@@ -23,12 +23,19 @@ tien, gratuit, chez Cloudflare. Compter ~10 minutes.
 
 ### 1. Créer une clé TURN
 
-1. Créer un compte sur <https://dash.cloudflare.com> (gratuit).
-2. Dans le menu de gauche : **Realtime** → **TURN**.
-3. Cliquer **Create** (ou « Add »), donner un nom (ex. `clip`), valider.
-4. Cloudflare affiche deux valeurs. Les copier :
-   - **TURN Key ID** (identifiant)
-   - **API Token** (jeton secret — ne pas le partager, ne pas le mettre sur GitHub)
+1. Créer un compte sur <https://dash.cloudflare.com/sign-up> (gratuit) et
+   valider l'e-mail reçu.
+2. Dans le menu de gauche : **Realtime**, puis dans la partie **TURN Server**,
+   cliquer **Create**.
+3. Donner un nom (ex. `clip`) et valider.
+4. Cloudflare affiche deux valeurs. Les copier tout de suite, le jeton n'est
+   affiché qu'une seule fois :
+   - **Turn Token ID** (identifiant)
+   - **API Token** (jeton secret : ne le donner à personne, ne pas le mettre
+     sur GitHub)
+
+Coût : les 1 000 premiers Go par mois sont gratuits. Du texte, c'est quelques
+Ko par envoi.
 
 ### 2. Créer le Worker (le petit relais)
 
@@ -75,7 +82,11 @@ liaison directe est bloquée.
 
 ## Vérifier que le relais marche
 
-Sur le PC, ouvrir les outils de développement (F12) → onglet **Network**, puis
+Test rapide : ouvrir l'adresse du Worker directement dans le navigateur. La
+page doit afficher du texte qui commence par `{"iceServers"`. Si elle affiche
+`{"error":"config"}`, une des variables de l'étape 3 manque ou est mal nommée.
+
+Ensuite, sur le PC, ouvrir les outils de développement (F12) → onglet **Network**, puis
 recharger `/clip/`. Une requête vers l'adresse du Worker doit renvoyer un code
 **200** avec une réponse `{"iceServers": …}`. Si elle renvoie 403, vérifier que
 `ALLOWED_ORIGIN` correspond exactement à l'adresse du site.
