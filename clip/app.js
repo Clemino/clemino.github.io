@@ -34,6 +34,62 @@
   const PING_EVERY = 10000;
   const STALE_AFTER = 25000;
 
+  // ---------- Relais (TURN) ----------
+  // Sur un réseau qui bloque les connexions directes (école, entreprise…), les
+  // deux appareils ne peuvent pas se joindre en direct : il faut un relais TURN.
+  // Mets ici l'URL de ton relais Cloudflare (voir clip/README.md). Il ne voit
+  // passer que du texte chiffré. Laissé vide : pas de relais, la connexion ne
+  // marche que là où la liaison directe est possible (même wifi, box perso…).
+  const TURN_ENDPOINT = ''; // ex. 'https://clip-turn.mon-compte.workers.dev'
+
+  const STUN = [
+    { urls: 'stun:stun.cloudflare.com:3478' },
+    { urls: 'stun:stun.l.google.com:19302' },
+  ];
+
+  // État partagé des serveurs ICE (STUN + éventuel TURN récupéré du relais).
+  const ICE = { servers: STUN.slice(), relay: false, fetchedAt: 0, loading: null };
+
+  async function fetchIce() {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 8000);
+    try {
+      const r = await fetch(TURN_ENDPOINT, { signal: ctrl.signal, cache: 'no-store', referrerPolicy: 'no-referrer' });
+      if (!r.ok) throw new Error('http ' + r.status);
+      const data = await r.json();
+      const raw = data && data.iceServers;
+      const list = Array.isArray(raw) ? raw : raw ? [raw] : [];
+      if (!list.length) throw new Error('vide');
+      ICE.servers = STUN.concat(list);
+      ICE.relay = true;
+      ICE.fetchedAt = Date.now();
+    } catch {
+      // On garde STUN seul ; l'interface signalera que le relais est indisponible.
+      if (!ICE.relay) ICE.servers = STUN.slice();
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  // Récupère les accès au relais, avec mémorisation (accès valables ~24 h).
+  function loadIce(force) {
+    if (!TURN_ENDPOINT) return Promise.resolve();
+    if (!force && ICE.relay && Date.now() - ICE.fetchedAt < 18 * 3600 * 1000) return Promise.resolve();
+    if (!ICE.loading) ICE.loading = fetchIce().finally(() => { ICE.loading = null; });
+    return ICE.loading;
+  }
+
+  function peerOpts() {
+    // Rafraîchit les accès en arrière-plan pour les prochains pairs.
+    loadIce();
+    return {
+      ...SIGNALING,
+      config: { iceServers: ICE.servers, sdpSemantics: 'unified-plan', iceCandidatePoolSize: 2 },
+    };
+  }
+
+  const relayNeeded = () => Boolean(TURN_ENDPOINT) === false || ICE.relay === false;
+
   const $ = (id) => document.getElementById(id);
   const te = new TextEncoder();
   const td = new TextDecoder('utf-8', { fatal: true });
@@ -233,7 +289,7 @@
     }
 
     function connectSignaling(s) {
-      const peer = new Peer(s.peerId, SIGNALING);
+      const peer = new Peer(s.peerId, peerOpts());
       s.peer = peer;
       peer.on('open', () => {
         s.down = false;
@@ -388,6 +444,7 @@
     let conn = null; // { dc, nPc, nTel, ... } de la connexion courante
     let retryTimer = null;
     let ended = false;
+    let failStreak = 0; // tentatives directes échouées d'affilée (jamais connectées)
 
     function show(text) {
       out.textContent = text;
@@ -415,7 +472,7 @@
       peer = null;
       if (oldConn) oldConn.dc.close();
       if (oldPeer) oldPeer.destroy();
-      const p = new Peer('clipr-' + hex(random(16)), SIGNALING);
+      const p = new Peer('clipr-' + hex(random(16)), peerOpts());
       peer = p;
       p.on('open', () => {
         if (p === peer && !ended) dial();
@@ -443,7 +500,22 @@
     function drop(c) {
       if (conn !== c) return;
       conn = null;
-      if (c.live) setStatus('err', 'Connexion perdue, reconnexion…');
+      if (c.live) {
+        setStatus('err', 'Connexion perdue, reconnexion…');
+      } else if (!c.denied) {
+        // La connexion directe n'a jamais abouti : souvent un réseau qui la bloque.
+        failStreak++;
+        if (failStreak >= 2) {
+          setStatus('err', relayNeeded() ? 'Connexion bloquée par le réseau' : 'Connexion difficile, nouvelle tentative…');
+          if (relayNeeded() && failStreak === 2) {
+            notice.textContent =
+              'La connexion directe est bloquée sur ce réseau (wifi d’école ou d’entreprise, par exemple). ' +
+              'Il faut activer un relais pour contourner ce blocage : voir le fichier clip/README.md du site. ' +
+              'Les nouvelles tentatives continuent en arrière-plan.';
+            notice.hidden = false;
+          }
+        }
+      }
       c.live = false;
       retry(c.denied ? 5000 : 1500);
     }
@@ -495,7 +567,9 @@
           c.lastRx = Date.now();
           if (!c.live) {
             c.live = true;
+            failStreak = 0;
             clearTimeout(timer);
+            notice.hidden = true;
             setStatus('ok', 'Connecté · chiffré de bout en bout');
           }
           if (body.end === true) finish('La session a été terminée depuis le PC. Le texte a été effacé.');
@@ -603,7 +677,7 @@
     return null;
   }
 
-  function main() {
+  async function main() {
     if (!window.isSecureContext || !window.crypto || !crypto.subtle || !window.RTCPeerConnection) {
       fatal('Ce navigateur ne prend pas en charge le chiffrement ou WebRTC nécessaires. Utilisez un navigateur récent en HTTPS.');
       return;
@@ -611,6 +685,13 @@
     if (typeof window.Peer !== 'function' || typeof window.qrcode !== 'function') {
       fatal('Impossible de charger les composants de la page. Rechargez-la.');
       return;
+    }
+
+    // Récupère les accès au relais avant de créer le premier pair, pour que la
+    // liaison puisse l'emprunter dès la première connexion.
+    if (TURN_ENDPOINT) {
+      setStatus('wait', 'Préparation du relais…');
+      await loadIce();
     }
 
     let stored = readStored();
@@ -632,5 +713,5 @@
     else startSender();
   }
 
-  main();
+  main().catch(() => fatal('Une erreur est survenue au démarrage. Rechargez la page.'));
 })();
