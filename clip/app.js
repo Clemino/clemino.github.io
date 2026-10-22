@@ -31,64 +31,286 @@
   const SECRET_RE = /^[A-Za-z0-9_-]{43}$/; // 32 octets en base64url
   const DEVICE_RE = /^[A-Za-z0-9_-]{22}$/; // 16 octets en base64url
   const SIGNALING = { host: '0.peerjs.com', port: 443, path: '/', secure: true, key: 'peerjs', debug: 0 };
-  const PING_EVERY = 10000;
-  const STALE_AFTER = 25000;
 
-  // ---------- Relais (TURN) ----------
+  // ---------- Relais ----------
   // Sur un réseau qui bloque les connexions directes (école, entreprise…), les
-  // deux appareils ne peuvent pas se joindre en direct : il faut un relais TURN.
-  // Mets ici l'URL de ton relais Cloudflare (voir clip/README.md). Il ne voit
-  // passer que du texte chiffré. Laissé vide : pas de relais, la connexion ne
-  // marche que là où la liaison directe est possible (même wifi, box perso…).
-  const TURN_ENDPOINT = ''; // ex. 'https://clip-turn.mon-compte.workers.dev'
+  // deux appareils ne peuvent pas se joindre en WebRTC. Avec un relais, le texte
+  // (déjà chiffré de bout en bout) transite par ton Cloudflare Worker, en
+  // WebSocket sur le port 443. Mets ici son adresse (voir clip/README.md).
+  // Laissé vide : connexion directe WebRTC uniquement (même wifi, box perso…).
+  const RELAY_URL = ''; // ex. 'wss://clip-relay.mon-compte.workers.dev'
 
+  const PING_EVERY = RELAY_URL ? 25000 : 10000;
+  const STALE_AFTER = RELAY_URL ? 60000 : 25000;
+
+  // Le relais TURN gratuit fourni par défaut avec PeerJS n'existe plus : on ne
+  // garde que des serveurs STUN pour la connexion directe.
   const STUN = [
     { urls: 'stun:stun.cloudflare.com:3478' },
     { urls: 'stun:stun.l.google.com:19302' },
   ];
 
-  // État partagé des serveurs ICE (STUN + éventuel TURN récupéré du relais).
-  const ICE = { servers: STUN.slice(), relay: false, fetchedAt: 0, loading: null };
+  const peerOpts = () => ({
+    ...SIGNALING,
+    config: { iceServers: STUN, sdpSemantics: 'unified-plan', iceCandidatePoolSize: 2 },
+  });
 
-  async function fetchIce() {
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 8000);
-    try {
-      const r = await fetch(TURN_ENDPOINT, { signal: ctrl.signal, cache: 'no-store', referrerPolicy: 'no-referrer' });
-      if (!r.ok) throw new Error('http ' + r.status);
-      const data = await r.json();
-      const raw = data && data.iceServers;
-      const list = Array.isArray(raw) ? raw : raw ? [raw] : [];
-      if (!list.length) throw new Error('vide');
-      ICE.servers = STUN.concat(list);
-      ICE.relay = true;
-      ICE.fetchedAt = Date.now();
-    } catch {
-      // On garde STUN seul ; l'interface signalera que le relais est indisponible.
-      if (!ICE.relay) ICE.servers = STUN.slice();
-    } finally {
-      clearTimeout(timer);
+  // Imite la petite partie de l'API PeerJS utilisée plus bas (Peer et
+  // DataConnection), mais fait passer les messages par le Worker. Topologie en
+  // étoile comme en WebRTC : les téléphones ne parlent qu'au PC. Trames :
+  // « destinataire \n corps » vers le relais, « expéditeur \n corps » en retour ;
+  // un expéditeur vide désigne un message du relais lui-même.
+
+  class Emitter {
+    constructor() {
+      this._handlers = {};
+    }
+    on(event, fn) {
+      (this._handlers[event] ||= []).push(fn);
+      return this;
+    }
+    emit(event, ...args) {
+      for (const fn of this._handlers[event] || []) fn(...args);
     }
   }
 
-  // Récupère les accès au relais, avec mémorisation (accès valables ~24 h).
-  function loadIce(force) {
-    if (!TURN_ENDPOINT) return Promise.resolve();
-    if (!force && ICE.relay && Date.now() - ICE.fetchedAt < 18 * 3600 * 1000) return Promise.resolve();
-    if (!ICE.loading) ICE.loading = fetchIce().finally(() => { ICE.loading = null; });
-    return ICE.loading;
+  const RELAY_CHUNK = 200000; // caractères par trame : sous la limite de 1 Mio des WebSockets Workers
+  const RELAY_HEARTBEAT = 30000;
+  const RELAY_DEAD = 150000;
+
+  class RelayConn extends Emitter {
+    constructor(peer, remote) {
+      super();
+      this.peer = peer;
+      this.remote = remote; // identifiant du téléphone côté PC ; '' côté téléphone (le PC)
+      this._open = false;
+      this._closed = false;
+    }
+    get open() {
+      return this._open && !this._closed && this.peer.open;
+    }
+    send(data) {
+      if (this.open) this.peer._send(this.remote, 'd', data);
+    }
+    close() {
+      if (this._closed) return;
+      this.peer._send(this.remote, 'close');
+      this._finish();
+    }
+    _finish() {
+      if (this._closed) return;
+      this._closed = true;
+      this._open = false;
+      if (this.peer._conns.get(this.remote) === this) this.peer._conns.delete(this.remote);
+      this.emit('close');
+    }
   }
 
-  function peerOpts() {
-    // Rafraîchit les accès en arrière-plan pour les prochains pairs.
-    loadIce();
-    return {
-      ...SIGNALING,
-      config: { iceServers: ICE.servers, sdpSemantics: 'unified-plan', iceCandidatePoolSize: 2 },
-    };
+  class RelayPeer extends Emitter {
+    constructor(room, role) {
+      super();
+      this.room = room;
+      this.role = role; // 'pc' ou 'tel'
+      this._conns = new Map();
+      this._parts = new Map();
+      this._open = false;
+      this._everOpened = false;
+      this._disconnected = false;
+      this._destroyed = false;
+      this._pcPresent = false;
+      this._connect();
+    }
+    get open() {
+      return this._open;
+    }
+    get disconnected() {
+      return this._disconnected;
+    }
+    get destroyed() {
+      return this._destroyed;
+    }
+
+    _connect() {
+      const url = RELAY_URL.replace(/\/+$/, '') + '/room/' + this.room + '?role=' + this.role;
+      let ws;
+      try {
+        ws = new WebSocket(url);
+      } catch {
+        setTimeout(() => this._lost(), 0);
+        return;
+      }
+      this.ws = ws;
+      this._lastRx = Date.now();
+      ws.onmessage = (e) => {
+        if (this.ws !== ws) return;
+        this._lastRx = Date.now();
+        if (typeof e.data === 'string' && e.data !== 'pong') this._onFrame(e.data);
+      };
+      ws.onclose = () => {
+        if (this.ws === ws) this._lost();
+      };
+      clearInterval(this._beat);
+      this._beat = setInterval(() => {
+        if (this.ws !== ws) return;
+        if (Date.now() - this._lastRx > RELAY_DEAD) ws.close();
+        else if (ws.readyState === WebSocket.OPEN) ws.send('ping');
+      }, RELAY_HEARTBEAT);
+    }
+
+    _lost() {
+      const welcomed = this._open;
+      this.ws = null;
+      this._open = false;
+      clearInterval(this._beat);
+      for (const c of [...this._conns.values()]) c._finish();
+      if (this._destroyed) return;
+      if (!this._everOpened) {
+        // Comme PeerJS : échec avant toute ouverture = pair détruit.
+        this._destroyed = true;
+        this.emit('error', { type: 'network' });
+        return;
+      }
+      this._disconnected = true;
+      if (!welcomed) this.emit('error', { type: 'network' });
+      this.emit('disconnected');
+    }
+
+    reconnect() {
+      if (this._destroyed || !this._disconnected) return;
+      this._disconnected = false;
+      this._connect();
+    }
+
+    destroy() {
+      if (this._destroyed) return;
+      this._destroyed = true;
+      this._open = false;
+      clearInterval(this._beat);
+      const ws = this.ws;
+      this.ws = null;
+      for (const c of [...this._conns.values()]) c._finish();
+      if (ws) ws.close();
+    }
+
+    // Côté téléphone : ouvre une « connexion » vers le PC de la salle.
+    connect() {
+      const old = this._conns.get('');
+      if (old) old.close();
+      const conn = new RelayConn(this, '');
+      this._conns.set('', conn);
+      if (!this._pcPresent) {
+        setTimeout(() => this.emit('error', { type: 'peer-unavailable' }), 0);
+        return conn;
+      }
+      conn._open = true;
+      this._send('', 'open');
+      return conn;
+    }
+
+    _send(to, c, d) {
+      const ws = this.ws;
+      if (!ws || ws.readyState !== WebSocket.OPEN) return;
+      const body = JSON.stringify(d === undefined ? { c } : { c, d });
+      if (body.length <= RELAY_CHUNK) {
+        ws.send(to + '\n' + body);
+        return;
+      }
+      // Gros message : découpé en morceaux, recollés à l'arrivée.
+      const whole = JSON.stringify(d);
+      const n = Math.ceil(whole.length / RELAY_CHUNK);
+      const k = hex(random(8));
+      for (let i = 0; i < n; i++) {
+        const p = whole.slice(i * RELAY_CHUNK, (i + 1) * RELAY_CHUNK);
+        ws.send(to + '\n' + JSON.stringify({ c: 'part', k, i, n, p }));
+      }
+    }
+
+    _onFrame(raw) {
+      const nl = raw.indexOf('\n');
+      if (nl < 0) return;
+      const from = raw.slice(0, nl);
+      let m;
+      try {
+        m = JSON.parse(raw.slice(nl + 1));
+      } catch {
+        return;
+      }
+      if (!isObj(m)) return;
+
+      if (from === '') {
+        // Message du relais.
+        if (m.sys === 'welcome') {
+          this._open = true;
+          this._everOpened = true;
+          this._pcPresent = m.pc === true;
+          this.emit('open');
+        } else if (m.sys === 'leave' && typeof m.id === 'string') {
+          const c = this._conns.get(m.id);
+          if (c) c._finish();
+        } else if (m.sys === 'pc') {
+          // Le PC arrive (ou revient) ou s'en va : la connexion en cours ne vaut plus.
+          this._pcPresent = m.present === true;
+          const c = this._conns.get('');
+          if (c) c._finish();
+        }
+        return;
+      }
+
+      const key = this.role === 'pc' ? from : '';
+      if (m.c === 'open') {
+        if (this.role !== 'pc') return;
+        const old = this._conns.get(key);
+        if (old) old._finish();
+        const conn = new RelayConn(this, key);
+        conn._open = true;
+        this._conns.set(key, conn);
+        this.emit('connection', conn);
+        setTimeout(() => {
+          if (!conn._closed) conn.emit('open');
+        }, 0);
+        return;
+      }
+
+      const conn = this._conns.get(key);
+      if (!conn) return;
+      if (m.c === 'close') {
+        conn._finish();
+      } else if (m.c === 'd') {
+        conn.emit('data', m.d);
+      } else if (m.c === 'part') {
+        this._onPart(from, conn, m);
+      }
+    }
+
+    _onPart(from, conn, m) {
+      if (typeof m.k !== 'string' || typeof m.p !== 'string') return;
+      if (!Number.isInteger(m.n) || m.n < 1 || m.n > 64 || !Number.isInteger(m.i) || m.i < 0 || m.i >= m.n) return;
+      const id = from + ':' + m.k;
+      let entry = this._parts.get(id);
+      if (!entry) {
+        if (this._parts.size >= 8) this._parts.delete(this._parts.keys().next().value);
+        entry = { n: m.n, got: 0, parts: new Array(m.n) };
+        this._parts.set(id, entry);
+      }
+      if (entry.n !== m.n || entry.parts[m.i] !== undefined) return;
+      entry.parts[m.i] = m.p;
+      if (++entry.got < entry.n) return;
+      this._parts.delete(id);
+      let d;
+      try {
+        d = JSON.parse(entry.parts.join(''));
+      } catch {
+        return;
+      }
+      conn.emit('data', d);
+    }
   }
 
-  const relayNeeded = () => Boolean(TURN_ENDPOINT) === false || ICE.relay === false;
+  // Crée le « pair » : relais WebSocket si configuré, sinon PeerJS (WebRTC).
+  // `room` est l'identifiant du PC, dérivé du secret du QR code.
+  function createPeer(ownId, room, role) {
+    return RELAY_URL ? new RelayPeer(room, role) : new Peer(ownId, peerOpts());
+  }
 
   const $ = (id) => document.getElementById(id);
   const te = new TextEncoder();
@@ -289,7 +511,7 @@
     }
 
     function connectSignaling(s) {
-      const peer = new Peer(s.peerId, peerOpts());
+      const peer = createPeer(s.peerId, s.peerId, 'pc');
       s.peer = peer;
       peer.on('open', () => {
         s.down = false;
@@ -472,7 +694,7 @@
       peer = null;
       if (oldConn) oldConn.dc.close();
       if (oldPeer) oldPeer.destroy();
-      const p = new Peer('clipr-' + hex(random(16)), peerOpts());
+      const p = createPeer('clipr-' + hex(random(16)), peerId, 'tel');
       peer = p;
       p.on('open', () => {
         if (p === peer && !ended) dial();
@@ -506,11 +728,11 @@
         // La connexion directe n'a jamais abouti : souvent un réseau qui la bloque.
         failStreak++;
         if (failStreak >= 2) {
-          setStatus('err', relayNeeded() ? 'Connexion bloquée par le réseau' : 'Connexion difficile, nouvelle tentative…');
-          if (relayNeeded() && failStreak === 2) {
+          setStatus('err', RELAY_URL ? 'Connexion difficile, nouvelle tentative…' : 'Connexion bloquée par le réseau');
+          if (!RELAY_URL && failStreak === 2) {
             notice.textContent =
               'La connexion directe est bloquée sur ce réseau (wifi d’école ou d’entreprise, par exemple). ' +
-              'Il faut activer un relais pour contourner ce blocage : voir le fichier clip/README.md du site. ' +
+              'Pour l’utiliser ici, il faut configurer un relais : voir le fichier clip/README.md du site. ' +
               'Les nouvelles tentatives continuent en arrière-plan.';
             notice.hidden = false;
           }
@@ -678,20 +900,14 @@
   }
 
   async function main() {
-    if (!window.isSecureContext || !window.crypto || !crypto.subtle || !window.RTCPeerConnection) {
+    // Avec le relais, WebRTC (parfois désactivé sur les postes gérés) est inutile.
+    if (!window.isSecureContext || !window.crypto || !crypto.subtle || (!RELAY_URL && !window.RTCPeerConnection)) {
       fatal('Ce navigateur ne prend pas en charge le chiffrement ou WebRTC nécessaires. Utilisez un navigateur récent en HTTPS.');
       return;
     }
-    if (typeof window.Peer !== 'function' || typeof window.qrcode !== 'function') {
+    if ((!RELAY_URL && typeof window.Peer !== 'function') || typeof window.qrcode !== 'function') {
       fatal('Impossible de charger les composants de la page. Rechargez-la.');
       return;
-    }
-
-    // Récupère les accès au relais avant de créer le premier pair, pour que la
-    // liaison puisse l'emprunter dès la première connexion.
-    if (TURN_ENDPOINT) {
-      setStatus('wait', 'Préparation du relais…');
-      await loadIce();
     }
 
     let stored = readStored();

@@ -1,104 +1,91 @@
 # Presse-papier sécurisé — `/clip/`
 
 Coller du texte sur le PC, le voir en direct sur le téléphone. Le texte est
-chiffré de bout en bout (AES-256-GCM) et passe directement d'un appareil à
-l'autre (WebRTC). Aucun serveur ne voit le contenu.
+chiffré de bout en bout (AES-256-GCM) : aucun serveur ne peut le lire.
 
 - Sur le PC : ouvrir `/clip/`, un QR code s'affiche.
 - Sur le téléphone : scanner le QR code avec l'appareil photo.
 - Coller le texte sur le PC → il apparaît sur le téléphone.
 
-## Pourquoi « ça reste bloqué sur Connexion… »
+## Deux modes de connexion
 
-Les deux appareils essaient d'abord de se parler **en direct**. Beaucoup de
-réseaux (wifi d'école, d'entreprise, certains opérateurs mobiles) bloquent ces
-connexions directes. Dans ce cas, il faut un **relais** : un serveur qui fait
-suivre les données chiffrées entre les deux appareils. Le relais ne voit jamais
-le texte en clair, seulement du charabia chiffré.
+- **Direct (par défaut)** : les deux appareils se parlent en WebRTC, sans
+  intermédiaire. Marche sur un réseau ouvert (box perso, même wifi).
+- **Relais** : le texte, chiffré, passe par ton propre Cloudflare Worker en
+  WebSocket sur le port 443. Nécessaire sur les réseaux qui bloquent les
+  connexions directes (wifi d'école ou d'entreprise, certains réseaux mobiles) :
+  sinon le téléphone reste bloqué sur « Connexion… ».
 
-Le relais gratuit qui était intégré n'existe plus. Voici comment brancher le
-tien, gratuit, chez Cloudflare. Compter ~10 minutes.
+## Mettre en place le relais (gratuit, sans carte bancaire)
 
-## Mettre en place le relais Cloudflare (gratuit)
+Le relais tourne sur l'offre gratuite de Cloudflare Workers. Aucune carte
+bancaire n'est nécessaire : si un jour le quota gratuit était dépassé, le relais
+s'arrêterait simplement jusqu'au lendemain, sans aucune facturation. Pour du
+texte, on en est très loin.
 
-### 1. Créer une clé TURN
+Le code du relais est dans [`clip/relay/`](relay/). Cloudflare le déploie
+directement depuis ce dépôt GitHub : rien à copier-coller, aucun secret à
+configurer.
 
-1. Créer un compte sur <https://dash.cloudflare.com/sign-up> (gratuit) et
-   valider l'e-mail reçu.
-2. Dans le menu de gauche : **Realtime**, puis dans la partie **TURN Server**,
-   cliquer **Create**.
-3. Donner un nom (ex. `clip`) et valider.
-4. Cloudflare affiche deux valeurs. Les copier tout de suite, le jeton n'est
-   affiché qu'une seule fois :
-   - **Turn Token ID** (identifiant)
-   - **API Token** (jeton secret : ne le donner à personne, ne pas le mettre
-     sur GitHub)
+### 1. Créer le Worker depuis GitHub
 
-Coût : les 1 000 premiers Go par mois sont gratuits. Du texte, c'est quelques
-Ko par envoi.
+1. Sur <https://dash.cloudflare.com>, menu de gauche : **Workers & Pages** →
+   **Create**.
+2. Choisir **Import a repository** (« Importer un dépôt »), puis se connecter
+   avec GitHub et autoriser Cloudflare. Il suffit de lui donner accès au dépôt
+   `clemino.github.io`.
+3. Sélectionner le dépôt `clemino.github.io`.
+4. Réglages du projet :
+   - **Project name** : `clip-relay` (doit être exactement ce nom)
+   - **Production branch** : `main`
+   - Ouvrir les réglages avancés (**Advanced settings** / **Build settings**) :
+     - **Root directory** (ou *Path*) : `clip/relay`
+     - **Build command** : laisser vide
+     - **Deploy command** : `npx wrangler deploy` (valeur par défaut)
+5. Cliquer **Deploy** et attendre la fin (une à deux minutes).
 
-### 2. Créer le Worker (le petit relais)
+### 2. Tester le relais
 
-1. Menu de gauche : **Workers & Pages** → **Create** → **Create Worker**.
-2. Lui donner un nom, par exemple `clip-turn`. L'adresse sera alors
-   `https://clip-turn.<ton-sous-domaine>.workers.dev`. **Noter cette adresse.**
-3. Cliquer **Deploy**, puis **Edit code**.
-4. Effacer le code d'exemple, coller tout le contenu du fichier
-   [`clip/turn/worker.js`](turn/worker.js) de ce dépôt, puis **Deploy**.
+Cloudflare affiche l'adresse du Worker, de la forme
+`https://clip-relay.<ton-sous-domaine>.workers.dev`. L'ouvrir dans le
+navigateur : la page doit afficher **« Relais du presse-papier sécurisé : OK »**.
 
-### 3. Donner ses réglages au Worker
+### 3. Brancher le site sur le relais
 
-Dans le Worker : **Settings** → **Variables and Secrets** → ajouter :
+Dans **`clip/app.js`**, remplacer :
 
-| Nom | Valeur | Type |
-| --- | --- | --- |
-| `TURN_KEY_ID` | la *TURN Key ID* de l'étape 1 | Text |
-| `TURN_KEY_API_TOKEN` | l'*API Token* de l'étape 1 | **Secret** (Encrypt) |
-| `ALLOWED_ORIGIN` | `https://clemino.github.io` | Text |
+```js
+const RELAY_URL = '';
+```
 
-Enregistrer (**Deploy** à nouveau si demandé).
+par l'adresse du Worker, en remplaçant `https://` par `wss://` :
 
-### 4. Brancher le site sur le Worker
+```js
+const RELAY_URL = 'wss://clip-relay.ton-sous-domaine.workers.dev';
+```
 
-Deux petites modifications dans ce dépôt :
+Pousser sur `main`. Après le déploiement GitHub Pages (~1 min), recharger
+`/clip/` sur le PC et rescanner le QR code.
 
-1. Dans **`clip/app.js`**, remplacer la ligne :
-   ```js
-   const TURN_ENDPOINT = '';
-   ```
-   par l'adresse du Worker (étape 2) :
-   ```js
-   const TURN_ENDPOINT = 'https://clip-turn.ton-sous-domaine.workers.dev';
-   ```
+## Si ça ne marche pas
 
-2. Si l'adresse du Worker **ne finit pas** par `.workers.dev` (domaine
-   personnalisé), ajouter aussi son origine dans la règle `connect-src` de
-   **`clip/index.html`**. Si elle finit par `.workers.dev`, il n'y a rien à
-   changer : c'est déjà autorisé.
-
-Pousser ces deux fichiers. Après le déploiement GitHub Pages (~1 min),
-recharger `/clip/` : la connexion passe maintenant par le relais quand la
-liaison directe est bloquée.
-
-## Vérifier que le relais marche
-
-Test rapide : ouvrir l'adresse du Worker directement dans le navigateur. La
-page doit afficher du texte qui commence par `{"iceServers"`. Si elle affiche
-`{"error":"config"}`, une des variables de l'étape 3 manque ou est mal nommée.
-
-Ensuite, sur le PC, ouvrir les outils de développement (F12) → onglet **Network**, puis
-recharger `/clip/`. Une requête vers l'adresse du Worker doit renvoyer un code
-**200** avec une réponse `{"iceServers": …}`. Si elle renvoie 403, vérifier que
-`ALLOWED_ORIGIN` correspond exactement à l'adresse du site.
+- **Le build Cloudflare échoue** : vérifier que le nom du projet est bien
+  `clip-relay` et que le *Root directory* est `clip/relay`.
+- **Le téléphone affiche « Réseau indisponible »** : ouvrir l'adresse du Worker
+  dans le navigateur du téléphone pour vérifier qu'il est joignable.
+- **Le site utilise un autre domaine** (par exemple `clemi.me`) : l'ajouter dans
+  `ALLOWED_ORIGIN` de [`clip/relay/wrangler.toml`](relay/wrangler.toml),
+  séparé par une virgule. Sinon le relais refuse la connexion.
 
 ## Sécurité en bref
 
-- Chiffrement de bout en bout AES-256-GCM ; la clé n'existe que dans le QR code
-  (fragment `#` de l'URL, jamais envoyé à un serveur).
-- Un seul appareil associé ; tout autre appareil présentant le QR est refusé et
-  le PC affiche une alerte.
-- La clé secrète du relais (`API Token`) reste dans le Worker, côté serveur ;
-  le navigateur ne reçoit que des accès temporaires.
+- Chiffrement de bout en bout AES-256-GCM. La clé n'existe que dans le QR code
+  (fragment `#` de l'URL, jamais envoyé à un serveur). Ni PeerJS, ni Cloudflare,
+  ni GitHub ne peuvent lire le texte.
+- Le relais ne fait que transmettre des messages chiffrés : il ne stocke rien et
+  n'accepte que les connexions venant du site autorisé (`ALLOWED_ORIGIN`).
+- Un seul appareil associé : tout autre appareil présentant le QR code est
+  refusé et le PC affiche une alerte.
 - Fermer l'onglet du PC ou « Terminer la session » efface le texte sur le
   téléphone.
 - Politique de sécurité (CSP) stricte, aucun script externe. PeerJS 1.5.5 et
