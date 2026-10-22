@@ -38,10 +38,11 @@ configurer.
 4. Réglages du projet :
    - **Project name** : `clip-relay` (doit être exactement ce nom)
    - **Production branch** : `main`
-   - Ouvrir les réglages avancés (**Advanced settings** / **Build settings**) :
-     - **Root directory** (ou *Path*) : `clip/relay`
-     - **Build command** : laisser vide
-     - **Deploy command** : `npx wrangler deploy` (valeur par défaut)
+   - **Root directory** (ou *Path*) : laisser vide (racine du dépôt). Le
+     fichier [`wrangler.toml`](../wrangler.toml) à la racine indique à
+     Cloudflare de déployer le relais de `clip/relay/`.
+   - **Build command** : laisser vide
+   - **Deploy command** : `npx wrangler deploy` (valeur par défaut)
 5. Cliquer **Deploy** et attendre la fin (une à deux minutes).
 
 ### 2. Tester le relais
@@ -70,12 +71,17 @@ Pousser sur `main`. Après le déploiement GitHub Pages (~1 min), recharger
 ## Si ça ne marche pas
 
 - **Le build Cloudflare échoue** : vérifier que le nom du projet est bien
-  `clip-relay` et que le *Root directory* est `clip/relay`.
+  `clip-relay`.
+- **L'adresse du Worker affiche une page blanche ou le site au lieu de
+  « Relais … : OK »** : Cloudflare a déployé le dépôt comme site statique.
+  Vérifier que le *Root directory* est vide et que la *Deploy command* est
+  exactement `npx wrangler deploy`, puis relancer le build.
 - **Le téléphone affiche « Réseau indisponible »** : ouvrir l'adresse du Worker
   dans le navigateur du téléphone pour vérifier qu'il est joignable.
 - **Le site utilise un autre domaine** (par exemple `clemi.me`) : l'ajouter dans
-  `ALLOWED_ORIGIN` de [`clip/relay/wrangler.toml`](relay/wrangler.toml),
-  séparé par une virgule. Sinon le relais refuse la connexion.
+  `ALLOWED_ORIGIN` de [`wrangler.toml`](../wrangler.toml) (et de
+  `clip/relay/wrangler.toml`), séparé par une virgule. Sinon le relais refuse
+  la connexion.
 
 ## Sécurité en bref
 

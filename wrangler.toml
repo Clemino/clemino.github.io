@@ -1,0 +1,21 @@
+# Relais WebSocket du presse-papier sécurisé (/clip/) — Cloudflare Workers, offre gratuite.
+# Cloudflare déploie ce Worker depuis la racine du dépôt ; le code est dans clip/relay/.
+# (clip/relay/wrangler.toml contient la même configuration, pour un déploiement
+# depuis ce dossier.) Ce fichier ne contient aucun secret.
+
+name = "clip-relay"
+main = "clip/relay/worker.js"
+compatibility_date = "2025-06-01"
+
+[vars]
+# Sites autorisés à utiliser le relais, séparés par des virgules.
+ALLOWED_ORIGIN = "https://clemino.github.io"
+
+[[durable_objects.bindings]]
+name = "ROOMS"
+class_name = "Room"
+
+# Offre gratuite : les Durable Objects doivent utiliser le stockage SQLite.
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Room"]
