@@ -38,7 +38,7 @@
   // (déjà chiffré de bout en bout) transite par ton Cloudflare Worker, en
   // WebSocket sur le port 443. Mets ici son adresse (voir clip/README.md).
   // Laissé vide : connexion directe WebRTC uniquement (même wifi, box perso…).
-  const RELAY_URL = ''; // ex. 'wss://clip-relay.mon-compte.workers.dev'
+  const RELAY_URL = 'wss://clip-relay.oteroclement.workers.dev';
 
   const PING_EVERY = RELAY_URL ? 25000 : 10000;
   const STALE_AFTER = RELAY_URL ? 60000 : 25000;
