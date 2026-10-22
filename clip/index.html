@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src wss://0.peerjs.com; base-uri 'none'; form-action 'none'; require-trusted-types-for 'script'; trusted-types 'none'" />
+		<meta name="referrer" content="no-referrer" />
+		<meta name="robots" content="noindex, nofollow" />
+		<meta name="google" content="notranslate" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+		<meta name="color-scheme" content="light dark" />
+		<title>Presse-papier sécurisé</title>
+		<link rel="icon" href="icon.svg" type="image/svg+xml" />
+		<link rel="stylesheet" href="style.css" />
+		<script src="vendor/peerjs.min.js" defer></script>
+		<script src="vendor/qrcode.js" defer></script>
+		<script src="app.js" defer></script>
+	</head>
+	<body translate="no">
+		<noscript><p class="noscript">Cette page nécessite JavaScript.</p></noscript>
+
+		<header class="top">
+			<div class="brand">
+				<img src="icon.svg" alt="" width="22" height="22" />
+				<span>Presse-papier sécurisé</span>
+			</div>
+			<div class="status" id="status" data-state="wait" role="status">
+				<span class="dot" aria-hidden="true"></span>
+				<span class="label">Initialisation…</span>
+			</div>
+		</header>
+
+		<!-- PC : on colle le texte ici -->
+		<main id="sender" class="sender" hidden>
+			<section class="editor">
+				<label for="text" class="sr-only">Texte à envoyer au téléphone</label>
+				<textarea id="text" placeholder="Collez ou tapez votre texte ici, il s'affiche en direct sur le téléphone." spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false"></textarea>
+				<div class="editor-bar">
+					<span id="count" class="muted small">0 caractère</span>
+					<button id="clear" type="button" class="btn ghost">Effacer</button>
+				</div>
+			</section>
+
+			<aside class="side">
+				<div class="card" id="pair">
+					<h2>Associer le téléphone</h2>
+					<canvas id="qr" class="qr" role="img" aria-label="QR code de connexion"></canvas>
+					<p class="muted small">Scannez avec l'appareil photo du téléphone. Le QR code se masque dès qu'un appareil est associé ; les autres sont ensuite refusés.</p>
+				</div>
+
+				<div class="card alert" id="alert" role="alert" hidden></div>
+
+				<div class="card actions">
+					<button id="pair-more" type="button" class="btn" hidden>Associer un autre appareil</button>
+					<button id="end" type="button" class="btn danger">Terminer la session</button>
+					<p class="muted small">Efface le texte sur le téléphone et génère un nouveau QR code. Fermer cet onglet termine aussi la session.</p>
+				</div>
+
+				<details class="card info">
+					<summary>Comment c'est sécurisé ?</summary>
+					<ul>
+						<li>Le texte passe directement du PC au téléphone (WebRTC), sans être stocké nulle part.</li>
+						<li>Il est chiffré de bout en bout (AES-256-GCM) avec une clé qui n'existe que dans le QR code : elle n'est jamais envoyée à un serveur.</li>
+						<li>Le relais de mise en relation (PeerJS) ne voit qu'un identifiant aléatoire, jamais le contenu.</li>
+						<li>Une nouvelle clé est créée à chaque session ; rien n'est enregistré sur le PC.</li>
+						<li>Aucun script externe, aucun traceur ; la correction orthographique et la traduction automatique sont désactivées.</li>
+					</ul>
+				</details>
+			</aside>
+		</main>
+
+		<!-- Téléphone : affichage en direct -->
+		<main id="receiver" class="receiver" hidden>
+			<div id="out" class="out" aria-live="polite"></div>
+			<p id="notice" class="notice" hidden></p>
+			<nav id="bar" class="bar">
+				<button id="copy" type="button" class="btn primary" disabled>Copier</button>
+				<button id="mask" type="button" class="btn" aria-pressed="false">Masquer</button>
+				<button id="quit" type="button" class="btn ghost">Quitter</button>
+			</nav>
+		</main>
+
+		<main id="fatal" class="fatal" hidden>
+			<p id="fatal-msg"></p>
+		</main>
+	</body>
+</html>
