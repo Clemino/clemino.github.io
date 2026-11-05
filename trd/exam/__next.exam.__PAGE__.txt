@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[90449,["/trd/_next/static/chunks/1ab6db2bf208275f.js","/trd/_next/static/chunks/6e25a3e10eef054c.js","/trd/_next/static/chunks/6c78d0c60270f8a9.js","/trd/_next/static/chunks/824a4038a204e9bc.js","/trd/_next/static/chunks/0369bcda4f9d9d63.js"],"ExamIndexView"]
+3:I[76778,["/trd/_next/static/chunks/8085d7f888ca6ca2.js","/trd/_next/static/chunks/a69d90497ac53907.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"buildId":"ZKdS-b95UO2r0lHdQ-ZwE","rsc":["$","$1","c",{"children":[["$","$L2",null,{"exams":[{"slug":"partiel-blanc-1","title":"Partiel blanc 1 — Fondations","description":"Modules 1 à 3 : marchés, ordres et comptes, crypto-actifs. QCM 10 pts, calculs (frais, plus-values) 6 pts, cas pratique 4 pts.","durationMinutes":60,"totalPoints":20,"format":"STANDARD","questionCount":14}]}],[["$","script","script-0",{"src":"/trd/_next/static/chunks/0369bcda4f9d9d63.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"loading":null,"isPartial":false}
+5:null

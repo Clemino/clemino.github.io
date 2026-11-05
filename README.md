@@ -12,3 +12,10 @@ Ouvrir `/clip/` sur le PC, scanner le QR code avec le téléphone, puis coller d
 - Un seul appareil associé par défaut : tout autre appareil qui présente le QR code est refusé, et le PC affiche une alerte.
 - « Terminer la session » ou la fermeture de l'onglet PC efface le texte sur le téléphone.
 - CSP stricte, aucun script externe : PeerJS 1.5.5 et qrcode-generator 1.4.4 sont copiés dans `clip/vendor/`.
+
+## /trd/ : apprendre le trading
+
+Parcours du niveau zéro jusqu'au bot : marchés, analyse, gestion du risque, backtest, automatisation, certification AMF.
+
+- Site statique généré par l'application `trdapp`. Le dossier `trd/` est un résultat de build : ne pas le modifier à la main.
+- Aucun compte ni serveur : la progression reste dans le navigateur (localStorage), propre à chaque appareil.
