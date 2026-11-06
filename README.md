@@ -19,3 +19,11 @@ Parcours du niveau zéro jusqu'au bot : marchés, analyse, gestion du risque, ba
 
 - Site statique généré par l'application `trdapp`. Le dossier `trd/` est un résultat de build : ne pas le modifier à la main.
 - Aucun compte ni serveur : la progression reste dans le navigateur (localStorage), propre à chaque appareil.
+
+## /admin/ : réviser le droit administratif
+
+Parcours de révision du droit administratif (L2, semestre 1) : service public, police administrative, sources de la légalité, limites et contrôle, avec exercices auto-corrigés, cas pratiques guidés et rédactions avec corrigé type.
+
+- Site statique généré par l'application `adminapp`. Le dossier `admin/` est un résultat de build : ne pas le modifier à la main.
+- Aucun compte ni serveur : la progression reste dans le navigateur (localStorage), propre à chaque appareil.
+- Les corrigés types et les sujets de dissertation sont rédigés pour s'entraîner : ils ne sont pas officiels.
