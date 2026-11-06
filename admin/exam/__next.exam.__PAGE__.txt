@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[90449,["/admin/_next/static/chunks/9f6f184508497b6f.js","/admin/_next/static/chunks/9403eed70be02ace.js","/admin/_next/static/chunks/6da1e790e9be050e.js","/admin/_next/static/chunks/824a4038a204e9bc.js","/admin/_next/static/chunks/bc1dba45859fba41.js"],"ExamIndexView"]
+3:I[76778,["/admin/_next/static/chunks/8085d7f888ca6ca2.js","/admin/_next/static/chunks/a69d90497ac53907.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"buildId":"MKmbfn5c57zdnudyi4ZGk","rsc":["$","$1","c",{"children":[["$","$L2",null,{"exams":[{"slug":"galop-essai","title":"Galop d'essai","description":"Modules 1 à 8, 90 minutes, noté sur 20. QCM sur 12 points et deux cas guidés sur 8 points. La rédaction se travaille dans les modules.","durationMinutes":90,"totalPoints":20,"questionCount":14},{"slug":"examen-final","title":"Examen final","description":"Tout le cours, 120 minutes, noté sur 20. QCM sur 12 points et deux cas guidés sur 8 points. La rédaction se travaille dans les modules.","durationMinutes":120,"totalPoints":20,"questionCount":14}]}],[["$","script","script-0",{"src":"/admin/_next/static/chunks/bc1dba45859fba41.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"loading":null,"isPartial":false}
+5:null
