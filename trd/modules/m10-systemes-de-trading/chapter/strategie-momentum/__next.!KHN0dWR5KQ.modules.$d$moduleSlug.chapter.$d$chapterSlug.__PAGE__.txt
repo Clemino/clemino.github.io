@@ -1,7 +1,0 @@
-1:"$Sreact.fragment"
-2:I[87852,["/trd/_next/static/chunks/9f6f184508497b6f.js","/trd/_next/static/chunks/d7489f9839110da9.js","/trd/_next/static/chunks/b3aa67a1f53cf5f1.js","/trd/_next/static/chunks/824a4038a204e9bc.js","/trd/_next/static/chunks/2806cf1457e4fd82.js","/trd/_next/static/chunks/7cd54674d13f43de.js"],"AccessGuard"]
-3:I[28661,["/trd/_next/static/chunks/9f6f184508497b6f.js","/trd/_next/static/chunks/d7489f9839110da9.js","/trd/_next/static/chunks/b3aa67a1f53cf5f1.js","/trd/_next/static/chunks/824a4038a204e9bc.js","/trd/_next/static/chunks/2806cf1457e4fd82.js","/trd/_next/static/chunks/7cd54674d13f43de.js"],"ChapterView"]
-4:I[76778,["/trd/_next/static/chunks/8085d7f888ca6ca2.js","/trd/_next/static/chunks/a69d90497ac53907.js"],"OutletBoundary"]
-5:"$Sreact.suspense"
-0:{"buildId":"nzv6U5jEgBtmUxXvmUNyQ","rsc":["$","$1","c",{"children":[["$","$L2",null,{"moduleSlug":"m10-systemes-de-trading","chapterSlug":"strategie-momentum","children":["$","$L3",null,{"moduleSlug":"m10-systemes-de-trading","mod":{"order":10,"title":"Systèmes de trading"},"chapter":{"slug":"strategie-momentum","order":2,"title":"Stratégie momentum","sections":[],"exercises":[]}}]}],[["$","script","script-0",{"src":"/trd/_next/static/chunks/7cd54674d13f43de.js","async":true}]],["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"loading":null,"isPartial":false}
-6:null

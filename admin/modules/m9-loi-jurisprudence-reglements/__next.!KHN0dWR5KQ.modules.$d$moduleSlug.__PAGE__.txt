@@ -1,7 +1,0 @@
-1:"$Sreact.fragment"
-2:I[87852,["/admin/_next/static/chunks/9f6f184508497b6f.js","/admin/_next/static/chunks/9403eed70be02ace.js","/admin/_next/static/chunks/6da1e790e9be050e.js","/admin/_next/static/chunks/824a4038a204e9bc.js","/admin/_next/static/chunks/ba96aec034e3f361.js","/admin/_next/static/chunks/07e0471c6db7ff12.js"],"AccessGuard"]
-3:I[4755,["/admin/_next/static/chunks/9f6f184508497b6f.js","/admin/_next/static/chunks/9403eed70be02ace.js","/admin/_next/static/chunks/6da1e790e9be050e.js","/admin/_next/static/chunks/824a4038a204e9bc.js","/admin/_next/static/chunks/ba96aec034e3f361.js","/admin/_next/static/chunks/07e0471c6db7ff12.js"],"ModuleView"]
-4:I[76778,["/admin/_next/static/chunks/8085d7f888ca6ca2.js","/admin/_next/static/chunks/a69d90497ac53907.js"],"OutletBoundary"]
-5:"$Sreact.suspense"
-0:{"buildId":"MKmbfn5c57zdnudyi4ZGk","rsc":["$","$1","c",{"children":[["$","$L2",null,{"moduleSlug":"m9-loi-jurisprudence-reglements","children":["$","$L3",null,{"moduleSlug":"m9-loi-jurisprudence-reglements"}]}],[["$","script","script-0",{"src":"/admin/_next/static/chunks/07e0471c6db7ff12.js","async":true}]],["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"loading":null,"isPartial":false}
-6:null

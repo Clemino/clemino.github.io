@@ -1,0 +1,889 @@
+§1 - l’histoire du droit administratif 
+ l’Ancien Régime 
+3 types de règles administratives : organisation d’une forme d’administration, règles édictées par l’administration et confusion de pouvoirs (souveraineté du roi). 
+B. La Révolution : le Consulat et l’Empire 
+D’un pov structurel : nouvelles collectivités, loi du 26 février 170 : création des départements -> territoire uniforme : principe d’égalité. 
+D’un pov textuel : DDHC 1789 (séparation des pouvoirs, droits de chacun face à l’État) et loi du 16 et 24 août 1790 (séparation des autorités judiciaires et admin, « théorie du ministre juge »)
+Constitution An 8 : création du Conseil d’État, le juge rend des décisions en son nom. 
+Loi du 24 mai 1789 : justice déléguée : le CE statut au nom du peuple : la république.
+C. la république
+Création du tribunal des conflits : 1872. 
+Arrêt Cadot 1882 : le CE abandonne la théorie du ministre juge, le CE devient juge en 1er ressort. 
+Le TC tranche en cas de désaccord entre le judiciaire et l’administratif. 
+droit admin = protecteur des libertés -> droits et libertés encadrés grâce à la juridiction admin. 
+
+§2 - les caractères du droit admin, son autonomie 
+Un droit original 
+dans la source : le droit est crée par le juge et pas la loi, il interprète des silences du législateur.  
+dans la méthode : on part du cas et on identifie les règles générales -> création en induction. 
+juge spécial : juge administratif (autonome). 
+Arrêt Blanco (tribunal des conflits) 1873 : la responsabilité administrative a ses règles spéciales, de part ses spécificités (assurer un SP qui prend en compte les besoins du service pour une conciliation entre les droits de l’État et ceux des particuliers). 
+Un droit contesté
+Critique : vu comme un droit de privilège pour l’administration. 
+Un droit transformé  
+De base, il est jurisprudentiel et prétorien, mais il y a des changements : moins prétorien (le législateur intervient plus qu’avant dans tous les domaines admin) + des codes + normes UE. 
+
+§3 - Critères de l’administration 
+insuffisance du critère organique
+Se demander qui est l’auteur de l’acte est insuffisant : l’administration n’est pas toujours soumise au droit public (ex : SPIC) + difficile de déterminer une administration (critère de personnalité morale ne marche pas -> certaines de droit privé exerce des missions administratives). 
+La querelle du critère matériel 
+-> activité d’IG : critère mauvais -> les activités privées peuvent aussi contribuer à l’IG. 
+Une activité d’intérêt général n’est pas forcément un SP : il doit être géré par une personne pub. 
+
+Partie 1 : les missions de l’administration  
+Titre 1 : service public 
+Chapitre 1 : la notion de service public 
+-> le SP permet de légitimer les actions de l’administration car elle agit dans l’intérêt général. 
+Arret Blanco TC 8 février 1873 : responsabilité de l’État du fait des SP, autonomie du droit admin et la compétence du juge admin.
+Section 1 : les critères de services public 
+R.Chapu : « le SP est une activité assurée par une personne publique pour un intérêt public ». 
+Service public auquel on peut appliquer le régime juridique commun (les règles du droit public ne s’appliquent pas au droit privé). 
+
+§1 - le service public assuré par une personne publique 
+-> par l’État, des collectivités territoriales et des établissements publics (EP).
+Certains organes ne sont pas qualifiés par la loi, donc on se réfère à des indices : origine de la création (loi/décret qui les établissent), pouvoirs conférés (exorbitants ?), missions qu’ils exercent (intérêt général ?)
+Ex : BNF personne morale de droit public, fédérations sportives personnelles morale de droit privé avec statut d’association. 
+Les ordres professionnels sont des personnes morale de droit privé (ex : médecins) -> missions de SP avec des pouvoirs exorbitants mais viennent des personnes privées. 
+Caractère du SP : activité d’IG, elle n’assure pas son propre intérêt. 
+Ce caractère dépend de la volonté des gouvernants qui décident qu’une chose doit être accessible à tous, elle peut changer dans le temps (ex : église, loto)
+Les communes gèrent seules leurs services et d’autres délèguent à un EP qu’elles contrôlent ou à une personne morale de droit privé. 
+
+§2 - le service public assuré par une personne privée 
+Arrêt caisse primaire aide et de protection 1938 : mission d’indemniser les clients en cas de risque => SP d’intérêt général sous le contrôle d’une personne publique. 
+Critère : 
+une personne publique délègue une personne privée 
+une personne privée prend l’initiative de créer une activité d’IG sous la puissance publique => encadrées, pose des objectifs et conditions, exige un retour.  
+Arret APREI 22 février 2007 CE : identifier une mission de SP par une personne privée ? Si le législateur n’a pas qualifié explicitement ou implicitement, il y a 3 critères cumulatifs :
+Activité d’intérêt général
+Contrôlée par une personne publique 
+PPP attribuées
+Arret Narcy 1963 CE : il faut les 3 critères pour qu’une personne privée gère un SP. 
+Finalement, le CE affirme qu’il y a des SP même sans PPP. 
+Par exception, s’il n’y a pas de PPP, on regarde des indices => conditions de création, de fonctionnement et d’organisation.  
+Donc, sans PPP il faut un caractère d’IG caractérisé et surtout un contrôle public renforcé. 
+
+section 2 : les catégories de services publics 
+Services publics industriels et commerciaux (SPIC) -> droit privé
+Services publics administratifs (SPA) -> règles de droit public. 
+
+§1 - la distinction entre SPA et SPIC
+Décision TC bac Eloka 1921 : certains SP sont conformes aux missions fondamentales de l’État et d’autres des SP « de luxe » qui ont débordé sur des affaires économiques pour satisfaire cet IG (SPIC). 
+SPIC : soumis au droit privé car ces activités économiques relèvent de l’entreprise donc du privé. 
+SPA : de nature d’IG et relève du droit admin. 
+Arrêt USIA 1956 : critère de distinction entre les SPA et SPIC : 
+-> on regarde si l’activité est qualifiée par la loi, sinon on regarde la qualification de l’organe (EPA ou EPIC).
+
+Le principe de qualification des SP : 
+Principe : le SP est présumé admin quand il répond à tous les critères du SP, par exception il peut devenir un SPIC quand on observe 3 critères : 
+Objet du service : marchand /non marchand ? Si l’objet est économique, c’est un SPIC
+Origine des ressources (mode de financement) : alimenté par l’impôt / gratuit (SPA) ou alimenté grâce aux prix payé par les usagers en contrepartie du SP (SPIC). 
+Arret Thomas 1990 : un SP gratuit peut être un SPIC qui relève du marché. 
+Arret Mme Alberti Scott 2005 TC : un SP moins cher que son coût peut être un SPIC si son objet était marchand (ex : service de distribution d’eau).  
+Mode d’organisation et fonctionnement : le SP est organisé en régie (par la personne pub avec ses propres agents). si l’organisation fonctionne comme une entreprise privée alors c’est un SPIC sauf dans des cas particuliers (objet économique) 
+Arret Beaufils 19 février 2009 : un SP en régie peut être un SPIC (ex : SP de remontées mécaniques au ski). 
+Mais le critère de l’objet reste prioritaire ⚠️. 
+Aujourd’hui, les 3 critères ne sont plus cumulatifs, il y a le faisceau d’indices : est ce que c’est une activité marchande ou non, si oui c’est un SPIC, les autres critères servent à confirmer la suspicion.   
+Certains SP ont une présomption de SPIC -> ex : service de distribution d’eau. 
+
+§2 - les conséquences de la distinction
+SPA -> droit admin et JA 
+SPIC -> droit privé et admin et JJ 
+« service universel » : il doit pouvoir être fournit dans tout le territoire et pour toute personne (ex : poste, électricité). 
+Il faut déterminer si c’est SPA ou SPIC pour savoir quel droit et juge sont compétents lors d’un litige de SP.
+
+Le régime juridique des SPA 
+SPA géré par les personnes publiques 
+Ex : universités, services sanitaires, services sociaux… 
+La personne adopte des AAU -> actes administratifs.
+Décision Berkani 1996 TC : les agents publics sont contrôlés par le JA et le droit public.
+=> responsabilité administrative devant le JA. 
+Les contrats ne sont pas toujours admin -> avec une personne privée, ils le sont que s’il y a des clauses exorbitants de droit commun OU si l’objet est l’exécution d’un SP (délégation). 
+2) SPA géré par une personne privée 
+Les décisions unilatérales sont admin car il y a la PPP, sans PPP c’est un acte de droit privé. 
+Arret AFNOR 1992 : 2 types de normes : norme indicative (sert de référence) et obligatoire. 
+=> quand l’AFNOR rend une norme obligatoire, elle exerce une PPP. 
+Les agents sont des privés même s’ils sont dans un SPA et la responsabilité reste administrative à condition que le préjudice invoqué ait été causé par l’exercice de PPP. 
+Les contrats sont presque tous de droit privés, exception = une personne privée agit au nom d’une personne publique ou contracte avec cette personne publique. 
+
+ Le régime juridique des SPIC 
+Le règles sont les mêmes, donc pas besoin de distinction entre personne publique ou privée => bloc de compétence. 
+Actes unilatéraux pris par les dirigeants des SPIC = actes de droit privé, exception = si l’objet est d’organiser le service (règlement intérieur). . 
+Arrêt de principe TC 1968 Compagnie Air France C/épouse Barbier : règlement d’Air France qui interdisait les hôtesses de se marier : acte qui organise le SPIC => JA. 
+Les contrats : 
+contrats entre gestionnaire et usager = droit privé, ex : acheter un billet de train. 
+contrats avec les tiers = droit privé, SAUF si une des deux est une personne publique + clauses exorbitantes dans le contrat ou l’objet est l’exécution du service. 
+Les agents sont de droit privé sauf 2 -> le directeur du SPIC et le comptable du SPIC. 
+Arret Robert Lafrégeyre 1923 : JJ compétent pour tous les dommages causés envers les tiers ou usagers sauf s’il est directement causé par l’acte règlementaire. 
+
+Chapitre 2 : le régime de service public
+Section 1 : création et suppression de services publics 
+§1 - les services publics obligatoires 
+Services publics locaux : nommé dans les lois de décentralisation, l’État demande aux collectivités de faire certaines missions. (Ex : les communes avec les services de déchets, entretien des routes, lycées…). 
+Services publics nationaux : imposés par la Constitution, le législateur ne peut pas les supprimer (ex : service de police et gendarmerie, enseignement public, justice…)
+
+§2 - les services publics facultatifs 
+L’État ou les collectivités peuvent décider de créer un service, mais des fois on ne peut pas -> quand la puissance publique décide d’organiser un SP alors que c’est une activité marchande donc concurrentielle => pb de concurrence déloyale (atteinte à la liberté d’entreprendre). 
+Arret Unipain 1970 : idée d’une boulangerie municipale. 
+Arret Ordre des avocats au barreau de Paris 31 mai 2006 : les collectivités doivent justifier un intérêt public (dont carence de l’initiative privée), elle ne doit pas fausser le jeu de la concurrence, ni abuser de sa position dominante.
+
+§2 - les autorités compétentes pour créer ou supprimer un SP 
+Création 
+Le législateur est compétent pour créer des catégories d’établissements publics et pour fixer des règles sur la nationalisation d’entreprises. 
+Il détermine aussi les principes fondamentaux : Défense nationale, libre administration des collectivités territoriales, enseignement, environnement, propriété, droit du travail. 
+Il est aussi compétent pour fixer les modalités d’organisation. 
+Les organes collégiaux sont compétents pour créer un SP local dans la limite des compétences des collectivités territoriales + d’un intérêt public local. 
+
+Suppression 
+SP constitutionnel : pas de suppression sauf si révision constitutionnelle 
+SP public facultatif : suppression par l’autorité qui la crée (principe du parallélisme des compétences). 
+Principe : une collectivité territoriale qui gère un SP peut le supprimer grâce à son pouvoir discrétionnaire. Les usagers n’ont aucun droit de maintien d’un SP facultatif (c’est pas parce qu’on l’utilise qu’il reste ouvert -> bureaux, trains). 
+Principe de mutabilité du SP : le SP peut changer, l’intérêt de le créer/supprimer peut évoluer, il peut devenir inutile (rentabilité pas suffisante). 
+Le juge fait un « contrôle de l’erreur manifeste d’appréciation » -> si la décision de supprimer est erronée et qu’on voulait juste faire des économies : le juge peut annuler la suppression mais la décision de suppression doit être MANIFESTEMENT absurde.   
+
+Section 2 : les principes communs aux service public : lois du service public 
+Lois de Rolland : continuité, mutabilité, égalité devant le SP. 
+§1 ) le principe de continuité du service public 
+Notion 
+-> ne s’interrompt pas, incarnation matérielle de la continuité de l’État, absence de continuité = faillite de l’État.  
+Continuité ≠ permanence mais régularité et prévisibilité (BU, médecins, école). 
+Mais il y en a qui doivent être permanents de manière stricte (ex : hôpitaux, défense nationale). 
+
+Valeurs 
+-> confrontation avec le droit de grève (préambule Constitution) qui remet en cause sa continuité. 
+Décision du 25 juillet 1979 : valeur constit du principe de continuité pour le concilier avec le droit de grève => la continuité ne doit pas toucher au droit de grève sans dégrader la qualité des SP, le droit de grève ne doit pas conduire à un arret de fonctionnement total.  
+Arrêt Dehaene 1950 : certaines catégorie d’agents n’ont pas le droit de grève (gendarme, police). Les agents hospitaliers ont le droit de grève mais les soins doivent continuer. 
+Même quand la grève est licite, l’autorité admin peut prendre des mesures pour éviter un « usage abusif du droit de grève ou contraire aux nécessités de l’OP » (ex : réquisition d’agents). 
+Le législateur peut poser des conditions au droit de grève (ex : obliger des services minimum). 
+Il faut des préavis pour savoir quel service est affecté pour prévoir son absence et s’organiser pour permettre la continuité des SP. 
+
+§2 - le principe de mutabilité du service public 
+-> le SP doit pouvoir changer et s’adapter aux circonstances, il ne doit pas être figé. 
+but du SP = interêt général mais ce contenu peut évoluer avec le temps. 
+Arrêt de principe section Vannier 1961. 
+
+§3 - le principe d’égalité du service public 
+-> art 1 C° et art 6 DDHC. 
+Nouveau PGD : égalité des usagers devant l’administration -> arrêt société des concerts du conservatoire 9 mars 1951. 
+S’il y a un contentieux des actes du SP, on utilise ce PGD. 
+
+L’égal accès aux emplois publics 
+-> principe d’égale admissibilité = principe essentiel au fonctionnement des SPA.  
+Principe = tout le monde peut accéder de la même façon aux emplois publics (art 6 DDHC). 
+Arret Varenne 1954 => interdiction de discriminations (religion, sexe, politique) -> refus de candidats de s’inscrire à l’ENA pour des raisons politiques. 
+
+L’égalité des usagers devant le service public 
+Principe : on doit soumettre tous les usagers aux memes services et mêmes règles mais si on a une situation différente, on peut faire différemment => inégalité donc traitement différents.  
+Un motif peut faire changer le traitement -> l’intérêt général ou la différence de situation objective. 
+Arret Baxter 1997 : ce n’est pas obligatoire, pas de discrimination positive. 
+Ex : entrée de piscine : tarifs sont différents (habitants de la commune, âge) mais la différence ne doit pas être trop grande. 
+Arrêt Denoyez et Chorques 1974 : possible de traiter différemment des situations quand elles sont objectivement différentes ou s’il y a un motif d’IG et EN PLUS un rapport avec l’objet/but d’IG ou la différence de situation.
+Il faut que la différence soit proportionnée à la différence de situation. 
+Cas pratique sur le principe d’égalité : 
+Différence objective de traitement ? 
+Elle est justifiée par l’existence d’une différence objective de situation ou d’IG ? 
+Proportion de la différence de traitement ? 
+
+§4 - le principe de neutralité du service public 
+-> lié avec le principe d’égalité car il interdit la discrimination envers les agents et les usagers.  
+
+A. Principe de neutralité qui s’impose aux agents 
+2 facettes : 
+facette non discriminatoire entre usagers/agents et les agents entre eux   
+Facette d’absence de prise en compte des spécificités de certains agents/usagers 
+=> interdit de privilégier certains agents par rapport à d’autres + interdit aux agents/usagers d’opposer leurs croyances au fonctionnement du SP = obligation défensive. 
+L’exigence est plus forte à l’égard des agents car ils sont le visage du SP. 
+-> exigence de laïcité du SP. 
+Arrêt Demoiselle Jamet 1950 : l’agent doit être neutre dans ses relations avec les usagers et avec sa hiérarchie, il n’a pas le droit d’influencer sur leur comportement (propagande)
+L’agent a un devoir de loyauté envers son administration et sa hiérarchie, il a le droit de ne pas être d’accord mais doit le garder pour lui 
+Arret Demoiselle Marteaux 2000 : interdit aux agents de manifester leurs convictions religieuses dans l’exercice de leurs fonctions, sinon c’est un manquement à ses obligations. 
+Le formulaire de candidature n’a pas le droit de demander des renseignements sur les opinions politiques, professionnelles…
+Arrêt centre hospitalier de St Denis 12 février 2020 : barbe vue comme un signe religieux -> le CE dit que ces critères ne peuvent être reconnus comme signes d’appartenance religieuse
+-> il faut prouver l’intention du signe religieux : ça dépend de la manière dont le signe est porté. 
+Ça s’applique à tous les agents (SPA/SPIC) mais pas aux agents privés qui n’ont pas de mission de SP.  
+Arrêt crèche Baby-Loup : la crèche licencie pour le port du voile -> licenciement illégal car elle a une mission d’IG mais pas de contrôle public donc pas de SP.
+Une entreprise peut avoir un règlement intérieur et considérer qu’elle a des objectifs qui demandent une neutralité => entreprises à mission => le juge du droit du travail peut valider un licenciement si un signe religieux va contre ces règles. 
+Régime de responsabilité de l’État sans faute pour réparation de préjudice + principe de non neutralité des collaborateurs occasionnels du SP.
+
+B. La neutralité et les usagers 
+On a des situations où les usagers sont soumis au principe de neutralité et laïcité du SP. 
+Loi 2004 : interdit à l’école de porter des signes manifestants une appartenance religieuse, sauf à l’université. 
+Interdiction d’utiliser ses croyances religieuses pour s’affranchir des règles communes, la laïcité interdit d’exiger au nom de la liberté religieuse. 
+La liberté religieuse ne permet pas l’invocation d’un service public à la carte (ex : pas d’obligation d’alternatives alimentaires dans les cantines) ni imposer des interdits religieux à l’administration (ex : transfusion de sang témoins de Jéhovah). 
+Arret Commune de Besançon 22 mars 2021 : on ne peut pas refuser l’inscription d’un élève parce qu’il demande des repas de substitution. 
+Arrêt Ligue des droits de l’Homme 22 août 2016 : port du burkini à certaines horaires, il faut veiller à l’égalité des traitements des usagers et la neutralité => nuisance au fonctionnement du SP avec son caractère dérogatoires aux règles communes donc => inégalité de traitement. 
+Arrêt Alliances citoyennes et autres : port de signes interdits pendant les matchs FFF pro        => c’est un SP mais les simples licenciés ne sont pas obligés : le règlement intérieur peut fixer des limites à leur liberté d’expression et opinion.
+
+Titre 2 : la police administrative
+Chapitre 1 : la notion de police administrative 
+La police est une activité, une mission, but : assurer le maintien de l’ordre public, avec des agents et moyens. Plusieurs remarques : 
+Assurée par une personne publique mais peut être déléguée à des personnes privées (arrêt Castelnaudary 1932). 
+Mesures de police restrictives de liberté : PPP (art 5 DDHC). 
+L’activité est dans le but d’IG. L’ordre public n’est pas un objectif, c’est un état maintenir. On distingue la police administrative (préventive) de la police judiciaire (répressive). 
+Police administrative générale VS spéciale (déterminées par des textes isolés). 
+La police a pour objet de limiter les libertés, elles sont libres tant qu’elles ne sont pas illicites -> principe de liberté liberticide. 
+Arret Baldy 1917: l’administration ne peut pas limiter les libertés juste parce qu’elle en a le pouvoir, elle doit justifier ses restrictions par des nécessités liées à l’ordre public.
+Art 5 DDHC : tout ce qui n’est pas interdit est libre. 
+Arret commune de Collioure 2003 : La police générale ne peut pas faire d’autorisation préalable, elle ne peut qu’interdire ou ne rien faire (sauf : usines pour l’environnement, construction). 
+Arret Consorts Baud CE 1951/Noualek TC 1951 : Police Admin : préventive, avant une infraction. Police Judiciaire : répressive, après une infraction. 
+Dans quelle mesure faut-il limiter la liberté ? 
+—> principe de proportionnalité, tant que ça n’atteint pas l’ordre public on laisse. Si on limite plus que besoin c’est une mesure disproportionnée, c’est illégal. 
+Maintien de l’OP = condition de légalité de la mesure de police + fondement de l’obligation d’interdiction. 
+La mesure de police doit être assez restrictive sans porter atteinte à la liberté. 
+Caractère prioritaire de la liberté, arret Doublet 1959 : 3 mesures cumulatives pour que la mesure de police soit reconnue -> la mesure doit être indispensable, le péril est grave et dangereux pour l’OP.  
+Le préfet peut mettre en demeure l’autorité de police à agir, le refus de la police est illégal.
+
+Section 1 : distinction entre police administrative et police judiciaire 
+PA = préventive et la PJ = répressive. 
+Certains individus peuvent être considérés comme comme allant commettre des infractions qui vont entrainer des condamnation judiciaire (mesure administrative). 
+La PA et PJ peuvent être exercées par le même agent. Les dommages de l’agent vont être admin ou judiciaire en fonction de son activité au moment des faits. 
+Le but est de donner plus de politiques pénales préventives et moins de répressives. 
+JA = contrôle les libertés et JJ = gardien des libertés. 
+L’opération peut changer de nature à tout moment (ex : délit de fuite pendant un contrôle d’identité). 
+
+Section 2 : la notion d’ordre public : 
+Art L2212-2 du code général de CT : réglemente la police municipale qui donne un pouvoir de police au maire : « la police municipale a pour but d’assurer le bon ordre, la sécurité, la sûreté et la salubrité publique ». 
+
+§1 - la conception traditionnelle de l’ordre public : un ordre social et relatif 
+Un ordre matériel 
+Selon Hauriou, l’ordre public repose sur 3 composantes : 
+tranquillité : perturbée par tout type de désordre (bruit, odeur…) -> disputes, attroupements, rassemblements nocturnes, grands espaces publics (marché, spectacles, foires)
+Sécurité : intégrité des biens et des personnes (ex : trous dans la chaussée, immeuble qui peut s’effondrer)
+Salubrité : risques pour l’hygiène publique et l’environnement.  
+-> les pensées ne sont pas sanctionnées, seulement les actes. 
+Ordre social et relatif 
+Ordre social : 
+Il s’oppose à l’ordre naturel des choses -> l’OP est une construction sociale et la PA a pour but de la maintenir -> principe de liberté : 
+L’ordre public a pour objectif de protéger la liberté et tranquillité des autres. 
+Le JA se pose la question de préserver l’individu contre lui même. 
+Arrêt Bouvet de la Maisonneuve 1975 : obligation du port de la ceinture de sécurité pour des mesures de sécurité -> on restreint la liberté des individus contre eux même.
+Ordre relatif
+Théorie des circonstances locale particulières : le trouble à l’OP dépend des circonstances de temps et de lieu => il n’existe qu’à un moment et dans un certain lieu.
+L’autorité de police doit toujours caractériser les circonstances de temps et de lieu sinon on peut pas dire si la mesure restrictive est proportionnée au trouble. 
+§2 - Les perturbations contemporaines de l’ordre public 
+La société évolue et les activités varient : les risques changent. 
+1ère tentative : Le juge ajoute une composante esthétique de l’OP. Ex : interdire des affichages ou bâtiments trop laids => Arrêt sociétés des usines Renault 1938. 
+2ème tentative : reconnaissance d’une moralité publique : fausse reconnaissance. 
+3ème tentative : dignité humaine. 
+
+La reconnaissance d’un moralité publique 
+Arret société des films le Lutétia 1959 : le ministre avait autorisé la diffusion mais le maire l’a interdit => police spéciale = le ministre qui autorise la diffusion, police générale = le maire protège l’ordre public dans sa commune. 
+Le maire peut prendre des mesures plus stricte que le ministre mais il doit les justifier par des circonstances locales particulières. 
+Moralité publique = ce qui est moralement accepté dans la société. 
+
+La dignité humaine 
+arrêt Morsang-sur-Orge 27 oct 1995 : (lancer de nain) la dignité humaine est une composante à l’OP sans besoin de trouble à la salubrité, tranquillité ou salubrité car si ça porte atteinte quelque part, ça porte atteinte à tout. 
+=> On cherche aussi à protéger l’individu contre lui même : pour protéger sa propre dignité. 
+C’est un absolu public : pas besoin de donner les circonstances locales particulières. 
+C’est aussi un absolu social : elle s’applique à tout le monde et on peut pas l’utiliser contre soi même, renoncer à ce principe. 
+Elle n’est plus de la sphère privée et du consentement car l’humain est en jeu. 
+loi de 2010 : interdit de se dissimuler totalement le visage dans l’espace public.
+Chapitre 2 : le régime de la police administrative 
+mesure de police = mesure admin restrictive de liberté. 
+Section 1 : la répartition des compétences en matières de police   
+§1 - la détermination des autorités compétentes 
+Police spéciale : règlemente un but spécial qui va au delà de la tranquillité, salubrité et sécurité (cinéma, poubelle, pêche), elle agit dans un domaine précis, elle peut avoir des plus grands pouvoirs que la police générale. 
+La police spéciale est déterminée par des textes spéciaux, la police générale ne peut intervenir que s’il y a un trouble. 
+La police générale intervient sur tous les terrains car elle a un caractère générale, mais elle a des pouvoir limité => elle ne peut que limiter la liberté. 
+
+Les autorités de police générale
+L’autorité compétente dépend du champs géographique de la mesure. Pour un trouble national, 2 autorités compétentes : 1er ministre et PR.
+Arrêt Labonne 8 août 2019 : le pouvoir de police général du PR est délégué au 1er Min. 
+Le ministre de l’intérieur ne dispose d’aucune mesures de police même s’il est le supérieur des forces polices civiles. 
+Le ministre peut donner des instructions au préfet pour une législation nationale, il a un pouvoir réglementaire envers ses subordonnés, pour la mesure de police au plan local : 
+Trouble au département : le préfet du département exerce le pouvoir de police général. 
+Commune : le maire, s’il n’agit pas (carence), le préfet a un pouvoir de substitution mais il faut un refus CATÉGORIQUE du maire, abstention pas suffisante. 
+Dépasse la commune : le préfet. 
+ 
+Les autorités des polices spéciales 
+Les ministres ont souvent des compétence de polices spéciales :  
+ministre de l’intérieur : pouvoir de police spéciale du casino, publication étrangère, étrangers 
+Ministre des finances : service de police spéciale économique 
+Ministre de l’agriculture : service de police spéciale de la chasse 
+—> elles ont un champ d’application particulier (ex : police d’environnement, eau, déchets…). 
+Échelle locale = détenues par le préfet. 
+
+§2 - les concours de police
+-> quand plusieurs autorités de police réglementent différemment la même activité = conflit de normes. 
+But = éviter les mesures contradictoires / l’empiètement d’une norme sur une autre. 
+
+
+
+Les concours de police générales entre elles 
+Hypothèse où le maire et le préfet régissent la même activité de manière différente. 
+Arrêt Commune de Néris les bains 1902 : la mesure de police inférieure prime sur la supérieure si elle est plus restrictive de liberté et qu’il y a des circonstances locales particulières. 
+
+Les concours des polices spéciales 
+Principe d’indépendance des législations -> chaque autorité est compétente pour intervenir dans son domaine. Si une autre autorité intervient, on cumule les mesures de police. 
+
+C.  Les concours des polices générales et spéciales  
+principe = la police spéciale déroge à la générale.  
+Arrêt société les films Lutétia 1959 = exception : la police générale peut intervenir s’il y a des circonstances locale particulières qui nécessite de prendre des mesures plus strictes. 
+Arrêt commune de Sceau 2020 : port du masque imposé par le maire mais c’est de la compétence de l’État (santé publique) donc incohérence avec la politique nationale.
+Certaines polices spéciales sont exclusives = le maire ne peut pas intervenir (police générale). L’État crée une police spéciale pour des domaines précis : antennes relais, OGM (arret commune de Valence 24 sep 2012), pesticides (arret commune d’Arceuil 31 déc 2020)   => on évite que chaque commune prenne des règles différentes pour avoir une réglementation cohérente sur tout le territoire. 
+
+Section 2 : conditions de légalité : encadrement de l’exercice du pouvoir de police 
+L’obligation d’exercer le pouvoir de police 
+principe = l’autorité compétente doit prendre des mesures de police quand il y a un trouble à l’OP. Le refus de prendre des mesures est illégal. 
+Si elle ne répond pas, au bout de 2 mois ça sera un refus implicite. En cas de carence, le préfet peut se substituer, s’il refuse il est aussi en carence. 
+On peut engager la responsabilité de l’administration car toute illégalité est fautive => la carence est fautive car elle crée une situation dangereuse qui nécessite une intervention immédiate. 
+L’autorité de police doit exercer elle même et ne peut pas le déléguer à des tiers ou personnes privées (Arret Castelnaudary 1932), mais l’enlèvement est deleguable (ex : circulation). 
+
+Le contrôle de proportionnalité 
+L’autorité constate une infraction et demande une mesure -> il faut caractériser la composante de l’OP, l’intensité du trouble et déterminer la mesure légale.
+Arrêt Benjamin 15 déc 1933 : contrôle de proportionnalité => mesure proportionnée = assez restrictive de liberté pour faire cesser le trouble sans porter atteinte excessive à la liberté.
+Arret Daudignac 1951 : une interdiction générale et absolue est en principe disproportionnée = dignité humaine. 
+La mesure doit être nécessaire, adaptée et proportionnée + le juge doit caractériser les circonstances de lieu et de temps (pas la même autorité pour le privé ou public). 
+Partie 2 : l’encadrement de l’administration 
+But = satisfaction de l’IG, préservation de l’OP. Ses prérogatives exorbitantes et sa supériorité juridique sont justifiées par l’IG. 
+Danger = abus de pouvoir 
+
+Titre 1 : le principe de légalité 
+2 grands principes : principe de légalité (règles de droit) et principe de responsabilité (réparer les dommages). 
+Chapitre 1 : les sources de légalité 
+Section 1 : les sources supra législatives 
+§1 - la Constitution 
+Décision liberté d’association 1971 : principe fondamental reconnu par les lois de la république -> la constitution est une source de fondement pour le contrôle constitutionnel. 
+
+ L’essor des normes constitutionnelles 
+2 types de normes : 
+Normes de compétences : art 34 et 37 C° : répartition de la compétence de l’administration 
+Normes de fonds : réglemente l’action de l’administration en reconnaissant des droits aux particuliers (art 1, 72, 55 C°). => DDHC (principe d’égalité, liberté et toit de propriété), préambule 46 (égalité des sexes, droit d’asile, de grève, liberté syndicale), PRRLR (arrêt Connect : interdiction d’extradition dans un but politique), charte de l’environnement. 
+
+Le statut contentieux des normes constitutionnelles 
+En principe, quand un acte administratif est contraire à la C° il doit être écarte ou annulé par le juge administratif. 
+Limites : 
+contenu des normes constitutionnelles : elles sont générales donc c’est difficile d’en donner un contenu clair, c’est vague. 
+Les normes constitutionnelles sont précisées par des lois : s’il existe une loi, l’administration doit la respecter et pas la Constitution -> la loi fait écran entre l’administration et la Constitution (obstacle). 
+1)  l’invocabilité des normes constitutionnelles 
+Arrêt « société Eky » : valeur constitutionnelle du préambule 58.
+Arrêt « commune d’Annecy » : valeur constitutionnelle de la charte de l’environnement.
+Toutes les dispositions de la Constitution ne sont pas toutes invocables, elles doivent s’appliquer directement. 
+Comment savoir si une norme du préambule 46 s’applique directement ou pas ? 
+-> Critère : capacité de la norme à créer directement es droits ou obligations pour des particuliers, ils doivent pouvoir s’en prévaloir sans. Invoquer de texte qui le précise. 
+Comment savoir si une norme créer directement des droits et obligations ? 
+-> Le juge se réfère au degré de précision du texte : s’il est trop imprécis, la norme ne pourra pas servir de fondement toute seule, elle devra elle suivie d’une autre norme. 
+
+Les principes constitutionnels applicables direct sont : droit de grève, droit d’asile, la participation des travailleurs à la détermination collective des conditions de travail, droit de l’enfant, de la mère, des vieux travailleurs à la protection de la santé. 
+Dans le préambule 45 il n’y en a qu’un qui n’est pas applicable direct : principe de solidarité nationale. 
+Dans la charte de l’environnement, certains principes sont applicables direct : principe de précaution, principe de développement durable, droit de vivre dans un environnement sain été respectueux pour la santé, principe d’information et participation publicitaire, devoir de toutes personnes de prévenir les atteintes à l’environnement. 
+Seulement l’applicabilité ne suffit pas, il faut franchir la théorie de la loi écran. 
+
+2) la théorie de la « loi écran »
+Elle est l’une des limites les plus importantes à la possibilité d’utiliser la Constitution dans un contentieux avec l’administration.
+Elle n’est pas toujours simple à comprendre : c’est une théorie qualifiée au moyen d’une métaphore (écran). 
+
+Le contenu de la théorie 
+Elle nait d’une situation où dans un contentieux, un justiciable conteste la légalité d’un acte administratif en invoquant la Constitution mais cet acte est lui même l’application d’une loi. 
+-> en contestant la constitutionnalité de l’acte, il conteste la constitutionnalité de la loi. 
+Le problème pour le juge admin est celui de sa compétence : il refuse de juger la constitutionnalité d’une loi, il est incompétent : arrêt « Arrighi ».  
+Il va donc se contenter de regarder si l’acte est conforme à la loi, la loi fait écran et bloque le juge -> idée de suprématie de la loi : le juge applique la loi et ne la juge pas (bouche de la loi). 
+Mais cela change, puisque le juge accepte de censurer la loi : contrôler de constitutionnalité de la loi. 
+Aujourd’hui, le juge accepte de censurer la loi quand elle est contraire à une norme internationale (arrêt Nicolo). 
+La loi ne fait plus écran à la conventionnalité mais encore à la Constitution. 
+Fondement dans la constitution de 1958 qui crée le CC : son travail est de contrôler la constitutionnalité -> c’est pour ça que le CE ne le fait pas. 
+
+Dans quel cas ça lui interdit de statuer sur un contrôle d’inconstitutionnalité s’il a un litige  ?
+La loi ne fera écran que si le moyen invoqué devant le juge le conduit à juger la loi et non l’acte admin, elle ne fait écran que si le moyen conteste l’inconstitutionnalité de la loi et non de l’acte. 
+Dans quel cas l’écran est-il transparent ? 
+Arrêt Quintin : quand l’acte admin contesté a été pris sur le fondement d’une loi mais qu’elle autorise l’administration à prendre cet acte mais qu’elle n’en détermine pas le contenu, elle se contente de poser une norme d’habilitation et non de fond : ce qui est décidé est peut être contraire à la Constitution, elle ne peut être que dans l’acte administratif et non dans la loi. 
+L’écran est transparent dès que l’administration dispose d’une marge d’appréciation de manœuvre . 
+La loi fera vraiment écran que quand l’acte administratif découle de la loi : tout ce qu’il impose est déjà contenu dans la loi. 
+
+Les hypothèses de contournement de la théorie 
+1ère technique : 
+On invoque une norme identique dans une convention internationale : on utilise un moyen d’inconventionnalité et non d’inconstitutionnalité : le juge retrouve sa compétence.
+2ème technique : 
+Théorie de l’abrogation implicite de la loi par la Constitution : une loi est en vigueur postérieurement à cette loi et une autre norme entrée dans la Constitution est contraire à cette loi.
+Le juge peut dire que la nouvelle constitution est postérieure donc elle engage à abroger les lois antérieures contraires à elle. 
+=> la Constitution l’emporte pas parce qu’elle est supérieure mais postérieure : on applique la loi la plus récente. Donc le juge fait un contrôle chronologique et non pas hiérarchique, il ne censure pas la loi mais constate que la Constitution l’a abrogé. 
+Arrêt « ministre de affaires sociales et syndicat national des huissier de justice ». 
+3ème technique : 
+La QPC : elle permet de poser la question de constitutionnalité de la loi devant un juge ordinaire (art 61-1 de la C°). 
+La loi ne fait plus écran pour le justiciable mais pour le juge car il doit la renvoyer devant le CC. 
+Le juge constate tout de même le respect des 3 conditions de la QPC, et peut la rejeter s’il manque une des conditions. 
+
+3) la QPC
+Conditions pour le champs d‘application de la QPC : 
+Elle peut être soulevée par n’importe quel justiciable devant n’importe quelle juridiction. 
+On ne peut contester qu’une disposition législative, pas d’acte réglementaire ou de traité international. 
+On peut contester une interprétation jurisprudentielle de la loi, on ne peut invoquer QUE les droits et libertés garantis par la Constitution. 
+
+Conditions de procédure 
+Le juge ne peut pas soulever la QPC tout seul, ça doit venir d’un justiciable. 
+Seuls la C.cass et le CE peuvent être concernés, pas le tribunal des conflits.
+Elle peut être soulevée pour la première fois en appel ou en cassation. 
+Le juge se pose plusieurs questions : question applicable au litige, elle n’a pas été déjà déclarée conforme à la Constitution, elle doit être sérieuse. 
+Puis il la transmet au CE si la question est nouvelle et sérieuse, qui va la transmettre au CC. 
+
+C. La suprématie de la Constitution dans l’orde juridique interne 
+Arrêt « Saran »  1998 et Arrêt « syndicat national des industries pharmaceutiques » 2001 : la Constitution est la norme suprême de l’ordre juridique interne. 
+Cette supériorité n’a pas toujours été aussi assumée puisqu’on a le droit de l’UE. 
+Art 55 : Les traits internationaux ont une supériorité face aux lois. 
+Art 54 : un traité international contraire à la Constitution ne peut pas être ratifié, on révise la constitution pour faire adopter le traité. 
+Arrêt  « Koné » : l’État doit refuser l’extradition d’un étranger dans un but politique, c’est un PFRLR mais il ne dit pas s’il s’applique dans les traités, il faut interpréter les conventions pour les rendre conforme à la Constitution. 
+Arrêt « Fraisse » 2000 et « Saran » 1998 : les conventions internationales ne sont pas supérieures 
+Une convention peut être écartée si elle n’est pas en accord avec la Constitution. 
+Arrêt porta 2002 : Ce n’est pas au juge que ce n’est pas à lui de dire s’il une convention est compatible avec la Constitution.
+
+Plusieurs raisons : 
+si le juge peut écarter les conventions sur fondement de la Constitution, on peut accuser la France de violer les traités et se dédouaner de sa responsabilité internationale. 
+Raison juridique : c’est le CC qui fait le contrôle de constitutionnalité des traités selon l’article 54, donc il est possible pour la France de faire partie d’un traité contraire à la Constitution. 
+Arret « French Data Network » 2021 : le CE confirme que la Constitution est l’ordre suprême dans l’ordre juridique interne. 
+
+§2 - les sources internationales 
+1946 : l’entrée en vigueur de la Constitution dans la 4è république : c’est la première à reconnaître les engagements internationaux dans l’ordre interne français : à l’art 15 du préambule. 
+Art 26 de la constitution 1946 : « les traités diplomatiques ratifiés et publiés ont force de loi dans le cas même où ils seraient contraires à des lois françaises »
+Les traités ont la même force que les lois. 
+Arret « Dame Kirkwood » 1952 : le CE admet de contrôler un acte administratif par rapport à un acte international. 
+Arret « Nicolo » 1989 : on fait primer la norme internationale même si elle est antérieure à la loi. 
+
+Le droit international général
+l’intégration du droit international en droit interne 
+Les normes internationales proviennent des relations entre les États dans l’ordre juridique international -> via des écrits (accords, traités) et non écrits (coutumes), elles ne regardent pas les ressortissants des États. 
+La question de l’intégration des traités dans le droit interne se pose quand ses ressortissants estiment être concernés par les engagements, quand ça a des impacts sur leurs droits. 
+On distingue les normes internationales écrites et non écrites. 
+
+a. Les normes internationales écrites 
+-> les traités, conventions (accords de volonté unissant des États).
+Il y a 5 conditions (art 55 de la Constitution française) : 
+Signature : elle ne traduit pas le consentement des États mais c’est une formalité d’authentification. C’est une manière de reconnaître le traité. Le juge admin vérifie l’existence de la signature par l’autorité française : arrêt « société française d’entreprise de dragage et travaux publics »
+Ratification/approbation : on distingue entre les traités ratifiés et les accords approuvés, dans les deux cas c’est un acte interne adoubant l’acte international. Art 52 de la Constitution : le PR ratifie les traités ; Art 53 de la Constitution : les traités doivent être ratifiés par une loi (traités de paix, de commerce, relatif à l’organisation internationale, ceux relatifs aux finances de l’État, l’état des personnes et aux échange/cession de territoire). Le CE contrôle la régularité de la ratification/approbation : arrêt « Blotzheim » 1998, si elle est irrégulière , le traité n’entre pas dans l’ordre juridique interne.
+Publication : « arrêt villa » : pas de publication = pas d’effet. Les pouvoirs publics peuvent bloquer l’applicabilité d’un traité dans le droit interne s’il n’est pas publié, le refus de ne pas publier un traité fait partie des actes de gouvernement. 
+Réciprocité : Un État n’a plus d’obligation de respecter un traité dès qu’un autre État refuse d’appliquer le même traité. Ça ne ne vaut que pour les accords/traités synallagmatiques, elle ne s’applique pas non plus si l’objet est la garantie des droits de l’homme (obligé de respecter). 
+L’effet direct : on s’intéresse au contenu juridique de la norme. C’est sa capacité à s’adresser directement à des particuliers, elle crée elle même des droits ou obligations pour les individus  et pas que pour les États. On a pas besoin d’un texte en droit interne, il s’applique directement. Arret « Gitsy et Fabil » 2012 : conditions d’invocabilité direct des normes : égalité des traitements sans discrimination pour les travailleurs migrants. Une stipulation est directe quand elle ne régit pas seulement les relations entre États et ne demande pas un autre acte pour agir sur les particuliers. Le juge doit interpréter en prenant en compte l’intention des parties, l’économie générale du traité, le contenu et les termes. 
+
+
+b.  Les normes internationales non écrites 
+C’est une norme qui gouverne les relations internationales des États sans reposer sur un texte.
+On a la coutume et les principes généraux du droit international, ils ne sont pas écrit dans l’art 55. 
+
+La coutume : 
+C’est une obligation juridique qui naît entre 2 États. 
+On a 2 critères cumulatifs : la répétition d’un comportement continu par les États et un sentiment d’obligation des États. 
+Elles ne sont pas écrites dans l’art 55 mais le Juge administratif peut les contrôler et appliquer pour écarter une norme inférieure (arret « Aquarone » 1997).
+
+Les principes généraux du droit international : 
+Ce sont des principes qui gouvernent la relations notre les États indirectement. Ils sont communs aux différents droits des États. 
+Ces principes sont donné par le CIJ, elle s’inspire de principes nationaux partagés pas plusieurs pays. 
+Ils ne sont pas soumis aux conditions de l’art 55, mais seulement à la réciprocité et l’effet direct. 
+
+Le statut contentieux des normes internationales dans le droit interne 
+Dans quelles conditions et limites ces principes peuvent être invoqués devant un juge ? 
+
+La primauté du droit international 
+POV droit international : il prime sur toutes les normes su droit interne : les États sont interdits d’invoquer leur droits internes pour justifier la violation d’une norme internationale. 
+
+POV droit interne : 
+toutes les normes internationales priment sur les normes internes infra législatives, elles sont au moins égales à la loi 
+Toutes les normes internationales écrites sont supérieures à la loi : distinction entre contrôle de conventionnalité et de constitutionnalité. Le CC ne peut pas écarter une loi car elle est « non conforme » avec une norme. Arret « J.Vabre » : les normes internationales sont supérieures.          Arret Nicolo : la contrôle a 4 caractéristiques : contrôle direct et immédiat (le JA peut écarter n’importe quelle norme sauf la Constitution, la QPC est prioritaire), contrôle ne fait pas d’office (seulement si une partie le demande au juge), c’est un contrôle de compatibilité et pas de conformité (le juge s’assure que la loi est compatible avec la norme internationale), s’il y a incompatibilité, le juge ne supprime pas les lois mais les écarte. 
+Aucune norme internationale prime sur la Constitution dans l’ordre interne, sauf le droit de l’UE qui n’est pas dans la hiérarchie : c’est la Constitution qui introduit les normes internationales dans l’ordre interne et fixe les règles et les juges compétents. On a deux possibilités : l’État ne ratifie pas le traité ou révision de la Constitution pour que le traité soit conforme.                             L’art 54 impose donc un contrôle de constitutionnalité des traités. 
+
+L’interprétation des normes internationales 
+L’interprétation relève de la CJUE : en cas de difficulté, le CE pose une question préjudicielle à la CJUE. 
+Le juge interne n peut pas imposer une interprétation aux autres États 
+
+B.  Le droit de l’UE
+Traité de Rome 1957. 
+Art 88-1 C° : reconnaît l’existence de l’UE et constitutionnalise l’ordre juridique européen. 
+Le droit UE prime sur les lois infra constitutionnelles et équivaut à la Constitution. 
+Les traités de l’UE forment le droit originaire et créent des institutions (commission européenne, CJUE) qui créent d’autres normes juridiques = le droit européen dérivé. 
+Droit européen dérivé = directives de l’UE + règlements européens.
+Les directives : objectifs que les États doivent transposer dans leur droit interne. 
+Règlements : règles directement applicables sans transpositions. 
+On a des transferts des compétences vers d’autres institutions sur des questions de droit international : remet en cause la souveraineté de l’État (ex : monnaie euro). 
+
+la primauté du droit UE sur les normes infra constitutionnelles 
+Les dispositions des traités qui fondent le droit dérivé sont supérieures aux normes infra constitutionnelles. 
+Les directives doivent faire une transposition en droit interne pour s’appliquer alors que les règlements s‘appliquent directement. 
+Les directives fixent un objectif mais laissent aux États le moyen de le réaliser -> il faut un acte interne. 
+Arret Vanduyne 1974 : passé le délai de transposition, la directive est d’effet direct. 
+Arret madame Perreux 2009 : toutes les directrices sont directement invocables, qu’elles soient transposées ou pas , le JA accepte d’appliquer directement la directive. 
+
+La place du droit UE par rapport à la Constitution française 
+Que se passe-t-il si dans un litige, l’administration applique une directive et qu’on considère qu’elle viole la Constitution ? 
+Arret Costa c/ Enel 1964 : si la Constitution gagne contre une directive de l’UE, c’est que la directive n’est plus un texte de l’UE : l’UE dit qu’elle n’existe plus. 
+Art 88-1 : respecter le droit de l’UE c’est respecter la Constitution. 
+Art 249 du traité UE : obligation de transposition des directives, c’est une obligation constitutionnelle imposée par l’article 88-1 C°. 
+Une directive transposée respecte la Constitution car elle doit être transposée. 
+
+Que se passe-t-il si le droit UE est contraire à la Constitution ?  
+-> on fait un contrôle de constitutionnalité : on révise la Constitution (art 55). 
+
+Qui fait le contrôle de constitutionnalité de l’UE ? 
+Validité d’une loi de transposition d’une directive = contrôle a priori par le CC, s’il juge la loi par rapport à la Constitution, il ignore la directive, il fait primer la Constitution, cela revient à contrôler la directive => poursuites de l’UE contre la France pour action en manquement pour méconnaissances du droit UE.   
+Loi DADVSI 2006 : une loi de transposition est immunisée constitutionnellement. 
+Exceptions : si la transposition va à l’encontre d’un principe d’identité constitutionnelle de la France, il y a des principes de la Constitution plus forts que d’autres. Dans ce cas, le CC a le droit de octroyer la loi par rapport à ce principe : contrôle de constitutionnalité de la directive. 
+
+Quels sont ces principes inhérents ? 
+Société Air France 2021 : déduit qu’une directive n’était pas conforme et contraire à ce PIICF, il l’écarte. 
+-> interdiction de déléguer des compétences de police d’autorité générale à une personne privée : inhérente à l’identité constitutionnelle de la force publique. 
+Décision 30 novembre 2006 : ce principe ne marche pas si la loi n’est pas conforme à la directive car elle viole l’obligation de transposition donc de la Constitution. 
+Pour que la loi de transposition soit immunisée constitutionnellement elle doit transposer, le juge vérifie que la loi soit conformes à la directive => contrôle de conventionnalité ? 
+-> pas vraiment, il censure la loi que si elle est incompatible avec la directive qu’elle devait transposer => revirement partiel par IVG, le CC fait un contrôle de l’erreur de transposition, contrôle d’inconventionnalité obvious. 
+Décret de transposition d’une directive : il viole la Constitution, il est du domaine du règlement donc pas de loi écran, on peut invoquer la Constitution. 
+La Constitution est la norme suprême mais l’obligation de transposer est constitutionnelle, donc un décret qui transpose une directive est conforme à la Constitution, mais ça ne vaut que c’est pris sur l’ensemble des normes du droit de l’UE, protection équivalente que le principe constitutionnel. 
+
+Qui protège le mieux le droit invoqué ? 
+2 conditions différentes : 
+si le droit UE apporte une protection équivalente à la Constitution, le problème est résolu dans la hiérarchie de normes européennes.
+S’il le décret est mal transposé, on l’annule ou s’il y a un problème de respect par la directive UE, la question se pose à la CJUE.  
+Si le droit UE n’apporte pas de protection équivalente à la Constitution, la question de pose dans l’ordre interne. Le JA contrôle directement la constitutionnalité du décret sauf si une loi peut faire écran, dans ce cas on fait une QPC et le CC juge le décret de transposition. 
+Nouveau mode de résolution des conflits : on compare le contenu des normes et on regarde laquelle est la mieux faite. 
+
+Arret société air Algérie 2012 : le CC contrôle un décret d’application d’une loi de transposition et se demande si le décret est conforme à la loi (si oui, on regarde la constitutionnalisation de la loi de transposition). Le JA ne peut pas regarde la constitutionnalité de la loi hors QPC mais ça vaut que si la loi qu’on critique fait écran donc si l’inconstitutionnalité est dans la directive, dans la loi et pas dans le décret. => écran transparent. 
+
+Arret French Data Network 2021 : sécurité dans la lutte contre le crime organisé et liberté numérique (protection des données personnelles) : jusqu’où on peut justifier les restrictions des données dans un but de lutte contre la criminalité organisée. Dans le droit français, on peut pour faire des préventions sur les atteintes à l’ordre public. 
+Selon l’UE, la conservation généralisée des données est imposée aux opérateurs pour les besoins de sécurité nationale avec des menaces graves et l’accès de renseignements à ces données => soumis à une autorisation sous le contrôle du juge. 
+La CJUE dit que ça concerne que les menaces graves à la sécurité nationale. 
+Il y a une condition pour la lutte contre la criminalité : que pour une catégorie de personnes, de lieux qui sont un risques (moins sévère que dans le droit français), le reste ne peut pas justifier de conserver les données. 
+
+Le droit UE interprété par la CJUE et les exigences constitutionnelles donc d’accord ? 
+Le CE refuse de censurer la CJUE pour excès de pouvoir ou incompétence mais il peut vérifier si le respect du droit UE ne met pas en danger les exigence de la Constitution même si elles n’ont pas d’équivalence en droit UE. 
+Quand il est saisi par une règle nationale contraire au droit UE, on ne peut pas l’écarte car il préférait les exigences constitutionnelles d’une garantie car elles n’ont pas d’équivalent en droit de l’UE, le juge doit vérifier que si en écartant la règle nationale, ça ne serait pas une violation de la Constitution. 
+Arret Arcelor : le CE fait une interprétation neutralisante du droit de l’UE pour les rendre compatibles avec les exigences constitutionnelles. 
+
+La QPC a-t-elle changé la place du droit UE dans la hiérarchie des normes ? 
+Ce moyen d’inconstitutionnalité, doit être examiné en priorité par rapport à un moyen d’inconventionnalité et ça fera passer le droit UE en priorité car si la loi est jugée conforme à la Constitution on se demande si on statut sur un moyen d’inconventionnalité et autorisé à le censurer comme contraire au droit UE alors que le CC a dit qu’il était conforme dit qu’il état conforme à la Constitution. 
+Le fait de valider constitutionnellement une loi aurait-il pour effet de l’immuniser de tout danger ? 
+-> le caractère prioritaire de la Constitution risque de conduire à la méconnaissance du droit internationale dont l’UE car des lois protégées constitutionnellement risquent de ne plus pouvoir être censurées alors qu’elles méconnaissent le droit UE. 
+La C.cass fait le contrôle de la loi par contrôle de conventionnalité  car elle est la juridiction suprême judiciaire. 
+Après la QPC, elle pose la question à la CJUE sur la conformité de la Constitution au droit UE -> la Constitution passe au contrôle de la juridiction européenne sur la question de la primauté du droit UE. 
+Dès qu’une QPC est transmise au droit UE, les juridictions internes sont privées de faire le contrôle.  
+Selon la C.cass, le CC peut en profiter pour trancher sur la constitutionnalité et conventionnalité, mais elle dit que confier le contrôle conventionnel au CC est moins bien pour protéger le droit UE car il peut mal l’appliquer. 
+Décision 12 mai 2010 du CC sur les conséquences du caractère prioritaire de la QPC : 
+le caractère prioritaire de la QPC n’empêche pas les juridictions (judiciaire et admin) de. Censurer une loi pour inconventionnalité alors qu’elle était déclarée conforme à la Constitution, ça n’a pas d’incident sur la hiérarchie de la C° et droit de l’UE. 
+Le caractère prioritaire de la QPC ne prive pas les juridictions de poser une question préjudicielle à la CJUE même quand elles transmettent une QPC. 
+Les juridictions judiciaire et admin peuvent suspendre les effets incompatibles d’une loi avec le droit UE pour garantir l’efficacité du droit UE en cas d’urgence. 
+
+La CJUE valide et conduit à la conformité du système seulement si on suspend l’application d’une loi quand le principe de primauté du droit UE est en danger et si on annule l’applicabilité d’une loi contraire au droit UE même si elle est conforme à la Constitution. 
+Après la validations de la QPC par la CJUE c’est la C.cass qui se pose la question de savoir si la loi est conforme à la Constitution et au droit UE. 
+Elle tranche soit sur la QPC soit sur le droit de l’UE s’il est en danger, dans cette décision elle préfère trancher sur la conventionnalité que la QPC (constitutionnalité). 
+
+Section 2 : les sources supra réglementaires 
+§1 - les lois 
+La loi est la 1ère source de la légalité de l’action de l’administration, elle doit d’abord respecter la loi. 
+Elle intervient dans les domaines donnés par l’art 34 de la Constitution, tout acte contraire à la loi doit être annulé ou écarté par le juge administratif. 
+
+§2 - la JP 
+La place de la JP 
+Le juge a 2 types d’activités : 
+activité juridictionnelle, il tranche les litiges et rend des solutions particulières en application du droit avec autorité de la chose jugée. 
+Activité jurisprudentielle, il rend des solutions au cas par cas, il codifie sa propre pratique, il dégage des interprétations de la loi ou des principes généraux en l’absence de loi à partir de normes générales. Ce sont les juges des juridictions suprêmes qui peuvent fixer un JP, pour le droit administratif c’est le CE. 
+-> théorie de la séparation des pouvoirs : le juge est la bouche de la loi, la JP ne devrait pas conduire à la créations de nouvelles normes (interdiction des arrêts de règlements à l’art 5 C.civ). 
+Il n’a pas le droit de refuser de juger si la loi est pas claire ou incomplète, il est obligé d’interpréter. 
+La JP ne doit pas être être soumise aux memes règles d’application dans le temps qu’une loi : exemple -> une loi ne doit pas être rétroactive, mais la JP est rétroactive car elle n’est qu’une interprétation d’une règle qui n’a pas changé. 
+Un revirement de JP est rétroactif car ce n’est pas une nouvelle règle, le juge s’est juste rendu compte de sa mauvaise interprétation de la loi. 
+Arrêt « Société tropiques travaux signalisation » 2007 : le CE peut modifier les effets de sont revirement de JP dans le temps. 
+Le CE fini par considérer sa JP comme une règle de droit ordinaire et admet son caractère normatif. 
+Arret CZABAJ : le CE n’ajuste pas toujours la temporalité de la JP. 
+La JP est concurrencée par des textes écrits applicables à l’administration, donc la JP décline un peu mais ne disparaît pas. 
+
+Les principes généraux du droit 
+-> norme générale non écrite, il assure le respect en l’appliquant à l’admin. 
+Théorie classique : le juge ne le crée pas mais le découvre, il n’est pas donné dans la loi
+2è interprétation : le juge est créateur du PDG. 
+La théorie classique va mieux avec la séparation des pouvoirs. 
+Les PDG sont des normes JP crées ou révélées. 
+
+le contenu des PDG
+Ce sont des libertés reconnues aux administrés, ils rappellent à l’administration un nombre de principes républicains pour les rendre applicables à l’administration ou litiges. 
+La 2è génération de PDG sont plus spécialisés, ils comblent des lacunes par analogie : on s’inspire de règles qui existent ailleurs mais pas en droit administratif (droit privé). 
+Arret Peymet : en droit prié on ne peut pas licencier une femme enceinte, le CE dit que ca s’applique aussi en droit administratif => extension de normes préexistantes. 
+Arret Gitsy 1978 : on a des PDG dans des droits spécialisés comme le droit des étrangers pas, assez légiférés. 
+
+La valeur des PDG 
+On a 2 hypothèses : 
+théorie « jus de citron » : la valeur du PDG est la même que celle du texte où il vient donner les limites et compléter. Il vient compléter un principe constitutionnel donc il a valeur constitutionnel, pour ceux qui viennent d’une loi, ils ont valeur législative. 
+La JP refuse de faire prévaloir un PDG sur une loi. Arret « syndicat des ingénieurs conseil » 1959 : un PDG peut prévaloir sur une ordonnance de l’art 38 C° tant qu’elle n’est pas ratifiée donc tant qu’elle est réglementaire. 
+René Chapus : théorie des origines : la valeur d’un PDG vient de sa source. Selon lui, c’est le PDH qui prend sa source dans la JP mais le juge contrôle l’acte administratif donc il est au dessus des décrets = le PDG se place entre la loi et le décret => valeur infra législative et supra décrétale. 
+Mais selon l’arrêt Nicolo, le juge n’est pas toujours au dessus de la loi.
+Le CE accepte de soumettre une ordonnance à des PDG alors qu’ils sont considérés comme des dispositions législatives une fois le délai d’habilitation finis, donc même si ils ne sont pas ratifiés, ils sont considérés comme des lois. 
+
+§3 - les ordonnances de l’art 38 de la C° 
+Art 38 : il donne la possibilité au Parlement d’autoriser le gouvernement à intervenir dans le domaine de la loi pendant un certain délai (délai d’habilitation). 
+Le gouvernement adopte un acte réglementaire par la forme mais matériellement législatif, il doit ensuite être ratifié par une autre loi du parlement donc l’ordonnance devient totalement législative. 
+D’abord on vote une loi d’habilitation où le législateur donne 2 délais : d’habilitation (le gouvernement peut prendre l’ordonnance et encore la modifier, après ce délai ce n’est plus possible) et le délai de ratification (le gouvernement doit déposer un projet de loi à une des 2 chambres, si elle est votée elle a valeur législative, mais s’il n’y a pas de projet de ratification pendant le délai l’ordonnance devient caduque. 
+Quand elle est adoptée sur le fondement d’une loi d’habilitation elle est réglementaire, le juge administratif est compétent pour reconnaître la légalité de cette ordonnance dans les 2 mois suivants et peut l’annuler pendant ce délai sur un PDG ou un moyen constitutionnel. 
+Si elle est ratifiée, elle a une valeur législative, elle ne peut pas être contestée sauf par un moyen de conventionnalité ou QPC. 
+Le CC dit que pour contester la constitutionnalité d’une ordonnance non ratifiée même si le délai d’habilitation est passé, on fait une QPC car c’est une disposition législative, seul le CC peut l’abroger pour inconstitutionnalité (arret Fédération CFDT). 
+S’il a un recours pour excès de pouvoir conter une ordonnance après le délai, le CC abroge l’ordonnance, le CE doit annuler les effets passés de l’ordonnance (arret UNSA fonction publique) 
+
+Section 3 : les sources réglementaire
+Le principe de l’égalité implique que l’administration est sous mise à la loi et normes qui lui sont supérieures. 
+Il existe une hiérarchie interne aux actes administratifs : 
+Les actes généraux et impersonnels sont supérieurs aux actes individuels (peu importe l’auteur).
+Si l’administration veut adopter un acte individuel contraire à un acte réglementaire qu’elle a adopté elle même, elle doit l’abroger ou le modifier pour pouvoir prendre une décision réglementaire. 
+Il y a une hiérarchie entre les actes réglementaires : 
+il y peut y avoir une hiérarchie entre les règlements d’une même autorité, ça va dépendre de leur procédure d’édiction (ex : décret CE supérieure à un décret du PM). 
+L’acte règlement d’une autorité inférieure doit respecter la supérieure d’une autre autorité (ex : un décret du PR a une valeur supérieure au décret du 1er ministre ou du CE, ce décret ne peut pas modifier une règle signée par le PR : arret « Comité d’entreprise de la RATP »). 
+Pour chaque acte soumis au juge, on identifie le bloc juridicité en vertu du principe de légalité, le but est de repérer une incompatibilité ou illégalité avec l’acte admin. 
+
+
+Chapitre 2 : les limites de la légalité 
+Toute action de l’administration ne doit pas non plus être automatiquement prédéterminée par d’autres normes, elle aune large de manœuvre pour pouvoir s’adapter à toutes les circonstances. 
+On a deux 2 grandes catégories de limites : 
+le juge décide de ne pas vérifier qu’un acte pris par l’administration est bien légal, il considère qu’il est hors de portée de contrôle de légalité => le principe de légalité s’efface. 
+La légalité sera appréciée avec plus de souplesse : les exigences sont moins strictes 
+
+Section 1 : l’effacement du principe de légalité 
+2 hypothèses ou le juge refuse de contrôler la légalité à cause de la nature des actes : 
+les actes pas assez importants pour justifier un contrôle (en deçà du contrôle) 
+Les actes trop importants pour pouvoir être contrôlés : rapports des pouvoirs publics entre eux ou des relations diplomatiques de l’État (au delà du contrôle)
+
+§1 - les actes en deçà du contrôle du juge 
+Mesures d’ordre d’intérieur : 
+-> Décision prise par une autorité admin pour le fonctionnement interne d’une administration. 
+Elle concerne les agents ou les usagers, donc pas les tiers. 
+Pour quelle soit non controlée, elle doit avoir un impact très faible, on ne veut pas embêter le juge et pas perturber le fonctionnement de l’administration avec des actes aussi minimes. 
+Plusieurs domaines sont concernés : 
+scolaire : règlement d’intérieur d’un établissement, arret « Kherouaa 1992 » : un règlement d’intérieur peut être contrôlé, on peut contrôler les règles vestimentaires. 
+Armée : on peut contrôler certaines décisions, donc les punitions, arrêt Marie 1995. 
+Prison : on prend en compte la nature de l’acte (punition, organisation…) plus son effet est fort moins ça sera une mesure d’intérieur, ou l’effet de l’acte sur la situation, si l’effet est pas assez importants ça reste une mesure d’intérieur sauf si ça repose sur un motif discriminatoire ou si elle met en cause des droits et libertés fondamentaux du détenu. 
+Mesures de transfert du détenu : 
+s’il passe dans une prison de haute sécurité, il y a plus de sécurité donc les effets sont plus stricts donc ce n’est pas une mesure d’ordre d’intérieur 
+S’il passe dans une maisons d’arrêt : pas de contrôle sauf si c’est discriminatoire ou porte atteinte aux droits et libertés fondamentaux : si ça bouleverse les droits de garder les liens familiaux, arret Miloudi 2009 (contrôle dès que la mesure excède l’effet. 
+
+Actes préparatoires : 
+-> décision admin prise après une longue procédure où on a pu demander des avis, 
+plusieurs étapes : 
+le juge admin considère que seule la décision finale peu être contestée et pas l’acte préparatoire
+Quand l’acte doit préparer une décision future, il n’a pas de sens tout seul : il ne sert qu’à participer au processus de décision. 
+On peut contrôler la décision finale par voie d’exception, donc de l’acte préparatoire. 
+Décision suite à un avis en commission : l’avis est négatif donc la décision est négative ; on peut faire un recours que contre la décision. 
+Précaire fiscale : l’administration apprend qu’on a pas déclarer tous ses revenus : proposition de redressement, l’administration a doigté une vais de certification, seul l’avis peut être contesté mais pas la proposition. 
+
+Actes sans effet notable : 
+Avant, tous les actes qui n’avaient pas d’obligation ou interdiction ne pouvait pas faire l’objet d’un recours en annulation, dont les circulaires (précisent une loi/décret) ou lignes directrices (façon dont la loi doit être appliquée. 
+Aujourd’hui, arret Gisti 2020 : contrôle du juge sur tous les actes susceptibles d’avoir des effets notables sur les droits et situations des autres personnes que les agents qui doivent les mettre en application. 
+Si l’acte produit des effets notables, le recours est possible. 
+Les circulaires, instructions, notes, interprétations… peuvent être donnés au juge s’ils ont des effets notables sur le droit ou la situation des agents qui doivent les mettre en place,dont les lignes directrices ou ceux qui ont un caractère impératif. 
+Déclaration d’intention (communiqué sur une intention de faire qqch) : aucun effet, pas susceptible de recours mais une simple annonce peut avoir un effet notable donc susceptible de recours (ex : festivals). 
+
+§2 - les actes au delà du contrôle du juge : les actes de gouvernement
+-> il révèlent l’exercice d’une fonction gouvernementale; ils ne sont pas des actes administratifs susceptibles de recours. 
+2 catégories d’actes du gouvernement : 
+dans l’ordre interne : actes sur les rapports entre les pouvoirs constituants, ils ne concerne pas les citoyens ou administrés. Principalement, c’est entre le parlement et le pouvoir exécutif (ex : convocation d’une session parlementaire, recours possible : acte de dissolution). Les actes du gouvernement peuvent être : le retrait/dépôt d’un projet de loi, décret ou refus de promulgation, décision d’utiliser l’article 16 C° et actes qui régissent les relations entre exécutif et juridictions. 
+Dans l’ordre international : ils touchent l’activité diplomatique de la France (décision d’engager l’armée, donner un litige à la CIJ, prise de position dans les négociations internationales…). Ils ont une immunité juridictionnelle (pas de contrôle, de recours pour excès de pouvoir, de reposanbilité engagée…). 
+Permis de construire donné à une autorité étrangère : il est détachable des relations diplomatiques donc susceptibles de recours -> théorie de l’acte détachable : on fait passer l’acte de gouvernement vers la catégorie d’acte administratif susceptible d’être controlé. 
+Décret d’extradition : impact sur le droit, arret decerf 1937, susceptible de recours
+Refus d’extradition : tension diplomatique, pareil que le décret. 
+=> grâce à la théorie des actes détachables, les actes du gouvernement se réduisent. 
+Section 2 : l’assouplissement du principe de légalité 
+L’administration trouve des marges de manœuvre pour rendre plus souple le principe de légalité. 
+
+§1 - l’assouplissement normal : le pouvoir discrétionnaire
+-> situation où se trouve l’administration avec ses règles imposées et dans certains cas, ces règles placent l’admiration dans une certaine situation. 2 grandes situations types : 
+les règles déterminent tout : l’administration n’a pas le choix d’agir, elle est dans une situation de compétence liée. 
+Les règles applicables laissent une marge de décision : elle fixent les conditions et imposent des principes mais elle laisse une marge de choix : situation de pouvoir discrétionnaire. 
+Comment savoir si c’est une compétence liée ou un pouvoir discrétionnaire ? 
+-> Ça dépend de la précision des normes et des notions données dans ces normes. 
+La situation de pouvoir discrétionnaire est souhaitable car  elle permet à l’adminisatrtion. De s’adapter aux différentes circonstances et aux cas particuliers tout en respectant les règles générales. 
+Danger : que ce pouvoir devienne arbitraire -> le juge fait un contrôle dessus : plus la règle sera précise plis grand sera le contrôle et inversement pour les règles plus générales : gradation dans l’intensité du contrôle. 
+Aspects contrôlés :
+1ère aspect : compétence de l’auteur de la décision 
+2ème aspect : règles de forme et de procédure, circonstance sou le juge ne sanctionne pas le no repsct de ces règles : la méconnaissance de la règles n’a pas d’impact sur le fond de la décision sauf si ca prouve les intéressés d’une garanties procédurales. 
+3ème aspect : la décision applique bien le droit ? 
+4ème aspect : but de la décision : intérêt général. Si le but est un intérêt personnel, la décision sera illégale -> détournement de pouvoir. 
+5ème aspect : qualification juridique des faits : 
+quand la règle est claire et précise : le juge contrôle toutes les qualifications (contrôle normal)
+Quand la règle est trop souple : le juge ne contrôle pas l’appréciation (conforme minimum). Il peut y avoir un contrôle restreint si l’erreur est grosse et un contrôle d’erreur matérielle (ce ne sont pas des appréciations). 
+
+§2 - l’assouplissement exceptionnel : les différents régimes de crises 
+2 conditions cumulatives : situation pas normale et tellement inédite qu’elle ne peut pas être résolue par la légalité normale. 
+-> hypothèse pour bifurquer vers une autre régime juridique : régimes textuels de crise. 
+
+Les régimes textuels de crise 
+3 exemples de régimes textuels de crise : 
+
+
+le cas de l’art 16 
+-> 2 conditions : interruption du fonctionnement des pouvoirs publics et menace grave immédiate sur les institutions et la nation. Le PR peut modifier la répartition des règles habituelles de compétences Où le législateur était le seul compétent. 
+Cet article n’a aucun impact sur les règles de fond mais que sur les compétences. 
+
+L’état de siège 
+Il repose sur 2 lois : celle du 9 août 1849 et du 3 avril 1878. 
+-> assise constitutionnelle, art 36 C° « péril imminent provenant d‘une guerre étrangère ou insurrection armée ». 
+Compétences données à l’administration qu’elle n’avait pas : 
+perquisitions de jour ou de nuit 
+Mesures exceptionnelles d’éloignement sur les non résidents 
+Remise de toute arme ou munition d’un particuliers 
+Interdire certaines publications ou réunions 
+L’État de siège se différencie de celui d’urgence car c’est un régime miliaire alors que l’État d’urgence est un régime civil. 
+
+L’état d’urgence 
+-> fondement législatif (loi 3 mai 1955), pas dans la C°. 
+« Péril imminent impactant gravement l’ordre public ». 
+-> régime civil : les autorités civiles et administratives dont les préfets vont avoir des pouvoirs. 
+Pouvoirs du préfet : 
+être investis de pleins droit : limiter/interdire la circulation des personnes et véhicules à une certaine heure, mettre des zones de sécurité. 
+Remise d’armes, perquisition administrative… 
+Les mesures de polices judiciaire sont administrées : plus grande limitation des libertés (ex : état d’urgence Charlie Hebdo, bataclan, urgence sanitaire covid…). 
+
+La théorie jurisprudentielle 
+-> Elle permet au juge de justifier une décision qui aurait été illégale, légale au vu des circonstances exceptionnelles. 
+-> « théorie des pouvoirs de guerre » : arret Heyriès 1918 et Dames Dol et Laurent 1919 (prostitution et soldats) => assouplissement des conditions de la légalité de actes administratifs.  
+2 conditions : pour qu’on soit dans une situation exceptionnelle : 
+impossibilité de l’administration d’être dans la légalité, elle est contrainte d’agir dans l’illégalité. 
+Principe de proportionnalité : l’atteinte à la légalité normale doit être proportionnée à l’atteinte aux circonstances normales 
+Ex : loi du 26 mars 2020 (covid) : application provisoire et circonstances exceptionnelles. 
+
+Titre 2 : le contrôle de la légalité 
+Chapitre 1 : le contrôle administratif 
+Plusieurs voies en cas de méconnaissance du principe et de contestation de légalité : recours à un juge ou à l’administration elle même. 
+Plusieurs sortes de contrôle admin : 
+-> contrôle à priori : avant il était souvent qualifié de contrôle de tutelle : fait par une personne morale supérieure sur les actes d’une autre personne morale subordonnée. Les actes sous tutelle doivent être approuvés par la supérieure pour entrer en vigueur. 
+ça fonctionne encore pour les établissements publics : s’il est local il est sous la tutelle d’une collectivité territoriale (commune, dpt, région), s’il est national il est sous la tutelle de l’État. 
+Actes des collectivités territoriales : depuis la décentralisation, ce pouvoir de tutelle a été supprimé et remplacé par un contrôle de légalité. Certains actes de collectivités territoriales les plus importants doivent être publiés mais aussi transmis au préfet. Le préfet peut saisir le JA s’il estime qu’un acte est illégal, il pourra exercer un déféré préfectoral (fait lui-même un recours  juridictionnel). 
+-> contrôle a postériori : pour les particuliers qui ont un intérêt à agir : 2 types de recours admin :
+recours gracieux : vers l’auteur de la décision 
+Recours hiérarchique : devant le supérieur hiérarchique de l’auteur de la décision 
+Caractéristiques principales : porte de plein droit et le recours administratif proroge le délai de recours (un nouveau délai débute à partir de la réponse de l’administration alors qu’une suspension ne fait que suspendre le délai) et les recours admin et leurs effets prorogateurs ne fonctionnement qu’une fois.
+Chapitre 2 : le contrôle juridictionnel 
+Un particulier qui a un problème avec l’administration cherche l’annulation d’une décision ou l’indemnisation de son préjudice. 
+Plusieurs questions : quel juge et quelle juridiction ? (Répartition des compétences) Quel type de recours ? (Classification des recours). 
+
+Section 1 : la répartition des compétences juridictionnelles 
+§1 - la détermination de l’ordre juridictionnel compétent 
+-> droit administratif ou droit privé ? 
+Le principe de séparation des ordres juridictionnels administratif et judiciaire : dualisme juridictionnel 
+Ordre juridictionnel de droit administratif : admin et ordre juridictionnel judiciaire : litiges de droit privé MAIS des fois le juge judiciaire peut être compétent pour juger l’administration. 
+
+
+
+
+la compétence de principe de l’ordre juridictionnel administratif 
+Édit de st germain en laye 1641 : administrateur-juge. 
+Après la RF, séparation des pouvoirs, loi 16 et 24 août 1790. 
+Dualisme juridictionnel : administration active et juridiciaire administrative : 
+création des conseils de préfectures : justice déléguée, on leur donne des missions admin  
+Création du CE : juge en dernier ressort des affaires admin 
+Arret Cadot 1889 : fin de la théorie du ministre-juge. 
+Pour savoir quelle juridiction doit être saisie, on raisonne en 2 temps : 
+le litige se rattache à une matière d’un ordre juridictionnel déterminé par la loi ? On regarde les règles constitutionnelles de détermination de compétences.
+S’il n’y en a pas on se réfère aux critères jurisprudentiels 
+Règles constitutionnelles : 
+-> conseil de la concurrence : compétence réservée par la Constitution au juge administratif : principe de séparation des pouvoirs. 
+-> annulation et réfutation des décisions, autorité admin sous leur contrôle. 
+Exceptions : matières du juge judiciaire à restent au juge judiciaire : 
+atteinte à la liberté individuelle : mesures privatives de liberté : les mesures restrictives de liberté peuvent être prises par l’administration dont la rétention admin pour les étrangers.  
+Voir de fait : le juge judiciaire est compétent même si c’est une décision admin s’il a atteinte à la liberté ou droit de propriété. 
+Litiges sur le fonctionnement du service public de la justice judiciaire. 
+Dérogations : possibilité de donner les litiges au juge judiciaire a 2 conditions : 
+si c’est pour créer des blocs de compétence dans un but de simplification pour le juge judiciaire
+Si les blocs servent à l’intérêt d’une bonne administration de la justice 
+Critères jurisprudentiels : 
+la compétence du JA peut aller au delà du noyau : 2 remarques : 
+le noyau ne concerne que le contentieux de la légalité des actes, on regarde si l’origine du préjudice est admin ou de droit privé. Si le préjudice est causé par un contrat on regarde s’il est admin ou privé. S’il est du fonctionnement d’un service public admin ou SPIC : mesure de police admin ou domaine admin = JA, mesure de police judiciaire ou domaine privé = JJ. 
+Le noyau ne concerne que les décisions prises par des autorités admin. 
+=> la compétence suit le fond.
+
+La compétence dérogatoire de l’ordre juridictionnel 
+Quand l’administration agit dans le domaine privé, c’est le juge judiciaire qui est compétent. 
+
+
+
+
+Les garanties du principe de séparation des ordres juridictionnels admin et judiciaire 
+Il ne doit pas y avoir empiètement de compétence d’un ordre sur un autre : but des garanties. 
+2 types de garanties : garanties constitutionnelles (2 types de litiges et de juges) et contentieuses (règles procédurales pour s’assurer qu’il arrive devant le bon juge compétent). 
+
+les garanties constitutionnelles du principe de séparation 
+Il n’y a rien dans le texte de la Constitution donc c’est el CE qui s’en occupe. 
+-> décision 22 juillet 1980  : consacre un PFRLR d’indépendance de la juridiction admin, elle est une vraie juridiction comme la judiciaire. 
+-> 23 janvier 1987 : conseil de la concurrence : compétence à minima garantie 
+Si on veut supprimer la JA il faudrait réviser la Constitution : QPC. 
+
+les garanties contentieuses du principe de séparation 
+2 ordres : 
+mécanisme de conflit : on donne tout le litige à une juridiction plutôt qu’à l’autre. 
+Questions préjudicielles : on transfère une partie du litige : le JA s’occupe de la question principale et pose une question au juge judiciaire. 
+Procédures de conflits : 
+Juridiction dédiée au conflit : tribunal des conflit, 3 types de saisine : 
+Procédure de règlement des conflits : 
+conflits positifs : chacune des juridictions revendique se compétence, procédure ad-hoc : le préfet donne la compétence au juge judiciaire, s’il refuse on renvoie au tribunal des conflits qui tranche dans un délai de 3 mois, s’il confirme, il confie au JA dans un délai de 2 mois. 
+Conflits négatifs : chacune des juridictions ne veut pas de la compétence : le tribunal confie la compétence (rare).
+Procédure de prévention des conflits : on veut éviter les conflits négatifs, les parties peuvent saisir le tribunal pour prévenir selon 2 modes : 
+Un juge s’est jugé incompétent définitivement.
+Les juridictions peuvent renvoyer une question de compétence sérieuse au tribunal. 
+Procédure de règlement du litige de fond (rare) : 2 jugements sont rendus et sont opposés : le tribunal tranche sur le fond (arret Rosay 1933). Ou si le délai béats plus raisonnable, l’État est responsable et le tribunal tranche
+Questions préjudicielles : 
+-> quand la juridiction compétente pour trancher une question accessoire n’est pas la même que la juridiction qui tranche la question principale. 
+En principe, le juge qui tranche la question principale est compétent pour trancher l’accessoire mais il faut aussi respecter le principe de séparation des pouvoirs quand il présent. 
+Si le juge judiciaire ne pose pas de question, il peut empiéter sur la compétence du JA. 
+
+
+Dans quels cas le JA doit poser une question préjudicielle au juge judiciaire ?  
+Question de droit public devant le juge judiciaire : 
+Si c’est le juge pénal : il a la pleine compétence et ne pose pas de question au JA. 
+Si c’est le juge civil : l’obligation de poser une question au JA dépend de 2 critères : question d’interprétation d’un acte administratif ou d’appréciation de validité ? 
+L’acte est réglementaire ou individuel ? S’il est individuel le juge judiciaire et incompétent et doit poser la question au JA, s’il est réglementaire il peut interpréter tout seul car c’est un acte général et impersonnel. 
+Appréciation de validité : acte individuel : juge civil incompétent et acte réglementaire : juge judiciaire incompétent sauf s’il est légal 
+Question de droit privé devant le JA :
+Interprétation : JA incompétent, si la contestation est sérieuse on pose la question au juge judiciaire. 
+Appréciation de validité : le JA peut écarter lui même un acte de droit privé illégal au bu d’un JP antérieure, il peut aussi juger lui même si c’est contre le droit de l’UE : solution miroir de SCEA du chéneau. 
+
+§2 - la détermination de la juridiction compétence au sein de l’ordre administratif 
+La justice est toujours rendue au nom de l’État, on peut engager sa responsabilité en cas de pb. 
+
+Les juridictions à compétence spéciale 
+Il faut un texte de loi qui les crée spécialement et qu’un texte leur donne des compétences précises : matière financières, sociale, disciplinaire (universités), contention du stationnement payant, cour nationale du droit d’asile. 
+Elle s’appliquent sur le fondement de textes spéciaux ou de principes généraux de procédure.
+ 
+Les juridictions à compétence générale
+Différents degrés d’instances : 
+Juges de 1er ressort : 
+-> Tribunaux administratifs. 
+Quel tribunal ? : ça dépend du siège de l’autorité qui êtes la décision : géographique. 
+Dans certains cas, c’est les cour d’appel qui sont compétentes en 1er ressort ou encore le CE (ordonnants, décrets du PM, actes règlementaires des ministres…)
+Juges d’appel : 
+Le CE statut en tant que juge d’appel et pas de cassation, 2 hypothèses : contentieux électoral des élections municipales ou en matière de référé des libertés. 
+Dans certains cas il n’y a pas d’appel, on fait direct un pourvoi en cassation -> le principe de double juridiction n’a ni valeur constitutionnelle ni conventionnelle.  
+Juges de cassation : 
+Le CE est la juridiction suprême, il sera compétent pour statuer en tant que juge de cassation  
+
+Section 2 : la classification des recours contentieux devant le juge administratif 
+Plusieurs types de recours, le but est de supprimer la décision. 
+Dans d’autres cascade, on peut demander la condamnation de l’administration à réparer son préjudice. 
+-> hypothèse du plein contentieux opposé au REP. 
+Il y a des recours simplement en appréciation de validité, le juge ne peut rien faire. 
+Il y a aussi le contentieux répressif où le JA a d’autres pouvoirs, il peut être compétent pour condamner un particulier à payer une amende, 2 hypothèses : 
+si un particulier porte atteinte à l’intégrité du domaine public le préfet peut le poursuivre pénalement devant la juridiction administrative, il y aura double peine : couch = réparations D&I et pénale = amende. 
+Un agent public : hypothèse de la responsabilité des gestionnaires publics : s’ils commettent une faute qui cause préjudice au patrimoine de la collectivité. 
+
+Les caractères généraux du REP (recours pour excès de pouvoir)
+-> il porte sur la légalité d’une norme, décision. Il y a des conséquences : 
+1ère : les décision du juge ont l’autorité absolue de la chose jugée. 
+2ème : le juge peut annuler l’acte jugé illégal. 
+3ème : le juge juge l’acte seulement, il peut prendre en compte les circonstances postérieures. 
+4ème : l’acte doit respecter la légalité objective : on ne peut pas invoquer sa situation subjective devant le juge pour contester la légalité d’un acte. 
+5ème : une fois que la question sur la légalité est posée, on n’a plus la maîtrise du contentieux, on peut juste se désister. 
+Conditions de recevabilité d’un recours : 
+on s’adresse à la juridiction compétente 
+On doit avoir un intérêt à agir 
+On a un délai à respecter pour saisir le juge : réglementaire = 2 mois à compter de la publication, individuel = 1 an s’il n’est pas bien notifié. 
+Dans certains cas, le recours doit être présenté par un avocat : en excès de pouvoir on est pas obligé mais en plein contentieux c’est obligatoire. 
+
+Le contrôle de légalité par le juge l’excès de pouvoir 
+Principe : en excès de pouvoir, le juge ne statut que sur les moyens soulevés devant lui. 
+2 catégories de moyens : légalité externe et interne. 
+
+le contrôle de la légalité externe 
+-> extérieur au contenu de la norme donnée dans la décision. 
+-> compétence de la norme + procédure + forme d’acte + respect du contradictoire.
+
+
+Le contrôle de la légalité interne 
+-> moyens relatifs au contenu de l’acte 
+Ex : contestation ou contrôle de but dans lequel l’acte a été pris. 
+But = intérêt général 
+Détournement de pouvoir= illégalité la plus grave. 
+Le JA fait d’abord un contrôle de l’erreur de droit : si l’administration s’est trompée. 
+Puis il contrôle aussi les faits : contrôle de qualification juridique des faits. 
+Il peut faire un contrôle restreint : il annule l’acte si l’administration fait une erreur manifeste d’appréciation. 
+Ou un contrôle minimum où il ne fera aucun contrôle de la qualification des faits. 
+  
+
+
+
+
+*
