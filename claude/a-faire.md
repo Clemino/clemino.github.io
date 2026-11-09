@@ -4,12 +4,12 @@
 
 ## En attente d'une réponse de Clément
 
-- [ ] **Ajouter des proches à la liste de test Google.** L'appli Google est en mode Test : seuls les comptes de sa liste peuvent se connecter, donc ouvrir un cours. Il faut leurs adresses Gmail exactes, à ajouter dans la [console Google, page Audience](https://console.cloud.google.com/auth/audience?project=cours-513918), bouton **Add users** (100 personnes maximum). À la première connexion, Google affiche « Google n'a pas validé cette application » : il faut cliquer sur **Continuer**.
-- [ ] **Décider du sort de la copie GitHub de `coursapp`.** Clément veut garder `coursapp` uniquement sur son PC. Une copie a quand même été envoyée dans le dépôt privé `Clemino/coursapp` avant sa décision ; le dossier local n'y est plus relié. La supprimer est définitif et se fait dans Chrome, car l'accès `gh` n'a pas le droit de supprimer un dépôt.
+- [ ] **Ajouter des proches à la liste de test Google.** L'appli Google reste en mode Test, comme Clément l'a décidé le 9 novembre 2026 : seuls les comptes de sa liste peuvent se connecter, donc ouvrir un cours. Il faut leurs adresses Gmail exactes, à ajouter dans la [console Google, page Audience](https://console.cloud.google.com/auth/audience?project=cours-513918), bouton **Add users** (100 personnes maximum). À la première connexion, Google affiche « Google n'a pas validé cette application » : il faut cliquer sur **Continuer**.
+- [x] **Supprimer le dépôt privé `Clemino/coursapp`.** Fait par Clément le 9 novembre 2026 : `coursapp` n'existe plus que sur son PC.
 
 ## Site
 
-- [ ] **Terminer la page d'accueil** (`index.html`, encore un brouillon). Elle mène directement à `/trd/` et `/admin/`, qui demandent maintenant de se connecter : elle devrait plutôt mener à `/cours/`. IA responsable n'y figure pas.
+- [x] **Régler la page d'accueil** (`index.html`). Fait le 9 novembre 2026 : à la demande de Clément, c'est une page blanche. On entre sur le site uniquement par `/cours/`.
 - [ ] **Chacun ne voit que ses matières.** Règle voulue par Clément : une personne ne voit que les matières qu'elle a proposées et que Clément a acceptées ; Clément, lui, voit tout. Aujourd'hui, chacun voit toute la bibliothèque et suit ce qu'il veut. À prévoir :
   - relier chaque matière créée à la personne qui l'a proposée : la table `course_proposals` garde déjà `user_id` et `course_id` ;
   - une table des accès par personne, protégée par des règles Supabase, et un moyen de reconnaître Clément comme administrateur (par l'identifiant de son compte) ;
@@ -30,7 +30,7 @@
 ## Idées pour plus tard
 
 - [ ] **Un chatbot sur le site** qui répond uniquement à partir du cours. En attendant, Claude Code le fait déjà avec [cours.md](cours.md). Une version en ligne demanderait un service d'IA gratuit à tester (Cloudflare Workers AI, par exemple).
-- [ ] **Ouvrir le site à tout le monde :** rédiger une page de règles de confidentialité, compléter la page Branding de Google (page d'accueil, confidentialité, domaine `clemino.github.io`), puis publier l'appli Google.
+- [ ] **Ouvrir le site à tout le monde :** rédiger une page de règles de confidentialité, compléter la page Branding de Google (page d'accueil : `https://clemino.github.io/cours/`, puisque la racine est une page blanche ; confidentialité, domaine `clemino.github.io`), puis publier l'appli Google.
 - [ ] **Le nom de domaine `clemi.me`.**
 - [ ] **Publier les cinq cours en réserve** dans `coursapp/courses/` : C++, IA, programmation fonctionnelle, système et réseau, TAD. Leurs exercices de code se corrigent soi-même, faute de serveur pour compiler.
 

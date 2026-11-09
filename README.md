@@ -2,6 +2,8 @@
 
 Site personnel. Domaine prevu : clemi.me
 
+La page d'accueil (`index.html`) est une page blanche, voulue ainsi : on entre sur le site par la bibliothèque, https://clemino.github.io/cours/.
+
 ## /cours/ : la bibliothèque de cours
 
 Connexion Google, puis choix d'une matière parmi les catégories (Droit, Finance…). Ensuite, chacun ne voit que ses matières dans « Mes cours » et peut en ajouter ou en retirer.
