@@ -4,6 +4,9 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Clément Otero</title>
+		<meta name="description" content="Site de Clément Otero : une bibliothèque de cours à réviser, avec des exercices corrigés et des examens blancs." />
+		<meta name="theme-color" content="#1d6b58" media="(prefers-color-scheme: light)" />
+		<meta name="theme-color" content="#0f3d33" media="(prefers-color-scheme: dark)" />
 		<style>
 			:root {
 				--bg: #1d6b58;
@@ -66,6 +69,11 @@
 				font-size: clamp(1.5rem, 4vw, 2.5rem);
 				line-height: 1.15;
 			}
+			/* Shows it is a link on touch screens, which have no hover. The second line hides the arrow from screen readers. */
+			strong::after {
+				content: " →";
+				content: " →" / "";
+			}
 			a:hover strong {
 				text-decoration: underline;
 				text-decoration-thickness: 0.08em;
@@ -86,18 +94,12 @@
 				<text y="197" textLength="1000" lengthAdjust="spacingAndGlyphs">Clément</text>
 			</svg>
 		</h1>
-		<nav aria-label="Applications">
+		<nav aria-label="Sections du site">
 			<ul>
 				<li>
-					<a href="trd/">
-						<strong>Trading</strong>
-						<span>Apprendre le trading, du niveau zéro au bot.</span>
-					</a>
-				</li>
-				<li>
-					<a href="admin/">
-						<strong>Droit administratif</strong>
-						<span>Réviser le cours de L2, avec des exercices et des cas pratiques.</span>
+					<a href="cours/">
+						<strong>Cours</strong>
+						<span>Ta bibliothèque de cours, avec des exercices corrigés et des examens blancs. Connexion avec Google.</span>
 					</a>
 				</li>
 			</ul>

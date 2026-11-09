@@ -2,6 +2,8 @@
 
 Site personnel. Domaine prevu : clemi.me
 
+La page d'accueil (`index.html`) mène à la bibliothèque `/cours/`, et non à chaque cours : les cours demandent de se connecter, et la liste des matières ne vit qu'à un endroit, `LIBRARY` dans `cours/index.html`.
+
 ## /cours/ : la bibliothèque de cours
 
 Connexion Google, puis choix d'une matière parmi les catégories (Droit, Finance…). Ensuite, chacun ne voit que ses matières dans « Mes cours » et peut en ajouter ou en retirer.

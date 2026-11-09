@@ -5,11 +5,11 @@
 ## En attente d'une réponse de Clément
 
 - [ ] **Ajouter des proches à la liste de test Google.** L'appli Google reste en mode Test, comme Clément l'a décidé le 9 novembre 2026 : seuls les comptes de sa liste peuvent se connecter, donc ouvrir un cours. Il faut leurs adresses Gmail exactes, à ajouter dans la [console Google, page Audience](https://console.cloud.google.com/auth/audience?project=cours-513918), bouton **Add users** (100 personnes maximum). À la première connexion, Google affiche « Google n'a pas validé cette application » : il faut cliquer sur **Continuer**.
-- [ ] **Supprimer le dépôt privé `Clemino/coursapp`.** Décidé par Clément le 9 novembre 2026 : `coursapp` reste uniquement sur son PC. Claude n'a pas le droit de supprimer un dépôt, donc Clément le fait lui-même sur github.com : **Settings**, tout en bas **Delete this repository**, puis taper `Clemino/coursapp`. C'est définitif.
+- [x] **Supprimer le dépôt privé `Clemino/coursapp`.** Fait par Clément le 9 novembre 2026 : `coursapp` n'existe plus que sur son PC.
 
 ## Site
 
-- [ ] **Terminer la page d'accueil** (`index.html`, encore un brouillon). Elle mène directement à `/trd/` et `/admin/`, qui demandent maintenant de se connecter : elle devrait plutôt mener à `/cours/`. IA responsable n'y figure pas.
+- [x] **Terminer la page d'accueil** (`index.html`). Fait le 9 novembre 2026 : elle mène à la bibliothèque `/cours/`, où se trouvent toutes les matières, IA responsable comprise.
 - [ ] **Chacun ne voit que ses matières.** Règle voulue par Clément : une personne ne voit que les matières qu'elle a proposées et que Clément a acceptées ; Clément, lui, voit tout. Aujourd'hui, chacun voit toute la bibliothèque et suit ce qu'il veut. À prévoir :
   - relier chaque matière créée à la personne qui l'a proposée : la table `course_proposals` garde déjà `user_id` et `course_id` ;
   - une table des accès par personne, protégée par des règles Supabase, et un moyen de reconnaître Clément comme administrateur (par l'identifiant de son compte) ;
