@@ -1,0 +1,127 @@
+[page 1]
+NOTICE (revenus 2024)
+Quand remplir une déclaration 2086 ?
+Si vous êtes domicilié fiscalement en France et que vous ou l’un des membres de votre foyer fiscal ou une personne rattachée
+à votre foyer avez réalisé des plus ou moins-values, directement ou par personne interposée, lors de cessions à titre onéreux
+d'actifs numériques, vous devez joindre à votre déclaration annuelle d'impôt sur le revenu n°2042 une annexe sur laquelle
+vous mentionnez vos plus ou moins-values réalisées à l'occasion de chacune des cessions effectuées au cours de l'année (ou
+les prix de cession de chacune des cessions si vos cessions sont exonérées).
+Les actifs numériques comprennent :
+- les jetons mentionnés à l’article L. 552-2 du code monétaire et financier, à l'exclusion de ceux remplissant les caractéristiques
+des instruments financiers mentionnés à l'article L. 211-1 et des bons de caisse mentionnés à l'article L. 223-1 du même code.
+- toute représentation numérique d'une valeur qui n'est pas émise ou garantie par une banque centrale ou par une autorité
+publique, qui n'est pas nécessairement attachée à une monnaie ayant cours légal et qui ne possède pas le statut juridique
+d'une monnaie, mais qui est acceptée par des personnes physiques ou morales comme un moyen d'échange et qui peut être
+transférée, stockée ou échangée électroniquement (bitcoins, ethereum, ripple, etc.).
+Conformément au III de l'article 150 VH bis du code général des impôts (CGI), la plus ou moins-value brute est égale à la
+différence entre, d'une part, le prix de cession et, d'autre part, le produit du prix total d'acquisition de l'ensemble du
+portefeuille d'actifs numériques par le quotient du prix de cession sur la valeur globale de ce portefeuille.
+
+Plus ou moins-value brute = Prix de cession – [Prix total d'acquisition x Prix de cession / Valeur globale du portefeuille]
+Les plus-values réalisées par les particuliers lors de la cession d’actifs numériques ou de droits s’y rapportant sont passibles
+de l’impôt sur le revenu selon le régime d’imposition prévu à l’article 150 VH bis du CGI (taux forfaitaire de 12,8 % auquel
+s’ajoutent les prélèvements sociaux).
+Par dérogation à l’application du taux forfaitaire de 12,8%, les plus-values de cession d’actifs numériques peuvent, sur option
+expresse et irrévocable du contribuable, être soumises au barème progressif de l’impôt sur le revenu.
+Si vous optez pour l’imposition de vos plus-values au barème progressif, vous devez cocher la case 3CN sur la déclaration
+2042 C. L’option est globale et porte sur le total des plus-values de cession d’actifs numériques réalisées par votre foyer
+fiscal. Cette option est indépendante de celle pouvant être exercée pour la taxation des revenus de capitaux mobiliers et
+des plus-values sur cession de droits sociaux. Le cas échéant, vous devrez donc exercer deux options.
+
+Comment remplir la déclaration 2086 : la déclaration ligne par ligne
+Rappel : Cessions exonérées :
+En application du B du II de l’article 150 VH bis du CGI, si le total des prix de cession de l’ensemble de vos opérations, que
+celles-ci aient été réalisées directement ou indirectement, hors opérations d'échange sans soulte entre actifs numériques,
+n'excède pas 305 € au cours de l'année d'imposition, les plus-values résultant de ces cessions sont exonérées.
+
+Lignes 212, 252 et 312
+Valeur globale du portefeuille au moment de la cession
+Il s’agit de la somme des valeurs, évaluées au moment de la cession imposable, des différents actifs numériques et droits s'y
+rapportant, détenus par le cédant avant de procéder à la cession, quel que soit leur support de conservation (plateformes
+d’échanges, y compris étrangères, serveurs personnels, dispositif de stockage hors-ligne, etc.). Cette valorisation doit
+s’effectuer au moment de chaque cession imposable en application de l’article 150 VH bis du CGI.
+
+Lignes 213 à 218, 253 à 258 et 313 à 318
+Prix de cession
+Il correspond au prix réel perçu ou à la valeur de la contrepartie obtenue par le cédant lors de la cession.
+Le prix de cession doit être majoré de la soulte que le cédant a reçue lors de la cession ou minoré de la soulte qu’il a versée
+lors de cette même cession.
+Il est réduit, sur justificatifs, des frais supportés par le cédant à l’occasion de cette cession. Ces frais s'entendent, notamment,
+de ceux perçus à l’occasion de l’opération imposable par les plateformes où s'effectuent les cessions à titre onéreux d'actifs
+numériques ou de droits s'y rapportant ainsi que de ceux perçus par les membres du réseau (appelés "mineurs") chargés de
+vérifier et valider les transactions qui s'y opèrent. Le paiement de ces frais de transaction perçus par les plateformes ou les
+"mineurs" peut s'effectuer au moyen d'actifs numériques. Or, dans ce cas, ce paiement est la contrepartie d'un service fourni
+au cédant et constitue une opération imposable au sens du I de l'article 150 VH bis du CGI. A titre de mesure de simplification,
+il est toutefois admis que la cession en tant que telle et les différentes prestations de services rendues en contrepartie des
+frais perçus par les plateformes et les "mineurs" soient assimilées à une seule et même opération de cession pour l'application
+de l'article 150 VH bis du CGI, pour laquelle le contribuable détermine une seule plus ou moins-value, en déduisant ces frais
+du prix de cession.
+
+6
+
+[page 2]
+Les frais déductibles, quels qu'ils soient, ne viennent pas en diminution du prix de cession pour la détermination du quotient
+du prix de cession sur la valeur globale du portefeuille (ils doivent seulement être déduits du prix de cession qui constitue le
+premier terme de la différence prévue dans la formule de calcul mentionnée ci-dessus).
+
+Lignes 220, 260 et 320
+Prix total d’acquisition du portefeuille
+Le prix total d'acquisition du portefeuille d'actifs numériques est égal à la somme de tous les prix acquittés en monnaie ayant
+cours légal à l'occasion de l'ensemble des acquisitions d’actifs numériques (sauf opérations d'échange ayant bénéficié du
+sursis d'imposition) réalisées avant la cession, et de la valeur des biens ou services, comprenant le cas échéant les soultes
+versées, fournis en contrepartie de ces acquisitions.
+
+Lignes 221, 261 et 321
+Fractions de capital initial
+Il s’agit de la fraction de capital contenue dans la valeur ou le prix de chacune des différentes cessions d'actifs numériques à
+titre gratuit ou onéreux réalisées antérieurement, hors opérations d’échange ayant bénéficié du sursis d’imposition sans
+soulte. Ces fractions de capital initial réduisent le prix total d’acquisition.
+Exemple :
+En janvier N, un contribuable fiscalement domicilié en France acquiert pour 1 000 € d'actifs numériques (il ne détient jusqu’alors aucun actif
+numérique).
+En mars N, la valeur globale de son portefeuille est de 1 200 €. Il réalise alors une cession de 450 €.
+La plus-value afférente à cette cession est déterminée comme suit : 450 – (1000 x 450 / 1200) = 450 – 375 € = 75 €.
+En août N, la valeur globale de son portefeuille est de 1 300 €. Il décide alors de céder l'ensemble des actifs numériques qu'il détient.
+Pour déterminer la plus-value afférente à cette nouvelle cession, il convient de minorer le prix total d'acquisition de la fraction de capital
+initial (375 €) déduite lors de la précédente cession. Soit :
+1300 – [(1000 – 375) x 1300 / 1300] = 1300 – 625 = 675 € de plus-value.
+
+Lignes 222, 262 et 322
+Soulte reçue en cas d’échanges antérieurs à la cession
+Lorsqu’un ou plusieurs échanges avec soulte reçue par le cédant ont été réalisés antérieurement à la cession imposable, le
+prix total d’acquisition est minoré du montant des soultes. Indiquez donc les montants reçus.
+
+Lignes 412, 422 et 432
+Prix de cession calculés par vos personnes interposées
+Déclarez aux lignes 412, 422 et 432 chacun des prix de cession que vous avez réalisés par le biais de personnes interposées,
+et additionnez-les aux lignes 413, 423 et 433. Déclarez seulement la quote-part vous revenant déterminée par la personne
+interposée. Le prix de cession à retenir en présence d'une cession réalisée par l'intermédiaire d'une personne interposée est
+égal à la quote-part du prix de cession correspondant au droit de l'associé dans la société.
+
+Lignes 414, 424 et 434
+Plus-values et moins-values calculées par vos personnes interposées
+Déclarez aux lignes 414, 424 et 434 chacune des plus-values et moins-values que vous avez réalisées par le biais de personnes
+interposées, et additionnez-les aux lignes 415, 425 et 435. Déclarez seulement la quote-part vous revenant que vous a
+indiquée la personne interposée.
+
+Ligne 51
+Total des prix de cession réalisés au niveau du foyer fiscal
+Si le total des prix de cession réalisés au niveau du foyer fiscal (ligne 218 + ligne 258 + ligne 318 + ligne 413 + ligne 423 + ligne
+433) est inférieur à 305 €, vos cessions sont exonérées et il n’y a alors pas lieu de remplir les autres lignes de la présente
+déclaration (à l’exception de celles vous ayant permis d’obtenir les résultats des lignes susmentionnées). En effet, lorsque, au
+cours d'une même année d'imposition, un foyer fiscal réalise des opérations imposables, certaines directement, d'autres par
+personne interposée, il convient, pour apprécier le seuil de 305 €, d'additionner l'ensemble des prix des cessions réalisées
+par chaque contribuable, directement et par personne interposée (hors opérations bénéficiant du sursis d'imposition).
+Si le total est supérieur à ce montant, vos cessions sont alors imposables, dès le premier euro de plus-value. Remplissez les
+lignes nécessaires à la détermination de vos plus-values et moins-values d’actifs numériques.
+
+Ligne 52
+Total des plus-values et moins-values réalisées au niveau du foyer fiscal : à reporter ligne 3AN de la 2042 C en
+cas de plus-value globale ou à reporter ligne 3BN de la 2042 C en cas de moins-value globale
+Reportez uniquement sur votre déclaration de revenu n°2042C, le total des plus ou moins-values constaté au titre des
+cessions d’actifs numériques de l’année, après imputation des moins-values de même nature subies au cours de cette même
+année.
+Si vous optez pour l’imposition de vos plus-values au barème progressif, n’oubliez pas de cocher la case 3CN de la 2042 C.
+
+7
+

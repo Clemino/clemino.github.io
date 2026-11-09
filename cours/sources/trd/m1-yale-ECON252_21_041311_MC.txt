@@ -1,0 +1,78 @@
+[page 1]
+Economics 252 – Financial Markets
+Spring 2011
+
+Lecture 18: Exchanges, Brokers, Dealers, Clearinghouses
+April 13, 2011
+
+Multiple Choice Questions
+Question 21.1
+What is the definition of a broker?
+
+(a) A broker acts on behalf of others as an agent to earn a commission.
+(b) Only agents in the real estate business are legally allowed to carry the title of
+a broker.
+(c) A broker trades for himself or herself, acting as a principal, not an agent, and
+profits from a markup.
+(d) Only agents in the antiques business are legally allowed to carry the title of a
+broker.
+
+Question 21.2
+What is the significance for Jonathan’s Coffee House for the history of stock
+exchanges?
+
+(a) This is the place in New York City, where traders of shares in 1792 signed the
+Buttonwood Agreement to form the New York Stock Exchange.
+(b) In London, people started posting stock prices on the wall at Jonathan's
+Coffee House by 1698, and the London Stock Exchange grew out of
+Jonathan's Coffee House.
+(c) The first insider trading scandal at the Sao Paolo Stock Exchange was
+uncovered at Jonathan’s Coffee House in Sao Paolo.
+(d) The origins of NASDAQ as an over-the-counter exchange can be traced back
+to the counter at Jonathan’s Coffee House in Chicago.
+
+[page 2]
+Question 21.3
+Suppose that you own 100 shares that are currently worth $50. Assume you want to
+hold on to your shares, but are worried that the price of your shares might collapse.
+You definitely want to sell the shares if their price falls to $25. What kind of order
+should you place?
+(a) A sell market order for 100 shares.
+(b) A sell limit order for 100 shares at $25.
+(c) A stop loss order for 100 shares at $25.
+(d) A sell limit order for 100 shares at $50.
+
+Question 21.4
+Consider a hypothetical NASDAQ level 1 screen for the shares of a corporation.
+Suppose the displayed ask is $30.05 for 100 shares and the displayed bid is $30 for
+250 shares. What happens if another dealer places a limit order to buy 50 shares for
+$30.03?
+(a) There will be no transaction.
+(b) There will be a transaction of 50 shares at $30.05.
+(c) There will be a transaction of 50 shares at $30.
+(d) There will be a transaction of 100 shares at $30.05.
+
+Question 21.5
+On May 6, 2010, the stock market experienced a so-called Flash Crash. Bring the
+following statement in the correct order, reflecting the order of events surrounding
+May 6, 2010.
+
+(a) The market was already in a stressed mode, as the market was down 4% and
+the VIX index had shot up.
+(b) Prices quickly rebounded on the same day, so that closing prices do not
+reflect the severity of the intraday events.
+(c) Computers started trading back and forth in milliseconds and the volume of
+trade just went to an astronomical level, scaring people off.
+(d) Although the Flash Crash created a lot of public anger about high frequency
+trading, it is considered a glitch and not a major fault of the system, which
+needs to be addressed with new regulation with regard to high frequency
+trading.
+
+[page 3]
+Correct Answers/Orders
+21.1: (a)
+21.2: (b)
+21.3: (c)
+21.4: (a)
+21.5: 1-(a), 2-(c), 3-(b), 4-(d)
+

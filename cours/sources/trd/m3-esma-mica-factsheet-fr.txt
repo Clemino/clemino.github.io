@@ -1,0 +1,248 @@
+[page 1]
+CRYPTO-ACTIFS :
+
+ce que MiCA signifie pour vous en tant
+qu’investisseur
+
+Qu’est-ce qu’un crypto-actif ?
+Un crypto-actif est une représentation numérique d’une valeur ou
+d’un droit qui peut être transféré et stocké électroniquement, à l’aide
+d’un registre distribué1 ou d’une autre technologie similaire.
+Des exemples bien connus de crypto-actifs sont le BTC (Bitcoin) et l’ETH
+(Ethereum), mais le marché des crypto-actifs englobe un large éventail
+d’autres actifs tels que les « stablecoins »2, les « meme coins »3 et les jetons
+non fongibles4.
+Dans l’Union européenne (UE), le règlement sur les marchés de crypto-actifs
+(MiCA) réglemente les activités impliquant certains crypto-actifs. L’un des
+objectifs de MiCA est de disposer de règles harmonisées pour les cryptoactifs et les services sur crypto-actifs dans l’ensemble de l’UE, notamment
+pour mieux protéger les investisseurs (par exemple : accès à des informations
+complètes, procédures transparentes de traitement des plaintes, etc.).
+Selon le type de crypto-actifs ou de services sur crypto-actifs (réglementés,
+non réglementés) et selon le prestataire de services sur crypto-actifs (par
+exemple non autorisé, basé en dehors de l’UE), vous pourriez être confronté
+à des risques plus élevés et à des niveaux de protection limités, voire
+inexistants. Il est essentiel de comprendre les risques auxquels vous pourriez
+être exposé avant d’acheter tout type de crypto-actif ou d’utiliser tout
+service sur crypto-actifs.
+Consultez l’avertissement des autorités européennes de surveillance pour en
+savoir plus sur les risques [shorturl.at/UqQLq].
+
+Quels crypto-actifs sont réglementés
+par MiCA, et lesquels ne le sont pas ?
+MiCA couvre trois types de crypto-actifs :
+✔
+
+Jetons de monnaie électronique Electronic money tokens - (EMT)5: les
+crypto-actifs qui visent à maintenir une valeur stable en faisant référence
+à la valeur d’une monnaie officielle, par exemple l’euro ou le dollar. Si vous
+détenez un EMT, vous avez le droit de récupérer votre argent auprès de
+l'émetteur à sa valeur nominale, dans la devise à laquelle il fait référence.
+
+✔
+
+Jetons se référant à un ou plusieurs actifs Asset Referenced Tokens - (ART)6:
+les crypto-actifs qui visent à maintenir une valeur stable en faisant référence
+à une autre valeur ou à un autre droit ou à une combinaison de ceux-ci
+(par exemple, une monnaie officielle, des matières premières, ou d’autres
+actifs). Vous pouvez échanger des ART à la valeur de marché du ou des actifs
+auxquels il fait référence.
+
+✔
+
+Crypto-actifs autres que les EMT et les ART : les jetons utilitaires7 et les
+«autres » crypto-actifs inclus dans le champ d’application de MiCA et qui ne
+sont pas caractérisables en tant qu’EMT ou ART, ni autrement exclus de MiCA.
+
+1
+
+TECHNOLOGIE DES REGISTRES DISTRIBUÉS (DLT) :
+
+Un registre distribué est un enregistrement d’informations, ou une
+base de données, qui est partagé à travers un réseau. Le type le plus
+connu de registre distribué est une blockchain, ainsi nommée parce
+qu’elle stocke des transactions individuelles dans des groupes, ou des
+blocs, attachés les uns aux autres dans l’ordre chronologique pour
+former une chaîne.
+La technologie des registres distribués est utilisée pour transférer
+différents types d’actifs entre un acheteur et un vendeur.
+2
+
+STABLECOINS :
+
+Un « stablecoin » est un crypto-actif qui prétend maintenir une valeur
+stable par référence à un actif (par exemple une monnaie fiduciaire)
+ou à plusieurs actifs. Un stablecoin peut ne pas être toujours aussi
+stable, en particulier dans des conditions de marché sous tension.
+3
+
+MEME COINS :
+
+Les « meme coins » sont des crypto-actifs inspirés de tendances,
+de sujets humoristiques ou d’actualité, ou toute autre sujet. Ils sont
+généralement créés pour engager une communauté et peuvent être
+utilisés dans les paiements en pair à pair, l’investissement spéculatif
+ou le trading. Ils sont souvent accompagnés d’un site web, illustré par
+un thème comique ou absurde, et leurs créateurs et fans participent
+à une stratégie de marketing virale en vue de créer un sentiment
+d’appartenance à une communauté.
+4
+
+JETONS NON FONGIBLES (NFT) :
+
+Il s’agit d’actifs numériques uniques et non fongibles enregistrés sur
+un réseau de registres distribués, incluant notamment des œuvres
+d’art numériques et des objets de collection.
+Les produits échangeables et commercialisés auprès des
+consommateurs sous le nom de NFT, mais faisant partie d’une série
+ou d’une collection, pourraient ne pas être considérés en tant que
+NFT et être encadrés par le réglement MiCA
+
+5
+
+JETONS DE MONNAIE ÉLECTRONIQUE :
+
+ Types de crypto-actifs qui visent à maintenir une valeur stable en
+faisant référence à la valeur d’une monnaie officielle (par exemple,
+l’euro, le dollar, etc.) ;
+ Seuls les établissements de crédit ou les établissements de
+monnaie électronique peuvent proposer au public ou demander
+l’admission à la négociation d’EMT dans l’UE ;
+ N’accordent pas d’intérêts aux détenteurs.
+6
+
+JETONS RÉFÉRENCÉS SUR LES ACTIFS :
+
+ Crypto-actifs qui ne sont pas des EMT ;
+ Seuls les établissements de crédit ou les émetteurs agréés par
+MiCA peuvent proposer au public ou demander l’admission à la
+négociation d’ART dans l’UE ;
+ Peuvent être référencés sur un autre actif, y compris une ou
+plusieurs monnaies officielles, d’autres crypto-actifs ou leur
+combinaison ;
+ N’accordent pas d’intérêts aux détenteurs.
+7
+
+JETONS UTILITAIRES :
+
+Il s’agit d’un type de crypto-actifs dont le seul but est de donner
+accès à un bien ou à un service octroyé par l’émetteur de ce jeton.
+
+[page 2]
+MiCA ne s’applique pas aux types de crypto-actifs suivants :
+✘
+
+Les crypto-actifs qui sont uniques et non fongibles. Ceux-ci ne sont pas facilement
+interchangeables et leur valeur relative à un autre crypto-actif ne peut pas être
+facilement aisément calculée par comparaison avec un marché existant ou des actifs
+équivalents (par exemple : des biens immobiliers virtuels, des noms de domaine
+et des éléments nécessitant une vérification de l’authenticité). Les jetons dits non
+fongibles (NFT) qui font partie d'une série ou d'une collection peuvent toutefois
+relever du champ d'application de MiCA.
+
+✘
+
+Les jetons qui ne sont pas transférables (tels que les points de récompense des
+programmes de fidélité).
+
+✘
+
+Les crypto-actifs qui relèvent déjà de la législation existante sur les services
+financiers, tels que les crypto-actifs qui peuvent être considérés comme des
+instruments financiers relevant de MiFID (par exemple : les contrats dérivés, les valeurs
+mobilières). Lorsque vous investissez dans ces actifs, vous bénéficiez des règles de
+protection des investisseurs applicables aux actifs financiers traditionnels tokenisés.
+
+Si vous achetez ou vendez des crypto-actifs, ou utilisez des services sur
+crypto-actifs, non réglementés par MiCA ou d'autres législations de l'UE sur
+les services financiers, vous pouvez être exposé à des risques importants et
+bénéficier d'une protection limitée ou inexistante.
+
+Les fournisseurs de crypto-actifs que vous pouvez rencontrer
+
+Les crypto-actifs et les prestataires de services sur
+crypto-actifs réglementés dans l’UE :
+
+Les crypto-actifs et les prestataires de services sur
+crypto-actifs non autorisés9 dans l’UE :
+
+Ces entreprises proposent des produits et des services aux
+investisseurs qui sont réglementés par MiCA, comme les jetons
+ART, des EMT, les services de conservation et d’administration de
+crypto-actifs, d’exploitation de plateformes de négociation ainsi
+que d’échange de crypto-actifs (contre des monnaies ayant cours
+légal-fiat8- ou contre d’autres crypto-actifs). Pour pouvoir fournir
+des services aux consommateurs dans l’UE, les prestataires de
+services sur crypto-actifs doivent être agréés, c’est-à-dire satisfaire
+à des exigences spécifiques en matière de gouvernance, de
+capital, de conduite et de protection des investisseurs.
+
+Malgré l’entrée en application de MiCA, il pourrait vous être
+proposé des crypto-actifs ou des services sur crypto-actifs fournis
+par des entreprises non autorisées dans l’UE. Ces entreprises
+peuvent ne pas être soumises à des règles relatives à la protection
+des investisseurs, ne pas avoir une gouvernance adéquate ou
+le capital suffisant et avoir des pratiques opérationnelles et
+des mécanismes de protection peu transparents. Les risques
+de fraude, de mauvaise gestion des actifs ou d'insolvabilité
+pourraient donc être accrus.
+
+Vous pouvez vérifier si un fournisseur est un prestataire
+agréé dans l’UE en consultant le registre de l’ESMA
+(shorturl.at/zZwVI) ou le site web de l’Autorité des
+marchés financiers (AMF).
+Pour plus de détails, consultez «Les questions que vous
+devez vous posez avant d'investir dans les crypto-actifs»
+dans l’avertissement des Autorités Européennes de
+Surveillance (AES) conjointes [shorturl.at/UqQLq]
+
+En vous engageant auprès d’entreprises non autorisées,
+vous vous exposez à des risques potentiellement
+importants et que vos droits et protections en tant
+qu’investisseurs sont limités, voire inexistants. Vous
+pourriez devoir faire face à des pertes, n’avoir qu’une
+possibilité limitée (voire nulle) de récupérer vos actifs,
+ainsi que de n’avoir aucun recours en cas de litiges.
+
+FIAT :
+
+9
+
+8
+
+La monnaie Fiat est déclarée comme ayant cours légal et émise par
+une banque centrale telle que le dollar américain, l’euro, etc.
+Échange de crypto-actifs contre des monnaies fiat : il s’agit de l’achat,
+de la vente ou de la négociation de crypto-actif avec de la monnaie.
+
+© Autorité bancaire européenne, Autorité européenne des assurances et des
+pensions professionnelles, Autorité européenne des marchés financiers, 2025
+Illustration credit: Kate3155 - stock.adobe.com.
+Reproduction autorisée, moyennant mention de la source.
+
+ENTREPRISE NON AUTORISÉE :
+
+Toutes les entreprises exerçant leurs activités dans l’UE sans licence
+valable au titre du réglement MiCA ne sont pas autorisées. Mais toutes
+les entreprises non autorisées fournissant des services ne sont pas
+nécessairement illégales (par exemple : lorsque l’entreprise est sollicitée
+directement par l’investisseur - «sollicitation inversée» -, lorsque
+l’activité est entièrement décentralisée ou bien sont en dehors du champ
+d’application du réglement MiCA).
+
+Luxembourg: Office des publications de l’Union européenne, 2025
+PDF
+
+ISBN 978-92-9407-076-0
+
+doi:10.2853/4232827
+
+DZ-01-25-050-FR-N
+
+Print
+
+ISBN 978-92-9407-077-7
+
+doi:10.2853/7326836
+
+DZ-01-25-050-FR-C
+
