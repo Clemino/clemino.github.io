@@ -4,14 +4,14 @@
 
 ## En attente d'une réponse de Clément
 
-- [ ] **Lancer `claude/supabase/acces-par-personne.sql` dans Supabase** (projet `cours`, **SQL Editor**), après avoir remplacé `ton.adresse@gmail.com` par l'adresse de son compte Google. Tant qu'il n'est pas lancé, tout le monde voit toutes les matières, comme avant. Ensuite, donner Droit administratif à Océane dans la section « Accès » de la bibliothèque.
+- [x] **Lancer `claude/supabase/acces-par-personne.sql` dans Supabase.** Fait par Clément le 10 novembre 2026 : les accès par personne sont actifs, et Clément les gère dans la section « Accès » de la bibliothèque.
 - [ ] **Ajouter des proches à la liste de test Google.** L'appli Google reste en mode Test, comme Clément l'a décidé le 9 novembre 2026 : seuls les comptes de sa liste peuvent se connecter, donc ouvrir un cours. Il faut leurs adresses Gmail exactes, à ajouter dans la [console Google, page Audience](https://console.cloud.google.com/auth/audience?project=cours-513918), bouton **Add users** (100 personnes maximum). À la première connexion, Google affiche « Google n'a pas validé cette application » : il faut cliquer sur **Continuer**.
 - [x] **Supprimer le dépôt privé `Clemino/coursapp`.** Fait par Clément le 9 novembre 2026 : `coursapp` n'existe plus que sur son PC.
 
 ## Site
 
 - [x] **Régler la page d'accueil** (`index.html`). Fait le 9 novembre 2026 : à la demande de Clément, c'est une page blanche. On entre sur le site uniquement par `/cours/`.
-- [x] **Chacun ne voit que ses matières.** Fait le 10 novembre 2026, à activer avec le SQL ci-dessus : une personne voit les matières qu'elle a proposées et qui ont été créées, celles qu'elle suivait déjà, et celles que Clément lui donne dans la section « Accès » ; Clément voit tout. `proposals.mjs done` ouvre la matière créée à son auteur. Les cours n'ont pas eu à être republiés : ils vérifient qu'on suit la matière, et Supabase cache celles dont l'accès a été retiré.
+- [x] **Chacun ne voit que ses matières.** Fait le 10 novembre 2026 : une personne voit les matières qu'elle a proposées et qui ont été créées, celles qu'elle suivait déjà, et celles que Clément lui donne dans la section « Accès » ; Clément voit tout. `proposals.mjs done` ouvre la matière créée à son auteur. Les cours n'ont pas eu à être republiés : ils vérifient qu'on suit la matière, et Supabase cache celles dont l'accès a été retiré.
 - [x] **Refaire l'interface de la bibliothèque** (`cours/index.html`). Fait le 9 novembre 2026 : une carte par matière, une carte « + » qui ouvre le formulaire dans une fenêtre, des boutons animés aux couleurs des cours, et « Mes propositions » avec l'état de chacune.
 - [ ] **Compléter Trading :** 18 sections de théorie rédigées sur 83 prévues ; les modules 4 à 15 sont presque vides. Le contenu se trouve dans `coursapp/courses/trd/`, puis se publie avec `pnpm publish:course trd`.
 - [ ] **Ajouter les ateliers d'IA responsable** (diapositives 18, 27 et 34), si leurs documents sont disponibles : le PDF ne contient que leurs titres.
