@@ -15,8 +15,8 @@
 
 ## Entretien
 
-- [ ] **Supprimer les branches déjà fusionnées :** `refonte-site`, `plateforme-cours`, `retire-clip`, `supabase-keepalive` et `a-faire`, en local et sur GitHub, plus l'ancienne `claude/admin-app`.
-- [ ] **Couper la connexion par e-mail dans Supabase** (projet `cours`, Authentication > Sign In / Providers > Email). Le site n'utilise que Google ; cela ferme une porte inutile et fait taire l'avertissement « Leaked Password Protection Disabled ».
+- [x] **Supprimer les branches déjà fusionnées.** Fait le 9 novembre 2026 : il ne reste que `main`, en local et sur GitHub.
+- [x] **Couper la connexion par e-mail dans Supabase.** Fait le 9 novembre 2026 : seul Google permet de se connecter, donc seules les personnes de la liste de test Google peuvent créer un compte.
 - [ ] **Tester sur un second appareil** (téléphone, iPad) : se connecter, retrouver ses matières et sa progression.
 
 ## Idées pour plus tard
