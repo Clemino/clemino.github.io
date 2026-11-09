@@ -8,10 +8,11 @@ La page d'accueil (`index.html`) est une page blanche, voulue ainsi : on entre s
 
 Connexion Google, puis choix d'une matière parmi les catégories (Droit, Finance…). Ensuite, chacun ne voit que ses matières dans « Mes cours » et peut en ajouter ou en retirer.
 
-- Pour publier un cours : le générer avec `pnpm publish:course <id>` dans `coursapp`, puis l'ajouter à `LIBRARY` dans `cours/index.html` avec sa catégorie. Ne jamais changer l'`id` d'un cours : les choix enregistrés et la progression pointent dessus.
+- Pour publier un cours : le générer avec `pnpm publish:course <id>` dans `coursapp`, puis l'ajouter à `LIBRARY` dans `cours/index.html` avec sa catégorie, la couleur de sa carte et son icône. Ne jamais changer l'`id` d'un cours : les choix enregistrés et la progression pointent dessus.
 - La connexion et les cours suivis passent par le projet Supabase `cours` (table `followed_courses`). La session est commune à tout le site, car elle reste dans le navigateur pour `clemino.github.io`.
 - Un cours renvoie vers `/cours/` si on n'est pas connecté ou si on ne le suit pas. C'est un contrôle dans le navigateur : les fichiers d'un site GitHub Pages restent publics.
-- La page reprend la direction artistique des cours : mêmes couleurs, polices Geist copiées dans `cours/fonts/`, et même choix de thème clair ou sombre.
+- Chaque matière est une carte : « Mes cours » pour celles qu'on suit, « À découvrir » pour les autres, et une carte « + » qui ouvre le formulaire « Proposer une matière ». « Mes propositions » montre l'état de chaque proposition.
+- La page reprend la direction artistique des cours : mêmes couleurs, polices Geist copiées dans `cours/fonts/`, et même choix de thème clair ou sombre. Les animations s'arrêtent si l'appareil demande moins de mouvements.
 - supabase-js 2.119.0 est copié dans `cours/vendor/`.
 
 ## /cours/sources/ et /claude/ : les sources des cours
