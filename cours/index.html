@@ -323,6 +323,62 @@
 				margin-top: 1.5rem;
 			}
 
+			.actions-row {
+				margin-top: 3rem;
+			}
+			.note {
+				max-width: 42rem;
+				margin: 0 0 1.5rem;
+				color: var(--fg-1);
+				font-size: 0.875rem;
+				line-height: 1.6;
+			}
+			form {
+				display: grid;
+				gap: 1rem;
+				max-width: 34rem;
+			}
+			.field {
+				display: grid;
+				gap: 0.375rem;
+			}
+			.field > span {
+				color: var(--fg-2);
+				font-family: var(--mono);
+				font-size: 0.75rem;
+			}
+			.field input {
+				width: 100%;
+				padding: 0.5rem 0.75rem;
+				border: 1px solid var(--border);
+				border-radius: 6px;
+				background: var(--bg-1);
+				color: var(--fg-0);
+				font: inherit;
+				font-size: 0.875rem;
+			}
+			.field input:focus-visible {
+				outline: 3px solid color-mix(in oklab, var(--accent) 50%, transparent);
+			}
+			.form-actions {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem;
+			}
+			#propose-status {
+				margin: 0;
+				color: var(--fg-1);
+				font-size: 0.875rem;
+			}
+			.status {
+				color: var(--fg-2);
+				font-family: var(--mono);
+				font-size: 0.75rem;
+				white-space: nowrap;
+			}
+			.status-created {
+				color: var(--accent);
+			}
 			footer {
 				position: relative;
 				border-top: 1px solid var(--border);
@@ -427,6 +483,36 @@
 					<h2 id="library-title">Choisis ta matière</h2>
 					<div id="library"></div>
 				</section>
+				<div class="actions-row">
+					<button id="propose-open" class="button button-outline" type="button" aria-expanded="false">Proposer une matière</button>
+				</div>
+				<section id="propose-section" aria-labelledby="propose-title" hidden>
+					<h2 id="propose-title">Proposer une matière</h2>
+					<p class="note">Envoie les PDF de ton cours. La matière est préparée à partir de ces documents, puis ajoutée à la bibliothèque. Les documents deviennent publics avec elle.</p>
+					<form id="propose-form" novalidate>
+						<label class="field">
+							<span>Titre</span>
+							<input id="propose-name" maxlength="120" autocomplete="off" />
+						</label>
+						<label class="field">
+							<span>Catégorie</span>
+							<input id="propose-category" maxlength="60" list="categories" autocomplete="off" />
+						</label>
+						<datalist id="categories"></datalist>
+						<label class="field">
+							<span>Fichiers PDF, 50 Mo maximum chacun</span>
+							<input id="propose-files" type="file" accept="application/pdf,.pdf" multiple />
+						</label>
+						<div class="form-actions">
+							<button id="propose-submit" class="button button-primary button-large" type="submit">Envoyer la proposition</button>
+						</div>
+						<p id="propose-status" role="status"></p>
+					</form>
+				</section>
+				<section id="proposals-section" aria-labelledby="proposals-title" hidden>
+					<h2 id="proposals-title">Mes propositions</h2>
+					<ul id="my-proposals"></ul>
+				</section>
 			</div>
 		</main>
 
@@ -499,6 +585,23 @@
 			let followed = new Set()
 			let libraryOpen = false
 
+			const MAX_FILE_BYTES = 50 * 1024 * 1024
+			const STATUS_LABELS = { pending: "En attente", created: "Créée", rejected: "Refusée" }
+
+			/** Storage keys accept a restricted set of characters: accents and symbols are replaced. */
+			function storageName(name) {
+				return name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^A-Za-z0-9 _.,()'-]/g, "-")
+			}
+
+			function uniqueNames(names) {
+				const seen = new Map()
+				return names.map((name) => {
+					const count = seen.get(name) ?? 0
+					seen.set(name, count + 1)
+					return count ? name.replace(/(\.pdf)?$/i, ` (${count + 1})$1`) : name
+				})
+			}
+
 			function showError(message) {
 				byId("error").textContent = message
 				byId("error").hidden = false
@@ -549,6 +652,82 @@
 				byId("library").replaceChildren(...categories.flatMap(categoryNodes))
 			}
 
+			function renderProposals(proposals) {
+				byId("proposals-section").hidden = proposals.length === 0
+				byId("my-proposals").replaceChildren(
+					...proposals.map((proposal) => {
+						const item = document.createElement("li")
+						item.className = "row"
+						const course = LIBRARY.find((c) => c.id === proposal.course_id)
+						const name = document.createElement(course ? "a" : "span")
+						if (course) name.href = course.href
+						name.className = "title"
+						name.textContent = `${proposal.title} · ${proposal.category}`
+						const status = document.createElement("span")
+						status.className = `status status-${proposal.status}`
+						status.textContent = STATUS_LABELS[proposal.status] ?? proposal.status
+						item.replaceChildren(name, status)
+						return item
+					}),
+				)
+			}
+
+			async function loadProposals() {
+				const { data, error } = await client
+					.from("course_proposals")
+					.select("title, category, status, course_id, created_at")
+					.order("created_at", { ascending: false })
+				if (!error) renderProposals(data)
+			}
+
+			function setProposeStatus(message) {
+				byId("propose-status").textContent = message
+			}
+
+			async function submitProposal(event) {
+				event.preventDefault()
+				const title = byId("propose-name").value.trim()
+				const category = byId("propose-category").value.trim()
+				const files = [...byId("propose-files").files]
+				const notPdf = files.find((file) => file.type !== "application/pdf" && !/\.pdf$/i.test(file.name))
+				const tooBig = files.find((file) => file.size > MAX_FILE_BYTES)
+				const problem = !title
+					? "Donne un titre à la matière."
+					: !category
+						? "Choisis ou écris une catégorie."
+						: files.length === 0
+							? "Ajoute au moins un PDF."
+							: notPdf
+								? `${notPdf.name} n'est pas un PDF.`
+								: tooBig
+									? `${tooBig.name} dépasse 50 Mo.`
+									: null
+				if (problem) return setProposeStatus(problem)
+
+				const id = crypto.randomUUID()
+				const names = uniqueNames(files.map((file) => storageName(file.name)))
+				byId("propose-submit").disabled = true
+				try {
+					// Files go first, into the sender's own folder: the proposal row cannot be changed afterwards.
+					for (const [index, file] of files.entries()) {
+						setProposeStatus(`Envoi du fichier ${index + 1} sur ${files.length}…`)
+						const { error } = await client.storage
+							.from("proposals")
+							.upload(`${userId}/${id}/${names[index]}`, file, { contentType: "application/pdf" })
+						if (error) throw error
+					}
+					const { error } = await client.from("course_proposals").insert({ id, title, category, files: names })
+					if (error) throw error
+				} catch {
+					return setProposeStatus("Envoi impossible. Réessaie dans un instant.")
+				} finally {
+					byId("propose-submit").disabled = false
+				}
+				byId("propose-form").reset()
+				setProposeStatus("Merci ! Ta proposition est en attente : la matière apparaîtra dans la bibliothèque une fois créée.")
+				await loadProposals()
+			}
+
 			async function loadCourses() {
 				const { data, error } = await client.from("followed_courses").select("course")
 				if (error) return showError("Impossible de charger tes cours. Recharge la page.")
@@ -575,9 +754,31 @@
 				byId("sign-out").hidden = !session
 				byId("email").textContent = session ? ` · ${session.user.email}` : ""
 				// Supabase calls made inside this callback can deadlock, so this one runs just after it.
-				if (session && session.user.id !== userId) setTimeout(loadCourses)
+				if (session && session.user.id !== userId) {
+					setTimeout(() => {
+						void loadCourses()
+						void loadProposals()
+					})
+				}
 				userId = session?.user.id ?? null
 			})
+
+			byId("categories").replaceChildren(
+				...[...new Set(LIBRARY.map((course) => course.category))].map((category) => {
+					const option = document.createElement("option")
+					option.value = category
+					return option
+				}),
+			)
+
+			byId("propose-open").addEventListener("click", () => {
+				const section = byId("propose-section")
+				section.hidden = !section.hidden
+				byId("propose-open").setAttribute("aria-expanded", String(!section.hidden))
+				if (!section.hidden) byId("propose-name").focus()
+			})
+
+			byId("propose-form").addEventListener("submit", submitProposal)
 
 			byId("manage").addEventListener("click", () => {
 				libraryOpen = !libraryOpen
