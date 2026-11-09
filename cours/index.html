@@ -871,6 +871,148 @@
 				background: color-mix(in oklab, var(--accent) 12%, transparent);
 			}
 
+			/* Access panel, for administrators */
+			.section-note {
+				max-width: 40rem;
+				margin: -0.25rem 0 1.25rem;
+				color: var(--fg-2);
+				font-size: 0.85rem;
+				line-height: 1.6;
+			}
+			.search {
+				position: relative;
+				display: block;
+				max-width: 22rem;
+				margin-bottom: 1rem;
+			}
+			.search .icon {
+				position: absolute;
+				top: 50%;
+				left: 0.875rem;
+				color: var(--fg-3);
+				transform: translateY(-50%);
+				pointer-events: none;
+			}
+			.search .input {
+				padding-left: 2.5rem;
+			}
+			.people {
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+				border: 1px solid var(--border);
+				border-radius: 16px;
+				background: var(--bg-1);
+				list-style: none;
+			}
+			.person {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				gap: 0.75rem 1rem;
+				padding: 0.875rem 1rem;
+			}
+			.person + .person {
+				border-top: 1px solid var(--border);
+			}
+			.avatar {
+				display: grid;
+				flex-shrink: 0;
+				place-items: center;
+				width: 2.25rem;
+				height: 2.25rem;
+				border-radius: 50%;
+				background: color-mix(in oklab, var(--c) 18%, transparent);
+				color: var(--c);
+				font-family: var(--mono);
+				font-size: 0.9rem;
+				font-weight: 600;
+			}
+			.person-main {
+				flex: 1 1 12rem;
+				min-width: 0;
+			}
+			.person-name {
+				display: block;
+				overflow: hidden;
+				font-size: 0.925rem;
+				font-weight: 500;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			.person-email {
+				display: block;
+				overflow: hidden;
+				color: var(--fg-2);
+				font-size: 0.75rem;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			.grants {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.375rem;
+			}
+			.grant {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.375rem;
+				height: 2rem;
+				padding: 0 0.75rem 0 0.5rem;
+				border: 1px dashed var(--border);
+				border-radius: 999px;
+				background: transparent;
+				color: var(--fg-2);
+				font: inherit;
+				font-size: 0.8rem;
+				cursor: pointer;
+				transition:
+					transform 0.3s var(--spring),
+					background-color 0.2s,
+					border-color 0.2s,
+					color 0.2s;
+			}
+			.grant .icon {
+				width: 0.95rem;
+				height: 0.95rem;
+				color: var(--fg-3);
+				transition:
+					color 0.2s,
+					transform 0.4s var(--spring);
+			}
+			.grant:hover {
+				border-color: color-mix(in oklab, var(--c) 60%, var(--border));
+				color: var(--fg-0);
+				transform: translateY(-1px);
+			}
+			.grant:hover .icon {
+				color: var(--c);
+				transform: rotate(-10deg) scale(1.1);
+			}
+			.grant:active {
+				transform: scale(0.95);
+			}
+			.grant[aria-pressed="true"] {
+				border-style: solid;
+				border-color: color-mix(in oklab, var(--c) 70%, transparent);
+				background: color-mix(in oklab, var(--c) 16%, transparent);
+				color: var(--fg-0);
+			}
+			.grant[aria-pressed="true"] .icon {
+				color: var(--c);
+			}
+			.grant:focus-visible {
+				outline: 3px solid color-mix(in oklab, var(--c) 55%, transparent);
+				outline-offset: 2px;
+			}
+			.grant.is-busy {
+				pointer-events: none;
+				opacity: 0.7;
+			}
+			.grant.pop {
+				animation: pop 0.45s var(--spring);
+			}
+
 			/* Proposal dialog */
 			dialog {
 				width: min(34rem, calc(100vw - 2rem));
@@ -1580,6 +1722,20 @@
 					<h2 id="proposals-title" class="section-title">Mes propositions</h2>
 					<ul id="my-proposals" class="proposals"></ul>
 				</section>
+
+				<section id="admin-section" aria-labelledby="admin-title" hidden>
+					<h2 id="admin-title" class="section-title">Accès <span id="people-count" class="count"></span></h2>
+					<p class="section-note">Toi seul vois cette partie. Touche une matière pour l'ouvrir à quelqu'un ou la lui retirer : elle apparaît dans sa bibliothèque à sa prochaine visite. Sa progression est gardée même quand l'accès est retiré.</p>
+					<label id="people-search-box" class="search" hidden>
+						<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+							<circle cx="11" cy="11" r="8" />
+							<path d="m21 21-4.3-4.3" />
+						</svg>
+						<input id="people-search" class="input" type="search" placeholder="Chercher une personne" aria-label="Chercher une personne" autocomplete="off" />
+					</label>
+					<ul id="people" class="people"></ul>
+					<p id="people-empty" class="section-note" hidden></p>
+				</section>
 			</div>
 		</main>
 
@@ -1788,6 +1944,13 @@
 			let sending = false
 			const busy = new Set()
 
+			let isAdmin = false
+			// Null when the access table does not answer: everyone then sees every course, as before access rules.
+			let access = null
+			let people = []
+			const grants = new Map()
+			const grantBusy = new Set()
+
 			const MAX_FILE_BYTES = 50 * 1024 * 1024
 			const STATUS_LABELS = { pending: "En attente", created: "Créée", rejected: "Refusée" }
 			const CATEGORIES = [...new Set(LIBRARY.map((course) => course.category))]
@@ -1916,14 +2079,25 @@
 				return card
 			}
 
+			/** An administrator sees every course; anyone else, the courses they were given. */
+			function visibleCourses() {
+				return isAdmin || !access ? LIBRARY : LIBRARY.filter((course) => access.has(course.id))
+			}
+
 			function render() {
-				const mine = LIBRARY.filter((course) => followed.has(course.id))
-				const others = LIBRARY.filter((course) => !followed.has(course.id))
-				byId("heading-start").textContent = mine.length ? "Reprendre" : "Choisis"
+				const visible = visibleCourses()
+				const mine = visible.filter((course) => followed.has(course.id))
+				const others = visible.filter((course) => !followed.has(course.id))
+				byId("heading-start").textContent = mine.length ? "Reprendre" : visible.length ? "Choisis" : "Propose"
 				byId("heading-accent").textContent = mine.length ? "tes cours" : "ta matière"
 				const hello = firstName ? `Bonjour ${firstName} ! ` : ""
 				byId("lead").textContent =
-					hello + (mine.length ? "Ouvre un cours pour reprendre, ou ajoute une matière de la bibliothèque." : "Ajoute une matière à tes cours pour commencer, ou propose la tienne.")
+					hello +
+					(mine.length
+						? "Ouvre un cours pour reprendre, ou ajoute une matière de la bibliothèque."
+						: visible.length
+							? "Ajoute une matière à tes cours pour commencer, ou propose la tienne."
+							: "Aucune matière ne t'est encore ouverte : envoie les PDF de ton cours avec la carte « + », et elle sera préparée pour toi.")
 				byId("my-section").hidden = mine.length === 0
 				byId("my-count").textContent = mine.length
 				byId("my-courses").replaceChildren(...mine.map((course, index) => cardNode(course, true, index)))
@@ -1942,10 +2116,18 @@
 			}
 
 			async function loadCourses() {
-				const { data, error } = await client.from("followed_courses").select("course")
-				if (error) return showError("Impossible de charger tes cours. Recharge la page.")
-				followed = new Set(data.map((row) => row.course))
+				const [follows, given, admin] = await Promise.all([
+					client.from("followed_courses").select("course"),
+					client.from("course_access").select("course").eq("user_id", userId),
+					client.rpc("is_admin"),
+				])
+				if (follows.error) return showError("Impossible de charger tes cours. Recharge la page.")
+				followed = new Set(follows.data.map((row) => row.course))
+				access = given.error ? null : new Set(given.data.map((row) => row.course))
+				isAdmin = !admin.error && admin.data === true
 				render()
+				byId("admin-section").hidden = !isAdmin
+				if (isAdmin) await loadPeople()
 			}
 
 			async function toggleCourse(id) {
@@ -1989,6 +2171,108 @@
 				card.addEventListener("animationend", () => card.classList.remove("flash"), { once: true })
 			}
 
+			/* Access panel: only an administrator gets here, and the database checks it again. */
+
+			const personName = (person) => person.name || person.email || "Sans nom"
+			const simplify = (text) => text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase()
+
+			async function loadPeople() {
+				const [list, rows] = await Promise.all([client.from("people").select("id, email, name"), client.from("course_access").select("user_id, course")])
+				if (list.error || rows.error) return showError("Impossible de charger les accès. Recharge la page.")
+				people = list.data.filter((person) => person.id !== userId).sort((a, b) => personName(a).localeCompare(personName(b), "fr"))
+				grants.clear()
+				for (const row of rows.data) {
+					if (!grants.has(row.user_id)) grants.set(row.user_id, new Set())
+					grants.get(row.user_id).add(row.course)
+				}
+				byId("people-search-box").hidden = people.length < 6
+				renderPeople()
+			}
+
+			function personNode(person) {
+				const item = document.createElement("li")
+				item.className = "person"
+				const name = personName(person)
+
+				const avatar = document.createElement("span")
+				avatar.className = "avatar"
+				avatar.setAttribute("aria-hidden", "true")
+				avatar.style.setProperty("--c", `var(--${colorOf({ id: person.id })})`)
+				avatar.textContent = name.charAt(0).toUpperCase()
+
+				const main = document.createElement("span")
+				main.className = "person-main"
+				const title = document.createElement("span")
+				title.className = "person-name"
+				title.textContent = name
+				main.append(title)
+				if (person.name && person.email) {
+					const email = document.createElement("span")
+					email.className = "person-email"
+					email.textContent = person.email
+					main.append(email)
+				}
+
+				const group = document.createElement("div")
+				group.className = "grants"
+				group.setAttribute("role", "group")
+				group.setAttribute("aria-label", `Matières de ${name}`)
+				for (const course of LIBRARY) {
+					const button = document.createElement("button")
+					button.type = "button"
+					button.className = "grant"
+					button.dataset.person = person.id
+					button.dataset.course = course.id
+					button.style.setProperty("--c", `var(--${colorOf(course)})`)
+					button.setAttribute("aria-pressed", String(Boolean(grants.get(person.id)?.has(course.id))))
+					button.innerHTML = `<span class="spinner"></span><svg class="icon busy-hide" viewBox="0 0 24 24" aria-hidden="true">${course.icon ?? BOOK_ICON}</svg>`
+					button.append(course.title)
+					button.addEventListener("click", () => toggleGrant(person, course))
+					group.append(button)
+				}
+				item.append(avatar, main, group)
+				return item
+			}
+
+			function renderPeople() {
+				const query = simplify(byId("people-search").value.trim())
+				const shown = query ? people.filter((person) => simplify(`${person.name ?? ""} ${person.email ?? ""}`).includes(query)) : people
+				byId("people-count").textContent = people.length
+				byId("people").replaceChildren(...shown.map(personNode))
+				byId("people").hidden = shown.length === 0
+				byId("people-empty").hidden = shown.length > 0
+				byId("people-empty").textContent = people.length ? "Personne ne correspond à cette recherche." : "Personne d'autre ne s'est encore connecté. Pour inviter quelqu'un, ajoute son adresse Gmail à la liste de test Google."
+			}
+
+			async function toggleGrant(person, course) {
+				const key = `${person.id}:${course.id}`
+				if (grantBusy.has(key)) return
+				const button = () => document.querySelector(`.grant[data-person="${person.id}"][data-course="${course.id}"]`)
+				const had = Boolean(grants.get(person.id)?.has(course.id))
+				grantBusy.add(key)
+				button()?.classList.add("is-busy")
+				const table = client.from("course_access")
+				const { error } = had ? await table.delete().eq("user_id", person.id).eq("course", course.id) : await table.insert({ user_id: person.id, course: course.id })
+				grantBusy.delete(key)
+				button()?.classList.remove("is-busy")
+				if (error) return showError("Action impossible. Réessaie dans un instant.")
+
+				if (!grants.has(person.id)) grants.set(person.id, new Set())
+				if (had) grants.get(person.id).delete(course.id)
+				else grants.get(person.id).add(course.id)
+				const target = button()
+				if (target) {
+					target.setAttribute("aria-pressed", String(!had))
+					target.classList.remove("pop")
+					void target.offsetWidth
+					target.classList.add("pop")
+					if (!had) burst(target.querySelector(".icon"), [colorOf(course), "amber", "violet"])
+				}
+				const name = personName(person)
+				if (had) toast(`${name} n'a plus accès à ${course.title}.`, { action: "Annuler", onAction: () => toggleGrant(person, course) })
+				else toast(`${name} a maintenant accès à ${course.title}.`)
+			}
+
 			/* Proposals */
 
 			const dateFormat = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long" })
@@ -2028,7 +2312,7 @@
 						item.append(icon, main, badge)
 
 						const course = LIBRARY.find((c) => c.id === proposal.course_id)
-						if (proposal.status === "created" && course) {
+						if (proposal.status === "created" && course && visibleCourses().includes(course)) {
 							const see = document.createElement("button")
 							see.type = "button"
 							see.className = "proposal-see"
@@ -2237,10 +2521,8 @@
 				if (!session && dialog.open) dialog.close()
 				// Supabase calls made inside this callback can deadlock, so this one runs just after it.
 				if (session && session.user.id !== userId) {
-					setTimeout(() => {
-						void loadCourses()
-						void loadProposals()
-					})
+					// Proposals come second: their "Voir" button needs to know which courses are visible.
+					setTimeout(() => void loadCourses().then(loadProposals))
 				}
 				userId = session?.user.id ?? null
 			})
@@ -2303,6 +2585,7 @@
 			for (const type of ["dragover", "drop"]) dialog.addEventListener(type, (event) => event.preventDefault())
 
 			byId("toast-close").addEventListener("click", hideToast)
+			byId("people-search").addEventListener("input", renderPeople)
 
 			byId("sign-in").addEventListener("click", async () => {
 				const { error } = await client.auth.signInWithOAuth({
