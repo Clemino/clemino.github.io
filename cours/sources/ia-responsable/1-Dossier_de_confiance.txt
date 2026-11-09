@@ -1,0 +1,1350 @@
+[page 1]
+IA
+responsable
+De l’incident à la preuve
+Construire le dossier de confiance
+
+Souhila Arib
+CY Tech, élèves-ingénieurs Bac+5, option IA
+
+[page 2]
+FONDATIONS
+
+Les cinq pièces du dossier de confiance
+—->R Risques
+
+Scénarios de préjudice et mesures de réduction.
+
+—->E Équité
+
+Métriques, populations et arbitrages documentés.
+
+—->E Explicabilité
+
+Explications testées et recours accessible.
+
+—->C Conformité
+
+Qualification du système et obligations applicables.
+
+—->D Décision
+
+Avis motivé, responsables et conditions d’arrêt.
+
+Chaque pièce porte un identifiant de preuve, une version, un responsable et une date.
+
+02
+
+[page 3]
+FONDATIONS
+
+Les choix de valeurs dans le modèle
+Choix
+
+Exemple TalentScore
+
+Question d’audit
+
+Objectif
+
+Recruter un bon candidat
+
+Bon selon quels critères ?
+
+Proxy
+
+Score à un test de code
+
+Quelle compétence reste invisible ?
+
+Seuil
+
+Entretien si score ≥ 0,70
+
+Quel coût pour les faux négatifs ?
+
+Données
+
+Historique des recrutements
+
+Qui manque dans cet historique ?
+
+Un choix technique peut distribuer les bénéfices et les préjudices.
+03
+
+[page 4]
+FONDATIONS
+
+Le préjudice dans le cycle de vie
+Étape
+
+Exemple de défaillance
+
+Preuve attendue
+
+1 Besoin
+
+Automatiser un usage contestable
+
+Périmètre et alternatives
+
+2 Données
+
+Sous-représentation d’un contexte
+
+Couverture des populations
+
+3 Étiquettes
+
+Le passé sert de vérité terrain
+
+Audit du protocole d’annotation
+
+4 Métriques
+
+Moyenne qui masque un sous-groupe
+
+Résultats désagrégés
+
+5 Déploiement
+
+Contexte différent du test
+
+Validation en situation
+
+6 Usage
+
+Contournement ou confiance excessive
+
+Observation et suivi des incidents
+
+Question : à quelle étape agir pour empêcher le préjudice de se reproduire ?
+
+04
+
+[page 5]
+PIÈCE 1 / RISQUES
+
+Une matrice de priorisation des risques
+G/P
+
+1
+
+2
+
+3
+
+4
+
+5
+
+5
+
+5
+
+10
+
+15
+
+20
+
+25
+
+4
+
+4
+
+8
+
+12
+
+16
+
+20
+
+3
+
+3
+
+6
+
+9
+
+12
+
+15
+
+2
+
+2
+
+4
+
+6
+
+8
+
+10
+
+1
+
+1
+
+2
+
+3
+
+4
+
+5
+
+Score = gravité × probabilité
+Échelles ordinales de 1 à 5.
+Convention du TD : score ≥ 12, suspension
+avant traitement du risque.
+Gravité 5 : revue obligatoire, même avec une
+probabilité faible.
+
+Le seuil de 12 est pédagogique. Un produit de scores ordinaux ne mesure pas une perte attendue.
+
+05
+
+[page 6]
+PIÈCE 1 / RISQUES
+
+Six incidents, six questions d’audit
+Cas documenté
+
+Point à examiner
+
+Test proposé en cours
+
+Amazon, recrutement
+
+Historique et signaux liés au genre
+
+Sélection par groupe et audit des variables
+
+COMPAS
+
+Choix du critère d’équité
+
+FPR, FNR et précision par groupe
+
+Uber, Tempe
+
+Organisation de la supervision
+
+Réaction et reprise en situation dégradée
+
+Tay
+
+Interactions adversariales
+
+Tests d’abus avant ouverture
+
+Air Canada
+
+Fiabilité de l’information fournie
+
+Réponse cohérente avec la règle en vigueur
+
+Santé, Obermeyer et al.
+
+Coût utilisé comme proxy du besoin
+
+Validation clinique de la cible
+
+Les tests proposés sont des exercices d’audit. Aucun test isolé ne garantit l’absence d’incident.
+
+06
+
+[page 7]
+PIÈCE 1 / RISQUES
+
+Le registre des risques
+Champ
+
+Exemple pédagogique
+
+Scénario et personne exposée Piéton manqué la nuit, usager de la route
+Cause à vérifier
+
+Couverture nocturne insuffisante dans les tests
+
+Cotation et incertitude
+
+G=5, P=3, score=15. Estimation à justifier.
+
+Mesure et propriétaire
+
+Limiter le domaine d’emploi. Responsable sécurité.
+
+Preuve de clôture
+
+Test nocturne indépendant et revue signée
+
+Les « 5 pourquoi » formulent des hypothèses de cause à vérifier.
+07
+
+[page 8]
+PIÈCE 1 / RISQUES
+
+La trace d’une décision
+Entrée
+
+Identifiant pseudonymisé et version des données utiles.
+
+Modèle
+
+Modèle, code, configuration et dépendances.
+
+Score et seuil
+
+0,62 face à un seuil de 0,60, avec la règle appliquée.
+
+Décision
+
+Action, date, acteur et éventuel réexamen.
+
+Pour un RAG : ajouter version du corpus, passages récupérés, gabarit et paramètres de génération.
+
+08
+
+[page 9]
+PIÈCE 1 / RISQUES
+
+Intégrité du journal et test de rejeu
+Empreinte
+
+SHA-256 identifie les octets d’un artefact.
+
+Ancrage
+
+Signature ou référence de confiance conservée séparément.
+
+Horodatage
+
+Preuve de date, selon le service et le cadre retenus.
+
+Sondage
+
+20 dossiers au hasard, puis comparaison et rejeu.
+
+Un sondage sans anomalie réduit une incertitude. Il ne prouve pas une absence totale de
+falsification.
+09
+
+[page 10]
+PIÈCE 1 / RISQUES
+
+Documentation et lignage
+Document
+
+Questions auxquelles il répond
+
+Datasheet du jeu de données Origine, collecte, population, annotation, usages permis.
+Model Card du modèle
+
+Usage prévu, performance, sous-groupes, limites.
+
+Manifeste de version
+
+Données, code, modèle et configuration exacts.
+
+Rapport de validation
+
+Test indépendant, protocole, incertitude, résultats.
+
+Un identifiant relie chaque résultat à ses artefacts.
+Une Model Card contribue à la documentation technique. Elle ne la remplace pas systématiquement.
+
+10
+
+[page 11]
+PIÈCE 1 / RISQUES
+
+Dérive des données et dérive du concept
+Type
+
+Ce qui change
+
+Surveillance
+
+Données
+
+Pₜ(X) ≠ P₀(X)
+
+Distribution et couverture des entrées
+
+Concept
+
+Pₜ(Y∣X) ≠ P₀(Y∣X)
+
+Erreurs, avec des étiquettes fiables
+
+Prévalence
+
+Pₜ(Y) ≠ P₀(Y)
+
+Fréquence de la cible observée
+
+Une alerte déclenche une investigation et une action prévue.
+Exemple de règle interne : AUC < 0,74, après contrôle de la fenêtre et de l’incertitude.
+
+11
+
+[page 12]
+CAS COURT / 10 MINUTES
+
+97,1 % de rappel peut masquer un risque
+112 %
+
+0,99
+
+0,97
+0,8
+
+84 %
+56 %
+
+20 %
+des piétons manqués
+la nuit
+
+28 %
+0%
+
+Jour
+
+Nuit
+
+Global
+
+Jour : 891 / 900
+Nuit : 80 / 100
+Global : 971 / 1 000
+
+Données pédagogiques. Calculer le rappel global, puis proposer une restriction du domaine d’emploi.
+
+12
+
+[page 13]
+PIÈCE 2 / ÉQUITÉ
+
+L’accuracy globale masque les écarts
+110 %
+
+0,96
+0,8
+
+83 %
+
+d’écart entre les deux
+groupes
+
+0,48
+
+55 %
+
+48 points
+
+28 %
+
+0%
+
+Groupe majoritaire
+
+Sous-groupe
+
+Global
+
+Effectifs, intervalles et
+groupes croisés
+accompagnent les scores.
+
+Illustration : 1 000 personnes à 96 % et 500 à 48 % donnent une accuracy globale de 80 %.
+
+13
+
+[page 14]
+PIÈCE 2 / ÉQUITÉ
+
+Le ratio de sélection et la règle des 4/5
+Ratio = taux de sélection du groupe b
+÷ taux de sélection de référence
+
+0,44
+22 % ÷ 50 %
+Exemple TalentScore
+
+Le seuil de 0,80 est un repère de dépistage issu du
+contexte américain de l’emploi.
+Le franchir ne prouve ni l’équité ni la conformité au
+droit européen.
+
+Toujours indiquer les effectifs, le groupe de référence et l’incertitude du ratio.
+
+14
+
+[page 15]
+PIÈCE 2 / ÉQUITÉ
+
+La parité démographique
+P(Ŷ = 1 ∣ A = a) = P(Ŷ = 1 ∣ A = b)
+65 %
+49 %
+
+28 points
+
+0,5
+
+33 %
+
+0,22
+
+d’écart de sélection
+dans l’exemple
+
+Femmes
+
+La métrique ignore Y.
+
+16 %
+0%
+
+Hommes
+
+A désigne le groupe, Y la qualification de référence et Ŷ la décision de sélection.
+
+15
+
+[page 16]
+PIÈCE 2 / ÉQUITÉ
+
+L’égalité des chances compare les rappels
+TPR = VP / (VP + FN)
+Equal opportunity : TPRₐ = TPRᵦ
+Groupe
+
+Qualifiés
+
+Sélectionnés parmi eux
+
+TPR
+
+G1
+
+600
+
+480
+
+80 %
+
+G2
+
+200
+
+120
+
+60 %
+
+Écart : 20 points. L’égalité des chances n’est pas satisfaite.
+16
+
+[page 17]
+PIÈCE 2 / ÉQUITÉ
+
+Trois moments pour atténuer un biais
+Moment
+
+Intervention possible
+
+Limite à tester
+
+Avant l’apprentissage
+
+Collecte ciblée, pondération, labels
+
+Le rééquilibrage ne corrige pas une
+mauvaise cible.
+
+Pendant l’apprentissage
+
+Contrainte ou pénalité d’équité
+
+Le critère choisi détermine l’arbitrage.
+
+Après l’apprentissage
+
+Seuils, abstention, revue humaine
+
+Coût, capacité et cadre juridique.
+
+Le jeu de test reste indépendant des choix de correction.
+Des seuils par groupe exigent une analyse juridique et une gestion adaptée des attributs protégés.
+
+[page 18]
+ATELIER / 50 MINUTES AVEC LA DIAPOSITIVE 20
+
+Atelier 1 et 2 : Autopsie d’incidents et L’équité ça se
+mesure
+
+19
+
+[page 19]
+TD2 · Matrice de confusion et indicateurs
+Observation Y : récidive observée à 2 ans (1 = oui, 0 = non), colonne two_year_recid.
+Prédiction Ŷ : classement à risque si decile_score ≥ 5 (Ŷ = 1), sinon Ŷ = 0.
+
+Les taux, calculés séparément par groupe
+
+Les quatre effectifs
+Prédit à risque
+Ŷ=1
+
+Prédit faible
+risque
+Ŷ=0
+
+Indicateur
+
+Formule
+
+TPR / rappel
+
+VP / (VP + FN)
+
+Récidive
+observée
+Y=1
+
+VP
+Vrais positifs
+
+FN
+Faux négatifs
+
+FPR / faux positifs
+
+FP / (FP + VN)
+
+FNR / faux négatifs
+
+FN / (VP + FN) = 1 − TPR
+
+Pas de récidive
+observée, Y = 0
+
+FP
+Faux positifs
+
+VN
+Vrais négatifs
+
+Précision positive / PPV
+
+VP / (VP + FP)
+
+Observation
+
+Accuracy / exactitude
+
+(VP + VN) / N
+
+VP, FN, FP et VN comptent les personnes
+qui appartiennent à chaque case.
+
+Taux de sélection
+
+(VP + FP) / N
+
+N = VP + FN + FP + VN
+
+Prévalence observée
+
+(VP + FN) / N
+
+Le dénominateur indique la population concernée par le taux.
+Le code affiche les taux par groupe. L’affichage des effectifs VP/VN/FP/FN nécessite un comptage supplémentaire.
+
+[page 20]
+PIÈCE 3 / EXPLICABILITÉ ET RECOURS
+
+Quatre notions pour examiner une explication
+Notion
+
+Question opérationnelle
+
+Transparence
+
+Quelles informations sur le système sont accessibles ?
+
+Interprétabilité
+
+Peut-on comprendre son mécanisme de calcul ?
+
+Explicabilité
+
+Quelle information éclaire cette sortie ou ce comportement ?
+
+Intelligibilité
+
+Le destinataire comprend-il l’information fournie ?
+
+Une explication doit répondre au besoin d’un destinataire précis.
+
+[page 21]
+PIÈCE 3 / EXPLICABILITÉ ET RECOURS
+
+Portée et origine de l’explication
+
+Globale : comportement
+d’ensemble
+
+Locale : une décision
+
+Modèle interprétable
+
+Arbre court, règles, modèle additif
+
+Chemin d’un arbre, contributions
+exactes
+
+Méthode post-hoc
+
+Substitut global, importance agrégée
+
+LIME, SHAP, contrefactuel
+
+Un substitut demande un test de fidélité au modèle qu’il explique.
+
+Une règle extraite d’un modèle complexe reste post-hoc, même si elle est simple.
+
+[page 22]
+PIÈCE 3 / EXPLICABILITÉ ET RECOURS
+
+Méthodes d’attribution : ce qu’elles mesurent
+Famille
+
+Principe
+
+Point de vigilance
+
+Perturbation
+
+Retirer ou modifier une entrée
+
+Entrées artificielles hors distribution
+
+Gradient
+
+Sensibilité locale de la sortie
+
+Saturation et choix de la référence
+
+Décomposition
+
+Redistribuer le signal, ex. LRP
+
+Dépendance aux règles de propagation
+
+Shapley / SHAP
+
+Contributions selon des coalitions
+
+Référence et dépendance des variables
+
+Une attribution décrit un calcul selon une méthode et ses hypothèses.
+
+[page 23]
+PIÈCE 3 / EXPLICABILITÉ ET RECOURS
+
+Le contrefactuel et le recours réalisable
+Trouver x′ proche de x, avec f(x′) différent,
+sous contraintes de faisabilité.
+Action autorisée
+
+Améliorer une compétence mesurée ou corriger une donnée.
+
+Contrainte
+
+Âge immuable, coût acceptable, relations réalistes.
+
+Vérification
+
+Tester la validité du changement et la stabilité du résultat.
+
+Un voisin est proche. Un prototype est typique. Une instance influente agit sur l’apprentissage.
+
+[page 24]
+PIÈCE 3 / EXPLICABILITÉ ET RECOURS
+
+Une supervision humaine effective
+Comprendre
+
+Accéder aux limites, à l’incertitude et aux informations utiles.
+
+Interrompre
+
+Suspendre avant que le préjudice survienne.
+
+Refuser
+
+Écarter ou corriger une sortie avec l’autorité nécessaire.
+
+La charge de travail et le délai disponible rendent ces pouvoirs réels.
+
+[page 25]
+PIÈCE 3 / EXPLICABILITÉ ET RECOURS
+
+Le biais d’automatisation
+Une validation humaine peut devenir une formalité.
+
+Facteurs
+
+Pression temporelle, confiance excessive, faible vigilance.
+
+Contre-mesures
+
+Charge limitée, formation, erreurs simulées et alertes utiles.
+
+Mesure
+
+Taux d’erreurs détectées, délai de réaction, décisions corrigées.
+
+Tempe, 2018 : le NTSB a identifié des facteurs humains et des défaillances de sécurité organisationnelle.
+
+[page 26]
+PIÈCE 3 / EXPLICABILITÉ ET RECOURS
+
+Un circuit de contestation utilisable
+1 Notification
+
+Décision compréhensible et effets annoncés.
+
+2 Explication
+
+Éléments déterminants, limites et données pertinentes.
+
+3 Contestation
+
+Canal accessible et possibilité de corriger les données.
+
+4 Réexamen
+
+Personne compétente avec pouvoir de modification.
+
+5 Trace
+
+Motif, délai, issue et suivi des réclamations.
+
+RGPD, art. 22 : champ et exceptions à examiner. AI Act, art. 14 : supervision des systèmes à haut risque.
+
+[page 27]
+ATELIER / 35 MINUTES
+
+Atelier 3: une explication suffit-elle à contester ?
+
+[page 28]
+PIÈCE 4 / CONFORMITÉ
+
+L’AI Act qualifie un système et son usage
+Régime
+
+Exemples et conditions
+
+Pratiques interdites
+
+Certaines formes de scoring social ou d’usages biométriques, art. 5.
+
+Systèmes à haut risque
+
+Recrutement, certains services essentiels ou produits, selon art. 6.
+
+Obligations de transparence
+
+Interactions avec une IA et contenus synthétiques, selon art. 50.
+
+Autres usages
+
+Des obligations d’autres textes peuvent rester applicables.
+
+La qualification dépend de la finalité, du rôle et des conditions d’usage.
+
+[page 29]
+PIÈCE 4 / SITUATION AU 2 OCTOBRE 2026
+
+AI Act : les échéances actualisées
+Date
+
+Principaux jalons
+
+2 février 2025
+
+Premières dispositions et interdictions
+
+2 août 2025
+
+Règles relatives aux modèles d’IA à usage général
+
+2 août 2026
+
+Transparence de l’article 50, sous dispositions transitoires
+
+2 décembre 2027
+
+Haut risque de l’annexe III
+
+2 août 2028
+
+Haut risque intégré aux produits de l’annexe I
+
+Plafonds : 35 M€ / 7 % pour les interdictions
+15 M€ / 3 % pour certains autres manquements
+Calendrier de la Commission après l’AI Omnibus. Plafonds et règles particulières selon l’acteur et le manquement.
+
+[page 30]
+PIÈCE 4 / CONFORMITÉ
+
+Obligations et preuves à réunir
+Bloc
+
+Exemple de preuve
+
+AI Act
+
+Risques
+
+Registre et mesures de réduction
+
+Art. 9
+
+Données
+
+Provenance et audit de qualité
+
+Art. 10
+
+Documentation
+
+Dossier technique versionné
+
+Art. 11
+
+Journalisation
+
+Événements et conservation
+
+Art. 12, 19
+
+Information
+
+Instructions et limites d’usage
+
+Art. 13
+
+Supervision
+
+Rôles et tests d’intervention
+
+Art. 14, 26
+
+Performance et sécurité
+
+Tests d’exactitude, robustesse, cyber
+
+Art. 15
+
+Qualité et conformité
+
+Processus et évaluation applicable
+
+Art. 17, 43
+
+Surveillance
+
+Suivi et procédure d’incidents
+
+Art. 72, 73
+
+La répartition fournisseur / déployeur compte. Cette grille pédagogique ne couvre pas toutes les obligations.
+
+[page 31]
+PIÈCE 4 / CONFORMITÉ
+
+Quatre questions RGPD dans le pipeline
+Finalité et base
+
+Pourquoi traiter ces données ? Sur quel fondement ?
+
+Minimisation
+
+Quelles données sont nécessaires, pour quelle durée ?
+
+AIPD
+
+Le traitement est-il susceptible d’engendrer un risque élevé ?
+
+Décision automatisée
+
+L’article 22 s’applique-t-il ? Quelles exceptions et garanties ?
+
+Attributs sensibles : vérifier le cadre de traitement, les garanties et l’usage nécessaire à l’audit.
+
+[page 32]
+PIÈCE 4 / LLM
+
+Les risques d’un LLM avec RAG
+Risque
+
+Exemple administratif
+
+Ce qu’il faut éprouver
+
+Information erronée
+
+Une réponse cite une règle abrogée
+
+Validité des sources et des affirmations
+
+Injection indirecte
+
+Un document contient des instructions Isolation entre contenu et commandes
+
+Fuite de données
+
+Le corpus contient des contacts
+internes
+
+Accès par utilisateur et sorties
+sensibles
+
+Le RAG ajoute des sources. Il ne garantit pas leur usage correct.
+Le caractère « haut risque » dépend de la finalité et de l’influence du système sur la décision.
+
+[page 33]
+PIÈCE 4 / LLM
+
+Des contrôles aux frontières du système
+Frontière
+
+Contrôle proposé
+
+Entrée et documents
+
+Séparer instructions et données, valider provenance et date.
+
+Recherche
+
+Limiter le corpus et appliquer les droits avant récupération.
+
+Outils
+
+Permissions minimales et confirmation des actions sensibles.
+
+Sortie
+
+Vérifier les sources, contrôler le format, prévoir l’abstention.
+
+Exploitation
+
+Journaliser, tester les abus, mesurer les erreurs et le recours.
+
+La supervision doit respecter une capacité humaine mesurée.
+
+[page 34]
+ATELIER / 50 MINUTES
+
+Atelier 4 : Conformité et gouvernance
+
+[page 35]
+PIÈCE 4 / MLOPS
+
+Exploitation responsable et coût environnemental
+Suivi
+
+Erreurs, dérive, équité, recours et volume réellement traité.
+
+Réversibilité
+
+Version stable, arrêt testé, rollback et mode dégradé.
+
+Empreinte
+
+Énergie mesurée, matériel, localisation, volume et durée.
+
+Comparaison
+
+Petit modèle, cache ou réutilisation à qualité équivalente.
+
+Le CO₂e d’inférence cumulé dépend du volume. Les estimations dépendent du périmètre de mesure.
+
+[page 36]
+PIÈCE 5 / GOUVERNANCE
+
+Le comité de décision
+Perspective
+
+Question décisive
+
+Technique
+
+Les résultats résistent-ils à un test indépendant ?
+
+Juridique et DPO
+
+L’usage, les données et les obligations sont-ils qualifiés ?
+
+Métier et usagers
+
+Quels bénéfices, préjudices et recours concrets ?
+
+Production
+
+Qui surveille, intervient et restaure le service ?
+
+Autoriser, refuser ou conditionner, avec une justification traçable.
+
+[page 37]
+PIÈCE 5 / GOUVERNANCE
+
+Un tableau de bord avec des actions associées
+Indicateur
+
+Lecture nécessaire
+
+Action préparée
+
+Sélection, TPR, FPR, PPV
+
+Par groupe, effectif et incertitude
+
+Analyse d’écart et
+réévaluation
+
+AUC et erreurs critiques
+
+Fenêtre, seuil et population
+
+Investigation ou suspension
+
+Recours
+
+Délais, motifs et décisions révisées
+
+Renfort et correction du
+service
+
+Incidents
+
+Gravité, fréquence, cause
+
+Confinement, notification,
+reprise
+
+Empreinte carbone
+
+Total et par service rendu
+
+Optimisation à qualité
+contrôlée
+
+Les alertes critiques sont immédiates. La revue mensuelle sert au suivi des tendances.
+
+[page 38]
+SYNTHÈSE DU COURS
+
+Le jour où l’on dit non
+
+« Quelle preuve vous ferait
+changer de décision ? »
+Un avis solide explicite son périmètre, ses hypothèses,
+les préjudices acceptés et les conditions de réexamen.
+
+Question de sortie : une preuve acquise, une incertitude restante, une condition d’arrêt.
+
+40
+
+[page 39]
+PROJET / 3 H 30
+
+Projet : produire un dossier de confiance
+Équipe
+
+4 à 5 étudiants, un système et un périmètre précis.
+
+Dossier
+
+Les cinq pièces, avec calculs et liens vers les preuves.
+
+Décision
+
+Une page signée par les rôles de l’équipe.
+
+Soutenance
+
+Une recommandation contestable, soutenue par des faits.
+
+Les scénarios sont pédagogiques. Chaque hypothèse ajoutée doit apparaître dans le dossier.
+
+[page 40]
+PROJET / ORGANISATION
+
+Les 210 minutes du projet
+Temps
+
+Travail
+
+Sortie
+
+00:00–00:15
+
+Périmètre, sujet et rôles
+
+Usage et limites
+
+00:15–01:00
+
+Risques et traçabilité
+
+Registre et spécification des logs
+
+01:00–02:00
+
+Équité, XAI et conformité
+
+Calculs, tests et qualification
+
+02:00–02:45
+
+Assemblage et arbitrage
+
+Dossier et note de décision
+
+02:45–03:30
+
+Préparation de l’oral
+
+Preuves sélectionnées et défense
+
+Rôles : pilotage, technique, conformité, usages et recours. À cinq, ajouter exploitation et sécurité.
+
+[page 41]
+PROJET / LIVRABLE FINAL
+
+La note de décision attendue
+Objet
+
+Système, version, finalité et population concernés.
+
+Preuves
+
+Trois résultats décisifs, avec limites et incertitudes.
+
+Avis
+
+Autoriser, refuser ou conditionner l’usage décrit.
+
+Conditions
+
+Action, responsable, échéance, critère de réussite.
+
+Réexamen
+
+Alerte, arrêt, rollback et sort des personnes affectées.
+
+Toute affirmation factuelle renvoie à une donnée, un calcul, une source ou une hypothèse explicite.
+
+[page 42]
+ÉVALUATION / 3 H 30
+
+Soutenance et audit contradictoire
+
+25 min
+par équipe
+15 min d’exposé + 10 min de
+questions
+
+8 équipes
+200 minutes de passages
+10 minutes de synthèse collective
+
+Le groupe suivant joue la commission d’audit et
+questionne une preuve déterminante.
+
+La commission est un rôle pédagogique. L’enseignante conserve la responsabilité de la note.
+
+[page 43]
+ÉVALUATION / CRITÈRES ANNONCÉS
+
+Grille d’évaluation sur 20
+Critère
+
+Points
+
+Niveau attendu
+
+Rigueur technique
+
+6
+
+Calculs exacts, preuves traçables, limites explicites
+
+Conformité
+
+4
+
+Qualification précise et obligations reliées aux preuves
+
+Éthique et recours
+
+4
+
+Préjudices discutés et recours opérationnel
+
+Décision
+
+4
+
+Avis justifié, conditions datées et responsabilités
+
+Clarté et posture
+
+2
+
+Dossier navigable et réponse argumentée
+
+Technique jugée insuffisante : note globale plafonnée à 10/20.
+Pondérations : 30 %, 20 %, 20 %, 20 %, 10 %. Plafonnement pédagogique à annoncer avant le projet.
+
+[page 44]
+POUR APPROFONDIR
+
+Références : droit et gouvernance
+AI Act : règlement et texte consolidé
+Commission européenne : calendrier d’application
+Commission européenne : AI Omnibus, juillet 2026
+AI Act Service Desk : qualification du haut risque
+CNIL : profilage et décision entièrement automatisée
+EEOC : portée et limites de la règle des quatre cinquièmes
+Mitchell et al. : Model Cards for Model Reporting
+Gebru et al. : Datasheets for Datasets
+
+Titres cliquables. Les notes de chaque diapositive précisent les sources qui soutiennent son contenu.
+
+[page 45]
+POUR APPROFONDIR
+
+Références : équité, explications et incidents
+Hardt, Price, Srebro : Equality of Opportunity (2016)
+Chouldechova : Fair Prediction with Disparate Impact (2017)
+Lundberg et Lee : SHAP (2017)
+Ribeiro et al. : LIME (2016)
+Wachter et al. : Counterfactual Explanations (2017)
+Obermeyer et al. : proxy de coût en santé (2019)
+NTSB : enquête sur la collision de Tempe
+OWASP : risques des applications LLM
+
+Cas supplémentaires dans les notes de la diapositive 6 : Amazon, COMPAS, Tay et Air Canada.
+

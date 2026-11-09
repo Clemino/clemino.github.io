@@ -38,6 +38,14 @@ Cours sur le site : https://clemino.github.io/trd/
 | `m3-esma-mica-factsheet-fr.pdf` | ESMA : ce que le règlement MiCA change pour un investisseur en crypto-actifs. |
 | `m3-notice-2086.pdf` | Notice de la déclaration 2086 : plus-values sur crypto-actifs. |
 
+### IA responsable : `cours/sources/ia-responsable/`
+
+Cours sur le site : https://clemino.github.io/ia-responsable/
+
+| Fichier | Contenu |
+|---|---|
+| `1-Dossier_de_confiance.pdf` et `.txt` | Diapositives du cours de Souhila Arib (CY Tech, option IA) : les cinq pièces du dossier de confiance (risques, équité, explicabilité et recours, conformité AI Act et RGPD, décision), les ateliers, le projet et sa grille d'évaluation. Les notes des diapositives, qui précisent les sources, ne sont pas dans le PDF. |
+
 ## Ajouter une matière
 
 Mettre ses fichiers dans `cours/sources/<id>/` avec une version texte de chaque PDF, puis ajouter sa section ci-dessus. La version texte se fait avec `pdftotext`, en remplaçant chaque saut de page par un repère `[page N]`.
