@@ -151,7 +151,8 @@ on conflict do nothing;
 do $$
 begin
 	if not exists (select 1 from public.admins) then
-		raise exception 'Aucun administrateur : remplace ton.adresse@gmail.com (étape 7) par ton adresse Google, puis relance.';
+		raise exception 'Aucun administrateur : à l''étape 7, mets l''adresse Google avec laquelle tu te connectes au site, puis relance. Comptes existants : %',
+			(select coalesce(string_agg(email, ', ' order by email), 'aucun') from auth.users);
 	end if;
 end $$;
 
