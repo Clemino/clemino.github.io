@@ -4,8 +4,8 @@
 
 ## En attente d'une réponse de Clément
 
-- [ ] **Ajouter des proches à la liste de test Google.** L'appli Google est en mode Test : seuls les comptes de sa liste peuvent se connecter, donc ouvrir un cours. Il faut leurs adresses Gmail exactes, à ajouter dans la [console Google, page Audience](https://console.cloud.google.com/auth/audience?project=cours-513918), bouton **Add users** (100 personnes maximum). À la première connexion, Google affiche « Google n'a pas validé cette application » : il faut cliquer sur **Continuer**.
-- [ ] **Décider du sort de la copie GitHub de `coursapp`.** Clément veut garder `coursapp` uniquement sur son PC. Une copie a quand même été envoyée dans le dépôt privé `Clemino/coursapp` avant sa décision ; le dossier local n'y est plus relié. La supprimer est définitif et se fait dans Chrome, car l'accès `gh` n'a pas le droit de supprimer un dépôt.
+- [ ] **Ajouter des proches à la liste de test Google.** L'appli Google reste en mode Test, comme Clément l'a décidé le 9 novembre 2026 : seuls les comptes de sa liste peuvent se connecter, donc ouvrir un cours. Il faut leurs adresses Gmail exactes, à ajouter dans la [console Google, page Audience](https://console.cloud.google.com/auth/audience?project=cours-513918), bouton **Add users** (100 personnes maximum). À la première connexion, Google affiche « Google n'a pas validé cette application » : il faut cliquer sur **Continuer**.
+- [ ] **Supprimer le dépôt privé `Clemino/coursapp`.** Décidé par Clément le 9 novembre 2026 : `coursapp` reste uniquement sur son PC. Claude n'a pas le droit de supprimer un dépôt, donc Clément le fait lui-même sur github.com : **Settings**, tout en bas **Delete this repository**, puis taper `Clemino/coursapp`. C'est définitif.
 
 ## Site
 
