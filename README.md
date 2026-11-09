@@ -2,7 +2,7 @@
 
 Site personnel. Domaine prevu : clemi.me
 
-La page d'accueil (`index.html`) mène à la bibliothèque `/cours/`, et non à chaque cours : les cours demandent de se connecter, et la liste des matières ne vit qu'à un endroit, `LIBRARY` dans `cours/index.html`.
+La page d'accueil (`index.html`) est une page blanche, voulue ainsi : on entre sur le site par la bibliothèque, https://clemino.github.io/cours/.
 
 ## /cours/ : la bibliothèque de cours
 

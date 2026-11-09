@@ -9,7 +9,7 @@
 
 ## Site
 
-- [x] **Terminer la page d'accueil** (`index.html`). Fait le 9 novembre 2026 : elle mène à la bibliothèque `/cours/`, où se trouvent toutes les matières, IA responsable comprise.
+- [x] **Régler la page d'accueil** (`index.html`). Fait le 9 novembre 2026 : à la demande de Clément, c'est une page blanche. On entre sur le site uniquement par `/cours/`.
 - [ ] **Chacun ne voit que ses matières.** Règle voulue par Clément : une personne ne voit que les matières qu'elle a proposées et que Clément a acceptées ; Clément, lui, voit tout. Aujourd'hui, chacun voit toute la bibliothèque et suit ce qu'il veut. À prévoir :
   - relier chaque matière créée à la personne qui l'a proposée : la table `course_proposals` garde déjà `user_id` et `course_id` ;
   - une table des accès par personne, protégée par des règles Supabase, et un moyen de reconnaître Clément comme administrateur (par l'identifiant de son compte) ;
@@ -30,7 +30,7 @@
 ## Idées pour plus tard
 
 - [ ] **Un chatbot sur le site** qui répond uniquement à partir du cours. En attendant, Claude Code le fait déjà avec [cours.md](cours.md). Une version en ligne demanderait un service d'IA gratuit à tester (Cloudflare Workers AI, par exemple).
-- [ ] **Ouvrir le site à tout le monde :** rédiger une page de règles de confidentialité, compléter la page Branding de Google (page d'accueil, confidentialité, domaine `clemino.github.io`), puis publier l'appli Google.
+- [ ] **Ouvrir le site à tout le monde :** rédiger une page de règles de confidentialité, compléter la page Branding de Google (page d'accueil : `https://clemino.github.io/cours/`, puisque la racine est une page blanche ; confidentialité, domaine `clemino.github.io`), puis publier l'appli Google.
 - [ ] **Le nom de domaine `clemi.me`.**
 - [ ] **Publier les cinq cours en réserve** dans `coursapp/courses/` : C++, IA, programmation fonctionnelle, système et réseau, TAD. Leurs exercices de code se corrigent soi-même, faute de serveur pour compiler.
 
