@@ -22,7 +22,7 @@
 				font-display: swap;
 			}
 
-			/* Same tokens as the course apps (app/globals.css). */
+			/* Same tokens as the course apps (app/globals.css), plus one colour per course card. */
 			:root {
 				color-scheme: dark;
 				--bg-0: oklch(0.14 0.005 250);
@@ -35,7 +35,17 @@
 				--fg-3: oklch(0.4 0.01 100);
 				--accent: oklch(0.7 0.15 290);
 				--accent-fg: oklch(0.99 0.01 290);
+				--violet: oklch(0.72 0.15 290);
+				--blue: oklch(0.76 0.12 230);
+				--green: oklch(0.8 0.16 150);
+				--amber: oklch(0.82 0.14 80);
+				--rose: oklch(0.72 0.16 15);
+				/* Text on a filled course colour. */
+				--ink: oklch(0.17 0.01 250);
+				--shadow: oklch(0 0 0 / 0.55);
 				--mono: "Geist Mono", ui-monospace, monospace;
+				--spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+				--ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
 			}
 			.light {
 				color-scheme: light;
@@ -49,6 +59,13 @@
 				--fg-3: oklch(0.65 0.01 250);
 				--accent: oklch(0.55 0.18 290);
 				--accent-fg: oklch(0.99 0.01 290);
+				--violet: oklch(0.55 0.19 290);
+				--blue: oklch(0.55 0.13 240);
+				--green: oklch(0.55 0.14 150);
+				--amber: oklch(0.6 0.15 60);
+				--rose: oklch(0.56 0.19 20);
+				--ink: oklch(0.99 0.005 100);
+				--shadow: oklch(0.3 0.02 250 / 0.25);
 			}
 
 			* {
@@ -78,6 +95,14 @@
 				background-size: 24px 24px;
 				pointer-events: none;
 			}
+			.visually-hidden {
+				position: absolute;
+				width: 1px;
+				height: 1px;
+				overflow: hidden;
+				clip-path: inset(50%);
+				white-space: nowrap;
+			}
 
 			.icon {
 				width: 1rem;
@@ -93,9 +118,149 @@
 			.light .icon-sun {
 				display: none;
 			}
+			.spinner {
+				display: none;
+				width: 0.875rem;
+				height: 0.875rem;
+				flex-shrink: 0;
+				border: 2px solid currentColor;
+				border-right-color: transparent;
+				border-radius: 50%;
+				animation: spin 0.7s linear infinite;
+			}
+			.is-busy .spinner {
+				display: inline-block;
+			}
+			.is-busy .busy-hide {
+				display: none;
+			}
 
+			/* Buttons */
+			.btn {
+				position: relative;
+				display: inline-flex;
+				flex-shrink: 0;
+				align-items: center;
+				justify-content: center;
+				gap: 0.5rem;
+				height: 2.5rem;
+				padding: 0 1.125rem;
+				overflow: hidden;
+				border: 1px solid transparent;
+				border-radius: 10px;
+				background: none;
+				color: inherit;
+				font: inherit;
+				font-size: 0.875rem;
+				font-weight: 500;
+				white-space: nowrap;
+				text-decoration: none;
+				cursor: pointer;
+				transition:
+					transform 0.25s var(--spring),
+					background-color 0.2s,
+					border-color 0.2s,
+					box-shadow 0.25s,
+					color 0.2s;
+			}
+			.btn:hover {
+				transform: translateY(-2px);
+			}
+			.btn:active {
+				transform: translateY(0) scale(0.97);
+				transition-duration: 0.08s;
+			}
+			.btn:focus-visible,
+			.chip input:focus-visible + span,
+			.follow-toggle:focus-visible,
+			.proposal-see:focus-visible {
+				outline: 3px solid color-mix(in oklab, var(--accent) 55%, transparent);
+				outline-offset: 2px;
+			}
+			.btn:disabled {
+				opacity: 0.6;
+				pointer-events: none;
+			}
+			.btn .icon-move {
+				transition: transform 0.25s var(--spring);
+			}
+			.btn:hover .icon-move {
+				transform: translateX(3px);
+			}
+			.btn-primary {
+				background: var(--accent);
+				color: var(--accent-fg);
+				box-shadow:
+					inset 0 1px 0 oklch(1 0 0 / 0.22),
+					0 10px 24px -14px var(--accent);
+			}
+			.btn-primary:hover {
+				background: color-mix(in oklab, var(--accent) 88%, white);
+				box-shadow:
+					inset 0 1px 0 oklch(1 0 0 / 0.22),
+					0 14px 30px -12px var(--accent);
+			}
+			/* A light sweep crosses the main buttons on hover. */
+			.btn-primary::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(110deg, transparent 30%, oklch(1 0 0 / 0.35) 50%, transparent 70%);
+				transform: translateX(-120%);
+				transition: transform 0.7s var(--ease-out);
+				pointer-events: none;
+			}
+			.btn-primary:hover::before {
+				transform: translateX(120%);
+			}
+			.btn-ghost {
+				border-color: var(--border);
+				background: color-mix(in oklab, var(--bg-1) 70%, transparent);
+			}
+			.btn-ghost:hover {
+				border-color: color-mix(in oklab, var(--accent) 55%, var(--border));
+				background: color-mix(in oklab, var(--accent) 10%, var(--bg-1));
+			}
+			.btn-sm {
+				gap: 0.375rem;
+				height: 2rem;
+				padding: 0 0.75rem;
+				border-radius: 8px;
+				font-size: 0.8rem;
+			}
+			.btn-lg {
+				height: 3rem;
+				padding: 0 1.375rem 0 0.5rem;
+				border-radius: 12px;
+				font-size: 0.95rem;
+			}
+			.btn-icon {
+				width: 2rem;
+				padding: 0;
+			}
+			.btn-icon svg {
+				transition: transform 0.5s var(--spring);
+			}
+			.btn-icon:hover svg {
+				transform: rotate(20deg) scale(1.1);
+			}
+			.google {
+				display: grid;
+				place-items: center;
+				width: 2rem;
+				height: 2rem;
+				border-radius: 8px;
+				background: white;
+			}
+			.google svg {
+				width: 1.125rem;
+				height: 1.125rem;
+			}
+
+			/* Header */
 			header {
 				position: relative;
+				z-index: 2;
 				border-bottom: 1px solid var(--border);
 				background: color-mix(in oklab, var(--bg-0) 80%, transparent);
 				backdrop-filter: blur(8px);
@@ -136,69 +301,17 @@
 			.header-actions {
 				display: flex;
 				align-items: center;
-				gap: 0.25rem;
-			}
-
-			.button {
-				display: inline-flex;
-				flex-shrink: 0;
-				align-items: center;
-				justify-content: center;
-				gap: 0.25rem;
-				height: 1.75rem;
-				padding: 0 0.625rem;
-				border: 1px solid transparent;
-				border-radius: 6px;
-				background: none;
-				color: inherit;
-				font: inherit;
-				font-size: 0.8rem;
-				font-weight: 500;
-				white-space: nowrap;
-				cursor: pointer;
-				transition: background-color 0.15s;
-			}
-			.button:hover {
-				background: color-mix(in oklab, var(--bg-2) 50%, transparent);
-			}
-			.button:focus-visible,
-			a.row:focus-visible {
-				outline: 3px solid color-mix(in oklab, var(--accent) 50%, transparent);
-			}
-			.button:disabled {
-				opacity: 0.5;
-				pointer-events: none;
-			}
-			.button-primary {
-				background: var(--accent);
-				color: var(--accent-fg);
-			}
-			.button-primary:hover {
-				background: color-mix(in oklab, var(--accent) 80%, transparent);
-			}
-			.button-outline {
-				border-color: var(--border);
-			}
-			.button-large {
 				gap: 0.375rem;
-				height: 2.25rem;
-				border-radius: 8px;
-				font-size: 0.875rem;
-			}
-			.button-icon {
-				width: 2rem;
-				height: 2rem;
-				padding: 0;
-				border-radius: 8px;
 			}
 
+			/* Page */
 			main {
 				position: relative;
 				flex: 1;
 				width: 100%;
 				max-width: 64rem;
 				margin: 0 auto;
-				padding: 5rem 1.5rem 8rem;
+				padding: 4.5rem 1.5rem 7rem;
 			}
 			.pill {
 				display: inline-flex;
@@ -220,11 +333,13 @@
 				height: 0.375rem;
 				border-radius: 50%;
 				background: var(--accent);
+				animation: pulseDot 2.4s ease-in-out infinite;
 			}
 			h1 {
+				min-height: 2em;
 				margin: 0;
 				font-family: var(--mono);
-				font-size: 3rem;
+				font-size: 2.75rem;
 				font-weight: 400;
 				line-height: 1;
 				letter-spacing: -0.05em;
@@ -238,17 +353,81 @@
 				}
 			}
 			.lead {
-				max-width: 42rem;
-				margin: 1.5rem 0 2.5rem;
+				max-width: 40rem;
+				margin: 1.5rem 0 0;
 				color: var(--fg-1);
 				line-height: 1.625;
 			}
 
-			section {
-				margin-top: 4rem;
+			/* Signed out: the sign-in pitch next to a fan of cards. */
+			.hero-out {
+				display: grid;
+				gap: 3.5rem;
+				align-items: center;
 			}
-			h2 {
-				margin: 0 0 1.5rem;
+			@media (min-width: 56rem) {
+				.hero-out {
+					grid-template-columns: 1.15fr 0.85fr;
+					min-height: 26rem;
+				}
+			}
+			.hero-out .btn {
+				margin-top: 2.5rem;
+			}
+			.fan {
+				position: relative;
+				height: 15rem;
+			}
+			@media (max-width: 30rem) {
+				.fan {
+					height: 12rem;
+					scale: 0.75;
+					transform-origin: 50% 100%;
+				}
+			}
+			.fan-card {
+				position: absolute;
+				bottom: 0;
+				left: 50%;
+				display: flex;
+				flex-direction: column;
+				gap: 0.625rem;
+				width: 9.5rem;
+				height: 12rem;
+				padding: 1rem;
+				border: 1px solid color-mix(in oklab, var(--c) 35%, var(--border));
+				border-radius: 16px;
+				background: linear-gradient(170deg, color-mix(in oklab, var(--c) 14%, var(--bg-1)), var(--bg-1) 65%);
+				box-shadow: 0 24px 50px -24px var(--shadow);
+				transform-origin: 50% 100%;
+				transform: translateX(calc(-50% + var(--x))) translateY(var(--y, 0)) rotate(var(--r));
+				animation: float 5s ease-in-out infinite;
+				animation-delay: var(--d);
+				transition: transform 0.6s var(--spring);
+			}
+			.fan:hover .fan-card {
+				transform: translateX(calc(-50% + var(--x) * 1.12)) translateY(var(--y, 0)) rotate(calc(var(--r) * 1.6));
+			}
+			.fan-card strong {
+				margin-top: auto;
+				font-size: 0.95rem;
+				font-weight: 500;
+			}
+			.fan-line {
+				height: 0.375rem;
+				border-radius: 999px;
+				background: color-mix(in oklab, var(--fg-2) 30%, transparent);
+			}
+
+			/* Sections */
+			section {
+				margin-top: 3.5rem;
+			}
+			.section-title {
+				display: flex;
+				align-items: center;
+				gap: 0.625rem;
+				margin: 0 0 1.25rem;
 				padding-bottom: 0.75rem;
 				border-bottom: 1px solid var(--border);
 				color: var(--fg-2);
@@ -258,127 +437,894 @@
 				letter-spacing: 0.1em;
 				text-transform: uppercase;
 			}
-			ul {
+			.count {
+				display: inline-grid;
+				place-items: center;
+				min-width: 1.375rem;
+				height: 1.375rem;
+				padding: 0 0.375rem;
+				border-radius: 999px;
+				background: color-mix(in oklab, var(--accent) 18%, transparent);
+				color: var(--accent);
+				font-size: 0.7rem;
+				letter-spacing: 0;
+			}
+			#my-title {
+				view-transition-name: my-title;
+			}
+			#library-title {
+				view-transition-name: library-title;
+			}
+			#proposals-section {
+				view-transition-name: proposals;
+			}
+
+			/* Course cards */
+			.grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.5rem), 1fr));
+				gap: 1rem;
+			}
+			.card {
+				--c: var(--accent);
+				position: relative;
+				display: flex;
+				flex-direction: column;
+				min-height: 13rem;
+				padding: 1.25rem;
+				border: 1px solid var(--border);
+				border-radius: 16px;
+				background: var(--bg-1);
+				color: inherit;
+				isolation: isolate;
+				transition:
+					transform 0.35s var(--spring),
+					border-color 0.25s,
+					box-shadow 0.35s;
+			}
+			@media (min-width: 40rem) {
+				.card {
+					min-height: 14.5rem;
+				}
+			}
+			/* A soft light follows the pointer across the card. */
+			.card::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				z-index: -1;
+				border-radius: inherit;
+				background: radial-gradient(16rem circle at var(--mx, 50%) var(--my, 0%), color-mix(in oklab, var(--c) 16%, transparent), transparent 70%);
+				opacity: 0;
+				transition: opacity 0.3s;
+			}
+			.card:hover {
+				transform: translateY(-4px);
+				border-color: color-mix(in oklab, var(--c) 60%, var(--border));
+				box-shadow: 0 22px 44px -26px color-mix(in oklab, var(--c) 70%, var(--shadow));
+			}
+			.card:hover::before {
+				opacity: 1;
+			}
+			.card:has(.stretched:focus-visible) {
+				outline: 3px solid color-mix(in oklab, var(--c) 60%, transparent);
+				outline-offset: 3px;
+			}
+			.card-mine {
+				border-color: color-mix(in oklab, var(--c) 30%, var(--border));
+				background: linear-gradient(165deg, color-mix(in oklab, var(--c) 12%, var(--bg-1)), var(--bg-1) 55%);
+			}
+			.card-top {
+				display: flex;
+				align-items: flex-start;
+				justify-content: space-between;
+				gap: 0.75rem;
+			}
+			.card-icon {
+				display: grid;
+				place-items: center;
+				width: 2.75rem;
+				height: 2.75rem;
+				border-radius: 12px;
+				background: color-mix(in oklab, var(--c) 16%, transparent);
+				color: var(--c);
+				transition: transform 0.45s var(--spring);
+			}
+			.card-icon .icon {
+				width: 1.375rem;
+				height: 1.375rem;
+			}
+			.card:hover .card-icon {
+				transform: rotate(-8deg) scale(1.08);
+			}
+			.card-category {
+				color: var(--fg-2);
+				font-family: var(--mono);
+				font-size: 0.7rem;
+				letter-spacing: 0.08em;
+				text-align: right;
+				text-transform: uppercase;
+			}
+			.card-body {
+				margin-top: auto;
+				padding-top: 1rem;
+			}
+			.card-title {
+				display: -webkit-box;
 				margin: 0;
-				padding: 0;
-				list-style: none;
+				overflow: hidden;
+				font-size: 1.05rem;
+				font-weight: 600;
+				line-height: 1.3;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2;
 			}
-			li + li {
-				border-top: 1px solid var(--border);
+			.card-text {
+				display: -webkit-box;
+				margin: 0.375rem 0 0;
+				overflow: hidden;
+				color: var(--fg-2);
+				font-size: 0.8rem;
+				line-height: 1.45;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 3;
 			}
-			.row {
+			.card-actions {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				gap: 1.5rem;
-				padding: 1rem 0.25rem;
-				color: inherit;
+				gap: 0.5rem;
+				margin-top: 0.875rem;
+			}
+			/* The card's main action covers the whole card; other buttons sit above it. */
+			.stretched::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+				border-radius: 16px;
+			}
+			.stretched:focus-visible {
+				outline: none;
+			}
+			.card-open {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.375rem;
+				color: var(--c);
+				font-size: 0.875rem;
+				font-weight: 600;
 				text-decoration: none;
-				transition: background-color 0.15s;
 			}
-			a.row:hover {
+			.card-open .icon {
+				transition: transform 0.3s var(--spring);
+			}
+			.card:hover .card-open .icon {
+				transform: translateX(4px);
+			}
+			.card-add {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.375rem;
+				height: 2rem;
+				padding: 0 0.875rem 0 0.625rem;
+				border: 1px solid color-mix(in oklab, var(--c) 40%, transparent);
+				border-radius: 999px;
+				background: color-mix(in oklab, var(--c) 12%, transparent);
+				color: var(--c);
+				font: inherit;
+				font-size: 0.8rem;
+				font-weight: 600;
+				cursor: pointer;
+				transition:
+					background-color 0.2s,
+					color 0.2s,
+					transform 0.3s var(--spring);
+			}
+			.card-add .icon {
+				transition: transform 0.4s var(--spring);
+			}
+			.card:hover .card-add {
+				background: var(--c);
+				color: var(--ink);
+				transform: scale(1.05);
+			}
+			.card:hover .card-add .icon {
+				transform: rotate(90deg);
+			}
+			.card:active .card-add {
+				transform: scale(0.96);
+			}
+			.follow-toggle {
+				position: relative;
+				z-index: 1;
+				display: inline-grid;
+				height: 1.75rem;
+				padding: 0 0.625rem;
+				border: 1px solid var(--border);
+				border-radius: 999px;
+				background: var(--bg-0);
+				color: var(--fg-2);
+				font: inherit;
+				font-size: 0.75rem;
+				font-weight: 500;
+				cursor: pointer;
+				transition:
+					border-color 0.2s,
+					color 0.2s,
+					background-color 0.2s;
+			}
+			.follow-toggle > span {
+				display: inline-flex;
+				grid-area: 1 / 1;
+				align-items: center;
+				justify-content: center;
+				gap: 0.25rem;
+				transition:
+					opacity 0.2s,
+					transform 0.25s var(--spring);
+			}
+			.follow-toggle .icon {
+				width: 0.8rem;
+				height: 0.8rem;
+			}
+			.follow-on .icon {
+				color: var(--c);
+			}
+			.follow-off {
+				opacity: 0;
+				transform: translateY(6px);
+			}
+			.follow-toggle:hover,
+			.follow-toggle:focus-visible {
+				border-color: color-mix(in oklab, var(--rose) 60%, var(--border));
+				background: color-mix(in oklab, var(--rose) 12%, var(--bg-0));
+				color: var(--rose);
+			}
+			.follow-toggle:hover .follow-on,
+			.follow-toggle:focus-visible .follow-on {
+				opacity: 0;
+				transform: translateY(-6px);
+			}
+			.follow-toggle:hover .follow-off,
+			.follow-toggle:focus-visible .follow-off {
+				opacity: 1;
+				transform: none;
+			}
+			.card.is-busy {
+				pointer-events: none;
+			}
+			.card.is-busy .card-add,
+			.card.is-busy .follow-toggle {
+				opacity: 0.7;
+			}
+			.card.pop {
+				animation: pop 0.6s var(--spring);
+			}
+			.card.flash {
+				animation: flash 1.4s var(--ease-out);
+			}
+
+			/* The card that opens the proposal form. */
+			.card-new {
+				--c: var(--accent);
+				align-items: center;
+				justify-content: center;
+				gap: 0.375rem;
+				border: 1.5px dashed color-mix(in oklab, var(--accent) 45%, var(--border));
+				background: color-mix(in oklab, var(--accent) 4%, transparent);
+				font: inherit;
+				text-align: center;
+				cursor: pointer;
+				view-transition-name: propose-card;
+			}
+			.card-new:hover {
+				border-style: solid;
+			}
+			.card-new:focus-visible {
+				outline: 3px solid color-mix(in oklab, var(--accent) 60%, transparent);
+				outline-offset: 3px;
+			}
+			.card-new:active {
+				transform: scale(0.98);
+			}
+			.plus {
+				display: grid;
+				place-items: center;
+				width: 3.5rem;
+				height: 3.5rem;
+				margin-bottom: 0.75rem;
+				border-radius: 50%;
+				background: color-mix(in oklab, var(--accent) 16%, transparent);
+				color: var(--accent);
+				transition:
+					transform 0.5s var(--spring),
+					background-color 0.25s,
+					color 0.25s;
+			}
+			.plus .icon {
+				width: 1.625rem;
+				height: 1.625rem;
+				stroke-width: 2.25;
+			}
+			.card-new:hover .plus {
+				background: var(--accent);
+				color: var(--accent-fg);
+				transform: rotate(90deg) scale(1.08);
+				animation: pulseAccent 1.4s ease-out infinite;
+			}
+			.card-new .card-title {
+				font-size: 1rem;
+			}
+			.card-new .card-text {
+				max-width: 15rem;
+			}
+
+			/* Placeholder cards while the courses load. */
+			.skeleton {
+				border-style: dashed;
+				background: linear-gradient(100deg, var(--bg-1) 30%, var(--bg-2) 50%, var(--bg-1) 70%) 0 0 / 300% 100%;
+				animation: shimmer 1.6s linear infinite;
+			}
+
+			/* Proposals */
+			.proposals {
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+				border: 1px solid var(--border);
+				border-radius: 16px;
 				background: var(--bg-1);
+				list-style: none;
 			}
-			.row-start {
+			.proposal {
 				display: flex;
-				align-items: baseline;
-				gap: 1rem;
+				align-items: center;
+				gap: 0.875rem;
+				padding: 0.875rem 1rem;
+				transition: background-color 0.2s;
+			}
+			.proposal + .proposal {
+				border-top: 1px solid var(--border);
+			}
+			.proposal:hover {
+				background: var(--bg-2);
+			}
+			.proposal-icon {
+				display: grid;
+				flex-shrink: 0;
+				place-items: center;
+				width: 2.25rem;
+				height: 2.25rem;
+				border-radius: 10px;
+				background: color-mix(in oklab, var(--s) 14%, transparent);
+				color: var(--s);
+			}
+			@media (max-width: 30rem) {
+				.proposal-icon {
+					display: none;
+				}
+			}
+			.proposal-main {
+				flex: 1;
 				min-width: 0;
 			}
-			.index {
-				color: var(--fg-2);
-				font-family: var(--mono);
-				font-size: 0.75rem;
-				font-variant-numeric: tabular-nums;
-			}
-			.title {
+			.proposal-title {
 				display: block;
+				overflow: hidden;
+				font-size: 0.925rem;
 				font-weight: 500;
+				text-overflow: ellipsis;
+				white-space: nowrap;
 			}
-			.text {
+			.proposal-meta {
 				display: block;
 				margin-top: 0.125rem;
 				color: var(--fg-2);
 				font-size: 0.75rem;
 			}
-			.arrow {
-				color: var(--fg-3);
-				transition:
-					color 0.15s,
-					transform 0.15s;
-			}
-			a.row:hover .arrow {
-				color: var(--accent);
-				transform: translateX(0.25rem);
-			}
-			h3 {
-				margin: 1.5rem 0 0.25rem;
-				padding: 0 0.25rem;
-				color: var(--accent);
+			.badge {
+				display: inline-flex;
+				flex-shrink: 0;
+				align-items: center;
+				gap: 0.375rem;
+				height: 1.5rem;
+				padding: 0 0.625rem;
+				border-radius: 999px;
+				background: color-mix(in oklab, var(--s) 14%, transparent);
+				color: var(--s);
 				font-family: var(--mono);
-				font-size: 0.75rem;
-				font-weight: 500;
+				font-size: 0.7rem;
+				white-space: nowrap;
 			}
-			#manage {
-				margin-top: 1.5rem;
+			.badge::before {
+				content: "";
+				width: 0.375rem;
+				height: 0.375rem;
+				border-radius: 50%;
+				background: currentColor;
+			}
+			.status-pending {
+				--s: var(--amber);
+			}
+			.status-pending .badge::before {
+				animation: pulseDot 1.8s ease-in-out infinite;
+			}
+			.status-created {
+				--s: var(--green);
+			}
+			.status-rejected {
+				--s: var(--rose);
+			}
+			.proposal-see {
+				flex-shrink: 0;
+				padding: 0.25rem 0.5rem;
+				border: 0;
+				border-radius: 6px;
+				background: none;
+				color: var(--accent);
+				font: inherit;
+				font-size: 0.8rem;
+				font-weight: 500;
+				cursor: pointer;
+			}
+			.proposal-see:hover {
+				background: color-mix(in oklab, var(--accent) 12%, transparent);
 			}
 
-			.actions-row {
-				margin-top: 3rem;
+			/* Proposal dialog */
+			dialog {
+				width: min(34rem, calc(100vw - 2rem));
+				max-height: calc(100svh - 2rem);
+				padding: 0;
+				overflow: auto;
+				border: 1px solid var(--border);
+				border-radius: 20px;
+				background: var(--bg-1);
+				color: var(--fg-0);
+				box-shadow: 0 40px 90px -30px var(--shadow);
+				opacity: 0;
+				transform: translateY(16px) scale(0.97);
+				transition:
+					opacity 0.25s,
+					transform 0.35s var(--spring),
+					overlay 0.35s allow-discrete,
+					display 0.35s allow-discrete;
 			}
-			.note {
-				max-width: 42rem;
-				margin: 0 0 1.5rem;
+			dialog[open] {
+				opacity: 1;
+				transform: none;
+			}
+			@starting-style {
+				dialog[open] {
+					opacity: 0;
+					transform: translateY(16px) scale(0.97);
+				}
+			}
+			dialog::backdrop {
+				background: oklch(0.1 0.005 250 / 0.55);
+				backdrop-filter: blur(6px);
+			}
+			@media (max-width: 34rem) {
+				dialog {
+					width: 100%;
+					max-width: 100%;
+					margin: auto 0 0;
+					border-radius: 20px 20px 0 0;
+					transform: translateY(40px);
+				}
+				@starting-style {
+					dialog[open] {
+						transform: translateY(40px);
+					}
+				}
+			}
+			.dialog-panel {
+				padding: 1.5rem;
+			}
+			.dialog-panel.shake {
+				animation: shake 0.45s;
+			}
+			.dialog-head {
+				display: flex;
+				align-items: center;
+				gap: 0.875rem;
+				margin-bottom: 1rem;
+			}
+			.dialog-head .plus {
+				width: 2.5rem;
+				height: 2.5rem;
+				margin: 0;
+				border-radius: 12px;
+			}
+			.dialog-head .plus .icon {
+				width: 1.25rem;
+				height: 1.25rem;
+			}
+			.dialog-head h2 {
+				flex: 1;
+				margin: 0;
+				font-family: var(--mono);
+				font-size: 1.25rem;
+				font-weight: 500;
+				letter-spacing: -0.03em;
+			}
+			.callout {
+				display: flex;
+				gap: 0.625rem;
+				margin: 0;
+				padding: 0.75rem 0.875rem;
+				border: 1px solid color-mix(in oklab, var(--blue) 30%, var(--border));
+				border-radius: 12px;
+				background: color-mix(in oklab, var(--blue) 8%, transparent);
 				color: var(--fg-1);
-				font-size: 0.875rem;
-				line-height: 1.6;
+				font-size: 0.825rem;
+				line-height: 1.55;
+			}
+			.callout .icon {
+				margin-top: 0.15rem;
+				color: var(--blue);
 			}
 			form {
 				display: grid;
-				gap: 1rem;
-				max-width: 34rem;
+				gap: 1.25rem;
 			}
 			.field {
 				display: grid;
-				gap: 0.375rem;
+				gap: 0.5rem;
+				min-width: 0;
+				margin: 0;
+				padding: 0;
+				border: 0;
 			}
-			.field > span {
+			.field-label {
+				padding: 0;
 				color: var(--fg-2);
 				font-family: var(--mono);
 				font-size: 0.75rem;
 			}
-			.field input {
+			/* A legend is not a grid item, so the fieldset's gap does not apply to it. */
+			legend.field-label {
+				margin-bottom: 0.5rem;
+			}
+			.input {
 				width: 100%;
-				padding: 0.5rem 0.75rem;
+				height: 2.625rem;
+				padding: 0 0.875rem;
 				border: 1px solid var(--border);
-				border-radius: 6px;
-				background: var(--bg-1);
+				border-radius: 10px;
+				background: var(--bg-0);
 				color: var(--fg-0);
 				font: inherit;
-				font-size: 0.875rem;
+				font-size: 0.9rem;
+				transition:
+					border-color 0.2s,
+					box-shadow 0.2s;
 			}
-			.field input:focus-visible {
-				outline: 3px solid color-mix(in oklab, var(--accent) 50%, transparent);
+			.input::placeholder {
+				color: var(--fg-3);
 			}
-			.form-actions {
+			.input:focus {
+				border-color: var(--accent);
+				outline: none;
+				box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 22%, transparent);
+			}
+			.input[aria-invalid="true"] {
+				border-color: var(--rose);
+			}
+			.chips {
 				display: flex;
 				flex-wrap: wrap;
 				gap: 0.5rem;
 			}
-			#propose-status {
-				margin: 0;
+			.chip input {
+				position: absolute;
+				opacity: 0;
+				pointer-events: none;
+			}
+			.chip span {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.375rem;
+				height: 2rem;
+				padding: 0 0.875rem;
+				border: 1px solid var(--border);
+				border-radius: 999px;
+				background: var(--bg-0);
 				color: var(--fg-1);
-				font-size: 0.875rem;
+				font-size: 0.825rem;
+				cursor: pointer;
+				transition:
+					transform 0.3s var(--spring),
+					background-color 0.2s,
+					border-color 0.2s,
+					color 0.2s;
 			}
-			.status {
+			.chip span::before {
+				content: "";
+				width: 0.5rem;
+				height: 0.5rem;
+				border-radius: 50%;
+				background: var(--c);
+				transition: transform 0.3s var(--spring);
+			}
+			.chip:hover span {
+				border-color: color-mix(in oklab, var(--c) 60%, var(--border));
+			}
+			.chip input:checked + span {
+				border-color: var(--c);
+				background: color-mix(in oklab, var(--c) 16%, var(--bg-0));
+				color: var(--fg-0);
+				transform: scale(1.04);
+			}
+			.chip input:checked + span::before {
+				transform: scale(1.4);
+			}
+			.dropzone {
+				position: relative;
+				display: grid;
+				justify-items: center;
+				gap: 0.25rem;
+				padding: 1.5rem 1rem;
+				border: 1.5px dashed var(--border);
+				border-radius: 14px;
+				background: var(--bg-0);
+				text-align: center;
+				cursor: pointer;
+				transition:
+					border-color 0.2s,
+					background-color 0.2s,
+					transform 0.3s var(--spring);
+			}
+			.dropzone:hover,
+			.dropzone.is-dragging {
+				border-color: var(--accent);
+				background: color-mix(in oklab, var(--accent) 7%, var(--bg-0));
+			}
+			.dropzone.is-dragging {
+				transform: scale(1.02);
+			}
+			.dropzone:focus-within {
+				outline: 3px solid color-mix(in oklab, var(--accent) 55%, transparent);
+				outline-offset: 2px;
+			}
+			.dropzone[aria-invalid="true"] {
+				border-color: var(--rose);
+			}
+			.dropzone-icon {
+				display: grid;
+				place-items: center;
+				width: 2.75rem;
+				height: 2.75rem;
+				margin-bottom: 0.375rem;
+				border-radius: 12px;
+				background: color-mix(in oklab, var(--accent) 14%, transparent);
+				color: var(--accent);
+				transition: transform 0.4s var(--spring);
+			}
+			.dropzone-icon .icon {
+				width: 1.375rem;
+				height: 1.375rem;
+			}
+			.dropzone:hover .dropzone-icon,
+			.dropzone.is-dragging .dropzone-icon {
+				transform: translateY(-4px);
+			}
+			.dropzone-title {
+				font-size: 0.9rem;
+				font-weight: 500;
+			}
+			.dropzone-text {
 				color: var(--fg-2);
-				font-family: var(--mono);
-				font-size: 0.75rem;
-				white-space: nowrap;
+				font-size: 0.775rem;
 			}
-			.status-created {
+			.dropzone-text u {
+				color: var(--accent);
+				text-underline-offset: 0.15em;
+			}
+			.touch-only {
+				display: none;
+			}
+			@media (pointer: coarse) {
+				.touch-only {
+					display: inline;
+				}
+				.pointer-only {
+					display: none;
+				}
+			}
+			.files {
+				display: grid;
+				gap: 0.375rem;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			.file {
+				display: flex;
+				align-items: center;
+				gap: 0.625rem;
+				padding: 0.5rem 0.5rem 0.5rem 0.75rem;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: var(--bg-0);
+				font-size: 0.825rem;
+				animation: slideUp 0.3s var(--ease-out);
+			}
+			.file > .icon {
 				color: var(--accent);
 			}
+			.file.is-invalid {
+				border-color: color-mix(in oklab, var(--rose) 50%, var(--border));
+			}
+			.file.is-invalid > .icon {
+				color: var(--rose);
+			}
+			.file-name {
+				flex: 1;
+				min-width: 0;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			.file-size {
+				color: var(--fg-2);
+				font-family: var(--mono);
+				font-size: 0.7rem;
+				white-space: nowrap;
+			}
+			.file.is-invalid .file-size {
+				color: var(--rose);
+			}
+			.file .btn-icon {
+				width: 1.75rem;
+				height: 1.75rem;
+				border-radius: 6px;
+				color: var(--fg-2);
+			}
+			.file .btn-icon:hover {
+				background: color-mix(in oklab, var(--rose) 12%, transparent);
+				color: var(--rose);
+			}
+			.progress {
+				height: 0.375rem;
+				overflow: hidden;
+				border-radius: 999px;
+				background: var(--bg-2);
+			}
+			.progress span {
+				display: block;
+				width: 0;
+				height: 100%;
+				border-radius: inherit;
+				background: linear-gradient(90deg, var(--violet), var(--blue), var(--green));
+				transition: width 0.5s var(--ease-out);
+			}
+			#propose-status {
+				min-height: 1.25rem;
+				margin: 0;
+				color: var(--fg-1);
+				font-size: 0.85rem;
+			}
+			#propose-status.is-error {
+				color: var(--rose);
+			}
+			.form-actions {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: flex-end;
+				gap: 0.5rem;
+			}
+			.done {
+				display: grid;
+				justify-items: center;
+				padding: 2.5rem 1.5rem 1.5rem;
+				text-align: center;
+			}
+			.done:focus {
+				outline: none;
+			}
+			.done-check {
+				width: 4.5rem;
+				height: 4.5rem;
+				margin-bottom: 1.25rem;
+				fill: none;
+				stroke: var(--green);
+				stroke-linecap: round;
+				stroke-linejoin: round;
+				stroke-width: 3;
+			}
+			.done-check circle {
+				fill: color-mix(in oklab, var(--green) 14%, transparent);
+				stroke-dasharray: 160;
+				stroke-dashoffset: 160;
+				animation: draw 0.6s var(--ease-out) forwards;
+			}
+			.done-check path {
+				stroke-dasharray: 40;
+				stroke-dashoffset: 40;
+				animation: draw 0.4s var(--ease-out) 0.45s forwards;
+			}
+			.done h2 {
+				margin: 0;
+				font-family: var(--mono);
+				font-size: 1.375rem;
+				font-weight: 500;
+				letter-spacing: -0.03em;
+			}
+			.done p {
+				max-width: 24rem;
+				margin: 0.75rem 0 1.75rem;
+				color: var(--fg-1);
+				font-size: 0.9rem;
+				line-height: 1.6;
+			}
+			.done .form-actions {
+				justify-content: center;
+			}
+
+			/* Toast */
+			.toast-region {
+				position: fixed;
+				bottom: 1.25rem;
+				left: 50%;
+				z-index: 50;
+				width: max-content;
+				max-width: calc(100vw - 2rem);
+				transform: translateX(-50%);
+			}
+			.toast {
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				padding: 0.5rem 0.5rem 0.5rem 1rem;
+				border: 1px solid var(--border);
+				border-radius: 12px;
+				background: var(--bg-2);
+				box-shadow: 0 20px 40px -20px var(--shadow);
+				font-size: 0.875rem;
+				animation: toastIn 0.4s var(--spring);
+			}
+			.toast-error {
+				border-color: color-mix(in oklab, var(--rose) 50%, var(--border));
+			}
+			.toast-error #toast-text::before {
+				content: "";
+				display: inline-block;
+				width: 0.5rem;
+				height: 0.5rem;
+				margin-right: 0.5rem;
+				border-radius: 50%;
+				background: var(--rose);
+			}
+			#toast-action {
+				height: 1.875rem;
+				padding: 0 0.75rem;
+				border-radius: 8px;
+				color: var(--accent);
+				font-weight: 600;
+			}
+			#toast-action:hover {
+				background: color-mix(in oklab, var(--accent) 14%, transparent);
+			}
+			.toast .btn-icon {
+				width: 1.875rem;
+				height: 1.875rem;
+				border-radius: 8px;
+				color: var(--fg-2);
+			}
+
+			.particle {
+				position: fixed;
+				z-index: 60;
+				width: 0.5rem;
+				height: 0.5rem;
+				border-radius: 2px;
+				pointer-events: none;
+			}
+			.particle:nth-child(odd) {
+				border-radius: 50%;
+			}
+
 			footer {
 				position: relative;
 				border-top: 1px solid var(--border);
@@ -394,22 +1340,106 @@
 				overflow-wrap: anywhere;
 			}
 
-			#error {
-				position: fixed;
-				right: 1rem;
-				bottom: 1rem;
-				max-width: calc(100vw - 2rem);
-				margin: 0;
-				padding: 0.75rem 1rem;
-				border: 1px solid var(--border);
-				border-radius: 8px;
-				background: var(--bg-2);
-				font-size: 0.875rem;
+			/* The first render slides the cards in one after the other. */
+			.is-entering > * {
+				animation: slideUp 0.5s var(--ease-out) both;
+				animation-delay: calc(var(--i, 0) * 70ms);
+			}
+
+			::view-transition-group(*) {
+				animation-duration: 0.5s;
+				animation-timing-function: var(--ease-out);
+			}
+
+			@keyframes spin {
+				to {
+					transform: rotate(360deg);
+				}
+			}
+			@keyframes slideUp {
+				from {
+					opacity: 0;
+					transform: translateY(12px);
+				}
+			}
+			@keyframes shake {
+				10%,
+				90% {
+					transform: translateX(-1px);
+				}
+				20%,
+				80% {
+					transform: translateX(2px);
+				}
+				30%,
+				50%,
+				70% {
+					transform: translateX(-4px);
+				}
+				40%,
+				60% {
+					transform: translateX(4px);
+				}
+			}
+			@keyframes pulseAccent {
+				from {
+					box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 60%, transparent);
+				}
+				to {
+					box-shadow: 0 0 0 14px transparent;
+				}
+			}
+			@keyframes pulseDot {
+				50% {
+					opacity: 0.35;
+					transform: scale(0.75);
+				}
+			}
+			@keyframes float {
+				50% {
+					translate: 0 -10px;
+				}
+			}
+			@keyframes pop {
+				40% {
+					transform: scale(1.04);
+				}
+			}
+			@keyframes flash {
+				20%,
+				60% {
+					box-shadow: 0 0 0 4px color-mix(in oklab, var(--c) 60%, transparent);
+				}
+			}
+			@keyframes shimmer {
+				to {
+					background-position: -300% 0;
+				}
+			}
+			@keyframes draw {
+				to {
+					stroke-dashoffset: 0;
+				}
+			}
+			@keyframes toastIn {
+				from {
+					opacity: 0;
+					transform: translateY(16px) scale(0.95);
+				}
 			}
 
 			@media (prefers-reduced-motion: reduce) {
-				* {
-					transition: none !important;
+				*,
+				*::before,
+				*::after {
+					animation-duration: 0.01ms !important;
+					animation-iteration-count: 1 !important;
+					transition-duration: 0.01ms !important;
+				}
+				::view-transition-group(*),
+				::view-transition-old(*),
+				::view-transition-new(*) {
+					animation: none !important;
 				}
 			}
 		</style>
@@ -428,15 +1458,15 @@
 					<span><strong>cours</strong><span class="logo-suffix">.app</span></span>
 				</div>
 				<div class="header-actions">
-					<button id="sign-out" class="button" type="button" hidden>
-						<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+					<button id="sign-out" class="btn btn-ghost btn-sm" type="button" hidden>
+						<svg class="icon icon-move" viewBox="0 0 24 24" aria-hidden="true">
 							<path d="m16 17 5-5-5-5" />
 							<path d="M21 12H9" />
 							<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
 						</svg>
 						Se déconnecter
 					</button>
-					<button id="theme" class="button button-icon" type="button" aria-label="Changer de thème">
+					<button id="theme" class="btn btn-ghost btn-sm btn-icon" type="button" aria-label="Changer de thème">
 						<svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true">
 							<circle cx="12" cy="12" r="4" />
 							<path d="M12 2v2" />
@@ -457,61 +1487,98 @@
 		</header>
 
 		<main>
-			<div id="signed-out" hidden>
-				<div class="pill"><span class="pill-dot"></span>Bibliothèque de cours</div>
-				<h1>Tes cours<br /><span>sur tous tes appareils</span></h1>
-				<p class="lead">Connecte-toi et choisis tes cours dans la bibliothèque : tu les retrouves sur ton ordinateur, ta tablette ou ton téléphone.</p>
-				<button id="sign-in" class="button button-primary button-large" type="button">
-					Se connecter avec Google
-					<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-						<path d="m10 17 5-5-5-5" />
-						<path d="M15 12H3" />
-						<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-					</svg>
-				</button>
+			<div id="signed-out" class="hero-out" hidden>
+				<div>
+					<div class="pill"><span class="pill-dot"></span>Bibliothèque de cours</div>
+					<h1>Tes cours<br /><span>sur tous tes appareils</span></h1>
+					<p class="lead">Connecte-toi et choisis tes cours dans la bibliothèque : tu les retrouves sur ton ordinateur, ta tablette ou ton téléphone.</p>
+					<button id="sign-in" class="btn btn-primary btn-lg" type="button">
+						<span class="google">
+							<svg viewBox="0 0 48 48" aria-hidden="true">
+								<path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z" />
+								<path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z" />
+								<path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z" />
+								<path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z" />
+							</svg>
+						</span>
+						Se connecter avec Google
+						<svg class="icon icon-move" viewBox="0 0 24 24" aria-hidden="true">
+							<path d="M5 12h14" />
+							<path d="m12 5 7 7-7 7" />
+						</svg>
+					</button>
+				</div>
+				<div class="fan" aria-hidden="true">
+					<div class="fan-card" style="--c: var(--violet); --x: -8.5rem; --y: 0.75rem; --r: -9deg; --d: 0s">
+						<span class="card-icon">
+							<svg class="icon" viewBox="0 0 24 24">
+								<path d="M12 7v14" />
+								<path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
+							</svg>
+						</span>
+						<strong>Fiches de cours</strong>
+						<span class="fan-line" style="width: 90%"></span>
+						<span class="fan-line" style="width: 65%"></span>
+					</div>
+					<div class="fan-card" style="--c: var(--blue); --x: 8.5rem; --y: 0.75rem; --r: 9deg; --d: -1.6s">
+						<span class="card-icon">
+							<svg class="icon" viewBox="0 0 24 24">
+								<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" />
+								<path d="M22 10v6" />
+								<path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
+							</svg>
+						</span>
+						<strong>Examens blancs</strong>
+						<span class="fan-line" style="width: 80%"></span>
+						<span class="fan-line" style="width: 55%"></span>
+					</div>
+					<div class="fan-card" style="--c: var(--green); --x: 0rem; --y: -0.5rem; --r: 0deg; --d: -3.2s">
+						<span class="card-icon">
+							<svg class="icon" viewBox="0 0 24 24">
+								<circle cx="12" cy="12" r="10" />
+								<path d="m9 12 2 2 4-4" />
+							</svg>
+						</span>
+						<strong>Exercices corrigés</strong>
+						<span class="fan-line" style="width: 85%"></span>
+						<span class="fan-line" style="width: 60%"></span>
+					</div>
+				</div>
 			</div>
 
 			<div id="signed-in" hidden>
 				<div class="pill"><span class="pill-dot"></span>Bibliothèque de cours</div>
 				<h1><span id="heading-start"></span><br /><span id="heading-accent"></span></h1>
-				<section id="my-section" aria-labelledby="my-courses-title" hidden>
-					<h2 id="my-courses-title">Mes cours</h2>
-					<ul id="my-courses"></ul>
-					<button id="manage" class="button button-outline" type="button"></button>
+				<p id="lead" class="lead"></p>
+
+				<section id="my-section" aria-labelledby="my-title" hidden>
+					<h2 id="my-title" class="section-title">Mes cours <span id="my-count" class="count"></span></h2>
+					<div id="my-courses" class="grid"></div>
 				</section>
-				<section id="library-section" aria-labelledby="library-title" hidden>
-					<h2 id="library-title">Choisis ta matière</h2>
-					<div id="library"></div>
+
+				<section id="library-section" aria-labelledby="library-title">
+					<h2 id="library-title" class="section-title">À découvrir</h2>
+					<div id="library" class="grid" aria-busy="true">
+						<div class="card skeleton"></div>
+						<div class="card skeleton"></div>
+						<div class="card skeleton"></div>
+						<!-- render() moves this card back to the end of the grid each time. -->
+						<button id="propose-open" class="card card-new" type="button" aria-haspopup="dialog">
+							<span class="plus">
+								<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+									<path d="M5 12h14" />
+									<path d="M12 5v14" />
+								</svg>
+							</span>
+							<span class="card-title">Proposer une matière</span>
+							<span class="card-text">Envoie les PDF de ton cours : la matière est préparée à partir de tes documents.</span>
+						</button>
+					</div>
 				</section>
-				<div class="actions-row">
-					<button id="propose-open" class="button button-outline" type="button" aria-expanded="false">Proposer une matière</button>
-				</div>
-				<section id="propose-section" aria-labelledby="propose-title" hidden>
-					<h2 id="propose-title">Proposer une matière</h2>
-					<p class="note">Envoie les PDF de ton cours. La matière est préparée à partir de ces documents, puis ajoutée à la bibliothèque. Les documents deviennent publics avec elle.</p>
-					<form id="propose-form" novalidate>
-						<label class="field">
-							<span>Titre</span>
-							<input id="propose-name" maxlength="120" autocomplete="off" />
-						</label>
-						<label class="field">
-							<span>Catégorie</span>
-							<input id="propose-category" maxlength="60" list="categories" autocomplete="off" />
-						</label>
-						<datalist id="categories"></datalist>
-						<label class="field">
-							<span>Fichiers PDF, 50 Mo maximum chacun</span>
-							<input id="propose-files" type="file" accept="application/pdf,.pdf" multiple />
-						</label>
-						<div class="form-actions">
-							<button id="propose-submit" class="button button-primary button-large" type="submit">Envoyer la proposition</button>
-						</div>
-						<p id="propose-status" role="status"></p>
-					</form>
-				</section>
+
 				<section id="proposals-section" aria-labelledby="proposals-title" hidden>
-					<h2 id="proposals-title">Mes propositions</h2>
-					<ul id="my-proposals"></ul>
+					<h2 id="proposals-title" class="section-title">Mes propositions</h2>
+					<ul id="my-proposals" class="proposals"></ul>
 				</section>
 			</div>
 		</main>
@@ -520,43 +1587,156 @@
 			<div class="footer-inner">cours.app<span id="email"></span></div>
 		</footer>
 
-		<p id="error" role="alert" hidden></p>
-
-		<template id="my-course-template">
-			<li>
-				<a class="row">
-					<span class="row-start">
-						<span class="index"></span>
-						<span>
-							<span class="title"></span>
-							<span class="text"></span>
-						</span>
-					</span>
-					<svg class="icon arrow" viewBox="0 0 24 24" aria-hidden="true">
-						<path d="M5 12h14" />
-						<path d="m12 5 7 7-7 7" />
+		<div class="toast-region" role="status" aria-live="polite">
+			<div id="toast" class="toast" hidden>
+				<span id="toast-text"></span>
+				<button id="toast-action" class="btn btn-sm" type="button" hidden></button>
+				<button id="toast-close" class="btn btn-sm btn-icon" type="button" aria-label="Fermer le message">
+					<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+						<path d="M18 6 6 18" />
+						<path d="m6 6 12 12" />
 					</svg>
-				</a>
-			</li>
-		</template>
+				</button>
+			</div>
+		</div>
 
-		<template id="library-course-template">
-			<li class="row">
-				<span class="row-start">
-					<span class="index"></span>
-					<span>
-						<span class="title"></span>
-						<span class="text"></span>
+
+		<dialog id="propose-dialog" aria-labelledby="propose-title">
+			<div id="propose-panel" class="dialog-panel">
+				<div class="dialog-head">
+					<span class="plus">
+						<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+							<path d="M5 12h14" />
+							<path d="M12 5v14" />
+						</svg>
 					</span>
-				</span>
-				<button class="button" type="button"></button>
-			</li>
+					<h2 id="propose-title">Proposer une matière</h2>
+					<button id="propose-close" class="btn btn-ghost btn-sm btn-icon" type="button" aria-label="Fermer">
+						<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+							<path d="M18 6 6 18" />
+							<path d="m6 6 12 12" />
+						</svg>
+					</button>
+				</div>
+
+				<form id="propose-form" novalidate>
+					<p class="callout">
+						<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+							<circle cx="12" cy="12" r="10" />
+							<path d="M12 16v-4" />
+							<path d="M12 8h.01" />
+						</svg>
+						<span>Envoie les PDF de ton cours. La matière est préparée à partir de ces documents, puis ajoutée à la bibliothèque. Les documents deviennent publics avec elle.</span>
+					</p>
+
+					<label class="field">
+						<span class="field-label">Titre de la matière</span>
+						<input id="propose-name" class="input" maxlength="120" autocomplete="off" placeholder="Par exemple : Droit des contrats" />
+					</label>
+
+					<fieldset class="field">
+						<legend class="field-label">Catégorie</legend>
+						<div id="propose-chips" class="chips"></div>
+						<input id="propose-category" class="input" maxlength="60" autocomplete="off" placeholder="Ou une nouvelle catégorie" aria-label="Nouvelle catégorie" />
+					</fieldset>
+
+					<div class="field">
+						<span class="field-label" id="files-label">Fichiers PDF</span>
+						<label id="dropzone" class="dropzone">
+							<input id="propose-files" class="visually-hidden" type="file" accept="application/pdf,.pdf" multiple aria-labelledby="files-label" aria-describedby="dropzone-text" />
+							<span class="dropzone-icon">
+								<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+									<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+									<path d="M14 2v4a2 2 0 0 0 2 2h4" />
+									<path d="M12 12v6" />
+									<path d="m15 15-3-3-3 3" />
+								</svg>
+							</span>
+							<span class="dropzone-title"><span class="pointer-only">Glisse tes PDF ici</span><span class="touch-only">Choisis tes PDF</span></span>
+							<span id="dropzone-text" class="dropzone-text"><span class="pointer-only">ou <u>choisis-les</u> · </span>50 Mo maximum chacun</span>
+						</label>
+						<ul id="file-list" class="files"></ul>
+					</div>
+
+					<div id="progress" class="progress" hidden><span></span></div>
+					<p id="propose-status" role="status"></p>
+
+					<div class="form-actions">
+						<button id="propose-cancel" class="btn btn-ghost" type="button">Annuler</button>
+						<button id="propose-submit" class="btn btn-primary" type="submit">
+							<span class="spinner"></span>
+							Envoyer la proposition
+							<svg class="icon icon-move busy-hide" viewBox="0 0 24 24" aria-hidden="true">
+								<path d="M5 12h14" />
+								<path d="m12 5 7 7-7 7" />
+							</svg>
+						</button>
+					</div>
+				</form>
+			</div>
+
+			<div id="propose-done" class="done" tabindex="-1" hidden>
+				<svg class="done-check" viewBox="0 0 52 52" aria-hidden="true">
+					<circle cx="26" cy="26" r="24" />
+					<path d="m15 27 7 7 15-15" />
+				</svg>
+				<h2>Proposition envoyée !</h2>
+				<p>Merci ! Elle est en attente : la matière apparaîtra dans ta bibliothèque une fois créée.</p>
+				<div class="form-actions">
+					<button id="propose-again" class="btn btn-ghost" type="button">Proposer une autre matière</button>
+					<button id="propose-finish" class="btn btn-primary" type="button">Fermer</button>
+				</div>
+			</div>
+		</dialog>
+
+		<template id="card-template">
+			<article class="card">
+				<div class="card-top">
+					<span class="card-icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"></svg></span>
+					<span class="card-category"></span>
+				</div>
+				<div class="card-body">
+					<h3 class="card-title"></h3>
+					<p class="card-text"></p>
+				</div>
+				<div class="card-actions card-actions-mine">
+					<a class="card-open stretched">
+						Ouvrir
+						<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+							<path d="M5 12h14" />
+							<path d="m12 5 7 7-7 7" />
+						</svg>
+					</a>
+					<button class="follow-toggle" type="button">
+						<span class="follow-on">
+							<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+							Suivi
+						</span>
+						<span class="follow-off">
+							<span class="spinner"></span>
+							<svg class="icon busy-hide" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /></svg>
+							Retirer
+						</span>
+					</button>
+				</div>
+				<div class="card-actions card-actions-other">
+					<button class="card-add stretched" type="button">
+						<span class="spinner"></span>
+						<svg class="icon busy-hide" viewBox="0 0 24 24" aria-hidden="true">
+							<path d="M5 12h14" />
+							<path d="M12 5v14" />
+						</svg>
+						Ajouter
+					</button>
+				</div>
+			</article>
 		</template>
 
 		<script src="vendor/supabase.js"></script>
 		<script>
 			// To publish a course: put its folder at the root of the site, then add it here.
 			// Never change an id: it is what people's saved courses point to.
+			// `color` is one of PALETTE and `icon` the inside of a 24×24 lucide icon; both are optional.
 			const LIBRARY = [
 				{
 					id: "admin",
@@ -564,6 +1744,8 @@
 					href: "../admin/",
 					title: "Droit administratif",
 					text: "Réviser le cours de L2, avec des exercices et des cas pratiques.",
+					color: "violet",
+					icon: '<path d="M12 3v18"/><path d="m19 8 3 8a5 5 0 0 1-6 0zV7"/><path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1"/><path d="m5 8 3 8a5 5 0 0 1-6 0zV7"/><path d="M7 21h10"/>',
 				},
 				{
 					id: "ia-responsable",
@@ -571,6 +1753,8 @@
 					href: "../ia-responsable/",
 					title: "IA responsable",
 					text: "Construire le dossier de confiance d'un système d'IA : risques, équité, explicabilité, conformité, décision.",
+					color: "blue",
+					icon: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
 				},
 				{
 					id: "trd",
@@ -578,8 +1762,15 @@
 					href: "../trd/",
 					title: "Trading",
 					text: "Apprendre le trading, du niveau zéro au bot.",
+					color: "green",
+					icon: '<path d="M9 5v4"/><rect width="4" height="6" x="7" y="9" rx="1"/><path d="M9 15v2"/><path d="M17 3v2"/><rect width="4" height="8" x="15" y="5" rx="1"/><path d="M17 13v3"/><path d="M3 3v16a2 2 0 0 0 2 2h16"/>',
 				},
 			]
+
+			const PALETTE = ["violet", "blue", "green", "amber", "rose"]
+			const BOOK_ICON = '<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>'
+			const FILE_ICON = '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>'
+			const X_ICON = '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
 
 			// Both values are public by design: access is enforced by the database policies.
 			const SUPABASE_URL = "https://fcxrvoloiuicbgbqjoco.supabase.co"
@@ -587,17 +1778,23 @@
 
 			const client = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, { auth: { flowType: "pkce" } })
 			const byId = (id) => document.getElementById(id)
+			const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)")
 
 			let userId = null
+			let firstName = ""
 			let followed = new Set()
-			let libraryOpen = false
+			let rendered = false
+			let pickedFiles = []
+			let sending = false
+			const busy = new Set()
 
 			const MAX_FILE_BYTES = 50 * 1024 * 1024
 			const STATUS_LABELS = { pending: "En attente", created: "Créée", rejected: "Refusée" }
+			const CATEGORIES = [...new Set(LIBRARY.map((course) => course.category))]
 
 			/** Storage keys accept a restricted set of characters: accents and symbols are replaced. */
 			function storageName(name) {
-				return name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^A-Za-z0-9 _.,()'-]/g, "-")
+				return name.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9 _.,()'-]/g, "-")
 			}
 
 			function uniqueNames(names) {
@@ -609,54 +1806,198 @@
 				})
 			}
 
-			function showError(message) {
-				byId("error").textContent = message
-				byId("error").hidden = false
+			function colorOf(course) {
+				if (PALETTE.includes(course.color)) return course.color
+				const hash = [...course.id].reduce((sum, char) => sum + char.charCodeAt(0), 0)
+				return PALETTE[hash % PALETTE.length]
 			}
 
-			function courseNode(templateId, course, position) {
-				const node = byId(templateId).content.cloneNode(true)
-				node.querySelector(".index").textContent = String(position).padStart(2, "0")
-				node.querySelector(".title").textContent = course.title
-				node.querySelector(".text").textContent = course.text
-				return node
+			function categoryColor(category) {
+				const course = LIBRARY.find((c) => c.category === category)
+				return course ? colorOf(course) : "accent"
 			}
 
-			function libraryNode(course) {
-				const node = courseNode("library-course-template", course, LIBRARY.indexOf(course) + 1)
-				const button = node.querySelector("button")
-				const label = followed.has(course.id) ? "Ne plus suivre" : "Suivre"
-				button.textContent = label
-				button.setAttribute("aria-label", `${label} : ${course.title}`)
-				button.classList.add(followed.has(course.id) ? "button-outline" : "button-primary")
-				button.addEventListener("click", () => toggleCourse(course.id, button))
-				return node
+			/* Feedback */
+
+			let toastTimer
+			function toast(message, { error = false, action, onAction } = {}) {
+				const box = byId("toast")
+				box.classList.toggle("toast-error", error)
+				byId("toast-text").textContent = message
+				byId("toast-action").hidden = !action
+				byId("toast-action").textContent = action ?? ""
+				byId("toast-action").onclick = () => {
+					hideToast()
+					onAction()
+				}
+				// Re-inserting restarts the entrance animation.
+				box.hidden = true
+				void box.offsetWidth
+				box.hidden = false
+				clearTimeout(toastTimer)
+				toastTimer = setTimeout(hideToast, action || error ? 7000 : 4000)
 			}
 
-			function categoryNodes(category) {
-				const title = document.createElement("h3")
-				title.textContent = category
-				const list = document.createElement("ul")
-				list.replaceChildren(...LIBRARY.filter((course) => course.category === category).map(libraryNode))
-				return [title, list]
+			function hideToast() {
+				byId("toast").hidden = true
+			}
+
+			const showError = (message) => toast(message, { error: true })
+
+			/** A small burst of confetti in the course colours, from the middle of `target`. */
+			function burst(target, colors = PALETTE) {
+				if (reducedMotion.matches || !target) return
+				const rect = target.getBoundingClientRect()
+				const x = rect.left + rect.width / 2
+				const y = rect.top + rect.height / 2
+				for (let i = 0; i < 16; i++) {
+					const bit = document.createElement("span")
+					bit.className = "particle"
+					bit.style.left = `${x}px`
+					bit.style.top = `${y}px`
+					bit.style.background = `var(--${colors[i % colors.length]})`
+					document.body.append(bit)
+					const angle = (i / 16) * Math.PI * 2 + Math.random() * 0.5
+					const distance = 45 + Math.random() * 55
+					bit
+						.animate(
+							[
+								{ transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
+								{
+									transform: `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px)) rotate(${Math.random() * 360}deg) scale(0.3)`,
+									opacity: 0,
+								},
+							],
+							{ duration: 650 + Math.random() * 300, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" },
+						)
+						.finished.then(() => bit.remove())
+				}
+			}
+
+			/** Animates the cards to their new place when the browser can, otherwise just updates. */
+			function withTransition(update) {
+				if (!document.startViewTransition || reducedMotion.matches) {
+					update()
+					return Promise.resolve()
+				}
+				return document.startViewTransition(update).finished.catch(() => {})
+			}
+
+			/* Courses */
+
+			function cardNode(course, mine, index) {
+				const card = byId("card-template").content.firstElementChild.cloneNode(true)
+				card.id = `course-${course.id}`
+				card.classList.toggle("card-mine", mine)
+				card.style.setProperty("--c", `var(--${colorOf(course)})`)
+				card.style.setProperty("--i", index)
+				card.style.viewTransitionName = `course-${course.id}`
+				card.querySelector(".card-icon svg").innerHTML = course.icon ?? BOOK_ICON
+				card.querySelector(".card-category").textContent = course.category
+				const title = card.querySelector(".card-title")
+				title.textContent = course.title
+				title.id = `title-${course.id}`
+				card.setAttribute("aria-labelledby", title.id)
+				card.querySelector(".card-text").textContent = course.text
+
+				card.querySelector(mine ? ".card-actions-other" : ".card-actions-mine").remove()
+				if (mine) {
+					const open = card.querySelector(".card-open")
+					open.href = course.href
+					open.setAttribute("aria-label", `Ouvrir ${course.title}`)
+					const toggle = card.querySelector(".follow-toggle")
+					toggle.setAttribute("aria-label", `Suivi : retirer ${course.title} de mes cours`)
+					toggle.addEventListener("click", () => toggleCourse(course.id))
+				} else {
+					const add = card.querySelector(".card-add")
+					add.setAttribute("aria-label", `Ajouter ${course.title} à mes cours`)
+					add.addEventListener("click", () => toggleCourse(course.id))
+				}
+				return card
 			}
 
 			function render() {
 				const mine = LIBRARY.filter((course) => followed.has(course.id))
+				const others = LIBRARY.filter((course) => !followed.has(course.id))
 				byId("heading-start").textContent = mine.length ? "Reprendre" : "Choisis"
 				byId("heading-accent").textContent = mine.length ? "tes cours" : "ta matière"
+				const hello = firstName ? `Bonjour ${firstName} ! ` : ""
+				byId("lead").textContent =
+					hello + (mine.length ? "Ouvre un cours pour reprendre, ou ajoute une matière de la bibliothèque." : "Ajoute une matière à tes cours pour commencer, ou propose la tienne.")
 				byId("my-section").hidden = mine.length === 0
-				byId("library-section").hidden = mine.length > 0 && !libraryOpen
-				byId("manage").textContent = libraryOpen ? "Fermer" : "Ajouter ou retirer une matière"
-				byId("my-courses").replaceChildren(
-					...mine.map((course, index) => {
-						const node = courseNode("my-course-template", course, index + 1)
-						node.querySelector("a").href = course.href
-						return node
-					}),
-				)
-				const categories = [...new Set(LIBRARY.map((course) => course.category))]
-				byId("library").replaceChildren(...categories.flatMap(categoryNodes))
+				byId("my-count").textContent = mine.length
+				byId("my-courses").replaceChildren(...mine.map((course, index) => cardNode(course, true, index)))
+				const proposeCard = byId("propose-open")
+				proposeCard.style.setProperty("--i", mine.length + others.length)
+				byId("library").replaceChildren(...others.map((course, index) => cardNode(course, false, mine.length + index)), proposeCard)
+				byId("library").removeAttribute("aria-busy")
+
+				if (!rendered) {
+					rendered = true
+					for (const grid of [byId("my-courses"), byId("library")]) {
+						grid.classList.add("is-entering")
+						setTimeout(() => grid.classList.remove("is-entering"), 1200)
+					}
+				}
+			}
+
+			async function loadCourses() {
+				const { data, error } = await client.from("followed_courses").select("course")
+				if (error) return showError("Impossible de charger tes cours. Recharge la page.")
+				followed = new Set(data.map((row) => row.course))
+				render()
+			}
+
+			async function toggleCourse(id) {
+				if (busy.has(id)) return
+				const course = LIBRARY.find((c) => c.id === id)
+				const wasFollowed = followed.has(id)
+				busy.add(id)
+				byId(`course-${id}`)?.classList.add("is-busy")
+				const table = client.from("followed_courses")
+				const { error } = wasFollowed ? await table.delete().eq("course", id) : await table.insert({ course: id })
+				busy.delete(id)
+				if (error) {
+					byId(`course-${id}`)?.classList.remove("is-busy")
+					return showError("Action impossible. Réessaie dans un instant.")
+				}
+				if (wasFollowed) followed.delete(id)
+				else followed.add(id)
+				await withTransition(() => {
+					render()
+					// The clicked button is gone: keep the keyboard on the card, now in its new place.
+					byId(`course-${id}`)?.querySelector(wasFollowed ? ".card-add" : ".card-open")?.focus({ preventScroll: true })
+				})
+				const card = byId(`course-${id}`)
+				if (wasFollowed) {
+					toast(`${course.title} est retiré de tes cours.`, { action: "Annuler", onAction: () => toggleCourse(id) })
+				} else if (card) {
+					card.classList.add("pop")
+					card.addEventListener("animationend", () => card.classList.remove("pop"), { once: true })
+					burst(card.querySelector(".card-icon"), [colorOf(course), "violet", "amber", "blue"])
+				}
+			}
+
+			/** Scrolls to a course card and makes it shine for a moment. */
+			function reveal(id) {
+				const card = byId(`course-${id}`)
+				if (!card) return
+				card.scrollIntoView({ behavior: reducedMotion.matches ? "auto" : "smooth", block: "center" })
+				card.classList.remove("flash")
+				void card.offsetWidth
+				card.classList.add("flash")
+				card.addEventListener("animationend", () => card.classList.remove("flash"), { once: true })
+			}
+
+			/* Proposals */
+
+			const dateFormat = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long" })
+			const dateFormatWithYear = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" })
+
+			function proposalDate(value) {
+				const date = new Date(value)
+				if (Number.isNaN(date.getTime())) return ""
+				return (date.getFullYear() === new Date().getFullYear() ? dateFormat : dateFormatWithYear).format(date)
 			}
 
 			function renderProposals(proposals) {
@@ -664,16 +2005,38 @@
 				byId("my-proposals").replaceChildren(
 					...proposals.map((proposal) => {
 						const item = document.createElement("li")
-						item.className = "row"
+						item.className = `proposal status-${proposal.status}`
+
+						const icon = document.createElement("span")
+						icon.className = "proposal-icon"
+						icon.innerHTML = `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${FILE_ICON}</svg>`
+
+						const main = document.createElement("span")
+						main.className = "proposal-main"
+						const title = document.createElement("span")
+						title.className = "proposal-title"
+						title.textContent = proposal.title
+						const meta = document.createElement("span")
+						meta.className = "proposal-meta"
+						const date = proposalDate(proposal.created_at)
+						meta.textContent = date ? `${proposal.category} · envoyée le ${date}` : proposal.category
+						main.append(title, meta)
+
+						const badge = document.createElement("span")
+						badge.className = "badge"
+						badge.textContent = STATUS_LABELS[proposal.status] ?? proposal.status
+						item.append(icon, main, badge)
+
 						const course = LIBRARY.find((c) => c.id === proposal.course_id)
-						const name = document.createElement(course ? "a" : "span")
-						if (course) name.href = course.href
-						name.className = "title"
-						name.textContent = `${proposal.title} · ${proposal.category}`
-						const status = document.createElement("span")
-						status.className = `status status-${proposal.status}`
-						status.textContent = STATUS_LABELS[proposal.status] ?? proposal.status
-						item.replaceChildren(name, status)
+						if (proposal.status === "created" && course) {
+							const see = document.createElement("button")
+							see.type = "button"
+							see.className = "proposal-see"
+							see.textContent = "Voir"
+							see.setAttribute("aria-label", `Voir ${course.title} dans la bibliothèque`)
+							see.addEventListener("click", () => reveal(course.id))
+							item.append(see)
+						}
 						return item
 					}),
 				)
@@ -687,79 +2050,191 @@
 				if (!error) renderProposals(data)
 			}
 
-			function setProposeStatus(message) {
+			/* Proposal form */
+
+			const dialog = byId("propose-dialog")
+			const nameInput = byId("propose-name")
+			const categoryInput = byId("propose-category")
+			const fileInput = byId("propose-files")
+			const dropzone = byId("dropzone")
+
+			function fileProblem(file) {
+				if (file.type !== "application/pdf" && !/\.pdf$/i.test(file.name)) return "n'est pas un PDF"
+				if (file.size > MAX_FILE_BYTES) return "dépasse 50 Mo"
+				return null
+			}
+
+			function fileSize(bytes) {
+				if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} ko`
+				return `${(bytes / 1024 / 1024).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} Mo`
+			}
+
+			function addFiles(files) {
+				for (const file of files) {
+					const known = pickedFiles.some((f) => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified)
+					if (!known) pickedFiles.push(file)
+				}
+				dropzone.removeAttribute("aria-invalid")
+				if (byId("propose-status").classList.contains("is-error")) setProposeStatus("")
+				renderFiles()
+			}
+
+			function renderFiles() {
+				byId("file-list").replaceChildren(
+					...pickedFiles.map((file) => {
+						const problem = fileProblem(file)
+						const item = document.createElement("li")
+						item.className = problem ? "file is-invalid" : "file"
+						item.innerHTML = `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${FILE_ICON}</svg><span class="file-name"></span><span class="file-size"></span><button class="btn btn-sm btn-icon" type="button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${X_ICON}</svg></button>`
+						item.querySelector(".file-name").textContent = file.name
+						item.querySelector(".file-size").textContent = problem ? (problem === "dépasse 50 Mo" ? "plus de 50 Mo" : "pas un PDF") : fileSize(file.size)
+						const remove = item.querySelector("button")
+						remove.setAttribute("aria-label", `Retirer ${file.name}`)
+						remove.disabled = sending
+						remove.addEventListener("click", () => {
+							pickedFiles = pickedFiles.filter((f) => f !== file)
+							renderFiles()
+							fileInput.focus()
+						})
+						return item
+					}),
+				)
+			}
+
+			function renderChips() {
+				byId("propose-chips").replaceChildren(
+					...CATEGORIES.map((category) => {
+						const chip = document.createElement("label")
+						chip.className = "chip"
+						chip.style.setProperty("--c", `var(--${categoryColor(category)})`)
+						const radio = document.createElement("input")
+						radio.type = "radio"
+						radio.name = "category"
+						radio.value = category
+						radio.addEventListener("change", () => {
+							categoryInput.value = ""
+							categoryInput.removeAttribute("aria-invalid")
+						})
+						const text = document.createElement("span")
+						text.textContent = category
+						chip.append(radio, text)
+						return chip
+					}),
+				)
+			}
+
+			function chosenCategory() {
+				return document.querySelector('input[name="category"]:checked')?.value ?? categoryInput.value.trim()
+			}
+
+			function setProposeStatus(message, error = false) {
 				byId("propose-status").textContent = message
+				byId("propose-status").classList.toggle("is-error", error)
+			}
+
+			function setSending(value) {
+				sending = value
+				byId("propose-submit").classList.toggle("is-busy", value)
+				for (const id of ["propose-submit", "propose-cancel", "propose-close"]) byId(id).disabled = value
+				for (const field of byId("propose-form").querySelectorAll("input")) field.disabled = value
+				byId("progress").hidden = !value
+				renderFiles()
+			}
+
+			function setProgress(done, total) {
+				byId("progress").firstElementChild.style.width = `${Math.round((done / total) * 100)}%`
+			}
+
+			function resetProposeForm() {
+				byId("propose-form").reset()
+				pickedFiles = []
+				renderFiles()
+				setProposeStatus("")
+				setProgress(0, 1)
+				for (const field of [nameInput, categoryInput, dropzone]) field.removeAttribute("aria-invalid")
+			}
+
+			function showProposeForm() {
+				byId("propose-panel").hidden = false
+				byId("propose-done").hidden = true
+			}
+
+			function openPropose() {
+				if (!sending && !byId("propose-done").hidden) {
+					resetProposeForm()
+					showProposeForm()
+				}
+				dialog.showModal()
+				if (!sending && byId("propose-done").hidden) nameInput.focus()
+			}
+
+			function closePropose() {
+				if (!sending) dialog.close()
+			}
+
+			function refuse(message, field) {
+				setProposeStatus(message, true)
+				field.setAttribute("aria-invalid", "true")
+				const panel = byId("propose-panel")
+				panel.classList.remove("shake")
+				void panel.offsetWidth
+				panel.classList.add("shake")
+				;(field === dropzone ? fileInput : field === byId("propose-chips") ? byId("propose-chips").querySelector("input") ?? categoryInput : field).focus()
 			}
 
 			async function submitProposal(event) {
 				event.preventDefault()
-				const title = byId("propose-name").value.trim()
-				const category = byId("propose-category").value.trim()
-				const files = [...byId("propose-files").files]
-				const notPdf = files.find((file) => file.type !== "application/pdf" && !/\.pdf$/i.test(file.name))
-				const tooBig = files.find((file) => file.size > MAX_FILE_BYTES)
-				const problem = !title
-					? "Donne un titre à la matière."
-					: !category
-						? "Choisis ou écris une catégorie."
-						: files.length === 0
-							? "Ajoute au moins un PDF."
-							: notPdf
-								? `${notPdf.name} n'est pas un PDF.`
-								: tooBig
-									? `${tooBig.name} dépasse 50 Mo.`
-									: null
-				if (problem) return setProposeStatus(problem)
+				if (sending) return
+				const title = nameInput.value.trim()
+				const category = chosenCategory()
+				const files = [...pickedFiles]
+				const bad = files.find(fileProblem)
+				if (!title) return refuse("Donne un titre à la matière.", nameInput)
+				if (!category) return refuse("Choisis ou écris une catégorie.", CATEGORIES.length ? byId("propose-chips") : categoryInput)
+				if (files.length === 0) return refuse("Ajoute au moins un PDF.", dropzone)
+				if (bad) return refuse(`${bad.name} ${fileProblem(bad)}.`, dropzone)
 
 				const id = crypto.randomUUID()
 				const names = uniqueNames(files.map((file) => storageName(file.name)))
-				byId("propose-submit").disabled = true
+				setSending(true)
 				try {
 					// Files go first, into the sender's own folder: the proposal row cannot be changed afterwards.
 					for (const [index, file] of files.entries()) {
 						setProposeStatus(`Envoi du fichier ${index + 1} sur ${files.length}…`)
+						setProgress(index + 0.5, files.length + 0.5)
 						const { error } = await client.storage
 							.from("proposals")
 							.upload(`${userId}/${id}/${names[index]}`, file, { contentType: "application/pdf" })
 						if (error) throw error
 					}
+					setProposeStatus("Enregistrement de la proposition…")
+					setProgress(files.length, files.length + 0.5)
 					const { error } = await client.from("course_proposals").insert({ id, title, category, files: names })
 					if (error) throw error
+					setProgress(1, 1)
 				} catch {
-					return setProposeStatus("Envoi impossible. Réessaie dans un instant.")
-				} finally {
-					byId("propose-submit").disabled = false
+					setSending(false)
+					return setProposeStatus("Envoi impossible. Réessaie dans un instant.", true)
 				}
-				byId("propose-form").reset()
-				setProposeStatus("Merci ! Ta proposition est en attente : la matière apparaîtra dans la bibliothèque une fois créée.")
+				setSending(false)
+				resetProposeForm()
+				byId("propose-panel").hidden = true
+				byId("propose-done").hidden = false
+				byId("propose-done").focus()
+				setTimeout(() => burst(byId("propose-done").querySelector(".done-check"), ["green", "violet", "blue", "amber"]), 450)
 				await loadProposals()
 			}
 
-			async function loadCourses() {
-				const { data, error } = await client.from("followed_courses").select("course")
-				if (error) return showError("Impossible de charger tes cours. Recharge la page.")
-				followed = new Set(data.map((row) => row.course))
-				render()
-			}
-
-			async function toggleCourse(id, button) {
-				button.disabled = true
-				byId("error").hidden = true
-				const table = client.from("followed_courses")
-				const { error } = followed.has(id) ? await table.delete().eq("course", id) : await table.insert({ course: id })
-				if (error) {
-					button.disabled = false
-					return showError("Action impossible. Réessaie dans un instant.")
-				}
-				if (!followed.delete(id)) followed.add(id)
-				render()
-			}
+			/* Wiring */
 
 			client.auth.onAuthStateChange((_event, session) => {
 				byId("signed-out").hidden = Boolean(session)
 				byId("signed-in").hidden = !session
 				byId("sign-out").hidden = !session
 				byId("email").textContent = session ? ` · ${session.user.email}` : ""
+				const meta = session?.user.user_metadata ?? {}
+				firstName = String(meta.given_name ?? meta.full_name ?? meta.name ?? "").trim().split(/\s+/)[0]
+				if (!session && dialog.open) dialog.close()
 				// Supabase calls made inside this callback can deadlock, so this one runs just after it.
 				if (session && session.user.id !== userId) {
 					setTimeout(() => {
@@ -770,27 +2245,64 @@
 				userId = session?.user.id ?? null
 			})
 
-			byId("categories").replaceChildren(
-				...[...new Set(LIBRARY.map((course) => course.category))].map((category) => {
-					const option = document.createElement("option")
-					option.value = category
-					return option
-				}),
-			)
+			renderChips()
 
-			byId("propose-open").addEventListener("click", () => {
-				const section = byId("propose-section")
-				section.hidden = !section.hidden
-				byId("propose-open").setAttribute("aria-expanded", String(!section.hidden))
-				if (!section.hidden) byId("propose-name").focus()
+			// A soft light follows the pointer on the cards.
+			byId("signed-in").addEventListener("pointermove", (event) => {
+				const card = event.target.closest(".card")
+				if (!card) return
+				const rect = card.getBoundingClientRect()
+				card.style.setProperty("--mx", `${event.clientX - rect.left}px`)
+				card.style.setProperty("--my", `${event.clientY - rect.top}px`)
 			})
 
+			byId("propose-open").addEventListener("click", openPropose)
+			byId("propose-close").addEventListener("click", closePropose)
+			byId("propose-cancel").addEventListener("click", closePropose)
+			byId("propose-finish").addEventListener("click", closePropose)
+			byId("propose-again").addEventListener("click", () => {
+				resetProposeForm()
+				showProposeForm()
+				nameInput.focus()
+			})
+			dialog.addEventListener("cancel", (event) => {
+				if (sending) event.preventDefault()
+			})
+			// A click on the dimmed backdrop lands on the dialog itself.
+			dialog.addEventListener("click", (event) => {
+				if (event.target === dialog) closePropose()
+			})
 			byId("propose-form").addEventListener("submit", submitProposal)
-
-			byId("manage").addEventListener("click", () => {
-				libraryOpen = !libraryOpen
-				render()
+			byId("propose-form").addEventListener("input", () => {
+				if (!sending && byId("propose-status").classList.contains("is-error")) setProposeStatus("")
 			})
+			nameInput.addEventListener("input", () => nameInput.removeAttribute("aria-invalid"))
+			categoryInput.addEventListener("input", () => {
+				categoryInput.removeAttribute("aria-invalid")
+				for (const radio of document.querySelectorAll('input[name="category"]')) radio.checked = false
+			})
+			fileInput.addEventListener("change", () => {
+				addFiles(fileInput.files)
+				fileInput.value = ""
+			})
+			for (const type of ["dragenter", "dragover"]) {
+				dropzone.addEventListener(type, (event) => {
+					event.preventDefault()
+					if (!sending) dropzone.classList.add("is-dragging")
+				})
+			}
+			dropzone.addEventListener("dragleave", (event) => {
+				if (!dropzone.contains(event.relatedTarget)) dropzone.classList.remove("is-dragging")
+			})
+			dropzone.addEventListener("drop", (event) => {
+				event.preventDefault()
+				dropzone.classList.remove("is-dragging")
+				if (!sending) addFiles(event.dataTransfer.files)
+			})
+			// A file dropped next to the zone must not open the PDF in place of the page.
+			for (const type of ["dragover", "drop"]) dialog.addEventListener(type, (event) => event.preventDefault())
+
+			byId("toast-close").addEventListener("click", hideToast)
 
 			byId("sign-in").addEventListener("click", async () => {
 				const { error } = await client.auth.signInWithOAuth({

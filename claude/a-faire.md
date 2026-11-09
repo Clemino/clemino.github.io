@@ -17,7 +17,7 @@
   - filtrer la bibliothèque, et le contrôle d'accès des cours (`coursapp/lib/access.ts`), sur ces accès plutôt que sur les matières suivies.
 
   Ce contrôle se fait dans le navigateur : les fichiers publiés sur GitHub Pages restent lisibles par qui connaît leur adresse.
-- [ ] **Refaire l'interface de la bibliothèque** (`cours/index.html`) : les boutons, le formulaire « Proposer une matière », la liste « Mes propositions » et tout ce qui a été ajouté autour. Clément les trouve peu réussis. Garder la direction artistique des cours.
+- [x] **Refaire l'interface de la bibliothèque** (`cours/index.html`). Fait le 9 novembre 2026 : une carte par matière, une carte « + » qui ouvre le formulaire dans une fenêtre, des boutons animés aux couleurs des cours, et « Mes propositions » avec l'état de chacune.
 - [ ] **Compléter Trading :** 18 sections de théorie rédigées sur 83 prévues ; les modules 4 à 15 sont presque vides. Le contenu se trouve dans `coursapp/courses/trd/`, puis se publie avec `pnpm publish:course trd`.
 - [ ] **Ajouter les ateliers d'IA responsable** (diapositives 18, 27 et 34), si leurs documents sont disponibles : le PDF ne contient que leurs titres.
 
