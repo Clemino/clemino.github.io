@@ -93,13 +93,21 @@ async function close(id, status, courseId = null) {
     headers: { "content-type": "application/json", prefer: "return=minimal" },
     body: JSON.stringify({ status, course_id: courseId }),
   })
+  // A created course is opened to the person who proposed it (claude/supabase/acces-par-personne.sql).
+  if (status === "created") {
+    await api("/rest/v1/course_access", {
+      method: "POST",
+      headers: { "content-type": "application/json", prefer: "resolution=ignore-duplicates,return=minimal" },
+      body: JSON.stringify({ user_id: proposal.user_id, course: courseId }),
+    })
+  }
   // The free plan has 1 GB of storage: files leave once the proposal is settled.
   await api(`/storage/v1/object/${BUCKET}`, {
     method: "DELETE",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ prefixes: proposal.files.map((file) => `${proposal.user_id}/${proposal.id}/${file}`) }),
   })
-  console.log(`${proposal.title} : ${status === "created" ? `créée (${courseId})` : "refusée"}, fichiers effacés de Supabase.`)
+  console.log(`${proposal.title} : ${status === "created" ? `créée (${courseId}) et ouverte à la personne qui l'a proposée` : "refusée"}, fichiers effacés de Supabase.`)
 }
 
 const [command, id, courseId] = process.argv.slice(2)
