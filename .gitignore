@@ -1,2 +1,2 @@
-# Supabase secret key for claude/scripts/proposals.mjs: never commit it
+# Supabase secret key for scripts/proposals.mjs: never commit it
 .env*.local

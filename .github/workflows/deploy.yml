@@ -1,0 +1,48 @@
+# Publishes site/ on https://clemino.github.io at each push to main.
+name: Deploy site
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; a running one is never cancelled.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Only site/ is published: a course generated anywhere else would silently go missing.
+      - name: Check that every course is in site/
+        run: |
+          stray=$(find . -mindepth 2 -maxdepth 2 -type d -name _next -not -path './site/*' -printf '%h\n')
+          if [ -n "$stray" ]; then
+            echo "::error::Cours généré hors de site/ : $stray. Le déplacer dans site/ (pnpm publish:course doit écrire dans site/<id>/)."
+            exit 1
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

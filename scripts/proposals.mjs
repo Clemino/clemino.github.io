@@ -3,17 +3,17 @@
  * Handles the course proposals sent from the library.
  * Needs SUPABASE_SECRET_KEY in .env.local at the root of this repository.
  *
- *   node claude/scripts/proposals.mjs list
- *   node claude/scripts/proposals.mjs download <proposal-id> <course-id>
- *   node claude/scripts/proposals.mjs done <proposal-id> <course-id>
- *   node claude/scripts/proposals.mjs reject <proposal-id>
+ *   node scripts/proposals.mjs list
+ *   node scripts/proposals.mjs download <proposal-id> <course-id>
+ *   node scripts/proposals.mjs done <proposal-id> <course-id>
+ *   node scripts/proposals.mjs reject <proposal-id>
  */
 import { execFileSync } from "node:child_process"
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const BUCKET = "proposals"
 const COURSE_ID = /^[a-z][a-z0-9-]{1,19}$/
 
@@ -38,7 +38,7 @@ const BASE_URL = env.SUPABASE_URL ?? "https://fcxrvoloiuicbgbqjoco.supabase.co"
 const SECRET_KEY = env.SUPABASE_SECRET_KEY
 
 async function api(pathname, init = {}) {
-  if (!SECRET_KEY) fail("SUPABASE_SECRET_KEY manque dans .env.local (voir claude/creer-matiere.md).")
+  if (!SECRET_KEY) fail("SUPABASE_SECRET_KEY manque dans .env.local (voir docs/creer-une-matiere.md).")
   // Secret keys go on the apikey header only: the gateway rejects them as a bearer token.
   const response = await fetch(BASE_URL + pathname, { ...init, headers: { apikey: SECRET_KEY, ...init.headers } })
   if (!response.ok) fail(`${init.method ?? "GET"} ${pathname} : ${response.status} ${await response.text()}`)
@@ -76,7 +76,7 @@ async function list() {
 async function download(id, courseId) {
   if (!COURSE_ID.test(courseId ?? "")) fail("Identifiant de matière attendu : minuscules, chiffres et tirets, 2 à 20 caractères.")
   const proposal = await getProposal(id)
-  const dir = path.join(ROOT, "cours", "sources", courseId)
+  const dir = path.join(ROOT, "sources", courseId)
   fs.mkdirSync(dir, { recursive: true })
   for (const file of proposal.files) {
     const response = await api(`/storage/v1/object/${BUCKET}/${storagePath(proposal, file)}`)
@@ -93,7 +93,7 @@ async function close(id, status, courseId = null) {
     headers: { "content-type": "application/json", prefer: "return=minimal" },
     body: JSON.stringify({ status, course_id: courseId }),
   })
-  // A created course is opened to the person who proposed it (claude/supabase/acces-par-personne.sql).
+  // A created course is opened to the person who proposed it (supabase/acces-par-personne.sql).
   if (status === "created") {
     await api("/rest/v1/course_access", {
       method: "POST",

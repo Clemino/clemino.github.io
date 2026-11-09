@@ -1,38 +1,63 @@
 # clemino.github.io
 
-Site personnel. Domaine prevu : clemi.me
+Bibliothèque de cours en ligne : on se connecte avec Google, on ouvre les matières qui nous sont ouvertes, et la progression suit sur tous les appareils.
 
-La page d'accueil (`index.html`) est une page blanche, voulue ainsi : on entre sur le site par la bibliothèque, https://clemino.github.io/cours/.
+**Site :** https://clemino.github.io/cours/ · Domaine prévu : `clemi.me`
 
-## /cours/ : la bibliothèque de cours
+## Organisation
 
-Connexion Google, puis choix d'une matière. Chacun ne voit que les matières qui lui sont ouvertes : celles qu'il a proposées et qui ont été créées, et celles que l'administrateur lui a données. L'administrateur voit tout, et donne ou retire les matières dans la section « Accès », visible de lui seul.
+```
+site/                   Publié tel quel sur https://clemino.github.io
+├── index.html          Page d'accueil, volontairement blanche
+├── cours/              Bibliothèque : connexion, matières, propositions, accès
+├── admin/              Droit administratif   ┐
+├── ia-responsable/     IA responsable        ├ générés par coursapp :
+└── trd/                Trading               ┘ ne pas modifier à la main
+sources/<id>/           Documents d'origine de chaque matière, avec leur version texte
+supabase/               Scripts SQL à lancer dans Supabase
+scripts/proposals.mjs   Traitement des matières proposées depuis la bibliothèque
+docs/                   Consignes pour Claude et liste des choses à faire
+.github/workflows/      Publication du site et réveil de Supabase
+```
 
-- Pour publier un cours : le générer avec `pnpm publish:course <id>` dans `coursapp`, puis l'ajouter à `LIBRARY` dans `cours/index.html` avec sa catégorie, la couleur de sa carte et son icône. Ne jamais changer l'`id` d'un cours : les choix enregistrés et la progression pointent dessus.
-- La connexion et les cours suivis passent par le projet Supabase `cours` (table `followed_courses`). La session est commune à tout le site, car elle reste dans le navigateur pour `clemino.github.io`.
-- Les accès sont dans les tables `course_access` (qui voit quelle matière), `people` (les comptes, pour la section « Accès ») et `admins`, créées par `claude/supabase/acces-par-personne.sql`. Les règles de Supabase empêchent de suivre une matière sans y avoir accès, et cachent celles dont l'accès a été retiré : la progression reste enregistrée.
-- Un cours renvoie vers `/cours/` si on n'est pas connecté ou si on ne le suit pas. Comme une matière sans accès ne peut pas être suivie, les cours n'ont rien d'autre à vérifier. C'est un contrôle dans le navigateur : les fichiers d'un site GitHub Pages restent publics.
-- Chaque matière est une carte : « Mes cours » pour celles qu'on suit, « À découvrir » pour les autres, et une carte « + » qui ouvre le formulaire « Proposer une matière ». « Mes propositions » montre l'état de chaque proposition.
-- La page reprend la direction artistique des cours : mêmes couleurs, polices Geist copiées dans `cours/fonts/`, et même choix de thème clair ou sombre. Les animations s'arrêtent si l'appareil demande moins de mouvements.
-- supabase-js 2.119.0 est copié dans `cours/vendor/`.
+## Publication
 
-## /cours/sources/ et /claude/ : les sources des cours
+- Chaque push sur `main` publie le dossier `site/` avec `.github/workflows/deploy.yml`. Le reste du dépôt n'est pas mis en ligne. Si une publication expire (« Timeout reached »), la relancer avec `gh workflow run deploy.yml --ref main`.
+- Un cours se rédige et se génère dans `coursapp`, sur le PC de Clément : `pnpm publish:course <id>` l'écrit dans `site/<id>/`. Il s'ajoute ensuite à `LIBRARY` dans `site/cours/index.html`, avec sa catégorie, la couleur de sa carte et son icône.
+- Ne jamais changer l'`id` d'un cours : les matières suivies, les accès et la progression pointent dessus.
 
-- `cours/sources/<id>/` contient les documents d'origine de chaque matière (PDF, notes) et une version texte de chacun, avec des repères `[page N]`. Ils sont publics, comme le reste du site.
-- `claude/cours.md` explique à Claude comment répondre à une question de cours, par exemple à partir d'une capture d'écran, en s'appuyant sur ces sources. `CLAUDE.md` y renvoie, pour que Claude Code le lise en ouvrant ce dépôt.
-- Dans la bibliothèque, toute personne connectée peut proposer une matière : un titre, une catégorie et des PDF, gardés dans un espace privé de Supabase. `claude/creer-matiere.md` décrit comment Claude crée ensuite la matière en local, avec `claude/scripts/proposals.mjs` et la clé secrète de Supabase dans `.env.local`, ignoré par git.
+## Cours
 
-## /trd/ : apprendre le trading
+| Dossier | Matière |
+|---|---|
+| `site/admin/` | Droit administratif, L2 semestre 1 : service public, police administrative, sources de la légalité, limites et contrôle. Les corrigés types et les sujets de dissertation servent à s'entraîner : ils ne sont pas officiels. |
+| `site/ia-responsable/` | IA responsable : le dossier de confiance d'un système d'IA, des risques à la décision. |
+| `site/trd/` | Trading, du niveau zéro au bot : marchés, analyse, gestion du risque, backtest, automatisation, certification AMF. |
 
-Parcours du niveau zéro jusqu'au bot : marchés, analyse, gestion du risque, backtest, automatisation, certification AMF.
+## Bibliothèque
 
-- Site statique généré par l'application `coursapp`. Le dossier `trd/` est un résultat de build : ne pas le modifier à la main.
-- La progression se synchronise entre les appareils.
+- Chaque matière est une carte : « Mes cours » pour celles qu'on suit, « À découvrir » pour les autres, et une carte « + » pour proposer une matière en envoyant ses PDF. « Mes propositions » montre l'état de chaque proposition.
+- Chacun ne voit que les matières qui lui sont ouvertes : celles qu'il a proposées et qui ont été créées, et celles que l'administrateur lui a données. L'administrateur voit tout, et donne ou retire les matières dans la section « Accès », visible de lui seul.
+- Un cours renvoie vers `/cours/` si on n'est pas connecté ou si on ne suit pas la matière. C'est un contrôle dans le navigateur : les fichiers publiés sur GitHub Pages restent lisibles par qui connaît leur adresse.
+- La page reprend la direction artistique des cours : mêmes couleurs, polices Geist dans `site/cours/fonts/`, même thème clair ou sombre. Les animations s'arrêtent si l'appareil demande moins de mouvements. supabase-js 2.119.0 est copié dans `site/cours/vendor/`.
 
-## /admin/ : réviser le droit administratif
+## Supabase
 
-Parcours de révision du droit administratif (L2, semestre 1) : service public, police administrative, sources de la légalité, limites et contrôle, avec exercices auto-corrigés, cas pratiques guidés et rédactions avec corrigé type.
+Projet `cours`, connexion par Google uniquement.
 
-- Site statique généré par l'application `coursapp`. Le dossier `admin/` est un résultat de build : ne pas le modifier à la main.
-- La progression se synchronise entre les appareils.
-- Les corrigés types et les sujets de dissertation sont rédigés pour s'entraîner : ils ne sont pas officiels.
+| Table | Contenu |
+|---|---|
+| `followed_courses` | Matières suivies par chacun |
+| `course_access` | Qui peut voir quelle matière |
+| `people` | Comptes inscrits, pour la section « Accès » |
+| `admins` | Administrateurs |
+| `course_proposals` | Matières proposées, avec leurs PDF dans l'espace de stockage privé `proposals` |
+
+- Les règles de Supabase empêchent de suivre une matière sans y avoir accès, et cachent celles dont l'accès a été retiré ; la progression reste enregistrée. Elles sont dans `supabase/acces-par-personne.sql`.
+- `.github/workflows/supabase-keepalive.yml` réveille le projet deux fois par semaine : sans activité, l'offre gratuite le met en pause.
+
+## Sources et Claude
+
+- `sources/<id>/` garde les documents d'origine de chaque matière et une version texte de chacun, avec des repères `[page N]`.
+- `CLAUDE.md` renvoie Claude Code vers `docs/` : répondre à une question de cours à partir des sources, créer une matière proposée, et suivre ce qui reste à faire.
+- `scripts/proposals.mjs` récupère, crée ou refuse les matières proposées. Il lit la clé secrète de Supabase dans `.env.local`, ignoré par git.
