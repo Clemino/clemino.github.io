@@ -10,6 +10,14 @@
 ## Site
 
 - [ ] **Terminer la page d'accueil** (`index.html`, encore un brouillon). Elle mène directement à `/trd/` et `/admin/`, qui demandent maintenant de se connecter : elle devrait plutôt mener à `/cours/`. IA responsable n'y figure pas.
+- [ ] **Chacun ne voit que ses matières.** Règle voulue par Clément : une personne ne voit que les matières qu'elle a proposées et que Clément a acceptées ; Clément, lui, voit tout. Aujourd'hui, chacun voit toute la bibliothèque et suit ce qu'il veut. À prévoir :
+  - relier chaque matière créée à la personne qui l'a proposée : la table `course_proposals` garde déjà `user_id` et `course_id` ;
+  - une table des accès par personne, protégée par des règles Supabase, et un moyen de reconnaître Clément comme administrateur (par l'identifiant de son compte) ;
+  - permettre à Clément de donner une matière à quelqu'un : Droit administratif et Trading n'ont été proposés par personne, et Océane doit pouvoir voir Droit administratif ;
+  - filtrer la bibliothèque, et le contrôle d'accès des cours (`coursapp/lib/access.ts`), sur ces accès plutôt que sur les matières suivies.
+
+  Ce contrôle se fait dans le navigateur : les fichiers publiés sur GitHub Pages restent lisibles par qui connaît leur adresse.
+- [ ] **Refaire l'interface de la bibliothèque** (`cours/index.html`) : les boutons, le formulaire « Proposer une matière », la liste « Mes propositions » et tout ce qui a été ajouté autour. Clément les trouve peu réussis. Garder la direction artistique des cours.
 - [ ] **Compléter Trading :** 18 sections de théorie rédigées sur 83 prévues ; les modules 4 à 15 sont presque vides. Le contenu se trouve dans `coursapp/courses/trd/`, puis se publie avec `pnpm publish:course trd`.
 - [ ] **Ajouter les ateliers d'IA responsable** (diapositives 18, 27 et 34), si leurs documents sont disponibles : le PDF ne contient que leurs titres.
 
