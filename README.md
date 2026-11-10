@@ -11,8 +11,9 @@ site/                   Publié tel quel sur https://clemino.github.io
 ├── index.html          Page d'accueil, volontairement blanche
 ├── cours/              Bibliothèque : connexion, matières, propositions, accès
 ├── admin/              Droit administratif   ┐
-├── ia-responsable/     IA responsable        ├ générés par coursapp :
-└── trd/                Trading               ┘ ne pas modifier à la main
+├── contrats/           Droit des contrats    │ générés par coursapp :
+├── ia-responsable/     IA responsable        │ ne pas modifier à la main
+└── trd/                Trading               ┘
 sources/<id>/           Documents d'origine de chaque matière, avec leur version texte
 supabase/               Scripts SQL à lancer dans Supabase
 scripts/proposals.mjs   Traitement des matières proposées depuis la bibliothèque
@@ -31,6 +32,7 @@ docs/                   Consignes pour Claude et liste des choses à faire
 | Dossier | Matière |
 |---|---|
 | `site/admin/` | Droit administratif, L2 semestre 1 : service public, police administrative, sources de la légalité, limites et contrôle. Les corrigés types et les sujets de dissertation servent à s'entraîner : ils ne sont pas officiels. |
+| `site/contrats/` | Droit des contrats, L2 semestre 3 : sources de l'obligation, réforme de 2016, conclusion du contrat, vices du consentement, capacité et contenu. Les corrigés types servent à s'entraîner : ils ne sont pas officiels. |
 | `site/ia-responsable/` | IA responsable : le dossier de confiance d'un système d'IA, des risques à la décision. |
 | `site/trd/` | Trading, du niveau zéro au bot : marchés, analyse, gestion du risque, backtest, automatisation, certification AMF. |
 

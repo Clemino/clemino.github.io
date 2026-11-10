@@ -46,6 +46,18 @@ Cours sur le site : https://clemino.github.io/ia-responsable/
 |---|---|
 | `1-Dossier_de_confiance.pdf` et `.txt` | Diapositives du cours de Souhila Arib (CY Tech, option IA) : les cinq pièces du dossier de confiance (risques, équité, explicabilité et recours, conformité AI Act et RGPD, décision), les ateliers, le projet et sa grille d'évaluation. Les notes des diapositives, qui précisent les sources, ne sont pas dans le PDF. |
 
+### Droit des contrats : `sources/contrats/`
+
+Cours sur le site : https://clemino.github.io/contrats/
+
+Droit des obligations, L2 semestre 3, CY Cergy Paris Université, cours de Magali Jaouen. Proposé par Océane depuis la bibliothèque.
+
+| Fichier | Contenu |
+|---|---|
+| `CM oblig 2026-27.pdf` et `.txt` | Notes d'étudiant du cours magistral, de la notion d'obligation à l'équilibre du contrat. Quelques coquilles : l'imprévision est l'article 1195 (pas « 1995 »), et le dol est l'article 1137 (l'article 1116 cité est l'ancien texte). |
+| `TD 1` à `TD 7` (`.pdf` et `.txt`) | Fiches de travaux dirigés : sources de l'obligation (loteries publicitaires), notion de contrat et réforme de 2016, conclusion du contrat, erreur et dol, violence, contenu licite et certain, révisions et commentaire d'arrêt. |
+| `FASCICULE METHODO L2 CONTRATS - 20262027.pdf` et `.txt` | Fascicule de méthodologie : lecture des arrêts de la Cour de cassation, commentaire d'arrêt, dissertation, cas pratique, commentaire d'article. |
+
 ## Ajouter une matière
 
 Mettre ses fichiers dans `sources/<id>/` avec une version texte de chaque PDF, puis ajouter sa section ci-dessus. La version texte se fait avec `pdftotext`, en remplaçant chaque saut de page par un repère `[page N]`.
