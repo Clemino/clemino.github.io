@@ -2,7 +2,7 @@
 
 Pour répondre à une question de cours, suivre @docs/questions-de-cours.md
 
-Pour créer une matière proposée depuis la bibliothèque, suivre @docs/creer-une-matiere.md
+Pour créer une matière proposée depuis la bibliothèque, utiliser le skill `creer-une-matiere` (`.claude/skills/creer-une-matiere/`)
 
 Ce qui reste à faire sur le site : @docs/a-faire.md
 

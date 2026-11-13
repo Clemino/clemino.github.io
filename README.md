@@ -11,20 +11,22 @@ site/                   Publié tel quel sur https://clemino.github.io
 ├── index.html          Page d'accueil, volontairement blanche
 ├── cours/              Bibliothèque : connexion, matières, propositions, accès
 ├── admin/              Droit administratif   ┐
-├── contrats/           Droit des contrats    │ générés par coursapp :
+├── contrats/           Droit des contrats    │ générés par moteur/ :
 ├── ia-responsable/     IA responsable        │ ne pas modifier à la main
 └── trd/                Trading               ┘
+moteur/                 Moteur des cours et contenu de chaque matière (courses/<id>/)
 sources/<id>/           Documents d'origine de chaque matière, avec leur version texte
 supabase/               Scripts SQL à lancer dans Supabase
 scripts/proposals.mjs   Traitement des matières proposées depuis la bibliothèque
 docs/                   Consignes pour Claude et liste des choses à faire
+.claude/skills/         Skill creer-une-matiere, pour Claude Code
 .github/workflows/      Publication du site et réveil de Supabase
 ```
 
 ## Publication
 
 - Chaque push sur `main` publie le dossier `site/` avec `.github/workflows/deploy.yml`. Le reste du dépôt n'est pas mis en ligne. Si une publication expire (« Timeout reached »), la relancer avec `gh workflow run deploy.yml --ref main`.
-- Un cours se rédige et se génère dans `coursapp`, sur le PC de Clément : `pnpm publish:course <id>` l'écrit dans `site/<id>/`. Il s'ajoute ensuite à `LIBRARY` dans `site/cours/index.html`, avec sa catégorie, la couleur de sa carte et son icône.
+- Un cours se rédige dans `moteur/courses/<id>/` et se génère avec `cd moteur && pnpm publish:course <id>`, qui l'écrit dans `site/<id>/`. Il s'ajoute ensuite à `LIBRARY` dans `site/cours/index.html`, avec sa catégorie, la couleur de sa carte et son icône. Tout se fait depuis ce dépôt, sur le PC de Clément comme dans claude.ai/code : `apps-revision`, sur le PC, n'est plus utilisé.
 - Ne jamais changer l'`id` d'un cours : les matières suivies, les accès et la progression pointent dessus.
 
 ## Cours
@@ -61,5 +63,6 @@ Projet `cours`, connexion par Google uniquement.
 ## Sources et Claude
 
 - `sources/<id>/` garde les documents d'origine de chaque matière et une version texte de chacun, avec des repères `[page N]`.
-- `CLAUDE.md` renvoie Claude Code vers `docs/` : répondre à une question de cours à partir des sources, créer une matière proposée, et suivre ce qui reste à faire.
-- `scripts/proposals.mjs` récupère, crée ou refuse les matières proposées. Il lit la clé secrète de Supabase dans `.env.local`, ignoré par git.
+- `CLAUDE.md` renvoie Claude Code vers `docs/` pour répondre à une question de cours à partir des sources et suivre ce qui reste à faire, et vers le skill `creer-une-matiere` pour créer une matière proposée.
+- `cd moteur && COURSE=<id> pnpm check:quality` compare une matière à Droit administratif et Droit des contrats, et refuse une nouvelle matière qui n'atteint pas leur niveau.
+- `scripts/proposals.mjs` récupère, crée ou refuse les matières proposées. Il lit la clé secrète de Supabase dans `.env.local`, ignoré par git, ou dans les variables d'environnement de claude.ai/code.

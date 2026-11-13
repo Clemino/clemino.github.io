@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Handles the course proposals sent from the library.
- * Needs SUPABASE_SECRET_KEY in .env.local at the root of this repository.
+ * Needs SUPABASE_SECRET_KEY, in .env.local at the root of this repository or in the environment.
  *
  *   node scripts/proposals.mjs list
  *   node scripts/proposals.mjs download <proposal-id> <course-id>
@@ -38,7 +38,7 @@ const BASE_URL = env.SUPABASE_URL ?? "https://fcxrvoloiuicbgbqjoco.supabase.co"
 const SECRET_KEY = env.SUPABASE_SECRET_KEY
 
 async function api(pathname, init = {}) {
-  if (!SECRET_KEY) fail("SUPABASE_SECRET_KEY manque dans .env.local (voir docs/creer-une-matiere.md).")
+  if (!SECRET_KEY) fail("SUPABASE_SECRET_KEY manque : dans .env.local sur le PC, ou dans les variables d'environnement de claude.ai/code (voir le skill creer-une-matiere).")
   // Secret keys go on the apikey header only: the gateway rejects them as a bearer token.
   const response = await fetch(BASE_URL + pathname, { ...init, headers: { apikey: SECRET_KEY, ...init.headers } })
   if (!response.ok) fail(`${init.method ?? "GET"} ${pathname} : ${response.status} ${await response.text()}`)
