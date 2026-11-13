@@ -1,0 +1,558 @@
+[
+  {
+    "chapterSlug": "comite-tableau-de-bord",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque perspective du comité à sa question décisive.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Technique"
+        },
+        {
+          "id": "l1",
+          "label": "Juridique et DPO"
+        },
+        {
+          "id": "l2",
+          "label": "Métier et usagers"
+        },
+        {
+          "id": "l3",
+          "label": "Production"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Les résultats résistent-ils à un test indépendant ?"
+        },
+        {
+          "id": "r1",
+          "label": "L'usage, les données et les obligations sont-ils qualifiés ?"
+        },
+        {
+          "id": "r2",
+          "label": "Quels bénéfices, préjudices et recours concrets ?"
+        },
+        {
+          "id": "r3",
+          "label": "Qui surveille, intervient et restaure le service ?"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "Chaque perspective apporte sa question avant la décision.",
+    "hint": "La production pense à ce qui se passe en cas de panne.",
+    "concepts": [
+      "comite-decision"
+    ],
+    "source": "Diapositives 36"
+  },
+  {
+    "chapterSlug": "comite-tableau-de-bord",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelles décisions le comité peut-il prendre ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Autoriser"
+        },
+        {
+          "id": "b",
+          "label": "Refuser"
+        },
+        {
+          "id": "c",
+          "label": "Conditionner"
+        },
+        {
+          "id": "d",
+          "label": "Reporter sans justification"
+        },
+        {
+          "id": "e",
+          "label": "Déléguer au fournisseur"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Autoriser, refuser ou conditionner, avec une justification traçable.",
+    "hint": "Toute décision doit être justifiée et traçable.",
+    "concepts": [
+      "comite-decision"
+    ],
+    "source": "Diapositives 36"
+  },
+  {
+    "chapterSlug": "comite-tableau-de-bord",
+    "type": "MATCHING",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Associe chaque indicateur du tableau de bord à l'action préparée.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Sélection, TPR, FPR, PPV"
+        },
+        {
+          "id": "l1",
+          "label": "AUC et erreurs critiques"
+        },
+        {
+          "id": "l2",
+          "label": "Recours"
+        },
+        {
+          "id": "l3",
+          "label": "Incidents"
+        },
+        {
+          "id": "l4",
+          "label": "Empreinte carbone"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Analyse d'écart et réévaluation"
+        },
+        {
+          "id": "r1",
+          "label": "Investigation ou suspension"
+        },
+        {
+          "id": "r2",
+          "label": "Renfort et correction du service"
+        },
+        {
+          "id": "r3",
+          "label": "Confinement, notification, reprise"
+        },
+        {
+          "id": "r4",
+          "label": "Optimisation à qualité contrôlée"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4"
+      }
+    },
+    "explanation": "Un indicateur n'a de sens que s'il déclenche une action prévue.",
+    "hint": "Les recours révèlent un service qui doit être renforcé.",
+    "concepts": [
+      "tableau-de-bord"
+    ],
+    "source": "Diapositives 37"
+  },
+  {
+    "chapterSlug": "comite-tableau-de-bord",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une alerte critique peut attendre la revue mensuelle.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Les alertes critiques sont immédiates ; la revue mensuelle sert au suivi des tendances.",
+    "hint": "Relis la phrase sous le tableau de bord.",
+    "concepts": [
+      "tableau-de-bord"
+    ],
+    "source": "Diapositives 37"
+  },
+  {
+    "chapterSlug": "note-de-decision",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle question le cours pose-t-il « le jour où l'on dit non » ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Quelle preuve vous ferait changer de décision ?"
+        },
+        {
+          "id": "b",
+          "label": "Combien coûterait l'arrêt du système ?"
+        },
+        {
+          "id": "c",
+          "label": "Qui a commandé le système ?"
+        },
+        {
+          "id": "d",
+          "label": "Le modèle est-il le plus précis du marché ?"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Un avis solide doit pouvoir être remis en cause par une preuve.",
+    "hint": "La question porte sur ce qui pourrait remettre l'avis en cause.",
+    "concepts": [
+      "note-de-decision"
+    ],
+    "source": "Diapositives 38"
+  },
+  {
+    "chapterSlug": "note-de-decision",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Que doit expliciter un avis solide ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Son périmètre"
+        },
+        {
+          "id": "b",
+          "label": "Ses hypothèses"
+        },
+        {
+          "id": "c",
+          "label": "Les préjudices acceptés"
+        },
+        {
+          "id": "d",
+          "label": "Les conditions de réexamen"
+        },
+        {
+          "id": "e",
+          "label": "Le nom du modèle concurrent"
+        },
+        {
+          "id": "f",
+          "label": "Le budget du projet"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Périmètre, hypothèses, préjudices acceptés et conditions de réexamen.",
+    "hint": "Un avis honnête dit ce qu'il couvre, ce qu'il suppose et ce qu'il accepte.",
+    "concepts": [
+      "note-de-decision"
+    ],
+    "source": "Diapositives 38"
+  },
+  {
+    "chapterSlug": "note-de-decision",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Remets les rubriques de la note de décision dans l'ordre.",
+    "payload": {
+      "items": [
+        {
+          "id": "i1",
+          "label": "Preuves"
+        },
+        {
+          "id": "i3",
+          "label": "Conditions"
+        },
+        {
+          "id": "i0",
+          "label": "Objet"
+        },
+        {
+          "id": "i2",
+          "label": "Avis"
+        },
+        {
+          "id": "i4",
+          "label": "Réexamen"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "i0",
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ]
+    },
+    "explanation": "On décrit le système, on donne les preuves, on rend un avis, on pose ses conditions, puis on prévoit le réexamen.",
+    "hint": "On commence par dire de quel système on parle.",
+    "concepts": [
+      "note-de-decision"
+    ],
+    "source": "Diapositives 41"
+  },
+  {
+    "chapterSlug": "note-de-decision",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Combien de résultats décisifs la note de décision présente-t-elle ?",
+    "payload": {},
+    "solution": {
+      "value": 3,
+      "absTol": 0
+    },
+    "explanation": "Trois résultats décisifs, avec leurs limites et incertitudes.",
+    "hint": "Le cours demande peu de preuves, mais décisives.",
+    "concepts": [
+      "note-de-decision"
+    ],
+    "source": "Diapositives 41"
+  },
+  {
+    "chapterSlug": "note-de-decision",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "À quoi doit renvoyer toute affirmation factuelle de la note ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "À une donnée, un calcul, une source ou une hypothèse explicite"
+        },
+        {
+          "id": "b",
+          "label": "À l'avis du chef de projet"
+        },
+        {
+          "id": "c",
+          "label": "À la documentation commerciale et aux engagements du fournisseur"
+        },
+        {
+          "id": "d",
+          "label": "Au score global du modèle"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Toute affirmation factuelle est justifiée par une donnée, un calcul, une source ou une hypothèse explicite.",
+    "hint": "Une affirmation doit pouvoir être vérifiée.",
+    "concepts": [
+      "note-de-decision"
+    ],
+    "source": "Diapositives 41"
+  },
+  {
+    "chapterSlug": "projet-evaluation",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Combien de minutes dure le projet ?",
+    "payload": {
+      "unit": "minutes"
+    },
+    "solution": {
+      "value": 210,
+      "absTol": 0
+    },
+    "explanation": "3 h 30, soit 210 minutes.",
+    "hint": "Le projet dure 3 h 30.",
+    "concepts": [
+      "projet-dossier"
+    ],
+    "source": "Diapositives 40"
+  },
+  {
+    "chapterSlug": "projet-evaluation",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Remets les phases du projet dans l'ordre.",
+    "payload": {
+      "items": [
+        {
+          "id": "i1",
+          "label": "Risques et traçabilité"
+        },
+        {
+          "id": "i3",
+          "label": "Assemblage et arbitrage"
+        },
+        {
+          "id": "i0",
+          "label": "Périmètre, sujet et rôles"
+        },
+        {
+          "id": "i2",
+          "label": "Équité, XAI et conformité"
+        },
+        {
+          "id": "i4",
+          "label": "Préparation de l'oral"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "i0",
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ]
+    },
+    "explanation": "Le projet suit l'ordre du dossier : cadrage, risques, équité et conformité, assemblage, oral.",
+    "hint": "On assemble le dossier une fois les analyses faites, et l'oral vient en dernier.",
+    "concepts": [
+      "projet-dossier"
+    ],
+    "source": "Diapositives 40"
+  },
+  {
+    "chapterSlug": "projet-evaluation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qui joue la commission d'audit pendant la soutenance ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le groupe suivant"
+        },
+        {
+          "id": "b",
+          "label": "L'enseignante seule"
+        },
+        {
+          "id": "c",
+          "label": "Un jury extérieur"
+        },
+        {
+          "id": "d",
+          "label": "Le groupe précédent"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le groupe suivant questionne une preuve déterminante ; l'enseignante garde la responsabilité de la note.",
+    "hint": "C'est un rôle pédagogique tenu par des étudiants.",
+    "concepts": [
+      "projet-dossier"
+    ],
+    "source": "Diapositives 42"
+  },
+  {
+    "chapterSlug": "projet-evaluation",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Combien de points vaut la rigueur technique dans la grille sur 20 ?",
+    "payload": {
+      "unit": "points"
+    },
+    "solution": {
+      "value": 6,
+      "absTol": 0
+    },
+    "explanation": "Rigueur technique 6, conformité 4, éthique et recours 4, décision 4, clarté et posture 2.",
+    "hint": "C'est le critère le plus lourd.",
+    "concepts": [
+      "projet-dossier"
+    ],
+    "source": "Diapositives 43"
+  },
+  {
+    "chapterSlug": "projet-evaluation",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Si la technique est jugée insuffisante, la note globale est plafonnée à 10/20.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "C'est le plafonnement pédagogique annoncé avant le projet.",
+    "hint": "Relis la règle sous la grille d'évaluation.",
+    "concepts": [
+      "projet-dossier"
+    ],
+    "source": "Diapositives 43"
+  },
+  {
+    "chapterSlug": "projet-evaluation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Combien de temps dure la soutenance d'une équipe ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "25 minutes : 15 d'exposé et 10 de questions"
+        },
+        {
+          "id": "b",
+          "label": "20 minutes : 15 d'exposé et 5 de questions"
+        },
+        {
+          "id": "c",
+          "label": "30 minutes : 20 d'exposé et 10 de questions"
+        },
+        {
+          "id": "d",
+          "label": "15 minutes d'exposé, sans questions"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "25 minutes par équipe, dont 10 minutes de questions de la commission d'audit.",
+    "hint": "L'exposé est plus long que les questions.",
+    "concepts": [
+      "projet-dossier"
+    ],
+    "source": "Diapositives 42"
+  }
+]

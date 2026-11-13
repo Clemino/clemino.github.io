@@ -1,0 +1,372 @@
+[
+  {
+    "slug": "expression",
+    "label": "Expression",
+    "summary": "Une construction Scala qui produit une valeur."
+  },
+  {
+    "slug": "instruction-vs-expression",
+    "label": "Instruction vs expression",
+    "summary": "Scala privilegie les expressions : if, match et blocs renvoient une valeur."
+  },
+  {
+    "slug": "val",
+    "label": "val",
+    "summary": "Une liaison immutable, non reassociable apres initialisation."
+  },
+  {
+    "slug": "var",
+    "label": "var",
+    "summary": "Une variable reassociable, a limiter car elle complique le raisonnement."
+  },
+  {
+    "slug": "lazy-val",
+    "label": "lazy val",
+    "summary": "Une valeur evaluee au premier acces puis memorisee."
+  },
+  {
+    "slug": "type-inference",
+    "label": "Inference de type",
+    "summary": "Le compilateur deduit souvent le type statique d'une expression."
+  },
+  {
+    "slug": "type-hierarchy",
+    "label": "Hierarchie des types",
+    "summary": "Any, AnyVal, AnyRef, Unit, Nothing et Null structurent les types Scala."
+  },
+  {
+    "slug": "unit",
+    "label": "Unit",
+    "summary": "Type des expressions utiles pour leur effet, avec valeur unique ()."
+  },
+  {
+    "slug": "option",
+    "label": "Option",
+    "summary": "Representation explicite d'une valeur presente ou absente : Some(x) ou None."
+  },
+  {
+    "slug": "tuple",
+    "label": "Tuple",
+    "summary": "Produit fini de valeurs, utile pour regrouper temporairement plusieurs resultats."
+  },
+  {
+    "slug": "bloc",
+    "label": "Bloc",
+    "summary": "Suite d'expressions dont la valeur est celle de la derniere expression."
+  },
+  {
+    "slug": "purete",
+    "label": "Fonction pure",
+    "summary": "Fonction sans effet de bord dont le resultat depend seulement de ses arguments."
+  },
+  {
+    "slug": "side-effect",
+    "label": "Effet de bord",
+    "summary": "Modification observable hors de la valeur retournee : affichage, mutation, I/O."
+  },
+  {
+    "slug": "require",
+    "label": "require",
+    "summary": "Precondition executable qui signale un argument invalide."
+  },
+  {
+    "slug": "by-name",
+    "label": "Parametre par nom",
+    "summary": "Parametre reevalue a chaque utilisation dans le corps de la fonction."
+  },
+  {
+    "slug": "by-value",
+    "label": "Parametre par valeur",
+    "summary": "Parametre evalue une fois avant l'appel de la fonction."
+  },
+  {
+    "slug": "recursion",
+    "label": "Recursion",
+    "summary": "Definition d'un calcul par appels a lui-meme sur des donnees plus petites."
+  },
+  {
+    "slug": "tailrec",
+    "label": "Recursion terminale",
+    "summary": "Recursion ou l'appel recursif est la derniere operation."
+  },
+  {
+    "slug": "hof",
+    "label": "Fonction d'ordre superieur",
+    "summary": "Fonction qui recoit ou retourne une fonction."
+  },
+  {
+    "slug": "lambda",
+    "label": "Lambda",
+    "summary": "Fonction anonyme manipulable comme valeur."
+  },
+  {
+    "slug": "currying",
+    "label": "Currying",
+    "summary": "Transformation d'une fonction a plusieurs arguments en chaine de fonctions."
+  },
+  {
+    "slug": "partial-application",
+    "label": "Application partielle",
+    "summary": "Fixer une partie des arguments d'une fonction."
+  },
+  {
+    "slug": "pattern-matching",
+    "label": "Pattern matching",
+    "summary": "Analyse de forme d'une valeur par cas exhaustifs."
+  },
+  {
+    "slug": "class",
+    "label": "Classe",
+    "summary": "Modele d'objets avec etat, parametres et methodes."
+  },
+  {
+    "slug": "object",
+    "label": "Objet singleton",
+    "summary": "Valeur unique definie par object, souvent point d'entree ou fabrique."
+  },
+  {
+    "slug": "companion",
+    "label": "Compagnon",
+    "summary": "Classe et objet de meme nom partageant un acces privilegie."
+  },
+  {
+    "slug": "constructeur",
+    "label": "Constructeur",
+    "summary": "Initialisation d'une instance a partir des parametres de classe."
+  },
+  {
+    "slug": "case-class",
+    "label": "case class",
+    "summary": "Classe de donnees avec egalite structurelle, copy, apply et unapply."
+  },
+  {
+    "slug": "sealed",
+    "label": "sealed",
+    "summary": "Restriction des sous-types directs au meme fichier pour raisonner par exhaustivite."
+  },
+  {
+    "slug": "trait",
+    "label": "Trait",
+    "summary": "Abstraction composable pouvant porter des signatures et implementations."
+  },
+  {
+    "slug": "generic",
+    "label": "Generique",
+    "summary": "Type parametre par un ou plusieurs types."
+  },
+  {
+    "slug": "variance",
+    "label": "Variance",
+    "summary": "Relation entre sous-typage des parametres et sous-typage des types construits."
+  },
+  {
+    "slug": "collection",
+    "label": "Collection",
+    "summary": "Abstraction de conteneurs Scala : Iterable, Seq, Set, Map."
+  },
+  {
+    "slug": "immutable",
+    "label": "Immutabilite",
+    "summary": "Donnees non modifiees en place ; les transformations produisent de nouvelles valeurs."
+  },
+  {
+    "slug": "list",
+    "label": "List",
+    "summary": "Sequence chainee immutable efficace en tete."
+  },
+  {
+    "slug": "vector",
+    "label": "Vector",
+    "summary": "Sequence immutable avec acces indexe efficace."
+  },
+  {
+    "slug": "set",
+    "label": "Set",
+    "summary": "Collection sans doublons."
+  },
+  {
+    "slug": "map-collection",
+    "label": "Map",
+    "summary": "Collection de couples cle-valeur."
+  },
+  {
+    "slug": "map-filter-flatmap",
+    "label": "map/filter/flatMap",
+    "summary": "Transformations fondamentales de collections."
+  },
+  {
+    "slug": "fold",
+    "label": "fold",
+    "summary": "Accumulation d'une collection vers une valeur."
+  },
+  {
+    "slug": "reduce",
+    "label": "reduce",
+    "summary": "Reduction sans valeur initiale, dangereuse sur collection vide."
+  },
+  {
+    "slug": "groupby",
+    "label": "groupBy/groupMapReduce",
+    "summary": "Regrouper puis transformer ou agreger des donnees."
+  },
+  {
+    "slug": "lazylist",
+    "label": "LazyList",
+    "summary": "Collection paresseuse potentiellement infinie."
+  },
+  {
+    "slug": "parallelism",
+    "label": "Parallelisme",
+    "summary": "Execution de transformations sur plusieurs travailleurs avec couts de coordination."
+  },
+  {
+    "slug": "complexity",
+    "label": "Complexite",
+    "summary": "Mesure asymptotique des ressources necessaires."
+  },
+  {
+    "slug": "big-o",
+    "label": "Grand O",
+    "summary": "Borne superieure asymptotique."
+  },
+  {
+    "slug": "omega",
+    "label": "Omega",
+    "summary": "Borne inferieure asymptotique."
+  },
+  {
+    "slug": "theta",
+    "label": "Theta",
+    "summary": "Encadrement asymptotique serre."
+  },
+  {
+    "slug": "worst-case",
+    "label": "Pire cas",
+    "summary": "Cout maximal pour une taille donnee."
+  },
+  {
+    "slug": "average-case",
+    "label": "Cas moyen",
+    "summary": "Cout attendu sous une hypothese de distribution."
+  },
+  {
+    "slug": "recurrence",
+    "label": "Recurrence",
+    "summary": "Equation de cout recursive."
+  },
+  {
+    "slug": "master",
+    "label": "Theoreme maitre",
+    "summary": "Outil d'analyse des recurrences de type diviser pour regner."
+  },
+  {
+    "slug": "invariant-loop",
+    "label": "Invariant de boucle",
+    "summary": "Propriete vraie avant et apres chaque iteration."
+  },
+  {
+    "slug": "termination",
+    "label": "Terminaison",
+    "summary": "Preuve qu'une boucle ou recursion finit."
+  },
+  {
+    "slug": "correction",
+    "label": "Correction",
+    "summary": "Lien entre specification, invariant et resultat final."
+  },
+  {
+    "slug": "petri-net",
+    "label": "Reseau de Petri",
+    "summary": "Modele biparti de concurrence a places, transitions et jetons."
+  },
+  {
+    "slug": "place",
+    "label": "Place",
+    "summary": "Noeud qui contient des jetons dans un marquage."
+  },
+  {
+    "slug": "transition",
+    "label": "Transition",
+    "summary": "Evenement pouvant franchir si ses places d'entree ont assez de jetons."
+  },
+  {
+    "slug": "arc",
+    "label": "Arc pondere",
+    "summary": "Lien place-transition ou transition-place avec multiplicite."
+  },
+  {
+    "slug": "marking",
+    "label": "Marquage",
+    "summary": "Vecteur du nombre de jetons dans chaque place."
+  },
+  {
+    "slug": "pre-post",
+    "label": "Matrices Pre/Post",
+    "summary": "Matrices des jetons consommes et produits par transition."
+  },
+  {
+    "slug": "incidence",
+    "label": "Matrice d'incidence",
+    "summary": "C = Post - Pre, variation de marquage par tir."
+  },
+  {
+    "slug": "firing",
+    "label": "Franchissement",
+    "summary": "Regle qui consomme les entrees puis produit les sorties."
+  },
+  {
+    "slug": "firing-sequence",
+    "label": "Sequence de tir",
+    "summary": "Suite de transitions franchies successivement."
+  },
+  {
+    "slug": "state-equation",
+    "label": "Equation d'etat",
+    "summary": "M = M0 + C.sigma pour un vecteur de tirs."
+  },
+  {
+    "slug": "reachability-graph",
+    "label": "Graphe d'accessibilite",
+    "summary": "Graphe des marquages atteignables et transitions entre eux."
+  },
+  {
+    "slug": "boundedness",
+    "label": "Bornitude",
+    "summary": "Existence d'une borne sur le nombre de jetons par place."
+  },
+  {
+    "slug": "safety",
+    "label": "Surete",
+    "summary": "1-bornitude : aucune place ne contient plus d'un jeton."
+  },
+  {
+    "slug": "liveness",
+    "label": "Vivacite",
+    "summary": "Possibilite de rendre une transition franchissable a nouveau depuis tout etat atteignable."
+  },
+  {
+    "slug": "deadlock",
+    "label": "Blocage",
+    "summary": "Marquage atteignable ou aucune transition n'est franchissable."
+  },
+  {
+    "slug": "resettable",
+    "label": "Reinitialisable",
+    "summary": "Capacite a revenir au marquage initial."
+  },
+  {
+    "slug": "p-invariant",
+    "label": "Invariant de places",
+    "summary": "Vecteur y tel que y^T C = 0."
+  },
+  {
+    "slug": "t-invariant",
+    "label": "Invariant de transitions",
+    "summary": "Vecteur x tel que C x = 0."
+  },
+  {
+    "slug": "modeling",
+    "label": "Modelisation",
+    "summary": "Traduire ressources, synchronisations et workflows en reseau de Petri."
+  }
+]

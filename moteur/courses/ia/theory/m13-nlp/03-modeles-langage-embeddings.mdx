@@ -1,0 +1,323 @@
+---
+title: "Modèles de langage et plongements lexicaux"
+slug: modeles-langage-embeddings
+order: 3
+estimatedReadMin: 25
+concepts: [analyse-syntaxique, grammaire-hors-contexte, arbre-syntaxique, modele-de-langage, n-gramme, plongement-lexical]
+source: "Intro_NLP.pdf"
+---
+
+## L'analyse syntaxique
+
+Le chapitre précédent a traité le niveau **lexical**. La couche suivante de la
+chaîne de traitement est l'**analyse syntaxique**. Le cours en pose la
+motivation :
+
+> La **phrase** est l'**unité de sens de base** d'un texte. Par conséquent, pour
+> **extraire le sens** d'un texte, il faut **identifier** et **analyser** les
+> phrases.
+
+Le point central est que les phrases **ne sont pas de simples suites linéaires
+de mots** :
+
+> Les phrases **ne sont pas des séquences linéaires de mots**. Elles sont
+> **construites selon des règles (de production)** qui définissent la
+> **structure** des phrases.
+
+Le cours donne un **exemple de règles** (issu d'une de ses références) :
+
+```text
+1. Sentence    → Noun Phrase, Verb Phrase
+2. Noun Phrase → Determiner, Noun
+3. Noun Phrase → Proper Noun
+4. Noun Phrase → Noun Phrase, Conjunction, Noun Phrase
+5. Verb Phrase → Verb, Noun Phrase
+6. Verb Phrase → Verb, Preposition, Noun Phrase
+```
+
+Chaque règle dit **comment un élément se décompose**. Une *Sentence* (phrase)
+est un *Noun Phrase* (syntagme nominal) suivi d'un *Verb Phrase* (syntagme
+verbal) ; un *Noun Phrase* peut être un déterminant suivi d'un nom, etc. C'est
+cet **ensemble de règles** qui donne aux phrases leur **structure**.
+
+> **À retenir** : la **phrase** est l'**unité de sens** du texte ; pour en
+> extraire le sens, il faut l'**identifier** et l'**analyser**. Une phrase n'est
+> **pas une suite linéaire de mots** : elle est construite selon des **règles de
+> production** qui définissent sa **structure**.
+
+## Les grammaires formelles
+
+Ces règles font partie de la définition d'une **grammaire**. Le cours en donne
+la **définition formelle**. Une grammaire (formelle) est définie par :
+
+1. un **ensemble `Σ` de symboles terminaux** : les **mots du lexique**, les
+   **signes de ponctuation**, etc. — ce sont les symboles qui **composent les
+   phrases** ;
+2. un **ensemble `N` de symboles non terminaux** : *Sentence*, *Noun Phrase*,
+   *Verb Phrase*, etc. ;
+3. un **symbole de départ `S`**, un symbole non terminal qui **désigne les
+   phrases entières** (dans l'exemple : *Sentence*) ;
+4. un **ensemble de règles de production** (c'est-à-dire de **réécriture**) de
+   la forme `LHS → RHS`, où `LHS` (*left-hand side*) est une **suite de
+   symboles non terminaux** et `RHS` (*right-hand side*) une **suite de zéro ou
+   plusieurs symboles**, terminaux ou non terminaux.
+
+Le cours donne ensuite un **exemple complet de grammaire**.
+
+L'ensemble des **symboles non terminaux** :
+
+```text
+N = { Conj, Det, Nn, NP, PN, Prep, S, V, VP }
+```
+
+L'ensemble des **symboles terminaux** :
+
+```text
+Σ = { a, and, barked, cat, dog, fish, in, John,
+      Mary, on, or, slept, swam, talked, the, to }
+```
+
+Et les **règles de production** :
+
+```text
+1.  S    → S Conj S
+2.  S    → NP VP
+3.  NP   → Det Nn | PN | NP Conj NP
+4.  VP   → V NP | V Prep NP | V Conj VP
+5.  Det  → the | a
+6.  Nn   → cat | dog | fish
+7.  PN   → Mary | John
+8.  V    → swam | talked | barked | slept
+9.  Conj → and | or
+10. Prep → in | on | to
+```
+
+La barre verticale `|` se lit **« ou »** : la règle `Det → the | a` signifie
+qu'un déterminant `Det` peut se réécrire en `the` **ou** en `a`.
+
+> **À retenir** : une **grammaire formelle** est définie par un ensemble de
+> **symboles terminaux `Σ`** (les mots), un ensemble de **symboles non
+> terminaux `N`** (les syntagmes), un **symbole de départ `S`**, et un ensemble
+> de **règles de production** `LHS → RHS` qui décrivent comment **réécrire** les
+> symboles.
+
+## Les grammaires hors-contexte
+
+Le cours rappelle un résultat fondamental, dû à **Chomsky** :
+
+> Après Chomsky, on distingue habituellement **quatre classes de grammaires**,
+> selon **la forme de leurs règles de production**. Ces classes s'organisent en
+> une **hiérarchie** dans laquelle une classe décrit **toutes les langues
+> décrites par la classe inférieure**, et **d'autres en plus**.
+
+Quelle classe faut-il pour les langues naturelles ? Le cours répond :
+
+> Il est généralement admis que les grammaires des langues naturelles ont
+> besoin d'**au moins la puissance de la classe dite hors-contexte**
+> (*context-free*).
+
+Et il définit cette classe :
+
+> Les **grammaires hors-contexte** (CFG, *Context-Free Grammars*) sont définies
+> par des règles ayant un **unique symbole (non terminal) en partie gauche**.
+
+C'est le critère décisif : dans une CFG, **chaque règle réécrit un seul symbole
+non terminal**. La grammaire-exemple ci-dessus le vérifie — toutes ses règles
+ont bien **un seul symbole** à gauche de la flèche (`S`, `NP`, `VP`, `Det`…).
+C'est donc une grammaire **hors-contexte**.
+
+> **À retenir** : d'après **Chomsky**, les grammaires se rangent en **quatre
+> classes** hiérarchisées selon **la forme de leurs règles**. Les langues
+> naturelles requièrent au moins la classe **hors-contexte (CFG)**, définie par
+> le fait que **chaque règle a un unique symbole non terminal en partie gauche**.
+
+## L'analyse syntaxique : les parsers
+
+Une grammaire **spécifie** quelles phrases sont bien formées ; reste à **s'en
+servir** pour analyser une phrase donnée. Le cours introduit les **parsers** :
+
+> Une grammaire (un ensemble de règles) donne une **spécification des phrases
+> bien formées**. Les **parsers** (analyseurs syntaxiques) les **utilisent pour
+> analyser les phrases**.
+
+Comment **montrer** le résultat de l'analyse ? Le cours répond :
+
+> Une façon de montrer le résultat de l'analyse syntaxique est un **arbre
+> syntaxique** (*parse tree*) : un arbre dans lequel la **racine** est la
+> **phrase analysée**, les **nœuds internes** sont des **syntagmes** (les
+> parties gauches des règles), les **liens** représentent l'**application des
+> règles**, et les **feuilles** sont des **symboles terminaux** (les **mots**).
+
+Le cours donne l'**exemple** d'une phrase reconnue par la grammaire ci-dessus :
+
+```text
+The dog swam and Mary slept or talked to John.
+```
+
+> **À retenir** : un **parser** utilise une **grammaire** pour **analyser** une
+> phrase. Le résultat se représente par un **arbre syntaxique** (*parse tree*) :
+> la **racine** est la **phrase**, les **nœuds internes** des **syntagmes**, les
+> **liens** des **applications de règles**, et les **feuilles** les **mots**.
+
+## L'arbre syntaxique
+
+Le cours détaille l'**arbre syntaxique** de la phrase
+*« The dog swam and Mary slept or talked to John »*. Cet arbre se lit du **haut
+vers le bas** : la racine `S` est la phrase entière ; la règle `S → S Conj S` la
+décompose en deux sous-phrases reliées par la conjonction `and` ; chaque
+sous-phrase est à son tour analysée par les règles `S → NP VP`, `NP → Det Nn`,
+`VP → V NP`, etc. ; et tout en bas, les **feuilles** portent les **mots** de la
+phrase.
+
+Le cours indique qu'un arbre syntaxique peut **aussi** se représenter par une
+**chaîne entre parenthèses étiquetées** (*labelled bracketed string*) — une
+écriture textuelle strictement équivalente à l'arbre. Pour la phrase précédente :
+
+```text
+(S
+  (S
+    (NP (Det the) (Nn dog)) (VP (V swam))
+  )
+  (Conj and)
+  (S
+    (NP (PN Mary))
+    (VP
+      (VP (V slept))
+      (Conj or)
+      (VP (V talked) (Prep to) (NP (PN John)))
+    )
+  )
+)
+```
+
+Chaque paire de parenthèses correspond à un **nœud** de l'arbre : l'étiquette
+qui ouvre la parenthèse est le **symbole** (terminal ou non terminal), et ce
+qu'elle contient en est la **descendance**. La structure imbriquée des
+parenthèses reproduit donc exactement la structure de l'arbre.
+
+> **À retenir** : l'**arbre syntaxique** se lit du **haut** (la phrase `S`) vers
+> le **bas** (les **mots**), chaque niveau appliquant une **règle de
+> production**. Il peut s'écrire de façon équivalente sous la forme d'une
+> **chaîne entre parenthèses étiquetées**, dont l'**imbrication** reproduit
+> l'arbre.
+
+## Des grammaires aux modèles de langage
+
+L'analyse syntaxique vue jusqu'ici relève de l'approche **symbolique** : des
+**règles** écrites à la main. Le cours a rappelé, au premier chapitre, qu'une
+autre approche existe — l'approche **statistique**, qui apprend des **modèles
+sur de grands corpus**. C'est l'objet des **modèles de langage**.
+
+Le **module 11** (réseaux récurrents) a déjà rencontré cette notion. Il y
+était écrit que la prédiction du **mot suivant** d'une séquence
+
+> constitue la base d'un sous-domaine important du traitement du langage
+> naturel, la **modélisation du langage**, dans lequel le but est d'**apprendre
+> une distribution de probabilité sur des séquences de mots**.
+
+Un **modèle de langage** est donc un **modèle statistique de la langue** : il
+attribue une **probabilité** aux séquences de mots et, surtout, sait **prédire
+le mot suivant** d'une séquence donnée. C'est précisément la définition reprise
+dès le **module 1** :
+
+> Un **modèle de langage** est un modèle statistique de la **distribution des
+> mots** d'une langue, capable de **prédire le mot suivant** d'une séquence et
+> donc de **générer du texte**.
+
+> **À retenir** : à côté de l'approche **symbolique** (grammaires écrites à la
+> main), l'approche **statistique** apprend un **modèle de langage** : un modèle
+> de la **distribution des mots** qui attribue une **probabilité** aux séquences
+> et sait **prédire le mot suivant** — donc **générer du texte**.
+
+## Les modèles de langage à n-grammes
+
+La forme historique du modèle de langage statistique repose sur les
+**n-grammes**, déjà introduits au chapitre 2. L'idée est de **simplifier** le
+calcul de la probabilité du mot suivant.
+
+En toute rigueur, la probabilité du mot `wₖ` dépend de **tous** les mots qui le
+précèdent : `P(wₖ | w₁, …, wₖ₋₁)`. Un modèle de langage à n-grammes fait une
+**hypothèse simplificatrice** : le mot suivant ne dépend que des **`n − 1` mots
+précédents**, et non de toute l'histoire de la phrase.
+
+```text
+Modèle complet :   P(wₖ | w₁, w₂, …, wₖ₋₁)
+Modèle bigramme :  P(wₖ | wₖ₋₁)
+Modèle trigramme : P(wₖ | wₖ₋₂, wₖ₋₁)
+```
+
+Ces probabilités sont **estimées par comptage** sur un grand corpus : on
+**compte** combien de fois une séquence de mots y apparaît. Un modèle à
+n-grammes capture ainsi du **contexte local**, mais reste **limité** : il ne
+voit que **quelques mots en arrière** et ne peut pas saisir des dépendances
+**longues**. C'est l'une des limites que les **réseaux récurrents** (module 11),
+puis les **transformeurs**, ont visé à dépasser.
+
+> **À retenir** : un **modèle de langage à n-grammes** suppose que le **mot
+> suivant** ne dépend que des **`n − 1` mots précédents** ; ses probabilités
+> sont **estimées par comptage** sur un grand corpus. Il capture le **contexte
+> local** mais **pas les dépendances longues**.
+
+## Les plongements lexicaux (word embeddings)
+
+Le sac de mots et le TF-IDF représentent un mot par sa **place dans le
+vocabulaire** : deux mots y sont des **dimensions distinctes**, sans aucun lien,
+même s'ils ont un sens proche. Les **plongements lexicaux** (*word embeddings*)
+proposent une représentation bien plus riche. Le **module 11** y faisait déjà
+référence :
+
+> Les mots peuvent être représentés en utilisant une méthode de **word
+> embedding** (plongement lexical).
+
+Un **plongement lexical** représente chaque mot par un **vecteur réel dense**,
+de **faible dimension**. L'exemple du module 11 prenait un vocabulaire de
+`|A| = 10 000` mots, chaque mot étant représenté par un **vecteur réel de
+dimension `n = 50`** : on passe ainsi d'un espace de 10 000 dimensions (une par
+mot) à un espace **compact** de 50 dimensions.
+
+La propriété décisive est que cet espace est **structuré par le sens** : dans
+un bon plongement, **les mots de sens ou d'usage proches ont des vecteurs
+proches** géométriquement. Les vecteurs de *chat* et *chien* y sont voisins ;
+ceux de *chat* et *avion*, éloignés.
+
+| Représentation | Un mot est… | Lien entre deux mots |
+| --- | --- | --- |
+| **Sac de mots / TF-IDF** | Une **dimension** du vocabulaire | **Aucun** : mots indépendants |
+| **Plongement lexical** | Un **vecteur dense** de faible dimension | **Proximité géométrique** = proximité de sens |
+
+Ces vecteurs ne sont pas écrits à la main : ils sont **appris** à partir de
+grands corpus, sur le principe qu'**un mot se caractérise par les contextes
+dans lesquels il apparaît**. C'est la représentation des mots utilisée à
+l'entrée des **réseaux de neurones** pour le langage — et, comme le verra le
+dernier chapitre, à la base des **grands modèles de langage**.
+
+> **À retenir** : un **plongement lexical** (*word embedding*) représente chaque
+> mot par un **vecteur réel dense** de **faible dimension**, **appris** sur de
+> grands corpus. Sa propriété clé : la **proximité géométrique** des vecteurs
+> reflète la **proximité de sens** des mots — ce que le sac de mots est
+> incapable de faire.
+
+## Synthèse de la section
+
+L'**analyse syntaxique** est la couche qui étudie la **structure des phrases**.
+Une phrase n'est pas une suite linéaire de mots : elle obéit à des **règles de
+production**, réunies dans une **grammaire formelle** définie par ses **symboles
+terminaux `Σ`**, ses **non terminaux `N`**, son **symbole de départ `S`** et ses
+**règles** `LHS → RHS`. Les langues naturelles requièrent au moins la classe
+**hors-contexte (CFG)** — chaque règle ayant un **unique symbole non terminal**
+à gauche. Un **parser** utilise la grammaire pour produire un **arbre
+syntaxique**, de la **phrase** (racine) aux **mots** (feuilles), qui s'écrit
+aussi par une **chaîne entre parenthèses étiquetées**. À côté de cette approche
+**symbolique**, l'approche **statistique** apprend un **modèle de langage** —
+une **distribution de probabilité sur les séquences de mots** capable de
+**prédire le mot suivant** ; sa forme historique, le modèle à **n-grammes**,
+suppose que le mot suivant ne dépend que des **`n − 1` mots précédents**. Enfin,
+les **plongements lexicaux** représentent les mots par des **vecteurs denses**
+de faible dimension, **appris** sur de grands corpus, dont la **proximité
+géométrique** reflète la **proximité de sens**.
+
+> **À retenir** : l'**analyse syntaxique** décrit la **structure** des phrases
+> par des **grammaires** (au moins **hors-contexte**) et des **arbres
+> syntaxiques** ; l'approche **statistique** apprend des **modèles de langage**
+> (n-grammes) qui **prédisent le mot suivant** ; et les **plongements lexicaux**
+> représentent les mots par des **vecteurs denses** porteurs de **sens**.

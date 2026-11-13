@@ -1,0 +1,80 @@
+---
+title: "Types d'ordres : marché, limite, stop"
+slug: types-ordres
+order: 3
+estimatedReadMin: 10
+concepts: [ordre-au-marche, ordre-a-cours-limite, ordre-meilleure-limite, ordre-stop, validite-ordre, avis-opere]
+source: "AMF, dossier « Les ordres de bourse » : « Choisir et passer un ordre de bourse » et « De l'achat à la vente de votre titre coté en bourse »"
+---
+
+## Idée centrale
+
+Chaque type d'ordre fait un compromis entre deux garanties : **le prix** et **l'exécution**. Aucun ordre ne garantit les deux à la fois. Choisir un ordre, c'est décider ce qui compte le plus pour toi à ce moment-là.
+
+## Ce que contient un ordre
+
+D'après l'AMF, un ordre complet précise :
+
+1. le **sens** : achat ou vente ;
+2. le **titre**, par son nom ou son code ISIN ;
+3. la **nature** du titre (action, obligation, ETF…) ;
+4. la **quantité** ;
+5. le **type d'ordre** et, le cas échéant, sa **limite de prix** ;
+6. la **durée de validité**.
+
+## Les quatre familles d'ordres
+
+### L'ordre à cours limité : maîtriser le prix
+
+Tu fixes un **prix maximum à l'achat** ou un **prix minimum à la vente**. L'ordre ne sera exécuté qu'à ce prix ou mieux.
+
+- Achat limité à 25,00 € : exécuté à 25,00 € ou moins, jamais au-dessus.
+- Vente limitée à 30,00 € : exécutée à 30,00 € ou plus, jamais en dessous.
+
+C'est l'ordre le plus sûr selon l'AMF. Contrepartie : il peut être **exécuté partiellement**, ou **pas du tout** si le marché n'atteint jamais ta limite.
+
+### L'ordre au marché : garantir l'exécution
+
+Pas de limite de prix : l'ordre est **prioritaire** et exécuté immédiatement contre les ordres opposés disponibles, **à n'importe quel prix**. Utile pour sortir à tout prix d'une position, dangereux sur une valeur peu liquide ou agitée, où le prix obtenu peut être très éloigné du dernier cours affiché. Passé avant l'ouverture, il est exécuté au cours d'ouverture.
+
+### L'ordre à la meilleure limite : la rapidité au prix affiché
+
+Pas de prix indiqué : l'ordre prend comme limite **le meilleur prix opposé** du carnet au moment où il arrive (la meilleure offre de vente pour un achat). Si la quantité disponible à ce prix ne suffit pas, le reste devient un ordre à cours limité à ce prix et attend.
+
+### Les ordres à déclenchement (ordres stop)
+
+Ils restent inactifs tant qu'un **seuil** n'est pas atteint. Usage typique : le **stop-loss**, qui coupe une perte.
+
+- **À seuil de déclenchement** : quand le seuil est touché, l'ordre devient un **ordre au marché**. L'exécution est quasi certaine, le prix ne l'est pas.
+- **À plage de déclenchement** : tu indiques **deux prix**, un seuil et une limite. Une fois le seuil touché, l'ordre devient un **ordre à cours limité**. Le prix est maîtrisé, l'exécution ne l'est pas.
+
+Exemple : tu détiens une action achetée 50 €. Tu places une vente à seuil de déclenchement à 46 €. Si le cours touche 46 €, ta vente part au marché. Si l'action ouvre directement à 41 € après une mauvaise nouvelle publiée pendant la nuit, tu seras vendu autour de 41 €, pas à 46 € : c'est un **gap**. Avec une plage 46 € / 45 €, tu ne vendrais pas en dessous de 45 €… et resterais donc en position.
+
+| Ordre | Prix garanti | Exécution garantie |
+|---|---|---|
+| Cours limité | Oui | Non |
+| Au marché | Non | Oui (si contrepartie) |
+| Meilleure limite | Prix du moment, sans garantie de quantité | Partielle possible |
+| Stop à seuil | Non | Oui, une fois déclenché |
+| Stop à plage | Oui (limite) | Non |
+
+## La durée de validité
+
+- **Jour** (par défaut) : l'ordre expire à la fin de la séance.
+- **À date déterminée** : il reste valable jusqu'à une date choisie.
+- **À révocation** : il reste dans le carnet jusqu'à exécution ou annulation, dans la limite d'un an.
+
+Un ordre oublié dans le carnet peut s'exécuter des semaines plus tard dans un contexte totalement différent : surveille tes ordres en attente.
+
+## Après l'exécution : l'avis d'opéré
+
+Chaque exécution donne lieu à un **avis d'opéré** : sens, quantité, cours, heure, frais, montants brut et net. Il sert de preuve : tu as **30 jours** pour contester.
+
+> **À retenir**
+> En cas de doute, l'ordre à cours limité est le bon réflexe : fixe une limite proche du prix affiché et tu ne paieras jamais plus que prévu.
+
+## Pièges classiques
+
+- Mettre un ordre au marché sur une petite valeur avec peu d'ordres en face.
+- Croire qu'un stop-loss à seuil garantit le prix de sortie : il ne protège pas d'un gap d'ouverture.
+- Inverser le sens de la limite : une vente limitée à 30 € signifie « pas en dessous de 30 € ».

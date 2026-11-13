@@ -1,0 +1,256 @@
+---
+title: "Types d'apprentissage et de tâches"
+slug: types-apprentissage
+order: 2
+estimatedReadMin: 16
+concepts: [apprentissage-supervise, apprentissage-non-supervise, classification, regression, clustering, regles-d-association]
+source: "Slides_Intro_DM_2425.pdf"
+---
+
+## Data Mining et Machine Learning
+
+Pour comprendre les **techniques** de la fouille de données, il faut savoir d'où
+elles viennent. Le cours situe le **Data Mining au croisement de deux disciplines** :
+
+- la **statistique** ;
+- l'**apprentissage automatique** — en anglais **Machine Learning** (**ML**).
+
+Pour certains auteurs, le Data Mining est même tout simplement de l'**apprentissage
+automatique appliqué**. La conséquence est directe : **la plupart des techniques
+utilisées en fouille de données sont issues du Machine Learning**.
+
+Or, dans ce dernier domaine, **il s'agit de généraliser** — c'est-à-dire de
+**trouver des régularités** — **à partir d'exemples**, ces exemples étant des
+**données brutes**. On retrouve exactement le programme de la section précédente :
+extraire des régularités de données brutes. La fouille de données et le Machine
+Learning partagent donc la **même idée centrale**, celle de **généralisation à
+partir d'exemples**.
+
+> **À retenir** : le **Data Mining** se trouve au **croisement de la statistique et
+> de l'apprentissage automatique** (Machine Learning) ; ses techniques sont pour la
+> plupart **issues du ML**, dont le principe est de **généraliser** (trouver des
+> régularités) **à partir d'exemples**.
+
+## Classer les tâches selon l'approche du ML
+
+Il existe **plusieurs typologies des tâches** de fouille de données. Le cours fait
+un choix explicite : ici, **les tâches sont distinguées selon l'approche de Machine
+Learning** qui est utilisée.
+
+Et en Machine Learning, **il existe deux approches principales** :
+
+- l'**apprentissage supervisé** ;
+- l'**apprentissage non supervisé**.
+
+C'est cette opposition qui va organiser toute la suite : à chaque approche
+correspondent des **tâches** particulières. Les deux sections qui suivent les
+détaillent, puis cinq exemples concrets viennent les illustrer.
+
+> **À retenir** : on classe ici les tâches **selon l'approche du ML** employée ; le
+> ML compte **deux approches principales** — **apprentissage supervisé** et
+> **apprentissage non supervisé**.
+
+## L'apprentissage supervisé
+
+La **première approche** est l'**apprentissage supervisé**. Le cours lui rattache
+**deux tâches** : la **classification** et la **régression**.
+
+L'**objectif de la classification** est d'**apprendre à affecter des objets à des
+classes pré-définies**. Deux mots sont décisifs :
+
+- **affecter à des classes** : on range chaque objet dans une catégorie ;
+- **pré-définies** : les classes sont **connues d'avance** — c'est le propre de
+  l'apprentissage supervisé. On dispose, pour apprendre, d'exemples dont la classe
+  est **déjà donnée**.
+
+Comme **exemples de méthodes** d'apprentissage supervisé, le cours cite les **arbres
+de décision** et les **réseaux de neurones** ; une autre liste, un peu plus loin,
+ajoute les **forêts aléatoires**, le **classifieur bayésien** et la **régression
+logistique**. Ces méthodes feront l'objet des modules suivants.
+
+> **À retenir** : l'**apprentissage supervisé** (tâches de **classification** et de
+> **régression**) consiste à apprendre à **affecter des objets à des classes
+> pré-définies** ; méthodes types : **arbres de décision**, **réseaux de neurones**,
+> forêts aléatoires, classifieur bayésien, régression logistique.
+
+## L'apprentissage non supervisé
+
+La **seconde approche** est l'**apprentissage non supervisé**, dont le cours retient
+**notamment le clustering**.
+
+L'**objectif du clustering** est de **construire des groupes — des clusters —
+d'objets similaires**. La différence avec la classification est nette et tient en
+une phrase du cours :
+
+> **Il n'y a pas de classes prédéfinies.**
+
+C'est là toute l'opposition : en apprentissage supervisé, les classes sont **données
+d'avance** ; en apprentissage non supervisé, elles ne le sont **pas** — l'algorithme
+doit **lui-même** découvrir les regroupements pertinents, en rassemblant les objets
+**similaires**. Comme **exemple d'algorithme** de clustering, le cours cite
+**K-Means**.
+
+| Critère | Apprentissage **supervisé** | Apprentissage **non supervisé** |
+| --- | --- | --- |
+| Tâches | **Classification**, régression | **Clustering** (notamment) |
+| Classes | **Pré-définies** (données d'avance) | **Pas** de classes prédéfinies |
+| But | **Affecter** les objets à ces classes | **Construire** des groupes d'objets **similaires** |
+| Méthode / algorithme cité | Arbres de décision, réseaux de neurones | **K-Means** |
+
+> ⚠️ Toute la différence est là : l'apprentissage **supervisé** travaille avec des
+> **classes prédéfinies** ; l'apprentissage **non supervisé** (clustering) **n'a pas
+> de classes prédéfinies** et doit découvrir lui-même les groupes d'objets
+> **similaires**.
+
+## Cinq exemples de tâches
+
+Pour rendre ces notions concrètes, le cours déroule **cinq exemples**. Chacun est
+présenté de la même façon : un **objectif**, une **entrée** et une **sortie**. Les
+parcourir, c'est balayer les grandes tâches de la fouille de données.
+
+### Exemple 1 — une dépendance linéaire (régression)
+
+- **Objectif** : trouver une **dépendance linéaire** entre une grandeur `Y` et `n`
+  grandeurs `X₁, …, Xₙ`.
+- **Entrée** : une liste de **couples (exemples)** `(Xᵢ, Yᵢ)`, avec
+  `Xᵢ = (xᵢ₁, …, xᵢₙ) ∈ ℝⁿ` et `Yᵢ ∈ ℝ`.
+- **Sortie** : un **hyperplan** dans `ℝⁿ⁺¹`, autrement dit un `(n+1)`-uplet
+  `a₀, …, aₙ`, tel que, pour toutes les valeurs de `i`, la quantité
+  `a₀ + Σⱼ aⱼ · xᵢⱼ` soit **aussi proche que possible** de `Yᵢ`.
+
+C'est un exemple de **régression** : la cible `Y` est **numérique**, et l'on cherche
+à l'**approcher** par une combinaison linéaire des `Xⱼ`.
+
+### Exemple 2 — accorder un prêt (classification, règles)
+
+- **Objectif** : définir, **sous forme de règles**, les conditions qui permettent
+  d'accorder un prêt à un client.
+- **Entrée** : une liste de couples *(Client, Décision)*. Les clients sont décrits
+  par des **caractéristiques** (Âge, Revenus…). La décision est **binaire** : prêt
+  *accordé* ou *non accordé*.
+- **Sortie** : un ensemble de **règles**, éventuellement regroupées au sein d'un
+  **arbre de décision** (voir le module correspondant), de la forme :
+  *« **Si** (condition portant sur les caractéristiques) **Alors** prêt accordé /
+  non accordé »*.
+
+Le cours illustre l'entrée par un extrait de table — chaque ligne est un client,
+chaque colonne une caractéristique, et la dernière colonne `Class` porte la décision :
+
+| Id | Age | Has_job | Own_house | Credit_rating | Class |
+| --- | --- | --- | --- | --- | --- |
+| 1 | young | no | no | fair | **No** |
+| 2 | young | no | no | good | **No** |
+| 3 | young | yes | no | good | **Yes** |
+| 6 | middle | no | no | fair | **No** |
+| 8 | middle | no | yes | excellent | **Yes** |
+| 11 | old | no | yes | excellent | **Yes** |
+| 13 | old | yes | no | good | **Yes** |
+
+C'est un exemple de **classification** : la cible `Class` prend un **nombre fini de
+valeurs** (ici deux : `Yes` / `No`).
+
+### Exemple 3 — jouer au tennis (classification, probabilités)
+
+- **Objectif** : savoir quels sont les jours où l'on joue au tennis.
+- **Entrée** : une liste de couples *(Jour, JouerTennis)*. Les jours sont décrits
+  par des **caractéristiques** (Température, Vent…). La valeur de *JouerTennis* est
+  **binaire** (oui / Non) et indique si, ce jour-là, on a joué au tennis.
+- **Sortie** : un ensemble de **probabilités** permettant, en fonction des
+  caractéristiques du jour, de dire si l'on joue au tennis.
+
+Le cours en donne la table — la cible est ici la colonne `PlayTennis` :
+
+| Id | Outlook | Temperature | Humidity | Windy | PlayTennis |
+| --- | --- | --- | --- | --- | --- |
+| 1 | sunny | hot | high | false | **No** |
+| 3 | overcast | hot | high | false | **Yes** |
+| 4 | rainy | mild | high | false | **yes** |
+| 6 | rainy | cool | normal | true | **No** |
+| 9 | sunny | cool | normal | false | **Yes** |
+| 14 | rainy | mild | high | true | **No** |
+
+C'est, de nouveau, un exemple de **classification** ; ici, le modèle prend la forme
+d'un **ensemble de probabilités**.
+
+### Exemple 4 — regrouper des étudiants (clustering)
+
+- **Objectif** : **regrouper des étudiants par profil**.
+- **Entrée** : une liste d'étudiants. Chaque étudiant est décrit par ses **notes**
+  dans les différentes matières. Si l'on appelle `n` le **nombre de matières**, alors
+  chaque étudiant est un **point dans `ℝⁿ`**.
+- **Sortie** : un ensemble de **clusters**. Un cluster est un **ensemble
+  d'étudiants** ; chaque cluster est défini par son **centre**, un point de `ℝⁿ`
+  dont les coordonnées sont les **moyennes** de celles des étudiants composant le
+  cluster.
+
+C'est un exemple de **clustering** — donc d'**apprentissage non supervisé** : aucune
+classe n'est donnée d'avance, l'algorithme regroupe les étudiants **similaires**.
+
+### Exemple 5 — produits achetés ensemble (règles d'association)
+
+- **Objectif** : savoir quels produits sont **achetés en même temps** dans un
+  supermarché.
+- **Entrée** : une liste de **paniers**. Chaque panier représente un **ensemble de
+  produits achetés en même temps**.
+- **Sortie** : un ensemble de **règles** du type *« **Si** on achète tels produits
+  **Alors** on achète aussi tels autres produits »*.
+
+Le cours détaille cet exemple. On considère un ensemble de **transactions** ; chaque
+transaction `tᵢ` est un ensemble d'**items** (produits) achetés par un client :
+
+```
+t1 : Beef, Chicken, Milk
+t2 : Beef, Cheese
+t3 : Cheese, Boots
+t4 : Beef, Chicken, Cheese
+t5 : Beef, Chicken, Clothes, Cheese, Milk
+t6 : Chicken, Clothes, Milk
+t7 : Chicken, Milk, Clothes
+```
+
+Les techniques de fouille de données — ici l'**algorithme Apriori** — permettent
+alors d'**extraire les règles d'association** suivantes :
+
+- **Règle 1** : `Chicken, Clothes → Milk`
+- **Règle 2** : `Clothes, Milk → Chicken`
+- **Règle 3** : `Milk → Clothes, Chicken`
+
+Une **règle d'association `X → Y` signifie que si le panier contient `X`, alors il
+contient `Y` aussi**.
+
+## Récapitulatif des tâches
+
+Les cinq exemples couvrent les **grandes tâches** de la fouille de données et se
+rattachent aux deux approches du Machine Learning.
+
+| Exemple | Tâche | Approche | Forme du modèle (sortie) |
+| --- | --- | --- | --- |
+| 1 — dépendance linéaire | **Régression** | Supervisé | Hyperplan / coefficients `a₀, …, aₙ` |
+| 2 — accord d'un prêt | **Classification** | Supervisé | Règles / **arbre de décision** |
+| 3 — jouer au tennis | **Classification** | Supervisé | Ensemble de **probabilités** |
+| 4 — profils d'étudiants | **Clustering** | Non supervisé | Ensemble de **clusters** (centres) |
+| 5 — produits achetés ensemble | **Règles d'association** | — | Règles `X → Y` (algorithme **Apriori**) |
+
+> ⚠️ Une même tâche — la **classification** — peut produire des **modèles de formes
+> très différentes** : des **règles / un arbre** (exemple 2) ou des **probabilités**
+> (exemple 3). La **tâche** et la **forme du modèle** sont deux choses distinctes.
+
+## Synthèse de la section
+
+Le **Data Mining** se situe au **croisement de la statistique et du Machine
+Learning** ; ses techniques, **issues du ML**, reposent sur la **généralisation à
+partir d'exemples**. On classe ici les **tâches selon l'approche du ML**, qui compte
+**deux approches principales**. L'**apprentissage supervisé** — tâches de
+**classification** et de **régression** — apprend à **affecter des objets à des
+classes pré-définies** (méthodes : arbres de décision, réseaux de neurones…).
+L'**apprentissage non supervisé** — notamment le **clustering** — **construit des
+groupes d'objets similaires sans classes prédéfinies** (algorithme : K-Means). Les
+**cinq exemples** illustrent ces tâches : **régression** (dépendance linéaire),
+**classification** (accord d'un prêt, jouer au tennis), **clustering** (profils
+d'étudiants) et **règles d'association** (produits achetés ensemble, `X → Y` extraites
+par **Apriori**).
+
+> **À retenir** : deux approches — **supervisée** (classification, régression :
+> classes **pré-définies**) et **non supervisée** (clustering : **pas** de classes
+> prédéfinies) ; quatre familles de tâches illustrées par les exemples —
+> **classification**, **régression**, **clustering**, **règles d'association**.

@@ -1,0 +1,289 @@
+{
+  "slug": "partiel-2",
+  "title": "Partiel blanc 2 — Tubes nommés, threads et synchronisation",
+  "description": "Examen blanc de programmation système couvrant les modules 4 et 5 : tubes nommés (FIFO) et schéma client/serveur, threads POSIX, conditions de course, mutex, variables de condition et sémaphores. Quatorze exercices de difficulté croissante — questions de cours, prédiction de sortie et écriture de code C — à traiter en 2 heures, notés sur 20.",
+  "durationMinutes": 120,
+  "totalPoints": 20,
+  "exercises": [
+    {
+      "chapterSlug": "fifo-mkfifo",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Un programme exécute `mkfifo(\"/tmp/canal\", 0644)`. Une fois cet appel réussi, que vient-il de se passer ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Un fichier spécial de type p a été créé dans l'arborescence ; aucune donnée n'y transite encore, le tube reste à utiliser via open()." },
+          { "id": "b", "label": "Un tube anonyme a été créé et ses deux descripteurs ont été placés dans un tableau fd[2]." },
+          { "id": "c", "label": "Le tube est créé et déjà ouvert en lecture et en écriture : on peut faire read() et write() immédiatement." },
+          { "id": "d", "label": "Le processus a été dédoublé, et le fils dispose désormais d'une extrémité du tube." }
+        ]
+      },
+      "solution": { "correct": ["a"] },
+      "explanation": "`mkfifo` crée le **fichier spécial** d'un tube nommé : une entrée dans le système de fichiers, un **i-nœud de type `p`** (visible avec `ls -l`), portant le nom et les droits. C'est **tout** ce que fait `mkfifo` : il **ne transfère aucune donnée** et **n'ouvre pas** le tube. Pour s'en servir, il faut ensuite l'**ouvrir** explicitement avec `open()` — en lecture ou en écriture. (b) décrit `pipe()`, qui crée un tube **anonyme**. (c) est faux : `mkfifo` n'ouvre rien — c'est le rôle distinct d'`open`. (d) décrit `fork()` : `mkfifo` ne crée aucun processus.",
+      "concepts": ["mkfifo-primitive", "fichier-special-p", "open-fifo"],
+      "source": "partiel-2"
+    },
+    {
+      "chapterSlug": "fifo-ouverture",
+      "type": "TRUE_FALSE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Sur un tube nommé, en mode bloquant (sans O_NONBLOCK), un `open(fifo, O_RDONLY)` et un `open(fifo, O_WRONLY)` exécutés par deux processus différents se débloquent ensemble : c'est le rendez-vous d'ouverture.",
+      "payload": {},
+      "solution": { "value": true },
+      "explanation": "Vrai. Par défaut, l'`open` d'un FIFO est **bloquant** et établit un **rendez-vous**. Un `open` en **lecture** bloque tant qu'aucun processus n'ouvre le FIFO en **écriture** — et réciproquement, un `open` en écriture bloque tant qu'aucun lecteur ne se présente. Le premier arrivé **patiente** ; quand la **paire** lecteur/écrivain est complète, les **deux** `open` se débloquent **au même instant** et renvoient leurs descripteurs. C'est précisément ce mécanisme qui **synchronise** deux processus sans aucun code explicite, et qui rend leur ordre de démarrage indifférent.",
+      "concepts": ["rendez-vous-ouverture", "open-fifo"],
+      "source": "partiel-2"
+    },
+    {
+      "chapterSlug": "threads-notion",
+      "type": "MATCHING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Associez chaque fonction des threads POSIX à l'action qu'elle réalise.",
+      "payload": {
+        "left": [
+          { "id": "create", "label": "pthread_create()" },
+          { "id": "join", "label": "pthread_join()" },
+          { "id": "exit", "label": "pthread_exit()" },
+          { "id": "self", "label": "pthread_self()" }
+        ],
+        "right": [
+          { "id": "r-create", "label": "Crée un nouveau thread exécutant une fonction void *f(void *)" },
+          { "id": "r-join", "label": "Suspend l'appelant jusqu'à la fin d'un thread donné et récupère sa valeur de retour" },
+          { "id": "r-exit", "label": "Termine le thread appelant en renvoyant une valeur" },
+          { "id": "r-self", "label": "Renvoie l'identifiant (TID) du thread appelant" }
+        ]
+      },
+      "solution": { "pairs": { "create": "r-create", "join": "r-join", "exit": "r-exit", "self": "r-self" } },
+      "explanation": "**`pthread_create`** crée un nouveau thread et lui fait exécuter la fonction passée en argument — une fonction de signature imposée `void *f(void *)`. **`pthread_join`** est l'équivalent de `waitpid` pour les threads : elle **suspend** le thread appelant jusqu'à la **terminaison** d'un thread *précis* et **récupère** sa valeur de retour. **`pthread_exit`** **termine le thread appelant** en renvoyant une valeur `void *` — c'est l'analogue du `return` dans la fonction de thread. **`pthread_self`** renvoie le **TID** (identifiant) du thread appelant, comme `getpid()` pour un processus.",
+      "concepts": ["pthread-create", "pthread-join", "pthread-exit", "pthread-self"],
+      "source": "partiel-2"
+    },
+    {
+      "chapterSlug": "partage-donnees",
+      "type": "MCQ_MULTI",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Plusieurs threads d'un même processus s'exécutent. Parmi ces données, lesquelles doivent être protégées contre les accès concurrents si au moins un thread les modifie ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Une variable globale modifiée par plusieurs threads." },
+          { "id": "b", "label": "Une zone allouée par malloc dont l'adresse est connue de plusieurs threads, et qu'ils modifient." },
+          { "id": "c", "label": "Une variable static locale à une fonction, modifiée par plusieurs threads." },
+          { "id": "d", "label": "Le int i d'une boucle, variable locale ordinaire propre à chaque thread." },
+          { "id": "e", "label": "Le PID du processus, obtenu par getpid()." }
+        ]
+      },
+      "solution": { "correct": ["a", "b", "c"] },
+      "explanation": "Sont exposées les données à la fois **partagées** et **modifiées** par au moins un thread. (a) Vrai : une **variable globale** est partagée par construction. (b) Vrai : la mémoire du **tas** (`malloc`) dont l'adresse circule entre threads est partagée. (c) Vrai : une variable **`static`** locale a une portée locale mais une **durée de vie globale** — elle est partagée par tous les threads. (d) est **faux** : une variable **locale ordinaire** vit sur la **pile** du thread, qui lui est **privée** — aucune collision possible, aucune protection nécessaire. (e) est **faux** : le PID est une valeur **constante** lue, jamais modifiée ; une lecture seule ne crée pas de course (il faut « au moins un écrivain »).",
+      "concepts": ["memoire-partagee-threads", "acces-concurrent", "pile-thread"],
+      "source": "partiel-2"
+    },
+    {
+      "chapterSlug": "mutex",
+      "type": "FILL_BLANK",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Complétez ce résumé sur la protection d'une section critique par un mutex.",
+      "payload": {
+        "template": "Un mutex global se déclare et s'initialise en une ligne grâce à la constante {{c1}}. Juste avant la section critique, un thread appelle {{c2}} : si le mutex est déjà tenu, le thread est mis en attente jusqu'à sa libération. Après la section critique, il appelle {{c3}}. La propriété garantie est qu'au plus un seul thread exécute la section critique à la fois : on l'appelle l'{{c4}}.",
+        "slots": [
+          { "id": "c1", "width": "lg", "placeholder": "constante d'initialisation" },
+          { "id": "c2", "width": "md" },
+          { "id": "c3", "width": "md" },
+          { "id": "c4", "width": "md" }
+        ]
+      },
+      "solution": {
+        "answers": {
+          "c1": ["PTHREAD_MUTEX_INITIALIZER"],
+          "c2": ["pthread_mutex_lock", "pthread_mutex_lock()"],
+          "c3": ["pthread_mutex_unlock", "pthread_mutex_unlock()"],
+          "c4": ["exclusion mutuelle"]
+        },
+        "caseSensitive": false,
+        "stripAccents": true
+      },
+      "explanation": "Un mutex **global** se déclare et s'initialise d'une seule ligne avec **`PTHREAD_MUTEX_INITIALIZER`** : `pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;`. Avant la section critique, le thread appelle **`pthread_mutex_lock`** : si le mutex est libre il le verrouille et continue ; s'il est **déjà tenu**, le thread est **bloqué** jusqu'à la libération. Après la section critique, il appelle **`pthread_mutex_unlock`** pour libérer le verrou et réveiller un éventuel thread en attente. La propriété garantie — au plus **un seul thread** dans la section critique à la fois — s'appelle l'**exclusion mutuelle**.",
+      "concepts": ["mutex-init-statique", "pthread-mutex-lock", "pthread-mutex-unlock", "exclusion-mutuelle"],
+      "source": "partiel-2"
+    },
+    {
+      "chapterSlug": "semaphores-posix",
+      "type": "ORDERING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Un sémaphore non nommé est utilisé pour synchroniser des threads d'un même processus. Remettez dans l'ordre les étapes de son cycle de vie complet.",
+      "payload": {
+        "items": [
+          { "id": "init", "label": "Initialiser le sémaphore avec sem_init, en fixant sa valeur de départ" },
+          { "id": "create", "label": "Créer les threads qui vont l'utiliser" },
+          { "id": "pv", "label": "Les threads exécutent des opérations P (sem_wait) et V (sem_post) sur le sémaphore" },
+          { "id": "join", "label": "Joindre tous les threads avec pthread_join" },
+          { "id": "destroy", "label": "Détruire le sémaphore avec sem_destroy" }
+        ]
+      },
+      "solution": { "order": ["init", "create", "pv", "join", "destroy"] },
+      "explanation": "Le cycle de vie d'un sémaphore non nommé suit un ordre strict. (1) On l'**initialise** d'abord avec **`sem_init`**, en fixant sa **valeur de départ** — qui encode son rôle. (2) On **crée** ensuite les threads qui vont s'en servir. (3) Ces threads exécutent leurs opérations **P** (`sem_wait`) et **V** (`sem_post`). (4) Le thread principal **joint** tous les threads avec `pthread_join` : il a alors la garantie qu'aucun thread ne s'en sert plus. (5) On peut enfin **détruire** le sémaphore avec **`sem_destroy`**. La destruction vient en **dernier**, après les `pthread_join`, car détruire un sémaphore sur lequel un thread est encore bloqué est une erreur.",
+      "concepts": ["sem-init", "sem-wait", "sem-post", "sem-destroy"],
+      "source": "partiel-2"
+    },
+    {
+      "chapterSlug": "conditions",
+      "type": "MCQ_MULTI",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "À propos de l'emploi correct d'une variable de condition (pthread_cond_t), quelles affirmations sont exactes ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "pthread_cond_wait libère le mutex et endort le thread de façon atomique, puis re-verrouille le mutex avant de revenir au réveil." },
+          { "id": "b", "label": "Le test du prédicat doit se faire dans une boucle while, jamais dans un simple if, à cause notamment des réveils parasites autorisés par POSIX." },
+          { "id": "c", "label": "Un pthread_cond_signal émis alors qu'aucun thread n'attend est définitivement perdu : une variable de condition ne mémorise rien." },
+          { "id": "d", "label": "Un thread peut appeler pthread_cond_wait sans tenir le mutex associé : la fonction le verrouille elle-même au début." },
+          { "id": "e", "label": "pthread_cond_broadcast réveille un seul thread, pthread_cond_signal les réveille tous." }
+        ]
+      },
+      "solution": { "correct": ["a", "b", "c"] },
+      "explanation": "(a) **Vrai** : `pthread_cond_wait` **libère le mutex** et **endort** le thread de façon **atomique** (indissociable), puis **re-verrouille le mutex** au réveil — au retour, le thread tient de nouveau le mutex. (b) **Vrai** : le prédicat se teste dans une boucle **`while`**, jamais un `if`, car POSIX autorise les **réveils parasites** (retours spontanés sans signal) et la condition peut redevenir fausse avant le réveil effectif. (c) **Vrai** : une variable de condition **ne mémorise rien** ; un `signal` émis sans attendeur est **perdu** (différence fondamentale avec `sem_post`). (d) est **faux** : tenir le mutex avant d'appeler `pthread_cond_wait` est **obligatoire** — la fonction le suppose déjà verrouillé. (e) est **faux** : c'est l'**inverse** — `signal` réveille **un** thread, `broadcast` les réveille **tous**.",
+      "concepts": ["pthread-cond-wait", "predicat-while", "reveil-parasite", "pthread-cond-signal"],
+      "source": "partiel-2"
+    },
+    {
+      "chapterSlug": "fifo-client-serveur",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Dans un service client/serveur par FIFO, pourquoi le serveur ne peut-il pas renvoyer sa réponse dans le FIFO bien connu où il a lu la requête ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Parce que ce FIFO est partagé et que la lecture est destructrice : n'importe quel processus pourrait récupérer la réponse à la place du bon client." },
+          { "id": "b", "label": "Parce qu'un FIFO ne peut être ouvert qu'une seule fois dans toute la vie du programme." },
+          { "id": "c", "label": "Parce que le FIFO bien connu est en lecture seule et n'accepte aucune écriture." },
+          { "id": "d", "label": "Parce que le serveur a déjà supprimé le FIFO bien connu par unlink après avoir lu la requête." }
+        ]
+      },
+      "solution": { "correct": ["a"] },
+      "explanation": "Le FIFO **bien connu** est une ressource **publique et partagée** : tous les clients y écrivent leurs requêtes. Si le serveur y déposait aussi la réponse, **n'importe quel processus** (un autre client, par exemple) pourrait la lire — car la **lecture d'un tube est destructrice** : le premier `read` consomme les octets, le destinataire prévu ne les verra jamais. La solution est un **canal de retour privé** : chaque client crée son propre **FIFO de retour** à un nom unique (dérivé de son PID) et le transmet dans sa requête ; le serveur y répond individuellement. (b), (c) et (d) sont faux : un FIFO s'ouvre autant de fois qu'on veut, n'est pas en lecture seule, et le serveur ne le supprime qu'à son arrêt.",
+      "concepts": ["fifo-client-serveur", "fifo-bien-connu", "fifo-retour", "lecture-destructrice"],
+      "source": "partiel-2"
+    },
+    {
+      "chapterSlug": "threads-notion",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Ce programme crée cinq threads ; chacun reçoit un entier de 1 à 5 et renvoie son triple. Le thread principal joint chaque thread, additionne les triples récupérés, puis affiche le total. Quelle est la sortie exacte ?",
+      "payload": {
+        "program": "#include <pthread.h>\n#include <stdio.h>\n\n#define NB 5\n\nvoid *triple(void *arg) {\n    long n = (long) arg;\n    return (void *) (n * 3);\n}\n\nint main(void) {\n    pthread_t thr[NB];\n    void *ret;\n\n    for (long i = 1; i <= NB; i++)\n        pthread_create(&thr[i - 1], NULL, triple, (void *) i);\n\n    long total = 0;\n    for (int i = 0; i < NB; i++) {\n        pthread_join(thr[i], &ret);\n        total += (long) ret;\n    }\n    printf(\"nombre de threads : %d\\n\", NB);\n    printf(\"somme des triples = %ld\\n\", total);\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "nombre de threads : 5\nsomme des triples = 45" },
+      "explanation": "Chaque thread reçoit un entier `n` (de 1 à 5) converti en `void *`, et **renvoie** `n * 3` — faire `return valeur;` dans la fonction de thread équivaut à `pthread_exit(valeur)`. Le thread principal appelle **`pthread_join`** sur chacun des cinq threads : il se **suspend** jusqu'à leur fin et **récupère** chaque valeur de retour dans `ret`. Il additionne donc les triples : 3 + 6 + 9 + 12 + 15 = **45**. La sortie est **déterministe** car les deux `printf` ont lieu dans le `main`, **après** que les cinq `pthread_join` ont garanti que tous les calculs sont terminés : l'ordre d'exécution des threads n'a **aucune influence** sur le total. La sortie est invariablement `nombre de threads : 5` puis `somme des triples = 45`.",
+      "concepts": ["pthread-create", "pthread-join", "pthread-exit"],
+      "source": "partiel-2"
+    },
+    {
+      "chapterSlug": "semaphores-posix",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Ce programme utilise deux sémaphores `s_b` et `s_c`, tous deux initialisés à 0, pour enchaîner quatre affichages. Le thread `thread_b` attend `s_b` ; le thread `thread_c` attend `s_c`. Le `main` affiche `A` puis débloque `s_b`. Quelle est la sortie exacte ?",
+      "payload": {
+        "program": "#include <pthread.h>\n#include <semaphore.h>\n#include <stdio.h>\n\nsem_t s_b;\nsem_t s_c;\n\nvoid *thread_b(void *arg) {\n    (void) arg;\n    sem_wait(&s_b);\n    printf(\"B\\n\");\n    sem_post(&s_c);\n    return NULL;\n}\n\nvoid *thread_c(void *arg) {\n    (void) arg;\n    sem_wait(&s_c);\n    printf(\"C\\n\");\n    return NULL;\n}\n\nint main(void) {\n    pthread_t tb, tc;\n\n    sem_init(&s_b, 0, 0);\n    sem_init(&s_c, 0, 0);\n\n    pthread_create(&tb, NULL, thread_b, NULL);\n    pthread_create(&tc, NULL, thread_c, NULL);\n\n    printf(\"A\\n\");\n    sem_post(&s_b);\n\n    pthread_join(tb, NULL);\n    pthread_join(tc, NULL);\n\n    sem_destroy(&s_b);\n    sem_destroy(&s_c);\n    printf(\"D\\n\");\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "A\nB\nC\nD" },
+      "explanation": "Les deux sémaphores valent **`0`** au départ, ce qui force un **enchaînement strict**. Le thread `thread_b` fait `sem_wait(&s_b)` : `s_b` valant 0, il est **bloqué d'emblée**. Le thread `thread_c` fait `sem_wait(&s_c)` : il est **bloqué** lui aussi. Le `main` affiche donc **`A`** en premier — aucun autre thread ne peut afficher quoi que ce soit — puis fait `sem_post(&s_b)`. Cela **réveille `thread_b`**, qui affiche **`B`**, puis fait `sem_post(&s_c)`. Cela **réveille `thread_c`**, qui affiche **`C`**. Enfin le `main`, après avoir joint les deux threads, affiche **`D`**. L'ordre est **entièrement déterminé** par la chaîne de sémaphores `main → thread_b → thread_c`, puis par les `pthread_join` : la sortie est invariablement `A`, `B`, `C`, `D`.",
+      "concepts": ["semaphore-posix", "sem-init", "sem-wait", "sem-post", "probleme-synchronisation"],
+      "source": "partiel-2"
+    },
+    {
+      "chapterSlug": "fifo-mkfifo",
+      "type": "CODE_WRITE",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Écrivez un programme C qui crée un tube nommé, puis se dédouble par fork(). Le fils ouvre le FIFO en écriture et y dépose l'entier 2025 (en binaire, avec write sur &valeur). Le père ouvre le FIFO en lecture, lit l'entier et affiche exactement la ligne `entier recu : 2025`. Le père attend le fils, puis le programme supprime le FIFO.",
+      "payload": {
+        "spec": "Le programme inclut les en-têtes nécessaires (<stdio.h>, <stdlib.h>, <unistd.h>, <errno.h>, <sys/types.h>, <sys/stat.h>, <sys/wait.h>, <fcntl.h>). Il crée le tube nommé avec mkfifo(\"/tmp/canal_entier\", 0666) en tolérant errno == EEXIST. Il appelle fork() (en testant l'echec -1). Dans le fils : ouvrir le FIFO avec open(\"/tmp/canal_entier\", O_WRONLY), declarer int valeur = 2025, ecrire l'entier avec write(fd, &valeur, sizeof(valeur)), fermer le descripteur, terminer le fils. Dans le pere : ouvrir le FIFO avec open(\"/tmp/canal_entier\", O_RDONLY), lire un int avec read(fd, &recu, sizeof(recu)), fermer le descripteur, attendre le fils avec wait(NULL), afficher la ligne 'entier recu : 2025' avec printf(\"entier recu : %d\\n\", recu), puis supprimer le FIFO avec unlink(\"/tmp/canal_entier\"). Le rendez-vous d'ouverture synchronise automatiquement les deux open : peu importe lequel s'execute en premier. On echange un int binaire (sizeof(int) octets), pas du texte.",
+        "std": "gnu11",
+        "compare": "trimmed",
+        "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\n#define CHEMIN \"/tmp/canal_entier\"\n\nint main(void) {\n    /* 1. creer le FIFO (tolerer EEXIST) */\n\n    /* 2. fork() : le fils ecrit l'entier 2025 dans le FIFO,\n          le pere le lit et affiche 'entier recu : 2025' */\n\n    /* 3. le pere attend le fils, puis unlink le FIFO */\n\n    return 0;\n}\n",
+        "tests": [
+          { "name": "le pere lit l'entier que le fils a ecrit", "stdin": "", "expectedStdout": "entier recu : 2025", "compare": "trimmed" }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\n#define CHEMIN \"/tmp/canal_entier\"\n\nint main(void) {\n    if (mkfifo(CHEMIN, 0666) == -1 && errno != EEXIST) {\n        perror(\"mkfifo\"); exit(EXIT_FAILURE);\n    }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        int fd = open(CHEMIN, O_WRONLY);\n        if (fd == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        int valeur = 2025;\n        write(fd, &valeur, sizeof(valeur));\n        close(fd);\n        exit(EXIT_SUCCESS);\n    } else {\n        int fd = open(CHEMIN, O_RDONLY);\n        if (fd == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        int recu;\n        read(fd, &recu, sizeof(recu));\n        close(fd);\n        wait(NULL);\n        printf(\"entier recu : %d\\n\", recu);\n        unlink(CHEMIN);\n    }\n    return 0;\n}"
+      },
+      "explanation": "Comme un FIFO doit exister avant toute ouverture, on appelle **`mkfifo`** en premier — en tolérant `errno == EEXIST` au cas où un FIFO du même nom subsisterait. Après `fork`, chaque processus **ouvre** le FIFO : le fils en **écriture** (`O_WRONLY`), le père en **lecture** (`O_RDONLY`). Le **rendez-vous d'ouverture** synchronise les deux `open` — celui qui arrive le premier **attend** l'autre, donc l'ordre des deux processus est indifférent. Le fils écrit l'entier `2025` en **binaire** : `write(fd, &valeur, sizeof(valeur))` envoie les `sizeof(int)` octets de la variable. Le père lit symétriquement avec `read(fd, &recu, sizeof(recu))` : échanger un `int` binaire est plus sûr que du texte, car le récepteur sait exactement combien d'octets lire. Le père **`wait`** la fin du fils, affiche `entier recu : 2025`, puis **`unlink`** efface le fichier FIFO — son i-nœud étant persistant, c'est indispensable.",
+      "concepts": ["mkfifo-primitive", "open-fifo", "rendez-vous-ouverture", "unlink-fifo", "fork"],
+      "source": "partiel-2"
+    },
+    {
+      "chapterSlug": "mutex",
+      "type": "CODE_FIX",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Ce programme lance 4 threads ; chacun incrémente 100 000 fois la variable globale `compteur` sous la protection d'un mutex. Il devrait afficher `compteur = 400000`, mais il se fige : il ne se termine jamais. Trouvez et corrigez l'erreur.",
+      "payload": {
+        "spec": "Le programme declare une variable globale long compteur = 0 et un mutex global mutex initialise par PTHREAD_MUTEX_INITIALIZER. La fonction incrementer fait, dans une boucle de NB_TOURS = 100000 tours, l'increment de compteur sous mutex. main cree 4 threads executant incrementer, les joint tous, puis affiche 'compteur = <valeur>'. LE BUG est dans la fonction incrementer : a chaque tour de boucle, elle appelle pthread_mutex_lock(&mutex) puis fait compteur = compteur + 1, mais elle N'APPELLE JAMAIS pthread_mutex_unlock(&mutex) — le verrou est pris et jamais rendu. Consequence : au tout premier tour, un thread verrouille le mutex et l'increment se fait ; au DEUXIEME tour du meme thread, pthread_mutex_lock(&mutex) trouve le mutex DEJA tenu (par le thread appelant lui-meme) et BLOQUE ce thread pour toujours, en attendant une liberation qui ne viendra jamais. Les autres threads se bloquent de meme des leur premier lock. pthread_join ne revient jamais, le programme est fige (interblocage). La correction consiste a AJOUTER, dans la boucle de incrementer, l'appel pthread_mutex_unlock(&mutex) juste apres compteur = compteur + 1 et avant la fin du tour : a tout pthread_mutex_lock doit correspondre un pthread_mutex_unlock. Une fois le deverrouillage en place, chaque thread libere le mutex apres son increment, les 4 threads progressent tour a tour, et le programme affiche 'compteur = 400000' (4 * 100000).",
+        "std": "gnu11",
+        "compare": "trimmed",
+        "starterCode": "#include <pthread.h>\n#include <stdio.h>\n#include <stdlib.h>\n\n#define NB_THREADS 4\n#define NB_TOURS   100000\n\nlong compteur = 0;\npthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;\n\nvoid *incrementer(void *arg) {\n    (void) arg;\n    for (int i = 0; i < NB_TOURS; i++) {\n        pthread_mutex_lock(&mutex);\n        compteur = compteur + 1;\n        /* BUG : le mutex verrouille n'est jamais deverrouille */\n    }\n    return NULL;\n}\n\nint main(void) {\n    pthread_t thr[NB_THREADS];\n\n    for (int i = 0; i < NB_THREADS; i++)\n        pthread_create(&thr[i], NULL, incrementer, NULL);\n\n    for (int i = 0; i < NB_THREADS; i++)\n        pthread_join(thr[i], NULL);\n\n    printf(\"compteur = %ld\\n\", compteur);\n    return 0;\n}\n",
+        "tests": [
+          { "name": "le programme se termine et affiche compteur = 400000", "stdin": "", "expectedStdout": "compteur = 400000", "compare": "trimmed", "timeoutMs": 3000 }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <pthread.h>\n#include <stdio.h>\n#include <stdlib.h>\n\n#define NB_THREADS 4\n#define NB_TOURS   100000\n\nlong compteur = 0;\npthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;\n\nvoid *incrementer(void *arg) {\n    (void) arg;\n    for (int i = 0; i < NB_TOURS; i++) {\n        pthread_mutex_lock(&mutex);\n        compteur = compteur + 1;\n        pthread_mutex_unlock(&mutex);\n    }\n    return NULL;\n}\n\nint main(void) {\n    pthread_t thr[NB_THREADS];\n\n    for (int i = 0; i < NB_THREADS; i++)\n        pthread_create(&thr[i], NULL, incrementer, NULL);\n\n    for (int i = 0; i < NB_THREADS; i++)\n        pthread_join(thr[i], NULL);\n\n    pthread_mutex_destroy(&mutex);\n    printf(\"compteur = %ld\\n\", compteur);\n    return 0;\n}"
+      },
+      "explanation": "Le programme se fige à cause d'un **déverrouillage manquant**. Dans la boucle de `incrementer`, chaque tour appelle `pthread_mutex_lock(&mutex)` puis incrémente `compteur` — mais **jamais** `pthread_mutex_unlock`. Le verrou est **pris et jamais rendu**. Au **premier** tour, un thread verrouille le mutex et fait son incrément. Au **deuxième** tour du **même thread**, `pthread_mutex_lock(&mutex)` retrouve le mutex **déjà tenu** — par le thread appelant lui-même — et **bloque** ce thread, en attendant une libération qui ne viendra jamais. Les autres threads se bloquent de même dès leur premier `lock`. C'est un **interblocage** : `pthread_join` ne revient jamais, le programme est figé. La correction : **ajouter `pthread_mutex_unlock(&mutex)`** juste après l'incrément. La règle d'or des mutex : **à tout `lock` doit correspondre un `unlock`**, sur tous les chemins de sortie. Une fois le déverrouillage en place, chaque thread libère le mutex après son incrément, les 4 threads progressent tour à tour, et le programme affiche `compteur = 400000`.",
+      "concepts": ["mutex", "pthread-mutex-lock", "pthread-mutex-unlock", "interblocage"],
+      "source": "partiel-2"
+    },
+    {
+      "chapterSlug": "conditions",
+      "type": "CODE_WRITE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Écrivez un programme C qui synchronise des threads par une variable de condition. Le programme lance 6 threads « ouvrier » d'identifiants 1 à 6 ; chacun ajoute son identifiant à la variable partagée `total` et incrémente un compteur `termines`. Un thread « collecteur » attend, sur une variable de condition, que les 6 ouvriers aient fini (`termines == 6`), puis copie `total`. Le programme doit afficher exactement `total = 21`.",
+      "payload": {
+        "spec": "Le programme inclut <pthread.h> et <stdio.h>. Constante NB_OUVRIERS = 6. Variables globales : int termines = 0, long total = 0, un mutex et une variable de condition initialises statiquement (PTHREAD_MUTEX_INITIALIZER, PTHREAD_COND_INITIALIZER). La fonction ouvrier recoit son identifiant (long id = (long) arg) : elle prend le mutex, fait total += id, fait termines++, signale la variable de condition avec pthread_cond_signal, puis rend le mutex. La fonction collecteur recoit un long* (ou l'on copiera total) : elle prend le mutex, attend dans une boucle while (termines < NB_OUVRIERS) en appelant pthread_cond_wait(&cond, &mutex), puis copie *resultat = total et rend le mutex. Le pthread_cond_wait est OBLIGATOIREMENT dans une boucle while testant le predicat, et est appele en tenant le mutex. main cree d'abord le thread collecteur (en lui passant l'adresse d'une variable resultat), puis cree les 6 threads ouvrier en passant a chacun son identifiant converti en void * — (void *) i — comme argument. main joint les 6 ouvriers puis le collecteur, detruit le mutex et la variable de condition, puis affiche 'total = <resultat>'. Comme les 6 ouvriers ajoutent leurs identifiants 1..6, le total vaut 1+2+3+4+5+6 = 21.",
+        "std": "gnu11",
+        "compare": "trimmed",
+        "starterCode": "#include <pthread.h>\n#include <stdio.h>\n\n#define NB_OUVRIERS 6\n\nint termines = 0;          /* nombre d'ouvriers ayant fini */\nlong total = 0;            /* somme des identifiants */\n\npthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;\npthread_cond_t  tous_finis = PTHREAD_COND_INITIALIZER;\n\nvoid *ouvrier(void *arg) {\n    long id = (long) arg;\n    /* TODO : prendre le mutex ; faire total += id et termines++ ;\n       signaler la variable de condition ; rendre le mutex */\n    (void) id;\n    return NULL;\n}\n\nvoid *collecteur(void *arg) {\n    long *resultat = (long *) arg;\n    /* TODO : prendre le mutex ; tant que termines < NB_OUVRIERS,\n       attendre sur la variable de condition (pthread_cond_wait) ;\n       copier *resultat = total ; rendre le mutex */\n    (void) resultat;\n    return NULL;\n}\n\nint main(void) {\n    pthread_t ouvr[NB_OUVRIERS];\n    pthread_t coll;\n    long resultat = 0;\n\n    /* 1. creer le thread collecteur (lui passer &resultat) */\n\n    /* 2. creer les NB_OUVRIERS threads ouvrier, chacun avec son identifiant 1..NB_OUVRIERS */\n\n    /* 3. joindre les ouvriers puis le collecteur */\n\n    /* 4. detruire le mutex et la variable de condition, puis afficher 'total = <resultat>' */\n\n    (void) resultat;\n    return 0;\n}\n",
+        "tests": [
+          { "name": "le collecteur attend les 6 ouvriers et lit total = 21", "stdin": "", "expectedStdout": "total = 21", "compare": "trimmed", "timeoutMs": 5000 }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <pthread.h>\n#include <stdio.h>\n\n#define NB_OUVRIERS 6\n\nint termines = 0;\nlong total = 0;\n\npthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;\npthread_cond_t  tous_finis = PTHREAD_COND_INITIALIZER;\n\nvoid *ouvrier(void *arg) {\n    long id = (long) arg;\n    pthread_mutex_lock(&mutex);\n    total += id;\n    termines++;\n    pthread_cond_signal(&tous_finis);\n    pthread_mutex_unlock(&mutex);\n    return NULL;\n}\n\nvoid *collecteur(void *arg) {\n    long *resultat = (long *) arg;\n    pthread_mutex_lock(&mutex);\n    while (termines < NB_OUVRIERS)\n        pthread_cond_wait(&tous_finis, &mutex);\n    *resultat = total;\n    pthread_mutex_unlock(&mutex);\n    return NULL;\n}\n\nint main(void) {\n    pthread_t ouvr[NB_OUVRIERS];\n    pthread_t coll;\n    long resultat = 0;\n\n    pthread_create(&coll, NULL, collecteur, &resultat);\n\n    for (long i = 1; i <= NB_OUVRIERS; i++)\n        pthread_create(&ouvr[i - 1], NULL, ouvrier, (void *) i);\n\n    for (int i = 0; i < NB_OUVRIERS; i++)\n        pthread_join(ouvr[i], NULL);\n    pthread_join(coll, NULL);\n\n    pthread_mutex_destroy(&mutex);\n    pthread_cond_destroy(&tous_finis);\n    printf(\"total = %ld\\n\", resultat);\n    return 0;\n}"
+      },
+      "explanation": "C'est un **rendez-vous** : le collecteur ne doit lire `total` qu'une fois **les 6 ouvriers terminés**. Un **mutex** protège le couple `(total, termines)` et une **variable de condition** synchronise l'attente. Chaque **ouvrier**, sous le mutex, fait `total += id` et `termines++`, puis **signale** la variable de condition (`pthread_cond_signal`) pour le cas où le collecteur dormirait, et rend le mutex. Le **collecteur**, sous le mutex, teste le prédicat dans un **`while (termines < NB_OUVRIERS)`** : tant qu'il est faux, il appelle `pthread_cond_wait`, qui **libère le mutex** et l'**endort** atomiquement. À chaque réveil, le `while` **re-teste** — protection contre les réveils parasites et contre une condition encore fausse. Quand le 6e ouvrier a fini, le prédicat devient vrai et le collecteur copie `total`. Deux points clés : `pthread_cond_wait` est **dans une boucle `while`** (jamais un `if`) et est appelé **en tenant le mutex**. Les identifiants 1 à 6 donnent invariablement `total = 1 + 2 + 3 + 4 + 5 + 6 = 21`.",
+      "concepts": ["variable-condition", "pthread-cond-wait", "pthread-cond-signal", "predicat-while", "mutex-condition-couple"],
+      "source": "partiel-2"
+    },
+    {
+      "chapterSlug": "fifo-client-serveur",
+      "type": "CODE_WRITE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Écrivez un programme C qui simule un service « longueur d'une chaîne » avec DEUX tubes nommés : `/tmp/req_longueur` pour la requête et `/tmp/rep_longueur` pour la réponse. Le programme crée les deux FIFO puis se dédouble. Le fils joue le serveur : il lit une chaîne sur le FIFO de requête et renvoie sa longueur (un entier) sur le FIFO de réponse. Le père joue le client : il envoie la chaîne `systeme`, lit la longueur et affiche exactement `longueur : 7`. Le père attend le fils, puis le programme supprime les deux FIFO.",
+      "payload": {
+        "spec": "Le programme inclut les en-tetes necessaires (<stdio.h>, <stdlib.h>, <string.h>, <unistd.h>, <errno.h>, <sys/types.h>, <sys/stat.h>, <sys/wait.h>, <fcntl.h>). Il cree DEUX FIFO avec mkfifo(\"/tmp/req_longueur\", 0666) et mkfifo(\"/tmp/rep_longueur\", 0666), en tolerant errno == EEXIST pour chacun. Il appelle fork() (en testant l'echec -1). Dans le fils (serveur) : ouvrir le FIFO de requete avec open(\"/tmp/req_longueur\", O_RDONLY), lire la chaine avec read dans un tampon, terminer la chaine lue par '\\0' a l'indice rendu par read, fermer ; calculer sa longueur avec strlen (un int) ; ouvrir le FIFO de reponse avec open(\"/tmp/rep_longueur\", O_WRONLY), ecrire l'int longueur avec write(fr, &longueur, sizeof(longueur)), fermer, terminer le fils. Dans le pere (client) : ouvrir le FIFO de requete avec open(\"/tmp/req_longueur\", O_WRONLY), ecrire les octets de \"systeme\" avec write(fd, \"systeme\", strlen(\"systeme\")), fermer ; ouvrir le FIFO de reponse avec open(\"/tmp/rep_longueur\", O_RDONLY), lire un int avec read(fr, &longueur, sizeof(longueur)), fermer ; afficher 'longueur : <valeur>' avec printf(\"longueur : %d\\n\", longueur), soit 'longueur : 7' puisque \"systeme\" a 7 caracteres. Le pere attend le fils avec wait(NULL), puis supprime les deux FIFO avec unlink. Les rendez-vous d'ouverture synchronisent automatiquement les open. On envoie la requete en texte mais on renvoie la reponse comme un int binaire.",
+        "std": "gnu11",
+        "compare": "trimmed",
+        "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <errno.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\n#define FIFO_REQ \"/tmp/req_longueur\"\n#define FIFO_REP \"/tmp/rep_longueur\"\n\nint main(void) {\n    /* 1. creer les deux FIFO (tolerer EEXIST) */\n\n    /* 2. fork() */\n    /*    fils (serveur) : lit une chaine sur FIFO_REQ, renvoie sa longueur sur FIFO_REP */\n    /*    pere (client)  : envoie \"systeme\" sur FIFO_REQ, lit la longueur sur FIFO_REP, */\n    /*                     affiche 'longueur : 7' */\n\n    /* 3. le pere attend le fils, puis unlink les deux FIFO */\n\n    return 0;\n}\n",
+        "tests": [
+          { "name": "le client recoit la longueur de sa chaine", "stdin": "", "expectedStdout": "longueur : 7", "compare": "trimmed" }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <errno.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\n#define FIFO_REQ \"/tmp/req_longueur\"\n#define FIFO_REP \"/tmp/rep_longueur\"\n\nint main(void) {\n    if (mkfifo(FIFO_REQ, 0666) == -1 && errno != EEXIST) { perror(\"mkfifo\"); exit(EXIT_FAILURE); }\n    if (mkfifo(FIFO_REP, 0666) == -1 && errno != EEXIST) { perror(\"mkfifo\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* SERVEUR : lit une chaine, renvoie sa longueur */\n        int fd = open(FIFO_REQ, O_RDONLY);\n        if (fd == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        char mot[256];\n        ssize_t n = read(fd, mot, sizeof(mot) - 1);\n        if (n < 0) n = 0;\n        mot[n] = '\\0';\n        close(fd);\n        int longueur = (int) strlen(mot);\n        int fr = open(FIFO_REP, O_WRONLY);\n        if (fr == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        write(fr, &longueur, sizeof(longueur));\n        close(fr);\n        exit(EXIT_SUCCESS);\n    } else {\n        /* CLIENT : envoie \"systeme\", lit la longueur renvoyee */\n        int fd = open(FIFO_REQ, O_WRONLY);\n        if (fd == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        const char *mot = \"systeme\";\n        write(fd, mot, strlen(mot));\n        close(fd);\n        int fr = open(FIFO_REP, O_RDONLY);\n        if (fr == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        int longueur;\n        read(fr, &longueur, sizeof(longueur));\n        close(fr);\n        printf(\"longueur : %d\\n\", longueur);\n        wait(NULL);\n        unlink(FIFO_REQ);\n        unlink(FIFO_REP);\n    }\n    return 0;\n}"
+      },
+      "explanation": "Un vrai service est un **dialogue** : il faut **deux FIFO**, un par sens — `/tmp/req_longueur` pour la requête, `/tmp/rep_longueur` pour la réponse —, car un FIFO est **half-duplex** et le serveur ne peut pas répondre dans le FIFO de requête (lecture destructrice, canal partagé). Le programme crée les deux FIFO (en tolérant `EEXIST`), puis `fork`. Le **fils-serveur** lit la chaîne sur le FIFO de requête, termine le tampon par `'\\0'` à l'indice rendu par `read`, calcule sa longueur avec `strlen`, puis écrit cet `int` sur le FIFO de réponse. Le **père-client** envoie les octets de `\"systeme\"`, puis lit la longueur et affiche `longueur : 7` — `\"systeme\"` comptant 7 caractères. Les **rendez-vous d'ouverture** synchronisent les `open` des deux processus sans aucun code explicite. La réponse est échangée comme un **`int` binaire** (`sizeof(int)` octets) : le récepteur sait exactement combien lire. Le père **`wait`** la fin du fils, puis **`unlink`** les deux fichiers FIFO.",
+      "concepts": ["fifo-client-serveur", "communication-bidirectionnelle", "rendez-vous-ouverture", "mkfifo-primitive", "unlink-fifo"],
+      "source": "partiel-2"
+    }
+  ]
+}

@@ -1,0 +1,338 @@
+---
+title: "Schéma client/serveur avec FIFO"
+slug: fifo-client-serveur
+order: 3
+estimatedReadMin: 19
+concepts: [fifo-client-serveur, fifo-bien-connu, fifo-retour, open-fifo, rendez-vous-ouverture, communication-bidirectionnelle, eof-tube, sigpipe-epipe, unlink-fifo, processus-non-apparentes]
+source: "Cours 3 — Les tubes nommés (FIFO)"
+---
+
+Les deux chapitres précédents ont donné tous les outils : `mkfifo` pour **créer** un tube nommé, `open` (et son **rendez-vous**) pour s'y **raccorder**, `read`/`write` pour **échanger**. Ce chapitre les assemble dans le **patron** qui justifie à lui seul l'existence des FIFO : le **schéma client/serveur**.
+
+## Pourquoi le FIFO est fait pour le client/serveur
+
+Un FIFO relie des **processus quelconques**, **sans lien de parenté** — chapitre 1. C'est exactement la situation d'un **serveur** et de ses **clients** :
+
+- le **serveur** est un programme lancé une fois, qui **attend** et **traite** des demandes ;
+- les **clients** sont des programmes lancés **séparément**, **plus tard**, peut-être par d'autres utilisateurs, et qui **adressent une requête** au serveur.
+
+Aucun de ces processus n'a créé l'autre. Un tube anonyme serait inutilisable. Le FIFO, lui, offre le **point de rendez-vous nommé** dont ils ont besoin.
+
+> Le **schéma client/serveur** : un processus **serveur** crée un FIFO **bien connu** (au nom fixé d'avance, que tout le monde connaît) et y **lit les requêtes en boucle** ; chaque processus **client** ouvre ce FIFO et y **écrit sa requête**. Le FIFO bien connu est le **point d'entrée public** du service.
+
+## Premier niveau : le service à sens unique
+
+Commençons simple, par un service qui **ne renvoie rien** : les clients **déposent** des messages, le serveur les **lit et les affiche**. Un seul FIFO suffit.
+
+```text
+   Client 1  --écrit-->                          .
+   Client 2  --écrit-->  [ FIFO "/tmp/service" ]  --lit-->  Serveur
+   Client 3  --écrit-->                          .
+```
+
+### Le serveur
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <errno.h>
+
+#define FIFO_SERVICE "/tmp/service"
+
+/* serveur.c : cree le FIFO bien connu, lit les requetes en boucle */
+int main(void) {
+    /* 1. creer le FIFO bien connu ; tolerer EEXIST (deja la).
+       Mode 0622 : le serveur-proprietaire lit (r), groupe et autres ecrivent (w)
+       — les bits w suffisent aux clients pour ouvrir le FIFO en ecriture. */
+    if (mkfifo(FIFO_SERVICE, 0622) == -1 && errno != EEXIST) {
+        perror("mkfifo");
+        exit(EXIT_FAILURE);
+    }
+
+    /* 2. ouvrir le FIFO en LECTURE.
+       Bloque (rendez-vous) tant qu'aucun client n'ouvre en ecriture. */
+    int fd = open(FIFO_SERVICE, O_RDONLY);
+    if (fd == -1) { perror("open"); exit(EXIT_FAILURE); }
+
+    /* 3. boucle de service : lire et traiter les requetes */
+    char buf[256];
+    ssize_t n;
+    while ((n = read(fd, buf, sizeof(buf) - 1)) > 0) {
+        buf[n] = '\0';
+        printf("[serveur] requete recue : %s\n", buf);
+    }
+    /* read a rendu 0 : plus aucun client connecte en ecriture */
+
+    /* 4. menage */
+    close(fd);
+    unlink(FIFO_SERVICE);          /* effacer le FIFO de l'arborescence */
+    return 0;
+}
+```
+
+### Le client
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <fcntl.h>
+
+#define FIFO_SERVICE "/tmp/service"
+
+/* client.c : ouvre le FIFO bien connu et y depose une requete */
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        fprintf(stderr, "usage : %s <message>\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    /* le client NE cree PAS le FIFO : il l'ouvre, suppose deja cree.
+       open en ECRITURE : bloque tant que le serveur n'a pas ouvert en lecture. */
+    int fd = open(FIFO_SERVICE, O_WRONLY);
+    if (fd == -1) { perror("open"); exit(EXIT_FAILURE); }
+
+    write(fd, argv[1], strlen(argv[1]));   /* envoyer la requete */
+    close(fd);
+    return 0;
+}
+```
+
+> ⚠️ **C'est le serveur, et lui seul, qui appelle `mkfifo`.** Le FIFO est une ressource **publique** : il doit exister **avant** qu'un client se présente. Un client qui ferait lui aussi `mkfifo` se heurterait à `EEXIST`, et surtout brouillerait la responsabilité de la **destruction** (`unlink`). Règle nette : le **serveur crée** le FIFO au démarrage et le **détruit** à l'arrêt ; le **client se contente d'`open`**.
+
+Ce schéma marche, mais il a une **faiblesse** déjà signalée au chapitre 2 : quand **tous** les clients se sont déconnectés, le `read` du serveur rend `0` et la **boucle se termine**. Si l'on veut un serveur qui **survit** entre deux clients, on emploie l'astuce suivante.
+
+> ⚠️ Pour qu'un serveur ne s'**arrête pas** dès le départ de tous ses clients, une technique classique consiste à ce que **le serveur ouvre lui-même le FIFO en écriture**, en plus de son ouverture en lecture (`open(FIFO_SERVICE, O_WRONLY)` après l'ouverture en lecture). Il existe alors **toujours au moins un écrivain** — le serveur — et le `read` ne rend **jamais `0`** : il **bloque** simplement en attendant le prochain client. Le serveur garde ce descripteur d'écriture ouvert sans jamais l'utiliser ; il sert uniquement à **maintenir le tube vivant**.
+
+## Le vrai défi : renvoyer une réponse au client
+
+Le service précédent est **à sens unique**. Or un vrai service est un **dialogue** : le client envoie une **requête**, le serveur renvoie une **réponse**. Comment le serveur **répond-il** à un client ?
+
+L'idée naïve — « le serveur réécrit la réponse dans le FIFO bien connu » — ne marche **pas**, pour deux raisons :
+
+1. la **lecture est destructrice** et le FIFO est **partagé** : si le serveur écrit la réponse dans le FIFO bien connu, c'est **n'importe quel processus** lisant ce FIFO qui la récupérera — peut-être le serveur lui-même, ou un autre client. Rien ne garantit qu'elle parvienne au **bon** client ;
+2. plusieurs clients peuvent dialoguer **en même temps** : un FIFO de retour unique **mélangerait** les réponses.
+
+Il faut donc un **canal de retour privé**, **propre à chaque client**.
+
+> **La technique du FIFO de retour.** Pour recevoir sa réponse, **chaque client crée son propre FIFO de retour** — un FIFO **privé**, au nom **unique** (typiquement construit à partir de son **PID**, garanti unique : `/tmp/rep_4271`). Le client **transmet ce nom au serveur** à l'intérieur même de sa requête. Le serveur, ayant reçu la requête **et** le nom du FIFO de retour, **ouvre ce FIFO de retour en écriture** et y dépose la réponse — qui parvient ainsi **au seul client concerné**.
+
+### Le mécanisme, étape par étape
+
+```text
+                          (1) requete = "PID + arguments"
+   CLIENT (PID 4271)  -----------------------------------> [ FIFO bien connu ]
+        |                                                          |
+        |  (2) cree son FIFO prive  /tmp/rep_4271                   | lit
+        |                                                          v
+        |                                                       SERVEUR
+        |                                                          |
+        |        (3) le serveur traite, puis ouvre /tmp/rep_4271    |
+        | <----------------------------------------------------    |
+        |          (4) reponse, dans le FIFO de retour du client    |
+        v
+   le client lit SA reponse dans /tmp/rep_4271, puis l'unlink
+```
+
+1. le client **crée** son FIFO de retour, à un nom **unique** dérivé de son **PID** (`getpid()`) ;
+2. le client **ouvre le FIFO bien connu** en écriture et y **envoie sa requête** ; la requête **contient son PID** (donc le serveur peut reconstituer le nom du FIFO de retour) **et les données** de la demande ;
+3. le serveur **lit la requête**, en extrait le **PID** et les **arguments**, **calcule** le résultat, puis **ouvre le FIFO de retour** `/tmp/rep_<PID>` en écriture ;
+4. le serveur **écrit la réponse** dans ce FIFO de retour ; le client, qui **lit** son propre FIFO de retour, la **reçoit** — et lui seul ;
+5. le client **referme** et **`unlink`** son FIFO de retour : il ne laisse rien traîner.
+
+Les **rendez-vous d'ouverture** orchestrent tout cela sans une seule ligne de synchronisation explicite : quand le serveur ouvre `/tmp/rep_<PID>` en écriture, son `open` **attend** que le client ait ouvert ce même FIFO en lecture — les deux se retrouvent **automatiquement**.
+
+## Exemple complet : le service « volume de piscine »
+
+Mettons tout en œuvre sur un cas concret, inspiré du TP : le client envoie **trois dimensions** d'une piscine (en centimètres) ; le serveur renvoie le **nombre de litres** nécessaires à son remplissage. Un litre vaut 1000 cm³.
+
+La requête a une **structure**, donc on définit un **type** partagé par les deux programmes (en pratique, dans un en-tête commun `protocole.h`). C'est plus robuste que d'échanger du texte à analyser.
+
+```c
+/* protocole.h : type d'echange partage entre client et serveur */
+#ifndef PROTOCOLE_H
+#define PROTOCOLE_H
+
+#define FIFO_SERVICE "/tmp/piscine"     /* le FIFO bien connu du service */
+
+/* une requete : le PID du client (pour calculer son FIFO de retour)
+   et les trois dimensions de la piscine, en centimetres */
+typedef struct {
+    int pid;
+    int longueur;
+    int largeur;
+    int profondeur;
+} Requete;
+
+#endif
+```
+
+### Le serveur
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <errno.h>
+#include "protocole.h"
+
+int main(void) {
+    /* ecrire sur un FIFO de retour deserte ne doit PAS tuer le serveur */
+    signal(SIGPIPE, SIG_IGN);
+
+    /* 1. creer le FIFO bien connu (tolerer EEXIST) */
+    if (mkfifo(FIFO_SERVICE, 0622) == -1 && errno != EEXIST) {
+        perror("mkfifo"); exit(EXIT_FAILURE);
+    }
+
+    /* 2. ouvrir le FIFO bien connu en LECTURE */
+    int fd = open(FIFO_SERVICE, O_RDONLY);
+    if (fd == -1) { perror("open service"); exit(EXIT_FAILURE); }
+
+    /* 2 bis. ouvrir aussi le FIFO en ECRITURE : il existe ainsi toujours
+       un ecrivain, donc read ne rendra jamais 0 -> le serveur ne s'arrete
+       pas entre deux clients, il bloque en attendant la requete suivante. */
+    int fd_garde = open(FIFO_SERVICE, O_WRONLY);
+    if (fd_garde == -1) { perror("open garde"); exit(EXIT_FAILURE); }
+
+    /* 3. boucle de service */
+    Requete req;
+    for (;;) {
+        ssize_t n = read(fd, &req, sizeof(req));
+        if (n == -1) { perror("read"); continue; }
+        if (n != sizeof(req)) continue;        /* requete incomplete : ignoree */
+
+        /* 3a. calcul du service : volume en cm3, puis litres (1 L = 1000 cm3) */
+        long volume = (long) req.longueur * req.largeur * req.profondeur;
+        long litres = volume / 1000;
+        printf("[serveur] client %d : %dx%dx%d cm -> %ld L\n",
+               req.pid, req.longueur, req.largeur, req.profondeur, litres);
+
+        /* 3b. construire le nom du FIFO de retour de CE client (a partir du PID) */
+        char fifoRetour[64];
+        snprintf(fifoRetour, sizeof(fifoRetour), "/tmp/rep_%d", req.pid);
+
+        /* 3c. ouvrir le FIFO de retour du client et y ecrire la reponse.
+           open en ecriture : rendez-vous avec le open en lecture du client. */
+        int fr = open(fifoRetour, O_WRONLY);
+        if (fr == -1) { perror("open retour"); continue; }   /* client disparu */
+        if (write(fr, &litres, sizeof(litres)) == -1)
+            perror("write retour");                          /* EPIPE possible */
+        close(fr);
+    }
+    /* boucle infinie : en pratique, l'arret se ferait sur un signal,
+       avec alors close(fd), close(fd_garde) et unlink(FIFO_SERVICE). */
+    return 0;
+}
+```
+
+### Le client
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include "protocole.h"
+
+int main(int argc, char *argv[]) {
+    if (argc != 4) {
+        fprintf(stderr, "usage : %s <longueur> <largeur> <profondeur>\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    /* 1. construire le nom de SON FIFO de retour, unique grace au PID */
+    char fifoRetour[64];
+    snprintf(fifoRetour, sizeof(fifoRetour), "/tmp/rep_%d", (int) getpid());
+
+    /* 2. creer ce FIFO de retour prive */
+    if (mkfifo(fifoRetour, 0644) == -1) {
+        perror("mkfifo retour"); exit(EXIT_FAILURE);
+    }
+
+    /* 3. preparer la requete : PID (pour le retour) + les trois dimensions */
+    Requete req;
+    req.pid        = (int) getpid();
+    req.longueur   = atoi(argv[1]);
+    req.largeur    = atoi(argv[2]);
+    req.profondeur = atoi(argv[3]);
+
+    /* 4. ouvrir le FIFO bien connu et y envoyer la requete */
+    int fd = open(FIFO_SERVICE, O_WRONLY);
+    if (fd == -1) { perror("open service"); unlink(fifoRetour); exit(EXIT_FAILURE); }
+    write(fd, &req, sizeof(req));
+    close(fd);
+
+    /* 5. ouvrir SON FIFO de retour en lecture et y attendre la reponse.
+       open en lecture : rendez-vous avec le open en ecriture du serveur. */
+    int fr = open(fifoRetour, O_RDONLY);
+    if (fr == -1) { perror("open retour"); unlink(fifoRetour); exit(EXIT_FAILURE); }
+
+    long litres;
+    ssize_t n = read(fr, &litres, sizeof(litres));
+    if (n == sizeof(litres))
+        printf("[client] remplissage : %ld litres\n", litres);
+    else
+        fprintf(stderr, "[client] reponse invalide\n");
+    close(fr);
+
+    /* 6. menage : le client efface SON FIFO de retour */
+    unlink(fifoRetour);
+    return 0;
+}
+```
+
+### Le déroulement
+
+```text
+$ ./serveur &                       # lance une fois, tourne en tache de fond
+$ ./client 500 300 150              # un client
+[serveur] client 8842 : 500x300x150 cm -> 22500 L
+[client] remplissage : 22500 litres
+$ ./client 200 200 120              # un autre client, plus tard
+[serveur] client 8857 : 200x200x120 cm -> 4800 L
+[client] remplissage : 4800 litres
+```
+
+Chaque client reçoit **sa** réponse, dans **son** FIFO de retour privé. Le serveur enchaîne les clients sans jamais s'arrêter, grâce au descripteur de garde.
+
+## Les pièges du schéma client/serveur
+
+> ⚠️ **Qui crée quoi.** Le **serveur** crée le **FIFO bien connu** (`mkfifo` une fois, tolérer `EEXIST`). Chaque **client** crée **son propre FIFO de retour** (`mkfifo` à un nom **unique**). Ne pas mélanger : le client ne crée **jamais** le FIFO bien connu, le serveur ne crée **jamais** les FIFO de retour.
+
+> ⚠️ **Un nom de retour vraiment unique.** Si deux clients utilisaient le **même** nom de FIFO de retour, leurs réponses se **mélangeraient**. Le **PID** est le choix naturel : il est **unique** à un instant donné sur la machine. D'où le motif `/tmp/rep_<PID>`, et le `pid` placé **dans la requête** pour que le serveur sache à **quel** FIFO de retour répondre.
+
+> ⚠️ **Le serveur doit ignorer `SIGPIPE`.** Entre l'envoi de sa requête et la lecture de la réponse, un client peut **disparaître** (interruption, plantage). Le serveur, en écrivant dans un FIFO de retour **sans lecteur**, recevrait alors `SIGPIPE` — et serait **tué**, privant tous les autres clients de service. Le serveur **ignore** `SIGPIPE` (`signal(SIGPIPE, SIG_IGN)`) et **teste le retour** de `write` (`EPIPE`) : un client perdu ne doit jamais faire tomber le serveur.
+
+> ⚠️ **Ne pas laisser de FIFO orphelins.** Les fichiers FIFO sont **persistants**. Chaque processus **`unlink`** ce qu'il a créé : le client efface son FIFO de retour en fin de requête (y compris sur les chemins d'erreur), le serveur efface le FIFO bien connu à son arrêt. Un `unlink` oublié laisse un fichier `p` traîner et fait **échouer le `mkfifo` suivant** (`EEXIST`).
+
+> ⚠️ **Échanger une structure de taille fixe est plus sûr que du texte.** En transmettant un `struct Requete` de taille connue, le serveur sait **exactement** combien d'octets lire et comment les interpréter. Il doit tout de même **vérifier** que `read` a bien rendu `sizeof(Requete)` octets avant d'exploiter la requête — un `read` peut toujours rendre moins que demandé.
+
+## Récapitulatif du patron
+
+| Acteur | Crée | Ouvre en écriture | Ouvre en lecture | Détruit (`unlink`) |
+|---|---|---|---|---|
+| **Serveur** | le FIFO **bien connu** | FIFO bien connu (garde), FIFO **de retour** du client | FIFO **bien connu** | le FIFO bien connu (à l'arrêt) |
+| **Client** | **son** FIFO de retour | FIFO **bien connu** | **son** FIFO de retour | **son** FIFO de retour |
+
+Ce patron — **un FIFO bien connu pour les requêtes, un FIFO de retour par client pour les réponses** — est la manière **canonique** de bâtir un service local avec des tubes nommés. C'est aussi une excellente préparation au **modèle client/serveur** que l'on retrouvera, à l'échelle du **réseau**, avec les **sockets** (Module 7).
+
+> **À retenir**
+> - Le FIFO est l'outil idéal du **schéma client/serveur** local : il relie des processus **non apparentés** via un **point de rendez-vous nommé**.
+> - Le **serveur** crée un **FIFO bien connu** (nom fixé d'avance), l'ouvre en lecture et y **lit les requêtes en boucle** ; chaque **client** ouvre ce FIFO et y **écrit sa requête**.
+> - Pour que le serveur **ne s'arrête pas** quand tous les clients sont partis (`read` qui rendrait `0`), il **ouvre lui-même** le FIFO bien connu **en écriture** : il reste toujours un écrivain, le `read` se contente de **bloquer**.
+> - Pour la **réponse**, chaque client crée son **FIFO de retour privé**, à un nom **unique** dérivé de son **PID**, et **transmet ce PID dans la requête** ; le serveur ouvre ce FIFO de retour en écriture et y dépose la réponse, qui parvient **au seul client concerné**.
+> - Les **rendez-vous d'ouverture** synchronisent client et serveur **sans code explicite** ; échanger une **structure de taille fixe** rend le protocole robuste (vérifier la taille rendue par `read`).
+> - Pièges : **qui crée quoi** (serveur ↔ FIFO bien connu, client ↔ FIFO de retour), **noms de retour uniques** (PID), le serveur **ignore `SIGPIPE`** (client disparu), et **chacun `unlink`** ce qu'il a créé pour ne pas laisser de FIFO orphelin.

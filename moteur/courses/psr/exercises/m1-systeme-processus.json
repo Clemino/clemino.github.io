@@ -1,0 +1,1605 @@
+[
+  {
+    "chapterSlug": "os-role",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle partie du système d'exploitation est qualifiée de « partie la plus critique » et constitue le premier logiciel chargé en mémoire au démarrage ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Les outils système"
+        },
+        {
+          "id": "b",
+          "label": "Le noyau (kernel)"
+        },
+        {
+          "id": "c",
+          "label": "Le compilateur C"
+        },
+        {
+          "id": "d",
+          "label": "L'interpréteur de commandes (shell)"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Le **noyau** (kernel) est la partie la plus critique du système d'exploitation : il permet au matériel et aux logiciels de communiquer et de former un tout cohérent. C'est pour cette raison qu'il est le **premier logiciel chargé en mémoire** au démarrage de la machine. Les outils système, eux, ne font que fournir une interface d'accès au système.",
+    "concepts": [
+      "noyau",
+      "systeme-exploitation"
+    ]
+  },
+  {
+    "chapterSlug": "os-role",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Du point de vue « machine étendue », le système d'exploitation est avant tout :",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un ordonnanceur qui répartit le processeur entre les programmes"
+        },
+        {
+          "id": "b",
+          "label": "Une interface qui masque la complexité du matériel et le rend plus simple à programmer"
+        },
+        {
+          "id": "c",
+          "label": "Un mécanisme de protection contre les accès concurrents aux ressources"
+        },
+        {
+          "id": "d",
+          "label": "Un pilote spécifique attaché à chaque modèle de périphérique"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Le système d'exploitation remplit une **double fonction**. En tant que **machine étendue** (ou machine virtuelle), il est l'**interface** entre les applications et le matériel : il masque la complexité du matériel brut et offre des opérations abstraites et simples (« lire un bloc du fichier » au lieu de piloter le contrôleur de disque). L'ordonnancement et la protection relèvent de l'autre fonction, celle de **gestionnaire de ressources**.",
+    "concepts": [
+      "systeme-exploitation"
+    ]
+  },
+  {
+    "chapterSlug": "os-role",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un programme utilisateur peut accéder directement au matériel, sans passer par le système d'exploitation.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Un programme utilisateur **ne peut pas accéder directement au matériel** : ce serait dangereux (un programme bogué planterait toute la machine) et non portable. Pour obtenir un service du noyau — par exemple lire sur le disque — il effectue un **appel système**, qui fait basculer le processeur en mode noyau le temps de rendre ce service.",
+    "concepts": [
+      "appel-systeme",
+      "mode-noyau-utilisateur"
+    ]
+  },
+  {
+    "chapterSlug": "os-role",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "La quasi-totalité des appels système POSIX renvoient -1 en cas d'échec ; il faut donc toujours tester leur valeur de retour.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. C'est une convention systématique de la programmation système UNIX : un appel système qui échoue renvoie en général **-1** et positionne la variable globale `errno`. On ne doit **jamais supposer qu'un appel système a réussi** : on teste sa valeur de retour, et on diagnostique l'erreur avec `perror()`, qui affiche un message clair correspondant à `errno`.",
+    "concepts": [
+      "appel-systeme"
+    ]
+  },
+  {
+    "chapterSlug": "os-role",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi ces affirmations sur les modes du processeur, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le code applicatif s'exécute en mode utilisateur, à droits restreints."
+        },
+        {
+          "id": "b",
+          "label": "Le code du système d'exploitation s'exécute en mode noyau, à droits étendus."
+        },
+        {
+          "id": "c",
+          "label": "Un appel système fait basculer le processeur du mode utilisateur vers le mode noyau."
+        },
+        {
+          "id": "d",
+          "label": "Le mode noyau est aussi appelé mode superviseur ou mode privilégié."
+        },
+        {
+          "id": "e",
+          "label": "Le mode utilisateur dispose de plus de droits que le mode noyau."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Le processeur fonctionne dans deux modes. Le **mode utilisateur** (droits restreints) exécute le code applicatif ; le **mode noyau** — aussi appelé mode superviseur ou mode privilégié — exécute le code du système avec des droits étendus. Un appel système consiste précisément à **franchir cette frontière** : basculer en mode noyau, exécuter le service, puis revenir en mode utilisateur. L'affirmation (e) est fausse : c'est le mode noyau qui a le plus de droits, pas le mode utilisateur.",
+    "concepts": [
+      "mode-noyau-utilisateur",
+      "appel-systeme"
+    ]
+  },
+  {
+    "chapterSlug": "os-role",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le système d'exploitation, en tant que gestionnaire de ressources, doit pour chacune des ressources de la machine :",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Connaître à tout moment l'utilisateur de la ressource"
+        },
+        {
+          "id": "b",
+          "label": "Accorder l'usage de la ressource de manière équitable"
+        },
+        {
+          "id": "c",
+          "label": "Éviter les conflits d'accès entre programmes ou utilisateurs"
+        },
+        {
+          "id": "d",
+          "label": "Réécrire le code des applications pour qu'elles partagent la ressource"
+        },
+        {
+          "id": "e",
+          "label": "Supprimer définitivement les ressources peu utilisées"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Comme gestionnaire de ressources, le système d'exploitation doit, pour **chaque** ressource (processeurs, mémoires, périphériques d'E/S) : en **connaître l'utilisateur** à tout moment, en **accorder l'usage équitablement** et **éviter les conflits** d'accès. Ses deux tâches essentielles sont donc le **partage** et la **protection** des ressources. Il ne réécrit jamais les applications, et ne supprime pas de ressources matérielles.",
+    "concepts": [
+      "systeme-exploitation"
+    ]
+  },
+  {
+    "chapterSlug": "os-role",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque appel système POSIX à la famille de services à laquelle il appartient.",
+    "payload": {
+      "left": [
+        {
+          "id": "open",
+          "label": "open"
+        },
+        {
+          "id": "fork",
+          "label": "fork"
+        },
+        {
+          "id": "socket",
+          "label": "socket"
+        },
+        {
+          "id": "read",
+          "label": "read"
+        }
+      ],
+      "right": [
+        {
+          "id": "fichiers",
+          "label": "Gestion des fichiers"
+        },
+        {
+          "id": "processus",
+          "label": "Gestion des processus"
+        },
+        {
+          "id": "reseau",
+          "label": "Communications inter-machines"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "open": "fichiers",
+        "fork": "processus",
+        "socket": "reseau",
+        "read": "fichiers"
+      }
+    },
+    "explanation": "POSIX classe les appels système selon le service rendu, en trois grandes familles. **Gestion des fichiers** : `open`, `close`, `read`, `write`, `lseek`… **Gestion des processus** : `fork`, `exec`, `wait`, `exit`, `pipe`… — ce sont les appels au cœur du Module 1. **Communications inter-machines** : `socket`, `bind`, `listen`, `connect`, `accept`… `open` et `read` relèvent tous deux de la **gestion des fichiers**, `fork` des processus, `socket` du réseau. Plusieurs appels peuvent appartenir à la même famille.",
+    "concepts": [
+      "appel-systeme"
+    ]
+  },
+  {
+    "chapterSlug": "os-role",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Lors d'un appel système, le passage du programme utilisateur au noyau et le retour se déroulent en quatre temps. Remettez ces étapes dans l'ordre.",
+    "payload": {
+      "items": [
+        {
+          "id": "retour",
+          "label": "Revenir en mode utilisateur"
+        },
+        {
+          "id": "bascule",
+          "label": "Basculer en mode noyau"
+        },
+        {
+          "id": "controle",
+          "label": "Rendre le contrôle au programme utilisateur"
+        },
+        {
+          "id": "service",
+          "label": "Invoquer le système d'exploitation (exécuter le service demandé)"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "bascule",
+        "service",
+        "retour",
+        "controle"
+      ]
+    },
+    "explanation": "Un appel système consiste à franchir la frontière entre mode utilisateur et mode noyau, en quatre temps : (1) **basculer en mode noyau** ; (2) **invoquer le système d'exploitation**, c'est-à-dire exécuter le service demandé ; (3) **revenir en mode utilisateur** ; (4) **rendre le contrôle** au programme utilisateur, qui reprend son exécution là où il s'était arrêté.",
+    "concepts": [
+      "appel-systeme",
+      "mode-noyau-utilisateur"
+    ]
+  },
+  {
+    "chapterSlug": "os-role",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 2,
+    "prompt": "Complétez ce résumé du rôle du système d'exploitation avec les termes manquants.",
+    "payload": {
+      "template": "Un ordinateur s'organise en trois couches : les applications, le système d'exploitation et le {{c1}}. Le système d'exploitation se compose de deux parties : le {{c2}}, qui est la partie la plus critique, et les outils système. Il remplit une double fonction : machine {{c3}} et gestionnaire de {{c4}}.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "md",
+          "placeholder": "couche basse"
+        },
+        {
+          "id": "c2",
+          "width": "md",
+          "placeholder": "partie critique"
+        },
+        {
+          "id": "c3",
+          "width": "sm"
+        },
+        {
+          "id": "c4",
+          "width": "md"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": "matériel",
+        "c2": [
+          "noyau",
+          "kernel"
+        ],
+        "c3": "étendue",
+        "c4": "ressources"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Les trois couches superposées sont : **applications**, **système d'exploitation**, **matériel** (la couche la plus basse). Le système d'exploitation se compose du **noyau** (la partie critique, premier logiciel chargé) et des **outils système**. Sa double fonction : **machine étendue** (interface simple masquant la complexité du matériel) et **gestionnaire de ressources** (partage équitable et protection des accès).",
+    "concepts": [
+      "systeme-exploitation",
+      "noyau"
+    ]
+  },
+  {
+    "chapterSlug": "processus-pid",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la différence essentielle entre un programme et un processus ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un programme est écrit en C, un processus en langage machine"
+        },
+        {
+          "id": "b",
+          "label": "Un programme est une entité passive (un fichier exécutable) ; un processus est une entité active (un programme en cours d'exécution)"
+        },
+        {
+          "id": "c",
+          "label": "Un programme s'exécute en mémoire, un processus sur le disque"
+        },
+        {
+          "id": "d",
+          "label": "Il n'y a aucune différence, les deux termes sont synonymes"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Un **programme** est une entité **passive** : un fichier exécutable stocké sur le disque, une suite d'instructions inertes. Un **processus** est une entité **active** : c'est un programme **en cours d'exécution**, avec un jeu de données particulier et son propre contexte (registres, pile, données, fichiers ouverts). Un même programme peut donner naissance à plusieurs processus simultanés.",
+    "concepts": [
+      "processus"
+    ]
+  },
+  {
+    "chapterSlug": "processus-pid",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quel processus est l'ancêtre de tous les autres processus sous UNIX, et quel est son PID ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le processus `bash`, de PID 0"
+        },
+        {
+          "id": "b",
+          "label": "Le processus `init` (ou `systemd`), de PID 1"
+        },
+        {
+          "id": "c",
+          "label": "Le processus `kernel`, de PID -1"
+        },
+        {
+          "id": "d",
+          "label": "Le dernier processus créé, de PID 65535"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Sous UNIX, un premier processus **`init`** (ou **`systemd`** sur les systèmes Linux modernes) est créé au démarrage avec un **PID égal à 1**. C'est l'**ancêtre de tous les processus** : il se trouve à la racine de l'arborescence. Tout processus, en remontant ses PPID successifs, finit toujours par atteindre `init`.",
+    "concepts": [
+      "processus-init",
+      "arborescence-processus"
+    ]
+  },
+  {
+    "chapterSlug": "processus-pid",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Deux processus peuvent communiquer simplement en modifiant la même variable globale, puisque tous deux exécutent le même programme.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Chaque processus possède son propre **espace d'adressage**, une zone de mémoire virtuelle qui lui est **strictement privée**. Un processus ne peut pas lire ou écrire dans la mémoire d'un autre. Même s'ils exécutent le même programme, deux processus ont chacun leur propre copie des variables globales : modifier la variable dans l'un n'a aucun effet dans l'autre. Pour échanger des données, il faut un mécanisme explicite de **communication inter-processus** (IPC).",
+    "concepts": [
+      "espace-adressage",
+      "processus"
+    ]
+  },
+  {
+    "chapterSlug": "processus-pid",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi ces affirmations sur l'arborescence des processus UNIX, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Chaque processus a un et un seul père."
+        },
+        {
+          "id": "b",
+          "label": "Un processus père peut avoir plusieurs processus fils."
+        },
+        {
+          "id": "c",
+          "label": "Un processus peut avoir deux pères différents."
+        },
+        {
+          "id": "d",
+          "label": "Le PID identifie un processus de façon unique ; le PPID est le PID de son père."
+        },
+        {
+          "id": "e",
+          "label": "Les processus forment un arbre dont la racine est `init`."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "d",
+        "e"
+      ]
+    },
+    "explanation": "Le modèle UNIX repose sur une règle fondamentale : chaque processus a **un seul père**, mais un père peut avoir **plusieurs fils**. Ces deux règles ont une conséquence géométrique : les processus s'organisent en **arbre**, dont la racine est `init` (PID 1). Le **PID** identifie un processus de manière unique, et le **PPID** est le PID de son père. L'affirmation (c) est fausse : un processus n'a jamais deux pères.",
+    "concepts": [
+      "arborescence-processus",
+      "pid",
+      "ppid"
+    ]
+  },
+  {
+    "chapterSlug": "processus-pid",
+    "type": "MATCHING",
+    "difficulty": 1,
+    "points": 2,
+    "prompt": "Associez chaque appel système à l'information qu'il renvoie. Tous trois sont déclarés dans <unistd.h> et ne prennent aucun argument.",
+    "payload": {
+      "left": [
+        {
+          "id": "getpid",
+          "label": "getpid()"
+        },
+        {
+          "id": "getppid",
+          "label": "getppid()"
+        },
+        {
+          "id": "getpgrp",
+          "label": "getpgrp()"
+        }
+      ],
+      "right": [
+        {
+          "id": "courant",
+          "label": "Le PID du processus courant"
+        },
+        {
+          "id": "pere",
+          "label": "Le PID du processus père"
+        },
+        {
+          "id": "groupe",
+          "label": "Le PID du groupe du processus courant"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "getpid": "courant",
+        "getppid": "pere",
+        "getpgrp": "groupe"
+      }
+    },
+    "explanation": "Un processus peut interroger le système pour connaître son identité. `getpid()` renvoie le **PID du processus courant** ; `getppid()` renvoie le **PID du processus père** ; `getpgrp()` renvoie le **PID du groupe** du processus courant. Les trois sont déclarés dans `<unistd.h>` et ne prennent aucun argument. Leur valeur est de type `pid_t`.",
+    "concepts": [
+      "pid",
+      "ppid",
+      "processus"
+    ]
+  },
+  {
+    "chapterSlug": "processus-pid",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Classez ces segments de l'espace d'adressage d'un processus, du segment situé aux adresses les plus basses jusqu'à celui situé aux adresses les plus hautes.",
+    "payload": {
+      "items": [
+        {
+          "id": "pile",
+          "label": "La pile (variables locales, appels de fonctions)"
+        },
+        {
+          "id": "code",
+          "label": "Le segment de code (les instructions du programme)"
+        },
+        {
+          "id": "donnees",
+          "label": "Le segment de données (variables globales et statiques)"
+        },
+        {
+          "id": "tas",
+          "label": "Le tas (mémoire allouée dynamiquement par malloc)"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "code",
+        "donnees",
+        "tas",
+        "pile"
+      ]
+    },
+    "explanation": "L'espace d'adressage d'un processus est structuré en segments. Des adresses **basses** vers les adresses **hautes** : le **segment de code** (les instructions, en lecture seule), le **segment de données** (variables globales et statiques), le **tas** (mémoire dynamique de `malloc`, qui croît vers le haut), et enfin la **pile** (variables locales et appels de fonctions, qui croît vers le bas). Le tas et la pile croissent l'un vers l'autre.",
+    "concepts": [
+      "espace-adressage"
+    ]
+  },
+  {
+    "chapterSlug": "processus-pid",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez ce programme qui affiche le PID du processus courant et celui de son père.",
+    "payload": {
+      "template": "#include <stdio.h>\n#include <unistd.h>\n\nint main(void) {\n    printf(\"Je suis le processus %d, \", (int) {{f1}}());\n    printf(\"mon pere est %d.\\n\", (int) {{f2}}());\n    return 0;\n}",
+      "slots": [
+        {
+          "id": "f1",
+          "width": "sm",
+          "hint": "PID du processus courant"
+        },
+        {
+          "id": "f2",
+          "width": "sm",
+          "hint": "PID du processus père"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "f1": "getpid",
+        "f2": "getppid"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "`getpid()` renvoie le **PID du processus courant** et `getppid()` renvoie le **PID du processus père**. Le type `pid_t` renvoyé est un type entier ; on l'affiche en pratique avec `%d` après une conversion explicite en `int`. Lancé depuis un terminal, ce programme affiche comme PPID le PID du **shell** qui l'a lancé.",
+    "concepts": [
+      "pid",
+      "ppid"
+    ]
+  },
+  {
+    "chapterSlug": "processus-pid",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le PID d'un processus ne change jamais durant toute sa vie. Quelle est la sortie exacte de ce programme ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <unistd.h>\n\nint main(void) {\n    pid_t a = getpid();\n    pid_t b = getpid();\n    if (a == b) {\n        printf(\"identiques\\n\");\n    } else {\n        printf(\"differents\\n\");\n    }\n    printf(\"difference = %d\\n\", (int) (a - b));\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "identiques\ndifference = 0"
+    },
+    "explanation": "Le **PID d'un processus est attribué une fois pour toutes** : il ne change jamais durant la vie du processus. Les deux appels `getpid()` sont donc effectués par le même processus et renvoient exactement la **même valeur**. La comparaison `a == b` est vraie (« identiques ») et leur différence `a - b` vaut nécessairement **0**, quel que soit le PID réel attribué par le système.",
+    "concepts": [
+      "pid",
+      "processus"
+    ]
+  },
+  {
+    "chapterSlug": "processus-pid",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écrivez un programme C complet qui affiche, sur une seule ligne, le PID du processus courant puis celui de son père, exactement au format `PID=<pid> PPID=<ppid>` suivi d'un retour à la ligne.",
+    "payload": {
+      "spec": "Le programme inclut <stdio.h> et <unistd.h>, puis affiche une unique ligne 'PID=<n> PPID=<m>' où <n> est getpid() et <m> est getppid(), chacun converti en int et affiché avec %d. Comme les PID dépendent de l'exécution, la sortie est vérifiée par une expression régulière sur le format.",
+      "std": "gnu11",
+      "compare": "regex",
+      "starterCode": "#include <stdio.h>\n#include <unistd.h>\n\nint main(void) {\n    /* affichez ici PID=<getpid> PPID=<getppid> */\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "format de sortie",
+          "stdin": "",
+          "expectedStdout": "^PID=[0-9]+ PPID=[0-9]+$",
+          "compare": "regex"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <unistd.h>\n#include <sys/types.h>\n\nint main(void) {\n    printf(\"PID=%d PPID=%d\\n\", (int) getpid(), (int) getppid());\n    return 0;\n}"
+    },
+    "explanation": "`getpid()` donne le PID du processus courant et `getppid()` celui de son père ; tous deux sont déclarés dans `<unistd.h>`. Leur type `pid_t` est un entier qu'on convertit en `int` pour l'afficher avec `%d`. Comme les PID varient d'une exécution à l'autre, le test n'impose pas une valeur précise mais le **format** de la ligne, vérifié par l'expression régulière `^PID=[0-9]+ PPID=[0-9]+$`.",
+    "concepts": [
+      "pid",
+      "ppid"
+    ]
+  },
+  {
+    "chapterSlug": "fork",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Que renvoie l'appel `fork()` au processus père lorsqu'il réussit ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "0"
+        },
+        {
+          "id": "b",
+          "label": "-1"
+        },
+        {
+          "id": "c",
+          "label": "Le PID du processus fils créé"
+        },
+        {
+          "id": "d",
+          "label": "Le PID du processus père lui-même"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "`fork()` est appelé une fois mais **renvoie deux fois**. Dans le **père**, en cas de succès, il renvoie le **PID du fils** créé — une valeur strictement positive. Dans le **fils**, il renvoie **0**. En cas d'échec, il renvoie **-1** (et seul le père existe alors). Le père a besoin de ce PID pour pouvoir attendre son fils plus tard ; le fils, lui, peut retrouver son propre PID avec `getpid()`, d'où la valeur 0 qui lui suffit.",
+    "concepts": [
+      "fork",
+      "processus-parent",
+      "pid"
+    ]
+  },
+  {
+    "chapterSlug": "fork",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Après un fork() réussi, le système garantit que le processus père s'exécute toujours avant le processus fils.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Après le `fork`, le père et le fils sont deux processus **concurrents** : c'est l'**ordonnanceur** du noyau qui décide lequel s'exécute en premier. Le système n'offre **aucune garantie** sur l'ordre d'exécution — ni père d'abord, ni fils d'abord. Si le code a besoin d'un ordre précis (par exemple « le père doit attendre la fin du fils »), il faut le **forcer explicitement** avec un mécanisme de synchronisation comme `wait()`.",
+    "concepts": [
+      "fork",
+      "processus-parent",
+      "processus-enfant"
+    ]
+  },
+  {
+    "chapterSlug": "fork",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez le schéma d'utilisation standard de fork(), avec ses trois branches classées de la plus prioritaire à la moins prioritaire.",
+    "payload": {
+      "template": "pid_t n = fork();\nif (n {{c1}} 0) {\n    perror(\"fork\");      /* le fork a echoue */\n    exit(EXIT_FAILURE);\n} else if (n {{c2}} 0) {\n    /* code execute uniquement par le {{c3}} */\n} else {\n    /* code execute uniquement par le {{c4}} ; n contient le PID du fils */\n}",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm",
+          "placeholder": "opérateur"
+        },
+        {
+          "id": "c2",
+          "width": "sm",
+          "placeholder": "opérateur"
+        },
+        {
+          "id": "c3",
+          "width": "sm"
+        },
+        {
+          "id": "c4",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": "<",
+        "c2": "==",
+        "c3": "fils",
+        "c4": [
+          "pere",
+          "parent"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "`fork` se teste avec une structure à trois branches, classées de la plus prioritaire à la moins prioritaire. On teste **toujours l'échec en premier** : `if (n < 0)`, on traite l'erreur et on s'arrête. Ensuite `else if (n == 0)` : on est dans le **fils**. Sinon (`n > 0`) : on est dans le **père**, et `n` contient le PID du fils. Tester l'échec en premier est essentiel : un code qui l'ignore continuerait comme si un fils existait alors qu'il n'y en a pas.",
+    "concepts": [
+      "fork",
+      "processus-parent",
+      "processus-enfant"
+    ]
+  },
+  {
+    "chapterSlug": "fork",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Avant le fork(), la variable locale `i` vaut 10 dans l'unique processus. Le père attend la fin du fils avec wait() avant d'afficher. Quelle est la sortie exacte de ce programme ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int i = 10;\n    pid_t pid = fork();\n    if (pid < 0) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (pid == 0) {\n        i = i + 5;\n        printf(\"fils : i = %d\\n\", i);\n    } else {\n        wait(NULL);\n        i = i - 3;\n        printf(\"pere : i = %d\\n\", i);\n    }\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "fils : i = 15\npere : i = 7"
+    },
+    "explanation": "Après le `fork`, le père et le fils ont **chacun leur propre copie** de la variable `i`, toutes deux égales à 10 à l'instant du `fork`. Le fils fait `i = i + 5` : sa copie vaut 15, il affiche « fils : i = 15 ». Le père fait `i = i - 3` : sa copie vaut 7, il affiche « pere : i = 7 ». Les deux variables `i` sont **indépendantes**. L'ordre des lignes est ici garanti : le père appelle `wait(NULL)`, ce qui le bloque jusqu'à la terminaison du fils — le fils affiche donc forcément avant le père.",
+    "concepts": [
+      "fork",
+      "espace-adressage",
+      "processus-enfant"
+    ]
+  },
+  {
+    "chapterSlug": "fork",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Combien de lignes `X` ce programme affiche-t-il ? Donnez la sortie exacte (l'ordre des lignes n'importe pas, elles sont toutes identiques).",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    fork();\n    fork();\n    fork();\n    printf(\"X\\n\");\n    while (wait(NULL) > 0)\n        ;\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "X\nX\nX\nX\nX\nX\nX\nX"
+    },
+    "explanation": "Chaque `fork` **double** le nombre de processus. Au départ il y a 1 processus. Après le premier `fork` : 2. Après le deuxième : 4. Après le troisième : 8. Tous ces 8 processus exécutent la même instruction suivante, le `printf(\"X\\n\")` : la sortie contient donc **8 lignes `X`** (2³ = 8). De façon générale, `n` appels `fork` en série produisent 2ⁿ processus.",
+    "concepts": [
+      "fork",
+      "processus",
+      "arborescence-processus"
+    ]
+  },
+  {
+    "chapterSlug": "fork",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "La variable globale `compteur` vaut 0 au départ. Le fils l'incrémente de 100 puis se termine ; le père attend le fils puis affiche `compteur`. Quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint compteur = 0;\n\nint main(void) {\n    pid_t pid = fork();\n    if (pid < 0) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (pid == 0) {\n        compteur += 100;\n        exit(EXIT_SUCCESS);\n    }\n    wait(NULL);\n    printf(\"compteur dans le pere = %d\\n\", compteur);\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "compteur dans le pere = 0"
+    },
+    "explanation": "Le `fork` duplique l'intégralité de l'espace d'adressage : le fils reçoit **sa propre copie** de la variable globale `compteur`. Quand le fils fait `compteur += 100`, il ne modifie que **sa copie** — celle du père reste à 0. Les deux espaces d'adressage sont **séparés** après le `fork`. Le père affiche donc `compteur dans le pere = 0`. C'est l'illustration directe du fait que deux processus ne partagent pas leur mémoire : même une variable globale n'est pas partagée.",
+    "concepts": [
+      "fork",
+      "espace-adressage",
+      "processus-parent"
+    ]
+  },
+  {
+    "chapterSlug": "fork",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Écrivez un programme C qui crée un processus fils. Le fils affiche la ligne `FILS` ; le père doit attendre la fin du fils, puis afficher la ligne `PERE`. La sortie doit donc toujours être `FILS` puis `PERE`.",
+    "payload": {
+      "spec": "Le programme appelle fork() et teste les trois cas. En cas d'échec (<0), il signale l'erreur et se termine. Le fils affiche 'FILS' sur sa propre ligne puis se termine. Le père appelle wait() pour attendre la fin du fils AVANT d'afficher 'PERE' sur sa propre ligne. La synchronisation par wait() garantit l'ordre FILS puis PERE.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    /* creez un fils ; le fils affiche FILS, le pere attend puis affiche PERE */\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "ordre FILS puis PERE",
+          "stdin": "",
+          "expectedStdout": "FILS\nPERE",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    pid_t pid = fork();\n    if (pid < 0) {\n        perror(\"fork\");\n        exit(EXIT_FAILURE);\n    }\n    if (pid == 0) {\n        printf(\"FILS\\n\");\n        exit(EXIT_SUCCESS);\n    }\n    wait(NULL);\n    printf(\"PERE\\n\");\n    return 0;\n}"
+    },
+    "explanation": "Sans synchronisation, l'ordre d'affichage entre père et fils est imprévisible. Pour imposer « FILS puis PERE », le père appelle `wait(NULL)` : cet appel le **bloque jusqu'à la terminaison du fils**. Le fils affiche donc `FILS` et se termine (`exit`) avant que le père ne soit débloqué et n'affiche `PERE`. Le `exit` dans la branche du fils est important : il évite que le fils ne poursuive dans le code commun destiné au père.",
+    "concepts": [
+      "fork",
+      "processus-parent",
+      "processus-enfant"
+    ]
+  },
+  {
+    "chapterSlug": "fork",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écrivez un programme qui lit un entier `n` au clavier, puis crée un fils. Le fils affiche `fils : <n*n>` (le carré de n) ; le père attend le fils, puis affiche `pere : <n+1>`. La sortie doit toujours être la ligne du fils puis celle du père.",
+    "payload": {
+      "spec": "Le programme lit un entier n sur l'entree standard avec scanf. Il appelle fork() et teste les trois cas. Le fils affiche 'fils : ' suivi de n*n, puis se termine. Le pere appelle wait() pour attendre le fils, puis affiche 'pere : ' suivi de n+1. La sortie est donc 'fils : <carre>' puis 'pere : <n+1>'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int n;\n    /* lisez n, creez un fils : fils affiche n*n, pere attend puis affiche n+1 */\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "n vaut 5",
+          "stdin": "5",
+          "expectedStdout": "fils : 25\npere : 6",
+          "compare": "trimmed"
+        },
+        {
+          "name": "n vaut 10",
+          "stdin": "10",
+          "expectedStdout": "fils : 100\npere : 11",
+          "compare": "trimmed"
+        },
+        {
+          "name": "test cache",
+          "stdin": "7",
+          "expectedStdout": "fils : 49\npere : 8",
+          "compare": "trimmed",
+          "hidden": true
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) {\n        return EXIT_FAILURE;\n    }\n    pid_t pid = fork();\n    if (pid < 0) {\n        perror(\"fork\");\n        exit(EXIT_FAILURE);\n    }\n    if (pid == 0) {\n        printf(\"fils : %d\\n\", n * n);\n        exit(EXIT_SUCCESS);\n    }\n    wait(NULL);\n    printf(\"pere : %d\\n\", n + 1);\n    return 0;\n}"
+    },
+    "explanation": "L'entier `n` est lu **avant** le `fork`, donc le fils hérite de sa valeur (l'espace d'adressage est dupliqué à l'instant du `fork`). Le fils calcule et affiche `n*n` ; le père calcule et affiche `n+1`. Chacun travaille sur sa propre copie de `n`, mais comme aucun ne la modifie, les deux copies restent égales. L'ordre d'affichage est garanti par `wait(NULL)`, qui bloque le père jusqu'à la fin du fils.",
+    "concepts": [
+      "fork",
+      "processus-enfant",
+      "processus-parent"
+    ]
+  },
+  {
+    "chapterSlug": "fork",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme devrait afficher exactement deux lignes : `fils` puis `pere`. En réalité il en affiche trois. Corrigez-le pour qu'il n'affiche que `fils` et `pere`.",
+    "payload": {
+      "spec": "Le programme doit afficher exactement deux lignes : 'fils' affichee par le processus fils, et 'pere' affichee par le processus pere apres wait(). Le bug : le fils ne se termine pas a la fin de sa branche et retombe donc dans le code commun, ce qui lui fait afficher 'pere' a son tour. Corrigez en faisant terminer le fils a la fin de sa branche.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    pid_t pid = fork();\n    if (pid < 0) {\n        perror(\"fork\");\n        exit(EXIT_FAILURE);\n    }\n    if (pid == 0) {\n        printf(\"fils\\n\");\n    }\n    wait(NULL);\n    printf(\"pere\\n\");\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "exactement deux lignes",
+          "stdin": "",
+          "expectedStdout": "fils\npere",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    pid_t pid = fork();\n    if (pid < 0) {\n        perror(\"fork\");\n        exit(EXIT_FAILURE);\n    }\n    if (pid == 0) {\n        printf(\"fils\\n\");\n        exit(EXIT_SUCCESS);\n    }\n    wait(NULL);\n    printf(\"pere\\n\");\n    return 0;\n}"
+    },
+    "explanation": "Le bug : la branche du fils affiche `fils` mais ne **se termine pas**. Le fils continue donc son exécution, **retombe dans le code commun** (`wait` puis `printf(\"pere\")`) et affiche `pere` à son tour — d'où trois lignes au total. La correction : faire **terminer le fils** à la fin de sa branche, avec `exit(EXIT_SUCCESS)`. Le code commun qui suit le `if` n'est alors exécuté que par le père.",
+    "concepts": [
+      "fork",
+      "processus-enfant",
+      "exit"
+    ]
+  },
+  {
+    "chapterSlug": "fork",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme lit un entier `n` et devrait afficher `fils : <n*n>` (le carré) puis `pere : <n+10>`. Le fils calcule une mauvaise valeur. Corrigez-le.",
+    "payload": {
+      "spec": "Le programme lit un entier n, cree un fils. Le fils doit afficher 'fils : ' suivi du carre de n (n*n). Le pere attend le fils puis affiche 'pere : ' suivi de n+10. Le bug : le fils calcule n+n (le double) au lieu de n*n (le carre). Corrigez le calcul du fils.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return EXIT_FAILURE;\n    pid_t pid = fork();\n    if (pid < 0) {\n        perror(\"fork\");\n        exit(EXIT_FAILURE);\n    }\n    if (pid == 0) {\n        printf(\"fils : %d\\n\", n + n);\n        exit(EXIT_SUCCESS);\n    }\n    wait(NULL);\n    printf(\"pere : %d\\n\", n + 10);\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "n vaut 5",
+          "stdin": "5",
+          "expectedStdout": "fils : 25\npere : 15",
+          "compare": "trimmed"
+        },
+        {
+          "name": "n vaut 7",
+          "stdin": "7",
+          "expectedStdout": "fils : 49\npere : 17",
+          "compare": "trimmed"
+        },
+        {
+          "name": "test cache",
+          "stdin": "9",
+          "expectedStdout": "fils : 81\npere : 19",
+          "compare": "trimmed",
+          "hidden": true
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return EXIT_FAILURE;\n    pid_t pid = fork();\n    if (pid < 0) {\n        perror(\"fork\");\n        exit(EXIT_FAILURE);\n    }\n    if (pid == 0) {\n        printf(\"fils : %d\\n\", n * n);\n        exit(EXIT_SUCCESS);\n    }\n    wait(NULL);\n    printf(\"pere : %d\\n\", n + 10);\n    return 0;\n}"
+    },
+    "explanation": "Le bug est dans la branche du fils : `n + n` calcule le **double** de `n`, alors que l'énoncé demande son **carré**. Pour 5, le programme bogué affiche `fils : 10` au lieu de `fils : 25`. La correction consiste à remplacer l'addition `n + n` par la multiplication `n * n`. Le reste du programme — le test des trois cas de `fork`, le `exit` du fils, le `wait` du père — était correct.",
+    "concepts": [
+      "fork",
+      "processus-enfant"
+    ]
+  },
+  {
+    "chapterSlug": "exec-wait",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Que se passe-t-il, du point de vue du programme appelant, lorsqu'un appel a `execlp` reussit ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "`execlp` renvoie 0 et l'execution continue a l'instruction suivante"
+        },
+        {
+          "id": "b",
+          "label": "`execlp` ne renvoie rien : le code appelant a ete recouvert et n'existe plus"
+        },
+        {
+          "id": "c",
+          "label": "`execlp` renvoie le PID du nouveau programme lance"
+        },
+        {
+          "id": "d",
+          "label": "`execlp` renvoie -1 mais l'environnement est conserve"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Un `exec` reussi **ne revient pas**. Ce n'est pas qu'il renvoie `void` : c'est que le code, les donnees et la pile du processus ont ete **recouverts** (remplaces) par ceux du nouveau programme. L'instruction qui suit l'`exec` n'appartient plus a aucun programme execute et n'est **jamais atteinte**. C'est uniquement en cas d'**echec** que `exec` renvoie **-1** et que l'execution se poursuit ; c'est pourquoi on place juste apres l'`exec` le traitement d'erreur (`perror` puis `exit`).",
+    "concepts": [
+      "exec",
+      "recouvrement"
+    ]
+  },
+  {
+    "chapterSlug": "exec-wait",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Apres un appel a `wait(&status)`, il est correct de lire `WEXITSTATUS(status)` sans avoir d'abord verifie `WIFEXITED(status)`.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. `WEXITSTATUS(status)` n'a de sens que **si `WIFEXITED(status)` est vrai**, c'est-a-dire si le fils s'est termine **normalement** (par `exit` ou `return`). Si le fils a ete **tue par un signal**, il n'a pas de code de retour : lire `WEXITSTATUS` dans ce cas donne une valeur **denuee de sens**. La regle est absolue : on teste **toujours `WIFEXITED` avant** de lire `WEXITSTATUS` (de meme, on verifie `WIFSIGNALED` avant de lire `WTERMSIG`).",
+    "concepts": [
+      "statut-terminaison",
+      "wait",
+      "code-retour"
+    ]
+  },
+  {
+    "chapterSlug": "exec-wait",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Les suffixes du nom des fonctions `exec` sont mnemoniques. Associez chaque suffixe a sa signification.",
+    "payload": {
+      "left": [
+        {
+          "id": "l",
+          "label": "Suffixe l (execl, execlp, execle)"
+        },
+        {
+          "id": "v",
+          "label": "Suffixe v (execv, execvp, execve)"
+        },
+        {
+          "id": "p",
+          "label": "Suffixe p (execlp, execvp)"
+        },
+        {
+          "id": "e",
+          "label": "Suffixe e (execle, execve)"
+        }
+      ],
+      "right": [
+        {
+          "id": "liste",
+          "label": "Arguments passes en liste, un par un, terminee par NULL"
+        },
+        {
+          "id": "vecteur",
+          "label": "Arguments passes dans un tableau (vecteur) termine par NULL"
+        },
+        {
+          "id": "path",
+          "label": "Le fichier est cherche dans les repertoires de la variable PATH"
+        },
+        {
+          "id": "env",
+          "label": "On transmet manuellement un environnement en dernier parametre"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l": "liste",
+        "v": "vecteur",
+        "p": "path",
+        "e": "env"
+      }
+    },
+    "explanation": "Le nom de chaque fonction `exec` encode son mode de fonctionnement. **l** (*list*) : les arguments sont donnes en **liste** (arg0, arg1, ..., NULL). **v** (*vector*) : les arguments sont rassembles dans un **tableau** termine par NULL. **p** (*path*) : le fichier est recherche dans les repertoires de **PATH** (on peut ecrire `ls` au lieu de `/bin/ls`). **e** (*environment*) : on **fournit explicitement** l'environnement en dernier parametre. Dans tous les cas, la liste ou le tableau d'arguments se termine **obligatoirement** par NULL.",
+    "concepts": [
+      "exec",
+      "recouvrement"
+    ]
+  },
+  {
+    "chapterSlug": "exec-wait",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pour executer une commande, un shell enchaine quatre etapes. Remettez-les dans l'ordre ou elles se deroulent.",
+    "payload": {
+      "items": [
+        {
+          "id": "wait",
+          "label": "Le shell (le pere) appelle wait() et attend la fin du fils"
+        },
+        {
+          "id": "fork",
+          "label": "Le shell appelle fork() pour creer un processus fils"
+        },
+        {
+          "id": "exec",
+          "label": "Le fils appelle exec() pour devenir le programme de la commande"
+        },
+        {
+          "id": "invite",
+          "label": "Le shell reaffiche son invite, pret pour la commande suivante"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "fork",
+        "exec",
+        "wait",
+        "invite"
+      ]
+    },
+    "explanation": "C'est le motif fondamental **fork + exec + wait**, exactement ce que fait un shell pour chaque commande. (1) Le shell **fork** un fils. (2) Le **fils** fait un **exec** pour se transformer en le programme de la commande, pendant que le pere, lui, ne fait pas d'exec. (3) Le shell (le pere) appelle **wait** et se bloque jusqu'a la fin du fils. (4) Une fois le fils termine et recupere, le shell **reaffiche son invite**.",
+    "concepts": [
+      "fork",
+      "exec",
+      "wait"
+    ]
+  },
+  {
+    "chapterSlug": "exec-wait",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Completez ce code qui attend la fin d'un fils et analyse completement son statut de terminaison.",
+    "payload": {
+      "template": "int status;\nwait(&status);\nif ({{m1}}(status)) {\n    printf(\"terminaison normale, code = %d\\n\", {{m2}}(status));\n} else if ({{m3}}(status)) {\n    printf(\"tue par le signal %d\\n\", {{m4}}(status));\n}",
+      "slots": [
+        {
+          "id": "m1",
+          "width": "md",
+          "hint": "vrai si terminaison normale"
+        },
+        {
+          "id": "m2",
+          "width": "md",
+          "hint": "le code de retour du fils"
+        },
+        {
+          "id": "m3",
+          "width": "md",
+          "hint": "vrai si tue par un signal"
+        },
+        {
+          "id": "m4",
+          "width": "md",
+          "hint": "le numero du signal"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "m1": "WIFEXITED",
+        "m2": "WEXITSTATUS",
+        "m3": "WIFSIGNALED",
+        "m4": "WTERMSIG"
+      },
+      "caseSensitive": true,
+      "stripAccents": false
+    },
+    "explanation": "Le `status` rempli par `wait` est **encode** : on l'analyse avec des macros de `<sys/wait.h>`. **WIFEXITED(status)** est vrai si le fils s'est termine normalement ; on peut alors lire son code de retour avec **WEXITSTATUS(status)**. **WIFSIGNALED(status)** est vrai si le fils a ete tue par un signal ; on obtient alors le numero de ce signal avec **WTERMSIG(status)**. On lit toujours WEXITSTATUS apres avoir verifie WIFEXITED, et WTERMSIG apres avoir verifie WIFSIGNALED.",
+    "concepts": [
+      "statut-terminaison",
+      "wait",
+      "code-retour"
+    ]
+  },
+  {
+    "chapterSlug": "exec-wait",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Le fils appelle execlp(\"echo\", ...) qui affiche AAA. Le pere attend la fin du fils avec wait. Quelle est la sortie exacte de ce programme ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    pid_t pid = fork();\n    if (pid < 0) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (pid == 0) {\n        execlp(\"echo\", \"echo\", \"AAA\", (char *) NULL);\n        printf(\"BBB\\n\");\n        exit(EXIT_FAILURE);\n    }\n    wait(NULL);\n    printf(\"CCC\\n\");\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "AAA\nCCC"
+    },
+    "explanation": "Le fils appelle `execlp` : si l'`exec` **reussit**, le code du fils est **recouvert** par le programme `echo`. `echo AAA` affiche donc `AAA`, puis le programme `echo` se termine. La ligne `printf(\"BBB\")` qui suit l'`exec` n'est **jamais executee** : elle ne serait atteinte que si l'`exec` avait echoue. Le pere, lui, attend la fin du fils avec `wait`, puis affiche `CCC`. La sortie est donc `AAA` puis `CCC`, jamais `BBB`. L'ordre est garanti par le `wait`.",
+    "concepts": [
+      "exec",
+      "recouvrement",
+      "wait"
+    ]
+  },
+  {
+    "chapterSlug": "exec-wait",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Ecrivez un programme C qui cree un fils. Le fils doit, par recouvrement, devenir la commande echo et afficher exactement la ligne 'sortie du fils'. Le pere doit attendre la fin du fils, puis afficher la ligne 'le pere reprend la main'.",
+    "payload": {
+      "spec": "Le programme appelle fork() et teste les trois cas (echec < 0, fils == 0, pere > 0). Le fils utilise execlp pour devenir echo et afficher la ligne 'sortie du fils' ; en cas d'echec de exec il signale l'erreur et se termine. Le pere appelle wait() pour attendre la fin du fils, puis affiche 'le pere reprend la main'. La sortie attendue est donc la ligne du fils puis celle du pere.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    /* creez un fils ; le fils fait un exec de echo, le pere attend puis affiche */\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "fork + exec + wait",
+          "stdin": "",
+          "expectedStdout": "sortie du fils\nle pere reprend la main",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    pid_t pid = fork();\n    if (pid < 0) {\n        perror(\"fork\");\n        exit(EXIT_FAILURE);\n    }\n    if (pid == 0) {\n        execlp(\"echo\", \"echo\", \"sortie du fils\", (char *) NULL);\n        perror(\"execlp\");\n        exit(EXIT_FAILURE);\n    }\n    wait(NULL);\n    printf(\"le pere reprend la main\\n\");\n    return 0;\n}"
+    },
+    "explanation": "C'est le motif **fork + exec + wait**. Le `fork` cree le fils ; **dans la branche du fils**, `execlp` recouvre le processus par la commande `echo` (le suffixe `p` permet d'ecrire `echo` sans chemin complet, `arg0` vaut `echo`, et la liste se termine par (char *) NULL). Le `perror` + `exit` qui suivent l'`exec` ne s'executent **que si l'`exec` a echoue**. Le pere, lui, appelle `wait(NULL)` : il se bloque jusqu'a la fin du fils, ce qui garantit que la ligne du pere s'affiche apres la sortie du fils.",
+    "concepts": [
+      "fork",
+      "exec",
+      "wait"
+    ]
+  },
+  {
+    "chapterSlug": "exec-wait",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ecrivez un programme qui lit un entier code au clavier, cree un fils qui se termine immediatement avec exit(code), puis (dans le pere) recupere le fils avec wait et affiche 'code de retour = <c>' ou <c> est le code de retour du fils, lu correctement avec les macros de statut.",
+    "payload": {
+      "spec": "Le programme lit un entier code sur l'entree standard avec scanf. Il appelle fork(). Le fils appelle exit(code). Le pere appelle wait(&status), puis verifie WIFEXITED(status) : si vrai, il affiche 'code de retour = ' suivi de WEXITSTATUS(status) ; sinon il affiche 'terminaison anormale'. La lecture du code de retour passe imperativement par WEXITSTATUS apres avoir teste WIFEXITED.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int code;\n    /* lisez code, creez un fils qui fait exit(code), recuperez-le et affichez son code */\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "code 0",
+          "stdin": "0",
+          "expectedStdout": "code de retour = 0",
+          "compare": "trimmed"
+        },
+        {
+          "name": "code 42",
+          "stdin": "42",
+          "expectedStdout": "code de retour = 42",
+          "compare": "trimmed"
+        },
+        {
+          "name": "test cache code 200",
+          "stdin": "200",
+          "expectedStdout": "code de retour = 200",
+          "compare": "trimmed",
+          "hidden": true
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int code;\n    if (scanf(\"%d\", &code) != 1) return EXIT_FAILURE;\n    pid_t pid = fork();\n    if (pid < 0) {\n        perror(\"fork\");\n        exit(EXIT_FAILURE);\n    }\n    if (pid == 0) {\n        exit(code);\n    }\n    int status;\n    wait(&status);\n    if (WIFEXITED(status)) {\n        printf(\"code de retour = %d\\n\", WEXITSTATUS(status));\n    } else {\n        printf(\"terminaison anormale\\n\");\n    }\n    return 0;\n}"
+    },
+    "explanation": "Le fils transmet son code de retour a son pere via `exit(code)`. Le pere recupere ce code en deux temps : il appelle `wait(&status)`, qui le bloque jusqu'a la fin du fils et **remplit status** ; puis il **analyse status** avec les macros. On teste d'abord `WIFEXITED(status)` (terminaison normale ?) et **seulement si elle est vraie** on lit `WEXITSTATUS(status)`, le code de retour effectif. Ce code est compris entre 0 et 255 (seul l'octet de poids faible est transmis).",
+    "concepts": [
+      "exit",
+      "wait",
+      "statut-terminaison",
+      "code-retour"
+    ]
+  },
+  {
+    "chapterSlug": "exec-wait",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme lit un entier code, cree un fils qui fait exit(code), et devrait afficher 'code = <code>'. En realite il affiche une valeur fausse (par exemple 'code = 768' pour une entree de 3). Corrigez-le.",
+    "payload": {
+      "spec": "Le programme lit un entier code, cree un fils qui appelle exit(code), puis le pere appelle wait(&status) et doit afficher 'code = ' suivi du code de retour du fils. Le bug : le pere affiche directement l'entier status au lieu d'en extraire le code de retour. L'entier status est encode ; il faut le passer a la macro WEXITSTATUS pour obtenir le vrai code de retour. Corrigez en affichant WEXITSTATUS(status) au lieu de status.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int code;\n    if (scanf(\"%d\", &code) != 1) return EXIT_FAILURE;\n    pid_t pid = fork();\n    if (pid < 0) {\n        perror(\"fork\");\n        exit(EXIT_FAILURE);\n    }\n    if (pid == 0) {\n        exit(code);\n    }\n    int status;\n    wait(&status);\n    printf(\"code = %d\\n\", status);\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "code 3",
+          "stdin": "3",
+          "expectedStdout": "code = 3",
+          "compare": "trimmed"
+        },
+        {
+          "name": "code 9",
+          "stdin": "9",
+          "expectedStdout": "code = 9",
+          "compare": "trimmed"
+        },
+        {
+          "name": "test cache code 100",
+          "stdin": "100",
+          "expectedStdout": "code = 100",
+          "compare": "trimmed",
+          "hidden": true
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int code;\n    if (scanf(\"%d\", &code) != 1) return EXIT_FAILURE;\n    pid_t pid = fork();\n    if (pid < 0) {\n        perror(\"fork\");\n        exit(EXIT_FAILURE);\n    }\n    if (pid == 0) {\n        exit(code);\n    }\n    int status;\n    wait(&status);\n    if (WIFEXITED(status)) {\n        printf(\"code = %d\\n\", WEXITSTATUS(status));\n    }\n    return 0;\n}"
+    },
+    "explanation": "Le bug : le programme affiche directement l'entier `status`. Or `status` est **encode** : ce n'est pas le code de retour, mais une valeur qui regroupe plusieurs informations. Pour une terminaison normale, le code de retour occupe l'**octet de poids fort** ; afficher status brut donne code multiplie par 256 (d'ou 768 pour une entree de 3). La correction : passer status a la macro **WEXITSTATUS**, qui en extrait le veritable code de retour. On encadre la lecture par `WIFEXITED` pour rester correct si le fils avait ete tue par un signal.",
+    "concepts": [
+      "statut-terminaison",
+      "wait",
+      "code-retour"
+    ]
+  },
+  {
+    "chapterSlug": "zombies-orphelins",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un processus fils est encore en cours d'execution lorsque son pere se termine. Que devient ce fils ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il est tue immediatement, puisqu'il n'a plus de pere"
+        },
+        {
+          "id": "b",
+          "label": "Il devient orphelin et est adopte par le processus init (PID 1)"
+        },
+        {
+          "id": "c",
+          "label": "Il devient un zombie et occupe une entree de la table des processus"
+        },
+        {
+          "id": "d",
+          "label": "Il prend automatiquement le PID de son ancien pere"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Un fils encore vivant dont le pere s'est termine est un processus **orphelin**. Le modele UNIX ne laisse jamais un processus sans pere : l'orphelin est **immediatement adopte par init** (PID 1). Concretement, son **PPID devient 1**. Il n'est pas tue (il continue de s'executer) et il ne devient pas un zombie (un zombie est un fils **termine** non recupere, pas un fils vivant). Un orphelin n'est pas un probleme : `init` appelle `wait` en permanence et le recuperera a sa terminaison.",
+    "concepts": [
+      "orphelin",
+      "processus-init",
+      "ppid"
+    ]
+  },
+  {
+    "chapterSlug": "zombies-orphelins",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi ces affirmations sur les processus zombies, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un zombie est un processus termine dont le pere n'a pas encore appele wait()."
+        },
+        {
+          "id": "b",
+          "label": "Un zombie ne consomme ni memoire ni temps processeur."
+        },
+        {
+          "id": "c",
+          "label": "Un zombie occupe une entree dans la table des processus."
+        },
+        {
+          "id": "d",
+          "label": "L'accumulation de zombies peut saturer la table des processus et empecher toute creation de processus."
+        },
+        {
+          "id": "e",
+          "label": "Un zombie continue d'executer des instructions en arriere-plan."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Un **zombie** est un processus qui **s'est termine** mais que son pere **n'a pas encore recupere** par `wait`/`waitpid`. Il a deja libere sa memoire et ne s'execute plus : il **ne consomme ni memoire ni CPU** (l'affirmation e est donc fausse). Il occupe seulement une **entree residuelle dans la table des processus**, ou sont conserves son PID et son statut de terminaison. Comme cette table est de **taille finie**, une **accumulation** de zombies peut la saturer et empecher tout `fork` sur la machine : c'est un veritable bogue systeme.",
+    "concepts": [
+      "zombie",
+      "wait",
+      "statut-terminaison"
+    ]
+  },
+  {
+    "chapterSlug": "zombies-orphelins",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un processus zombie continue de consommer de la memoire vive tant que son pere ne l'a pas recupere.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. C'est une idee recue frequente. Un zombie est un processus **deja termine** : il a **libere toute sa memoire** (segments de code, donnees, tas, pile) au moment de sa terminaison, et il ne s'execute plus. Il **ne consomme ni memoire ni temps processeur**. Ce qu'il occupe, c'est uniquement une **entree dans la table des processus**, le temps que le pere vienne lire son statut de terminaison. Le danger n'est donc pas la memoire, mais la **saturation de la table** en cas d'accumulation de zombies.",
+    "concepts": [
+      "zombie"
+    ]
+  },
+  {
+    "chapterSlug": "zombies-orphelins",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Les notions de zombie et d'orphelin sont symetriques. Associez chaque caracteristique au processus qu'elle decrit.",
+    "payload": {
+      "left": [
+        {
+          "id": "fils_mort",
+          "label": "Le fils est termine (mort), le pere est encore vivant"
+        },
+        {
+          "id": "fils_vivant",
+          "label": "Le fils est vivant, le pere est termine (mort)"
+        },
+        {
+          "id": "adopte",
+          "label": "Son PPID passe a 1, il est adopte par init"
+        },
+        {
+          "id": "table",
+          "label": "Occupe une entree residuelle dans la table des processus"
+        }
+      ],
+      "right": [
+        {
+          "id": "zombie",
+          "label": "Processus zombie"
+        },
+        {
+          "id": "orphelin",
+          "label": "Processus orphelin"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "fils_mort": "zombie",
+        "fils_vivant": "orphelin",
+        "adopte": "orphelin",
+        "table": "zombie"
+      }
+    },
+    "explanation": "Les deux notions sont **symétriques**. Le **zombie** : fils mort, père vivant qui ne l’a pas encore récupéré ; il occupe une **entrée résiduelle dans la table des processus** (son PID et son statut y subsistent). L’**orphelin** : fils vivant, père mort ; il est aussitôt **adopté par init** et son **PPID passe à 1**. Pour ne plus les confondre : zombie = fils mort / père vivant ; orphelin = fils vivant / père mort. Plusieurs caractéristiques peuvent décrire le même type de processus.",
+    "concepts": [
+      "zombie",
+      "orphelin",
+      "processus-init"
+    ]
+  },
+  {
+    "chapterSlug": "zombies-orphelins",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "La terminaison complete d'un processus UNIX se fait en plusieurs temps. Remettez ces etapes dans l'ordre chronologique.",
+    "payload": {
+      "items": [
+        {
+          "id": "efface",
+          "label": "Le systeme efface definitivement le fils de la table des processus"
+        },
+        {
+          "id": "exit",
+          "label": "Le fils appelle exit() : il libere sa memoire et cesse de s'executer"
+        },
+        {
+          "id": "zombie",
+          "label": "Le fils, termine mais non recupere, est un zombie"
+        },
+        {
+          "id": "wait",
+          "label": "Le pere appelle wait() et recupere le statut de terminaison du fils"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "exit",
+        "zombie",
+        "wait",
+        "efface"
+      ]
+    },
+    "explanation": "La terminaison se fait en **deux temps**, pas en un seul. (1) Le fils **se termine** (`exit`) : il libere sa memoire et cesse de s'executer. (2) Tant que le pere n'a pas recupere son statut, le fils est un **zombie** : une entree residuelle subsiste dans la table des processus pour conserver son code de retour. (3) Le pere appelle **wait** : le systeme lui remet le **statut de terminaison** du fils. (4) Le systeme peut alors **effacer definitivement** le fils de la table des processus.",
+    "concepts": [
+      "zombie",
+      "wait",
+      "statut-terminaison",
+      "exit"
+    ]
+  },
+  {
+    "chapterSlug": "zombies-orphelins",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Completez ce resume comparant les processus zombies et orphelins.",
+    "payload": {
+      "template": "Un processus {{z1}} est un processus termine dont le pere n'a pas encore appele {{z2}}. Un processus {{z3}} est un processus encore vivant dont le pere s'est termine : il est alors adopte par le processus init, dont le PID vaut {{z4}}.",
+      "slots": [
+        {
+          "id": "z1",
+          "width": "sm",
+          "placeholder": "fils mort non recupere"
+        },
+        {
+          "id": "z2",
+          "width": "sm",
+          "hint": "primitive de recuperation"
+        },
+        {
+          "id": "z3",
+          "width": "sm",
+          "placeholder": "fils vivant sans pere"
+        },
+        {
+          "id": "z4",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "z1": "zombie",
+        "z2": [
+          "wait",
+          "wait()",
+          "waitpid",
+          "waitpid()"
+        ],
+        "z3": "orphelin",
+        "z4": "1"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Un processus **zombie** est un processus **termine** dont le pere n'a pas encore appele **wait** (ou `waitpid`) pour recuperer son statut. Un processus **orphelin** est un processus **encore vivant** dont le pere s'est termine : il est immediatement adopte par le processus **init**, de **PID 1**, ancetre de tous les processus. Formule a retenir : zombie = fils mort, pere vivant negligent ; orphelin = fils vivant, pere mort.",
+    "concepts": [
+      "zombie",
+      "orphelin",
+      "processus-init",
+      "wait"
+    ]
+  },
+  {
+    "chapterSlug": "zombies-orphelins",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le pere intermediaire cree un fils puis se termine aussitot ; son fils dort un court instant puis teste son PPID. Le processus initial attend le pere intermediaire et reste vivant. L'ordre des deux lignes n'a pas d'importance. Quelle est la sortie de ce programme ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    pid_t pere = fork();\n    if (pere < 0) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (pere == 0) {\n        pid_t fils = fork();\n        if (fils < 0) { perror(\"fork\"); exit(EXIT_FAILURE); }\n        if (fils == 0) {\n            usleep(200000);\n            if (getppid() == 1) {\n                printf(\"fils : adopte par init\\n\");\n            } else {\n                printf(\"fils : pere encore vivant\\n\");\n            }\n            fflush(stdout);\n            exit(0);\n        }\n        printf(\"pere intermediaire : je me termine\\n\");\n        fflush(stdout);\n        exit(0);\n    }\n    wait(NULL);\n    usleep(900000);\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "pere intermediaire : je me termine\nfils : adopte par init"
+    },
+    "explanation": "Le pere intermediaire cree un fils, affiche sa ligne, puis appelle `exit(0)` **tout de suite**. Son fils, lui, attend 200 ms avant de tester son PPID : a ce moment, le pere intermediaire est **deja termine**. Le fils est donc devenu **orphelin** et a ete **adopte par init** ; son `getppid()` renvoie **1**. Il affiche donc la ligne 'adopte par init'. Le test `getppid() == 1` est la maniere canonique de constater l'adoption d'un orphelin. L'ordre des deux lignes depend de l'ordonnancement et n'est pas significatif.",
+    "concepts": [
+      "orphelin",
+      "processus-init",
+      "ppid"
+    ]
+  },
+  {
+    "chapterSlug": "zombies-orphelins",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ecrivez un programme qui cree 4 fils dans une boucle. Chaque fils se termine immediatement. Le pere doit ensuite recuperer TOUS ses fils avec wait (pour ne laisser aucun zombie), en comptant combien il en recupere, puis afficher 'fils recuperes = 4'.",
+    "payload": {
+      "spec": "Le programme cree 4 fils avec une boucle de fork. IMPORTANT : chaque fils doit appeler exit() pour sortir de la boucle, sinon il creerait lui-meme des fils (fork bomb). Apres la boucle, le pere recupere tous ses fils : il appelle wait() en boucle tant que wait renvoie une valeur strictement positive, en incrementant un compteur. Il affiche enfin 'fils recuperes = ' suivi du compteur, qui doit valoir 4. Aucun zombie ne doit subsister.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\n#define N 4\n\nint main(void) {\n    /* creez N fils ; chaque fils se termine ; le pere les recupere tous et compte */\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "4 fils tous recuperes",
+          "stdin": "",
+          "expectedStdout": "fils recuperes = 4",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\n#define N 4\n\nint main(void) {\n    for (int i = 0; i < N; i++) {\n        pid_t pid = fork();\n        if (pid < 0) { perror(\"fork\"); exit(EXIT_FAILURE); }\n        if (pid == 0) {\n            exit(EXIT_SUCCESS);\n        }\n    }\n    int recuperes = 0;\n    while (wait(NULL) > 0) {\n        recuperes++;\n    }\n    printf(\"fils recuperes = %d\\n\", recuperes);\n    return 0;\n}"
+    },
+    "explanation": "Quand un pere cree **plusieurs fils**, il doit faire **autant de wait** qu'il a cree de fils, sans quoi les fils termines deviennent des **zombies**. Deux points essentiels. (1) Dans la boucle de `fork`, **chaque fils doit exit** : sinon il continuerait la boucle et creerait ses propres fils, une fork bomb. (2) Le pere recupere ses fils **apres** la boucle : `while (wait(NULL) > 0)` appelle `wait` jusqu'a ce qu'il renvoie **-1** (plus aucun fils). Le compteur atteint alors exactement 4, et aucun zombie ne subsiste.",
+    "concepts": [
+      "zombie",
+      "wait",
+      "fork",
+      "exit"
+    ]
+  },
+  {
+    "chapterSlug": "zombies-orphelins",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Ce programme cree 3 fils qui se terminent aussitot, puis affiche le nombre de fils recuperes ; il devrait afficher 'fils recuperes = 3'. Mais il laisse 3 zombies et affiche 'fils recuperes = 0'. Corrigez-le pour qu'il recupere tous ses fils.",
+    "payload": {
+      "spec": "Le programme cree 3 fils avec une boucle de fork ; chaque fils appelle exit(). Le pere doit ensuite recuperer ses 3 fils avec wait() pour ne laisser aucun zombie, en incrementant le compteur recuperes a chaque fils recupere, puis afficher 'fils recuperes = 3'. Le bug : le pere n'appelle jamais wait() ; il affiche donc 'fils recuperes = 0' et laisse 3 zombies. Corrigez en ajoutant, apres la boucle de fork, une boucle qui appelle wait() pour chaque fils cree et incremente le compteur.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\n#define N 3\n\nint main(void) {\n    int recuperes = 0;\n    for (int i = 0; i < N; i++) {\n        pid_t pid = fork();\n        if (pid < 0) { perror(\"fork\"); exit(EXIT_FAILURE); }\n        if (pid == 0) {\n            exit(EXIT_SUCCESS);\n        }\n    }\n    printf(\"fils recuperes = %d\\n\", recuperes);\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "3 fils tous recuperes",
+          "stdin": "",
+          "expectedStdout": "fils recuperes = 3",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\n#define N 3\n\nint main(void) {\n    int recuperes = 0;\n    for (int i = 0; i < N; i++) {\n        pid_t pid = fork();\n        if (pid < 0) { perror(\"fork\"); exit(EXIT_FAILURE); }\n        if (pid == 0) {\n            exit(EXIT_SUCCESS);\n        }\n    }\n    for (int i = 0; i < N; i++) {\n        if (wait(NULL) > 0) {\n            recuperes++;\n        }\n    }\n    printf(\"fils recuperes = %d\\n\", recuperes);\n    return 0;\n}"
+    },
+    "explanation": "Le bug : le pere cree 3 fils mais **n'appelle jamais wait**. Ses 3 fils se terminent et, faute d'etre recuperes, deviennent des **zombies** ; le compteur `recuperes` reste a 0. La regle est absolue : **a chaque fork doit correspondre un wait**. La correction ajoute, apres la boucle de `fork`, une **boucle de wait** : on appelle `wait(NULL)` une fois par fils cree, et on incremente le compteur quand `wait` renvoie un PID valide (> 0). Le programme affiche alors 'fils recuperes = 3' et ne laisse aucun zombie.",
+    "concepts": [
+      "zombie",
+      "wait",
+      "fork"
+    ]
+  }
+]

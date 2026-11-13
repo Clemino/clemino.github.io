@@ -1,0 +1,1253 @@
+[
+  {
+    "chapterSlug": "fouille-de-donnees-kdd",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "La fouille de données s'applique à de grandes quantités de données, là où l'œil humain ne peut plus voir seul ce qui se répète.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. « Grandes quantités » est l'un des trois mots-clés de la définition : la fouille de données s'applique à des volumes importants de données, là où l'observation humaine ne suffit plus.",
+    "concepts": [
+      "fouille-de-donnees"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "fouille-de-donnees-kdd",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles formes le cours mentionne-t-il comme formes possibles d'un modèle (régularité extraite) ? (cochez toutes les bonnes réponses)",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un ensemble de règles"
+        },
+        {
+          "id": "b",
+          "label": "Un arbre de décision"
+        },
+        {
+          "id": "c",
+          "label": "Un ensemble de probabilités"
+        },
+        {
+          "id": "d",
+          "label": "Un ensemble de clusters"
+        },
+        {
+          "id": "e",
+          "label": "Le code source de l'algorithme d'apprentissage"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Les régularités extraites prennent différentes formes : ensemble de règles, arbre de décision, ensemble de probabilités, ensemble de clusters… Le code source de l'algorithme n'est pas un modèle : c'est l'outil qui produit le modèle.",
+    "concepts": [
+      "modele",
+      "motif"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "fouille-de-donnees-kdd",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un épidémiologiste construit un modèle pour mettre en évidence les facteurs qui expliquent l'apparition d'une maladie dans une population déjà observée. À quel usage du modèle cela correspond-il principalement ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "L'explication et la compréhension"
+        },
+        {
+          "id": "b",
+          "label": "La prédiction"
+        },
+        {
+          "id": "c",
+          "label": "L'interprétation au sens du prétraitement"
+        },
+        {
+          "id": "d",
+          "label": "La transformation des données"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Mettre en évidence les facteurs explicatifs de données déjà observées relève de l'explication / compréhension : le modèle aide à comprendre les données. La prédiction, elle, viserait à anticiper de nouvelles situations.",
+    "concepts": [
+      "explication-comprehension",
+      "modele"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "fouille-de-donnees-kdd",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complétez la phrase sur les deux acceptions du terme « Data Mining ».",
+    "payload": {
+      "template": "Au sens restreint, le Data Mining désigne la seule étape d'{{t1}} des régularités. Au sens élargi, il recouvre {{t2}} étapes du processus, d'où la confusion avec le KDD.",
+      "slots": [
+        {
+          "id": "t1",
+          "width": "sm",
+          "placeholder": "étape"
+        },
+        {
+          "id": "t2",
+          "width": "sm",
+          "placeholder": "combien"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "t1": [
+          "extraction"
+        ],
+        "t2": [
+          "plusieurs"
+        ]
+      },
+      "stripAccents": true
+    },
+    "explanation": "Au sens restreint, « Data Mining » désigne la seule étape d'extraction des régularités. Au sens élargi, il recouvre plusieurs étapes du processus (par exemple la transformation), ce qui explique la confusion fréquente avec le KDD.",
+    "concepts": [
+      "processus-kdd",
+      "fouille-de-donnees"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "fouille-de-donnees-kdd",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans le processus KDD, à quelle étape correspond le nettoyage des données brutes et la gestion des valeurs manquantes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le prétraitement des données"
+        },
+        {
+          "id": "b",
+          "label": "L'extraction des régularités"
+        },
+        {
+          "id": "c",
+          "label": "L'interprétation des régularités"
+        },
+        {
+          "id": "d",
+          "label": "La prédiction sur de nouvelles instances"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Nettoyer les données brutes et gérer les valeurs manquantes relève du prétraitement, première étape du processus KDD, avant la transformation, l'extraction et l'interprétation.",
+    "concepts": [
+      "processus-kdd"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "types-apprentissage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans l'exemple 4 du cours, chaque étudiant est décrit par ses notes dans n matières. Comment est défini le centre d'un cluster d'étudiants ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "C'est un point de ℝⁿ dont les coordonnées sont les moyennes de celles des étudiants composant le cluster"
+        },
+        {
+          "id": "b",
+          "label": "C'est l'étudiant ayant la meilleure note dans le cluster"
+        },
+        {
+          "id": "c",
+          "label": "C'est le premier étudiant ajouté au cluster"
+        },
+        {
+          "id": "d",
+          "label": "C'est la classe pré-définie du cluster"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le centre d'un cluster est un point de ℝⁿ dont les coordonnées sont les moyennes de celles des étudiants composant le cluster. Le clustering n'a pas de classes pré-définies : c'est de l'apprentissage non supervisé.",
+    "concepts": [
+      "clustering",
+      "apprentissage-non-supervise"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "types-apprentissage",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le tableau ci-dessous est un extrait du jeu de données « jouer au tennis » de l'exemple 3. Chaque ligne est un jour ; la dernière colonne, PlayTennis, est la classe. Lisez-le et répondez aux sous-questions.",
+    "payload": {
+      "figure": {
+        "kind": "data-table",
+        "columns": [
+          "Id",
+          "Outlook",
+          "Temperature",
+          "Humidity",
+          "Windy",
+          "PlayTennis"
+        ],
+        "rows": [
+          [
+            1,
+            "sunny",
+            "hot",
+            "high",
+            "false",
+            "No"
+          ],
+          [
+            3,
+            "overcast",
+            "hot",
+            "high",
+            "false",
+            "Yes"
+          ],
+          [
+            6,
+            "rainy",
+            "cool",
+            "normal",
+            "true",
+            "No"
+          ],
+          [
+            9,
+            "sunny",
+            "cool",
+            "normal",
+            "false",
+            "Yes"
+          ],
+          [
+            11,
+            "sunny",
+            "mild",
+            "normal",
+            "true",
+            "Yes"
+          ]
+        ],
+        "caption": "Extrait du dataset PlayTennis (exemple 3 du cours)"
+      },
+      "caption": "Jeu de données « jouer au tennis »",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quel attribut du tableau joue le rôle de la classe C ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "PlayTennis : c'est la cible que l'on cherche à prédire"
+              },
+              {
+                "id": "b",
+                "label": "Id : c'est l'identifiant de l'exemple"
+              },
+              {
+                "id": "c",
+                "label": "Outlook : c'est la première variable explicative"
+              },
+              {
+                "id": "d",
+                "label": "Temperature : c'est une variable numérique"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Combien de variables explicatives (attributs hors Id et hors classe) décrivent chaque jour dans ce tableau ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Comptez les colonnes en retirant Id et PlayTennis."
+          }
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "À quelle tâche de fouille de données ce jeu de données se prête-t-il ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Classification : la cible PlayTennis prend un nombre fini de valeurs (Yes / No)"
+              },
+              {
+                "id": "b",
+                "label": "Régression : la cible PlayTennis est un nombre réel"
+              },
+              {
+                "id": "c",
+                "label": "Clustering : il n'y a aucune classe dans le tableau"
+              },
+              {
+                "id": "d",
+                "label": "Règles d'association entre paniers de produits"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 4,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "La classe C est la colonne PlayTennis : c'est l'attribut spécial que l'on cherche à prédire. En retirant Id (identifiant) et PlayTennis (classe), il reste 4 variables explicatives : Outlook, Temperature, Humidity, Windy. La cible PlayTennis prend un nombre fini de valeurs (Yes / No) : c'est donc une tâche de classification.",
+    "concepts": [
+      "classification",
+      "attribut",
+      "classe"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "types-apprentissage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quel algorithme le cours associe-t-il à l'extraction de règles d'association à partir de paniers d'achats ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Apriori"
+        },
+        {
+          "id": "b",
+          "label": "K-Means"
+        },
+        {
+          "id": "c",
+          "label": "kNN"
+        },
+        {
+          "id": "d",
+          "label": "Les forêts aléatoires"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours cite l'algorithme Apriori pour extraire les règles d'association (exemple 5, produits achetés ensemble). K-Means fait du clustering ; kNN et les forêts aléatoires relèvent de l'apprentissage supervisé.",
+    "concepts": [
+      "regles-d-association"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "types-apprentissage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Un supermarché veut découvrir, à partir de ses tickets de caisse, quels produits sont fréquemment achetés ensemble, sans cible à prédire fixée d'avance. De quelle tâche s'agit-il ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Règles d'association : on cherche des règles X → Y entre produits achetés ensemble"
+        },
+        {
+          "id": "b",
+          "label": "Régression : on cherche une dépendance linéaire entre les prix"
+        },
+        {
+          "id": "c",
+          "label": "Classification : on affecte chaque ticket à une classe pré-définie"
+        },
+        {
+          "id": "d",
+          "label": "Évaluation par matrice de confusion"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Découvrir quels produits sont achetés ensemble à partir de paniers correspond à l'extraction de règles d'association de la forme X → Y (exemple 5 du cours), réalisée par l'algorithme Apriori.",
+    "concepts": [
+      "regles-d-association"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "apprentissage-test-surapprentissage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Comment appelle-t-on aussi les enregistrements (lignes) d'un jeu d'apprentissage ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Des exemples ou des observations"
+        },
+        {
+          "id": "b",
+          "label": "Des attributs"
+        },
+        {
+          "id": "c",
+          "label": "Des classes"
+        },
+        {
+          "id": "d",
+          "label": "Des clusters"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Les enregistrements d'un jeu d'apprentissage sont appelés exemples, lignes ou observations. Les attributs, eux, sont les colonnes ; la classe est un attribut spécial.",
+    "concepts": [
+      "jeu-d-apprentissage"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "apprentissage-test-surapprentissage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours signale un cas particulier important des variables qualitatives. Lequel ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Les variables binaires, qui n'ont que deux valeurs possibles"
+        },
+        {
+          "id": "b",
+          "label": "Les variables continues, qui prennent une infinité de valeurs"
+        },
+        {
+          "id": "c",
+          "label": "Les variables numériques discrètes"
+        },
+        {
+          "id": "d",
+          "label": "Les variables qui n'ont aucune valeur possible"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours signale les variables binaires comme cas particulier important des variables qualitatives : elles n'ont que deux valeurs possibles. Les variables continues et discrètes, elles, sont des sous-types de variables quantitatives.",
+    "concepts": [
+      "attribut"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "apprentissage-test-surapprentissage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Comment le cours définit-il la généralisation d'un modèle ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La capacité du modèle à fournir de bonnes prédictions sur des données qu'il n'a pas rencontrées"
+        },
+        {
+          "id": "b",
+          "label": "La capacité du modèle à mémoriser parfaitement le jeu d'apprentissage"
+        },
+        {
+          "id": "c",
+          "label": "Le fait de répartir les données en deux ensembles"
+        },
+        {
+          "id": "d",
+          "label": "Le fait de normaliser les variables explicatives"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La généralisation est la capacité du modèle, appris sur des exemples, à fournir de bonnes prédictions sur des données qu'il n'a pas rencontrées. Mémoriser le jeu d'apprentissage sans généraliser, c'est au contraire le sur-apprentissage.",
+    "concepts": [
+      "generalisation"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "apprentissage-test-surapprentissage",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque ensemble de données à son rôle dans l'apprentissage supervisé.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Jeu d'apprentissage"
+        },
+        {
+          "id": "l2",
+          "label": "Jeu de test"
+        },
+        {
+          "id": "l3",
+          "label": "Jeu de validation"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Construire le modèle"
+        },
+        {
+          "id": "r2",
+          "label": "Évaluer le modèle sur des exemples non vus"
+        },
+        {
+          "id": "r3",
+          "label": "Régler un paramètre du modèle (par exemple le k de kNN)"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "Le jeu d'apprentissage sert à construire le modèle ; le jeu de test à l'évaluer sur des exemples non rencontrés ; le jeu de validation à régler un paramètre, comme le nombre de voisins k de kNN.",
+    "concepts": [
+      "jeu-d-apprentissage",
+      "jeu-de-test",
+      "jeu-de-validation"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "apprentissage-test-surapprentissage",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Voici l'appel à l'algorithme kNN du script R du TD. Lisez-le et répondez aux sous-questions sur ses arguments.",
+    "payload": {
+      "code": "library(class)\n\n# iris.train et iris.test ont été obtenus par partition aléatoire d'iris\npred <- knn(train = iris.train[,1:4],\n            test  = iris.test[,1:4],\n            cl    = iris.train[,5],\n            k     = 5)",
+      "language": "r",
+      "caption": "Appel de la fonction knn (TD_Intro_DM_Ex1.r)",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Que contient l'argument cl = iris.train[,5] ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Les classes (étiquettes) des exemples d'apprentissage — la 5e colonne d'iris, Species"
+              },
+              {
+                "id": "b",
+                "label": "Les classes des exemples de test, que l'algorithme cherche à prédire"
+              },
+              {
+                "id": "c",
+                "label": "Le nombre de voisins à consulter"
+              },
+              {
+                "id": "d",
+                "label": "La distance euclidienne entre les exemples"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "TRUE_FALSE",
+          "prompt": "L'objet pred contient les classes prédites par kNN pour les instances de l'ensemble de test.",
+          "weight": 1,
+          "payload": {}
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Pourquoi train et test utilisent-ils les colonnes [,1:4] et non la colonne 5 ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Parce que les colonnes 1 à 4 sont les variables explicatives ; la colonne 5 est la classe, qui ne doit pas servir d'entrée à la prédiction"
+              },
+              {
+                "id": "b",
+                "label": "Parce que la colonne 5 est vide"
+              },
+              {
+                "id": "c",
+                "label": "Parce que kNN n'accepte jamais plus de 4 colonnes"
+              },
+              {
+                "id": "d",
+                "label": "Parce que les colonnes 1 à 4 contiennent les classes"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": true
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "cl = iris.train[,5] fournit les classes (Species) des exemples d'apprentissage : kNN en a besoin pour faire voter les voisins. pred reçoit la sortie de knn(), c'est-à-dire les classes prédites pour les instances de test. On passe [,1:4] (les quatre variables explicatives) en train et test : la colonne 5 est la classe et ne doit pas figurer parmi les entrées de la prédiction.",
+    "concepts": [
+      "k-plus-proches-voisins",
+      "attribut",
+      "classe"
+    ],
+    "source": "TD_Intro_DM_Ex1.r"
+  },
+  {
+    "chapterSlug": "apprentissage-test-surapprentissage",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Voici le calcul de l'accuracy à partir d'une matrice de confusion dans le script R du TD. On suppose qu'après exécution conf vaut [[18, 2], [3, 27]]. Lisez le code et répondez aux sous-questions.",
+    "payload": {
+      "code": "conf <- table(pred, iris.test[,5])\n# Pour cet exercice, on suppose : conf = matrix(c(18,3,2,27), nrow=2)\n#        prédit A   prédit B\n# réel A     18         2\n# réel B      3        27\n\nacc <- sum(diag(conf)) / sum(conf)",
+      "language": "r",
+      "caption": "Calcul de l'accuracy à partir de la matrice de confusion (TD_Intro_DM_Ex1.r)",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Que vaut sum(diag(conf)), la somme de la diagonale de conf ?",
+          "weight": 1,
+          "payload": {
+            "hint": "La diagonale est composée des cases [réel A, prédit A] et [réel B, prédit B]."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Que vaut sum(conf), la somme de toutes les cases ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Additionnez les quatre cases de la matrice."
+          }
+        },
+        {
+          "id": "q3",
+          "type": "NUMERIC",
+          "prompt": "Que vaut acc, l'accuracy obtenue ? Donnez un nombre entre 0 et 1, arrondi au centième.",
+          "weight": 1,
+          "payload": {
+            "hint": "acc = sum(diag(conf)) / sum(conf)."
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 45,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 50,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": 0.9,
+            "absTol": 0.01
+          }
+        }
+      ]
+    },
+    "explanation": "diag(conf) extrait la diagonale : 18 (réel A, prédit A) et 27 (réel B, prédit B), donc sum(diag(conf)) = 18 + 27 = 45. sum(conf) additionne les quatre cases : 18 + 2 + 3 + 27 = 50. acc = sum(diag(conf)) / sum(conf) = 45 / 50 = 0,90 : 90 % des exemples de test sont bien classés.",
+    "concepts": [
+      "matrice-de-confusion",
+      "taux-de-bonne-classification",
+      "k-plus-proches-voisins"
+    ],
+    "source": "TD_Intro_DM_Ex1.r"
+  },
+  {
+    "chapterSlug": "apprentissage-test-surapprentissage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans le script R du TD, l'instruction iris2 <- scale(iris[,1:4]) (sans autre argument) applique la standardisation : chaque variable est centrée et réduite. Quel est l'effet sur les variables explicatives ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Chaque variable explicative est ramenée à une moyenne nulle et un écart-type de 1, pour des échelles comparables"
+        },
+        {
+          "id": "b",
+          "label": "Chaque variable explicative est multipliée par 4"
+        },
+        {
+          "id": "c",
+          "label": "Les lignes du dataset sont triées par ordre croissant"
+        },
+        {
+          "id": "d",
+          "label": "La colonne des classes est supprimée du dataset"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "scale() sans argument supplémentaire centre (retranche la moyenne) et réduit (divise par l'écart-type) chaque colonne : chaque variable explicative obtient une moyenne nulle et un écart-type de 1. Les variables deviennent ainsi comparables, ce qui est utile pour la mesure de distance de kNN.",
+    "concepts": [
+      "k-plus-proches-voisins",
+      "attribut"
+    ],
+    "source": "TD_Intro_DM_Ex1.r"
+  },
+  {
+    "chapterSlug": "apprentissage-test-surapprentissage",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remettez dans l'ordre les étapes du choix empirique du nombre de voisins k de kNN, telles que le cours les décrit.",
+    "payload": {
+      "items": [
+        {
+          "id": "o2",
+          "label": "Mesurer la performance de chaque valeur sur un ensemble de validation"
+        },
+        {
+          "id": "o1",
+          "label": "Essayer plusieurs valeurs de k"
+        },
+        {
+          "id": "o3",
+          "label": "Sélectionner la valeur de k qui donne la meilleure performance"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    "explanation": "Le choix empirique de k procède ainsi : essayer plusieurs valeurs de k, mesurer la performance de chacune sur un ensemble de validation, puis sélectionner la valeur qui donne la meilleure performance.",
+    "concepts": [
+      "k-plus-proches-voisins",
+      "jeu-de-validation"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "evaluation-metriques",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pour un problème de classification à m classes, quelles sont les dimensions de la matrice de confusion ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "m lignes et m colonnes"
+        },
+        {
+          "id": "b",
+          "label": "2 lignes et 2 colonnes, quel que soit m"
+        },
+        {
+          "id": "c",
+          "label": "m lignes et 2 colonnes"
+        },
+        {
+          "id": "d",
+          "label": "1 ligne et m colonnes"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La matrice de confusion est une matrice m × m, où m est le nombre de classes. Le cas 2 × 2 n'est que le cas particulier de la classification binaire (m = 2).",
+    "concepts": [
+      "matrice-de-confusion"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "evaluation-metriques",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un classifieur binaire a la matrice de confusion CONF = [[VP, FN], [FP, VN]] = [[24, 6], [16, 54]]. Quelle est son accuracy ? Donnez un nombre entre 0 et 1.",
+    "payload": {
+      "placeholder": "ex. 0.78",
+      "hint": "Accuracy = (VP + VN) / total."
+    },
+    "solution": {
+      "value": 0.78,
+      "absTol": 0.001
+    },
+    "explanation": "Accuracy = (VP + VN) / (VP + FP + VN + FN) = (24 + 54) / (24 + 16 + 54 + 6) = 78 / 100 = 0,78.",
+    "concepts": [
+      "taux-de-bonne-classification",
+      "matrice-de-confusion"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "evaluation-metriques",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Un classifieur binaire a la matrice de confusion CONF = [[VP, FN], [FP, VN]] = [[24, 6], [16, 54]]. Quel est son taux d'erreur (proportion d'exemples mal classés) ? Donnez un nombre entre 0 et 1.",
+    "payload": {
+      "placeholder": "ex. 0.22",
+      "hint": "Taux d'erreur = (FP + FN) / total = 1 − accuracy."
+    },
+    "solution": {
+      "value": 0.22,
+      "absTol": 0.001
+    },
+    "explanation": "Les exemples mal classés sont les cases hors diagonale : FP + FN = 16 + 6 = 22, sur un total de 100. Taux d'erreur = 22 / 100 = 0,22. On vérifie : taux d'erreur = 1 − accuracy = 1 − 0,78 = 0,22.",
+    "concepts": [
+      "taux-de-bonne-classification",
+      "matrice-de-confusion"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "evaluation-metriques",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un classifieur binaire a la matrice CONF = [[VP, FN], [FP, VN]] = [[24, 6], [16, 54]]. On a rappel = VP/(VP+FN) et précision = VP/(VP+FP). Calculez la F-mesure F = 2 · précision · rappel / (précision + rappel). Donnez un nombre entre 0 et 1, arrondi au centième.",
+    "payload": {
+      "placeholder": "ex. 0.69",
+      "hint": "Calculez d'abord rappel = 24/30 et précision = 24/40, puis F = 2·P·R/(P+R)."
+    },
+    "solution": {
+      "value": 0.69,
+      "absTol": 0.01
+    },
+    "explanation": "Rappel = VP/(VP+FN) = 24/(24+6) = 24/30 = 0,80. Précision = VP/(VP+FP) = 24/(24+16) = 24/40 = 0,60. F = 2 · 0,60 · 0,80 / (0,60 + 0,80) = 0,96 / 1,40 ≈ 0,686, soit 0,69 arrondi au centième.",
+    "concepts": [
+      "f-mesure",
+      "rappel",
+      "precision"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "evaluation-metriques",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complétez l'interprétation du rappel et de la précision dans le cas binaire.",
+    "payload": {
+      "template": "Le dénominateur du rappel, VP + FN, correspond aux exemples réellement {{t1}}. Le dénominateur de la précision, VP + FP, correspond aux exemples {{t2}} positifs.",
+      "slots": [
+        {
+          "id": "t1",
+          "width": "sm",
+          "placeholder": "quels exemples"
+        },
+        {
+          "id": "t2",
+          "width": "sm",
+          "placeholder": "quels exemples"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "t1": [
+          "positifs",
+          "positif"
+        ],
+        "t2": [
+          "prédits",
+          "predits",
+          "prédit",
+          "predit"
+        ]
+      },
+      "stripAccents": true
+    },
+    "explanation": "VP + FN est la première ligne de la matrice : les exemples réellement positifs — le rappel mesure la part de positifs retrouvés. VP + FP est la première colonne : les exemples prédits positifs — la précision mesure la part de vrais positifs parmi les prédits positifs.",
+    "concepts": [
+      "rappel",
+      "precision",
+      "matrice-de-confusion"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "evaluation-metriques",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "La matrice de confusion ci-dessous évalue un test diagnostique (classe Positif = « malade ») sur 100 patients. Lisez-la et calculez les métriques demandées.",
+    "payload": {
+      "figure": {
+        "kind": "confusion-matrix",
+        "classes": [
+          "Positif",
+          "Négatif"
+        ],
+        "matrix": [
+          [
+            15,
+            5
+          ],
+          [
+            5,
+            75
+          ]
+        ],
+        "caption": "Matrice de confusion 2 × 2 : VP = 15, FN = 5, FP = 5, VN = 75"
+      },
+      "caption": "Évaluation d'un test diagnostique sur 100 patients",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Quelle est l'accuracy du test ? Donnez un nombre entre 0 et 1.",
+          "weight": 1,
+          "payload": {
+            "hint": "Accuracy = (VP + VN) / total."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Quel est le rappel (recall) du test ? Arrondissez au centième.",
+          "weight": 1,
+          "payload": {
+            "hint": "Recall = VP / (VP + FN)."
+          }
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Bien que l'accuracy soit élevée, pourquoi le rappel reste-t-il instructif ici ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Parce que le rappel se concentre sur les malades réels (VP + FN) et révèle que 5 d'entre eux n'ont pas été détectés"
+              },
+              {
+                "id": "b",
+                "label": "Parce que le rappel compte tous les patients sans distinction"
+              },
+              {
+                "id": "c",
+                "label": "Parce que le rappel est toujours égal à l'accuracy"
+              },
+              {
+                "id": "d",
+                "label": "Parce que le rappel ne dépend que des vrais négatifs"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 0.9,
+            "absTol": 0.01
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 0.75,
+            "absTol": 0.01
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "La matrice donne VP = 15, FN = 5, FP = 5, VN = 75. Accuracy = (15 + 75) / 100 = 0,90. Recall = VP / (VP + FN) = 15 / (15 + 5) = 15 / 20 = 0,75. L'accuracy agrège tous les patients (les 75 vrais négatifs gonflent le score) ; le rappel, lui, se concentre sur les malades réels et montre qu'un sur quatre (5 FN) n'a pas été détecté — un aspect que l'accuracy seule masque.",
+    "concepts": [
+      "matrice-de-confusion",
+      "taux-de-bonne-classification",
+      "rappel"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "evaluation-metriques",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "La matrice de confusion ci-dessous évalue un classifieur du dataset Iris (3 classes) sur 75 exemples de test. Lisez-la et répondez aux sous-questions.",
+    "payload": {
+      "figure": {
+        "kind": "confusion-matrix",
+        "classes": [
+          "setosa",
+          "versicolor",
+          "virginica"
+        ],
+        "matrix": [
+          [
+            20,
+            3,
+            2
+          ],
+          [
+            1,
+            22,
+            2
+          ],
+          [
+            0,
+            4,
+            21
+          ]
+        ],
+        "caption": "Matrice de confusion 3 × 3 d'un classifieur Iris (75 exemples de test)"
+      },
+      "caption": "Classifieur Iris à 3 classes, jeu de test de 75 exemples",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Quelle est l'accuracy globale du classifieur ? Donnez un nombre entre 0 et 1.",
+          "weight": 1,
+          "payload": {
+            "hint": "Accuracy = somme de la diagonale / somme totale."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Combien d'exemples sont mal classés au total ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Total des exemples − somme de la diagonale."
+          }
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Sur la classe réelle setosa (première ligne [20, 3, 2]), comment se lisent les valeurs 3 et 2 ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "3 exemples setosa ont été prédits versicolor et 2 ont été prédits virginica : ce sont des setosa mal classés"
+              },
+              {
+                "id": "b",
+                "label": "3 et 2 sont des exemples setosa bien classés"
+              },
+              {
+                "id": "c",
+                "label": "3 et 2 sont des exemples versicolor et virginica prédits setosa"
+              },
+              {
+                "id": "d",
+                "label": "3 et 2 sont les probabilités des classes versicolor et virginica"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 0.84,
+            "absTol": 0.01
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 12,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "Diagonale = 20 + 22 + 21 = 63 ; total = 75. Accuracy = 63 / 75 = 0,84. Exemples mal classés = 75 − 63 = 12 (les cases hors diagonale). La ligne setosa [20, 3, 2] se lit : 20 setosa bien classés, 3 setosa prédits versicolor, 2 setosa prédits virginica — les valeurs hors diagonale d'une ligne sont des exemples de cette classe réelle, mal classés.",
+    "concepts": [
+      "matrice-de-confusion",
+      "taux-de-bonne-classification"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  },
+  {
+    "chapterSlug": "evaluation-metriques",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un classifieur binaire a la matrice CONF = [[VP, FN], [FP, VN]] = [[8, 2], [2, 8]]. Quelle est sa F-mesure ? (Indice : ici rappel = précision.) Donnez un nombre entre 0 et 1.",
+    "payload": {
+      "placeholder": "ex. 0.80",
+      "hint": "rappel = 8/10, précision = 8/10 ; F = 2·P·R/(P+R)."
+    },
+    "solution": {
+      "value": 0.8,
+      "absTol": 0.01
+    },
+    "explanation": "Rappel = VP/(VP+FN) = 8/(8+2) = 0,80 et précision = VP/(VP+FP) = 8/(8+2) = 0,80. F = 2 · 0,80 · 0,80 / (0,80 + 0,80) = 1,28 / 1,60 = 0,80. Quand rappel et précision sont égaux, la F-mesure prend cette valeur commune.",
+    "concepts": [
+      "f-mesure",
+      "rappel",
+      "precision"
+    ],
+    "source": "Slides_Intro_DM_2425.pdf"
+  }
+]

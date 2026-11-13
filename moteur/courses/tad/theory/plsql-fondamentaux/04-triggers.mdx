@@ -1,0 +1,186 @@
+---
+title: Triggers
+slug: triggers
+order: 4
+estimatedReadMin: 10
+concepts: [trigger, trigger-timing, trigger-row, trigger-instead-of, raise-application-error]
+source: "CM5, slides 16-22"
+---
+
+## Qu'est-ce qu'un trigger ?
+
+Un **trigger** est du **code PL/SQL stocké en base** qui **se déclenche automatiquement** lors d'un événement sur :
+
+- une **TABLE**,
+- une **VUE**,
+- un **SCHÉMA / DATABASE**.
+
+Les **instructions de déclenchement** parmi :
+
+- **LDD** : `CREATE`, `ALTER`, `DROP`
+- **LMD** : `INSERT`, `DELETE`, `UPDATE`
+- **DATABASE** : `STARTUP`, `SHUTDOWN`, `LOGON`, etc.
+
+Le moment de déclenchement autour de l'événement : **BEFORE** ou **AFTER**.
+
+> Conseil : il n'y a pas que les applications qui modifient les données. Pensez à mettre en place des **garde-fous via triggers** pour les traitements stockés.
+
+## Triggers sur table
+
+### Syntaxe complète
+
+```sql
+CREATE [OR REPLACE] TRIGGER nom_trig
+BEFORE|AFTER INSERT|DELETE|UPDATE ON nom_table
+[FOR EACH ROW]
+[WHEN condition]
+DECLARE
+  variables
+BEGIN
+  instructions PL/SQL
+END;
+```
+
+- **`BEFORE|AFTER`** : avant ou après l'événement.
+- **`INSERT|DELETE|UPDATE`** : type d'événement. Plusieurs possibles : `BEFORE INSERT OR DELETE`.
+- **`ON nom_table`** : table cible.
+- **`FOR EACH ROW`** : trigger **niveau ligne** (sans cette clause, c'est niveau **instruction**).
+- **`WHEN`** : filtre supplémentaire.
+
+### FOR EACH ROW
+
+Avec `FOR EACH ROW`, le trigger s'exécute **pour chaque ligne** modifiée. Oracle instancie deux pseudo-variables :
+
+- **`:new`** : ligne après modification (`INSERT`, `UPDATE`).
+- **`:old`** : ligne avant modification (`UPDATE`, `DELETE`).
+
+On accède aux colonnes par notation pointée : `:new.id_produit`, `:old.stock`, etc.
+
+> ⚠️ **Règle de non-mutation** : lors de l'exécution d'un trigger sur table, on ne **requête pas** la table en cours de mutation (et a fortiori on n'**écrit** pas dans la requête en cours d'exécution).
+
+## Plusieurs déclenchements groupés
+
+Un trigger peut couvrir **plusieurs événements** et se diversifier en interne :
+
+```sql
+CREATE OR REPLACE TRIGGER nom_trig
+BEFORE INSERT OR DELETE ON nom_table
+BEGIN
+   IF INSERTING THEN
+      ...
+   ELSIF DELETING THEN
+      ...
+   END IF;
+END;
+```
+
+Les prédicats **`INSERTING`**, **`UPDATING`**, **`DELETING`** sont disponibles pour discriminer.
+
+## Trigger sur colonne spécifique
+
+```sql
+CREATE OR REPLACE TRIGGER nom_trig
+BEFORE UPDATE OF col1, col2 ON nom_table
+DECLARE
+   ...
+BEGIN
+   ...
+END;
+```
+
+Le trigger ne se déclenche que si `col1` ou `col2` est dans la liste des colonnes mises à jour.
+
+## Exemple 1 : mise à jour de stock après commande
+
+```sql
+CREATE OR REPLACE TRIGGER trig_maj_stock
+AFTER INSERT ON ligne_commande
+BEGIN
+   :new.date_ajout := SYSDATE;
+   UPDATE PRODUIT
+   SET nb_stock = nb_stock - :new.quantite
+   WHERE id_produit = :new.id_produit;
+END;
+```
+
+(Ici on suppose que la vérification des quantités n'est pas à la charge de ce trigger.)
+
+## Exemple 2 : empêcher un stock négatif
+
+```sql
+CREATE OR REPLACE TRIGGER trig_check_stock
+BEFORE UPDATE OF nb_stock ON produit
+FOR EACH ROW
+BEGIN
+   IF :new.nb_stock < 0 THEN
+      RAISE_APPLICATION_ERROR(-20012, 'Mise à jour du stock impossible (<0)');
+   END IF;
+END;
+```
+
+**`RAISE_APPLICATION_ERROR(code, message)`** lève une erreur applicative. Le code doit être dans la plage `[-21000, -20000]`. C'est l'outil canonique pour faire échouer un trigger et donc annuler l'opération qui l'a déclenché.
+
+## États d'un trigger
+
+Un trigger possède **deux états** : `ENABLED` (activé) ou `DISABLED` (désactivé).
+
+```sql
+ALTER TRIGGER nom_trig ENABLED;
+ALTER TRIGGER nom_trig DISABLED;
+ALTER TRIGGER nom_trig COMPILE;     -- recompile si modifié
+DROP TRIGGER nom_trig;              -- suppression
+```
+
+## Triggers sur vue : INSTEAD OF
+
+Une vue accepte les modifications de données seulement si elle est « simple » (clés primaires uniques, pas de regroupement, pas de sous-requête…). Pour les autres vues, on peut associer un trigger **`INSTEAD OF`** :
+
+```sql
+CREATE OR REPLACE TRIGGER nom_trig
+INSTEAD OF INSERT ON nom_vue
+[DECLARE]
+   ...
+BEGIN
+   -- traitement alternatif
+END;
+```
+
+Au lieu d'exécuter l'`INSERT` original sur la vue (impossible), le trigger fait un traitement de **substitution**.
+
+### Exemple : vue jointe `film + réalisateur`
+
+```sql
+CREATE OR REPLACE VIEW vue_film_real AS
+   SELECT num_film, titre, annee, f.num_ind AS id_real, nom, prenom
+   FROM film f, individu i
+   WHERE f.num_ind = i.num_ind;
+
+CREATE OR REPLACE TRIGGER trig_ins_vue_film_real
+INSTEAD OF INSERT ON vue_film_real
+DECLARE
+   v_id_real INDIVIDU.NUM_IND%TYPE;
+BEGIN
+   BEGIN
+      SELECT num_ind INTO v_id_real
+      FROM INDIVIDU
+      WHERE num_ind = :new.id_real;
+   EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+         INSERT INTO individu
+         VALUES (seq_id_real.NEXTVAL, :new.nom, :new.prenom)
+         RETURNING num_ind INTO v_id_real;
+   END;
+
+   INSERT INTO film (num_film, titre, annee, num_ind)
+   VALUES (seq_id_film.NEXTVAL, :new.titre, :new.annee, v_id_real);
+END;
+```
+
+> **À retenir**
+> - Trigger = PL/SQL stocké déclenché par un événement (LMD, LDD, DATABASE).
+> - Timing : `BEFORE` ou `AFTER`. Niveau : instruction ou `FOR EACH ROW` (avec `:new` et `:old`).
+> - Plusieurs événements : prédicats `INSERTING`, `UPDATING`, `DELETING`.
+> - `RAISE_APPLICATION_ERROR(-20XXX, 'message')` pour faire échouer.
+> - États : `ENABLED` / `DISABLED`, recompile via `ALTER TRIGGER ... COMPILE`.
+> - **`INSTEAD OF`** pour rendre modifiable une vue complexe.
+> - **Non-mutation** : un trigger ne requête pas la table en mutation.

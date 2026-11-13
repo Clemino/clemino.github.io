@@ -1,0 +1,318 @@
+---
+title: "Applications du NLP et vers les LLM"
+slug: applications-nlp-llm
+order: 4
+estimatedReadMin: 25
+concepts: [semantique-lexicale, ambiguite-linguistique, application-nlp, modele-de-langage, grand-modele-de-langage, transformeur]
+source: "Intro_NLP.pdf"
+---
+
+## L'analyse sémantique
+
+Les chapitres précédents ont parcouru les niveaux **lexical** et **syntaxique**.
+La dernière couche de la chaîne de traitement est l'**analyse sémantique**. Le
+cours la définit :
+
+> L'**analyse sémantique** consiste à « **comprendre le sens** » des **mots**,
+> des **expressions**, des **phrases** et des **documents**.
+
+Le cours insiste sur le fait que la sémantique **n'est pas une couche isolée** :
+
+> **Tous les niveaux** de l'analyse **contribuent à la sémantique**.
+
+Autrement dit, la compréhension du sens s'appuie sur tout ce qui précède — le
+lexique, la morphologie, la syntaxe. Le cours opère ensuite une **distinction
+fondamentale** :
+
+> On distingue la **sémantique lexicale** (le sens des **mots individuels**) et
+> la **sémantique supralexicale** (le sens des **combinaisons de mots**, comme
+> les syntagmes et les phrases). Les deux niveaux **interagissent et
+> s'interpénètrent** de diverses manières.
+
+| Niveau de sémantique | Porte sur… |
+| --- | --- |
+| **Sémantique lexicale** | Le sens des **mots individuels** |
+| **Sémantique supralexicale** | Le sens des **combinaisons de mots** (syntagmes, phrases) |
+
+> **À retenir** : l'**analyse sémantique** vise la **compréhension du sens** des
+> mots, expressions, phrases et documents ; **tous les niveaux** d'analyse y
+> contribuent. On distingue la **sémantique lexicale** (sens des **mots**) et la
+> **sémantique supralexicale** (sens des **combinaisons de mots**).
+
+## La sémantique lexicale
+
+Le cours précise l'objet de la **sémantique lexicale** :
+
+> La sémantique lexicale étudie le **sens des mots individuels**, et plus
+> généralement le sens des **unités lexicales** (*lexical items*) telles que les
+> **affixes** ou les **mots composés**.
+
+Analyser le sens de ces unités revient à **deux tâches** :
+
+1. **analyser leur structure interne** et leur **contenu** ;
+2. **représenter leurs relations** aux autres éléments du lexique.
+
+> **À retenir** : la **sémantique lexicale** étudie le sens des **mots** et des
+> **unités lexicales** (affixes, mots composés) : il s'agit d'**analyser leur
+> structure interne** et de **représenter leurs relations** aux autres mots du
+> lexique.
+
+## Les relations entre unités lexicales
+
+Le cœur de la sémantique lexicale réside dans les **relations** entre unités
+lexicales. Le cours les organise en **deux familles** : les relations
+**horizontales** et les relations **verticales**.
+
+Les **relations horizontales** entre unités lexicales :
+
+1. la **synonymie** : des mots ayant le **même sens** ou un sens **proche** —
+   par exemple *small* / *little* ;
+2. l'**opposition** : l'**antonymie** (*big* / *small*), la **conversité**
+   (*teach* / *learn*, *give* / *take*), etc. ;
+3. l'**homonymie** : des **mots différents** ayant la **même forme** — par
+   exemple *light* (clair, opposé à sombre) et *light* (léger, opposé à
+   lourd) ;
+4. la **polysémie** : un **même mot** ayant des **sens différents** — par
+   exemple *satellite* : un engin électronique envoyé dans l'espace, ou bien un
+   pays / État dépendant d'un État plus puissant.
+
+Les **relations verticales** entre unités lexicales :
+
+1. l'**hyponymie / hyperonymie** : le sens d'une unité, l'**hyponyme**, est
+   **plus spécifique** que celui de l'autre, l'**hyperonyme** — par exemple
+   *rose* / *flower*, ou *orange* / *fruit*. Les unités qui sont hyponymes d'une
+   **même** unité sont appelées **co-hyponymes** (par exemple *cat* et *dog*) ;
+2. la **méronymie** : une relation de **partie-à-tout** entre le **méronyme**
+   (la partie) et le **holonyme** (le tout) — par exemple *nose* / *face*, ou
+   *wheel* / *car*.
+
+| Famille | Relation | Exemple du cours |
+| --- | --- | --- |
+| **Horizontale** | Synonymie | *small* / *little* |
+| **Horizontale** | Opposition (antonymie, conversité) | *big* / *small* ; *teach* / *learn* |
+| **Horizontale** | Homonymie | *light* (clair) / *light* (léger) |
+| **Horizontale** | Polysémie | *satellite* (engin / pays dépendant) |
+| **Verticale** | Hyponymie / hyperonymie | *rose* / *flower* |
+| **Verticale** | Méronymie | *wheel* / *car* |
+
+On notera le lien avec l'**ambiguïté** vue au chapitre 1 : l'**homonymie** et la
+**polysémie** sont précisément les sources de l'**ambiguïté lexicale** — un mot
+ayant plus d'un sens.
+
+> **À retenir** : la sémantique lexicale décrit des **relations horizontales**
+> (**synonymie**, **opposition**, **homonymie**, **polysémie**) et des
+> **relations verticales** (**hyponymie / hyperonymie**, **méronymie**) entre
+> unités lexicales. **Homonymie** et **polysémie** sont à l'origine de
+> l'**ambiguïté lexicale**.
+
+## WordNet
+
+Le cours présente une ressource concrète de sémantique lexicale, **WordNet** :
+
+> **WordNet** est une **base de données lexicale électronique de l'anglais**.
+
+Le cours détaille son organisation :
+
+- WordNet **regroupe les noms, verbes, adjectifs et adverbes** en **ensembles de
+  synonymes cognitifs** appelés **synsets**, chacun **exprimant un concept
+  distinct** ;
+- il **inclut aussi les relations entre synsets** (**hyperonymie /
+  hyponymie**, **synonymie**, etc.) ;
+- WordNet peut être **utilisé avec Python** grâce au **module NLTK**.
+
+WordNet est donc une mise en œuvre concrète des **relations lexicales** décrites
+ci-dessus : ses **synsets** matérialisent la synonymie, et ses liens entre
+synsets, les relations verticales comme l'hyponymie.
+
+> **À retenir** : **WordNet** est une **base de données lexicale de l'anglais**
+> qui regroupe les mots en **synsets** (ensembles de synonymes exprimant un
+> **concept**) et code les **relations entre synsets** (hyperonymie, synonymie…).
+> Il s'utilise en Python via le module **NLTK**.
+
+## La sémantique compositionnelle
+
+Le cours aborde ensuite la **sémantique supralexicale** — le sens des
+**combinaisons de mots** — par l'**approche compositionnelle** :
+
+> Il existe plusieurs approches pour la sémantique supralexicale. Les approches
+> **compositionnelles** reposent sur l'hypothèse que le **sens d'une combinaison
+> de mots est déterminé par les sens de ses parties et par la manière dont ces
+> parties sont combinées** (**principe de compositionnalité**).
+
+Le cours signale qu'une approche logique relève de cette famille :
+
+> L'**approche logique** appartient à cette catégorie. Elle utilise la **logique
+> du premier ordre** (logique des prédicats), qui représente l'interprétation
+> sémantique des phrases à l'aide de **variables, constantes, prédicats,
+> foncteurs, connecteurs logiques et quantificateurs**.
+
+Dans cette approche :
+
+> Le **sens d'une phrase** est assimilé aux **conditions de vérité** de la (ou
+> des) **formule(s)** qui la représentent — c'est-à-dire les conditions sous
+> lesquelles ces formules sont **vraies**.
+
+Le cours donne **deux exemples** de phrases et de l'interprétation de leur sens
+en logique du premier ordre :
+
+```text
+"Some teachers are sick"
+   →  ∃x  teacher(x) ∧ sick(x)
+
+"All french students learn English"
+   →  ∀x  ( french(x) ∧ student(x) ) ⇒ learn(x, english)
+```
+
+> **À retenir** : la **sémantique compositionnelle** repose sur le **principe de
+> compositionnalité** — le sens d'une combinaison vient du **sens des parties**
+> et de leur **mode de combinaison**. L'**approche logique** en relève : elle
+> représente le sens d'une phrase par une **formule de logique du premier
+> ordre**, dont les **conditions de vérité** définissent ce sens.
+
+## Les règles d'inférence et le modus ponens
+
+L'approche logique ne sert pas seulement à **représenter** le sens : elle permet
+aussi de **raisonner**. Le cours précise :
+
+> Les règles des prédicats incluent aussi des **règles d'inférence** qui
+> déterminent **quelles phrases sont vraies étant donné que certaines autres le
+> sont**.
+
+La plus célèbre de ces règles est le **modus ponens**, dont le cours donne un
+exemple d'application :
+
+```text
+Prémisse 1 :  Pierre est malade.            P : sick(c)
+Prémisse 2 :  Chaque fois que Pierre est malade, il reste à la maison.
+                                            P ⇒ Q : stay_at_home(c)
+Conclusion :  Pierre reste à la maison.     Q : stay_at_home(c)
+```
+
+Le **modus ponens** se lit ainsi : si l'on sait que `P` est vraie, **et** que
+`P ⇒ Q` est vraie, alors on peut **conclure** que `Q` est vraie. C'est cette
+mécanique d'inférence qui permet, à partir du sens **représenté** des phrases,
+d'**en déduire** de nouvelles connaissances.
+
+> **À retenir** : l'approche logique inclut des **règles d'inférence** qui
+> **déduisent** des phrases vraies à partir d'autres. La plus connue est le
+> **modus ponens** : de `P` et de `P ⇒ Q`, on **conclut** `Q`.
+
+## Les applications du NLP
+
+Le cours a énuméré, dès le premier chapitre, plusieurs **applications** du NLP.
+On peut maintenant les relire à la lumière des techniques étudiées dans le
+module :
+
+- la **traduction automatique** : produire, à partir d'un document dans une
+  langue, un document dans une autre langue. Le **module 11** l'avait identifiée
+  comme un problème **séquence à séquence** typique, traité par les RNN et les
+  architectures **encodeur-décodeur** ;
+- le **question-réponse** (*question answering*) : répondre à une question
+  posée en langue naturelle ;
+- le **résumé de texte** (*text summarization*) : produire une version
+  abrégée d'un document qui en conserve l'essentiel ;
+- l'**extraction d'information** : repérer dans des textes des éléments
+  structurés (entités, relations, faits) ;
+- les **agents conversationnels** : dialoguer avec un utilisateur en langue
+  naturelle.
+
+Toutes ces applications mobilisent les niveaux d'analyse parcourus : il faut
+**tokeniser** et **représenter** le texte, en analyser la **structure**, et en
+**comprendre le sens** — tout en **résolvant l'ambiguïté**.
+
+> **À retenir** : les applications du NLP incluent la **traduction
+> automatique**, le **question-réponse**, le **résumé de texte**,
+> l'**extraction d'information** et les **agents conversationnels**. Toutes
+> reposent sur les niveaux d'analyse étudiés : **représentation**, **structure**
+> et **sens** du texte.
+
+## Vers les grands modèles de langage
+
+Le cours conclut sa partie théorique en rappelant les niveaux de traitement du
+langage. Ce module-ci peut aller plus loin et **boucler le fil du cours** : du
+NLP « classique » aux **grands modèles de langage**, déjà annoncés dans le tout
+**premier module**.
+
+Le parcours suivi est cohérent. Le NLP classique enchaîne le **prétraitement**
+(tokenisation, lemmatisation), une **représentation** du texte (sac de mots,
+TF-IDF, n-grammes), une **analyse syntaxique** par **grammaires**, et une
+**analyse sémantique**. Puis trois idées, vues au fil du cours, ont changé
+l'échelle du domaine :
+
+1. les **plongements lexicaux** (chapitre 3) : représenter les mots par des
+   **vecteurs denses** porteurs de **sens** ;
+2. les **réseaux récurrents** et les **LSTM** (module 11) : traiter le texte
+   comme une **séquence**, avec une **mémoire** ;
+3. le **transformeur** (module 11) : une architecture fondée sur l'**attention**,
+   **sans récurrence**, **parallèle** et conçue pour le **passage à l'échelle**.
+
+C'est cette dernière brique qui mène aux **LLM**. Le **module 1** en donnait
+déjà la définition, que l'on peut maintenant relire avec tout le vocabulaire du
+module :
+
+> Un **grand modèle de langage (LLM)** est un **modèle de langage neuronal de
+> très grande taille**, généralement fondé sur l'**architecture transformeur**,
+> principale réalisation de l'**IA générative**.
+
+Chaque terme de cette phrase est désormais éclairé. Un **modèle de langage**
+(chapitre 3) apprend une **distribution de probabilité sur les séquences de
+mots** et sait **prédire le mot suivant**. **Neuronal** : il est réalisé par un
+**réseau de neurones** (modules 9 à 11). **De très grande taille** : il
+comporte un très grand nombre de **paramètres**, entraîné sur d'immenses
+corpus. **Fondé sur le transformeur** : il s'appuie sur l'**attention** et le
+calcul **parallèle** qui autorisent ce **passage à l'échelle** (module 11). Un
+LLM est ainsi **l'aboutissement** du chemin parcouru — du sac de mots au
+transformeur.
+
+> **À retenir** : les **grands modèles de langage (LLM)** sont l'**aboutissement**
+> du cours : un **modèle de langage** (distribution sur les séquences de mots),
+> **neuronal** (réseau de neurones), **de très grande taille**, fondé sur le
+> **transformeur** et son **attention** parallèle. Ils relient le NLP
+> « classique » à l'**IA générative** annoncée au **module 1**.
+
+## Conclusion du module — et du cours
+
+Le cours conclut sobrement son chapitre :
+
+> Dans ce chapitre, nous avons **introduit le traitement automatique du langage
+> naturel (NLP)**. Nous avons **brièvement décrit les principaux niveaux de
+> traitement du langage**.
+
+Ce module clôt aussi le **parcours complet** du cours d'intelligence
+artificielle. Parti de la **recherche** dans les espaces d'états et des **jeux**,
+le cours a traversé l'**optimisation**, le **machine learning** (data mining,
+arbres, Bayes, régression logistique), l'**apprentissage profond** (réseaux de
+neurones, CNN, RNN), l'**apprentissage par renforcement**, pour aboutir au
+**NLP** et aux **grands modèles de langage**. Le **module 1** présentait le
+**paysage de l'IA, du machine learning aux LLM** ; ce dernier module en fournit
+la **dernière pièce**, et **referme la boucle**.
+
+> **À retenir** : ce module a **introduit le NLP** et ses **niveaux** de
+> traitement. Il **clôt le cours** : du parcours allant de la **recherche** aux
+> **LLM**, il fournit la **dernière pièce** et **referme la boucle** ouverte au
+> **module 1**.
+
+## Synthèse de la section
+
+L'**analyse sémantique** vise la **compréhension du sens** ; **tous les niveaux**
+d'analyse y contribuent. La **sémantique lexicale** étudie le sens des **mots**
+et leurs **relations** — **horizontales** (synonymie, opposition, homonymie,
+polysémie) et **verticales** (hyponymie / hyperonymie, méronymie) —, relations
+matérialisées par la base **WordNet** et ses **synsets**. La **sémantique
+supralexicale** suit le **principe de compositionnalité** : le sens d'une
+combinaison vient du **sens des parties** et de leur **mode de combinaison** ;
+l'**approche logique** représente une phrase par une **formule de logique du
+premier ordre**, dont les **conditions de vérité** définissent le sens, et le
+**modus ponens** permet d'en **inférer** d'autres. Le NLP nourrit de nombreuses
+**applications** — **traduction**, **question-réponse**, **résumé**,
+**extraction d'information**, **agents conversationnels**. Enfin, en reliant
+les **plongements lexicaux**, les **RNN / LSTM** et le **transformeur**, le
+module aboutit aux **grands modèles de langage (LLM)** : des modèles de langage
+**neuronaux**, **de très grande taille**, fondés sur le **transformeur** — ce
+qui **referme la boucle** ouverte au **module 1**.
+
+> **À retenir** : l'**analyse sémantique** (sémantique **lexicale** et
+> **compositionnelle**, **WordNet**, **logique du premier ordre**) achève la
+> chaîne de traitement ; le NLP alimente de multiples **applications** ; et le
+> chemin **plongements → RNN → transformeur** mène aux **LLM**, dernière pièce
+> du cours.

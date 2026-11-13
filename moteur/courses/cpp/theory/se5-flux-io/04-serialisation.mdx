@@ -1,0 +1,266 @@
+---
+title: Sérialisation d'objets
+slug: serialisation
+order: 4
+estimatedReadMin: 11
+concepts: [serialisation-objet, serialisation-texte, serialisation-binaire]
+source: "Cours 5 — Gestion des entrées/sorties"
+---
+
+## Faire survivre un objet à l'arrêt du programme
+
+Les objets vivent en mémoire vive : ils **disparaissent** dès que le programme se termine. Un répertoire de contacts, un classement de tournoi, un inventaire — tout serait perdu à la fermeture. Pour qu'un objet **persiste**, il faut l'enregistrer dans un fichier, puis savoir le **reconstruire** plus tard.
+
+> La **sérialisation** est l'opération qui transforme un objet en une suite d'octets que l'on peut **écrire dans un fichier** ; la **désérialisation** est l'opération inverse, qui **reconstruit** l'objet à partir du fichier.
+
+Deux approches existent : la sérialisation **texte** et la sérialisation **binaire**. Ce chapitre les compare et montre comment doter une classe de méthodes de persistance.
+
+## Le fil rouge : les classes `Contact` et `Repertoire`
+
+Reprenons des classes du cours. Un `Contact` regroupe un nom et un téléphone ; un `Repertoire` est une collection de contacts.
+
+```cpp
+#include <string>
+#include <vector>
+
+class Contact {
+    protected:
+        std::string nom;
+        std::string tel;
+    public:
+        Contact() = default;
+        Contact(std::string n, std::string t) : nom(n), tel(t) {}
+        std::string getNom() const { return nom; }
+        std::string getTel() const { return tel; }
+};
+
+class Repertoire {
+    protected:
+        std::vector<Contact> contacts;
+    public:
+        void ajouter(const Contact& c) { contacts.push_back(c); }
+        void sauvegarder(const std::string& chemin) const;   // sérialisation
+        void charger(const std::string& chemin);             // désérialisation
+};
+```
+
+L'objectif : implémenter `sauvegarder` (écrire le répertoire dans un fichier) et `charger` (le reconstruire depuis ce fichier).
+
+## La sérialisation texte
+
+La sérialisation **texte** écrit les attributs de l'objet sous forme **lisible**, avec l'opérateur `<<`, en séparant les champs par des espaces ou des sauts de ligne. C'est la forme la plus simple et la plus naturelle.
+
+```cpp
+#include <fstream>
+
+void Repertoire::sauvegarder(const std::string& chemin) const {
+    std::ofstream sortie(chemin);
+    if (!sortie.is_open()) {
+        std::cerr << "Impossible d'ouvrir " << chemin << " en ecriture\n";
+        return;
+    }
+    for (const Contact& c : contacts) {
+        sortie << c.getNom() << " " << c.getTel() << "\n";   // un contact par ligne
+    }
+    sortie.close();
+}
+```
+
+Le fichier produit est un simple texte, **lisible et modifiable** dans n'importe quel éditeur :
+
+```text
+Dupont 0612345678
+Martin 0698765432
+```
+
+La désérialisation relit ce texte avec `>>`. Le format choisi à l'écriture — un nom, un espace, un téléphone, un saut de ligne — **dicte** la manière de relire :
+
+```cpp
+void Repertoire::charger(const std::string& chemin) {
+    std::ifstream entree(chemin);
+    if (!entree.is_open()) {
+        std::cerr << "Impossible d'ouvrir " << chemin << " en lecture\n";
+        return;
+    }
+    contacts.clear();
+    std::string nom, tel;
+    while (entree >> nom >> tel) {          // tant qu'un couple (nom, tel) se lit
+        contacts.push_back(Contact(nom, tel));
+    }
+    entree.close();
+}
+```
+
+> ⚠️ La sérialisation texte impose un **contrat de format** : la lecture doit suivre **exactement** l'ordre et les séparateurs de l'écriture. Et comme `>>` s'arrête au premier espace, un attribut qui peut **contenir des espaces** (une adresse, un nom composé) casse ce schéma — il faut alors un séparateur dédié et `std::getline`.
+
+## Donner à la classe son `operator<<` et `operator>>`
+
+Écrire `c.getNom() << " " << c.getTel()` à chaque sauvegarde est répétitif. Mieux vaut **centraliser** le format dans la classe elle-même, en surchargeant `operator<<` et `operator>>` (cours 3). Le format de sérialisation est alors défini **une seule fois**.
+
+```cpp
+class Contact {
+    protected:
+        std::string nom, tel;
+    public:
+        Contact() = default;
+        Contact(std::string n, std::string t) : nom(n), tel(t) {}
+        // opérateurs amis : ils accèdent aux attributs protégés
+        friend std::ostream& operator<<(std::ostream& os, const Contact& c);
+        friend std::istream& operator>>(std::istream& is, Contact& c);
+};
+
+std::ostream& operator<<(std::ostream& os, const Contact& c) {
+    os << c.nom << " " << c.tel;        // format d'écriture défini ICI
+    return os;
+}
+
+std::istream& operator>>(std::istream& is, Contact& c) {
+    is >> c.nom >> c.tel;               // format de lecture, symétrique
+    return is;
+}
+```
+
+L'atout décisif : ces opérateurs prennent un `ostream&` / `istream&`, c'est-à-dire **n'importe quel flux**. Le **même** `operator<<` sert à afficher un contact à l'écran **et** à l'enregistrer dans un fichier — les deux flux dérivent de `ostream`.
+
+```cpp
+Contact c("Dupont", "0612345678");
+
+std::cout << c << "\n";          // affichage à l'écran
+
+std::ofstream f("contacts.txt");
+f << c << "\n";                  // sérialisation dans un fichier — même opérateur
+f.close();
+```
+
+La sauvegarde du répertoire devient limpide :
+
+```cpp
+void Repertoire::sauvegarder(const std::string& chemin) const {
+    std::ofstream sortie(chemin);
+    for (const Contact& c : contacts)
+        sortie << c << "\n";             // operator<< de Contact
+    sortie.close();
+}
+
+void Repertoire::charger(const std::string& chemin) {
+    std::ifstream entree(chemin);
+    contacts.clear();
+    Contact c;
+    while (entree >> c)                  // operator>> de Contact
+        contacts.push_back(c);
+    entree.close();
+}
+```
+
+## La sérialisation binaire
+
+La sérialisation **binaire** écrit l'objet tel qu'il est représenté **en mémoire** : on copie ses octets bruts directement dans le fichier, sans conversion en texte.
+
+Elle s'appuie sur deux méthodes des flux de fichier, et exige le mode **`std::ios::binary`** :
+
+- **`write(adresse, taille)`** — écrit `taille` octets pris à `adresse` ;
+- **`read(adresse, taille)`** — lit `taille` octets et les place à `adresse`.
+
+Ces méthodes attendent un pointeur de type `char*`. On y passe l'**adresse de l'objet**, convertie en `char*`, et sa **taille** donnée par `sizeof`.
+
+Écrire un objet **entier** d'un seul `write` n'est correct que si le type est **« plat »** : tous ses champs sont des types fondamentaux ou des tableaux de taille fixe — **aucun** `std::string`, pointeur ni `std::vector`. Pour le nom de l'équipe, on emploie donc un tableau `char[]` de taille fixe, **précisément parce qu'une `std::string` ne pourrait pas être écrite ainsi** (voir l'avertissement plus bas). Définissons une structure `EquipeBinaire` plate, inspirée du tournoi de football du cours :
+
+```cpp
+#include <fstream>
+#include <iostream>
+#include <cstring>     // pour std::strncpy
+
+struct EquipeBinaire {
+    char nom[32];          // taille fixe : pas de std::string
+    int  points;
+    int  butsMarques;
+    int  butsEncaisses;
+};
+
+void sauvegarderBinaire(const EquipeBinaire& e, const std::string& chemin) {
+    std::ofstream f(chemin, std::ios::out | std::ios::binary);
+    if (!f.is_open()) { std::cerr << "Erreur a l'ouverture\n"; return; }
+    f.write(reinterpret_cast<const char*>(&e), sizeof(e));   // octets bruts
+    f.close();
+}
+
+void chargerBinaire(EquipeBinaire& e, const std::string& chemin) {
+    std::ifstream f(chemin, std::ios::in | std::ios::binary);
+    if (!f.is_open()) { std::cerr << "Erreur a l'ouverture\n"; return; }
+    f.read(reinterpret_cast<char*>(&e), sizeof(e));          // relecture des octets
+    f.close();
+}
+```
+
+`reinterpret_cast<char*>(&e)` indique simplement « traite l'adresse de cet objet comme une suite d'octets ». La lecture est l'**exacte symétrie** de l'écriture : même taille, même mode binaire. Un aller-retour complet écrit l'objet, le relit dans un autre, et retrouve **les mêmes valeurs** :
+
+```cpp
+int main() {
+    EquipeBinaire e{};                       // initialisation à zéro
+    std::strncpy(e.nom, "Lyon", sizeof(e.nom) - 1);
+    e.points = 9; e.butsMarques = 14; e.butsEncaisses = 5;
+
+    sauvegarderBinaire(e, "equipe.dat");      // écriture binaire
+
+    EquipeBinaire relu{};
+    chargerBinaire(relu, "equipe.dat");       // relecture binaire
+
+    std::cout << relu.nom << " " << relu.points << " "
+              << relu.butsMarques << " " << relu.butsEncaisses << "\n";
+    // affiche : Lyon 9 14 5
+    return 0;
+}
+```
+
+## Texte ou binaire : que choisir ?
+
+| Critère | Sérialisation **texte** | Sérialisation **binaire** |
+|---|---|---|
+| Lisible par un humain | **oui** | non |
+| Modifiable dans un éditeur | **oui** | non |
+| Taille du fichier | plus grande | plus **compacte** |
+| Vitesse de lecture/écriture | plus lente (conversions) | plus **rapide** |
+| Portable entre machines/compilateurs | **oui** | non (dépend de la représentation) |
+
+> ⚠️ La sérialisation binaire d'un objet **entier** par `write`/`read` ne fonctionne **que pour les objets « plats »** : ceux dont tous les attributs sont des types fondamentaux ou des tableaux de taille fixe. Un objet qui contient un **pointeur**, une `std::string` ou un `std::vector` ne peut **pas** être sauvegardé ainsi. En interne, une `std::string` ne stocke qu'un **pointeur** vers son texte (situé ailleurs en mémoire) : `write` n'écrirait que cette adresse, pas les caractères. À la relecture, `read` réécrirait par-dessus ce pointeur des octets périmés, et toute utilisation de la chaîne serait un **comportement indéfini** (plantage probable). C'est exactement pour cette raison que `EquipeBinaire` utilise un `char[32]` de **taille fixe** plutôt qu'une `std::string` : le tableau, lui, contient les caractères *à l'intérieur* de l'objet. Pour un objet non plat, il faut sérialiser **champ par champ** (en mode texte, ou en écrivant la longueur puis les caractères).
+
+## Persister une collection complète
+
+Pour sauvegarder une **collection**, un point pratique : écrire d'abord le **nombre d'éléments**, puis les éléments. À la relecture, ce nombre indique combien d'objets attendre — on n'a plus besoin de tester la fin de fichier.
+
+```cpp
+void Repertoire::sauvegarder(const std::string& chemin) const {
+    std::ofstream sortie(chemin);
+    sortie << contacts.size() << "\n";       // d'abord : combien de contacts
+    for (const Contact& c : contacts)
+        sortie << c << "\n";                 // ensuite : chaque contact
+    sortie.close();
+}
+
+void Repertoire::charger(const std::string& chemin) {
+    std::ifstream entree(chemin);
+    if (!entree.is_open()) {
+        std::cerr << "Impossible d'ouvrir " << chemin << "\n";
+        return;
+    }
+    contacts.clear();
+    size_t n;
+    entree >> n;                             // on relit le nombre annoncé
+    for (size_t i = 0; i < n; ++i) {
+        Contact c;
+        entree >> c;
+        contacts.push_back(c);
+    }
+    entree.close();
+}
+```
+
+Ce schéma — **doter chaque classe d'un couple `sauvegarder` / `charger`** (ou `operator<<` / `operator>>`) — est l'approche standard de la persistance objet. Chaque classe sait s'enregistrer et se reconstruire ; les classes composées délèguent à leurs membres. C'est exactement ce que font `Repertoire` avec ses `Contact`, ou un `Groupe` de tournoi avec ses `Equipe` et ses `Match`.
+
+> **À retenir**
+> - La **sérialisation** transforme un objet en octets stockables dans un fichier ; la **désérialisation** le reconstruit. Elle donne aux objets une vie au-delà de l'exécution.
+> - La sérialisation **texte** écrit les attributs en clair avec `<<` et les relit avec `>>` : lisible, portable, mais l'ordre et les séparateurs forment un **contrat de format** strict.
+> - Centraliser le format dans **`operator<<` / `operator>>`** : le **même** opérateur sert pour l'écran et pour le fichier, puisque tous les flux dérivent d'`ostream`/`istream`.
+> - La sérialisation **binaire** copie les octets bruts via **`write`/`read`** en mode **`std::ios::binary`** : plus compacte et plus rapide, mais illisible et **non portable**.
+> - `write`/`read` sur un objet entier ne valent que pour les objets **« plats »** (types fondamentaux et tableaux de taille fixe, d'où le `char[]` plutôt qu'une `std::string`) : un attribut **pointeur**, `string` ou `vector` rend l'opération **indéfinie** et doit être sérialisé **champ par champ**.
+> - Pour une collection, écrire d'abord le **nombre d'éléments** ; doter chaque classe d'un couple **`sauvegarder` / `charger`** est l'approche standard de la persistance.

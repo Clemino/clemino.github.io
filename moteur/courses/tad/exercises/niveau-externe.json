@@ -1,0 +1,1072 @@
+[
+  {
+    "chapterSlug": "architecture-sparc",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Combien de niveaux distincts définit l'architecture ANSI/SPARC ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "2 niveaux : logique et physique"
+        },
+        {
+          "id": "b",
+          "label": "3 niveaux : externe, conceptuel, physique"
+        },
+        {
+          "id": "c",
+          "label": "4 niveaux : présentation, externe, conceptuel, physique"
+        },
+        {
+          "id": "d",
+          "label": "1 seul niveau : le schéma de la base"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "L'architecture ANSI/SPARC définit trois niveaux : externe (vues utilisateurs), conceptuel (MLD logique) et physique (stockage disque).",
+    "concepts": [
+      "architecture-sparc"
+    ],
+    "source": "CM1 slide 3"
+  },
+  {
+    "chapterSlug": "architecture-sparc",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi ces éléments, lesquels font partie du niveau externe SPARC ? (cocher tout ce qui s'applique)",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Les utilisateurs"
+        },
+        {
+          "id": "b",
+          "label": "Les rôles"
+        },
+        {
+          "id": "c",
+          "label": "Les tablespaces"
+        },
+        {
+          "id": "d",
+          "label": "Les vues logiques et matérialisées"
+        },
+        {
+          "id": "e",
+          "label": "Les fichiers Redo Log"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "d"
+      ]
+    },
+    "explanation": "Le niveau externe comprend les utilisateurs, les rôles et les vues. Les tablespaces et les Redo Log relèvent du niveau physique.",
+    "concepts": [
+      "architecture-sparc",
+      "schema-externe"
+    ]
+  },
+  {
+    "chapterSlug": "architecture-sparc",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une base de données peut avoir plusieurs schémas externes mais un seul schéma conceptuel.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Exact. Le schéma conceptuel est unique, alors qu'on peut créer plusieurs schémas externes (un par type d'utilisateur ou d'application).",
+    "concepts": [
+      "architecture-sparc",
+      "schema-conceptuel"
+    ]
+  },
+  {
+    "chapterSlug": "architecture-sparc",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "L'indépendance physique permet de modifier le stockage sans toucher au schéma conceptuel ni aux applications.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "C'est l'un des intérêts majeurs de SPARC. On peut réindexer, partitionner, déplacer des fichiers sans casser les applications.",
+    "concepts": [
+      "architecture-sparc"
+    ]
+  },
+  {
+    "chapterSlug": "architecture-sparc",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque élément à son niveau SPARC.",
+    "payload": {
+      "left": [
+        {
+          "id": "user",
+          "label": "Utilisateur Oracle"
+        },
+        {
+          "id": "table",
+          "label": "Table CLIENT (MLD)"
+        },
+        {
+          "id": "tblspace",
+          "label": "Tablespace USERS"
+        },
+        {
+          "id": "view",
+          "label": "Vue matérialisée"
+        }
+      ],
+      "right": [
+        {
+          "id": "ext",
+          "label": "Niveau externe"
+        },
+        {
+          "id": "conc",
+          "label": "Niveau conceptuel"
+        },
+        {
+          "id": "phys",
+          "label": "Niveau physique"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "user": "ext",
+        "table": "conc",
+        "tblspace": "phys",
+        "view": "ext"
+      }
+    },
+    "explanation": "Utilisateurs et vues = niveau externe. Tables (MLD) = niveau conceptuel. Tablespaces = niveau physique.",
+    "concepts": [
+      "architecture-sparc"
+    ]
+  },
+  {
+    "chapterSlug": "utilisateurs-roles",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle instruction crée un nouvel utilisateur Oracle ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "ADD USER bob IDENTIFIED 'pwd';"
+        },
+        {
+          "id": "b",
+          "label": "CREATE USER bob IDENTIFIED BY pwd;"
+        },
+        {
+          "id": "c",
+          "label": "NEW USER bob PASSWORD pwd;"
+        },
+        {
+          "id": "d",
+          "label": "INSERT INTO USERS VALUES ('bob', 'pwd');"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "La syntaxe est CREATE USER nom IDENTIFIED BY mot_de_passe [DEFAULT TABLESPACE ...].",
+    "concepts": [
+      "create-user"
+    ]
+  },
+  {
+    "chapterSlug": "utilisateurs-roles",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un utilisateur nouvellement créé peut se connecter immédiatement à la base.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. À sa création, un utilisateur n'a aucun rôle et ne peut rien faire — pas même CREATE SESSION. Il faut lui attribuer au minimum le rôle CONNECT.",
+    "concepts": [
+      "create-user",
+      "role-oracle"
+    ]
+  },
+  {
+    "chapterSlug": "utilisateurs-roles",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "À quoi correspond le rôle prédéfini CONNECT ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Tous les privilèges de la base"
+        },
+        {
+          "id": "b",
+          "label": "Un ensemble de privilèges minimaux (ALTER SESSION, CREATE TABLE, CREATE VIEW, CREATE SESSION...)"
+        },
+        {
+          "id": "c",
+          "label": "Le droit de créer des triggers et procédures uniquement"
+        },
+        {
+          "id": "d",
+          "label": "Le droit de sauvegarder toute la base"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "CONNECT regroupe ALTER SESSION, CREATE CLUSTER, CREATE DATABASE LINK, CREATE SEQUENCE, CREATE SESSION, CREATE SYNONYM, CREATE TABLE, CREATE VIEW.",
+    "concepts": [
+      "role-predefini-connect"
+    ]
+  },
+  {
+    "chapterSlug": "utilisateurs-roles",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez le code pour créer l'utilisateur `bob` puis lui accorder le rôle `R_DEV` :",
+    "payload": {
+      "template": "{{kw1}} USER bob IDENTIFIED BY motpasse;\n{{kw2}} R_DEV {{kw3}} bob;",
+      "slots": [
+        {
+          "id": "kw1"
+        },
+        {
+          "id": "kw2"
+        },
+        {
+          "id": "kw3"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "kw1": "CREATE",
+        "kw2": "GRANT",
+        "kw3": "TO"
+      },
+      "caseSensitive": false
+    },
+    "explanation": "CREATE USER ... IDENTIFIED BY ...; puis GRANT role TO user;",
+    "concepts": [
+      "create-user",
+      "grant-revoke"
+    ]
+  },
+  {
+    "chapterSlug": "utilisateurs-roles",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remettez ces instructions dans l'ordre logique pour configurer un utilisateur développeur :",
+    "payload": {
+      "items": [
+        {
+          "id": "1",
+          "label": "CREATE USER udev IDENTIFIED BY pwd;"
+        },
+        {
+          "id": "2",
+          "label": "CREATE ROLE rdev;"
+        },
+        {
+          "id": "3",
+          "label": "GRANT CONNECT, RESOURCE TO rdev;"
+        },
+        {
+          "id": "4",
+          "label": "GRANT rdev TO udev;"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ]
+    },
+    "explanation": "On crée l'utilisateur, puis le rôle, puis on remplit le rôle, puis on l'attribue à l'utilisateur.",
+    "concepts": [
+      "create-user",
+      "role-oracle",
+      "grant-revoke"
+    ]
+  },
+  {
+    "chapterSlug": "utilisateurs-roles",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Qu'a de particulier un rôle d'application Oracle ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il est automatiquement activé lors de l'exécution d'un élément du package auquel il est associé, et c'est la seule façon de l'activer"
+        },
+        {
+          "id": "b",
+          "label": "Il regroupe tous les privilèges d'administration"
+        },
+        {
+          "id": "c",
+          "label": "Il est créé automatiquement par Oracle"
+        },
+        {
+          "id": "d",
+          "label": "Il s'active à chaque ouverture de session"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Un rôle d'application est lié à un package : il s'active automatiquement lors de l'appel d'un de ses éléments, et uniquement comme cela.",
+    "concepts": [
+      "role-application"
+    ]
+  },
+  {
+    "chapterSlug": "utilisateurs-roles",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Un rôle peut être attribué à un autre rôle (hiérarchie de rôles).",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Oui. GRANT roleA TO roleB est valide : roleB hérite des privilèges de roleA.",
+    "concepts": [
+      "role-oracle",
+      "grant-revoke"
+    ]
+  },
+  {
+    "chapterSlug": "utilisateurs-roles",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pour activer un rôle protégé par mot de passe, on utilise :",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "GRANT ROLE nom IDENTIFIED BY pwd;"
+        },
+        {
+          "id": "b",
+          "label": "SET ROLE nom IDENTIFIED BY pwd;"
+        },
+        {
+          "id": "c",
+          "label": "USE ROLE nom WITH pwd;"
+        },
+        {
+          "id": "d",
+          "label": "CONNECT ROLE nom pwd;"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "SET ROLE nomRole IDENTIFIED BY motPasse; active un rôle utilisateur protégé.",
+    "concepts": [
+      "role-utilisateur"
+    ]
+  },
+  {
+    "chapterSlug": "privileges",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Lequel des suivants est un privilège SYSTÈME ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "SELECT ON Client"
+        },
+        {
+          "id": "b",
+          "label": "CREATE TABLE"
+        },
+        {
+          "id": "c",
+          "label": "EXECUTE ON proc_x"
+        },
+        {
+          "id": "d",
+          "label": "INSERT ON Facture"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "CREATE TABLE est un privilège système (permet de créer un objet d'un type donné). Les autres sont des privilèges objet (action ON un objet précis).",
+    "concepts": [
+      "privilege-systeme",
+      "privilege-objet"
+    ]
+  },
+  {
+    "chapterSlug": "privileges",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quels privilèges objet existent pour une SÉQUENCE ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "ALTER"
+        },
+        {
+          "id": "b",
+          "label": "SELECT"
+        },
+        {
+          "id": "c",
+          "label": "DELETE"
+        },
+        {
+          "id": "d",
+          "label": "EXECUTE"
+        },
+        {
+          "id": "e",
+          "label": "INDEX"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b"
+      ]
+    },
+    "explanation": "Une séquence n'autorise que ALTER et SELECT en privilèges objet (SELECT pour utiliser NEXTVAL/CURRVAL, ALTER pour modifier la séquence).",
+    "concepts": [
+      "privilege-objet"
+    ]
+  },
+  {
+    "chapterSlug": "privileges",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "GRANT SELECT ANY TABLE TO bob donne à bob le droit de lire toutes les tables de tous les schémas.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Le mot-clé ANY étend le privilège système à tous les objets du même type, dans tous les schémas. À utiliser avec prudence.",
+    "concepts": [
+      "privilege-systeme"
+    ]
+  },
+  {
+    "chapterSlug": "privileges",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Pour qu'un utilisateur puisse créer une clé étrangère vers une colonne d'une table d'un autre utilisateur, de quel privilège a-t-il besoin sur cette colonne ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "SELECT"
+        },
+        {
+          "id": "b",
+          "label": "REFERENCES"
+        },
+        {
+          "id": "c",
+          "label": "INSERT"
+        },
+        {
+          "id": "d",
+          "label": "ALTER"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "REFERENCES est un privilège objet spécifique : GRANT REFERENCES (col) ON table TO user;",
+    "concepts": [
+      "privilege-objet"
+    ]
+  },
+  {
+    "chapterSlug": "privileges",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez : donner à `marie` les droits CRUD sur la table `Suppliers`.",
+    "payload": {
+      "template": "GRANT SELECT, {{op1}}, {{op2}}, {{op3}} ON Suppliers TO marie;",
+      "slots": [
+        {
+          "id": "op1"
+        },
+        {
+          "id": "op2"
+        },
+        {
+          "id": "op3"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "op1": [
+          "INSERT",
+          "UPDATE",
+          "DELETE"
+        ],
+        "op2": [
+          "INSERT",
+          "UPDATE",
+          "DELETE"
+        ],
+        "op3": [
+          "INSERT",
+          "UPDATE",
+          "DELETE"
+        ]
+      },
+      "caseSensitive": false
+    },
+    "explanation": "Les 4 opérations CRUD : SELECT (lire), INSERT (créer), UPDATE (modifier), DELETE (supprimer).",
+    "concepts": [
+      "privilege-objet",
+      "grant-revoke"
+    ]
+  },
+  {
+    "chapterSlug": "privileges",
+    "type": "MATCHING",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Associez chaque privilège objet à l'objet sur lequel il s'applique principalement.",
+    "payload": {
+      "left": [
+        {
+          "id": "exe",
+          "label": "EXECUTE"
+        },
+        {
+          "id": "ref",
+          "label": "REFERENCES"
+        },
+        {
+          "id": "sel",
+          "label": "SELECT"
+        },
+        {
+          "id": "idx",
+          "label": "INDEX"
+        }
+      ],
+      "right": [
+        {
+          "id": "tbl",
+          "label": "Table (sur ses colonnes)"
+        },
+        {
+          "id": "fonc",
+          "label": "Procédure / Fonction / Package"
+        },
+        {
+          "id": "any",
+          "label": "Table, vue, séquence, vue matérialisée"
+        },
+        {
+          "id": "tbl2",
+          "label": "Table (pour créer un index dessus)"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "exe": "fonc",
+        "ref": "tbl",
+        "sel": "any",
+        "idx": "tbl2"
+      }
+    },
+    "explanation": "EXECUTE → code stocké. REFERENCES → colonnes (FK). SELECT → tout objet lisible. INDEX → table.",
+    "concepts": [
+      "privilege-objet"
+    ]
+  },
+  {
+    "chapterSlug": "privileges",
+    "type": "RUBRIC_OPEN",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Expliquez le principe du moindre privilège et donnez un exemple où on pourrait l'appliquer dans un projet Oracle.",
+    "payload": {
+      "rubric": [
+        {
+          "id": "principe",
+          "description": "Définit le principe du moindre privilège",
+          "keywords": [
+            "minimum",
+            "moindre",
+            "nécessaire",
+            "stricte"
+          ],
+          "weight": 2
+        },
+        {
+          "id": "exemple-grant",
+          "description": "Donne un exemple concret avec GRANT",
+          "keywords": [
+            "GRANT",
+            "SELECT",
+            "table"
+          ],
+          "weight": 1
+        },
+        {
+          "id": "alternative-any",
+          "description": "Mentionne d'éviter ANY",
+          "keywords": [
+            "ANY",
+            "éviter",
+            "trop",
+            "large"
+          ],
+          "weight": 1
+        },
+        {
+          "id": "role-isolation",
+          "description": "Propose d'utiliser des rôles plutôt que des grants directs",
+          "keywords": [
+            "rôle",
+            "role",
+            "isolation",
+            "encapsuler"
+          ],
+          "weight": 1
+        }
+      ],
+      "minWords": 50
+    },
+    "solution": {
+      "modelAnswer": "Le principe du moindre privilège consiste à donner à chaque utilisateur ou rôle uniquement les droits strictement nécessaires à ses tâches. Par exemple, plutôt que GRANT SELECT ANY TABLE TO bob, on préfère GRANT SELECT ON Client TO bob. On évite ainsi les privilèges 'ANY' trop larges et on encapsule les droits dans des rôles métiers (R_LECTEUR, R_REDACTEUR) attribués aux utilisateurs."
+    },
+    "explanation": "Réponse type : limiter au strict nécessaire pour réduire la surface d'attaque, utiliser des rôles métiers, éviter les ANY.",
+    "concepts": [
+      "privilege-systeme",
+      "privilege-objet",
+      "role-oracle"
+    ]
+  },
+  {
+    "chapterSlug": "vues",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la différence fondamentale entre vue logique et vue matérialisée ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Aucune, ce sont des synonymes"
+        },
+        {
+          "id": "b",
+          "label": "La vue logique est ré-exécutée à chaque appel, la vue matérialisée stocke physiquement les résultats et est rafraîchie périodiquement"
+        },
+        {
+          "id": "c",
+          "label": "La vue logique stocke les résultats, la vue matérialisée recalcule"
+        },
+        {
+          "id": "d",
+          "label": "La vue matérialisée n'accepte que les SELECT, la vue logique aussi les INSERT/UPDATE"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Vue logique = requête stockée ré-exécutée à chaque accès, pas de stockage. Vue matérialisée = stockage physique des résultats, rafraîchi.",
+    "concepts": [
+      "vue-logique",
+      "vue-materialisee"
+    ]
+  },
+  {
+    "chapterSlug": "vues",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Une vue matérialisée avec REFRESH ON COMMIT est rafraîchie automatiquement à chaque validation d'une transaction sur les tables sources.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "C'est précisément le sens de ON COMMIT : la VM est mise à jour au moment de chaque COMMIT modifiant une table source.",
+    "concepts": [
+      "vue-materialisee",
+      "vue-rafraichissement"
+    ]
+  },
+  {
+    "chapterSlug": "vues",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle méthode de rafraîchissement nécessite la création préalable d'un MATERIALIZED VIEW LOG ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "COMPLETE"
+        },
+        {
+          "id": "b",
+          "label": "FORCE"
+        },
+        {
+          "id": "c",
+          "label": "FAST"
+        },
+        {
+          "id": "d",
+          "label": "NEVER"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "FAST ne propage que les changements ; le log de la VM trace ces changements sur les tables sources.",
+    "concepts": [
+      "vue-rafraichissement",
+      "vue-materialisee"
+    ]
+  },
+  {
+    "chapterSlug": "vues",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ordonnez du moins automatique au plus automatique :",
+    "payload": {
+      "items": [
+        {
+          "id": "demand",
+          "label": "REFRESH ON DEMAND (manuel via DBMS_MVIEW.REFRESH)"
+        },
+        {
+          "id": "start",
+          "label": "REFRESH START WITH ... NEXT ... (rafraîchissement périodique)"
+        },
+        {
+          "id": "commit",
+          "label": "REFRESH ON COMMIT (à chaque validation source)"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "demand",
+        "start",
+        "commit"
+      ]
+    },
+    "explanation": "ON DEMAND est manuel ; START WITH ... NEXT ... est périodique programmé ; ON COMMIT réagit à chaque transaction = le plus automatique et le plus réactif.",
+    "concepts": [
+      "vue-rafraichissement"
+    ]
+  },
+  {
+    "chapterSlug": "vues",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écrivez une requête SELECT qui liste les noms et prénoms des individus, sans afficher leur numéro (la base contient `individu(num_ind, nom, prenom)`). Triez par nom alphabétique.",
+    "payload": {
+      "spec": "Écrivez une requête SELECT qui liste les noms et prénoms des individus, sans afficher leur numéro (la base contient `individu(num_ind, nom, prenom)`). Triez par nom alphabétique.",
+      "tests": []
+    },
+    "solution": {
+      "referenceCode": "SELECT nom, prenom FROM individu ORDER BY nom"
+    },
+    "explanation": "Une vue logique masquant le num_ind correspondrait exactement à cette requête. ORDER BY nom impose un ordre déterministe.",
+    "concepts": [
+      "vue-logique"
+    ]
+  },
+  {
+    "chapterSlug": "vues",
+    "type": "SQL_DDL",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Créez une vue `vue_films_recents` qui affiche tous les films de l'année 2000 ou après.",
+    "payload": {
+      "requiredElements": [
+        {
+          "kind": "keyword",
+          "keyword": "CREATE",
+          "description": "Mot-clé CREATE"
+        },
+        {
+          "kind": "keyword",
+          "keyword": "VIEW",
+          "description": "Mot-clé VIEW"
+        },
+        {
+          "kind": "keyword",
+          "keyword": "vue_films_recents",
+          "description": "Nom de la vue 'vue_films_recents'"
+        },
+        {
+          "kind": "keyword",
+          "keyword": "SELECT",
+          "description": "Clause SELECT"
+        },
+        {
+          "kind": "keyword",
+          "keyword": "FROM",
+          "description": "Clause FROM"
+        },
+        {
+          "kind": "keyword",
+          "keyword": "film",
+          "description": "Table source 'film'"
+        },
+        {
+          "kind": "keyword",
+          "keyword": "WHERE",
+          "description": "Clause de filtre"
+        },
+        {
+          "kind": "keyword",
+          "keyword": "annee",
+          "description": "Filtre sur la colonne annee"
+        },
+        {
+          "kind": "keyword",
+          "keyword": "2000",
+          "description": "Seuil 2000"
+        }
+      ]
+    },
+    "solution": {
+      "ddl": "CREATE VIEW vue_films_recents AS SELECT * FROM film WHERE annee >= 2000;"
+    },
+    "explanation": "Syntaxe : CREATE [OR REPLACE] VIEW nom AS SELECT ... FROM ... WHERE ...;",
+    "concepts": [
+      "vue-logique"
+    ]
+  },
+  {
+    "chapterSlug": "vues",
+    "type": "SQL_DDL",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Créez une vue matérialisée `mv_count_films` qui compte le nombre de films par réalisateur, rafraîchie à la demande.",
+    "payload": {
+      "requiredElements": [
+        {
+          "kind": "keyword",
+          "keyword": "MATERIALIZED",
+          "description": "Mot-clé MATERIALIZED"
+        },
+        {
+          "kind": "keyword",
+          "keyword": "VIEW",
+          "description": "Mot-clé VIEW"
+        },
+        {
+          "kind": "keyword",
+          "keyword": "REFRESH",
+          "description": "Clause REFRESH"
+        },
+        {
+          "kind": "keyword",
+          "keyword": "DEMAND",
+          "description": "ON DEMAND"
+        },
+        {
+          "kind": "keyword",
+          "keyword": "COUNT",
+          "description": "Agrégat COUNT"
+        },
+        {
+          "kind": "keyword",
+          "keyword": "GROUP",
+          "description": "Clause GROUP BY"
+        }
+      ]
+    },
+    "solution": {
+      "ddl": "CREATE MATERIALIZED VIEW mv_count_films REFRESH ON DEMAND AS SELECT num_ind, COUNT(*) AS nb_films FROM film GROUP BY num_ind;"
+    },
+    "explanation": "Vue matérialisée avec REFRESH ON DEMAND. Le COUNT(*) groupé par num_ind donne le nombre de films par réalisateur.",
+    "concepts": [
+      "vue-materialisee",
+      "vue-rafraichissement"
+    ]
+  },
+  {
+    "chapterSlug": "vues",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Une vue logique accepte les INSERT / UPDATE / DELETE quand :",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Elle ne contient pas de GROUP BY"
+        },
+        {
+          "id": "b",
+          "label": "Elle contient toutes les colonnes NOT NULL des tables sources"
+        },
+        {
+          "id": "c",
+          "label": "Elle utilise DISTINCT"
+        },
+        {
+          "id": "d",
+          "label": "Elle n'a pas de sous-requête ni de fonction d'agrégat"
+        },
+        {
+          "id": "e",
+          "label": "Elle utilise une jointure complexe"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "d"
+      ]
+    },
+    "explanation": "Une vue est modifiable si : pas de GROUP BY, pas de DISTINCT, pas de sous-requête, pas d'agrégat, et toutes les colonnes obligatoires sont projetées.",
+    "concepts": [
+      "vue-logique"
+    ]
+  },
+  {
+    "chapterSlug": "vues",
+    "type": "RUBRIC_OPEN",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Vous travaillez sur un dashboard analytique qui agrège des millions de lignes par requête (jointures lourdes + GROUP BY). Recommanderiez-vous une vue logique ou une vue matérialisée ? Justifiez votre choix.",
+    "payload": {
+      "rubric": [
+        {
+          "id": "choix",
+          "description": "Recommande la vue matérialisée",
+          "keywords": [
+            "matérialisée",
+            "materialisée",
+            "VM"
+          ],
+          "weight": 2
+        },
+        {
+          "id": "perf",
+          "description": "Argument performance",
+          "keywords": [
+            "performance",
+            "pré-calcul",
+            "rapide",
+            "réutilisation",
+            "cache"
+          ],
+          "weight": 2
+        },
+        {
+          "id": "refresh",
+          "description": "Mentionne le rafraîchissement",
+          "keywords": [
+            "refresh",
+            "rafraîchissement",
+            "rafraichissement",
+            "à jour",
+            "actualisation"
+          ],
+          "weight": 1
+        },
+        {
+          "id": "denorm",
+          "description": "Mentionne la dénormalisation",
+          "keywords": [
+            "dénormalisation",
+            "denormalisation"
+          ],
+          "weight": 1
+        }
+      ],
+      "minWords": 60
+    },
+    "solution": {
+      "modelAnswer": "Je recommande une vue matérialisée. Les requêtes du dashboard sont coûteuses (jointures lourdes + agrégations). Une vue logique les recalculerait à chaque accès. Avec une vue matérialisée, le résultat est pré-calculé et stocké physiquement, ce qui rend chaque lecture quasi instantanée. On peut configurer un REFRESH ON COMMIT FAST si les données changent fréquemment et que la fraîcheur compte, ou un REFRESH START WITH ... NEXT ... pour un rafraîchissement nocturne si les données du jour d'avant suffisent. Créer une vue matérialisée consiste en général à dénormaliser pour des soucis de performance."
+    },
+    "explanation": "Rubrique : VM choisie pour performance + pré-calcul + dénormalisation + rafraîchissement adapté.",
+    "concepts": [
+      "vue-materialisee",
+      "vue-rafraichissement"
+    ]
+  }
+]

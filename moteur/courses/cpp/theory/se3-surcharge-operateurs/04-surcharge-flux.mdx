@@ -1,0 +1,168 @@
+---
+title: Surcharge des flux
+slug: surcharge-flux
+order: 4
+estimatedReadMin: 10
+concepts: [surcharge-flux-sortie, surcharge-flux-entree, fonction-amie, operateur-non-membre]
+source: "Cours 3 — Surcharge d'opérateurs"
+---
+
+## Afficher et lire ses objets
+
+Sur les types fondamentaux, `cout << n` affiche et `cin >> n` saisit. On voudrait la même chose sur ses classes :
+
+```cpp
+Fraction f(5, 7);
+cout << f;        // afficher  "Fraction : 5/7"
+cin  >> f;        // saisir une fraction au clavier
+```
+
+C'est l'objet de ce chapitre : surcharger l'**opérateur de sortie `<<`** et l'**opérateur d'entrée `>>`** pour ses propres types.
+
+## `<<` et `>>` sont des opérateurs comme les autres
+
+`<<` et `>>` n'ont rien de magique : ce sont des **opérateurs binaires**, surchargés par la **bibliothèque standard** pour les types prédéfinis. Le compilateur **traduit** :
+
+```cpp
+cout << f;        // operator<<(cout, f)
+cin  >> f;        // operator>>(cin, f)
+```
+
+L'opérande de **gauche** est le **flux** (`cout`, `cin`, un fichier...) ; l'opérande de **droite** est l'objet à afficher ou à remplir. À nous d'écrire la fonction `operator<<` lorsque l'objet de droite est d'un de nos types.
+
+## Les types des flux : `ostream` et `istream`
+
+Les flux vivent dans l'en-tête `<iostream>` :
+
+- **`std::ostream`** — flux de **sortie** (*output stream*). `std::cout` en est une instance.
+- **`std::istream`** — flux d'**entrée** (*input stream*). `std::cin` en est une instance.
+
+Un flux **ne se copie pas** : il représente une ressource (console, fichier) unique. On le manipule donc **toujours par référence** : `std::ostream&`, `std::istream&`. C'est pourquoi le flux est à la fois **paramètre par référence** et **type de retour par référence** de nos opérateurs.
+
+## Règle fondamentale : `<<` et `>>` doivent être non-membres
+
+C'est le point central du chapitre.
+
+> Les opérateurs `<<` et `>>` **doivent** être surchargés comme **fonctions non-membres**.
+
+La raison est la **traduction**. Tentons d'écrire `operator<<` en **méthode membre** de `Fraction`. L'opérande de gauche serait alors `*this`, donc une `Fraction`, et le compilateur traduirait `cout << f` en :
+
+```cpp
+f.operator<<(cout);     // ce qu'imposerait une méthode membre de Fraction
+```
+
+Il faudrait écrire `f << cout` — le flux à **droite** — ce qui est l'**inverse** de la syntaxe attendue `cout << f`. Pour que l'opérande de gauche soit le **flux**, il faudrait que `operator<<` soit une **méthode de la classe `ostream`**. Or `ostream` est une classe de la **bibliothèque standard** : on **ne peut pas la modifier** pour y ajouter une méthode acceptant notre type `Fraction`.
+
+La seule issue est une fonction **non-membre**, dont les **deux** opérandes — flux et objet — sont des paramètres :
+
+```cpp
+ostream& operator<<(ostream& out, const Fraction& f);
+//                  \_________/   \_______________/
+//                  opérande        opérande de droite
+//                  de gauche       (l'objet à afficher)
+```
+
+## `operator<<` : la sortie
+
+`operator<<` doit lire les attributs (souvent `private`) de l'objet : on la déclare donc **amie** de la classe. Déclaration **dans** `Fraction` :
+
+```cpp
+// fraction.h
+class Fraction {
+        int numerateur, denominateur;
+    public:
+        Fraction(int n = 0, int d = 1);
+        // fonction amie : accès aux attributs privés, non-membre
+        friend ostream& operator<<(ostream& out, const Fraction& f);
+};
+```
+
+Définition **hors** de la classe (ni `Fraction::`, ni `friend` à la définition) :
+
+```cpp
+// fraction.cpp
+ostream& operator<<(ostream& out, const Fraction& f) {
+    out << "Fraction : " << f.numerateur << "/" << f.denominateur;
+    return out;                       // on RENVOIE le flux
+}
+```
+
+Décortiquons la signature :
+
+- **`ostream& out`** — le flux, **par référence** (un flux ne se copie pas) ; non `const`, car écrire dedans le **modifie** ;
+- **`const Fraction& f`** — l'objet à afficher : **`const`** (l'affichage ne le modifie pas) et **`&`** (pas de copie) ;
+- corps : on **écrit** les attributs dans `out` avec le `<<` déjà connu sur `int` et `const char*` ;
+- **retour `ostream&`** : on **renvoie le flux reçu** — c'est ce qui permet le **chaînage** (voir plus bas).
+
+> ⚠️ `out` ne doit **jamais** être `const` : on **écrit** dedans, donc on le modifie. À l'inverse, l'objet à afficher est `const&` : l'afficher ne doit pas l'altérer. Et l'on n'ajoute **pas** `endl` dans l'opérateur — c'est à l'appelant de décider du passage à la ligne.
+
+## `operator>>` : l'entrée
+
+L'entrée suit le **même schéma**, avec deux différences : le flux est un **`istream&`**, et l'objet de droite est **modifié** (on le remplit), donc **non `const`** :
+
+```cpp
+// fraction.h
+friend istream& operator>>(istream& in, Fraction& f);
+```
+
+```cpp
+// fraction.cpp
+istream& operator>>(istream& in, Fraction& f) {
+    in >> f.numerateur >> f.denominateur;   // on REMPLIT l'objet
+    return in;                              // on renvoie le flux
+}
+```
+
+- **`istream& in`** — le flux d'entrée, **par référence** ;
+- **`Fraction& f`** — l'objet à remplir : **`&`** et surtout **pas `const`**, puisqu'on **modifie** ses attributs ;
+- **retour `istream&`** : on renvoie le flux, là encore pour le **chaînage**.
+
+`operator>>` lit aussi les attributs privés : on la déclare donc **`friend`**, comme `operator<<`.
+
+## Pourquoi renvoyer le flux : le chaînage
+
+On écrit couramment `cout << f1 << f2;`. Comprendre cette ligne, c'est comprendre pourquoi nos opérateurs **renvoient le flux**.
+
+`<<` est **associatif à gauche** : l'expression se groupe `(cout << f1) << f2`. Le compilateur l'évalue en deux temps :
+
+```cpp
+cout << f1 << f2;
+
+// 1. on évalue  cout << f1 , soit  operator<<(cout, f1)
+//    -> cette fonction renvoie  ostream&  : le flux cout lui-même
+// 2. ce résultat (cout) devient l'opérande gauche du << suivant :
+//    operator<<( operator<<(cout, f1), f2 )
+//    soit  operator<<(cout, f2)
+```
+
+Chaque appel **renvoie le flux** pour que le `<<` **suivant** ait, à sa gauche, un flux sur lequel opérer. Sans ce `return out;`, `cout << f1 << f2;` **ne compilerait pas** : le second `<<` n'aurait plus de flux à gauche. Le même raisonnement vaut pour `cin >> f1 >> f2;` avec `operator>>`.
+
+C'est pour cette **seule** raison que le type de retour est `ostream&` / `istream&` plutôt que `void` : permettre de **chaîner** les opérations sur le flux.
+
+## Mise en commun
+
+```cpp
+// fraction.h
+class Fraction {
+        int numerateur, denominateur;
+    public:
+        Fraction(int n = 0, int d = 1);
+        friend ostream& operator<<(ostream& out, const Fraction& f);
+        friend istream& operator>>(istream& in,        Fraction& f);
+};
+```
+
+```cpp
+// main.cpp
+Fraction f1(5, 7), f2;
+cin  >> f2;                      // saisie d'une fraction
+cout << f1 << " et " << f2 << endl;   // chaînage : tout sur cout
+```
+
+> **À retenir**
+> - On surcharge **`operator<<`** (sortie) et **`operator>>`** (entrée) pour afficher et saisir ses objets ; le compilateur traduit `cout << f` en `operator<<(cout, f)`.
+> - L'opérande de **gauche** est le **flux**, l'opérande de **droite** est l'objet.
+> - `<<` et `>>` **doivent être non-membres** : une méthode membre exigerait `f << cout` (flux à droite), et l'on **ne peut pas modifier** la classe `ostream` de la bibliothèque standard.
+> - Comme elles lisent/écrivent les attributs `private`, ces fonctions sont déclarées **`friend`**.
+> - Types : flux **par référence** — `ostream&` / `istream&` (un flux ne se copie pas) ; l'objet est `const&` pour `<<` (lu) mais `&` **non `const`** pour `>>` (rempli).
+> - Le type de **retour** est le **flux par référence** : c'est ce qui permet le **chaînage** `cout << f1 << f2;` (chaque appel renvoie le flux à l'opérateur suivant).

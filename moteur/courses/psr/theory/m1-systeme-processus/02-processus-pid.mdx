@@ -1,0 +1,134 @@
+---
+title: "Processus, PID et espace d'adressage"
+slug: processus-pid
+order: 2
+estimatedReadMin: 12
+concepts: [processus, pid, ppid, arborescence-processus, espace-adressage, processus-init]
+source: "Cours 1 — Systèmes d'exploitation et processus"
+---
+
+## Qu'est-ce qu'un processus ?
+
+Il faut distinguer deux notions souvent confondues :
+
+- un **programme** est une entité **passive** : un fichier exécutable stocké sur le disque, une suite d'instructions inertes ;
+- un **processus** est une entité **active** : c'est un **programme en cours d'exécution**, avec un **jeu de données particulier**.
+
+> Un **processus** est un programme qui s'exécute avec un jeu de données particulier.
+
+Un même programme peut donner naissance à **plusieurs processus** simultanés : ouvrir deux fois un éditeur de texte crée deux processus distincts à partir du même fichier exécutable. Chaque processus possède son propre **contexte d'exécution** : le contenu de ses registres, sa pile, ses données, et la liste de ses fichiers ouverts.
+
+### Création d'un processus
+
+Quand on tape une commande dans un terminal, **le shell lance un processus** pour l'exécuter. Le shell **attend la fin** de ce processus, puis attend la commande suivante. Ce schéma — créer un processus, attendre sa fin, recommencer — est le fonctionnement de base d'un interpréteur de commandes.
+
+Sur une machine **monoprocesseur**, un seul processus s'exécute réellement à un instant donné. L'illusion du **multi-tâches** vient de l'**ordonnanceur** du noyau, qui partage très rapidement le processeur entre les processus prêts.
+
+## L'arborescence des processus
+
+Le modèle UNIX repose sur une règle fondamentale : **chaque processus a un père**, celui qui l'a lancé.
+
+- Un processus est identifié par un numéro unique : son **PID** (*Process IDentifier*).
+- Le numéro du processus père est le **PPID** (*Parent Process IDentifier*).
+- Un **processus père** peut avoir **plusieurs processus fils**.
+- En revanche, un processus n'a qu'**un seul père**.
+
+Ces deux dernières règles ont une conséquence géométrique : les processus s'organisent en **arbre**. À la racine se trouve un processus particulier.
+
+> Sous UNIX, un premier processus **`init`** (ou **`systemd`** sur les systèmes Linux modernes) est créé au démarrage avec un **PID égal à 1**. C'est l'**ancêtre de tous les processus**.
+
+```text
+            init (PID 1)
+           /      |      \
+       login   sshd     cron
+         |       |
+       bash    bash
+       /  \      |
+     ls   gcc  python
+```
+
+Chaque flèche descendante représente une relation **père → fils**. Tout processus, en remontant les PPID successifs, finit toujours par atteindre `init`.
+
+## Récupérer son identité : `getpid`, `getppid`, `getpgrp`
+
+Un processus peut interroger le système pour connaître son identité. Trois appels système, déclarés dans `<unistd.h>`, ne prennent **aucun argument** :
+
+```c
+pid_t getpid(void);    /* PID du processus courant         */
+pid_t getppid(void);   /* PID du processus père            */
+pid_t getpgrp(void);   /* PID du groupe du processus courant */
+```
+
+- `getpid()` renvoie le **PID du processus courant** ;
+- `getppid()` renvoie le **PID du processus père** ;
+- `getpgrp()` renvoie le **PID du groupe** du processus courant (les groupes de processus servent notamment à diffuser un signal à plusieurs processus à la fois).
+
+Le type `pid_t` est un type entier défini par POSIX dans `<sys/types.h>` ; on l'affiche en pratique avec `%d` après une conversion en `int`.
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+
+int main(void) {
+    printf("Je suis le processus %d, ", (int) getpid());
+    printf("mon pere est le processus %d.\n", (int) getppid());
+    return 0;
+}
+```
+
+Si vous compilez ce programme et le lancez depuis un terminal, le PPID affiché est le PID du **shell** qui a lancé le programme : c'est lui qui en est le père.
+
+## L'espace d'adressage d'un processus
+
+Chaque processus possède son propre **espace d'adressage** : une zone de **mémoire virtuelle** que le noyau lui réserve et qui lui est **strictement privée**. Un processus ne peut **pas** lire ou écrire directement dans la mémoire d'un autre processus — c'est une garantie d'**isolation** et de **protection** assurée par le système.
+
+Cet espace d'adressage est structuré en **segments** :
+
+```text
+adresses hautes
+┌─────────────────────────┐
+│         Pile            │  variables locales, appels de fonctions
+│           │             │
+│           ▼             │  ↓ la pile croît vers le bas
+│                         │
+│           ▲             │  ↑ le tas croît vers le haut
+│           │             │
+│          Tas            │  mémoire allouée dynamiquement (malloc)
+├─────────────────────────┤
+│   Données non init.     │  variables globales non initialisées (BSS)
+├─────────────────────────┤
+│   Données initialisées  │  variables globales initialisées
+├─────────────────────────┤
+│          Code           │  les instructions du programme (texte)
+└─────────────────────────┘
+adresses basses
+```
+
+- **Le segment de code** (ou *texte*) contient les instructions du programme. Il est en **lecture seule**.
+- **Le segment de données** contient les **variables globales** et **statiques** (qu'elles soient initialisées ou non).
+- **Le tas** (*heap*) reçoit la mémoire **allouée dynamiquement** par `malloc` ; il croît vers les adresses hautes.
+- **La pile** (*stack*) contient les **variables locales** et les informations liées aux **appels de fonctions** ; elle croît vers les adresses basses.
+
+Outre ces segments, le processus possède d'autres ressources gérées par le noyau : sa **table des descripteurs de fichiers** (les fichiers qu'il a ouverts), son **répertoire de travail courant**, ses **identités** (utilisateur, groupe), et le **contexte** de ses registres.
+
+> ⚠️ Cette isolation a une conséquence majeure pour la suite du module. Deux processus **ne partagent pas leur mémoire** : ils ne peuvent donc **pas communiquer en se contentant de modifier une variable globale**. Pour échanger des données entre processus, il faut un mécanisme explicite de **communication inter-processus** (IPC) — tubes, signaux, mémoire partagée, sockets — qui fait l'objet des modules suivants.
+
+## États d'un processus
+
+Au cours de sa vie, un processus passe par différents **états**, parmi lesquels :
+
+- **élu** (*running*) — il s'exécute actuellement sur le processeur ;
+- **prêt** (*ready*) — il pourrait s'exécuter, mais l'ordonnanceur a donné le processeur à un autre ;
+- **bloqué** (*blocked*) — il attend un événement (la fin d'une lecture disque, l'arrivée de données, la fin d'un fils…) ;
+- **zombie** — il s'est terminé mais son père n'a pas encore récupéré son statut (voir le chapitre dédié).
+
+C'est l'**ordonnanceur** du noyau qui fait passer les processus de l'état *prêt* à l'état *élu* et inversement, afin de partager équitablement le processeur.
+
+> **À retenir**
+> - Un **programme** est passif (un fichier exécutable) ; un **processus** est actif (un programme en cours d'exécution avec ses données).
+> - Tout processus a un **PID** unique et un unique père identifié par son **PPID** ; un père peut avoir plusieurs fils. Les processus forment donc un **arbre**.
+> - **`init`** (PID 1, ou `systemd`) est la racine de cet arbre, l'**ancêtre de tous les processus**.
+> - `getpid()`, `getppid()` et `getpgrp()` (dans `<unistd.h>`) renvoient respectivement le PID courant, celui du père et celui du groupe.
+> - Chaque processus a un **espace d'adressage privé**, structuré en segments **code / données / tas / pile**, **isolé** de celui des autres processus.
+> - Conséquence : deux processus **ne partagent pas leur mémoire** et doivent recourir à un mécanisme explicite (IPC) pour communiquer.

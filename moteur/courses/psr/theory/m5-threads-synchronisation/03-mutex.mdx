@@ -1,0 +1,290 @@
+---
+title: "Exclusion mutuelle : pthread_mutex"
+slug: mutex
+order: 3
+estimatedReadMin: 18
+concepts: [mutex, mutex-init-statique, pthread-mutex-init, pthread-mutex-destroy, pthread-mutex-lock, pthread-mutex-unlock, pthread-mutex-trylock, exclusion-mutuelle, interblocage, ordre-de-verrouillage]
+source: "Cours 4 — Les threads POSIX"
+---
+
+Le chapitre précédent a posé le problème : un accès concurrent à une donnée partagée provoque une **condition de course**, et la solution est de garantir l'**exclusion mutuelle** sur la **section critique**. Ce chapitre présente l'outil de base qui réalise cette garantie : le **mutex**.
+
+## Qu'est-ce qu'un mutex ?
+
+Le mot **mutex** est la contraction de **MUT**ual **EX**clusion (*exclusion mutuelle*). Un mutex est un **objet de verrouillage** : il sert à **protéger des données partagées** contre les modifications concurrentes et, plus généralement, à **implémenter des sections critiques**.
+
+Un mutex a **exactement deux états** :
+
+- **libre** (*unlocked*) — il n'est pris par aucun thread ;
+- **verrouillé** (*locked*) — il est pris par **un** thread.
+
+Les règles de fonctionnement sont simples et strictes :
+
+- un thread qui **verrouille** un mutex le **tient** (on dit qu'il en est le **propriétaire**) ;
+- **un seul thread** peut tenir un mutex donné **à la fois** ;
+- tout autre thread qui tente de verrouiller un mutex **déjà tenu** est **bloqué** (endormi) jusqu'à ce que le mutex soit libéré.
+
+Le principe d'utilisation est donc toujours le même : **avant** d'entrer dans une section critique, un thread **verrouille** le mutex ; **après** la section critique, il le **déverrouille**. Comme un seul thread peut tenir le verrou, **un seul thread à la fois** exécute la section critique — l'exclusion mutuelle est obtenue.
+
+Le type d'un mutex est **`pthread_mutex_t`**, déclaré dans `<pthread.h>`. Un mutex est généralement une **variable globale** ou une **variable locale statique** : il faut en effet que **tous** les threads à synchroniser puissent l'atteindre.
+
+## Créer un mutex
+
+Un mutex doit être **initialisé** avant tout usage. Il y a **deux façons** de le faire.
+
+### Initialisation statique
+
+La plus simple, quand le mutex est une variable globale, est d'utiliser la **constante d'initialisation** fournie par la bibliothèque :
+
+```c
+#include <pthread.h>
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+```
+
+`PTHREAD_MUTEX_INITIALIZER` initialise le mutex avec les **attributs par défaut**, dès la compilation. C'est la méthode à privilégier pour un mutex global : aucune fonction à appeler, le mutex est prêt dès le démarrage du programme.
+
+### Initialisation dynamique
+
+Quand le mutex n'est pas global (par exemple alloué dans le tas), on l'initialise par un **appel de fonction** :
+
+```c
+#include <pthread.h>
+
+int pthread_mutex_init(pthread_mutex_t *mutex,
+                       const pthread_mutexattr_t *attr);
+```
+
+- **`mutex`** — un pointeur vers la variable `pthread_mutex_t` à initialiser ;
+- **`attr`** — un pointeur vers un objet `pthread_mutexattr_t` pour fixer des **attributs particuliers**, ou **`NULL`** pour les valeurs **par défaut**.
+
+`pthread_mutex_init` renvoie **`0`** en cas de succès, un **code d'erreur** sinon.
+
+### Libérer un mutex
+
+Quand le mutex n'est plus utile (typiquement en fin de programme), on libère ses ressources :
+
+```c
+#include <pthread.h>
+
+int pthread_mutex_destroy(pthread_mutex_t *mutex);
+```
+
+`pthread_mutex_destroy` **détruit** un mutex. Une règle impérative l'accompagne :
+
+> ⚠️ Un mutex ne peut être **détruit** que s'il est **déverrouillé** (libre). Détruire un mutex qu'un thread tient encore — ou sur lequel un thread est bloqué — est un **comportement indéfini**. De même, on ne **détruit pas** un mutex initialisé statiquement par `PTHREAD_MUTEX_INITIALIZER` sans s'être assuré qu'aucun thread ne l'utilise plus.
+
+## Verrouiller et déverrouiller
+
+Deux fonctions encadrent la section critique.
+
+### Verrouiller : `pthread_mutex_lock`
+
+```c
+#include <pthread.h>
+
+int pthread_mutex_lock(pthread_mutex_t *mutex);
+```
+
+Le comportement de `pthread_mutex_lock` dépend de l'état du mutex :
+
+- si le mutex est **libre** : il est **verrouillé** et **attribué** au thread appelant, qui **continue** son exécution ;
+- si le mutex est **déjà verrouillé** (tenu par un autre thread) : le thread appelant est **bloqué** jusqu'à la **libération** du mutex ; dès qu'il est libre, il est verrouillé et attribué à ce thread, qui reprend alors.
+
+C'est donc un appel **potentiellement bloquant** : son rôle est précisément de **faire attendre** le thread tant que la section critique est occupée.
+
+### Déverrouiller : `pthread_mutex_unlock`
+
+```c
+#include <pthread.h>
+
+int pthread_mutex_unlock(pthread_mutex_t *mutex);
+```
+
+`pthread_mutex_unlock` **déverrouille** le mutex. S'il existe des threads **bloqués** en attente de ce mutex, l'un d'eux est **réveillé** et obtient le verrou.
+
+> ⚠️ **Un mutex ne doit être déverrouillé que par le thread qui l'a verrouillé.** Pour le type de mutex par défaut, déverrouiller un mutex que le thread appelant ne possède pas — ou déverrouiller un mutex déjà libre — est un **comportement indéfini** au sens de POSIX : le programme peut corrompre l'état interne du mutex, réveiller des threads à tort, ou provoquer tout autre dysfonctionnement imprévisible. Ce n'est pas une simple « mauvaise pratique » : c'est formellement interdit.
+
+Les deux fonctions renvoient **`0`** en cas de succès et un **code d'erreur** sinon.
+
+## Le schéma type : protéger une section critique
+
+Voici le motif à connaître par cœur. On reprend le programme **incorrect** du chapitre 2 — cinq threads ajoutant chacun 1 000 000 fois leur numéro à une variable globale `somme`, total attendu **10 000 000** — et on le **corrige** avec un mutex :
+
+```c
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#define NB_THREADS 5
+
+long somme = 0;                                     /* donnee partagee   */
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;  /* verrou qui protege somme */
+
+void *ajouter(void *arg) {
+    long num = (long) arg;
+    for (int i = 0; i < 1000000; i++) {
+        pthread_mutex_lock(&mutex);     /* ---- entree en section critique ---- */
+        somme = somme + num;            /* acces a la donnee partagee : protege */
+        pthread_mutex_unlock(&mutex);   /* ---- sortie de section critique ----- */
+    }
+    return NULL;
+}
+
+int main(void) {
+    pthread_t thr[NB_THREADS];
+
+    for (long i = 0; i < NB_THREADS; i++)
+        pthread_create(&thr[i], NULL, ajouter, (void *) i);
+
+    for (int i = 0; i < NB_THREADS; i++)
+        pthread_join(thr[i], NULL);
+
+    pthread_mutex_destroy(&mutex);      /* mutex libre : destruction possible */
+    printf("somme = %ld (attendu : 10000000)\n", somme);
+    return 0;
+}
+```
+
+Désormais, le résultat est **systématiquement 10 000 000**, à **chaque** exécution. La raison : entre `pthread_mutex_lock` et `pthread_mutex_unlock`, **un seul thread à la fois** peut exécuter `somme = somme + num`. Les trois étapes `lire / modifier / écrire` se déroulent sans qu'aucun autre thread ne s'intercale ; la perte de mise à jour est **impossible**.
+
+> ⚠️ **À tout `lock` doit correspondre un `unlock`.** Un thread qui verrouille un mutex et **oublie** de le déverrouiller — parce qu'il a fait `return`, `break` ou rencontré une erreur **avant** le `unlock` — laisse le mutex **verrouillé pour toujours**. Tous les autres threads se bloqueront indéfiniment dessus. Veillez en particulier à déverrouiller le mutex **sur tous les chemins de sortie** de la section critique (y compris les retours d'erreur).
+
+> ⚠️ **Garder une section critique aussi courte que possible.** Tout le code placé entre `lock` et `unlock` est exécuté **en série** : tant qu'un thread le parcourt, les autres attendent. Mettre dans la section critique du code qui n'a **pas besoin** d'être protégé (un long calcul, une attente, une écriture fichier lente) **réduit le parallélisme** et peut annuler tout l'intérêt des threads. On ne verrouille que **le strict nécessaire** — l'accès à la donnée partagée.
+
+## Un exemple d'ordonnancement
+
+L'exemple suivant, fidèle au cours, illustre **visuellement** l'exclusion mutuelle. Cinq threads se disputent un même mutex (`mutex_stdout`) pour afficher sur la sortie standard ; chacun **garde** le mutex un certain temps avant de le rendre :
+
+```c
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+pthread_mutex_t mutex_stdout = PTHREAD_MUTEX_INITIALIZER;
+
+void *routine(void *arg) {
+    long numero = (long) arg;
+    int nb = 1 + rand() % 3;            /* entre 1 et 3 iterations */
+    for (int i = 0; i < nb; i++) {
+        sleep(rand() % 3);              /* travail HORS section critique */
+
+        pthread_mutex_lock(&mutex_stdout);          /* --- prise du verrou --- */
+        printf("Le thread %ld a obtenu le mutex\n", numero);
+        sleep(rand() % 3);              /* le thread GARDE le mutex */
+        printf("Le thread %ld relache le mutex\n", numero);
+        pthread_mutex_unlock(&mutex_stdout);        /* --- libere le verrou --- */
+    }
+    return NULL;
+}
+
+int main(void) {
+    pthread_t thr[5];
+
+    for (long i = 0; i < 5; i++)
+        pthread_create(&thr[i], NULL, routine, (void *) i);
+
+    pthread_exit(NULL);                 /* le main finit, les threads continuent */
+}
+```
+
+Une exécution affiche, par exemple :
+
+```text
+Le thread 0 a obtenu le mutex
+Le thread 0 relache le mutex
+Le thread 4 a obtenu le mutex
+Le thread 4 relache le mutex
+Le thread 1 a obtenu le mutex
+Le thread 1 relache le mutex
+...
+```
+
+Le point capital : on ne voit **jamais** deux « a obtenu le mutex » consécutifs sans le « relache » correspondant entre les deux. Chaque message *« a obtenu »* est **toujours** suivi du message *« relache »* du **même** thread. C'est la **preuve visible** de l'exclusion mutuelle : entre le `lock` et le `unlock` d'un thread, **aucun autre** thread ne peut entrer dans la section critique. En revanche, l'**ordre** dans lequel les threads obtiennent le mutex reste **imprévisible** — c'est l'ordonnanceur qui décide.
+
+## Verrouillage non bloquant : `pthread_mutex_trylock`
+
+Parfois, on ne veut **pas** qu'un thread se bloque s'il ne peut pas obtenir le mutex tout de suite — on préfère qu'il fasse autre chose et réessaie plus tard. C'est le rôle de :
+
+```c
+#include <pthread.h>
+
+int pthread_mutex_trylock(pthread_mutex_t *mutex);
+```
+
+`pthread_mutex_trylock` tente de verrouiller le mutex **sans jamais bloquer** :
+
+- si le mutex est **libre** : il est verrouillé et attribué, la fonction renvoie **`0`** (comme un `lock` réussi) ;
+- si le mutex est **déjà tenu** : la fonction **revient immédiatement** avec le code d'erreur **`EBUSY`**, **sans** verrouiller et **sans** attendre.
+
+```c
+if (pthread_mutex_trylock(&mutex) == 0) {
+    /* verrou obtenu : on traite la section critique */
+    /* ... acces a la donnee partagee ... */
+    pthread_mutex_unlock(&mutex);
+} else {
+    /* mutex occupe (EBUSY) : on fait autre chose, on n'attend pas */
+}
+```
+
+C'est le pendant non bloquant de `pthread_mutex_lock`, utile lorsqu'un thread a un travail alternatif à faire plutôt que d'attendre.
+
+## L'interblocage (*deadlock*)
+
+Le mutex résout les conditions de course, mais il introduit un **nouveau** risque, propre à tous les mécanismes de verrouillage : l'**interblocage**, ou *deadlock*.
+
+> Un **interblocage** est une situation où un ou plusieurs threads sont **bloqués pour toujours**, chacun attendant un verrou que **seul un autre thread bloqué** pourrait libérer. Plus aucun thread ne peut progresser : le programme est **figé**.
+
+### Cas n°1 : se verrouiller soi-même
+
+L'interblocage le plus simple — et le plus fréquent — est de **verrouiller deux fois le même mutex dans le même thread** sans le déverrouiller entre-temps :
+
+```c
+pthread_mutex_lock(&mutex);
+/* ... */
+pthread_mutex_lock(&mutex);   /* DEADLOCK : le thread s'attend lui-meme */
+```
+
+Le deuxième `lock` voit le mutex **déjà tenu** — par le thread appelant **lui-même** — et **bloque** le thread en attendant une libération… qui ne viendra **jamais**, puisque c'est ce thread bloqué qui aurait dû déverrouiller. Le thread est **figé définitivement**.
+
+> ⚠️ **Ne verrouillez jamais deux fois le même mutex dans le même thread** sans l'avoir déverrouillé entre les deux. Il y a un **risque de blocage définitif** du thread. Ce piège se cache souvent dans les **fonctions imbriquées** : une fonction verrouille un mutex, puis appelle une autre fonction qui verrouille **le même** mutex. Avec un mutex ordinaire (par défaut), le résultat est l'interblocage.
+
+### Cas n°2 : l'interblocage croisé
+
+Le cas classique met en jeu **deux mutex** (A et B) et **deux threads** qui les verrouillent dans l'**ordre inverse** :
+
+```c
+/* Thread 1                       Thread 2                       */
+pthread_mutex_lock(&A);   /*      pthread_mutex_lock(&B);         */
+/* ... le thread 1 tient A ...    ... le thread 2 tient B ...     */
+pthread_mutex_lock(&B);   /*      pthread_mutex_lock(&A);         */
+/*  <- bloque : B tenu par T2      <- bloque : A tenu par T1      */
+```
+
+Déroulons le scénario fatal :
+
+1. le **thread 1** verrouille **A**, le **thread 2** verrouille **B** — chacun tient un mutex ;
+2. le **thread 1** demande **B** → bloqué, car B est tenu par le thread 2 ;
+3. le **thread 2** demande **A** → bloqué, car A est tenu par le thread 1 ;
+4. chacun attend un verrou que **seul l'autre, lui-même bloqué, pourrait libérer** → **interblocage**.
+
+### La parade : l'ordre de verrouillage
+
+La règle de prévention est simple et universelle :
+
+> ⚠️ **Tous les threads doivent verrouiller plusieurs mutex dans le même ordre.** Si l'on impose, par convention, que **A se verrouille toujours avant B** (par exemple par ordre alphabétique, ou par ordre d'adresse mémoire), l'interblocage croisé devient **impossible** : aucun thread ne peut tenir B en attendant A. Cet **ordre de verrouillage** cohérent est la protection de référence contre le *deadlock*.
+
+Deux autres bonnes pratiques limitent le risque :
+
+- **déverrouiller au plus tôt** : ne pas garder un verrou pendant qu'on en demande un autre, si on peut l'éviter ;
+- **réduire le nombre de mutex tenus simultanément** : un thread qui ne tient **qu'un** verrou à la fois ne peut **jamais** participer à un interblocage croisé.
+
+> **À retenir**
+> - Un **mutex** (*MUTual EXclusion*, type `pthread_mutex_t`) est un verrou à **deux états** — **libre** ou **verrouillé** ; **un seul** thread peut le tenir à la fois.
+> - On l'initialise **statiquement** par `PTHREAD_MUTEX_INITIALIZER` (mutex global) ou **dynamiquement** par `pthread_mutex_init` ; on le libère par `pthread_mutex_destroy` (le mutex doit alors être **déverrouillé**).
+> - **`pthread_mutex_lock`** verrouille le mutex, **en bloquant** le thread s'il est déjà tenu ; **`pthread_mutex_unlock`** le libère et réveille un thread en attente.
+> - Schéma type : **`lock` → section critique → `unlock`**. Cela garantit l'**exclusion mutuelle** et supprime la condition de course. À **tout `lock`** doit correspondre un **`unlock`** sur **tous les chemins de sortie**.
+> - Une section critique doit rester **aussi courte que possible** : tout ce qui est entre `lock` et `unlock` s'exécute **en série** et réduit le parallélisme.
+> - **`pthread_mutex_trylock`** tente le verrouillage **sans bloquer** : il renvoie `0` si le verrou est obtenu, **`EBUSY`** si le mutex est occupé.
+> - Un **interblocage** (*deadlock*) fige des threads qui s'attendent mutuellement. Pièges : **verrouiller deux fois le même mutex** dans un même thread ; verrouiller **deux mutex dans des ordres opposés**. Parade : un **ordre de verrouillage** identique pour tous les threads.

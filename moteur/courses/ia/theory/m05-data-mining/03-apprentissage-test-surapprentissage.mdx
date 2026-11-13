@@ -1,0 +1,260 @@
+---
+title: "Apprentissage, test et sur-apprentissage"
+slug: apprentissage-test-surapprentissage
+order: 3
+estimatedReadMin: 17
+concepts: [jeu-d-apprentissage, jeu-de-test, jeu-de-validation, attribut, classe, sur-apprentissage, generalisation, k-plus-proches-voisins]
+source: "Slides_Intro_DM_2425.pdf"
+---
+
+## Le point de départ : un jeu d'apprentissage
+
+Cette section se concentre sur l'**apprentissage supervisé** dans le cas de la
+**classification**. Tout commence par un **ensemble de données**.
+
+Le **point de départ est un ensemble `D` d'enregistrements**, appelés **exemples**
+— ou encore **lignes**, ou **observations**. Cet ensemble `D` porte un nom précis :
+on l'appelle l'**ensemble (ou jeu) d'apprentissage**.
+
+Chaque exemple est **décrit à l'aide d'attributs** — appelés aussi **colonnes** ou
+**variables**. On note l'ensemble des attributs `{A₁, A₂, …, Aₚ}`. Chaque attribut
+`Aₚ` possède un certain nombre de **valeurs possibles** `v₁, …, vₙₚ` (ou, plus
+généralement, un **domaine de définition**).
+
+> **À retenir** : l'apprentissage supervisé part d'un **ensemble `D`** — le **jeu
+> d'apprentissage** — d'**exemples** (lignes, observations) ; chaque exemple est
+> décrit par des **attributs** `{A₁, …, Aₚ}` (colonnes, variables), chacun ayant un
+> **domaine** de valeurs.
+
+## Les types d'attributs
+
+Avant d'aller plus loin, le cours **rappelle les principaux types de variables**,
+car la nature des attributs influe sur les méthodes employées. Deux grandes
+catégories se distinguent.
+
+**Les variables quantitatives** — dites aussi **numériques**. On y distingue :
+
+- les variables numériques **continues** ;
+- les variables numériques **discrètes**.
+
+**Les variables qualitatives** — dites aussi **catégorielles** ou encore
+**facteurs**. On y distingue :
+
+- les variables qualitatives **nominales** ;
+- les variables qualitatives **ordinales**.
+
+Le cours signale un **cas particulier important** des variables qualitatives : les
+**variables binaires**, qui n'ont que **deux valeurs possibles**.
+
+| Catégorie | Autres noms | Sous-types |
+| --- | --- | --- |
+| **Quantitative** | numérique | **continue**, **discrète** |
+| **Qualitative** | catégorielle, facteur | **nominale**, **ordinale** (cas particulier : **binaire**) |
+
+> **À retenir** : un attribut est soit **quantitatif** (numérique : **continu** ou
+> **discret**), soit **qualitatif** (catégoriel : **nominal** ou **ordinal**) ; les
+> variables **binaires** — deux valeurs — sont un cas qualitatif important.
+
+## L'attribut spécial : la classe
+
+Parmi tous les attributs, **il en existe un spécial**, noté `C` : **la classe**.
+
+L'attribut `C` a **`m` valeurs possibles**, notées `c₁, …, cₘ`. C'est lui qui
+distingue l'**apprentissage supervisé** : chaque exemple du jeu d'apprentissage est
+**étiqueté** par sa valeur de classe. Dans les exemples de la section précédente,
+c'était la colonne `Class` (prêt accordé / non accordé) ou la colonne `PlayTennis`
+(jouer au tennis ou non).
+
+L'**objectif** de l'apprentissage supervisé peut alors se formuler ainsi :
+**définir — on dira aussi *apprendre* — une fonction de classification / prédiction,
+à l'aide d'un algorithme d'apprentissage**. Le rôle de cette fonction est la
+**prédiction** : **prédire la valeur de la classe d'une instance quelconque**.
+
+Cette fonction, une fois apprise, reçoit elle aussi un nom : on parle de **modèle**
+ou de **classifieur**.
+
+> **À retenir** : un attribut **spécial `C`** — la **classe**, à `m` valeurs
+> `c₁, …, cₘ` — est la cible de l'apprentissage supervisé. L'**objectif** est
+> d'**apprendre** une fonction de classification (un **modèle**, un **classifieur**)
+> capable de **prédire la classe d'une instance quelconque**.
+
+## Évaluer le modèle : le jeu de test
+
+Une fois la fonction de classification **apprise**, une question se pose
+immédiatement : **est-elle bonne ?** Le cours répond : la fonction apprise — le
+**modèle**, le **classifieur** — est **évaluée à l'aide d'un ensemble de test**.
+
+La définition de cet ensemble de test est **capitale**, et le cours la précise mot
+à mot :
+
+> L'ensemble de test contient des **exemples que l'algorithme n'a pas rencontrés
+> durant l'apprentissage**.
+
+Voilà le point central : on **n'évalue pas** un modèle sur les exemples qui ont
+servi à le construire. On l'évalue sur des exemples **nouveaux** pour lui.
+
+Le cours détaille le **jeu de test** :
+
+- ses exemples ont **la même forme** que ceux du jeu d'apprentissage : ce sont des
+  **couples `(instance, classe)`** — la classe réelle y est donc connue ;
+- **tester**, c'est alors **comparer les valeurs de la classe données** (les classes
+  réelles) **avec celles prédites par le classifieur**.
+
+Reste une question : **d'où viennent** les deux ensembles ? La réponse du cours est
+simple : **les données disponibles sont divisées — par exemple aléatoirement — en
+deux ensembles disjoints**, le jeu d'apprentissage et le jeu de test.
+
+| Ensemble | Rôle | Contenu |
+| --- | --- | --- |
+| **Jeu d'apprentissage** | **Construire** le modèle | Couples `(instance, classe)` |
+| **Jeu de test** | **Évaluer** le modèle | Couples `(instance, classe)`, **non vus** à l'apprentissage |
+
+> ⚠️ Le jeu de test contient des **exemples non rencontrés durant l'apprentissage**.
+> Les deux ensembles sont **disjoints** : on **divise** les données disponibles (par
+> exemple **aléatoirement**) en jeu d'apprentissage et jeu de test. Évaluer un
+> modèle sur ses propres exemples d'apprentissage n'aurait aucun sens.
+
+## Pourquoi des exemples non vus : généralisation et sur-apprentissage
+
+Pourquoi cette exigence — évaluer sur des **exemples non vus** ? Parce que le but
+d'un modèle n'est pas de **réciter** les exemples d'apprentissage, mais de bien se
+comporter sur des **données nouvelles**. C'est ce qu'on appelle la
+**généralisation** : la capacité du modèle, appris sur des exemples, à fournir de
+**bonnes prédictions sur des données qu'il n'a pas rencontrées**. La section 1 le
+disait déjà : un modèle sert à **prédire de nouvelles situations**.
+
+Un modèle peut très bien **classer parfaitement les exemples d'apprentissage** et
+pourtant se **tromper lourdement sur des données nouvelles**. Ce défaut porte un
+nom : le **sur-apprentissage**. Un modèle en sur-apprentissage a, en quelque sorte,
+**trop collé** aux exemples d'apprentissage — il en a appris jusqu'aux **détails et
+aux particularités** — au lieu d'en dégager les **régularités générales**. Il a
+**mémorisé** plutôt que **généralisé**.
+
+C'est précisément **pour cette raison** que le modèle doit être évalué sur un **jeu
+de test** distinct :
+
+- une bonne performance **sur le jeu d'apprentissage seul** ne prouve **rien** : le
+  modèle a pu se contenter de mémoriser ces exemples ;
+- seule une bonne performance **sur le jeu de test** — des exemples **non vus** —
+  témoigne d'une véritable **capacité de généralisation**.
+
+| Notion | Description |
+| --- | --- |
+| **Généralisation** | Bien prédire sur des **données nouvelles**, non rencontrées |
+| **Sur-apprentissage** | Le modèle **colle trop** aux exemples d'apprentissage et **généralise mal** |
+
+> ⚠️ Le **sur-apprentissage** : un modèle qui réussit **sur ses exemples
+> d'apprentissage** mais échoue sur des **données nouvelles**. L'enjeu d'un bon
+> modèle est la **généralisation** — et c'est le **jeu de test** (exemples non vus)
+> qui permet de la mesurer.
+
+## Les trois étapes de l'apprentissage supervisé
+
+Le cours **résume l'apprentissage supervisé** par un schéma à **trois étapes**.
+Chacune fait intervenir l'un des deux ingrédients — l'**algorithme d'apprentissage**
+ou le **modèle** déjà appris.
+
+```
+Ensemble d'apprentissage  --->  Algorithme d'apprentissage  --->  Modèle
+Ensemble de test          --->  Modèle                      --->  Évaluation
+Nouvelle instance         --->  Modèle                      --->  Prédiction
+```
+
+Étape par étape :
+
+1. **Apprentissage** — on fournit l'**ensemble d'apprentissage** à l'**algorithme
+   d'apprentissage**, qui en produit le **modèle**.
+2. **Évaluation** — on fournit l'**ensemble de test** au **modèle** : on obtient une
+   **évaluation** de sa qualité (en comparant classes réelles et classes prédites).
+3. **Prédiction** — on fournit une **nouvelle instance** au **modèle** : on obtient
+   une **prédiction** de sa classe.
+
+Ce schéma articule tout ce qui précède : on **apprend** un modèle (étape 1), on le
+**teste** sur des exemples non vus (étape 2), et, s'il est jugé satisfaisant, on
+l'**utilise** pour prédire la classe d'instances nouvelles (étape 3).
+
+> **À retenir** : l'apprentissage supervisé tient en **trois étapes** —
+> **apprentissage** (apprentissage → algorithme → **modèle**), **évaluation** (test →
+> modèle → **évaluation**), **prédiction** (nouvelle instance → modèle →
+> **prédiction**).
+
+## Le jeu de validation : régler les réglages
+
+Le cours évoque, à propos de l'algorithme **kNN**, un **troisième type d'ensemble** :
+l'**ensemble de validation**.
+
+Certains modèles possèdent des **réglages** — des paramètres que l'algorithme ne
+détermine pas seul. Pour l'algorithme kNN, c'est le **nombre de voisins `k`**. Le
+cours indique que la valeur de `k` est **en général déterminée de manière
+empirique**, c'est-à-dire ainsi :
+
+- on **essaie plusieurs valeurs de `k`** ;
+- on **mesure la performance** de chacune **sur un ensemble de validation** (par
+  exemple via le taux de bonne classification) ;
+- on **sélectionne** la valeur de `k` **qui donne la meilleure performance**.
+
+L'**ensemble de validation** est donc l'ensemble sur lequel on **règle** un
+paramètre du modèle — à ne pas confondre avec le **jeu de test**, qui sert à
+l'**évaluation finale** du modèle, une fois ses réglages fixés.
+
+> **À retenir** : un **jeu de validation** sert à **régler** un paramètre du modèle —
+> par exemple le **nombre de voisins `k`** de **kNN**, choisi en **essayant
+> plusieurs valeurs** et en gardant celle qui **maximise la performance**.
+
+## Un exemple de classifieur : kNN, l'apprenant paresseux
+
+L'algorithme des **k plus proches voisins** (**kNN**, *k Nearest Neighbours*) sert,
+dans le cours, d'**exemple simple de classification**. Il éclaire aussi, par
+contraste, la notion de **modèle**.
+
+Le **principe** de kNN. Soit `D` le **jeu d'apprentissage**. Lorsqu'une **nouvelle
+instance `d`** est présentée pour classification :
+
+- l'algorithme **compare `d` à chaque exemple de `D`** et détermine la **similarité**
+  entre `d` et cet exemple ;
+- les **`k` exemples les plus similaires** de `d` sont sélectionnés : ils forment les
+  **`k` voisins les plus proches** de `d` ;
+- l'algorithme **affecte à `d` la classe la plus fréquente** parmi ces `k` voisins.
+
+L'élément **clé** de kNN est la **mesure de similarité / distance**. Cette fonction
+**dépend du problème et du type de données** (numériques, qualitatives…). Pour des
+**données numériques**, le cours cite la **distance euclidienne** et la **similarité
+cosinus**, fréquemment utilisées.
+
+Une **remarque** importante : **contrairement aux autres méthodes d'apprentissage
+supervisé, kNN ne construit pas de modèle**. Il se contente de **stocker le jeu
+d'apprentissage** et y **accède à nouveau** à chaque fois qu'une nouvelle instance
+doit être classée. Pour cette raison :
+
+- kNN est qualifié de méthode d'apprentissage **paresseuse** (*lazy*) ;
+- on parle d'**apprentissage basé sur les instances** (*instance based learning*).
+
+> ⚠️ **kNN** classe une instance par **vote** de ses **`k` plus proches voisins**
+> (au sens d'une **mesure de similarité**). C'est un apprenant **paresseux** : il
+> **ne construit aucun modèle**, il **stocke le jeu d'apprentissage** et le
+> reparcourt à chaque classification.
+
+## Synthèse de la section
+
+L'apprentissage supervisé part d'un **jeu d'apprentissage `D`** d'**exemples**
+décrits par des **attributs** `{A₁, …, Aₚ}` — **quantitatifs** (numériques) ou
+**qualitatifs** (catégoriels) — dont l'un, **spécial**, est la **classe `C`** à
+`m` valeurs. L'**objectif** est d'**apprendre** une fonction de classification — un
+**modèle**, un **classifieur** — capable de **prédire la classe d'une instance
+quelconque**. Le modèle est **évalué** sur un **jeu de test** fait d'exemples **non
+rencontrés durant l'apprentissage** : on **divise** (par exemple aléatoirement) les
+données disponibles en deux ensembles **disjoints**. Cette exigence vise la
+**généralisation** — bien prédire sur des **données nouvelles** — et à démasquer le
+**sur-apprentissage**, défaut d'un modèle qui **colle trop** aux exemples
+d'apprentissage. L'apprentissage supervisé se résume en **trois étapes** —
+**apprentissage**, **évaluation**, **prédiction** — auxquelles s'ajoute un éventuel
+**jeu de validation** pour **régler** un paramètre (le `k` de **kNN**). L'algorithme
+**kNN**, enfin, classe par **vote des `k` plus proches voisins** et, en apprenant
+**paresseux**, **ne construit aucun modèle**.
+
+> **À retenir** : jeu d'**apprentissage** (construire le modèle) et jeu de **test**
+> (l'évaluer sur des exemples **non vus**, ensembles **disjoints**) ; le but est la
+> **généralisation**, le piège le **sur-apprentissage** ; trois étapes —
+> **apprentissage / évaluation / prédiction** — et un jeu de **validation** pour
+> régler les paramètres ; **kNN** = vote des **`k` plus proches voisins**, apprenant
+> **paresseux** sans modèle.

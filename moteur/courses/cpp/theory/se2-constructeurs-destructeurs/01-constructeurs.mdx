@@ -1,0 +1,184 @@
+---
+title: Constructeurs
+slug: constructeurs
+order: 1
+estimatedReadMin: 10
+concepts: [constructeur-defaut, constructeur-parametre, liste-initialisation]
+source: "Cours 2 — Constructeurs & Destructeurs"
+---
+
+## À quoi sert un constructeur ?
+
+Quand on crée un objet, ses attributs doivent recevoir des **valeurs initiales cohérentes**. Laisser un objet naître avec des attributs non initialisés (contenant des « déchets » mémoire) est une source classique de bugs. Le **constructeur** est la méthode chargée de ce travail.
+
+> Le **constructeur** d'une classe est une **fonction membre particulière** dont le rôle est d'**initialiser un objet** : il donne des valeurs aux données membres de chaque objet de la classe.
+
+Trois caractéristiques le distinguent d'une méthode ordinaire :
+
+- il **porte exactement le nom de la classe** ;
+- il **n'a aucun type de retour** — pas même `void` ;
+- il est **appelé automatiquement** à chaque création d'objet.
+
+On n'appelle donc jamais un constructeur « à la main » comme une fonction normale : il se déclenche au moment où l'objet est construit.
+
+## Déclarer plusieurs constructeurs
+
+Une classe peut posséder **plusieurs constructeurs**, à condition qu'ils aient des **listes de paramètres différentes** : c'est de la **surcharge**, appliquée au constructeur. Le compilateur choisira la bonne version selon les arguments fournis à la création.
+
+Voici la classe `Fraction`, fil rouge de ce chapitre, dans son fichier d'en-tête :
+
+```cpp
+// fraction.h
+#ifndef FRACTION_H
+#define FRACTION_H
+
+class Fraction {
+    private:
+        int numerateur;
+        int denominateur;
+
+    public:
+        Fraction();                 // constructeur par défaut
+        Fraction(int n);            // constructeur à 1 paramètre
+        Fraction(int n, int d);     // constructeur à 2 paramètres
+        ~Fraction();                // destructeur (chapitre suivant)
+        // ... autres méthodes
+};
+
+#endif
+```
+
+Trois constructeurs cohabitent ici, chacun pour un scénario de création différent.
+
+## Le constructeur par défaut
+
+Le **constructeur par défaut** est celui qui **ne prend aucun paramètre**. Il sert à construire un objet sans qu'on ait à fournir de valeurs : il fixe lui-même des valeurs initiales raisonnables.
+
+```cpp
+Fraction::Fraction() : numerateur(0), denominateur(1) {}
+```
+
+Cette fraction « par défaut » vaut `0/1`. On choisit `1` au dénominateur — et non `0` — pour éviter une division par zéro : un bon constructeur par défaut produit un objet **dans un état valide**.
+
+> ⚠️ Le constructeur par défaut s'appelle **sans parenthèses** : on écrit `Fraction f1;` et **non** `Fraction f1();`. La seconde forme ne crée pas d'objet : le compilateur la lit comme la **déclaration d'une fonction** `f1` qui ne prend rien et renvoie une `Fraction`. C'est l'un des pièges les plus déroutants du C++.
+
+## Les constructeurs paramétrés
+
+Un **constructeur paramétré** reçoit des arguments et s'en sert pour initialiser les attributs. C'est lui qui permet de créer un objet « sur mesure ».
+
+```cpp
+Fraction::Fraction(int n)        : numerateur(n), denominateur(1) {}
+Fraction::Fraction(int n, int d) : numerateur(n), denominateur(d) {}
+```
+
+Le constructeur à un paramètre construit la fraction `n/1` (un entier vu comme fraction) ; celui à deux paramètres construit `n/d`.
+
+## La liste d'initialisation des membres
+
+Tout ce qui suit le **`:`** entre l'en-tête du constructeur et son corps `{}` est la **liste d'initialisation des membres**. Chaque attribut y est initialisé directement par sa valeur, entre parenthèses.
+
+```cpp
+Fraction::Fraction(int n, int d) : numerateur(n), denominateur(d) {}
+//                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//                                liste d'initialisation
+```
+
+C'est la **manière recommandée** d'initialiser les attributs en C++. On pourrait écrire à la place une affectation dans le corps :
+
+```cpp
+Fraction::Fraction(int n, int d) {
+    numerateur = n;       // affectation, dans le corps
+    denominateur = d;
+}
+```
+
+Les deux versions semblent équivalentes sur cet exemple, mais elles ne le sont pas vraiment :
+
+- avec la liste d'initialisation, l'attribut est **construit directement** avec sa valeur définitive ;
+- avec l'affectation dans le corps, l'attribut est d'abord **construit** (valeur quelconque), **puis** modifié — deux étapes au lieu d'une.
+
+> ⚠️ La liste d'initialisation n'est pas qu'une question de style : elle est **obligatoire** pour les attributs `const`, les attributs de type **référence**, et les attributs **objets** qui n'ont pas de constructeur par défaut. Prenez l'habitude de l'utiliser systématiquement.
+
+La syntaxe moderne admet aussi les **accolades** à la place des parenthèses dans la liste — les deux écritures sont équivalentes :
+
+```cpp
+Fraction::Fraction()             : numerateur{0}, denominateur{1} {}
+Fraction::Fraction(int n)        : numerateur{n}, denominateur{1} {}
+Fraction::Fraction(int n, int d) : numerateur{n}, denominateur{d} {}
+```
+
+## Le pointeur `this`
+
+Que faire quand un paramètre porte **le même nom** qu'un attribut ? À l'intérieur du constructeur, le nom `n` désigne alors le paramètre, qui **masque** l'attribut homonyme. Le mot-clé **`this`** lève l'ambiguïté.
+
+> `this` est un **pointeur** vers l'**objet courant** — l'objet sur lequel la méthode est en train de travailler. `this->numerateur` désigne sans ambiguïté l'**attribut** de cet objet.
+
+```cpp
+Fraction::Fraction(int numerateur, int denominateur) {
+    this->numerateur = numerateur;       // attribut <- paramètre
+    this->denominateur = denominateur;
+}
+```
+
+Ici les paramètres s'appellent `numerateur` et `denominateur`, exactement comme les attributs. `this->numerateur` est l'attribut ; `numerateur` seul est le paramètre. On rencontre `this` dans de nombreuses situations ; il sera de nouveau utile au chapitre sur `operator=`.
+
+## Constructeur à arguments par défaut
+
+Les **arguments par défaut**, vus pour les fonctions, s'appliquent aussi aux constructeurs. Un **seul** constructeur peut alors couvrir plusieurs cas d'usage et **remplacer** une famille de constructeurs surchargés.
+
+```cpp
+// fraction.h
+class Fraction {
+    private:
+        int numerateur;
+        int denominateur;
+    public:
+        Fraction(int n = 0, int d = 1);   // un seul constructeur, deux défauts
+};
+```
+
+```cpp
+// fraction.cpp
+Fraction::Fraction(int n, int d) : numerateur(n), denominateur(d) {}
+```
+
+Ce constructeur unique se comporte comme les trois précédents réunis :
+
+```cpp
+Fraction a;          // n = 0, d = 1  -> 0/1
+Fraction b(5);       // n = 5, d = 1  -> 5/1
+Fraction c(5, 6);    // n = 5, d = 6  -> 5/6
+```
+
+> ⚠️ La valeur par défaut s'écrit **une seule fois**, dans la **déclaration** (le `.h`) — jamais dans la définition du `.cpp`. Et attention aux **ambiguïtés** : si la classe possède *à la fois* `Fraction(int n = 0, int d = 1)` et `Fraction()`, l'appel `Fraction a;` devient ambigu, car les deux conviennent.
+
+## Quand le compilateur fournit un constructeur
+
+Si une classe ne déclare **aucun** constructeur, le compilateur en **synthétise un par défaut** (sans paramètre), afin qu'on puisse tout de même créer des objets. Ce constructeur implicite ne fait rien de particulier : il se contente d'appeler le constructeur par défaut de chaque attribut objet (les attributs de type primitif, eux, restent **non initialisés**).
+
+> ⚠️ Dès que vous écrivez **un seul** constructeur — par exemple `Fraction(int n, int d)` — le compilateur **cesse** de fournir le constructeur par défaut. La ligne `Fraction f;` ne compile alors plus. Si vous avez besoin des deux, vous devez **déclarer explicitement** le constructeur par défaut vous-même.
+
+Ce point est crucial pour la suite : l'allocation d'un **tableau d'objets** (chapitre « Allocation dynamique ») exige un constructeur par défaut accessible.
+
+## Appeler les constructeurs
+
+À l'utilisation, le bon constructeur est sélectionné d'après les arguments passés à la création :
+
+```cpp
+int main() {
+    Fraction f1;          // constructeur par défaut  -> 0/1
+    Fraction f2(10);      // constructeur à 1 paramètre -> 10/1
+    Fraction f3(5, 6);    // constructeur à 2 paramètres -> 5/6
+    return 0;
+}
+```
+
+`f1` se construit **sans parenthèses**, `f2` et `f3` avec les arguments attendus. Le compilateur fait correspondre chaque création au constructeur dont la signature s'accorde.
+
+> **À retenir**
+> - Le **constructeur** est une fonction membre qui **porte le nom de la classe**, **n'a pas de type de retour** et est **appelé automatiquement** à la création d'un objet.
+> - Une classe peut avoir **plusieurs constructeurs** surchargés : le **constructeur par défaut** (sans paramètre) et des **constructeurs paramétrés**.
+> - La **liste d'initialisation** `: x(x), y(y)` initialise les attributs **directement** ; elle est recommandée, et **obligatoire** pour les attributs `const`, référence ou objet sans constructeur par défaut.
+> - **`this`** est un pointeur vers l'objet courant ; `this->x` lève l'ambiguïté entre l'attribut `x` et un paramètre homonyme.
+> - Un **constructeur à arguments par défaut** peut remplacer plusieurs constructeurs surchargés (valeurs par défaut écrites dans le `.h`).
+> - Sans aucun constructeur déclaré, le compilateur **synthétise** un constructeur par défaut ; mais **dès qu'on en déclare un**, ce service implicite disparaît.

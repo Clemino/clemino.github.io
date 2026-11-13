@@ -1,0 +1,595 @@
+[
+  {
+    "chapterSlug": "heritage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle relation entre deux classes l'héritage modélise-t-il correctement ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "La relation « est-un » : la classe dérivée est une sorte de la classe de base." },
+        { "id": "b", "label": "La relation « a-un » : la classe dérivée possède un objet de la classe de base." },
+        { "id": "c", "label": "La relation « utilise » : la classe dérivée appelle des fonctions de la classe de base." },
+        { "id": "d", "label": "Une relation d'égalité : les deux classes sont interchangeables." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "L'héritage modélise la relation **« est-un »** (*is-a*) : la classe dérivée **est une sorte de** la classe de base. Un `Etudiant` **est une** `Personne` → `Etudiant` hérite de `Personne`. La relation **« a-un »** (une voiture **a un** moteur) relève au contraire de la **composition** : on y met un attribut de type `Moteur`, on n'hérite pas.",
+    "concepts": ["heritage"]
+  },
+  {
+    "chapterSlug": "heritage",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "La classe dérivée hérite de **tous les membres** de la classe de base, aussi bien les données (attributs) que les méthodes.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. La classe dérivée **hérite de tous les membres** — données **et** méthodes — de la classe de base. Un objet dérivé contient ainsi une **sous-partie** de la classe de base. Attention toutefois : hériter d'un membre `private` ne signifie pas y **accéder** — le `private` de la base reste inaccessible à la dérivée.",
+    "concepts": ["classe-base-derivee", "heritage"]
+  },
+  {
+    "chapterSlug": "heritage",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi ces couples de classes, lesquels relèvent légitimement d'un héritage « est-un » ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Cercle dérive de Forme" },
+        { "id": "b", "label": "Voiture dérive de Moteur" },
+        { "id": "c", "label": "Etudiant dérive de Personne" },
+        { "id": "d", "label": "Bibliotheque dérive de Livre" },
+        { "id": "e", "label": "Triangle dérive de Forme" }
+      ]
+    },
+    "solution": { "correct": ["a", "c", "e"] },
+    "explanation": "Test « est-un » : un cercle **est une** forme, un étudiant **est une** personne, un triangle **est une** forme → héritage légitime. En revanche une voiture **a un** moteur (composition, pas héritage) et une bibliothèque **contient des** livres (composition, ou agrégation) — ni l'une ni l'autre n'est un « est-un ».",
+    "concepts": ["heritage"]
+  },
+  {
+    "chapterSlug": "heritage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans la construction d'un objet d'une classe dérivée, dans quel ordre les constructeurs s'exécutent-ils ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Le constructeur de la classe de base, puis celui de la classe dérivée." },
+        { "id": "b", "label": "Le constructeur de la classe dérivée, puis celui de la classe de base." },
+        { "id": "c", "label": "Les deux constructeurs s'exécutent en même temps." },
+        { "id": "d", "label": "Seul le constructeur de la classe dérivée s'exécute." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Un objet dérivé contient une sous-partie de la classe de base ; cette sous-partie doit être **construite avant** le reste. Le **constructeur de la classe de base** est donc appelé **avant** celui de la classe dérivée. L'objet se construit « de la base vers le sommet ».",
+    "concepts": ["ordre-construction-heritage"]
+  },
+  {
+    "chapterSlug": "heritage",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On crée puis on détruit un objet `Chien` où `Chien` dérive de `Mammifere`, qui dérive d'`Animal`. Remets les quatre événements indiqués dans l'ordre chronologique.",
+    "payload": {
+      "items": [
+        { "id": "ctorMam", "label": "Le constructeur de Mammifere s'exécute" },
+        { "id": "ctorChien", "label": "Le constructeur de Chien s'exécute" },
+        { "id": "dtorChien", "label": "Le destructeur de Chien s'exécute" },
+        { "id": "dtorAnimal", "label": "Le destructeur d'Animal s'exécute" }
+      ]
+    },
+    "solution": { "order": ["ctorMam", "ctorChien", "dtorChien", "dtorAnimal"] },
+    "explanation": "À la **construction**, on va de la base vers le sommet : `Animal`, puis `Mammifere`, puis `Chien` — donc le constructeur de `Mammifere` précède celui de `Chien`. À la **destruction**, l'ordre est **inversé** : `Chien`, puis `Mammifere`, puis `Animal` — le destructeur de `Chien` s'exécute en premier, celui d'`Animal` en dernier.",
+    "concepts": ["ordre-construction-heritage"]
+  },
+  {
+    "chapterSlug": "heritage",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète le constructeur d'`Etudiant` : il doit appeler le constructeur de la classe de base `Personne` en lui transmettant `nom`, puis initialiser l'attribut propre `id`.",
+    "payload": {
+      "template": "Etudiant(std::string nom, std::string id) : {{base}}, {{attr}} {}",
+      "slots": [
+        { "id": "base", "width": "md" },
+        { "id": "attr", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "base": "Personne(nom)", "attr": "id(id)" },
+      "caseSensitive": false
+    },
+    "explanation": "Pour passer des arguments au constructeur de la base, on **l'invoque dans la liste d'initialisation** en écrivant le **nom de la classe de base** suivi des arguments : `Personne(nom)`. On initialise ensuite l'attribut propre : `id(id)`. Forme finale : `Etudiant(...) : Personne(nom), id(id) {}`. L'appel à la base figure toujours **en premier**.",
+    "concepts": ["ordre-construction-heritage", "classe-base-derivee"]
+  },
+  {
+    "chapterSlug": "heritage",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pour un héritage `public`, associe le statut d'un membre **dans la classe de base** à son statut résultant **dans la classe dérivée**.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "Membre public dans la base" },
+        { "id": "l2", "label": "Membre protected dans la base" },
+        { "id": "l3", "label": "Membre private dans la base" }
+      ],
+      "right": [
+        { "id": "r1", "label": "public dans la dérivée" },
+        { "id": "r2", "label": "protected dans la dérivée" },
+        { "id": "r3", "label": "inaccessible à la dérivée" }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3" } },
+    "explanation": "L'héritage **`public`** **conserve** le statut des membres : `public` reste `public`, `protected` reste `protected`. C'est ce qui exprime la relation « est-un ». Dans **tous** les modes d'héritage, en revanche, les membres **`private`** de la base restent **inaccessibles** à la dérivée — c'est le sens même de `private`.",
+    "concepts": ["acces-protected", "heritage"]
+  },
+  {
+    "chapterSlug": "heritage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Que signifie le spécificateur d'accès `protected` pour un membre d'une classe ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Il est accessible dans la classe elle-même et dans ses classes dérivées, mais pas depuis le code extérieur." },
+        { "id": "b", "label": "Il est accessible partout, exactement comme public." },
+        { "id": "c", "label": "Il est accessible uniquement dans la classe elle-même, comme private." },
+        { "id": "d", "label": "Il est accessible depuis le code extérieur mais pas dans les classes dérivées." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Un membre **`protected`** est accessible **dans la classe elle-même** et **dans ses classes dérivées**, mais **pas** depuis le code extérieur. C'est un intermédiaire entre `private` (accessible seulement dans la classe) et `public` (accessible partout) : il sert à exposer un membre **aux classes filles** tout en le cachant au reste du programme.",
+    "concepts": ["acces-protected"]
+  },
+  {
+    "chapterSlug": "heritage",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe l'ordre d'appel du constructeur et du destructeur.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Personne {\n    public:\n        Personne()  { cout << \"constructeur Personne\" << endl; }\n        ~Personne() { cout << \"destructeur Personne\" << endl; }\n};\n\nclass Etudiant : public Personne {\n    public:\n        Etudiant()  { cout << \"constructeur Etudiant\" << endl; }\n        ~Etudiant() { cout << \"destructeur Etudiant\" << endl; }\n};\n\nint main() {\n    Etudiant e;\n    cout << \"--- utilisation ---\" << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "constructeur Personne\nconstructeur Etudiant\n--- utilisation ---\ndestructeur Etudiant\ndestructeur Personne" },
+    "explanation": "À la création de `e`, la sous-partie de base est construite d'abord : `constructeur Personne`, puis `constructeur Etudiant`. À la fin de `main`, `e` est détruit dans l'ordre **inverse** : `destructeur Etudiant`, puis `destructeur Personne`. L'objet se construit de la base vers le sommet et se détruit du sommet vers la base.",
+    "concepts": ["ordre-construction-heritage"]
+  },
+  {
+    "chapterSlug": "heritage",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Le constructeur de `Voiture` appelle explicitement celui de `Vehicule`.",
+    "payload": {
+      "program": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Vehicule {\n    private:\n        string marque;\n    public:\n        Vehicule(string m) : marque(m) {\n            cout << \"Vehicule \" << marque << endl;\n        }\n};\n\nclass Voiture : public Vehicule {\n    private:\n        int portes;\n    public:\n        Voiture(string m, int p) : Vehicule(m), portes(p) {\n            cout << \"Voiture \" << portes << \" portes\" << endl;\n        }\n};\n\nint main() {\n    Voiture v(\"Renault\", 5);\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "Vehicule Renault\nVoiture 5 portes" },
+    "explanation": "Le constructeur de `Voiture` invoque `Vehicule(m)` dans sa liste d'initialisation : la sous-partie de base est construite **en premier**, ce qui affiche `Vehicule Renault`. Le corps du constructeur de `Voiture` s'exécute **ensuite** et affiche `Voiture 5 portes`.",
+    "concepts": ["ordre-construction-heritage", "classe-base-derivee"]
+  },
+  {
+    "chapterSlug": "heritage",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme à héritage multiple ? `C` dérive de `A` puis de `B`.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass A {\n    public:\n        A() { cout << \"A()\" << endl; }\n        ~A() { cout << \"~A()\" << endl; }\n};\n\nclass B {\n    public:\n        B() { cout << \"B()\" << endl; }\n        ~B() { cout << \"~B()\" << endl; }\n};\n\nclass C : public A, public B {\n    public:\n        C() { cout << \"C()\" << endl; }\n        ~C() { cout << \"~C()\" << endl; }\n};\n\nint main() {\n    C c;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "A()\nB()\nC()\n~C()\n~B()\n~A()" },
+    "explanation": "En héritage multiple, l'ordre des constructeurs suit l'**ordre de déclaration** des bases : `class C : public A, public B` → constructeur de `A`, puis de `B`, puis de `C`. À la destruction, l'ordre est **inversé** : `~C()`, `~B()`, `~A()`.",
+    "concepts": ["ordre-construction-heritage", "heritage"]
+  },
+  {
+    "chapterSlug": "heritage",
+    "type": "CODE_WRITE",
+    "difficulty": 1,
+    "points": 2,
+    "prompt": "Crée la classe `Etudiant` qui dérive publiquement de `Personne`. Elle ajoute un `int numero` et un accesseur `getNumero()`. Son constructeur reçoit le nom et le numéro, et transmet le nom à `Personne`.",
+    "payload": {
+      "spec": "La classe Personne (deja fournie) a un attribut prive string nom, un constructeur Personne(string n) et un accesseur getNom() const. Definir la classe Etudiant qui herite PUBLIQUEMENT de Personne, ajoute un attribut prive int numero, un accesseur getNumero() const, et un constructeur Etudiant(string nom, int num) qui appelle Personne(nom) dans sa liste d'initialisation puis initialise numero. Le main lit un nom et un numero, construit un Etudiant et affiche son nom puis son numero. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Personne {\n    private:\n        string nom;\n    public:\n        Personne(string n) : nom(n) {}\n        string getNom() const { return nom; }\n};\n\n// a completer : la classe Etudiant\n\nint main() {\n    string n;\n    int num;\n    cin >> n >> num;\n    Etudiant e(n, num);\n    cout << e.getNom() << endl;\n    cout << e.getNumero() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "etudiant standard", "stdin": "Durand 4012", "expectedStdout": "Durand\n4012" },
+        { "name": "petit numero", "stdin": "Bob 7", "expectedStdout": "Bob\n7" },
+        { "name": "cache", "stdin": "Zoe 99999", "expectedStdout": "Zoe\n99999", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Personne {\n    private:\n        string nom;\n    public:\n        Personne(string n) : nom(n) {}\n        string getNom() const { return nom; }\n};\n\nclass Etudiant : public Personne {\n    private:\n        int numero;\n    public:\n        Etudiant(string nom, int num) : Personne(nom), numero(num) {}\n        int getNumero() const { return numero; }\n};\n\nint main() {\n    string n;\n    int num;\n    cin >> n >> num;\n    Etudiant e(n, num);\n    cout << e.getNom() << endl;\n    cout << e.getNumero() << endl;\n    return 0;\n}"
+    },
+    "explanation": "`class Etudiant : public Personne` exprime la relation « est-un ». Le constructeur d'`Etudiant` invoque `Personne(nom)` dans sa liste d'initialisation pour construire la sous-partie de base, puis initialise l'attribut propre `numero`. La méthode `getNom()`, héritée, est utilisable sur un `Etudiant` comme si elle lui appartenait.",
+    "concepts": ["classe-base-derivee", "heritage", "ordre-construction-heritage"]
+  },
+  {
+    "chapterSlug": "heritage",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris la classe `Employe` qui dérive de `Personne`. Sa méthode `afficher()` doit **réutiliser** `Personne::afficher()` puis ajouter l'affichage du salaire.",
+    "payload": {
+      "spec": "La classe Personne (deja fournie) a un attribut prive string nom, un constructeur Personne(string n) et une methode afficher() const qui ecrit 'Nom: ' suivi du nom et d'un retour a la ligne. Definir la classe Employe qui herite publiquement de Personne, ajoute un attribut prive int salaire, un constructeur Employe(string nom, int s) qui appelle Personne(nom) et initialise salaire, et une methode afficher() const qui appelle d'abord Personne::afficher() puis ecrit 'Salaire: ' suivi du salaire et d'un retour a la ligne. Le main lit un nom et un salaire et affiche l'employe. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Personne {\n    private:\n        string nom;\n    public:\n        Personne(string n) : nom(n) {}\n        void afficher() const { cout << \"Nom: \" << nom << endl; }\n};\n\n// a completer : la classe Employe\n\nint main() {\n    string n;\n    int s;\n    cin >> n >> s;\n    Employe e(n, s);\n    e.afficher();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "employe standard", "stdin": "Martin 2500", "expectedStdout": "Nom: Martin\nSalaire: 2500" },
+        { "name": "autre employe", "stdin": "Lea 3100", "expectedStdout": "Nom: Lea\nSalaire: 3100" },
+        { "name": "cache", "stdin": "Tom 0", "expectedStdout": "Nom: Tom\nSalaire: 0", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Personne {\n    private:\n        string nom;\n    public:\n        Personne(string n) : nom(n) {}\n        void afficher() const { cout << \"Nom: \" << nom << endl; }\n};\n\nclass Employe : public Personne {\n    private:\n        int salaire;\n    public:\n        Employe(string nom, int s) : Personne(nom), salaire(s) {}\n        void afficher() const {\n            Personne::afficher();\n            cout << \"Salaire: \" << salaire << endl;\n        }\n};\n\nint main() {\n    string n;\n    int s;\n    cin >> n >> s;\n    Employe e(n, s);\n    e.afficher();\n    return 0;\n}"
+    },
+    "explanation": "`Employe::afficher()` **redéfinit** la méthode héritée mais **réutilise** le travail de la base : la notation `Personne::afficher()` — nom de la classe de base, `::`, nom de la méthode — appelle explicitement la version de la base. La dérivée n'a plus qu'à ajouter ce qui lui est propre (le salaire).",
+    "concepts": ["classe-base-derivee", "heritage"]
+  },
+  {
+    "chapterSlug": "heritage",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris la classe `Livre` qui dérive de `Produit`. `Produit` a deux attributs `protected` (`nom`, `prix`) et un accesseur `getPrix()`. `Livre` ajoute un auteur et une méthode `afficher()`.",
+    "payload": {
+      "spec": "La classe Produit (deja fournie) a deux attributs PROTECTED string nom et double prix, un constructeur Produit(string n, double p) et un accesseur getPrix() const. Definir la classe Livre qui herite publiquement de Produit, ajoute un attribut prive string auteur, un constructeur Livre(string n, double p, string a) qui appelle Produit(n, p) et initialise auteur, et une methode afficher() const qui ecrit le nom (attribut protected) puis ' par ' puis l'auteur puis ' : ' puis getPrix() puis ' euros' puis un retour a la ligne. Le main lit nom, prix et auteur, construit un Livre et l'affiche. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Produit {\n    protected:\n        string nom;\n        double prix;\n    public:\n        Produit(string n, double p) : nom(n), prix(p) {}\n        double getPrix() const { return prix; }\n};\n\n// a completer : la classe Livre\n\nint main() {\n    string nom, auteur;\n    double prix;\n    cin >> nom >> prix >> auteur;\n    Livre l(nom, prix, auteur);\n    l.afficher();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "roman", "stdin": "1984 12 Orwell", "expectedStdout": "1984 par Orwell : 12 euros" },
+        { "name": "conte", "stdin": "Candide 8 Voltaire", "expectedStdout": "Candide par Voltaire : 8 euros" },
+        { "name": "cache", "stdin": "Germinal 15 Zola", "expectedStdout": "Germinal par Zola : 15 euros", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Produit {\n    protected:\n        string nom;\n        double prix;\n    public:\n        Produit(string n, double p) : nom(n), prix(p) {}\n        double getPrix() const { return prix; }\n};\n\nclass Livre : public Produit {\n    private:\n        string auteur;\n    public:\n        Livre(string n, double p, string a) : Produit(n, p), auteur(a) {}\n        void afficher() const {\n            cout << nom << \" par \" << auteur << \" : \" << getPrix() << \" euros\" << endl;\n        }\n};\n\nint main() {\n    string nom, auteur;\n    double prix;\n    cin >> nom >> prix >> auteur;\n    Livre l(nom, prix, auteur);\n    l.afficher();\n    return 0;\n}"
+    },
+    "explanation": "`Livre` accède à l'attribut `protected` `nom` **directement** (les classes filles y ont accès) et lit `prix` via l'accesseur **public** hérité `getPrix()` — les deux voies sont valides. Le constructeur transmet `n` et `p` à `Produit` dans la liste d'initialisation, avant d'initialiser l'attribut propre `auteur`.",
+    "concepts": ["acces-protected", "classe-base-derivee", "ordre-construction-heritage"]
+  },
+  {
+    "chapterSlug": "heritage",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas. Le constructeur de `CompteEpargne` n'appelle pas celui de `Compte`, qui n'a pas de constructeur par défaut. Corrige-le.",
+    "payload": {
+      "spec": "La classe Compte a un attribut prive int solde, un constructeur Compte(int s) et un accesseur getSolde() const. Comme Compte n'a PAS de constructeur par defaut, la classe derivee CompteEpargne doit appeler explicitement Compte(s) dans la liste d'initialisation de son constructeur. Le main lit un solde et un taux, construit un CompteEpargne et affiche son solde.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Compte {\n    private:\n        int solde;\n    public:\n        Compte(int s) : solde(s) {}\n        int getSolde() const { return solde; }\n};\n\nclass CompteEpargne : public Compte {\n    private:\n        double taux;\n    public:\n        CompteEpargne(int s, double t) : taux(t) {}\n};\n\nint main() {\n    int s;\n    double t;\n    cin >> s >> t;\n    CompteEpargne ce(s, t);\n    cout << ce.getSolde() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "solde positif", "stdin": "1000 2", "expectedStdout": "1000" },
+        { "name": "solde nul", "stdin": "0 5", "expectedStdout": "0" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Compte {\n    private:\n        int solde;\n    public:\n        Compte(int s) : solde(s) {}\n        int getSolde() const { return solde; }\n};\n\nclass CompteEpargne : public Compte {\n    private:\n        double taux;\n    public:\n        CompteEpargne(int s, double t) : Compte(s), taux(t) {}\n};\n\nint main() {\n    int s;\n    double t;\n    cin >> s >> t;\n    CompteEpargne ce(s, t);\n    cout << ce.getSolde() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `CompteEpargne(int s, double t) : taux(t) {}` n'appelle pas le constructeur de la base. À défaut d'appel explicite, le compilateur tente le constructeur **par défaut** de `Compte` — qui n'existe pas, puisque `Compte(int)` a été déclaré. g++ refuse (`no matching function for call to 'Compte::Compte()'`). La correction : invoquer `Compte(s)` dans la liste d'initialisation : `CompteEpargne(int s, double t) : Compte(s), taux(t) {}`.",
+    "concepts": ["ordre-construction-heritage", "classe-base-derivee"]
+  },
+  {
+    "chapterSlug": "heritage",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme ne compile pas : `e.getNom()` est signalé inaccessible. L'auteur a oublié un mot-clé dans la déclaration de l'héritage. Corrige-le.",
+    "payload": {
+      "spec": "La classe Etudiant doit heriter PUBLIQUEMENT de Personne pour que la methode publique getNom(), heritee, reste utilisable depuis le main. Ecrire 'class Etudiant : Personne' correspond pour une class a un heritage private implicite, qui rend getNom() inaccessible de l'exterieur. Il faut ecrire 'class Etudiant : public Personne'. Le main lit un nom, construit un Etudiant et affiche getNom().",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Personne {\n    private:\n        string nom;\n    public:\n        Personne(string n) : nom(n) {}\n        string getNom() const { return nom; }\n};\n\nclass Etudiant : Personne {\n    public:\n        Etudiant(string n) : Personne(n) {}\n};\n\nint main() {\n    string n;\n    cin >> n;\n    Etudiant e(n);\n    cout << e.getNom() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "sophie", "stdin": "Sophie", "expectedStdout": "Sophie" },
+        { "name": "karim", "stdin": "Karim", "expectedStdout": "Karim" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Personne {\n    private:\n        string nom;\n    public:\n        Personne(string n) : nom(n) {}\n        string getNom() const { return nom; }\n};\n\nclass Etudiant : public Personne {\n    public:\n        Etudiant(string n) : Personne(n) {}\n};\n\nint main() {\n    string n;\n    cin >> n;\n    Etudiant e(n);\n    cout << e.getNom() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `class Etudiant : Personne` omet le mode d'héritage. Pour une **`class`**, l'absence de mot-clé vaut héritage **`private`** : `getNom()`, `public` dans la base, devient `private` dans `Etudiant` — donc inaccessible depuis `main` (g++ : `'Personne' is not an accessible base of 'Etudiant'`). La correction : `class Etudiant : public Personne`, qui conserve les statuts hérités.",
+    "concepts": ["heritage", "classe-base-derivee"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Que signifie « redéfinir » (override) une méthode héritée ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Fournir, dans la classe dérivée, une nouvelle version d'une méthode de la base avec exactement la même signature." },
+        { "id": "b", "label": "Déclarer dans la même classe plusieurs méthodes de même nom mais de signatures différentes." },
+        { "id": "c", "label": "Supprimer une méthode héritée pour qu'elle ne soit plus utilisable." },
+        { "id": "d", "label": "Renommer une méthode de la classe de base." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "**Redéfinir** une méthode, c'est, dans la classe dérivée, fournir une **nouvelle version** d'une méthode déjà présente dans la base, avec **exactement la même signature**. La nouvelle version **remplace** la version héritée pour les objets de la classe dérivée. Déclarer plusieurs méthodes de même nom mais de signatures différentes dans une même classe, c'est de la **surcharge**, pas de la redéfinition.",
+    "concepts": ["redefinition"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque notion à sa caractéristique distinctive.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "Surcharge (overload)" },
+        { "id": "l2", "label": "Redéfinition (override)" },
+        { "id": "l3", "label": "Masquage" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Plusieurs méthodes de même nom mais de signatures différentes, dans une même classe" },
+        { "id": "r2", "label": "Même nom et même signature qu'une méthode de la base : la dérivée remplace la version héritée" },
+        { "id": "r3", "label": "Même nom mais signature différente de la base : la dérivée cache toutes les versions héritées de ce nom" }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3" } },
+    "explanation": "La **surcharge** : plusieurs fonctions de même nom mais de signatures **différentes** coexistent dans **une même** classe. La **redéfinition** : une méthode dérivée a la **même signature** qu'une méthode de la base et la remplace. Le **masquage** : une méthode dérivée de même nom mais de signature **différente** cache (rend inaccessibles) toutes les versions héritées de ce nom — ni surcharge ni redéfinition.",
+    "concepts": ["redefinition"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Qu'est-ce que la **liaison dynamique** (liaison tardive) ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Le choix de la méthode à exécuter est fait à l'exécution, d'après le type réel de l'objet." },
+        { "id": "b", "label": "Le choix de la méthode est fait à la compilation, d'après le type déclaré du pointeur." },
+        { "id": "c", "label": "Le choix de la méthode dépend de l'ordre de déclaration des classes." },
+        { "id": "d", "label": "La méthode est choisie aléatoirement au démarrage du programme." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "La **liaison dynamique** (ou tardive, *late binding*) : la méthode est choisie **à l'exécution**, d'après le **type réel** de l'objet pointé. Elle s'oppose à la **liaison statique** (précoce), comportement par défaut, où la méthode est choisie **à la compilation** d'après le **type déclaré**. En C++, on active la liaison dynamique avec le mot-clé `virtual`.",
+    "concepts": ["liaison-dynamique"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles affirmations à propos du mot-clé `virtual` et de la liaison dynamique sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Il suffit de déclarer la méthode virtual dans la classe de base ; la redéfinition reste virtuelle dans toutes les dérivées." },
+        { "id": "b", "label": "La liaison dynamique n'opère que via un pointeur ou une référence." },
+        { "id": "c", "label": "Sur un objet manipulé directement (ni pointeur ni référence), la liaison reste statique même si la méthode est virtual." },
+        { "id": "d", "label": "Il faut obligatoirement réécrire le mot virtual dans chaque classe dérivée, sinon la méthode n'est plus virtuelle." },
+        { "id": "e", "label": "La liaison dynamique fonctionne aussi lors d'une copie par valeur dans une variable du type de base." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "`virtual` se place dans la **base** ; une méthode redéfinie reste virtuelle dans **toutes** les dérivées, qu'on réécrive `virtual` ou non (d est faux). La liaison dynamique n'opère que via **pointeur ou référence** ; sur un objet manipulé directement, le type est connu et la liaison reste **statique**. Une copie **par valeur** dans une variable du type de base provoque la **découpe d'objet** : le comportement virtuel est perdu (e est faux).",
+    "concepts": ["methode-virtuelle", "liaison-dynamique"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "À quoi sert le spécificateur `override` placé après la signature d'une méthode ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Il demande au compilateur de vérifier que la méthode redéfinit bien une méthode virtuelle de la base, et provoque une erreur sinon." },
+        { "id": "b", "label": "Il rend la méthode virtuelle même si la base ne l'a pas déclarée virtual." },
+        { "id": "c", "label": "Il interdit aux classes dérivées de redéfinir la méthode." },
+        { "id": "d", "label": "Il accélère l'appel de la méthode à l'exécution." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Le spécificateur **`override`** demande au compilateur de **vérifier** que la méthode redéfinit bien une méthode virtuelle de la base. Sinon (un `const` oublié, un type de paramètre divergent...), il **émet une erreur** au lieu de créer silencieusement une nouvelle méthode. Interdire toute redéfinition est le rôle de `final`, pas d'`override`.",
+    "concepts": ["override-final"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète la déclaration : la classe de base `Forme` doit avoir un destructeur **virtuel** par défaut, indispensable pour une classe de base polymorphe.",
+    "payload": {
+      "template": "class Forme {\n    public:\n        {{kw}} ~Forme() = {{def}};\n};",
+      "slots": [
+        { "id": "kw", "width": "sm" },
+        { "id": "def", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "kw": "virtual", "def": "default" },
+      "caseSensitive": false
+    },
+    "explanation": "Toute classe destinée à servir de **classe de base polymorphe** doit déclarer son destructeur **`virtual`** : `virtual ~Forme() = default;`. Sans cela, `delete` sur un pointeur de base applique la liaison statique et n'appelle que `~Forme()` — la partie dérivée n'est pas détruite (fuite mémoire). `= default` demande au compilateur de générer le corps du destructeur.",
+    "concepts": ["methode-virtuelle"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "TRUE_FALSE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Copier un objet dérivé **par valeur** dans une variable du type de base conserve intégralement son comportement virtuel.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. C'est le piège de la **découpe d'objet** (*object slicing*) : affecter ou copier un objet dérivé **par valeur** dans une variable du **type de base** ne conserve que la **sous-partie de base** — attributs **et** comportement virtuel propres à la dérivée sont « tranchés ». Pour préserver le polymorphisme, on manipule un objet polymorphe par **référence** (`Base&`) ou par **pointeur** (`Base*`), jamais par valeur.",
+    "concepts": ["liaison-dynamique", "methode-virtuelle"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? La méthode `description()` n'est **pas** virtuelle.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Forme {\n    public:\n        void description() const { cout << \"forme\" << endl; }\n};\n\nclass Cercle : public Forme {\n    public:\n        void description() const { cout << \"cercle\" << endl; }\n};\n\nint main() {\n    Forme f;\n    Cercle c;\n    f.description();\n    c.description();\n    Forme* p = &c;\n    p->description();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "forme\ncercle\nforme" },
+    "explanation": "`f.description()` et `c.description()` sont des appels sur des objets manipulés **directement** : le type est connu → `forme` puis `cercle`. Mais `p` est déclaré `Forme*` et `description()` n'est **pas** `virtual` : l'appel `p->description()` est en **liaison statique** et exécute `Forme::description()` → `forme`, alors même que `p` désigne un `Cercle`.",
+    "concepts": ["liaison-dynamique", "redefinition"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? La méthode `description()` est `virtual`.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual void description() const { cout << \"forme\" << endl; }\n};\n\nclass Cercle : public Forme {\n    public:\n        void description() const override { cout << \"cercle\" << endl; }\n};\n\nclass Carre : public Forme {\n    public:\n        void description() const override { cout << \"carre\" << endl; }\n};\n\nint main() {\n    Cercle c;\n    Carre  s;\n    Forme* tab[2];\n    tab[0] = &c;\n    tab[1] = &s;\n    for (int i = 0; i < 2; i++)\n        tab[i]->description();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "cercle\ncarre" },
+    "explanation": "`description()` est `virtual` : l'appel `tab[i]->description()`, fait via un pointeur `Forme*`, est en **liaison dynamique** et exécute la version du **type réel** de l'objet. `tab[0]` désigne un `Cercle` → `cercle` ; `tab[1]` désigne un `Carre` → `carre`. C'est le mécanisme du polymorphisme : un même appel, des comportements différents.",
+    "concepts": ["methode-virtuelle", "liaison-dynamique"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Compare l'appel via une **référence** et via une **copie par valeur**.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Animal {\n    public:\n        virtual void crier() const { cout << \"...\" << endl; }\n};\n\nclass Chat : public Animal {\n    public:\n        void crier() const override { cout << \"Miaou\" << endl; }\n};\n\nint main() {\n    Chat ch;\n    Animal& ref = ch;\n    ref.crier();\n    Animal copie = ch;\n    copie.crier();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "Miaou\n..." },
+    "explanation": "`ref` est une **référence** `Animal&` vers `ch` : la liaison dynamique opère, `ref.crier()` exécute `Chat::crier()` → `Miaou`. `copie` est en revanche une variable `Animal` **par valeur** : l'initialisation `Animal copie = ch;` **découpe** l'objet (object slicing) — seule la sous-partie `Animal` est copiée. `copie` n'est plus un `Chat` ; `copie.crier()` exécute `Animal::crier()` → `...`.",
+    "concepts": ["liaison-dynamique", "methode-virtuelle"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Rends le programme polymorphe : déclare `aire()` `virtual` dans `Forme` et écris la classe `Rectangle` qui la redéfinit avec `override`.",
+    "payload": {
+      "spec": "La classe Forme a une methode aire() const qui ecrit 'aire inconnue' suivi d'un retour a la ligne. Declarer cette methode VIRTUAL. Definir la classe Rectangle qui herite publiquement de Forme, a deux attributs prives int largeur et hauteur, un constructeur Rectangle(int l, int h), et redefinit aire() const avec le specificateur override : la methode ecrit le produit largeur*hauteur suivi d'un retour a la ligne. Le main lit deux entiers, construit un Rectangle, le pointe avec un Forme* et appelle aire() via ce pointeur. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Forme {\n    public:\n        // a modifier : rendre aire() virtual\n        void aire() const { cout << \"aire inconnue\" << endl; }\n};\n\n// a completer : la classe Rectangle\n\nint main() {\n    int l, h;\n    cin >> l >> h;\n    Rectangle r(l, h);\n    Forme* p = &r;\n    p->aire();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "rectangle", "stdin": "4 5", "expectedStdout": "20" },
+        { "name": "autre rectangle", "stdin": "7 3", "expectedStdout": "21" },
+        { "name": "cache carre", "stdin": "6 6", "expectedStdout": "36", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual void aire() const { cout << \"aire inconnue\" << endl; }\n};\n\nclass Rectangle : public Forme {\n    private:\n        int largeur, hauteur;\n    public:\n        Rectangle(int l, int h) : largeur(l), hauteur(h) {}\n        void aire() const override {\n            cout << largeur * hauteur << endl;\n        }\n};\n\nint main() {\n    int l, h;\n    cin >> l >> h;\n    Rectangle r(l, h);\n    Forme* p = &r;\n    p->aire();\n    return 0;\n}"
+    },
+    "explanation": "`aire()` étant déclarée **`virtual`** dans `Forme`, l'appel `p->aire()` via le pointeur `Forme*` est en **liaison dynamique** et exécute `Rectangle::aire()`. Le spécificateur **`override`** sur la méthode de `Rectangle` fait vérifier par le compilateur qu'elle redéfinit bien une virtuelle de la base.",
+    "concepts": ["methode-virtuelle", "override-final", "liaison-dynamique"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris les classes `Chien` et `Chat` qui dérivent d'`Animal` et redéfinissent `parler()`. Le `main` choisit le type à l'exécution et appelle `parler()` via un `Animal*`.",
+    "payload": {
+      "spec": "La classe Animal (deja fournie) a une methode virtual void parler() const qui ecrit 'Animal' et un destructeur virtuel vide. Definir deux classes Chien et Chat qui heritent publiquement d'Animal. Chien redefinit parler() avec override pour ecrire 'Wouf' suivi d'un retour a la ligne ; Chat redefinit parler() avec override pour ecrire 'Miaou' suivi d'un retour a la ligne. Le main lit un entier n : si n vaut 1 il cree un Chien, sinon un Chat, via un Animal*, appelle parler() puis fait delete. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Animal {\n    public:\n        virtual void parler() const { cout << \"Animal\" << endl; }\n        virtual ~Animal() {}\n};\n\n// a completer : les classes Chien et Chat\n\nint main() {\n    int n;\n    cin >> n;\n    Animal* a;\n    if (n == 1)\n        a = new Chien;\n    else\n        a = new Chat;\n    a->parler();\n    delete a;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "chien", "stdin": "1", "expectedStdout": "Wouf" },
+        { "name": "chat", "stdin": "2", "expectedStdout": "Miaou" },
+        { "name": "cache autre", "stdin": "0", "expectedStdout": "Miaou", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Animal {\n    public:\n        virtual void parler() const { cout << \"Animal\" << endl; }\n        virtual ~Animal() {}\n};\n\nclass Chien : public Animal {\n    public:\n        void parler() const override { cout << \"Wouf\" << endl; }\n};\n\nclass Chat : public Animal {\n    public:\n        void parler() const override { cout << \"Miaou\" << endl; }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    Animal* a;\n    if (n == 1)\n        a = new Chien;\n    else\n        a = new Chat;\n    a->parler();\n    delete a;\n    return 0;\n}"
+    },
+    "explanation": "`parler()` est `virtual` : quel que soit l'objet réellement créé (`Chien` ou `Chat`), l'appel `a->parler()` via le pointeur `Animal*` exécute la version du **type réel**. Le programme manipule l'objet sans connaître son type exact — c'est le polymorphisme. Le destructeur virtuel d'`Animal` garantit que `delete a` détruit correctement la partie dérivée.",
+    "concepts": ["methode-virtuelle", "liaison-dynamique", "override-final"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris la classe `Manager` qui dérive d'`Employe` et redéfinit `salaire()`. La fonction `afficherSalaire` reçoit un `const Employe&` : le polymorphisme doit fonctionner.",
+    "payload": {
+      "spec": "La classe Employe (deja fournie) a un attribut PROTECTED int base, un constructeur Employe(int b), une methode virtual int salaire() const qui renvoie base, et un destructeur virtuel vide. Definir la classe Manager qui herite publiquement d'Employe, ajoute un attribut prive int prime, un constructeur Manager(int b, int p) qui appelle Employe(b) et initialise prime, et redefinit salaire() const avec override pour renvoyer base + prime. La fonction afficherSalaire(const Employe& e) est deja fournie. Le main lit deux entiers b et p, construit un Employe(b) et un Manager(b, p), et appelle afficherSalaire sur chacun. Ne pas modifier le main ni afficherSalaire.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Employe {\n    protected:\n        int base;\n    public:\n        Employe(int b) : base(b) {}\n        virtual int salaire() const { return base; }\n        virtual ~Employe() {}\n};\n\n// a completer : la classe Manager\n\nvoid afficherSalaire(const Employe& e) {\n    cout << e.salaire() << endl;\n}\n\nint main() {\n    int b, p;\n    cin >> b >> p;\n    Employe e(b);\n    Manager m(b, p);\n    afficherSalaire(e);\n    afficherSalaire(m);\n    return 0;\n}\n",
+      "tests": [
+        { "name": "avec prime", "stdin": "2000 500", "expectedStdout": "2000\n2500" },
+        { "name": "prime nulle", "stdin": "1800 0", "expectedStdout": "1800\n1800" },
+        { "name": "cache", "stdin": "3000 1200", "expectedStdout": "3000\n4200", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Employe {\n    protected:\n        int base;\n    public:\n        Employe(int b) : base(b) {}\n        virtual int salaire() const { return base; }\n        virtual ~Employe() {}\n};\n\nclass Manager : public Employe {\n    private:\n        int prime;\n    public:\n        Manager(int b, int p) : Employe(b), prime(p) {}\n        int salaire() const override { return base + prime; }\n};\n\nvoid afficherSalaire(const Employe& e) {\n    cout << e.salaire() << endl;\n}\n\nint main() {\n    int b, p;\n    cin >> b >> p;\n    Employe e(b);\n    Manager m(b, p);\n    afficherSalaire(e);\n    afficherSalaire(m);\n    return 0;\n}"
+    },
+    "explanation": "`afficherSalaire` reçoit son paramètre par **référence constante** `const Employe&` : la liaison dynamique opère. Pour un `Employe`, `e.salaire()` renvoie `base` ; pour un `Manager`, la version redéfinie renvoie `base + prime`. Passer le paramètre par **valeur** (`Employe e`) aurait découpé le `Manager` et perdu le polymorphisme. `Manager` lit `base` directement car cet attribut est `protected`.",
+    "concepts": ["methode-virtuelle", "liaison-dynamique", "redefinition"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme compile mais affiche `forme` au lieu de `triangle`. L'appel via le pointeur de base n'exécute pas la bonne version. Corrige le code.",
+    "payload": {
+      "spec": "La classe Triangle redefinit la methode nom() de Forme. Pour que l'appel p->nom() via un pointeur Forme* execute la version du type reel (Triangle), la methode nom() doit etre declaree VIRTUAL dans la classe de base Forme. Marquer aussi la redefinition dans Triangle avec override. Forme::nom() ecrit 'forme', Triangle::nom() ecrit 'triangle', chaque message suivi d'un retour a la ligne. Le main cree un Triangle, le pointe avec un Forme* et appelle nom() via ce pointeur : il doit afficher 'triangle'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Forme {\n    public:\n        void nom() const { cout << \"forme\" << endl; }\n};\n\nclass Triangle : public Forme {\n    public:\n        void nom() const { cout << \"triangle\" << endl; }\n};\n\nint main() {\n    Triangle t;\n    Forme* p = &t;\n    p->nom();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "dispatch dynamique", "stdin": "", "expectedStdout": "triangle" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual void nom() const { cout << \"forme\" << endl; }\n};\n\nclass Triangle : public Forme {\n    public:\n        void nom() const override { cout << \"triangle\" << endl; }\n};\n\nint main() {\n    Triangle t;\n    Forme* p = &t;\n    p->nom();\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `nom()` n'est pas `virtual`. L'appel `p->nom()`, via un pointeur `Forme*`, est alors en **liaison statique** — le compilateur choisit `Forme::nom()` d'après le type **déclaré** du pointeur, sans regarder l'objet réel. La correction : déclarer `nom()` **`virtual`** dans `Forme` (et `override` dans `Triangle`). L'appel passe en liaison dynamique et exécute `Triangle::nom()`.",
+    "concepts": ["methode-virtuelle", "liaison-dynamique"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas. La méthode de `Derivee` porte `override` mais ne redéfinit rien : sa signature diffère de celle de la base. Corrige la signature.",
+    "payload": {
+      "spec": "Dans la classe Base, la methode virtuelle afficher() est declaree CONST. La redefinition dans Derivee doit avoir EXACTEMENT la meme signature, donc etre const elle aussi. La methode de Derivee a oublie le const : avec override, le compilateur signale qu'elle ne redefinit rien. Ajouter le const manquant. Base::afficher() ecrit 'Base', Derivee::afficher() ecrit 'Derivee'. Le main cree une Derivee, la pointe avec un Base* et appelle afficher() : il doit afficher 'Derivee'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Base {\n    public:\n        virtual void afficher() const { cout << \"Base\" << endl; }\n};\n\nclass Derivee : public Base {\n    public:\n        void afficher() override { cout << \"Derivee\" << endl; }\n};\n\nint main() {\n    Derivee d;\n    Base* p = &d;\n    p->afficher();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "redefinition correcte", "stdin": "", "expectedStdout": "Derivee" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Base {\n    public:\n        virtual void afficher() const { cout << \"Base\" << endl; }\n};\n\nclass Derivee : public Base {\n    public:\n        void afficher() const override { cout << \"Derivee\" << endl; }\n};\n\nint main() {\n    Derivee d;\n    Base* p = &d;\n    p->afficher();\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `Base::afficher()` est `const`, mais `Derivee::afficher()` ne l'est pas — les deux signatures **diffèrent**, donc la méthode de `Derivee` ne redéfinit rien (elle **masquerait** la version héritée). Le spécificateur `override` transforme ce piège silencieux en **erreur de compilation** (`marked 'override', but does not override`). La correction : ajouter le `const` pour que les signatures soient identiques.",
+    "concepts": ["override-final", "redefinition"]
+  },
+  {
+    "chapterSlug": "redefinition-virtual",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme compile mais n'affiche que `~Base` : le destructeur de `Derivee` n'est jamais appelé. Corrige le code.",
+    "payload": {
+      "spec": "Le programme detruit un objet Derivee via un pointeur Base*. Pour que delete appelle aussi le destructeur de Derivee, le destructeur de la classe de base Base doit etre declare VIRTUAL. Base::~Base() ecrit '~Base', Derivee::~Derivee() ecrit '~Derivee', chaque message suivi d'un retour a la ligne. Le main cree une Derivee via un Base* et fait delete : il doit afficher '~Derivee' puis '~Base'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Base {\n    public:\n        ~Base() { cout << \"~Base\" << endl; }\n};\n\nclass Derivee : public Base {\n    public:\n        ~Derivee() { cout << \"~Derivee\" << endl; }\n};\n\nint main() {\n    Base* p = new Derivee;\n    delete p;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "destruction complete", "stdin": "", "expectedStdout": "~Derivee\n~Base" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Base {\n    public:\n        virtual ~Base() { cout << \"~Base\" << endl; }\n};\n\nclass Derivee : public Base {\n    public:\n        ~Derivee() override { cout << \"~Derivee\" << endl; }\n};\n\nint main() {\n    Base* p = new Derivee;\n    delete p;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : le destructeur de `Base` n'est pas `virtual`. `delete p` (sur un `Base*`) applique alors la **liaison statique** et n'appelle que `~Base()` — `~Derivee()` est ignoré, et toute ressource qu'il libérerait fuit. La correction : déclarer `virtual ~Base()`. `delete p` passe en liaison dynamique : `~Derivee()` puis `~Base()`.",
+    "concepts": ["methode-virtuelle", "liaison-dynamique"]
+  }
+]

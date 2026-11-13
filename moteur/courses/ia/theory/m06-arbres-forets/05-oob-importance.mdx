@@ -1,0 +1,217 @@
+---
+title: "Erreur OOB et importance des variables"
+slug: oob-importance
+order: 5
+estimatedReadMin: 18
+concepts: [echantillon-out-of-bag, erreur-oob, importance-des-variables, foret-aleatoire, echantillon-bootstrap, jeu-de-test, sur-apprentissage, agregation]
+source: "Slides_RF_DM.pdf, ING2_GI_ML_Tree_SLIDES.pdf"
+---
+
+## L'idée : évaluer la forêt sans jeu de test séparé
+
+La section 4 a noté un fait précieux : puisque chaque arbre est construit sur un
+**échantillon bootstrap** — un tirage avec remise — **certaines observations ne
+sont pas tirées** pour cet arbre. **Les échantillons bootstrap n'utilisent pas
+toutes les observations.** Cette section exploite ce fait.
+
+Comme tout autre classifieur (ou « régresseur »), une forêt aléatoire **peut
+être évaluée à l'aide d'un ensemble de test**. Mais il existe **un autre mode
+d'évaluation des forêts**, appliqué **en parallèle de la création** de la
+forêt — sans mettre de côté un jeu de test séparé.
+
+L'évaluation classique exigeait de **diviser** les données en apprentissage et
+test. Ici, on **n'a pas besoin** de cette division : chaque observation, **non
+tirée** par une partie des arbres, peut être prédite par **ces arbres-là** — des
+arbres qui ne l'ont **jamais vue**. On dispose donc, gratuitement, d'un mécanisme
+de validation **intégré à l'algorithme** : c'est la **procédure Out-Of-Bag**.
+
+> **À retenir** : comme les **échantillons bootstrap n'utilisent pas toutes les
+> observations**, une forêt peut s'**auto-évaluer** — sans jeu de test
+> séparé — grâce à la procédure **Out-Of-Bag (OOB)**, appliquée **en parallèle**
+> de sa construction.
+
+## L'échantillon out-of-bag et le classifieur OOB
+
+Précisons le mécanisme. Pour chaque exemple `e = (Xᵢ, Yᵢ)` de l'ensemble
+d'apprentissage :
+
+- on considère **uniquement les arbres `T_k` construits sur un échantillon
+  bootstrap `D_k` ne contenant pas cet exemple** ;
+- on considère le classifieur qui associe à l'instance `Xᵢ` la **classe obtenue
+  en faisant voter ces arbres**. Ce classifieur est appelé **classifieur
+  Out-of-bag (OOB)** ;
+- l'**erreur commise** par ce classifieur est appelée **erreur OOB**, et donne
+  une **première évaluation** de la forêt.
+
+Pour une observation donnée, l'**échantillon out-of-bag** est donc l'ensemble
+des observations **qui n'ont pas servi** à construire un arbre — vu du côté de
+l'arbre, ce sont les exemples « **hors du sac** » (*out of bag*). Le cours
+résume la procédure ainsi : pour chaque point `(xᵢ, yᵢ)` de la base
+d'apprentissage,
+
+- on **considère les échantillons bootstrap qui ne contiennent pas cette
+  observation** ;
+- on **construit une forêt aléatoire sur ces échantillons** — on se restreint
+  aux arbres n'ayant pas cette observation dans leur base d'apprentissage ;
+- on **calcule `ŷᵢ`, la prévision de `yᵢ`**.
+
+L'astuce est que la prédiction OOB de `(xᵢ, yᵢ)` est faite **uniquement** par
+des arbres qui n'ont **jamais vu** cet exemple : `ŷᵢ` est donc une prédiction sur
+une donnée **« nouvelle »** pour ces arbres — exactement ce qu'exige une
+évaluation honnête (module 5 : on n'évalue pas un modèle sur ses propres
+exemples d'apprentissage).
+
+> **À retenir** : pour chaque exemple, on ne retient que les arbres dont
+> l'**échantillon bootstrap ne le contient pas** ; le vote de ces arbres définit
+> le **classifieur OOB**. Sa prédiction porte donc sur une donnée **non vue** par
+> les arbres concernés — une évaluation **honnête**, **intégrée** à la forêt.
+
+## La formule de l'erreur OOB
+
+L'**erreur Out-Of-Bag (OOB)** est donnée par la formule :
+
+`erreur OOB = (1/n) Σᵢ₌₁ⁿ 1[ŷᵢ ≠ yᵢ]`
+
+où :
+
+- `n` est le nombre d'observations de la base d'apprentissage ;
+- `yᵢ` est la **classe réelle** de l'observation `i` ;
+- `ŷᵢ` est la **prévision OOB** de cette observation — le vote des seuls arbres
+  ne l'ayant pas dans leur échantillon bootstrap ;
+- `1[ŷᵢ ≠ yᵢ]` est la **fonction indicatrice** : elle vaut `1` lorsque la
+  prévision est **fausse** (`ŷᵢ ≠ yᵢ`) et `0` lorsqu'elle est **juste**.
+
+La somme `Σ 1[ŷᵢ ≠ yᵢ]` **compte les observations mal classées** par le
+classifieur OOB ; divisée par `n`, elle donne la **proportion d'erreurs** —
+c'est-à-dire le **taux d'erreur OOB**.
+
+Pourquoi cette erreur est-elle utile ? Le cours le rappelle : la **validation
+croisée**, technique habituelle pour estimer une erreur de prévision, est
+**coûteuse en temps de calcul**. Or, ici, cette technique est **directement
+intégrée dans l'algorithme** des forêts aléatoires — **« il est possible de
+calculer une erreur de prévision car les échantillons bootstrap n'utilisent pas
+toutes les observations »**. L'erreur OOB est donc une estimation de la
+performance **obtenue sans surcoût**, en parallèle de la construction. Elle sert
+notamment à **éviter le sur-ajustement** (le sur-apprentissage).
+
+> **À retenir** : l'**erreur OOB** vaut `(1/n) Σ 1[ŷᵢ ≠ yᵢ]` — la **proportion
+> d'observations mal classées** par le **classifieur OOB**. C'est une estimation
+> de l'erreur de prévision **intégrée** à la forêt, obtenue **sans surcoût**,
+> là où la **validation croisée** serait coûteuse.
+
+## Erreur OOB et erreur de test : les comparer
+
+L'erreur OOB et l'**erreur de test** (mesurée sur un jeu de test séparé)
+estiment toutes deux la performance de la forêt. Comment se comparent-elles ?
+
+Le cours est précis sur ce point : **l'erreur de test et l'erreur OOB n'ont
+aucune raison d'être égales**. En revanche, **il faut vérifier si elles sont
+proches**.
+
+Que signifie le contraire — des erreurs **éloignées** ? Cela voudrait dire que
+l'**ensemble d'apprentissage et l'ensemble de test n'appartiennent pas à la même
+distribution** (au sens des probabilités) — plus concrètement, qu'ils **ne sont
+pas issus du même ensemble**. Si les deux erreurs sont **cohérentes**
+(proches), on en déduit qu'il n'y a **pas de sur-ajustement** : la forêt se
+comporte de la même façon sur les exemples d'apprentissage (vus en OOB par des
+arbres qui ne les ont pas appris) et sur des exemples de test indépendants.
+
+| Situation | Interprétation |
+| --- | --- |
+| Erreur OOB **et** erreur de test **proches** | Comportement cohérent — **pas de sur-ajustement** |
+| Erreur OOB **et** erreur de test **éloignées** | Apprentissage et test **pas issus du même ensemble** (distributions différentes) |
+
+> **À retenir** : l'erreur **OOB** et l'erreur de **test** n'ont **aucune raison
+> d'être égales**, mais doivent être **proches** ; si elles le sont, **pas de
+> sur-ajustement**. Des erreurs **éloignées** signalent que apprentissage et
+> test ne sont **pas issus de la même distribution**.
+
+## L'importance des variables : le problème
+
+L'agrégation des arbres pour construire une forêt a un **prix**, déjà signalé à
+la section 4 : **on perd l'interprétabilité du modèle**. Il n'y a **plus de
+visualisation sous forme de graphe** — on ne peut plus « lire » la forêt comme
+on lisait un arbre unique. Du coup, **il est difficile de déterminer quelles
+variables ont joué un rôle crucial dans la discrimination**.
+
+**Mesurer l'importance des variables** (indépendantes), c'est précisément
+**évaluer leur influence sur la valeur de la classe**. Une **mesure** permet de
+**quantifier le rôle de chaque variable explicative dans le modèle**, et de
+restaurer ainsi une part de l'interprétabilité perdue.
+
+Cette mesure repose sur une **idée simple** : **si une variable a un rôle
+négligeable, alors le fait de perturber aléatoirement ses valeurs n'aura pas
+d'impact sur l'erreur OOB ; et inversement** — si une variable est importante,
+brouiller ses valeurs **dégradera** nettement la performance.
+
+> **À retenir** : agréger les arbres fait **perdre la lisibilité** de la
+> forêt — plus de graphe à lire. L'**importance des variables** **quantifie le
+> rôle** de chaque attribut, en s'appuyant sur une idée : **perturber** une
+> variable **inutile** ne change **rien** à l'erreur OOB ; perturber une
+> variable **importante** la **dégrade**.
+
+## L'importance par permutation
+
+Il existe plusieurs façons de mesurer l'importance des variables dans une forêt,
+mais **la plus utilisée est l'importance des permutations**. Le cours en décrit
+le calcul, arbre par arbre.
+
+- **Lorsque l'arbre `T_k` est créé**, sa **précision de prédiction est estimée à
+  l'aide de son échantillon OOB** — les observations qui n'ont pas servi à le
+  construire.
+- Ensuite, les **valeurs de chaque attribut `A` sont permutées de manière
+  aléatoire**, et une **nouvelle précision de prédiction de `T_k` est calculée**.
+- Une **mesure de l'importance de `A`** est obtenue en faisant la **moyenne de
+  la diminution de précision** due à ces permutations.
+
+Le raisonnement est limpide :
+
+- **permuter au hasard** les valeurs d'un attribut **détruit le lien** entre cet
+  attribut et la classe ;
+- si la précision **chute fortement** après permutation, c'est que l'attribut
+  **portait beaucoup d'information** : il est **important** ;
+- si la précision **ne bouge presque pas**, l'attribut était **peu utile** ;
+- la **diminution moyenne de précision** (moyennée sur les arbres) est donc une
+  **mesure naturelle de l'importance** de l'attribut.
+
+| Effet de la permutation d'un attribut `A` | Importance de `A` |
+| --- | --- |
+| Forte **chute** de la précision OOB | Attribut **important** |
+| Précision OOB quasi **inchangée** | Attribut **peu influent** |
+
+On peut alors **classer les variables** par importance décroissante et
+représenter graphiquement ce classement. Cela permet d'identifier les
+**variables discriminantes** comme les **variables ayant peu d'impact** — un
+résultat directement exploitable, par exemple, pour **comprendre** le phénomène
+étudié ou pour **simplifier** le modèle.
+
+> **À retenir** : l'**importance par permutation** mesure, pour chaque attribut,
+> la **diminution moyenne de précision OOB** quand ses valeurs sont **permutées
+> au hasard** : une **forte chute** révèle une variable **importante**, une
+> précision **inchangée** une variable **peu influente**. On en tire un
+> **classement** des variables.
+
+## Synthèse de la section
+
+Parce que les **échantillons bootstrap n'utilisent pas toutes les observations**,
+une forêt aléatoire peut s'**auto-évaluer** sans jeu de test séparé : pour
+chaque exemple, on ne retient que les arbres dont l'**échantillon bootstrap ne
+le contient pas** — leur vote définit le **classifieur OOB**, dont la prédiction
+porte sur une donnée **non vue**. L'**erreur OOB**, `(1/n) Σ 1[ŷᵢ ≠ yᵢ]`, est la
+**proportion d'observations mal classées** par ce classifieur : une estimation
+de l'erreur de prévision **intégrée** à l'algorithme, là où la **validation
+croisée** serait coûteuse. L'erreur OOB et l'erreur de **test** n'ont **aucune
+raison d'être égales**, mais doivent être **proches** — sinon apprentissage et
+test ne sont pas issus de la **même distribution** ; proches, elles attestent de
+l'**absence de sur-ajustement**. L'agrégation faisant **perdre la lisibilité**
+de la forêt, on mesure l'**importance des variables** : la méthode la plus
+utilisée, l'**importance par permutation**, **brouille au hasard** les valeurs
+d'un attribut et observe la **diminution moyenne de précision OOB** — forte pour
+une variable **importante**, nulle pour une variable **inutile**.
+
+> **À retenir** : l'**erreur OOB** — `(1/n) Σ 1[ŷᵢ ≠ yᵢ]`, calculée par les
+> arbres n'ayant **pas vu** chaque exemple — évalue la forêt **sans surcoût** et
+> doit être **proche** de l'erreur de test (sinon : distributions différentes).
+> L'**importance des variables** par **permutation** quantifie le rôle de chaque
+> attribut via la **chute de précision OOB** qu'entraîne le brouillage de ses
+> valeurs.

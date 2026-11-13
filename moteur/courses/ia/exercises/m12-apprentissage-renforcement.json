@@ -1,0 +1,1061 @@
+[
+  {
+    "chapterSlug": "cadre-renforcement-mdp",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "D'après le cours, sur quel principe repose l'apprentissage par renforcement ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Le principe Essai-Erreur : l'agent agit, l'environnement réagit par un retour, l'agent corrige" },
+        { "id": "b", "label": "La généralisation d'exemples étiquetés fournis par un superviseur" },
+        { "id": "c", "label": "Le regroupement de données non étiquetées selon une mesure de similarité" },
+        { "id": "d", "label": "La recherche exhaustive de toutes les solutions possibles avant d'agir" }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Le cours définit l'apprentissage par renforcement comme le problème d'un agent qui apprend à se comporter par ses interactions avec l'environnement, selon le principe Essai-Erreur : chaque action provoque un retour (récompense ou punition) que l'agent utilise pour affiner ses choix. La généralisation d'exemples est l'apprentissage supervisé ; le regroupement de données est l'apprentissage non supervisé.",
+    "concepts": ["apprentissage-par-renforcement", "essai-erreur"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "cadre-renforcement-mdp",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Dans le cadre du renforcement, l'objectif de l'agent est de maximiser la récompense immédiate de la prochaine action.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. Le cours est explicite : le comportement de l'agent doit maximiser la somme à long terme des retours, et non la seule récompense immédiate. Une bonne stratégie peut accepter une faible récompense immédiate pour de meilleures récompenses futures.",
+    "concepts": ["apprentissage-par-renforcement", "agent-environnement"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "cadre-renforcement-mdp",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque type d'apprentissage à ce qu'il reçoit en entrée, d'après le cours.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "Apprentissage supervisé" },
+        { "id": "l2", "label": "Apprentissage non supervisé" },
+        { "id": "l3", "label": "Apprentissage par renforcement" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Des exemples étiquetés fournis par un superviseur" },
+        { "id": "r2", "label": "Des données sans étiquette à regrouper" },
+        { "id": "r3", "label": "Des interactions et des retours de l'environnement" }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3" } },
+    "explanation": "Le cours distingue les trois types : le supervisé reçoit des exemples étiquetés (un superviseur) ; le non supervisé reçoit des données sans étiquette qu'il regroupe ; le renforcement ne reçoit ni l'un ni l'autre — il apprend par les interactions et les retours, et associe une valeur aux états.",
+    "concepts": ["apprentissage-par-renforcement"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "cadre-renforcement-mdp",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la description de la propriété de Markov et de la matrice de transition.",
+    "payload": {
+      "template": "Un processus vérifie la propriété de {{s1}} si la prédiction de l'avenir à partir du présent n'est pas rendue plus précise par la connaissance du {{s2}} : c'est un processus « sans {{s3}} ». La matrice de transition rassemble les probabilités Pᵢⱼ de passer d'un état à un autre ; la somme des éléments de chaque {{s4}} est égale à 1.",
+      "slots": [
+        { "id": "s1", "width": "sm", "placeholder": "mot" },
+        { "id": "s2", "width": "sm", "placeholder": "mot" },
+        { "id": "s3", "width": "sm", "placeholder": "mot" },
+        { "id": "s4", "width": "sm", "placeholder": "mot" }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": ["Markov", "markov"],
+        "s2": ["passé", "passe"],
+        "s3": ["mémoire", "memoire"],
+        "s4": ["ligne", "ligne de la matrice"]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "La propriété de Markov énonce que le futur ne dépend que du présent et pas du passé — un processus « sans mémoire ». La matrice de transition a la propriété : la somme des éléments de chaque ligne vaut 1, car depuis un état l'agent passe forcément dans l'un des états de S.",
+    "concepts": ["propriete-de-markov", "chaine-de-markov", "matrice-de-transition"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "cadre-renforcement-mdp",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "D'après le cours, quels éléments définissent un processus de décision markovien (MDP) ? Sélectionnez toutes les bonnes réponses.",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Un ensemble d'états S" },
+        { "id": "b", "label": "Un ensemble d'actions A" },
+        { "id": "c", "label": "Une fonction de transition T(s, a, s′)" },
+        { "id": "d", "label": "Une fonction de récompense R(s, a)" },
+        { "id": "e", "label": "Un facteur d'actualisation γ" },
+        { "id": "f", "label": "Un ensemble d'exemples étiquetés par un superviseur" }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c", "d", "e"] },
+    "explanation": "Le cours définit un MDP par le quintuplet (S, A, T, R, γ) : un ensemble d'états S, un ensemble d'actions A, une fonction de transition T : S × A × S ⟶ [0, 1], une fonction de récompense R : S × A ⟶ ℝ, et un facteur d'actualisation γ ∈ [0, 1[. Aucun exemple étiqueté n'intervient — c'est précisément ce qui distingue le renforcement de l'apprentissage supervisé.",
+    "concepts": ["processus-de-decision-markovien", "fonction-de-transition", "fonction-de-recompense"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "cadre-renforcement-mdp",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours décrit le déroulement d'une étape d'apprentissage par renforcement comme une suite de trois moments. Remettez-les dans l'ordre chronologique.",
+    "payload": {
+      "items": [
+        { "id": "a", "label": "Perception : l'agent reçoit la valeur de l'état s" },
+        { "id": "b", "label": "Décision / Action : l'agent exécute une action a" },
+        { "id": "c", "label": "Conséquence : l'agent reçoit un reward r et l'environnement passe dans l'état s′" }
+      ]
+    },
+    "solution": { "order": ["a", "b", "c"] },
+    "explanation": "Le cours décrit chaque étape comme le triplet perception → action → conséquence : l'agent perçoit d'abord l'état s, choisit et exécute ensuite une action a, puis reçoit le reward r tandis que l'environnement passe en s′.",
+    "concepts": ["agent-environnement", "signal-de-renforcement"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "cadre-renforcement-mdp",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Le cours suppose que l'environnement, même non déterministe, est stationnaire : les probabilités des couples (r, s′) obtenus pour un même (s, a) ne changent pas au cours du temps.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. Le cours précise que l'environnement est souvent non déterministe (une même action dans un même état peut produire des couples (r, s′) différents) mais qu'il est supposé stationnaire : les probabilités de ces couples sont toujours les mêmes. C'est cette stationnarité qui rend l'apprentissage possible.",
+    "concepts": ["agent-environnement", "processus-de-decision-markovien"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "cadre-renforcement-mdp",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On modélise par une chaîne de Markov la soirée de révision d'un étudiant (états Cours1, Cours2, Cours3, Pause, Dormir, Sortir, Facebook). Les transitions sont : Cours1 → Cours2 (0,5) ou Facebook (0,5) ; Cours2 → Cours3 (0,8) ou Dormir (0,2) ; Cours3 → Pause (0,4) ou Sortir (0,6) ; Sortir → Dormir (1,0). En partant de Cours1, calculez la probabilité de la suite d'états : Cours1, Cours2, Cours3, Sortir, Dormir.",
+    "payload": {
+      "placeholder": "ex. 0,24",
+      "hint": "Multipliez les probabilités de transition successives : 0,5 × 0,8 × 0,6 × 1,0."
+    },
+    "solution": { "value": 0.24, "absTol": 0.001 },
+    "explanation": "La probabilité d'une suite d'états est le produit des probabilités de transition (l'agent part de Cours1 avec probabilité 1). P = P(C1→C2) × P(C2→C3) × P(C3→S) × P(S→D) = 0,5 × 0,8 × 0,6 × 1,0 = 0,24. Ce calcul figure dans le corrigé du TD (exercice 3).",
+    "concepts": ["chaine-de-markov", "matrice-de-transition"],
+    "source": "TD_RL_Exo3_Corr.pdf"
+  },
+  {
+    "chapterSlug": "cadre-renforcement-mdp",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans la chaîne de Markov de la soirée de révision, les transitions depuis Cours1 sont : Cours1 → Cours2 (0,5) ou Cours1 → Facebook (0,5). Depuis Facebook : Facebook → Facebook (0,9) ou Facebook → Cours1 (0,1). En partant de Cours1, calculez la probabilité de la suite d'états : Cours1, Facebook, Facebook, Facebook.",
+    "payload": {
+      "placeholder": "ex. 0,405",
+      "hint": "0,5 (C1→Fb) × 0,9 (Fb→Fb) × 0,9 (Fb→Fb)."
+    },
+    "solution": { "value": 0.405, "absTol": 0.001 },
+    "explanation": "P = P(C1→Fb) × P(Fb→Fb) × P(Fb→Fb) = 0,5 × 0,9 × 0,9 = 0,405. Chaque facteur est lu dans la matrice de transition, et l'agent part de Cours1 avec probabilité 1.",
+    "concepts": ["chaine-de-markov", "matrice-de-transition"],
+    "source": "TD_RL.pdf"
+  },
+  {
+    "chapterSlug": "cadre-renforcement-mdp",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le code Python ci-dessous construit la matrice de transition P de la chaîne de Markov de la soirée de révision (états indexés 0 = Cours1, 1 = Cours2, 2 = Cours3, 3 = Pause, 4 = Dormir, 5 = Sortir, 6 = Facebook). Lisez-le et répondez.",
+    "payload": {
+      "code": "import numpy as np\n\netats = ['Cours1', 'Cours2', 'Cours3', 'Pause', 'Dormir', 'Sortir', 'Facebook']\nP = np.zeros([7, 7])\n\nP[0][1] = 0.5\nP[0][6] = 0.5\nP[1][2] = 0.8\nP[1][4] = 0.2\nP[2][3] = 0.4\nP[2][5] = 0.6\nP[3][0] = 0.2\nP[3][1] = 0.4\nP[3][2] = 0.4\nP[4][4] = 1.0\nP[5][4] = 1.0\nP[6][0] = 0.1\nP[6][6] = 0.9",
+      "language": "python",
+      "caption": "Construction de la matrice de transition",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la valeur de P[1][2], la probabilité de passer de Cours2 à Cours3 ?",
+          "weight": 1,
+          "payload": { "placeholder": "ex. 0,8" }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "L'état Dormir (indice 4) a une seule transition : P[4][4] = 1.0. Quelle est la somme des éléments de la ligne 4 de P ?",
+          "weight": 1,
+          "payload": { "placeholder": "ex. 1" }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "La ligne 4 (P[4][4] = 1.0, le reste nul) indique que Dormir est un état absorbant : une fois dans Dormir, l'agent y reste.",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        { "id": "q1", "solution": { "value": 0.8, "absTol": 0.001 } },
+        { "id": "q2", "solution": { "value": 1, "absTol": 0.001 } },
+        { "id": "q3", "solution": { "value": true } }
+      ]
+    },
+    "explanation": "La ligne P[1] code les transitions depuis Cours2 : P[1][2] = 0.8 vers Cours3. Toute ligne d'une matrice de transition somme à 1 ; la ligne 4 ne contient que P[4][4] = 1.0, donc sa somme vaut 1. Comme la seule transition de Dormir mène à Dormir avec probabilité 1, l'état est absorbant : l'agent ne peut plus en sortir.",
+    "concepts": ["matrice-de-transition", "chaine-de-markov"],
+    "source": "exo3_Q4.py"
+  },
+  {
+    "chapterSlug": "politique-gain-actualise",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Dans le cas déterministe, comment le cours définit-il une stratégie (politique) π ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Une fonction π : S ⟶ A qui associe une seule action à chaque état" },
+        { "id": "b", "label": "Une matrice carrée dont la somme de chaque ligne vaut 1" },
+        { "id": "c", "label": "Une distribution de probabilités sur l'ensemble des récompenses" },
+        { "id": "d", "label": "Le facteur d'actualisation appliqué aux récompenses futures" }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Le cours distingue deux cas. Dans le cas général, une stratégie est une distribution de probabilités π(s, a) = P(Aₜ = a | Sₜ = s). Dans le cas déterministe, c'est une fonction π : S ⟶ A qui associe à chaque état une seule action π(s).",
+    "concepts": ["politique"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "politique-gain-actualise",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours adopte le modèle à horizon infini : le gain actualisé est G = r₀ + γ·r₁ + γ²·r₂ + … En suivant une politique, l'agent obtient la suite de récompenses immédiates r₀ = 2, r₁ = 3, r₂ = 4 (puis 0 ensuite). Avec un facteur d'actualisation γ = 0,5, calculez le gain actualisé G.",
+    "payload": {
+      "placeholder": "ex. 4,5",
+      "hint": "G = 2 + 0,5·3 + 0,5²·4 = 2 + 1,5 + 1."
+    },
+    "solution": { "value": 4.5, "absTol": 0.001 },
+    "explanation": "G = r₀ + γ·r₁ + γ²·r₂ = 2 + 0,5·3 + 0,25·4 = 2 + 1,5 + 1 = 4,5. Chaque récompense est pondérée par une puissance de γ d'autant plus petite que l'étape est lointaine.",
+    "concepts": ["gain-actualise", "facteur-d-actualisation"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "politique-gain-actualise",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le gain actualisé est G = r₀ + γ·r₁ + γ²·r₂ + γ³·r₃ + … L'agent reçoit la suite de récompenses r₀ = 1, r₁ = 1, r₂ = 1, r₃ = 1 (puis 0 ensuite). Avec γ = 0,9, calculez le gain actualisé G.",
+    "payload": {
+      "placeholder": "ex. 3,439",
+      "hint": "G = 1 + 0,9 + 0,81 + 0,729."
+    },
+    "solution": { "value": 3.439, "absTol": 0.001 },
+    "explanation": "G = 1 + 0,9·1 + 0,9²·1 + 0,9³·1 = 1 + 0,9 + 0,81 + 0,729 = 3,439. Les poids γᵗ valent 1 ; 0,9 ; 0,81 ; 0,729 — ils décroissent avec l'éloignement de l'étape.",
+    "concepts": ["gain-actualise", "facteur-d-actualisation"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "politique-gain-actualise",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le gain actualisé est G = r₀ + γ·r₁ + γ²·r₂ + … L'agent reçoit la suite de récompenses r₀ = 0, r₁ = 0, r₂ = 10 (puis 0 ensuite). Avec γ = 0,8, calculez le gain actualisé G.",
+    "payload": {
+      "placeholder": "ex. 6,4",
+      "hint": "Seul r₂ est non nul : G = γ²·10 = 0,64·10."
+    },
+    "solution": { "value": 6.4, "absTol": 0.001 },
+    "explanation": "G = 0 + 0,8·0 + 0,8²·10 = 0,64·10 = 6,4. La récompense de 10 arrive à l'étape t = 2, donc elle est pondérée par γ² = 0,64. Une récompense identique reçue plus tard pèserait encore moins.",
+    "concepts": ["gain-actualise", "facteur-d-actualisation"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "politique-gain-actualise",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Une politique mène l'agent à recevoir une récompense constante r = 5 à chaque étape, indéfiniment. Le gain actualisé est la somme infinie G = 5 + γ·5 + γ²·5 + … Avec γ = 0,9, calculez G. (Indication : Σ γᵗ = 1/(1−γ).)",
+    "payload": {
+      "placeholder": "ex. 50",
+      "hint": "G = 5 · (1 + γ + γ² + …) = 5 / (1 − γ) = 5 / 0,1."
+    },
+    "solution": { "value": 50, "absTol": 0.01 },
+    "explanation": "Pour une récompense constante r, G = r·Σ γᵗ = r/(1−γ). Ici G = 5/(1−0,9) = 5/0,1 = 50. La condition γ < 1 est précisément ce qui garantit que cette somme infinie reste finie.",
+    "concepts": ["gain-actualise", "facteur-d-actualisation", "modeles-d-optimalite"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "politique-gain-actualise",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "La figure représente un couloir d'états. L'agent part de la case Départ, se déplace vers la droite à chaque étape et reçoit la récompense indiquée en arrivant sur chaque case ; il atteint la case Objectif (récompense +10) à la 3ᵉ étape. La suite des récompenses reçues est donc r₀ = 0, r₁ = 0, r₂ = 10. Lisez la figure et répondez.",
+    "payload": {
+      "figure": {
+        "kind": "grid-world",
+        "rows": 1,
+        "cols": 4,
+        "cells": [
+          { "row": 0, "col": 0, "reward": 0, "start": true, "label": "Départ" },
+          { "row": 0, "col": 1, "reward": 0 },
+          { "row": 0, "col": 2, "reward": 0 },
+          { "row": 0, "col": 3, "reward": 10, "terminal": true, "label": "Objectif" }
+        ],
+        "caption": "Couloir d'états : l'agent va de Départ à Objectif vers la droite"
+      },
+      "caption": "Un couloir d'états avec une récompense terminale",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Avec γ = 0,9, calculez le gain actualisé G = r₀ + γ·r₁ + γ²·r₂ de cette trajectoire.",
+          "weight": 1,
+          "payload": { "placeholder": "ex. 8,1", "hint": "Seul r₂ = 10 est non nul : G = 0,9²·10." }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Si l'on augmente γ de 0,9 vers une valeur plus proche de 1, comment évolue le gain actualisé de cette même trajectoire ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              { "id": "a", "label": "Il augmente : la récompense lointaine +10 est moins dévaluée" },
+              { "id": "b", "label": "Il diminue : la récompense lointaine compte moins" },
+              { "id": "c", "label": "Il reste exactement le même : γ n'a pas d'effet ici" }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        { "id": "q1", "solution": { "value": 8.1, "absTol": 0.001 } },
+        { "id": "q2", "solution": { "correct": ["a"] } }
+      ]
+    },
+    "explanation": "G = 0 + 0,9·0 + 0,9²·10 = 0,81·10 = 8,1. La récompense +10 arrive à t = 2, pondérée par γ². Plus γ est proche de 1, plus le poids γ² est proche de 1, donc moins la récompense lointaine est dévaluée et plus le gain actualisé est grand (à la limite γ = 1, G = 10).",
+    "concepts": ["gain-actualise", "facteur-d-actualisation", "gridworld"],
+    "source": "TD_RL.pdf"
+  },
+  {
+    "chapterSlug": "politique-gain-actualise",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours décrit l'effet du facteur d'actualisation γ. Que signifie une valeur de γ proche de 0 ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Seules les récompenses très proches comptent : l'agent est « myope »" },
+        { "id": "b", "label": "Les récompenses lointaines comptent presque autant que les proches : l'agent est « prévoyant »" },
+        { "id": "c", "label": "Toutes les récompenses sont ignorées : l'agent n'apprend rien" },
+        { "id": "d", "label": "La somme infinie des récompenses devient infinie" }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Comme γ < 1, les poids γᵗ décroissent avec t. Quand γ est proche de 0, γ¹, γ², … deviennent très vite négligeables : seules les récompenses très proches pèsent dans le gain — c'est un agent « myope ». À l'inverse, γ proche de 1 donne un agent « prévoyant ».",
+    "concepts": ["facteur-d-actualisation", "modeles-d-optimalite"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "politique-gain-actualise",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Exercice du TD : un agent part de l'état s₀, prend une action, puis suit une trajectoire qui passe ensuite dans un état dont la récompense vaut 2 à chaque passage, indéfiniment. La suite des récompenses reçues est r₀ = 0, r₁ = 0, r₂ = 2, r₃ = 2, r₄ = 2, … (le 2 commence à l'étape t = 2). Avec le modèle à horizon infini et γ = 0,9, calculez le gain actualisé G = Σ γᵗ rₜ.",
+    "payload": {
+      "placeholder": "ex. 16,2",
+      "hint": "G = Σ (à partir de t = 2) γᵗ·2 = 2·γ²/(1 − γ) = 2·0,81/0,1."
+    },
+    "solution": { "value": 16.2, "absTol": 0.05 },
+    "explanation": "Les récompenses valent 0 pour t = 0, 1, puis 2 pour tout t ≥ 2. G = Σ_{t≥2} γᵗ·2 = 2·γ²·Σ_{t≥0} γᵗ = 2·γ²/(1−γ) = 2·0,81/0,1 = 16,2. Ce résultat figure dans le corrigé du TD (exercice 1, modèle à horizon infini).",
+    "concepts": ["gain-actualise", "facteur-d-actualisation", "modeles-d-optimalite"],
+    "source": "TD_RL_Exo1_Corr.pdf"
+  },
+  {
+    "chapterSlug": "politique-gain-actualise",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Modèle à horizon fini du TD : l'agent maximise la somme NON actualisée de ses rewards sur les h = 5 prochaines étapes, E(Σ rₜ) pour t = 0 à 4. Une trajectoire donne r₀ = 0, r₁ = 0, r₂ = 2, r₃ = 2, r₄ = 2. Calculez la somme des récompenses sur cet horizon.",
+    "payload": {
+      "placeholder": "ex. 6",
+      "hint": "Dans le modèle à horizon fini, il n'y a pas de pondération : on additionne simplement r₀ + r₁ + r₂ + r₃ + r₄."
+    },
+    "solution": { "value": 6, "absTol": 0.001 },
+    "explanation": "Le modèle à horizon fini additionne les rewards des h premières étapes sans pondération : 0 + 0 + 2 + 2 + 2 = 6. Le corrigé du TD (exercice 1) donne bien R = 6 pour cette trajectoire. Contrairement à l'horizon infini, aucune puissance de γ n'intervient.",
+    "concepts": ["modeles-d-optimalite"],
+    "source": "TD_RL_Exo1_Corr.pdf"
+  },
+  {
+    "chapterSlug": "fonction-valeur-bellman",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours réécrit la valeur d'un état (chaîne de Markov avec récompense) sous forme récursive. Quelle est cette équation de Bellman ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "V(s) = Rₛ + γ · Σ Pₛₛ′ · V(s′)" },
+        { "id": "b", "label": "V(s) = Rₛ · γ · Σ Pₛₛ′ · V(s′)" },
+        { "id": "c", "label": "V(s) = maxₐ Q(s, a) − γ · Rₛ" },
+        { "id": "d", "label": "V(s) = Σ Pₛₛ′ − γ · Rₛ" }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Le cours isole le premier terme du gain actualisé et obtient l'équation de Bellman V(s) = Rₛ + γ · Σ Pₛₛ′ · V(s′) : la valeur d'un état est sa récompense immédiate Rₛ plus γ fois la valeur moyenne des états successeurs, pondérée par les probabilités de transition Pₛₛ′.",
+    "concepts": ["equation-de-bellman", "fonction-de-valeur"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "fonction-valeur-bellman",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On considère un état terminal T qui boucle sur lui-même : depuis T, la seule transition mène à T (probabilité 1). Sa récompense est Rₜ = 2. L'équation de Bellman s'écrit V(T) = Rₜ + γ·V(T). Avec γ = 0,9, calculez V(T).",
+    "payload": {
+      "placeholder": "ex. 20",
+      "hint": "V(T) = Rₜ + γ·V(T) ⟹ V(T)·(1 − γ) = Rₜ ⟹ V(T) = Rₜ / (1 − γ)."
+    },
+    "solution": { "value": 20, "absTol": 0.01 },
+    "explanation": "L'équation V(T) = Rₜ + γ·V(T) se résout : V(T)(1 − γ) = Rₜ, donc V(T) = Rₜ/(1 − γ) = 2/(1 − 0,9) = 2/0,1 = 20. C'est un cas où la résolution directe du système de Bellman est immédiate.",
+    "concepts": ["equation-de-bellman", "fonction-de-valeur"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "fonction-valeur-bellman",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Chaîne de Markov à deux états. Depuis A, la seule transition mène à B (probabilité 1). Depuis B, la seule transition mène à B (probabilité 1, état absorbant). Les récompenses sont Rₐ = 0 et R_B = 10. On prend γ = 0,9. L'équation de Bellman donne V(B) = R_B + γ·V(B) et V(A) = Rₐ + γ·V(B). Calculez la valeur V(A).",
+    "payload": {
+      "placeholder": "ex. 90",
+      "hint": "Calculez d'abord V(B) = R_B / (1 − γ) = 100, puis V(A) = Rₐ + γ·V(B)."
+    },
+    "solution": { "value": 90, "absTol": 0.05 },
+    "explanation": "On résout d'abord l'état absorbant : V(B) = R_B/(1 − γ) = 10/0,1 = 100. Puis V(A) = Rₐ + γ·V(B) = 0 + 0,9·100 = 90. L'équation de Bellman se résout en partant des états les plus « avals ».",
+    "concepts": ["equation-de-bellman", "fonction-de-valeur"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "fonction-valeur-bellman",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Chaîne de Markov : depuis l'état A, deux transitions sont possibles — vers B avec probabilité 0,5 et vers C avec probabilité 0,5. B et C sont des états absorbants (chacun boucle sur lui-même). Les récompenses sont Rₐ = 0, R_B = 10, R_C = 0, et γ = 0,9. Sachant que V(B) = R_B/(1−γ) = 100 et V(C) = 0, l'équation de Bellman donne V(A) = Rₐ + γ·(0,5·V(B) + 0,5·V(C)). Calculez V(A).",
+    "payload": {
+      "placeholder": "ex. 45",
+      "hint": "V(A) = 0 + 0,9 · (0,5·100 + 0,5·0) = 0,9 · 50."
+    },
+    "solution": { "value": 45, "absTol": 0.05 },
+    "explanation": "L'équation de Bellman moyenne sur les successeurs : V(A) = Rₐ + γ·Σ Pₐₛ′·V(s′) = 0 + 0,9·(0,5·100 + 0,5·0) = 0,9·50 = 45. La somme Σ Pₐₛ′·V(s′) est bien l'espérance de la valeur de l'état d'arrivée.",
+    "concepts": ["equation-de-bellman", "fonction-de-valeur", "matrice-de-transition"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "fonction-valeur-bellman",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours définit la valeur optimale V*(s) comme solution de l'équation de Bellman d'optimalité. Quelle est la différence essentielle avec l'équation de Bellman d'une chaîne de Markov ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Elle introduit un maxₐ : pour la valeur optimale, on choisit la meilleure action au lieu de subir la transition" },
+        { "id": "b", "label": "Elle supprime le facteur d'actualisation γ" },
+        { "id": "c", "label": "Elle remplace la somme par un produit de probabilités" },
+        { "id": "d", "label": "Elle ne tient plus compte de la récompense immédiate" }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "L'équation de Bellman d'optimalité est V*(s) = maxₐ (R(s, a) + γ · Σ T(s, a, s′) · V*(s′)). La nouveauté par rapport à V(s) = Rₛ + γ Σ Pₛₛ′ V(s′) est le maxₐ : on ne subit plus la transition, on choisit la meilleure action a. Le facteur γ, la récompense et la somme restent présents.",
+    "concepts": ["equation-de-bellman", "valeur-optimale"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "fonction-valeur-bellman",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Dans un état s, deux actions sont possibles. L'action a₁ : récompense R(s, a₁) = 0, mène de façon déterministe vers un état dont la valeur optimale est V* = 10. L'action a₂ : récompense R(s, a₂) = 5, mène de façon déterministe vers un état dont la valeur optimale est V* = 0. Avec γ = 0,9, appliquez l'équation de Bellman d'optimalité V*(s) = maxₐ (R(s, a) + γ·V*(s′)) pour calculer V*(s).",
+    "payload": {
+      "placeholder": "ex. 9",
+      "hint": "Action a₁ : 0 + 0,9·10. Action a₂ : 5 + 0,9·0. Prenez le maximum."
+    },
+    "solution": { "value": 9, "absTol": 0.01 },
+    "explanation": "Pour chaque action, on calcule R(s, a) + γ·V*(s′). Action a₁ : 0 + 0,9·10 = 9. Action a₂ : 5 + 0,9·0 = 5. La valeur optimale prend le maximum : V*(s) = max(9 ; 5) = 9. La stratégie optimale choisira donc l'action a₁ (argmax).",
+    "concepts": ["equation-de-bellman", "valeur-optimale", "politique-optimale"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "fonction-valeur-bellman",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la phrase sur le lien entre valeur optimale et stratégie optimale.",
+    "payload": {
+      "template": "La valeur optimale est V*(s) = {{s1}}ₐ (R(s, a) + γ · Σ T(s, a, s′) · V*(s′)) : cet opérateur donne la valeur de la meilleure action. La stratégie optimale π*(s) = {{s2}}ₐ (…) utilise au contraire un opérateur qui donne l'action elle-même réalisant ce maximum. La stratégie optimale est dite {{s3}} par rapport à V*.",
+      "slots": [
+        { "id": "s1", "width": "sm", "placeholder": "opérateur" },
+        { "id": "s2", "width": "sm", "placeholder": "opérateur" },
+        { "id": "s3", "width": "sm", "placeholder": "mot" }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": ["max"],
+        "s2": ["argmax"],
+        "s3": ["gloutonne", "gloutone", "glouton"]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Le cours distingue max et argmax : maxₐ donne la valeur de la meilleure action (ce qui définit V*) ; argmaxₐ donne l'action qui réalise ce maximum (ce qui définit π*). La stratégie optimale est gloutonne par rapport à V* : dans chaque état, elle prend l'action qui paraît la meilleure au vu des valeurs optimales.",
+    "concepts": ["valeur-optimale", "politique-optimale"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "fonction-valeur-bellman",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "D'après le cours, la valeur d'un état dépend de la stratégie suivie : un même état peut avoir une grande valeur sous une bonne stratégie et une faible valeur sous une mauvaise.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. Le cours insiste : Vπ(s) = Eπ(Σ γᵗ rₜ) est la valeur de l'état s pour une stratégie π donnée. Évaluer un état, c'est toujours l'évaluer pour une stratégie. La valeur optimale V*(s) est le maximum de Vπ(s) sur toutes les stratégies.",
+    "concepts": ["fonction-de-valeur", "politique"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "value-iteration",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans l'algorithme Value Iteration, quelle est la mise à jour appliquée à chaque état s à chaque itération ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "V(s) = maxₐ Q(s, a), avec Q(s, a) = R(s, a) + γ · Σ T(s, a, s′) · V(s′)" },
+        { "id": "b", "label": "V(s) = Q(s, a) + α · (r + γ·maxₐ′ Q(s′, a′) − Q(s, a))" },
+        { "id": "c", "label": "V(s) = Σ Pₛₛ′ · V(s′) sans facteur d'actualisation" },
+        { "id": "d", "label": "V(s) = argmaxₐ R(s, a)" }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Value Iteration calcule, pour chaque état et chaque action, Q(s, a) = R(s, a) + γ · Σ T(s, a, s′) · V(s′), puis pose V(s) = maxₐ Q(s, a). C'est l'équation de Bellman d'optimalité transformée en règle d'affectation. La réponse b est la règle de mise à jour du Q-learning, qui est un autre algorithme.",
+    "concepts": ["value-iteration", "equation-de-bellman"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "value-iteration",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On applique Value Iteration sur le couloir d'états s1 — s2 — s3 — s4 de la figure. s4 est terminal : sa valeur reste fixée à V(s4) = 0. Deux actions par état : « gauche » et « droite », déterministes ; tenter de sortir du couloir laisse l'agent sur place. La récompense est nulle pour toutes les actions, SAUF l'action « droite » depuis s3 qui mène à s4 et rapporte R(s3, droite) = 10. On prend γ = 0,9. Toutes les valeurs sont initialisées à 0. La mise à jour est V(s) = maxₐ (R(s, a) + γ·V(s′)). Donnez les valeurs V(s1), V(s2), V(s3) après l'itération 1 et après l'itération 2.",
+    "payload": {
+      "description": "Itération 1 : on utilise les valeurs initiales (toutes à 0) pour calculer les nouvelles valeurs. Itération 2 : on réutilise les valeurs obtenues à l'itération 1. À chaque état, on prend le maximum sur les deux actions de R(s, a) + γ·V(s′). Rappel : V(s4) = 0 (terminal).",
+      "figure": {
+        "kind": "grid-world",
+        "rows": 1,
+        "cols": 4,
+        "cells": [
+          { "row": 0, "col": 0, "label": "s1" },
+          { "row": 0, "col": 1, "label": "s2" },
+          { "row": 0, "col": 2, "label": "s3" },
+          { "row": 0, "col": 3, "reward": 10, "terminal": true, "label": "s4" }
+        ],
+        "caption": "Couloir d'états : R(s3, droite) = 10, toutes les autres récompenses nulles"
+      },
+      "cells": [
+        { "id": "it1_s1", "label": "Itération 1 — V(s1)", "kind": "number", "placeholder": "0" },
+        { "id": "it1_s2", "label": "Itération 1 — V(s2)", "kind": "number", "placeholder": "0" },
+        { "id": "it1_s3", "label": "Itération 1 — V(s3)", "kind": "number", "placeholder": "0" },
+        { "id": "it2_s1", "label": "Itération 2 — V(s1)", "kind": "number", "placeholder": "0" },
+        { "id": "it2_s2", "label": "Itération 2 — V(s2)", "kind": "number", "placeholder": "0" },
+        { "id": "it2_s3", "label": "Itération 2 — V(s3)", "kind": "number", "placeholder": "0" }
+      ]
+    },
+    "solution": {
+      "cells": [
+        { "id": "it1_s1", "expected": 0, "absTol": 0.001 },
+        { "id": "it1_s2", "expected": 0, "absTol": 0.001 },
+        { "id": "it1_s3", "expected": 10, "absTol": 0.001 },
+        { "id": "it2_s1", "expected": 0, "absTol": 0.001 },
+        { "id": "it2_s2", "expected": 9, "absTol": 0.001 },
+        { "id": "it2_s3", "expected": 10, "absTol": 0.001 }
+      ]
+    },
+    "explanation": "Itération 1 (valeurs initiales toutes nulles) : V(s1) = max(0 + 0,9·0 ; 0 + 0,9·0) = 0 ; V(s2) = 0 de même ; V(s3) = max(0 + 0,9·V(s2)=0 ; 10 + 0,9·V(s4)=10) = 10. Itération 2 (on réutilise V(s1)=0, V(s2)=0, V(s3)=10) : V(s1) = max(0 ; 0,9·0) = 0 ; V(s2) = max(0,9·V(s1)=0 ; 0,9·V(s3)=9) = 9 ; V(s3) = max(0,9·V(s2)=0 ; 10 + 0,9·0) = 10. La valeur « se propage » d'une case par itération depuis l'objectif.",
+    "concepts": ["value-iteration", "equation-de-bellman", "gridworld"],
+    "source": "TD_RL.pdf"
+  },
+  {
+    "chapterSlug": "value-iteration",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On poursuit Value Iteration sur le même couloir s1 — s2 — s3 — s4 (V(s4) = 0, terminal ; R(s3, droite) = 10, toutes les autres récompenses nulles ; deux actions « gauche »/« droite » déterministes), mais cette fois avec γ = 0,5. Toutes les valeurs sont initialisées à 0. Donnez V(s1), V(s2), V(s3) après l'itération 1, puis après l'itération 3 (l'algorithme a alors convergé).",
+    "payload": {
+      "description": "Mise à jour : V(s) = maxₐ (R(s, a) + γ·V(s′)) avec γ = 0,5. L'itération 1 part des valeurs nulles. Aux itérations suivantes on réutilise les valeurs de l'itération précédente. Rappel : V(s4) = 0.",
+      "figure": {
+        "kind": "grid-world",
+        "rows": 1,
+        "cols": 4,
+        "cells": [
+          { "row": 0, "col": 0, "label": "s1" },
+          { "row": 0, "col": 1, "label": "s2" },
+          { "row": 0, "col": 2, "label": "s3" },
+          { "row": 0, "col": 3, "reward": 10, "terminal": true, "label": "s4" }
+        ],
+        "caption": "Couloir d'états, γ = 0,5"
+      },
+      "cells": [
+        { "id": "it1_s1", "label": "Itération 1 — V(s1)", "kind": "number", "placeholder": "0" },
+        { "id": "it1_s2", "label": "Itération 1 — V(s2)", "kind": "number", "placeholder": "0" },
+        { "id": "it1_s3", "label": "Itération 1 — V(s3)", "kind": "number", "placeholder": "0" },
+        { "id": "it3_s1", "label": "Itération 3 — V(s1)", "kind": "number", "placeholder": "0" },
+        { "id": "it3_s2", "label": "Itération 3 — V(s2)", "kind": "number", "placeholder": "0" },
+        { "id": "it3_s3", "label": "Itération 3 — V(s3)", "kind": "number", "placeholder": "0" }
+      ]
+    },
+    "solution": {
+      "cells": [
+        { "id": "it1_s1", "expected": 0, "absTol": 0.001 },
+        { "id": "it1_s2", "expected": 0, "absTol": 0.001 },
+        { "id": "it1_s3", "expected": 10, "absTol": 0.001 },
+        { "id": "it3_s1", "expected": 2.5, "absTol": 0.001 },
+        { "id": "it3_s2", "expected": 5, "absTol": 0.001 },
+        { "id": "it3_s3", "expected": 10, "absTol": 0.001 }
+      ]
+    },
+    "explanation": "Itération 1 : V(s1) = 0, V(s2) = 0, V(s3) = max(0,5·0 ; 10 + 0,5·0) = 10. Itération 2 : V(s2) = max(0,5·0 ; 0,5·10) = 5 ; V(s1) = 0 ; V(s3) = 10. Itération 3 : V(s1) = max(0,5·0 ; 0,5·V(s2)=0,5·5) = 2,5 ; V(s2) = 5 ; V(s3) = 10. Les valeurs ne changent plus ensuite — l'algorithme a convergé. Avec γ = 0,5 (au lieu de 0,9) les valeurs des états éloignés de l'objectif sont nettement plus faibles.",
+    "concepts": ["value-iteration", "equation-de-bellman", "gridworld"],
+    "source": "TD_RL.pdf"
+  },
+  {
+    "chapterSlug": "value-iteration",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quel est le critère d'arrêt de l'algorithme Value Iteration, d'après le cours ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Le maximum des différences entre deux valeurs successives de V est inférieur à un paramètre ε" },
+        { "id": "b", "label": "Un nombre fixe de 100 itérations a été atteint" },
+        { "id": "c", "label": "Chaque couple (état, action) a été visité infiniment souvent" },
+        { "id": "d", "label": "La somme de toutes les valeurs V(s) devient nulle" }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Le cours énonce le critère d'arrêt : le maximum des différences entre deux valeurs successives de V est inférieur à ε, pour un paramètre ε donné. On arrête quand, d'un tour à l'autre, plus aucune valeur d'état ne change de plus de ε — l'estimation est stabilisée. La condition « visité infiniment souvent » concerne la convergence du Q-learning, pas Value Iteration.",
+    "concepts": ["value-iteration"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "value-iteration",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours distingue deux algorithmes de résolution des équations de Bellman et deux familles de méthodes. Associez chaque terme à sa caractéristique.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "Value Iteration" },
+        { "id": "l2", "label": "Policy Iteration" },
+        { "id": "l3", "label": "Méthode model-based" },
+        { "id": "l4", "label": "Méthode model-free" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Met à jour la fonction V par V(s) = maxₐ Q(s, a) ; la stratégie se déduit à la fin" },
+        { "id": "r2", "label": "Manipule directement la stratégie : alterne évaluation de Vπ et amélioration de π" },
+        { "id": "r3", "label": "Estime d'abord un modèle puis l'utilise (apprentissage indirect — ex. Dyna)" },
+        { "id": "r4", "label": "Apprend la stratégie sans passer par un modèle (apprentissage direct — ex. Q-learning)" }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3", "l4": "r4" } },
+    "explanation": "Value Iteration manipule la fonction V (mise à jour par maxₐ Q) et déduit π à la fin. Policy Iteration manipule directement la stratégie, en alternant évaluation et amélioration. Les méthodes model-based estiment un modèle puis l'utilisent (apprentissage indirect, ex. Dyna) ; les méthodes model-free apprennent la stratégie sans modèle (apprentissage direct, ex. Q-learning).",
+    "concepts": ["value-iteration", "policy-iteration", "methodes-model-based", "methodes-model-free"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "value-iteration",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Value Iteration et Policy Iteration supposent que l'on connaît déjà le modèle du problème, c'est-à-dire la fonction de transition T(s, a, s′) et la fonction de récompense R(s, a).",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. Le cours souligne cette limite essentielle : les deux algorithmes supposent le modèle connu (T et R). Or l'apprentissage par renforcement vise précisément le cas où le modèle est inconnu — d'où le besoin de méthodes comme le Q-learning, qui apprend par interaction sans modèle.",
+    "concepts": ["value-iteration", "policy-iteration", "methodes-model-free"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "value-iteration",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le code Python ci-dessous calcule directement la valeur des états d'une chaîne de Markov avec récompense, en résolvant le système de Bellman V = R + γPV sous la forme V = (I − γP)⁻¹R. Lisez-le et répondez.",
+    "payload": {
+      "code": "import numpy as np\n\n# P : matrice de transition (deja construite)\n# R : vecteur des recompenses des etats\nI = np.identity(7)\nR = np.array([1, 1, 1, 0, 0, -1, -2])\n\ngamma = float(input('Donnez la valeur de gamma : '))\n\nmat_inv = np.linalg.inv(I - gamma * P)\nV = np.dot(mat_inv, R)\n\nfor i in range(7):\n    print(etats[i], ':', round(V[i], 2))",
+      "language": "python",
+      "caption": "Résolution directe du système de Bellman",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quelle équation matricielle ce code résout-il pour obtenir le vecteur V ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              { "id": "a", "label": "(I − γP)·V = R, d'où V = (I − γP)⁻¹·R" },
+              { "id": "b", "label": "V = P·R sans facteur d'actualisation" },
+              { "id": "c", "label": "V = γ·R − P" }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Cette méthode de résolution directe (inversion de matrice) est-elle adaptée à un problème comportant un très grand nombre d'états ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              { "id": "a", "label": "Non : le cours réserve la résolution directe au cas où le nombre d'états est faible" },
+              { "id": "b", "label": "Oui : l'inversion de matrice est instantanée quel que soit le nombre d'états" },
+              { "id": "c", "label": "Oui, mais seulement si γ = 0" }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "Le paramètre γ est saisi par l'utilisateur, ce qui permet d'observer l'effet du facteur d'actualisation sur les valeurs des états.",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        { "id": "q1", "solution": { "correct": ["a"] } },
+        { "id": "q2", "solution": { "correct": ["a"] } },
+        { "id": "q3", "solution": { "value": true } }
+      ]
+    },
+    "explanation": "Le système de Bellman V = R + γPV se réécrit (I − γP)V = R, dont la solution est V = (I − γP)⁻¹R : c'est exactement ce que calcule np.dot(np.linalg.inv(I - gamma*P), R). Le cours précise que la résolution directe n'est praticable que si le nombre d'états est faible — pour un grand nombre d'états, on préfère des méthodes indirectes. La ligne input('Donnez la valeur de gamma') permet bien d'essayer plusieurs γ.",
+    "concepts": ["equation-de-bellman", "fonction-de-valeur", "facteur-d-actualisation"],
+    "source": "exo3_Q4.py"
+  },
+  {
+    "chapterSlug": "q-learning",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la règle de mise à jour de la valeur Q(s, a) dans l'algorithme Q-learning ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Q(s, a) ← Q(s, a) + α · (r + γ · maxₐ′ Q(s′, a′) − Q(s, a))" },
+        { "id": "b", "label": "Q(s, a) ← Rₛ + γ · Σ Pₛₛ′ · Q(s′)" },
+        { "id": "c", "label": "Q(s, a) ← maxₐ Q(s, a) − ε" },
+        { "id": "d", "label": "Q(s, a) ← Q(s, a) · α · r" }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "La règle de mise à jour du Q-learning est Q(s, a) ← Q(s, a) + α · (r + γ · maxₐ′ Q(s′, a′) − Q(s, a)). Le terme entre parenthèses est l'écart entre la nouvelle estimation r + γ·maxₐ′ Q(s′, a′) et l'ancienne valeur Q(s, a) ; on corrige Q d'une fraction α de cet écart.",
+    "concepts": ["regle-de-mise-a-jour-q", "q-learning"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "q-learning",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Q-learning. La table Q est initialisée à 0. L'agent exécute une action a dans l'état s, reçoit la récompense r = 1 et arrive dans un état s′ où toutes les Q-valeurs valent encore 0 (donc maxₐ′ Q(s′, a′) = 0). Avec α = 0,2 et γ = 0,9, calculez la nouvelle valeur de Q(s, a) après une mise à jour : Q(s, a) ← Q(s, a) + α·(r + γ·maxₐ′ Q(s′, a′) − Q(s, a)).",
+    "payload": {
+      "placeholder": "ex. 0,2",
+      "hint": "Q(s, a) ← 0 + 0,2·(1 + 0,9·0 − 0) = 0,2·1."
+    },
+    "solution": { "value": 0.2, "absTol": 0.001 },
+    "explanation": "Q(s, a) ← 0 + 0,2·(1 + 0,9·0 − 0) = 0,2·1 = 0,2. Comme la table part de 0, la première mise à jour place dans Q(s, a) la fraction α de la récompense immédiate reçue. (Paramètres α = 0,2 et γ = 0,9 du code QLearning.py du TD.)",
+    "concepts": ["regle-de-mise-a-jour-q", "q-learning", "facteur-d-apprentissage"],
+    "source": "QLearning.py"
+  },
+  {
+    "chapterSlug": "q-learning",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Q-learning. On a actuellement Q(s, a) = 2. L'agent exécute a dans s, reçoit r = 1 et arrive dans s′ où la meilleure Q-valeur est maxₐ′ Q(s′, a′) = 4. Avec α = 0,5 et γ = 0,9, calculez la nouvelle valeur de Q(s, a) : Q(s, a) ← Q(s, a) + α·(r + γ·maxₐ′ Q(s′, a′) − Q(s, a)).",
+    "payload": {
+      "placeholder": "ex. 3,3",
+      "hint": "Cible = r + γ·maxQ′ = 1 + 0,9·4 = 4,6. Écart = 4,6 − 2 = 2,6. Q ← 2 + 0,5·2,6."
+    },
+    "solution": { "value": 3.3, "absTol": 0.001 },
+    "explanation": "Nouvelle estimation (cible) : r + γ·maxₐ′ Q(s′, a′) = 1 + 0,9·4 = 4,6. Écart avec l'ancienne valeur : 4,6 − 2 = 2,6. Mise à jour : Q(s, a) ← 2 + 0,5·2,6 = 2 + 1,3 = 3,3. On peut vérifier avec la seconde écriture : (1−α)·Q + α·cible = 0,5·2 + 0,5·4,6 = 1 + 2,3 = 3,3.",
+    "concepts": ["regle-de-mise-a-jour-q", "q-learning", "facteur-d-apprentissage"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "q-learning",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Q-learning, cas déterministe. Dans le gridworld 3×3, la table Q est initialisée à 0. L'agent, dans un état s, exécute l'action qui le mène sur la case interdite, ce qui lui rapporte une punition r = −1 ; sur cette case interdite toutes les Q-valeurs valent 0 (maxₐ′ Q(s′, a′) = 0). Avec α = 0,2 et γ = 0,9, calculez la valeur de Q(s, a) après cette mise à jour.",
+    "payload": {
+      "placeholder": "ex. -0,2",
+      "hint": "Q(s, a) ← 0 + 0,2·(−1 + 0,9·0 − 0)."
+    },
+    "solution": { "value": -0.2, "absTol": 0.001 },
+    "explanation": "Q(s, a) ← 0 + 0,2·(−1 + 0,9·0 − 0) = 0,2·(−1) = −0,2. La punition fait baisser la Q-valeur de l'action qui mène à la case interdite : l'agent apprend à éviter cette action. (Paramètres α = 0,2 et γ = 0,9 du code QLearning.py du TD.)",
+    "concepts": ["regle-de-mise-a-jour-q", "q-learning", "facteur-d-apprentissage"],
+    "source": "QLearning.py"
+  },
+  {
+    "chapterSlug": "q-learning",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Q-learning. On suit la valeur d'un seul couple (s, a) au fil de trois mises à jour successives. À chaque fois, l'agent exécute a dans s, reçoit r = 1 et revient dans un état où maxₐ′ Q(s′, a′) = 0. Les paramètres sont α = 0,5 et γ = 0,9. La valeur initiale est Q(s, a) = 0. La règle est Q(s, a) ← Q(s, a) + α·(r + γ·maxₐ′ Q(s′, a′) − Q(s, a)). Donnez Q(s, a) après la 1ʳᵉ, la 2ᵉ et la 3ᵉ mise à jour.",
+    "payload": {
+      "description": "À chaque mise à jour, la cible vaut r + γ·maxₐ′ Q(s′, a′) = 1 + 0,9·0 = 1. La règle Q ← Q + 0,5·(1 − Q) rapproche Q de la cible 1 de la moitié de l'écart à chaque fois. Réinjectez la valeur obtenue dans la mise à jour suivante.",
+      "cells": [
+        { "id": "u1", "label": "Q(s, a) après la 1ʳᵉ mise à jour", "kind": "number", "placeholder": "0" },
+        { "id": "u2", "label": "Q(s, a) après la 2ᵉ mise à jour", "kind": "number", "placeholder": "0" },
+        { "id": "u3", "label": "Q(s, a) après la 3ᵉ mise à jour", "kind": "number", "placeholder": "0" }
+      ]
+    },
+    "solution": {
+      "cells": [
+        { "id": "u1", "expected": 0.5, "absTol": 0.001 },
+        { "id": "u2", "expected": 0.75, "absTol": 0.001 },
+        { "id": "u3", "expected": 0.875, "absTol": 0.001 }
+      ]
+    },
+    "explanation": "La cible est toujours 1. 1ʳᵉ : Q ← 0 + 0,5·(1 − 0) = 0,5. 2ᵉ : Q ← 0,5 + 0,5·(1 − 0,5) = 0,5 + 0,25 = 0,75. 3ᵉ : Q ← 0,75 + 0,5·(1 − 0,75) = 0,75 + 0,125 = 0,875. À chaque mise à jour, Q se rapproche de la cible de la moitié de l'écart restant : la Q-valeur converge progressivement vers 1.",
+    "concepts": ["regle-de-mise-a-jour-q", "q-learning", "convergence-q-learning"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "q-learning",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans la stratégie ε-greedy du Q-learning, que représente le paramètre ε ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "La probabilité que l'agent choisisse une action au hasard (exploration)" },
+        { "id": "b", "label": "Le facteur d'actualisation appliqué aux récompenses futures" },
+        { "id": "c", "label": "Le facteur d'apprentissage qui règle l'amplitude de la correction de Q" },
+        { "id": "d", "label": "Le nombre total d'épisodes de l'algorithme" }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Le cours définit ε comme la probabilité que l'on veut donner aux choix aléatoires d'une action. Avec la probabilité ε l'agent explore (action au hasard), sinon il exploite (action de plus grande Q) : c'est la stratégie ε-greedy. Le facteur d'actualisation est γ ; le facteur d'apprentissage est α.",
+    "concepts": ["epsilon-greedy", "exploration-exploitation-rl"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "q-learning",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Si l'agent exploite toujours (sans jamais explorer), il risque de ne jamais découvrir une action meilleure qu'il n'a pas encore essayée.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. Le cours explique le besoin d'un compromis : si l'agent exploite toujours, il se contente de ce qu'il croit déjà être le mieux et risque de ne jamais découvrir une meilleure action ; s'il explore toujours, il n'utilise jamais ce qu'il a appris. Il faut donc doser exploration et exploitation.",
+    "concepts": ["exploration-exploitation-rl", "epsilon-greedy"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "q-learning",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Le code Python ci-dessous est le cœur de l'algorithme Q-learning sur un gridworld 3×3 (extrait de QLearning.py du TD). Lisez-le et répondez.",
+    "payload": {
+      "code": "def QLearning(tabQ, alpha, gamma, start, nbIter, tauxExplor, obj, cobj):\n  for numiter in range(nbIter):\n    st = start\n    while (st != obj) and (st != cobj):\n      rnd = np.random.rand()\n      if rnd < tauxExplor:\n        action = np.random.randint(4)\n      else:\n        action = bestAction(tabQ, st)[0]\n\n      new_x, new_y = Transition(st, action)\n      r = tabReward[new_x][new_y]\n      maxQ = max(tabQ[new_x][new_y][0], tabQ[new_x][new_y][1],\n                 tabQ[new_x][new_y][2], tabQ[new_x][new_y][3])\n      tabQ[st[0]][st[1]][action] = tabQ[st[0]][st[1]][action] \\\n        + alpha * (r + gamma * maxQ - tabQ[st[0]][st[1]][action])\n      st = (new_x, new_y)\n\n# Programme principal\nalpha = 0.2\ngamma = 0.9\ntauxExplor = 0.7",
+      "language": "python",
+      "caption": "Le cœur de l'algorithme Q-learning",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Que fait la branche « if rnd < tauxExplor: action = np.random.randint(4) » ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              { "id": "a", "label": "Elle réalise l'exploration : avec la probabilité tauxExplor, une action est tirée au hasard parmi les 4" },
+              { "id": "b", "label": "Elle réalise l'exploitation : elle choisit toujours la meilleure action connue" },
+              { "id": "c", "label": "Elle met à jour la table Q" }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Dans la ligne de mise à jour, que représente la variable maxQ ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              { "id": "a", "label": "La plus grande Q-valeur de l'état d'arrivée (new_x, new_y), c'est-à-dire maxₐ′ Q(s′, a′)" },
+              { "id": "b", "label": "La récompense immédiate r reçue après l'action" },
+              { "id": "c", "label": "Le facteur d'apprentissage α" }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "La boucle « while (st != obj) and (st != cobj) » montre qu'un épisode se termine dès que l'agent atteint l'objectif ou la case interdite.",
+          "weight": 1,
+          "payload": {}
+        },
+        {
+          "id": "q4",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la valeur du facteur d'apprentissage α utilisée dans le programme principal ?",
+          "weight": 1,
+          "payload": { "placeholder": "ex. 0,2" }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        { "id": "q1", "solution": { "correct": ["a"] } },
+        { "id": "q2", "solution": { "correct": ["a"] } },
+        { "id": "q3", "solution": { "value": true } },
+        { "id": "q4", "solution": { "value": 0.2, "absTol": 0.001 } }
+      ]
+    },
+    "explanation": "rnd est un tirage aléatoire dans [0, 1[ ; si rnd < tauxExplor, l'agent prend une action au hasard parmi les 4 : c'est l'exploration (tauxExplor joue le rôle de ε). Sinon il appelle bestAction : c'est l'exploitation. maxQ = max(...) est la plus grande Q-valeur de l'état d'arrivée (new_x, new_y), soit maxₐ′ Q(s′, a′) dans la règle de mise à jour. La condition de boucle while arrête l'épisode dès que st vaut obj (objectif) ou cobj (case interdite). Le programme principal fixe alpha = 0.2.",
+    "concepts": ["q-learning", "regle-de-mise-a-jour-q", "epsilon-greedy", "exploration-exploitation-rl"],
+    "source": "QLearning.py"
+  },
+  {
+    "chapterSlug": "q-learning",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "La figure montre le gridworld 3×3 du TD (Q-learning, cas déterministe). La case verte est l'objectif (récompense +1), la case rouge est interdite (punition −1). L'agent se déplace dans les 4 directions ; atteindre la case rouge ou la case verte termine l'épisode. Lisez la figure et répondez.",
+    "payload": {
+      "figure": {
+        "kind": "grid-world",
+        "rows": 3,
+        "cols": 3,
+        "cells": [
+          { "row": 0, "col": 0 },
+          { "row": 0, "col": 1 },
+          { "row": 0, "col": 2, "reward": 1, "terminal": true, "label": "Objectif" },
+          { "row": 1, "col": 0 },
+          { "row": 1, "col": 1, "reward": -1, "terminal": true, "label": "Interdite" },
+          { "row": 1, "col": 2 },
+          { "row": 2, "col": 0, "start": true, "label": "Départ" },
+          { "row": 2, "col": 1 },
+          { "row": 2, "col": 2 }
+        ],
+        "caption": "Gridworld 3×3 : objectif +1, case interdite −1"
+      },
+      "caption": "Le gridworld 3×3 du Q-learning",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "L'agent, situé sur la case voisine de gauche de l'objectif (ligne 0, colonne 1), exécute l'action « droite » qui l'amène directement sur l'objectif. Quelle récompense immédiate r reçoit-il ?",
+          "weight": 1,
+          "payload": { "placeholder": "ex. 1" }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Depuis la case voisine de gauche de l'objectif, et une fois la table Q apprise, quelle action la stratégie optimale (exploitation) choisira-t-elle ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              { "id": "a", "label": "L'action « droite », qui mène directement à l'objectif (+1)" },
+              { "id": "b", "label": "L'action « bas », qui mène vers la case interdite (−1)" },
+              { "id": "c", "label": "Une action au hasard parmi les 4" }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "Si l'agent tente de sortir du gridworld (par exemple « haut » depuis la ligne 0), le code du TD le remet sur sa case de départ : il reste donc sur place.",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        { "id": "q1", "solution": { "value": 1, "absTol": 0.001 } },
+        { "id": "q2", "solution": { "correct": ["a"] } },
+        { "id": "q3", "solution": { "value": true } }
+      ]
+    },
+    "explanation": "Atteindre la case verte (objectif) rapporte une récompense de +1 : c'est la valeur lue dans tabReward pour la case d'arrivée. Une fois la table Q apprise, l'exploitation choisit l'action de plus grande Q-valeur : depuis la case voisine de gauche de l'objectif, c'est « droite », qui rapporte +1 immédiatement ; « bas » mènerait à la punition −1. Le TD précise que tenter de sortir du gridworld remet l'agent sur sa case de départ, donc il reste sur place.",
+    "concepts": ["q-learning", "gridworld", "exploration-exploitation-rl", "politique-optimale"],
+    "source": "TD_RL.pdf"
+  },
+  {
+    "chapterSlug": "q-learning",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la description du facteur d'apprentissage α dans la règle de mise à jour du Q-learning.",
+    "payload": {
+      "template": "La règle peut s'écrire Q(s, a) ← (1 − α)·Q(s, a) + α·(r + γ·maxₐ′ Q(s′, a′)) : la valeur mise à jour est une {{s1}} pondérée de l'ancienne valeur et de la nouvelle estimation. Le facteur d'apprentissage α est compris entre {{s2}} et {{s3}}. Plus α est proche de 0, plus l'apprentissage est {{s4}}.",
+      "slots": [
+        { "id": "s1", "width": "md", "placeholder": "mot(s)" },
+        { "id": "s2", "width": "sm", "placeholder": "nombre" },
+        { "id": "s3", "width": "sm", "placeholder": "nombre" },
+        { "id": "s4", "width": "sm", "placeholder": "mot" }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": ["moyenne", "moyenne pondérée", "moyenne ponderee"],
+        "s2": ["0", "zéro", "zero"],
+        "s3": ["1", "un"],
+        "s4": ["lent", "prudent", "lent et prudent"]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "La seconde écriture montre que Q est une moyenne pondérée : une part (1−α) de l'ancienne valeur et une part α de la nouvelle estimation. Le facteur d'apprentissage α est un paramètre compris entre 0 et 1. Proche de 0, l'agent garde surtout son ancienne valeur : apprentissage lent et prudent ; proche de 1, il remplace presque tout : apprentissage rapide.",
+    "concepts": ["facteur-d-apprentissage", "regle-de-mise-a-jour-q"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "q-learning",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "D'après le cours, quelles conditions garantissent la convergence du Q-learning vers Q* ? Sélectionnez toutes les bonnes réponses.",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Dans le cas déterministe : chaque couple (s, a) est visité infiniment souvent" },
+        { "id": "b", "label": "Les récompenses r sont bornées" },
+        { "id": "c", "label": "Tous les facteurs d'apprentissage αₙ sont compris entre 0 et 1" },
+        { "id": "d", "label": "Le modèle (T et R) doit être connu à l'avance" },
+        { "id": "e", "label": "Le facteur d'actualisation γ doit valoir exactement 1" }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "Le cours énonce : dans le cas déterministe, la convergence Qₙ → Q* est garantie si chaque couple (s, a) est visité infiniment souvent. Dans le cas stochastique, les conditions sont : récompenses bornées, facteurs αₙ ∈ [0, 1[, chaque couple visité, et décroissance adéquate de α (Σ αₙ = ∞, Σ αₙ² < ∞). Le Q-learning est précisément une méthode model-free : il n'exige pas le modèle connu. Et le cours impose γ < 1, pas γ = 1.",
+    "concepts": ["convergence-q-learning", "q-learning"],
+    "source": "Apprentissage_renforcement.pdf"
+  },
+  {
+    "chapterSlug": "q-learning",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le code Python ci-dessous applique une fois la règle de mise à jour du Q-learning. Donnez ce qu'affiche le programme.",
+    "payload": {
+      "program": "# Une mise a jour Q-learning\nQ = 2.0          # ancienne valeur Q(s, a)\nalpha = 0.5      # facteur d'apprentissage\ngamma = 0.9      # facteur d'actualisation\nr = 1.0          # recompense immediate recue\nmaxQ_prime = 4.0 # plus grande Q-valeur de l'etat d'arrivee\n\nQ = Q + alpha * (r + gamma * maxQ_prime - Q)\nprint(Q)"
+    },
+    "solution": { "expectedOutput": "3.3" },
+    "explanation": "On applique la règle : Q ← Q + α·(r + γ·maxQ′ − Q) = 2,0 + 0,5·(1,0 + 0,9·4,0 − 2,0) = 2,0 + 0,5·(4,6 − 2,0) = 2,0 + 0,5·2,6 = 2,0 + 1,3 = 3,3. Le programme affiche donc 3.3.",
+    "concepts": ["regle-de-mise-a-jour-q", "q-learning"],
+    "source": "QLearning.py"
+  }
+]

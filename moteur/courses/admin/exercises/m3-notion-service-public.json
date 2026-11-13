@@ -1,0 +1,1099 @@
+[
+ {
+  "chapterSlug": "criteres-service-public",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quelle est la première question à poser pour identifier un service public géré par une personne privée ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le juge judiciaire est-il compétent ?"
+    },
+    {
+     "id": "b",
+     "label": "La personne privée fait-elle des bénéfices ?"
+    },
+    {
+     "id": "c",
+     "label": "L'activité est-elle gratuite ?"
+    },
+    {
+     "id": "d",
+     "label": "Le législateur a-t-il qualifié l'activité ?"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Les critères jurisprudentiels ne jouent que dans le silence de la loi.",
+  "hint": "Les critères du juge ne jouent que dans un cas précis.",
+  "concepts": [
+   "aprei"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 1 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "criteres-service-public",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quels sont les trois critères cumulatifs issus de Narcy ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Des prérogatives de puissance publique"
+    },
+    {
+     "id": "b",
+     "label": "La gratuité du service"
+    },
+    {
+     "id": "c",
+     "label": "Un contrôle par une personne publique"
+    },
+    {
+     "id": "d",
+     "label": "Une activité d'intérêt général"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "c",
+    "d"
+   ]
+  },
+  "explanation": "Ces trois critères restent la voie classique, repris par APREI.",
+  "hint": "Pense à l'activité, à celui qui la surveille et aux pouvoirs donnés.",
+  "concepts": [
+   "sp-personne-privee"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 1 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "criteres-service-public",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Depuis l'arrêt APREI, une personne privée ne peut pas gérer un service public sans prérogatives de puissance publique.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Au contraire : sans prérogatives, le juge recourt à un faisceau d'indices pour savoir si l'administration a entendu confier la mission.",
+  "hint": "APREI a justement ouvert une seconde voie.",
+  "concepts": [
+   "aprei"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 1 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "criteres-service-public",
+  "type": "MCQ_MULTI",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "En l'absence de prérogatives, quels indices le juge examine-t-il ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Les conditions d'organisation et de fonctionnement"
+    },
+    {
+     "id": "b",
+     "label": "Les obligations imposées"
+    },
+    {
+     "id": "c",
+     "label": "Les mesures de vérification des objectifs"
+    },
+    {
+     "id": "d",
+     "label": "Les conditions de création de l'activité"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "b",
+    "c",
+    "d"
+   ]
+  },
+  "explanation": "Ces indices montrent si l'administration a entendu confier une mission de service public.",
+  "hint": "Le juge cherche à savoir si l'administration a voulu confier la mission.",
+  "concepts": [
+   "aprei"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 1 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "criteres-service-public",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Dans UGC-Ciné-Cité, pourquoi la société d'économie mixte n'assure-t-elle pas un service public ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Parce que c'est une personne publique"
+    },
+    {
+     "id": "b",
+     "label": "Parce que la ville ne lui impose aucune obligation et ne contrôle aucun objectif"
+    },
+    {
+     "id": "c",
+     "label": "Parce que le législateur l'interdit"
+    },
+    {
+     "id": "d",
+     "label": "Parce qu'un cinéma ne peut jamais être d'intérêt général, même dans une ville qui manque de salles"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "L'intérêt général de l'activité ne suffit pas sans obligations ni contrôle.",
+  "hint": "Regarde ce que la ville demandait à la société et ce qu'elle vérifiait.",
+  "concepts": [
+   "sp-personne-privee"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 1 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "criteres-service-public",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Dans l'arrêt Rolin, quelle conséquence le Conseil d'État tire-t-il de l'absence de service public ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Ses décisions ne sont pas des actes administratifs et il est incompétent"
+    },
+    {
+     "id": "b",
+     "label": "Les décisions de la Française des Jeux sont annulées, faute de mission de service public"
+    },
+    {
+     "id": "c",
+     "label": "Le Parlement doit légiférer"
+    },
+    {
+     "id": "d",
+     "label": "La société devient une personne publique"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Sans mission de service public, les décisions d'une personne privée ne sont pas des actes administratifs.",
+  "hint": "Sans mission de service public, que deviennent les décisions d'une personne privée ?",
+  "concepts": [
+   "definition-sp"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 1 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "criteres-service-public",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque arrêt à son apport.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Aide et protection (1938)"
+    },
+    {
+     "id": "l1",
+     "label": "Narcy (1963)"
+    },
+    {
+     "id": "l2",
+     "label": "APREI (2007)"
+    }
+   ],
+   "right": [
+    {
+     "id": "r1",
+     "label": "Trois critères cumulatifs"
+    },
+    {
+     "id": "r2",
+     "label": "Service public possible sans prérogatives"
+    },
+    {
+     "id": "r0",
+     "label": "Une personne privée peut gérer un service public"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2"
+   }
+  },
+  "explanation": "Ces trois arrêts forment une chronologie à connaître.",
+  "hint": "Trois arrêts qui construisent la gestion privée d'un service public.",
+  "concepts": [
+   "sp-personne-privee"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 1 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "criteres-service-public",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Le caractère d'intérêt général d'une activité peut évoluer avec le temps.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Il dépend de la volonté des gouvernants.",
+  "hint": "Pense à la volonté des gouvernants, et à des exemples comme l'église ou le loto.",
+  "concepts": [
+   "definition-sp"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 1 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "criteres-service-public",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel organisme est une personne morale de droit privé ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Une commune"
+    },
+    {
+     "id": "b",
+     "label": "L'État"
+    },
+    {
+     "id": "c",
+     "label": "La BNF"
+    },
+    {
+     "id": "d",
+     "label": "Une fédération sportive"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Les fédérations sportives sont des associations, même si elles peuvent gérer un service public.",
+  "hint": "Le cours donne l'exemple d'une association qui organise un sport.",
+  "concepts": [
+   "definition-sp"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 1 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "criteres-service-public",
+  "type": "FILL_BLANK",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Complète la formule de l'arrêt APREI.",
+  "payload": {
+   "template": "Sans prérogatives de puissance publique, le juge cherche si l'{{a}} a entendu confier la mission.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "md"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "administration"
+    ]
+   }
+  },
+  "explanation": "C'est le test final du faisceau d'indices.",
+  "hint": "Le test final porte sur la volonté de confier la mission.",
+  "concepts": [
+   "aprei"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 1 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "spa-spic",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quelle est la présomption de départ ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Un service public est présumé administratif"
+    },
+    {
+     "id": "b",
+     "label": "La présomption dépend du juge saisi"
+    },
+    {
+     "id": "c",
+     "label": "Un service public est présumé industriel et commercial"
+    },
+    {
+     "id": "d",
+     "label": "Il n'y a pas de présomption"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Le SPIC reste l'exception.",
+  "hint": "Le SPIC reste l'exception.",
+  "concepts": [
+   "spa-spic"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "spa-spic",
+  "type": "MCQ_MULTI",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quels critères l'arrêt USIA pose-t-il ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Les modalités d'organisation et de fonctionnement"
+    },
+    {
+     "id": "b",
+     "label": "La nationalité des usagers"
+    },
+    {
+     "id": "c",
+     "label": "L'objet du service"
+    },
+    {
+     "id": "d",
+     "label": "L'origine des ressources"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "c",
+    "d"
+   ]
+  },
+  "explanation": "Trois critères, dont l'objet est le plus important.",
+  "hint": "L'un porte sur ce que fait le service, un autre sur son argent.",
+  "concepts": [
+   "usia"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "spa-spic",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quel critère reste prioritaire ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'origine des ressources"
+    },
+    {
+     "id": "b",
+     "label": "L'objet du service"
+    },
+    {
+     "id": "c",
+     "label": "Le mode d'organisation"
+    },
+    {
+     "id": "d",
+     "label": "Le statut des agents"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "Si l'objet est marchand, les autres critères servent à confirmer.",
+  "hint": "Le cours met un panneau attention sur l'un d'eux.",
+  "concepts": [
+   "usia"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "spa-spic",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Les trois critères de l'arrêt USIA doivent aujourd'hui être tous réunis pour retenir un SPIC.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Ils ne sont plus cumulatifs : on raisonne par faisceau d'indices.",
+  "hint": "Le juge raisonne par faisceau d'indices.",
+  "concepts": [
+   "usia"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "spa-spic",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Un service de distribution d'eau géré en régie peut être un SPIC même si le prix ne couvre qu'une partie du coût.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "C'est la solution d'Alberti-Scott.",
+  "hint": "Alberti-Scott écarte l'argument du financement partiel.",
+  "concepts": [
+   "alberti-scott"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "spa-spic",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Le service de distribution d'eau reste un SPIC même s'il ne fait l'objet d'aucune facturation périodique à l'usager.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Dans ce cas précis, Alberti-Scott exclut le caractère industriel et commercial.",
+  "hint": "Alberti-Scott pose une limite à la fin de son raisonnement.",
+  "concepts": [
+   "alberti-scott"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "spa-spic",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Une commune distribue l'eau en régie, sans budget annexe, avec une redevance selon les compteurs, qui couvre 30 % du coût. Quelle est la nature du service ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Un SPA, car il y a une régie"
+    },
+    {
+     "id": "b",
+     "label": "Un SPIC"
+    },
+    {
+     "id": "c",
+     "label": "Un SPA, car le prix ne couvre pas le coût"
+    },
+    {
+     "id": "d",
+     "label": "Aucun service public"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "Ce sont presque les faits d'Alberti-Scott.",
+  "hint": "Regarde l'objet du service, puis si les usagers sont facturés.",
+  "concepts": [
+   "alberti-scott"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "spa-spic",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Un service est gratuit et financé par l'impôt. Vers quelle qualification cet indice oriente-t-il ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Un SPIC"
+    },
+    {
+     "id": "b",
+     "label": "Une police spéciale"
+    },
+    {
+     "id": "c",
+     "label": "Un SPA"
+    },
+    {
+     "id": "d",
+     "label": "Une activité privée"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Il oriente vers le SPA, sous réserve de l'objet du service.",
+  "hint": "Pense à l'origine des ressources.",
+  "concepts": [
+   "spa-spic"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "spa-spic",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque arrêt à ce qu'il apporte.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Bac d'Eloka (1921)"
+    },
+    {
+     "id": "l1",
+     "label": "USIA (1956)"
+    },
+    {
+     "id": "l2",
+     "label": "Alberti-Scott (2005)"
+    },
+    {
+     "id": "l3",
+     "label": "Beaufils (2009)"
+    }
+   ],
+   "right": [
+    {
+     "id": "r2",
+     "label": "La distribution d'eau est en principe un SPIC"
+    },
+    {
+     "id": "r1",
+     "label": "Les trois critères de distinction"
+    },
+    {
+     "id": "r0",
+     "label": "Un service peut fonctionner comme une entreprise privée"
+    },
+    {
+     "id": "r3",
+     "label": "Une régie peut être un SPIC"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2",
+    "l3": "r3"
+   }
+  },
+  "explanation": "Ces arrêts jalonnent la distinction SPA/SPIC.",
+  "hint": "Quatre arrêts qui construisent la distinction, de 1921 à 2009.",
+  "concepts": [
+   "spa-spic"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "spa-spic",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quel était le problème central de l'affaire du Bac d'Eloka ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La fin de la théorie du ministre-juge"
+    },
+    {
+     "id": "b",
+     "label": "La responsabilité de l'État pour un accident causé par un wagonnet sur une voie ferrée publique"
+    },
+    {
+     "id": "c",
+     "label": "L'existence de services publics fonctionnant comme des entreprises privées"
+    },
+    {
+     "id": "d",
+     "label": "La grève dans les services publics"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Le Tribunal des conflits fait apparaître la catégorie qui deviendra le SPIC.",
+  "hint": "L'affaire du Bac d'Eloka concerne un bac exploité par une colonie.",
+  "concepts": [
+   "bac-eloka"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2 ; Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "consequences-distinction",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel juge connaît d'un litige entre un SPIC et son usager ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le juge judiciaire"
+    },
+    {
+     "id": "b",
+     "label": "Le Tribunal des conflits"
+    },
+    {
+     "id": "c",
+     "label": "Le Conseil constitutionnel"
+    },
+    {
+     "id": "d",
+     "label": "Le juge administratif"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Les rapports entre un SPIC et ses usagers sont de droit privé.",
+  "hint": "Le lien entre un SPIC et ses usagers est un rapport de droit privé.",
+  "concepts": [
+   "regime-spic"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "consequences-distinction",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Un règlement de SPIC interdit à ses hôtesses de se marier. Que décide le Tribunal des conflits ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Il est inexistant"
+    },
+    {
+     "id": "b",
+     "label": "C'est un acte de gouvernement"
+    },
+    {
+     "id": "c",
+     "label": "C'est un acte de droit privé, relevant du juge judiciaire, comme tout acte pris par un SPIC"
+    },
+    {
+     "id": "d",
+     "label": "C'est un acte d'organisation du service, relevant du juge administratif"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "C'est l'arrêt Compagnie Air France c/ époux Barbier (1968).",
+  "hint": "Le règlement concerne l'organisation même du service.",
+  "concepts": [
+   "air-france-barbier"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "consequences-distinction",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Un contrat entre un SPIC et son usager peut être administratif s'il contient une clause exorbitante.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Ce contrat est toujours de droit privé.",
+  "hint": "Pour ce contrat précis, la règle ne connaît pas d'exception.",
+  "concepts": [
+   "regime-spic"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "consequences-distinction",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Les salariés d'une personne privée gérant un SPA restent des salariés de droit privé.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Le statut suit la personne qui les emploie.",
+  "hint": "Le statut suit l'employeur.",
+  "concepts": [
+   "regime-spa"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "consequences-distinction",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quel statut ont les agents d'un SPA géré par une personne publique ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Cela dépend de leur contrat"
+    },
+    {
+     "id": "b",
+     "label": "Des agents publics"
+    },
+    {
+     "id": "c",
+     "label": "Des salariés de droit privé"
+    },
+    {
+     "id": "d",
+     "label": "Des collaborateurs occasionnels"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "C'est la solution de Berkani.",
+  "hint": "Pense à l'arrêt Berkani.",
+  "concepts": [
+   "berkani"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "consequences-distinction",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quels agents d'un SPIC relèvent du droit public ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le comptable, s'il a la qualité de comptable public"
+    },
+    {
+     "id": "b",
+     "label": "Tous les agents"
+    },
+    {
+     "id": "c",
+     "label": "Le directeur"
+    },
+    {
+     "id": "d",
+     "label": "Les agents en contact avec le public"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "c"
+   ]
+  },
+  "explanation": "Ce sont les deux seules exceptions.",
+  "hint": "Il n'y a que deux exceptions à la règle.",
+  "concepts": [
+   "regime-spic"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "consequences-distinction",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Une personne privée gérant un SPA prend une décision unilatérale sans prérogative de puissance publique. De quoi s'agit-il ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Un acte de gouvernement"
+    },
+    {
+     "id": "b",
+     "label": "Un règlement"
+    },
+    {
+     "id": "c",
+     "label": "Un acte administratif"
+    },
+    {
+     "id": "d",
+     "label": "Un acte de droit privé"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Sans prérogative, l'acte reste de droit privé.",
+  "hint": "Ce qui compte ici, c'est l'usage d'une prérogative.",
+  "concepts": [
+   "ppp"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "consequences-distinction",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Un contrat entre une personne publique gérant un SPA et une personne privée est administratif si…",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "il contient une clause exorbitante ou a pour objet l'exécution du service public"
+    },
+    {
+     "id": "b",
+     "label": "il contient une clause exorbitante et a pour objet l'exécution du service public, ces deux critères étant cumulatifs"
+    },
+    {
+     "id": "c",
+     "label": "il est conclu pour plus d'un an"
+    },
+    {
+     "id": "d",
+     "label": "il est écrit"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Les deux critères sont alternatifs.",
+  "hint": "Le cours donne deux critères : sont-ils cumulatifs ?",
+  "concepts": [
+   "regime-spa"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "consequences-distinction",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Un acte de SPIC qui organise le service est un acte administratif.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "C'est l'exception posée par Barbier.",
+  "hint": "Pense à l'arrêt Barbier.",
+  "concepts": [
+   "regime-spic"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "consequences-distinction",
+  "type": "MATCHING",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Associe chaque situation au juge compétent.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Agent d'un SPA géré par une personne publique"
+    },
+    {
+     "id": "l1",
+     "label": "Usager d'un SPIC"
+    },
+    {
+     "id": "l2",
+     "label": "Règlement organisant un SPIC"
+    },
+    {
+     "id": "l3",
+     "label": "Salarié d'une personne privée gérant un SPA"
+    }
+   ],
+   "right": [
+    {
+     "id": "r0",
+     "label": "Juge administratif"
+    },
+    {
+     "id": "r1",
+     "label": "Juge judiciaire"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r0",
+    "l3": "r1"
+   }
+  },
+  "explanation": "La compétence suit le régime applicable.",
+  "hint": "Le régime applicable commande le juge compétent.",
+  "concepts": [
+   "regime-spa"
+  ],
+  "source": "CM, Partie 1, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "td-seance-2",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quelle thèse Marcou défend-il dans son article de 2008 ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Fusionner les deux ordres de juridiction"
+    },
+    {
+     "id": "b",
+     "label": "Renoncer à l'expression service public"
+    },
+    {
+     "id": "c",
+     "label": "Maintenir l'expression et la notion de service public"
+    },
+    {
+     "id": "d",
+     "label": "Supprimer les SPIC"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Le titre de son article répond à celui de Truchet.",
+  "hint": "Son article répond à celui de Truchet.",
+  "concepts": [
+   "definition-sp"
+  ],
+  "source": "Fascicule de TD, séance 2"
+ },
+ {
+  "chapterSlug": "td-seance-2",
+  "type": "WRITING",
+  "difficulty": 3,
+  "points": 4,
+  "prompt": "Sujet d'entraînement (non officiel) : « Le service public est-il encore une notion utile ? » Rédige l'introduction et le plan détaillé.",
+  "payload": {
+   "modelAnswer": "Accroche : en 2008, deux auteurs s'opposent dans la même revue, l'un voulant renoncer à l'expression « service public », l'autre la maintenir.\n\nDéfinitions : le service public est une activité d'intérêt général assurée ou assumée par une personne publique. Une notion utile est une notion qui produit des effets de droit.\n\nEnjeu : la notion a fondé le droit administratif depuis Blanco, mais elle s'est diluée, entre personnes privées gestionnaires, SPIC et droit de l'Union.\n\nProblématique : la notion de service public, devenue incertaine, commande-t-elle encore le régime applicable à l'action administrative ?\n\nI. Une notion fragilisée. A. Des critères devenus incertains (Narcy, APREI, Rolin, UGC-Ciné-Cité). B. Une unité perdue (SPA et SPIC, Bac d'Eloka, USIA).\n\nII. Une notion toujours opératoire. A. Une clé de répartition du droit et du juge (Berkani, Barbier, Alberti-Scott). B. Le fondement d'obligations pour le gestionnaire (continuité, égalité, mutabilité, neutralité).",
+   "rubric": [
+    {
+     "id": "c0",
+     "label": "Les termes du sujet sont définis, y compris « utile »"
+    },
+    {
+     "id": "c1",
+     "label": "La problématique n'est pas une reformulation"
+    },
+    {
+     "id": "c2",
+     "label": "Le plan répond à la question posée et ne se contente pas de décrire le service public"
+    },
+    {
+     "id": "c3",
+     "label": "Les titres sont qualifiés, sans verbe conjugué"
+    },
+    {
+     "id": "c4",
+     "label": "Au moins quatre décisions sont utilisées au service d'une idée"
+    },
+    {
+     "id": "c5",
+     "label": "Le débat Truchet-Marcou est exploité"
+    }
+   ]
+  },
+  "solution": {},
+  "explanation": "Ce corrigé n'est qu'un exemple. D'autres plans sont possibles, à condition de répondre au sujet.",
+  "concepts": [
+   "definition-sp"
+  ],
+  "source": "Fascicule de TD, séance 2"
+ }
+]

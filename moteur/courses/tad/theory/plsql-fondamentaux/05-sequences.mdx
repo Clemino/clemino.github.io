@@ -1,0 +1,93 @@
+---
+title: Séquences
+slug: sequences
+order: 5
+estimatedReadMin: 6
+concepts: [sequence, trigger-row]
+source: "CM5, slides 23-25"
+---
+
+## Le concept
+
+Une **séquence** est un générateur de **valeurs entières automatiques**, typiquement utilisé pour produire des clés primaires uniques.
+
+> Une séquence est **indépendante** des transactions : son compteur n'est pas annulé par un `ROLLBACK`. Une séquence consommée et non utilisée laisse un « trou » dans la suite des numéros — c'est normal.
+
+## Syntaxe
+
+```sql
+CREATE SEQUENCE nom_seq
+   [INCREMENT BY n]      -- 1 par défaut
+   [START WITH m]         -- 1 par défaut
+   [MINVALUE k]
+   [MAXVALUE p]
+   [CYCLE | NOCYCLE]      -- recycler ou non quand max atteint
+   [CACHE l | NOCACHE];
+```
+
+Exemple :
+
+```sql
+CREATE SEQUENCE seq_id_client
+   INCREMENT BY 1
+   START WITH 100
+   NOCYCLE
+   CACHE 20;
+```
+
+`CACHE 20` : Oracle pré-réserve 20 valeurs en mémoire pour des performances optimales (au prix de « trous » en cas de redémarrage). `NOCACHE` pour ne pas en avoir.
+
+## Accesseurs
+
+Deux **pseudo-colonnes** sont exposées :
+
+- **`nom_seq.NEXTVAL`** : génère et retourne le **prochain** numéro.
+- **`nom_seq.CURRVAL`** : retourne la valeur **courante** (la dernière `NEXTVAL` de la session).
+
+> ⚠️ **`CURRVAL`** n'est accessible **qu'après** un premier `NEXTVAL` dans la même session. Avant : erreur.
+
+## Utilisation typique
+
+### En INSERT
+
+```sql
+INSERT INTO users VALUES (seq_id_usr.NEXTVAL, 'toto');
+```
+
+### En SELECT
+
+```sql
+SELECT seq_id_usr.CURRVAL INTO v_id_courant FROM DUAL;
+```
+
+## Combo séquence + trigger : auto-incrémentation
+
+Le pattern standard pour qu'une table ait une PK auto-incrémentée :
+
+```sql
+CREATE SEQUENCE seq_id_eleve START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE TRIGGER trig_id_eleve
+BEFORE INSERT ON eleve
+FOR EACH ROW
+DECLARE
+   v_user VARCHAR2(10);
+BEGIN
+   -- nom de l'utilisateur connecté
+   SELECT USER INTO v_user FROM DUAL;
+
+   :new.id_eleve := seq_id_eleve.NEXTVAL;
+   :new.date_ajout := SYSDATE;
+   :new.cree_par := v_user;
+END;
+```
+
+À partir de ce moment, un `INSERT INTO eleve(nom, prenom) VALUES (...)` suffit : l'`id_eleve`, la date d'ajout et l'auteur sont remplis automatiquement.
+
+> 💡 Depuis Oracle 12c, l'option `GENERATED AS IDENTITY` permet de déclarer une colonne auto-incrémentée sans trigger explicite. Elle simule la séquence côté Oracle. Pour TAD, la version trigger + séquence reste la voie pédagogique de référence.
+
+> **À retenir**
+> - `CREATE SEQUENCE nom INCREMENT BY n START WITH m [CYCLE] [CACHE l];`
+> - `nom_seq.NEXTVAL` génère le suivant, `nom_seq.CURRVAL` lit la valeur courante.
+> - Une séquence est **insensible aux ROLLBACK** : pas de récupération de numéros.
+> - Pattern auto-incrémentation : **séquence** + **trigger `BEFORE INSERT FOR EACH ROW`** qui pose `:new.id := seq.NEXTVAL;`.

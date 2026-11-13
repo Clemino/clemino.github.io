@@ -1,0 +1,169 @@
+---
+title: Flux standard
+slug: flux-standard
+order: 1
+estimatedReadMin: 9
+concepts: [flux-cout-cin-cerr, manipulateurs-flux]
+source: "Cours 5 — Gestion des entrées/sorties"
+---
+
+## Les entrées/sorties passent toujours par un flux
+
+Un programme ne lit ni n'écrit jamais « directement » sur un écran ou un clavier. En C++, **toute** entrée et **toute** sortie passe par un intermédiaire : un **flux** (en anglais *stream*, parfois traduit *flot*).
+
+> Un **flux** est un canal qui transporte une suite d'octets entre le programme et un périphérique : il **reçoit** l'information dans le cas d'un flux de **sortie**, il **fournit** l'information dans le cas d'un flux d'**entrée**.
+
+Cette abstraction est puissante : le périphérique réel — écran, clavier, fichier, réseau — change, mais le **code reste le même**. Écrire dans un fichier (cours suivant) se fera avec les mêmes opérateurs que `cout`. C'est tout l'intérêt du flux : un modèle **uniforme** pour des supports différents.
+
+## Les trois (et un) flux standard
+
+L'en-tête **`<iostream>`** met à disposition quatre flux déjà ouverts au démarrage du programme, tous dans l'espace de noms `std` :
+
+| Flux | Sens | Connecté par défaut à | Usage |
+|---|---|---|---|
+| **`std::cout`** | sortie | l'écran (console) | affichage normal |
+| **`std::cin`** | entrée | le clavier | saisie de l'utilisateur |
+| **`std::cerr`** | sortie | l'écran (console) | messages d'**erreur** |
+| **`std::clog`** | sortie | l'écran (console) | messages de **journalisation** (log) |
+
+`cout` et `cin` sont les deux flux du quotidien. `cerr` mérite une attention particulière :
+
+> `std::cerr` est le flux standard d'**erreur**. Il est distinct de `cout` : on y écrit les **messages d'erreur**, ce qui permet de les **séparer** de la sortie normale du programme.
+
+Pourquoi un flux dédié aux erreurs ? Parce que la sortie normale et les erreurs peuvent être **redirigées séparément** par le système d'exploitation. Et surtout, `cerr` n'est **pas tamponné** : un message d'erreur est affiché **immédiatement**, sans attendre — précieux quand le programme plante juste après.
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::cout << "Resultat normal du programme\n";   // sortie standard
+    std::cerr << "Erreur : fichier introuvable\n";    // sortie d'erreur
+    return 0;
+}
+```
+
+> En C, ces flux s'appelaient `stdout`, `stdin` et `stderr` (en-tête `<cstdio>`), et l'on écrivait avec `printf`. C++ remplace ce mécanisme par `cout`/`cin`/`cerr` et les opérateurs `<<` / `>>`, typés et extensibles à ses propres classes.
+
+## Les deux opérateurs : `<<` et `>>`
+
+Le transfert de l'information se fait avec **deux** opérateurs :
+
+- **`<<`** — l'opérateur d'**insertion** : il **écrit** sur un flux de sortie ;
+- **`>>`** — l'opérateur d'**extraction** : il **lit** depuis un flux d'entrée.
+
+Un moyen mnémotechnique : les chevrons « pointent » dans le sens du transfert. `cout << x` envoie `x` **vers** `cout` ; `cin >> x` extrait une valeur de `cin` **vers** `x`.
+
+```cpp
+int age;
+std::cout << "Quel age avez-vous ? ";   // écriture vers la sortie
+std::cin  >> age;                        // lecture depuis l'entrée
+std::cout << "Vous avez " << age << " ans.\n";
+```
+
+Ces deux opérateurs sont surchargés par la bibliothèque standard pour **tous les types fondamentaux** (`int`, `double`, `char`, `bool`, `std::string`...). Et, comme vu au cours 3, on peut les **surcharger pour ses propres classes** — c'est ce qui rendra une classe affichable par `cout`.
+
+## Le chaînage
+
+On enchaîne couramment plusieurs valeurs sur une même ligne :
+
+```cpp
+std::cout << "x = " << x << ", y = " << y << "\n";
+std::cin  >> x >> y;
+```
+
+C'est possible parce que `<<` et `>>` **renvoient le flux** lui-même. L'expression `cout << "x = " << x` se groupe en `(cout << "x = ") << x` : le premier `<<` produit `cout`, sur lequel le `<<` suivant peut à son tour opérer. On parle de **chaînage** des opérations sur le flux.
+
+## Comment `>>` traite les espaces
+
+Le comportement de l'extraction `>>` doit être parfaitement compris, car il est source de nombreux bugs.
+
+> L'opérateur `>>` **ignore d'abord** les espaces, tabulations et sauts de ligne qui précèdent la valeur, puis lit les caractères **jusqu'au premier séparateur** (espace, tabulation ou saut de ligne).
+
+Autrement dit, `>>` lit **un « mot » à la fois** et considère tout blanc comme une frontière :
+
+```cpp
+int a, b;
+std::cin >> a >> b;     // saisie tapée : "  12   34 "
+// a vaut 12, b vaut 34 : les espaces autour et entre sont ignorés
+```
+
+Conséquence directe pour les chaînes de caractères :
+
+```cpp
+std::string nom;
+std::cin >> nom;        // saisie tapée : "Jean Dupont"
+// nom vaut "Jean"  -- l'espace arrête la lecture, "Dupont" reste dans le flux
+```
+
+`>>` lit donc des **mots**, jamais des phrases. Pour lire une **ligne entière**, espaces compris, il faut une autre fonction : **`std::getline`** (étudiée en détail au cours suivant avec les fichiers).
+
+```cpp
+std::string ligne;
+std::getline(std::cin, ligne);   // saisie : "Jean Dupont" -> ligne vaut "Jean Dupont"
+```
+
+> ⚠️ Mélanger `cin >> x` puis `std::getline` est un piège classique : après `cin >> x`, le saut de ligne tapé par l'utilisateur **reste** dans le flux. Le `getline` qui suit lit alors cette ligne **vide**. La parade : consommer ce reliquat avant le `getline`. Attention, `std::cin.ignore()` **sans argument ne jette qu'un seul caractère** ; pour vider tout le reste de la ligne, on utilise la forme à deux arguments : `std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n')` (en-tête `<limits>`), qui ignore les caractères jusqu'au saut de ligne inclus.
+
+## `endl` contre `\n`
+
+Pour passer à la ligne, on rencontre deux écritures :
+
+```cpp
+std::cout << "ligne 1" << std::endl;
+std::cout << "ligne 2" << "\n";
+```
+
+Elles ne sont **pas équivalentes** :
+
+- **`"\n"`** est un simple **caractère** de fin de ligne. Il est écrit dans le **tampon** (le *buffer*) du flux.
+- **`std::endl`** est un **manipulateur** : il insère un `\n` **puis vide le tampon** — c'est l'opération de **flush**.
+
+Cette distinction tient à un mécanisme essentiel : la **bufferisation**.
+
+> Un flux de sortie n'écrit pas immédiatement sur le périphérique : il **accumule** les caractères dans un **tampon** en mémoire, et ne transmet le tout que lorsque le tampon est plein, à la fermeture du flux, ou lors d'un **flush** explicite.
+
+La bufferisation est une optimisation : grouper les écritures coûte bien moins cher que les transmettre une à une. Mais `std::endl` **force** un flush à chaque appel, ce qui peut **ralentir** une boucle qui affiche beaucoup.
+
+> En pratique : préférer **`'\n'`** pour les passages à la ligne courants ; réserver **`std::endl`** aux cas où l'on veut être certain que l'affichage est visible **immédiatement** (par exemple avant une saisie, ou un calcul potentiellement long).
+
+## Les manipulateurs de formatage
+
+Un **manipulateur** est un objet que l'on insère dans un flux pour en **modifier le formatage**. `std::endl` en est un ; il en existe beaucoup d'autres, regroupés dans l'en-tête **`<iomanip>`**.
+
+```cpp
+#include <iostream>
+#include <iomanip>
+
+int main() {
+    double prix = 3.14159;
+
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "Prix : " << prix << "\n";          // Prix : 3.14
+
+    std::cout << std::setw(8) << 42 << "\n";          // "      42" (largeur 8)
+
+    std::cout << std::hex << 255 << "\n";             // ff  (255 en hexadécimal)
+    std::cout << std::dec << 255 << "\n";             // 255 (retour en décimal)
+    return 0;
+}
+```
+
+Les principaux manipulateurs :
+
+| Manipulateur | Effet |
+|---|---|
+| `std::setw(n)` | fixe la **largeur** du prochain champ à `n` caractères |
+| `std::setprecision(n)` | fixe le nombre de **chiffres significatifs** affichés |
+| `std::fixed` | notation à **virgule fixe** (avec `setprecision`, fixe le nombre de **décimales**) |
+| `std::hex` / `std::dec` / `std::oct` | affiche les entiers en base **16 / 10 / 8** |
+| `std::boolalpha` | affiche les `bool` en `true`/`false` plutôt qu'en `1`/`0` |
+
+> ⚠️ Distinguer les manipulateurs **persistants** des manipulateurs **ponctuels**. `std::hex`, `std::fixed`, `std::setprecision` restent actifs sur **toutes** les écritures suivantes du flux. `std::setw`, en revanche, n'agit que sur le **champ immédiatement suivant**, puis se réinitialise.
+
+> **À retenir**
+> - Toute E/S en C++ passe par un **flux** : un canal d'octets entre le programme et un périphérique. C'est une abstraction **uniforme** — écran, clavier ou fichier, le code est le même.
+> - `<iostream>` fournit quatre flux : **`cout`** (sortie écran), **`cin`** (entrée clavier), **`cerr`** (erreurs, non tamponné) et **`clog`** (journalisation).
+> - **`<<`** insère (écrit vers un flux de sortie), **`>>`** extrait (lit depuis un flux d'entrée) ; les chevrons indiquent le sens du transfert. Ils renvoient le flux, d'où le **chaînage**.
+> - `>>` **ignore les espaces de tête** puis lit **un mot** jusqu'au premier blanc : il ne lit jamais une ligne entière — c'est le rôle de `std::getline`.
+> - Un flux de sortie est **tamponné** : **`'\n'`** écrit juste un saut de ligne ; **`std::endl`** ajoute le saut de ligne **et vide le tampon** (flush), plus coûteux.
+> - Les **manipulateurs** (`<iomanip>`) règlent le formatage : `setw`, `setprecision`, `fixed`, `hex`/`dec`, `boolalpha`.

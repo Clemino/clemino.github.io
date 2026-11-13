@@ -1,0 +1,1372 @@
+[
+  {
+    "chapterSlug": "formuler-un-probleme",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 2,
+    "prompt": "Complétez la définition de la résolution d'un problème.",
+    "payload": {
+      "template": "Résoudre un problème, c'est trouver une {{objet}} d'actions conduisant de l'état {{depart}} à un état {{arrivee}}.",
+      "slots": [
+        {
+          "id": "objet",
+          "placeholder": "quoi ?"
+        },
+        {
+          "id": "depart",
+          "placeholder": "lequel ?"
+        },
+        {
+          "id": "arrivee",
+          "placeholder": "lequel ?"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "objet": [
+          "suite",
+          "séquence"
+        ],
+        "depart": "initial",
+        "arrivee": [
+          "final",
+          "finals"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Résoudre un problème signifie trouver une suite (ou séquence) d'actions menant de l'état initial e₀ à un état final de F.",
+    "concepts": [
+      "action",
+      "etat-initial",
+      "etats-finaux"
+    ],
+    "source": "Intro_IA_slides2.pdf"
+  },
+  {
+    "chapterSlug": "formuler-un-probleme",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On généralise le problème des pièces à n pièces (chacune montrant pile ou face). Pour n = 6 pièces, combien d'états compte l'espace d'états ?",
+    "payload": {
+      "hint": "L'espace d'états compte 2ⁿ configurations."
+    },
+    "solution": {
+      "value": 64
+    },
+    "explanation": "Avec n pièces, l'espace d'états compte 2ⁿ configurations. Pour n = 6, cela fait 2⁶ = 64 états.",
+    "concepts": [
+      "espace-d-etats"
+    ],
+    "source": "TD_Intro_IA"
+  },
+  {
+    "chapterSlug": "formuler-un-probleme",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Dans le problème des trois pièces, retourner une pièce est une action réversible : la retourner à nouveau ramène à l'état précédent. Le graphe des états contient donc des cycles.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Retourner une pièce est réversible : un P devient F et inversement. On peut donc retourner une pièce puis la retourner encore et revenir à l'état de départ : le graphe contient des cycles.",
+    "concepts": [
+      "espace-d-etats",
+      "action"
+    ],
+    "source": "TD_Intro_IA"
+  },
+  {
+    "chapterSlug": "formuler-un-probleme",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Dans le problème des trois pièces, l'état initial est PPF et l'on veut que les trois pièces montrent le même côté. Combien d'états finals ce problème possède-t-il ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "2 : PPP et FFF"
+        },
+        {
+          "id": "b",
+          "label": "1 : FFF seulement"
+        },
+        {
+          "id": "c",
+          "label": "8 : tous les états de S"
+        },
+        {
+          "id": "d",
+          "label": "0 : il n'y a pas d'état final atteignable"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "On veut que les trois pièces montrent le même côté : il y a deux façons d'y parvenir, tout en pile (PPP) ou tout en face (FFF). L'ensemble F = {PPP, FFF} contient donc 2 états finals.",
+    "concepts": [
+      "etats-finaux",
+      "etat-initial"
+    ],
+    "source": "TD_Intro_IA"
+  },
+  {
+    "chapterSlug": "formuler-un-probleme",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans l'arbre de recherche, qu'est-ce qu'une feuille ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un état sans successeurs : soit non encore considéré par l'algorithme, soit considéré mais sans nouvel état généré à partir de lui"
+        },
+        {
+          "id": "b",
+          "label": "Uniquement un état final de F"
+        },
+        {
+          "id": "c",
+          "label": "La racine de l'arbre"
+        },
+        {
+          "id": "d",
+          "label": "Un état qui apparaît plusieurs fois dans l'arbre"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Une feuille de l'arbre de recherche est un état qui n'a pas de successeurs, pour l'une de deux raisons : l'algorithme ne l'a pas encore considéré, ou il l'a considéré mais aucun autre nœud-état n'a été généré à partir de lui.",
+    "concepts": [
+      "arbre-de-recherche"
+    ],
+    "source": "Intro_IA_slides2.pdf"
+  },
+  {
+    "chapterSlug": "formuler-un-probleme",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On peut exiger certaines propriétés d'une suite d'actions solution. Lesquelles de ces affirmations sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "On peut se contenter de trouver une suite d'actions valide quelconque menant à un état final"
+        },
+        {
+          "id": "b",
+          "label": "On peut exiger une suite d'actions de coût minimal"
+        },
+        {
+          "id": "c",
+          "label": "Selon le niveau d'exigence, on n'utilise pas les mêmes algorithmes de recherche"
+        },
+        {
+          "id": "d",
+          "label": "Toute suite d'actions valide est forcément de coût minimal"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "On distingue deux niveaux d'exigence : trouver une suite valide quelconque, ou trouver la meilleure (coût minimal). Selon ce que l'on exige, on n'utilise pas les mêmes algorithmes (recherche aveugle vs A*). Une suite valide n'est pas forcément optimale (d est faux).",
+    "concepts": [
+      "action",
+      "cout-d-action"
+    ],
+    "source": "Intro_IA_slides2.pdf"
+  },
+  {
+    "chapterSlug": "recherche-aveugle",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "À quelle structure de données associe-t-on la recherche en profondeur d'abord ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une pile"
+        },
+        {
+          "id": "b",
+          "label": "Une file"
+        },
+        {
+          "id": "c",
+          "label": "Une liste triée par coût"
+        },
+        {
+          "id": "d",
+          "label": "Un graphe pondéré"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La recherche en profondeur d'abord s'implémente avec une pile (dernier entré, premier sorti) : les fils empilés passent au-dessus des autres et sont visités immédiatement, d'où une plongée le long d'une branche.",
+    "concepts": [
+      "parcours-en-profondeur",
+      "strategie-de-recherche"
+    ],
+    "source": "Intro_IA_slides2.pdf"
+  },
+  {
+    "chapterSlug": "recherche-aveugle",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 2,
+    "prompt": "Complétez la description des deux parcours aveugles.",
+    "payload": {
+      "template": "La recherche en {{largeur}} d'abord visite les nœuds niveau par niveau et utilise une {{file}}. La recherche en {{profondeur}} d'abord plonge le long d'une branche et utilise une {{pile}}.",
+      "slots": [
+        {
+          "id": "largeur",
+          "placeholder": "quelle recherche ?"
+        },
+        {
+          "id": "file",
+          "placeholder": "structure"
+        },
+        {
+          "id": "profondeur",
+          "placeholder": "quelle recherche ?"
+        },
+        {
+          "id": "pile",
+          "placeholder": "structure"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "largeur": "largeur",
+        "file": "file",
+        "profondeur": "profondeur",
+        "pile": "pile"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Largeur d'abord = visite par niveau, file. Profondeur d'abord = plongée par branche, pile.",
+    "concepts": [
+      "parcours-en-largeur",
+      "parcours-en-profondeur"
+    ],
+    "source": "Intro_IA_slides2.pdf"
+  },
+  {
+    "chapterSlug": "recherche-aveugle",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Parcours en profondeur d'abord avec une pile, sur l'arbre où a₁ a pour fils b₁, b₂, b₃ et chaque bᵢ a trois fils c. On empile la racine, puis à chaque étape on visite le sommet, on le dépile et on empile ses fils (de gauche à droite). Indiquez le contenu de la pile JUSTE APRÈS avoir traité le nœud indiqué (du sommet vers le fond, sommet à gauche).",
+    "payload": {
+      "description": "Donnez le contenu de la pile sous la forme d'une liste séparée par des virgules, le sommet de la pile en premier.",
+      "cells": [
+        {
+          "id": "p1",
+          "label": "Pile après traitement de a1",
+          "kind": "text"
+        },
+        {
+          "id": "p2",
+          "label": "Pile après traitement de b1",
+          "kind": "text"
+        },
+        {
+          "id": "p3",
+          "label": "Pile après traitement de c1",
+          "kind": "text"
+        },
+        {
+          "id": "p4",
+          "label": "Pile après traitement de c3",
+          "kind": "text"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "p1",
+          "expected": "b1, b2, b3",
+          "accepted": [
+            "b1,b2,b3",
+            "b1 b2 b3"
+          ]
+        },
+        {
+          "id": "p2",
+          "expected": "c1, c2, c3, b2, b3",
+          "accepted": [
+            "c1,c2,c3,b2,b3",
+            "c1 c2 c3 b2 b3"
+          ]
+        },
+        {
+          "id": "p3",
+          "expected": "c2, c3, b2, b3",
+          "accepted": [
+            "c2,c3,b2,b3",
+            "c2 c3 b2 b3"
+          ]
+        },
+        {
+          "id": "p4",
+          "expected": "b2, b3",
+          "accepted": [
+            "b2,b3",
+            "b2 b3"
+          ]
+        }
+      ],
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Après a₁ : on a dépilé a₁ et empilé ses fils → [b₁, b₂, b₃]. Après b₁ : on dépile b₁ et on empile c₁,c₂,c₃ par-dessus → [c₁, c₂, c₃, b₂, b₃]. Après c₁ (feuille, sans fils) : on dépile c₁ → [c₂, c₃, b₂, b₃]. Après c₃ : c₂ puis c₃ dépilés sans fils → [b₂, b₃]. C'est la trace donnée dans le corrigé du TD.",
+    "concepts": [
+      "parcours-en-profondeur",
+      "strategie-de-recherche"
+    ],
+    "source": "TD_Intro_IA"
+  },
+  {
+    "chapterSlug": "recherche-aveugle",
+    "type": "ALGO_TRACE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "On considère l'arbre binaire suivant : la racine R a deux fils L1 et L2 ; L1 a pour fils A et B ; L2 a pour fils C et D. Donnez l'ordre de visite des nœuds par un parcours en PROFONDEUR d'abord (fils de gauche d'abord).",
+    "payload": {
+      "description": "Indiquez le nom du nœud visité à chaque rang.",
+      "cells": [
+        {
+          "id": "v1",
+          "label": "1er nœud visité",
+          "kind": "text"
+        },
+        {
+          "id": "v2",
+          "label": "2e nœud visité",
+          "kind": "text"
+        },
+        {
+          "id": "v3",
+          "label": "3e nœud visité",
+          "kind": "text"
+        },
+        {
+          "id": "v4",
+          "label": "4e nœud visité",
+          "kind": "text"
+        },
+        {
+          "id": "v5",
+          "label": "5e nœud visité",
+          "kind": "text"
+        },
+        {
+          "id": "v6",
+          "label": "6e nœud visité",
+          "kind": "text"
+        },
+        {
+          "id": "v7",
+          "label": "7e nœud visité",
+          "kind": "text"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "v1",
+          "expected": "R"
+        },
+        {
+          "id": "v2",
+          "expected": "L1"
+        },
+        {
+          "id": "v3",
+          "expected": "A"
+        },
+        {
+          "id": "v4",
+          "expected": "B"
+        },
+        {
+          "id": "v5",
+          "expected": "L2"
+        },
+        {
+          "id": "v6",
+          "expected": "C"
+        },
+        {
+          "id": "v7",
+          "expected": "D"
+        }
+      ],
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "En profondeur d'abord, on épuise toute la descendance de L1 avant de toucher à L2 : R, puis L1, puis ses fils A et B, puis L2, puis ses fils C et D. L'ordre est R, L1, A, B, L2, C, D.",
+    "concepts": [
+      "parcours-en-profondeur",
+      "arbre-de-recherche"
+    ],
+    "source": "TD_Intro_IA"
+  },
+  {
+    "chapterSlug": "recherche-aveugle",
+    "type": "ALGO_TRACE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Même arbre binaire : la racine R a deux fils L1 et L2 ; L1 a pour fils A et B ; L2 a pour fils C et D. Donnez l'ordre de visite des nœuds par un parcours en LARGEUR d'abord (fils de gauche d'abord).",
+    "payload": {
+      "description": "Indiquez le nom du nœud visité à chaque rang.",
+      "cells": [
+        {
+          "id": "v1",
+          "label": "1er nœud visité",
+          "kind": "text"
+        },
+        {
+          "id": "v2",
+          "label": "2e nœud visité",
+          "kind": "text"
+        },
+        {
+          "id": "v3",
+          "label": "3e nœud visité",
+          "kind": "text"
+        },
+        {
+          "id": "v4",
+          "label": "4e nœud visité",
+          "kind": "text"
+        },
+        {
+          "id": "v5",
+          "label": "5e nœud visité",
+          "kind": "text"
+        },
+        {
+          "id": "v6",
+          "label": "6e nœud visité",
+          "kind": "text"
+        },
+        {
+          "id": "v7",
+          "label": "7e nœud visité",
+          "kind": "text"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "v1",
+          "expected": "R"
+        },
+        {
+          "id": "v2",
+          "expected": "L1"
+        },
+        {
+          "id": "v3",
+          "expected": "L2"
+        },
+        {
+          "id": "v4",
+          "expected": "A"
+        },
+        {
+          "id": "v5",
+          "expected": "B"
+        },
+        {
+          "id": "v6",
+          "expected": "C"
+        },
+        {
+          "id": "v7",
+          "expected": "D"
+        }
+      ],
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "En largeur d'abord, on visite les nœuds par niveau : R (niveau 0), puis L1 et L2 (niveau 1), puis A, B, C, D (niveau 2). L'ordre est R, L1, L2, A, B, C, D.",
+    "concepts": [
+      "parcours-en-largeur",
+      "arbre-de-recherche"
+    ],
+    "source": "TD_Intro_IA"
+  },
+  {
+    "chapterSlug": "recherche-aveugle",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remettez dans l'ordre les étapes du parcours en largeur d'abord à l'aide d'une file (pour un tour de boucle).",
+    "payload": {
+      "items": [
+        {
+          "id": "a",
+          "label": "Ajouter la racine de l'arbre à la file"
+        },
+        {
+          "id": "b",
+          "label": "Visiter le nœud situé en tête de la file"
+        },
+        {
+          "id": "c",
+          "label": "Supprimer la tête de la file"
+        },
+        {
+          "id": "d",
+          "label": "Ajouter à la file les fils du nœud que l'on vient de visiter"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "On ajoute d'abord la racine. Puis, tant que la file n'est pas vide : on visite la tête, on la supprime, et on ajoute en queue les fils du nœud visité. Les fils passant derrière les nœuds présents, la visite se fait par niveau.",
+    "concepts": [
+      "parcours-en-largeur",
+      "strategie-de-recherche"
+    ],
+    "source": "TD_Intro_IA"
+  },
+  {
+    "chapterSlug": "heuristiques",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Plus un état e est proche d'un état final, plus la valeur h(e) doit être faible.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "C'est la propriété fondamentale d'une heuristique : une petite valeur de h signale un état proche du but. h(e) = 0 correspond à un état idéal (un état final).",
+    "concepts": [
+      "heuristique"
+    ],
+    "source": "Intro_IA_slides2.pdf"
+  },
+  {
+    "chapterSlug": "heuristiques",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Si une heuristique est monotone et coïncidente, alors elle est minorante.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "C'est un résultat démontrable du cours : une heuristique cohérente à chaque pas (monotone) et qui reconnaît les états finals (coïncidente) sous-estime nécessairement le coût restant, donc elle est minorante (admissible).",
+    "concepts": [
+      "heuristique-monotone",
+      "heuristique-coincidente",
+      "heuristique-minorante"
+    ],
+    "source": "TD_Intro_IA"
+  },
+  {
+    "chapterSlug": "heuristiques",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez les conditions formelles des propriétés d'une heuristique.",
+    "payload": {
+      "template": "Une heuristique est coïncidente si h(e_f) = {{val}} pour tout état final. Elle est minorante si, pour tout état e, h(e) ≤ {{borne}}.",
+      "slots": [
+        {
+          "id": "val",
+          "placeholder": "valeur"
+        },
+        {
+          "id": "borne",
+          "placeholder": "quelle fonction ?"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "val": "0",
+        "borne": [
+          "h*(e)",
+          "h*"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Coïncidente : h(e_f) = 0 pour tout état final e_f ∈ F. Minorante (admissible) : h(e) ≤ h*(e) pour tout état e, l'heuristique ne surestimant jamais le coût restant.",
+    "concepts": [
+      "heuristique-coincidente",
+      "heuristique-minorante",
+      "fonction-h-etoile"
+    ],
+    "source": "Intro_IA_slides2.pdf"
+  },
+  {
+    "chapterSlug": "heuristiques",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une heuristique est dite MONOTONE si :",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "h(eᵢ) − h(eⱼ) ≤ k(eᵢ, eⱼ) pour toute paire eᵢ, eⱼ telle que eⱼ est un successeur de eᵢ"
+        },
+        {
+          "id": "b",
+          "label": "h(eᵢ) − h(eⱼ) ≤ k*(eᵢ, eⱼ) pour toute paire d'états quelconque"
+        },
+        {
+          "id": "c",
+          "label": "h(e) ≤ h*(e) pour tout état e"
+        },
+        {
+          "id": "d",
+          "label": "h(e_f) = 0 pour tout état final"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La monotonie est formulée sur un seul pas : pour eⱼ successeur de eᵢ, h(eᵢ) − h(eⱼ) ≤ k(eᵢ, eⱼ). En franchissant une action, l'heuristique ne peut pas diminuer de plus que le coût de cette action. La consistance, elle, est l'analogue formulé sur les chemins (k*).",
+    "concepts": [
+      "heuristique-monotone",
+      "heuristique-consistante"
+    ],
+    "source": "Intro_IA_slides2.pdf"
+  },
+  {
+    "chapterSlug": "heuristiques",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Au jeu du taquin, l'heuristique h₂ somme, pour chaque case mal placée, les déplacements horizontaux et verticaux nécessaires pour la ramener à sa cible. À quelle distance correspond-elle ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "À la distance de Manhattan entre l'état courant et l'état final"
+        },
+        {
+          "id": "b",
+          "label": "À la distance de Hamming entre l'état courant et l'état final"
+        },
+        {
+          "id": "c",
+          "label": "Au coût exact h* du chemin restant"
+        },
+        {
+          "id": "d",
+          "label": "Au facteur de branchement moyen du problème"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "h₂ additionne, pour chaque case mal placée, le nombre de déplacements horizontaux et verticaux pour la ramener à sa position cible : c'est la distance de Manhattan. h₁ (nombre de cases mal placées) correspond, elle, à la distance de Hamming.",
+    "concepts": [
+      "heuristique"
+    ],
+    "source": "TD_Intro_IA"
+  },
+  {
+    "chapterSlug": "heuristiques",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Taquin 3×3. État courant (de gauche à droite, de haut en bas) : 1 2 3 / vide 4 5 / 6 7 8. État final : vide 1 2 / 3 4 5 / 6 7 8. Combien vaut l'heuristique h₂ (somme des distances de Manhattan des cases pleines mal placées) ?",
+    "payload": {
+      "hint": "Repérez d'abord les cases mal placées, puis sommez |Δligne| + |Δcolonne| pour chacune."
+    },
+    "solution": {
+      "value": 5
+    },
+    "explanation": "Cases bien placées : 4, 5, 6, 7, 8 (déjà à leur position cible). Cases mal placées : 1 de (0,0) vers (0,1) → 1 ; 2 de (0,1) vers (0,2) → 1 ; 3 de (0,2) vers (1,0) → |0−1| + |2−0| = 3. Total : h₂ = 1 + 1 + 3 = 5.",
+    "concepts": [
+      "heuristique"
+    ],
+    "source": "TD_Intro_IA"
+  },
+  {
+    "chapterSlug": "heuristiques",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "On compare, sur un même état du taquin, l'heuristique h₁ (cases mal placées, Hamming) et h₂ (distances de Manhattan). Quelle relation est toujours vérifiée ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "h₁(e) ≤ h₂(e) : chaque case mal placée compte pour 1 dans h₁ mais pour au moins 1 dans h₂"
+        },
+        {
+          "id": "b",
+          "label": "h₂(e) ≤ h₁(e) : la distance de Manhattan est toujours plus petite"
+        },
+        {
+          "id": "c",
+          "label": "h₁(e) = h₂(e) pour tout état"
+        },
+        {
+          "id": "d",
+          "label": "Il n'existe aucune relation systématique entre h₁ et h₂"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Une case mal placée contribue pour exactement 1 à h₁, et pour sa distance de Manhattan (au moins 1) à h₂. On a donc toujours h₁(e) ≤ h₂(e) : h₂ est une heuristique « plus informée ».",
+    "concepts": [
+      "heuristique"
+    ],
+    "source": "TD_Intro_IA"
+  },
+  {
+    "chapterSlug": "algorithme-a-star",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez l'initialisation de l'algorithme A*.",
+    "payload": {
+      "template": "Au départ, la file Inactif est {{vide}}, g de l'état initial vaut {{g0}}, et la file Actif contient le seul état {{e0}}.",
+      "slots": [
+        {
+          "id": "vide",
+          "placeholder": "état de la file ?"
+        },
+        {
+          "id": "g0",
+          "placeholder": "valeur"
+        },
+        {
+          "id": "e0",
+          "placeholder": "quel état ?"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "vide": "vide",
+        "g0": "0",
+        "e0": [
+          "e0",
+          "initial",
+          "l'état initial",
+          "état initial",
+          "e₀"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Initialisation : Actif = [e₀], Inactif = [], g(e₀) = 0. Le coût pour aller de l'état initial à lui-même est nul.",
+    "concepts": [
+      "algorithme-a-etoile",
+      "fonction-g"
+    ],
+    "source": "Intro_IA_slides2.pdf"
+  },
+  {
+    "chapterSlug": "algorithme-a-star",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi qualifie-t-on la recherche effectuée par A* de recherche « guidée » ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Parce que la fonction f = g + h oriente l'effort de recherche vers les états les plus prometteurs, au lieu de parcourir l'arbre dans un ordre figé"
+        },
+        {
+          "id": "b",
+          "label": "Parce qu'un utilisateur indique manuellement à A* quel état développer"
+        },
+        {
+          "id": "c",
+          "label": "Parce qu'A* visite obligatoirement tous les nœuds de l'arbre, comme la recherche aveugle"
+        },
+        {
+          "id": "d",
+          "label": "Parce qu'A* choisit ses états au hasard"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "A* ne parcourt pas l'arbre dans un ordre fixé d'avance : la fonction f = g + h, qui intègre l'heuristique h, oriente la recherche vers les états les plus prometteurs (f faible). C'est en cela que la recherche est guidée, par opposition à la recherche aveugle.",
+    "concepts": [
+      "algorithme-a-etoile",
+      "recherche-informee",
+      "fonction-f"
+    ],
+    "source": "TD_Intro_IA"
+  },
+  {
+    "chapterSlug": "algorithme-a-star",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On applique A* au graphe ci-dessous (arêtes pondérées, h dans les nœuds). Départ : S. But : G. Le coût de l'action S→A vaut 1, mais celui de S→B vaut 2 et celui de B→C seulement 1. Donnez les valeurs de g calculées par A* sur le chemin solution et l'ordre de développement des états avant d'atteindre G.",
+    "payload": {
+      "description": "Coûts : S→A=1, S→B=2, A→C=7, B→C=1, C→G=2. Heuristiques : h(S)=5, h(A)=8, h(B)=3, h(C)=2, h(G)=0.",
+      "figure": {
+        "kind": "search-tree",
+        "nodes": [
+          {
+            "id": "S",
+            "label": "S",
+            "h": 5
+          },
+          {
+            "id": "A",
+            "label": "A",
+            "h": 8
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "h": 3
+          },
+          {
+            "id": "C",
+            "label": "C",
+            "h": 2
+          },
+          {
+            "id": "G",
+            "label": "G",
+            "h": 0
+          }
+        ],
+        "edges": [
+          {
+            "from": "S",
+            "to": "A",
+            "cost": 1
+          },
+          {
+            "from": "S",
+            "to": "B",
+            "cost": 2
+          },
+          {
+            "from": "A",
+            "to": "C",
+            "cost": 7
+          },
+          {
+            "from": "B",
+            "to": "C",
+            "cost": 1
+          },
+          {
+            "from": "C",
+            "to": "G",
+            "cost": 2
+          }
+        ],
+        "startId": "S",
+        "goalIds": [
+          "G"
+        ],
+        "caption": "Graphe d'états : C est accessible depuis A et depuis B"
+      },
+      "cells": [
+        {
+          "id": "gB",
+          "label": "g(B)",
+          "kind": "number"
+        },
+        {
+          "id": "gC",
+          "label": "g(C)",
+          "kind": "number"
+        },
+        {
+          "id": "gG",
+          "label": "g(G) (coût de la solution)",
+          "kind": "number"
+        },
+        {
+          "id": "ordre",
+          "label": "Ordre de développement des états avant d'atteindre G",
+          "kind": "text"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "gB",
+          "expected": 2
+        },
+        {
+          "id": "gC",
+          "expected": 3
+        },
+        {
+          "id": "gG",
+          "expected": 5
+        },
+        {
+          "id": "ordre",
+          "expected": "S, B, C",
+          "accepted": [
+            "S,B,C",
+            "S B C"
+          ]
+        }
+      ],
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Initialisation : Actif=[S], g(S)=0, f(S)=5. On développe S : A (g=1, f=1+8=9) et B (g=2, f=2+3=5). Actif trié : [B(f=5), A(f=9)]. On développe B : son successeur C (g=2+1=3, f=3+2=5). Actif : [C(f=5), A(f=9)]. On développe C : successeur G (g=3+2=5, f=5). G est atteint. A* développe donc S, B, C. Le chemin par A donnerait g(C)=1+7=8 (f=10), bien pire : A* ne le retient pas. Coût de la solution S→B→C→G : g(G)=5.",
+    "concepts": [
+      "algorithme-a-etoile",
+      "fonction-g",
+      "fonction-f"
+    ],
+    "source": "Intro_IA_slides2.pdf"
+  },
+  {
+    "chapterSlug": "algorithme-a-star",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Le graphe ci-dessous décrit un espace d'états (arêtes pondérées, h dans les nœuds). On applique A* depuis S vers le but G : l'état initial S possède trois successeurs A, B et C, chacun relié à G.",
+    "payload": {
+      "figure": {
+        "kind": "search-tree",
+        "nodes": [
+          {
+            "id": "S",
+            "label": "S",
+            "h": 6
+          },
+          {
+            "id": "A",
+            "label": "A",
+            "h": 5
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "h": 2
+          },
+          {
+            "id": "C",
+            "label": "C",
+            "h": 1
+          },
+          {
+            "id": "G",
+            "label": "G",
+            "h": 0
+          }
+        ],
+        "edges": [
+          {
+            "from": "S",
+            "to": "A",
+            "cost": 2
+          },
+          {
+            "from": "S",
+            "to": "B",
+            "cost": 3
+          },
+          {
+            "from": "S",
+            "to": "C",
+            "cost": 6
+          },
+          {
+            "from": "A",
+            "to": "G",
+            "cost": 7
+          },
+          {
+            "from": "B",
+            "to": "G",
+            "cost": 3
+          },
+          {
+            "from": "C",
+            "to": "G",
+            "cost": 1
+          }
+        ],
+        "startId": "S",
+        "goalIds": [
+          "G"
+        ],
+        "caption": "Espace d'états : S a trois successeurs A, B, C"
+      },
+      "caption": "A* appliqué depuis S vers G",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Après le développement de S, quelle est la valeur f de l'état B ?",
+          "weight": 1,
+          "payload": {
+            "hint": "f(B) = g(B) + h(B)."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Juste après le développement de S, quel état la file Actif place-t-elle en tête ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "A, avec f = 7"
+              },
+              {
+                "id": "b",
+                "label": "B, avec f = 5"
+              },
+              {
+                "id": "c",
+                "label": "C, avec f = 7"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "NUMERIC",
+          "prompt": "Quel est le coût total de la solution trouvée par A* (valeur de g sur G) ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Le chemin optimal passe par le successeur de meilleur f."
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 5
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "correct": [
+              "b"
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": 6
+          }
+        }
+      ]
+    },
+    "explanation": "Depuis S : g(A)=2, f(A)=2+5=7 ; g(B)=3, f(B)=3+2=5 ; g(C)=6, f(C)=6+1=7. La file Actif place B en tête (f=5, le plus petit). On développe B : G entre avec g(G)=3+3=6 et f=6. G est atteint avec un coût de 6 : le chemin S→B→G coûte 6, mieux que S→A→G (coût 9) ou S→C→G (coût 7).",
+    "concepts": [
+      "algorithme-a-etoile",
+      "fonction-f",
+      "fonction-g"
+    ],
+    "source": "Intro_IA_slides2.pdf"
+  },
+  {
+    "chapterSlug": "algorithme-a-star",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On applique A* sur un graphe en chaîne : S→A→B→C→D→G (un seul chemin possible). Coûts : S→A=2, A→B=1, B→C=4, C→D=2, D→G=1. Heuristiques : h(S)=8, h(A)=6, h(B)=5, h(C)=2, h(D)=1, h(G)=0. Donnez les valeurs de g et f calculées par A* pour les états indiqués.",
+    "payload": {
+      "description": "Le graphe est une chaîne : un seul chemin de S à G.",
+      "figure": {
+        "kind": "search-tree",
+        "nodes": [
+          {
+            "id": "S",
+            "label": "S",
+            "h": 8
+          },
+          {
+            "id": "A",
+            "label": "A",
+            "h": 6
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "h": 5
+          },
+          {
+            "id": "C",
+            "label": "C",
+            "h": 2
+          },
+          {
+            "id": "D",
+            "label": "D",
+            "h": 1
+          },
+          {
+            "id": "G",
+            "label": "G",
+            "h": 0
+          }
+        ],
+        "edges": [
+          {
+            "from": "S",
+            "to": "A",
+            "cost": 2
+          },
+          {
+            "from": "A",
+            "to": "B",
+            "cost": 1
+          },
+          {
+            "from": "B",
+            "to": "C",
+            "cost": 4
+          },
+          {
+            "from": "C",
+            "to": "D",
+            "cost": 2
+          },
+          {
+            "from": "D",
+            "to": "G",
+            "cost": 1
+          }
+        ],
+        "startId": "S",
+        "goalIds": [
+          "G"
+        ],
+        "caption": "Graphe en chaîne"
+      },
+      "cells": [
+        {
+          "id": "gC",
+          "label": "g(C)",
+          "kind": "number"
+        },
+        {
+          "id": "fC",
+          "label": "f(C)",
+          "kind": "number"
+        },
+        {
+          "id": "gG",
+          "label": "g(G) (coût de la solution)",
+          "kind": "number"
+        },
+        {
+          "id": "fG",
+          "label": "f(G)",
+          "kind": "number"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "gC",
+          "expected": 7
+        },
+        {
+          "id": "fC",
+          "expected": 9
+        },
+        {
+          "id": "gG",
+          "expected": 10
+        },
+        {
+          "id": "fG",
+          "expected": 10
+        }
+      ]
+    },
+    "explanation": "Sur la chaîne : g(A)=2, g(B)=2+1=3, g(C)=3+4=7, g(D)=7+2=9, g(G)=9+1=10. Donc f(C)=g(C)+h(C)=7+2=9 et f(G)=g(G)+h(G)=10+0=10. Le coût de l'unique solution S→A→B→C→D→G est g(G)=10. Sur un état final, f = g puisque h(G)=0.",
+    "concepts": [
+      "algorithme-a-etoile",
+      "fonction-g",
+      "fonction-f"
+    ],
+    "source": "Intro_IA_slides2.pdf"
+  },
+  {
+    "chapterSlug": "algorithme-a-star",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Que se passe-t-il à chaque tour de la boucle principale de A* ? Sélectionnez les affirmations correctes.",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "On retire l'état courant e de la tête de la file Actif"
+        },
+        {
+          "id": "b",
+          "label": "On ajoute e à la file Inactif"
+        },
+        {
+          "id": "c",
+          "label": "On examine les successeurs e' de e pour décider de les (ré)insérer dans Actif"
+        },
+        {
+          "id": "d",
+          "label": "Si Actif n'est pas vide, le nouvel état courant devient le premier élément de Actif"
+        },
+        {
+          "id": "e",
+          "label": "On vide entièrement la file Inactif"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "À chaque tour : Supprimer(Actif) retire e, Ajouter(Inactif, e) le range parmi les états déjà utilisés, on examine les successeurs e' pour les (ré)insérer dans Actif, puis le nouvel état courant devient premier(Actif) si la file n'est pas vide. La file Inactif n'est jamais vidée (e est faux).",
+    "concepts": [
+      "algorithme-a-etoile"
+    ],
+    "source": "Intro_IA_slides2.pdf"
+  },
+  {
+    "chapterSlug": "algorithme-a-star",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque opération sur les files de A* à son effet.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "FileVide(file)"
+        },
+        {
+          "id": "l2",
+          "label": "Ajouter(file, e)"
+        },
+        {
+          "id": "l3",
+          "label": "Supprimer(file)"
+        },
+        {
+          "id": "l4",
+          "label": "AjouterTrier(file, e)"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Renvoie un booléen indiquant si la file est vide"
+        },
+        {
+          "id": "r2",
+          "label": "Ajoute l'état e à la file"
+        },
+        {
+          "id": "r3",
+          "label": "Retire le premier élément de la file"
+        },
+        {
+          "id": "r4",
+          "label": "Ajoute e puis trie la file : meilleur f en tête"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4"
+      }
+    },
+    "explanation": "FileVide renvoie un booléen, Ajouter insère un élément, Supprimer retire le premier élément, et AjouterTrier ajoute un élément puis trie la file pour placer en tête celui de meilleur f.",
+    "concepts": [
+      "algorithme-a-etoile",
+      "fonction-f"
+    ],
+    "source": "Intro_IA_slides2.pdf"
+  }
+]

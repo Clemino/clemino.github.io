@@ -1,0 +1,268 @@
+---
+title: "Masquage et attente de signaux"
+slug: masquage-attente
+order: 4
+estimatedReadMin: 16
+concepts: [masque-signaux, sigset-t, sigprocmask, signaux-pendants, sigpending, sigsuspend, condition-course-signal, async-signal-safe]
+source: "Cours 2 — Les signaux"
+---
+
+Les trois premiers chapitres ont montré comment **émettre** et **capturer** un signal. Reste un dernier besoin, et non le moindre : **contrôler le moment** où un signal est délivré. C'est l'objet du **masquage**. Le masquage permet aussi de résoudre proprement la **course** rencontrée aux chapitres 2 et 3 — grâce à `sigsuspend`, la véritable primitive d'attente d'un signal.
+
+## Le problème : un signal au mauvais moment
+
+Un signal est **asynchrone** : il interrompt le code principal à un point **imprévisible**. Or certaines portions de code ne **doivent pas** être interrompues. Imaginons une section qui met à jour une **structure de données complexe** en plusieurs instructions :
+
+```c
+/* mise a jour en plusieurs etapes : ne doit PAS etre coupee */
+liste->taille += 1;
+liste->dernier = nouveau;
+nouveau->precedent = ancien_dernier;
+```
+
+Si un signal frappe **entre** la première et la deuxième ligne, et que son gestionnaire **lit** ou **modifie** cette même liste, il la voit dans un état **incohérent** (la taille est à jour, mais le chaînage non). Le programme se corrompt.
+
+Il faut donc pouvoir dire au système : **« pendant ce passage critique, retarde la délivrance des signaux »**. C'est précisément ce que fait le **masque de signaux**.
+
+## Trois états pour un signal
+
+Pour comprendre le masquage, il faut distinguer **trois états** dans lesquels un signal peut se trouver vis-à-vis d'un processus :
+
+1. **Délivré** — le signal a été pris en compte : l'action associée (défaut, ignorée, ou gestionnaire) s'exécute.
+2. **Pendant** (*pending*) — le signal a été **envoyé** mais **pas encore délivré**. Il « attend » d'être traité.
+3. **Bloqué** (*masqué*) — le signal est **interdit de délivrance**. S'il est envoyé, il devient **pendant** et le **reste** tant qu'il est bloqué. Dès qu'on le débloque, il est **délivré**.
+
+> Bloquer un signal ne le fait **pas disparaître** : il est seulement **mis en attente** (état pendant). Il sera **délivré plus tard**, au moment où on le débloquera. Le masquage **retarde** la délivrance, il ne **supprime** pas le signal.
+
+> ⚠️ Ne confondez pas **bloquer** et **ignorer**. Un signal **ignoré** (`SIG_IGN`) est **jeté** : il ne sera jamais délivré, même plus tard. Un signal **bloqué** est **conservé** à l'état pendant et **sera délivré** dès le déblocage. Ce sont deux mécanismes distincts, avec des effets opposés sur la « mémoire » du signal.
+
+## Représenter un ensemble de signaux : `sigset_t`
+
+Le masque d'un processus est un **ensemble de signaux**. Le type qui représente un tel ensemble est **`sigset_t`**. On ne le manipule **jamais** directement (sa structure interne dépend du système) : on utilise **cinq fonctions** dédiées, déclarées dans `<signal.h>` :
+
+```c
+#include <signal.h>
+
+int sigemptyset(sigset_t *set);              /* vide l'ensemble                 */
+int sigfillset (sigset_t *set);              /* remplit l'ensemble (tous signaux) */
+int sigaddset  (sigset_t *set, int signum);  /* ajoute un signal a l'ensemble    */
+int sigdelset  (sigset_t *set, int signum);  /* retire un signal de l'ensemble   */
+int sigismember(const sigset_t *set, int signum); /* le signal est-il dans l'ensemble ? */
+```
+
+- `sigemptyset` et `sigfillset` **initialisent** l'ensemble (vide ou plein) ; les quatre premières renvoient `0`/`-1` ;
+- `sigaddset` et `sigdelset` y ajoutent ou retirent un signal **précis** ;
+- `sigismember` **teste** la présence d'un signal : elle renvoie **`1`** si le signal est dans l'ensemble, **`0`** sinon.
+
+> ⚠️ **Toujours initialiser** un `sigset_t` par `sigemptyset` ou `sigfillset` **avant** de l'utiliser. Une variable `sigset_t` locale non initialisée contient des **bits aléatoires** : le masque ainsi formé bloquerait des signaux **au hasard**. C'est exactement la même précaution que pour la `struct sigaction` du chapitre 3.
+
+Construire un ensemble contenant `SIGINT` et `SIGUSR1` se fait ainsi :
+
+```c
+sigset_t set;
+sigemptyset(&set);            /* on part d'un ensemble vide */
+sigaddset(&set, SIGINT);      /* + SIGINT   */
+sigaddset(&set, SIGUSR1);     /* + SIGUSR1  */
+```
+
+## Modifier le masque du processus : `sigprocmask`
+
+Le **masque** d'un processus est l'ensemble des signaux qu'il a **bloqués**. On le consulte et on le modifie avec **`sigprocmask`** :
+
+```c
+#include <signal.h>
+
+int sigprocmask(int how, const sigset_t *set, sigset_t *oldset);
+```
+
+- **`how`** indique **quelle opération** appliquer au masque ;
+- **`set`** est l'ensemble de signaux concerné par l'opération (peut être `NULL` si l'on veut seulement *consulter*) ;
+- **`oldset`**, s'il n'est pas `NULL`, reçoit l'**ancien masque** — utile pour le **restaurer** ensuite.
+
+Le paramètre `how` prend l'une de trois valeurs :
+
+| `how` | Effet sur le masque |
+|---|---|
+| `SIG_BLOCK` | **ajoute** les signaux de `set` au masque (les bloque, en plus de ceux déjà bloqués) |
+| `SIG_UNBLOCK` | **retire** les signaux de `set` du masque (les débloque) |
+| `SIG_SETMASK` | **remplace** entièrement le masque par `set` |
+
+`sigprocmask` renvoie **`0`** en cas de succès, **`-1`** en cas d'erreur.
+
+### Protéger une section critique
+
+Le motif standard : on **sauvegarde** l'ancien masque, on **bloque** le signal gênant le temps de la section critique, puis on **restaure** l'ancien masque. Au déblocage, un signal arrivé entre-temps (resté pendant) est délivré.
+
+```c
+#include <stdio.h>
+#include <signal.h>
+
+int main(void) {
+    sigset_t a_bloquer, ancien;
+
+    sigemptyset(&a_bloquer);
+    sigaddset(&a_bloquer, SIGINT);          /* on veut proteger contre SIGINT */
+
+    /* --- entree en section critique : on bloque SIGINT --- */
+    sigprocmask(SIG_BLOCK, &a_bloquer, &ancien);
+
+    printf("Section critique : un Ctrl-C ici sera differe.\n");
+    /* ... mise a jour delicate, ininterruptible ... */
+
+    /* --- sortie : on restaure le masque d'origine --- */
+    sigprocmask(SIG_SETMASK, &ancien, NULL);
+    /* si un SIGINT est arrive pendant la section, il est delivre MAINTENANT */
+
+    printf("Hors section critique.\n");
+    return 0;
+}
+```
+
+> ⚠️ `SIG_BLOCK` est **cumulatif** : il ajoute au masque sans rien retirer. Pour être sûr de **revenir à l'état initial** en sortie de section critique, on **sauvegarde** l'ancien masque dans `oldset` et on le **restaure** avec `SIG_SETMASK`. Faire un `SIG_UNBLOCK` à l'aveugle débloquerait le signal **même s'il était déjà bloqué avant** d'entrer dans la section — ce n'est pas la même chose.
+
+> ⚠️ Bloquer un signal **trop longtemps** est dangereux : tant qu'un signal est masqué, le processus **ne peut pas y réagir**. Si l'on bloque `SIGTERM` et qu'on oublie de le débloquer, le processus devient difficile à arrêter proprement. Le masquage doit encadrer une section **courte** et **bien délimitée**. (Rappel : `SIGKILL` et `SIGSTOP`, eux, **ne peuvent de toute façon pas** être bloqués.)
+
+## Connaître les signaux pendants : `sigpending`
+
+Comment savoir si un signal a été **envoyé pendant qu'il était bloqué** ? La fonction **`sigpending`** renvoie l'ensemble des signaux **pendants** du processus — envoyés mais pas encore délivrés parce que bloqués :
+
+```c
+#include <signal.h>
+
+int sigpending(sigset_t *set);
+```
+
+Elle remplit `set` avec les signaux en attente. On teste ensuite la présence d'un signal donné avec `sigismember` :
+
+```c
+#include <stdio.h>
+#include <signal.h>
+#include <unistd.h>
+
+int main(void) {
+    sigset_t a_bloquer, pendants;
+
+    sigemptyset(&a_bloquer);
+    sigaddset(&a_bloquer, SIGINT);
+    sigprocmask(SIG_BLOCK, &a_bloquer, NULL);   /* SIGINT bloque */
+
+    printf("SIGINT est bloque. Faites un Ctrl-C, puis attendez.\n");
+    sleep(5);                                    /* le SIGINT eventuel reste pendant */
+
+    sigpending(&pendants);                       /* quels signaux attendent ? */
+    if (sigismember(&pendants, SIGINT))
+        printf("Un SIGINT est en attente (pendant).\n");
+    else
+        printf("Aucun SIGINT en attente.\n");
+
+    sigprocmask(SIG_UNBLOCK, &a_bloquer, NULL);  /* deblocage : le SIGINT pendant est delivre */
+    return 0;
+}
+```
+
+`sigpending` permet ainsi de **vérifier** l'arrivée d'un signal **avant** de le débloquer — par exemple pour décider de l'action à prendre.
+
+## Attendre un signal proprement : `sigsuspend`
+
+On peut maintenant régler la **course** identifiée aux chapitres 2 et 3. Rappel du problème : le schéma « je bloque, je vérifie, puis je m'endors avec `pause` » n'est **pas atomique**. Entre le déblocage et le `pause`, il existe une **fenêtre** ; si le signal attendu arrive dans cette fenêtre, le processus s'endort **après** lui et **ne se réveille jamais**.
+
+```c
+/* SCHEMA INCORRECT : course entre le deblocage et pause() */
+sigprocmask(SIG_UNBLOCK, &set, NULL);   /* (1) on debloque le signal      */
+/*  <-- si le signal arrive ICI, il est delivre et perdu pour pause() --> */
+pause();                                /* (2) ... et on s'endort trop tard */
+```
+
+La solution est la primitive **`sigsuspend`** :
+
+```c
+#include <signal.h>
+
+int sigsuspend(const sigset_t *mask);
+```
+
+`sigsuspend` réalise **en une seule opération atomique**, ininterruptible :
+
+1. elle **remplace** le masque courant par `mask` (le masque passé en argument) ;
+2. elle **endort** le processus ;
+3. elle le **réveille** à la réception d'un signal **non bloqué** par `mask` (après exécution de son gestionnaire) ;
+4. elle **restaure** le masque qui était en place avant l'appel.
+
+Comme le changement de masque et l'endormissement sont **indissociables**, **aucun signal ne peut se glisser entre les deux** : la course disparaît. `sigsuspend` renvoie toujours **`-1`** (avec `errno` à `EINTR`) — comme `pause`.
+
+### Le schéma correct d'attente d'un signal
+
+Le motif rigoureux pour **attendre un signal sans le manquer** combine `sigprocmask` et `sigsuspend` :
+
+```c
+#include <stdio.h>
+#include <signal.h>
+#include <unistd.h>
+
+volatile sig_atomic_t recu = 0;
+
+void handler(int sig) {
+    (void) sig;
+    recu = 1;                              /* gestionnaire minimal et sur */
+}
+
+int main(void) {
+    struct sigaction act;
+    sigset_t bloque, vide, ancien;
+
+    /* 1. installer le gestionnaire de SIGUSR1 */
+    act.sa_handler = handler;
+    sigemptyset(&act.sa_mask);
+    act.sa_flags = 0;
+    sigaction(SIGUSR1, &act, NULL);
+
+    /* 2. BLOQUER SIGUSR1 avant la zone sensible : meme s'il arrive
+          maintenant, il restera pendant et ne sera pas perdu */
+    sigemptyset(&bloque);
+    sigaddset(&bloque, SIGUSR1);
+    sigprocmask(SIG_BLOCK, &bloque, &ancien);
+
+    /* 3. ... ici, du travail ; un SIGUSR1 envoye reste pendant ... */
+    printf("Pret a recevoir SIGUSR1.\n");
+
+    /* 4. s'endormir EN DEBLOQUANT SIGUSR1 de facon ATOMIQUE.
+          'vide' = masque sans SIGUSR1 : il sera donc delivre,
+          reveillant sigsuspend. Aucune course possible. */
+    sigemptyset(&vide);
+    while (!recu)
+        sigsuspend(&vide);
+
+    /* 5. restaurer le masque d'origine */
+    sigprocmask(SIG_SETMASK, &ancien, NULL);
+
+    printf("SIGUSR1 recu : on continue.\n");
+    return 0;
+}
+```
+
+Analysons pourquoi ce schéma est **correct** :
+
+- en **bloquant** `SIGUSR1` à l'étape 2 **avant** la zone sensible, on garantit qu'un signal arrivé « trop tôt » n'est **pas perdu** : il devient simplement **pendant** ;
+- à l'étape 4, `sigsuspend(&vide)` installe un masque **vide** (qui ne bloque pas `SIGUSR1`) **et** endort le processus, **atomiquement**. Si un `SIGUSR1` était déjà pendant, il est délivré **immédiatement** ; sinon, le processus dort jusqu'à son arrivée. Dans les deux cas, **le signal n'est jamais manqué** ;
+- la **boucle `while (!recu)`** protège contre les **réveils intempestifs** : `sigsuspend` peut aussi être réveillée par **un autre** signal. Tant que le drapeau `recu` n'est pas positionné, on se rendort.
+
+> ⚠️ `sigsuspend` ne se comprend que par opposition à `pause` : `pause` s'endort « tout court », tandis que `sigsuspend` **change le masque et s'endort en un seul geste indivisible**. C'est cette **atomicité** qui élimine la course. Règle pratique : pour **attendre un signal de façon fiable**, on **bloque** le signal d'abord (`sigprocmask`), puis on attend avec **`sigsuspend`** — **jamais** avec `pause`.
+
+## Récapitulatif des primitives de masquage
+
+| Primitive | Rôle |
+|---|---|
+| `sigemptyset` / `sigfillset` | initialiser un `sigset_t` (vide / plein) |
+| `sigaddset` / `sigdelset` | ajouter / retirer un signal d'un ensemble |
+| `sigismember` | tester la présence d'un signal dans un ensemble |
+| `sigprocmask(how, set, old)` | bloquer / débloquer / remplacer le **masque** du processus |
+| `sigpending(set)` | obtenir l'ensemble des signaux **pendants** |
+| `sigsuspend(mask)` | poser un masque **et** s'endormir **atomiquement** jusqu'à un signal |
+
+> **À retenir**
+> - Un signal connaît trois états : **délivré**, **pendant** (envoyé mais pas encore délivré) et **bloqué** (délivrance interdite). Bloquer **retarde** la délivrance ; **ignorer** la **supprime** — à ne pas confondre.
+> - Un ensemble de signaux est un **`sigset_t`**, manipulé **uniquement** par `sigemptyset`, `sigfillset`, `sigaddset`, `sigdelset`, `sigismember`. **Toujours l'initialiser** avant usage.
+> - **`sigprocmask(how, set, old)`** modifie le **masque** (signaux bloqués) du processus : `SIG_BLOCK` ajoute, `SIG_UNBLOCK` retire, `SIG_SETMASK` remplace. On **sauvegarde** l'ancien masque pour le **restaurer** après une section critique.
+> - Un signal bloqué puis envoyé devient **pendant** ; **`sigpending`** révèle les signaux pendants. Le masquage protège les **sections critiques** — mais doit rester **court** (`SIGKILL`/`SIGSTOP` restent non blocables).
+> - **`sigsuspend(mask)`** pose un masque **et** endort le processus de manière **atomique**, supprimant la **course** du couple `pause` + `sigprocmask`.
+> - Schéma fiable d'attente d'un signal : **installer le gestionnaire**, **bloquer** le signal (`sigprocmask`), puis attendre par **`sigsuspend`** dans une **boucle `while`** sur un drapeau `volatile sig_atomic_t`.

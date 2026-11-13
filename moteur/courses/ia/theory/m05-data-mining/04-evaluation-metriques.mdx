@@ -1,0 +1,224 @@
+---
+title: "Évaluation : matrice de confusion et métriques"
+slug: evaluation-metriques
+order: 4
+estimatedReadMin: 15
+concepts: [matrice-de-confusion, taux-de-bonne-classification, precision, rappel, f-mesure, jeu-de-test]
+source: "Slides_Intro_DM_2425.pdf"
+---
+
+## Évaluer un modèle : des métriques
+
+La section précédente a posé le principe : un modèle se **teste** sur un **jeu de
+test** d'exemples non vus. Reste à dire **comment** on chiffre la qualité d'un
+modèle. C'est l'objet de cette section.
+
+Le cours pose d'abord une **mise en garde** : **la façon d'évaluer les modèles
+dépend de la méthode** — ou de la **classe de méthodes** — employée. Il n'y a donc
+**pas une seule** manière d'évaluer ; chaque famille de modèles a ses outils.
+
+Cela dit, l'évaluation **utilise des métriques** : des **valeurs numériques** qui
+mesurent la qualité d'un modèle. Pour la **classification**, le cours en présente un
+outil central et les métriques qui s'en déduisent : la **matrice de confusion** et
+la **précision** (*accuracy*).
+
+> **À retenir** : la **façon d'évaluer** un modèle **dépend de la méthode** ;
+> l'évaluation s'appuie sur des **métriques** (valeurs numériques). Pour la
+> classification : la **matrice de confusion** et la **précision** (*accuracy*).
+
+## La matrice de confusion
+
+La **matrice de confusion** est l'outil d'évaluation des modèles de
+**classification**. Le cours en donne la définition exacte.
+
+C'est une **matrice à `m` lignes et `m` colonnes**, où `m` est le **nombre de
+classes** (le nombre de valeurs possibles de la classe `C`). Sa case générique se
+définit ainsi :
+
+> `Conf[i, j]` = **nombre d'exemples de l'ensemble de test qui appartiennent à la
+> classe `cᵢ` et que notre modèle affecte à la classe `cⱼ`**.
+
+Lisons cette définition avec soin. Chaque case croise **deux classes** :
+
+- l'**indice de ligne `i`** désigne la **classe réelle** de l'exemple — la classe à
+  laquelle il **appartient** réellement (donnée par le jeu de test) ;
+- l'**indice de colonne `j`** désigne la **classe prédite** — la classe que le
+  **modèle affecte** à l'exemple.
+
+Deux cas se distinguent immédiatement :
+
+- les cases de la **diagonale** (`i = j`) comptent les exemples **bien classés** :
+  classe réelle et classe prédite **coïncident** ;
+- les cases **hors diagonale** (`i ≠ j`) comptent les exemples **mal classés** : le
+  modèle a **confondu** la classe `cᵢ` avec la classe `cⱼ` — d'où le nom de matrice
+  de *confusion*.
+
+> **À retenir** : la **matrice de confusion** est une matrice **`m × m`** où
+> `Conf[i, j]` est le **nombre d'exemples du jeu de test de classe réelle `cᵢ`
+> affectés par le modèle à la classe `cⱼ`**. La **diagonale** = exemples **bien
+> classés** ; le **hors-diagonale** = exemples **confondus**.
+
+## La précision (accuracy)
+
+À partir de la matrice de confusion, le cours définit une première métrique : la
+**précision**, en anglais **accuracy**. Sa formule :
+
+```
+Accuracy = (Somme de la diagonale) / (Somme sur toute la matrice)
+```
+
+L'interprétation est donnée explicitement par le cours :
+
+> Autrement dit, l'**accuracy est la proportion des exemples bien classés**.
+
+C'est cohérent avec la lecture de la matrice : la **somme de la diagonale** compte
+**tous les exemples bien classés**, et la **somme sur toute la matrice** compte
+**tous les exemples** du jeu de test. Leur rapport est donc bien la **fraction
+d'exemples correctement classés**.
+
+Le cours signale enfin qu'il **existe d'autres métriques calculables à partir de la
+matrice de confusion**, et en nomme trois :
+
+- le **rappel** (*Recall*) ;
+- la **précision** (*Precision*) ;
+- la **F-mesure** (*F-measure*), qui **se déduit** des deux précédentes.
+
+> ⚠️ Attention au vocabulaire : le mot **« précision »** traduit ici l'*accuracy*
+> (proportion d'exemples **bien classés**), mais il sert **aussi** à traduire
+> *Precision*, une **autre** métrique définie plus loin. Le **contexte** lève
+> l'ambiguïté.
+
+## Le cas binaire : la matrice de confusion 2 × 2
+
+Le cours détaille un **cas fréquent** : la **classification binaire**, où `m = 2` —
+la classe n'a que **deux valeurs possibles**, par exemple `True` / `False`.
+
+La matrice de confusion d'un tel modèle est alors une matrice **`2 × 2`** :
+
+- ses **deux lignes** sont les **classes réelles** ;
+- ses **deux colonnes** sont les **classes prédites**.
+
+Le cours la présente sous la forme suivante :
+
+```
+        ⎛ VP   FN ⎞
+CONF =  ⎜         ⎟
+        ⎝ FP   VN ⎠
+```
+
+Les quatre cases portent des **noms** qui se lisent en combinant deux idées —
+**V(rai) / F(aux)** d'une part, **P(ositif) / N(égatif)** d'autre part :
+
+- **V(rai) / F(aux)** indique si l'exemple est **correctement** ou
+  **incorrectement classé** ;
+- **P(ositif) / N(égatif)** indique la classe — **positive** ou **négative**.
+
+| Case | Nom (FR) | Nom (EN) | Signification |
+| --- | --- | --- | --- |
+| **VP** | Vrai Positif | TP (*True Positive*) | Exemple **positif**, **correctement** classé |
+| **VN** | Vrai Négatif | TN (*True Negative*) | Exemple **négatif**, **correctement** classé |
+| **FP** | Faux Positif | FP (*False Positive*) | Exemple **prédit positif**, mais **incorrectement** classé |
+| **FN** | Faux Négatif | FN (*False Negative*) | Exemple **prédit négatif**, mais **incorrectement** classé |
+
+On retrouve la règle générale de la section précédente : `VP` et `VN` sont sur la
+**diagonale** (exemples **bien classés**) ; `FP` et `FN` sont **hors diagonale**
+(exemples **mal classés**).
+
+> **À retenir** : en **classification binaire** (`m = 2`), la matrice est **`2 × 2`** :
+> lignes = classes **réelles**, colonnes = classes **prédites**. Quatre cases —
+> **VP, VN** (bien classés, diagonale) et **FP, FN** (mal classés) — où **V/F** =
+> correct/incorrect et **P/N** = positif/négatif.
+
+## Les métriques du cas binaire
+
+Dans le **cas binaire**, le cours donne les formules des trois métriques en fonction
+de `TP`, `TN`, `FP`, `FN`.
+
+**L'accuracy** se **déduit** de la définition générale (somme de la diagonale sur
+somme totale) :
+
+```
+Accuracy = (TP + TN) / (TP + FP + TN + FN)
+```
+
+Le **numérateur** `TP + TN` est la **diagonale** (tous les exemples bien classés) ;
+le **dénominateur** `TP + FP + TN + FN` est la **somme des quatre cases** (tous les
+exemples du jeu de test).
+
+Le cours donne ensuite, **« dans ce cas »**, deux autres métriques :
+
+```
+Recall    = TP / (TP + FN)
+Precision = TP / (TP + FP)
+```
+
+Lisons-les :
+
+- le **rappel** (`Recall`) rapporte les **vrais positifs** à `TP + FN`. Or
+  `TP + FN` est, dans la matrice donnée, la **première ligne** : l'ensemble des
+  exemples de **classe réelle positive**. Le rappel mesure donc la **proportion
+  d'exemples réellement positifs que le modèle a su retrouver** ;
+- la **précision** (`Precision`) rapporte les **vrais positifs** à `TP + FP`. Or
+  `TP + FP` est la **première colonne** : l'ensemble des exemples **prédits
+  positifs**. La précision mesure donc la **proportion d'exemples réellement positifs
+  parmi ceux que le modèle a prédits positifs**.
+
+| Métrique | Formule (cas binaire) | Dénominateur | Ce qu'elle mesure |
+| --- | --- | --- | --- |
+| **Accuracy** | `(TP + TN) / (TP + FP + TN + FN)` | Tous les exemples | Proportion d'exemples **bien classés** |
+| **Recall** (rappel) | `TP / (TP + FN)` | Exemples **réellement positifs** | Part des positifs **retrouvés** |
+| **Precision** (précision) | `TP / (TP + FP)` | Exemples **prédits positifs** | Part de **vrais positifs** parmi les **prédits positifs** |
+
+Quant à la **F-mesure** (*F-measure*), le cours indique qu'elle **se déduit** du
+**rappel** et de la **précision** : elle **résume les deux** métriques en une seule
+valeur.
+
+> **À retenir** : dans le cas binaire, `Accuracy = (TP+TN)/(TP+FP+TN+FN)`,
+> `Recall = TP/(TP+FN)`, `Precision = TP/(TP+FP)` ; la **F-mesure** **se déduit** du
+> **rappel** et de la **précision**.
+
+## Pourquoi plusieurs métriques ?
+
+Le cours présente l'accuracy comme la métrique de base, puis ajoute le rappel, la
+précision et la F-mesure. Pourquoi **ne pas se contenter de l'accuracy** ?
+
+Parce que ces métriques **ne regardent pas la même chose**. L'**accuracy** considère
+**tous les exemples** — bien classés sur l'ensemble du jeu de test. Le **rappel** et
+la **précision**, eux, se concentrent sur la **classe positive**, mais sous deux
+angles **complémentaires** :
+
+- le **rappel** se demande : *parmi les exemples réellement positifs, combien ai-je
+  retrouvés ?* (dénominateur `TP + FN` : les **réellement positifs**) ;
+- la **précision** se demande : *parmi les exemples que j'ai prédits positifs,
+  combien l'étaient vraiment ?* (dénominateur `TP + FP` : les **prédits positifs**).
+
+Ce sont deux questions **différentes**. Un modèle peut **bien réussir l'une et moins
+l'autre** — d'où l'intérêt de disposer **des deux**. La **F-mesure**, justement,
+**les combine** : elle **résume** rappel et précision en **une seule valeur**, utile
+pour comparer des modèles d'un seul coup d'œil.
+
+> ⚠️ L'**accuracy** ne dit pas **tout** : elle agrège **tous les exemples**. Le
+> **rappel** (positifs **retrouvés**) et la **précision** (prédits positifs
+> **corrects**) éclairent deux aspects **complémentaires** de la classe positive ;
+> la **F-mesure** les **résume** en une valeur unique.
+
+## Synthèse de la section
+
+La **façon d'évaluer un modèle dépend de la méthode** employée et s'appuie sur des
+**métriques**. Pour la **classification**, l'outil central est la **matrice de
+confusion** : une matrice **`m × m`** où `Conf[i, j]` compte les **exemples du jeu de
+test de classe réelle `cᵢ` affectés par le modèle à la classe `cⱼ`** — la
+**diagonale** rassemblant les exemples **bien classés**. On en déduit l'**accuracy**
+= **(somme de la diagonale) / (somme de la matrice)**, soit la **proportion
+d'exemples bien classés**. Dans le **cas binaire** (`m = 2`), la matrice est
+**`2 × 2`** — lignes : classes **réelles**, colonnes : classes **prédites** — avec
+les cases **VP, VN, FP, FN** (**V/F** = correct/incorrect, **P/N** =
+positif/négatif). On y calcule `Accuracy = (TP+TN)/(TP+FP+TN+FN)`,
+`Recall = TP/(TP+FN)` et `Precision = TP/(TP+FP)`, dont **se déduit** la **F-mesure**.
+Disposer de **plusieurs métriques** est utile, car **accuracy**, **rappel** et
+**précision** mesurent des aspects **complémentaires** de la qualité d'un modèle.
+
+> **À retenir** : la **matrice de confusion `m × m`** croise classe **réelle** et
+> classe **prédite** ; **accuracy** = diagonale / total = exemples **bien classés**.
+> Cas binaire : **VP, VN, FP, FN** → `Recall = TP/(TP+FN)`, `Precision = TP/(TP+FP)`,
+> et la **F-mesure** qui s'en déduit.

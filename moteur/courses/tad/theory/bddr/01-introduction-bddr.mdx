@@ -1,0 +1,73 @@
+---
+title: Introduction aux bases de données réparties
+slug: introduction-bddr
+order: 1
+estimatedReadMin: 6
+concepts: [bdd-repartie, top-down-design, bottom-up-design]
+source: "CM4, slides 2-8"
+---
+
+## Définitions
+
+> Une **base de données répartie** est un ensemble de données stockées sur **plusieurs sites** connectés par un réseau.
+
+Quelques notions de vocabulaire :
+
+- **Site** : une machine portant une base de données locale.
+- **Réseau** : moyen de communication entre les sites.
+- **SGBD Réparti** : système permettant de gérer une BDD répartie de façon transparente pour les applications.
+
+### Critères de choix
+
+La décision de répartir une base se prend en pesant :
+
+- **Coût d'installation** : plusieurs serveurs et licences.
+- **Coût de communication** : trafic réseau, latence.
+- **Sûreté** : panne d'un site, intégrité globale.
+- **Disponibilité** : si un site tombe, les autres restent-ils utilisables ?
+
+## Intérêts de la répartition
+
+- **Plus grande fiabilité** : la panne d'un site n'arrête pas tous les autres.
+- **Meilleures performances** : un utilisateur parisien est servi par le site de Paris, pas par celui de Marseille.
+- **Croissance facilitée** : ajouter un site est plus simple que d'agrandir un site monolithique.
+
+## Inconvénients
+
+- **Coûts** : trafic réseau, hardware, software supplémentaires.
+- **Synchronisation** : difficulté à coordonner les accès aux données partagées.
+- **Sécurité** : un site exposé est un point d'attaque, multiplier les sites multiplie la surface d'attaque.
+- **Interblocage distribué** : un deadlock peut maintenant traverser plusieurs sites, plus difficile à détecter.
+
+## Méthodes de conception
+
+### Top-down design
+
+1. Définir un **schéma global** (Global Conceptual Schema) : la base "comme si" elle était unique.
+2. **Distribuer** ce schéma vers des **schémas locaux** : décider quel site héberge quoi.
+3. **Fragmenter et allouer** les fragments selon les contraintes locales.
+
+Approche typique quand on conçoit une BDD répartie **à partir de zéro**.
+
+### Bottom-up design
+
+1. Identifier des **schémas locaux** existants (souvent dans une logique d'**intégration** de bases pré-existantes).
+2. Les intégrer dans un **schéma global**.
+
+Approche typique en fusion d'entreprises ou en migration de bases existantes vers un système réparti.
+
+## Les deux grandes techniques
+
+Une fois la décision de répartir prise, deux techniques principales s'offrent :
+
+1. **La fragmentation** : découper une relation en plusieurs morceaux, chacun stocké sur un site.
+2. **La réplication** : copier les mêmes données sur plusieurs sites.
+
+Ces deux techniques sont souvent combinées (fragmentation puis réplication des fragments critiques pour la disponibilité).
+
+> **À retenir**
+> - BDD répartie = données sur plusieurs sites reliés par un réseau.
+> - 3 atouts : fiabilité, performance, croissance.
+> - 4 risques principaux : coût, synchronisation, sécurité, deadlock distribué.
+> - 2 méthodes de conception : top-down (du global au local) et bottom-up (intégration).
+> - 2 techniques de répartition : fragmentation et réplication.

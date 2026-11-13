@@ -1,0 +1,223 @@
+---
+title: "Mémoire partagée"
+slug: memoire-partagee
+order: 4
+estimatedReadMin: 21
+concepts: [memoire-partagee, segment-partage, shmget, shmat, shmdt, shmctl, ipc-sans-synchronisation, cycle-vie-shm]
+source: "Cours 6 — IPC System V (mémoire partagée)"
+---
+
+Les tubes et les files de messages partagent un trait : pour transmettre une donnée, le noyau la **recopie** — de l'émetteur vers un tampon noyau, puis du tampon vers le récepteur. La **mémoire partagée** supprime cette recopie : plusieurs processus voient **la même zone mémoire**. C'est l'IPC le **plus rapide** — mais aussi le plus **dangereux**, car il n'offre **aucune synchronisation**.
+
+## Le principe : une zone mémoire commune
+
+> Un **segment de mémoire partagée** est une zone de mémoire physique que **plusieurs processus** peuvent faire apparaître dans **leur propre espace d'adressage**. Une fois le segment **attaché**, le processus y accède comme à de la mémoire ordinaire — par un **pointeur**. Toute écriture par un processus est **instantanément visible** par tous les autres : ils manipulent **le même octet physique**.
+
+Rappelons le verrou que cela fait sauter. Le Module 1 a établi que chaque processus possède un **espace d'adressage privé**, **étanche** : c'est précisément cette étanchéité qui **impose** un mécanisme d'IPC. La mémoire partagée est le mécanisme qui **perce un trou** dans cette cloison : il fait en sorte qu'une **même page physique** soit référencée par les tables de pages de **plusieurs** processus.
+
+La conséquence sur les performances est radicale :
+
+| Mécanisme | Trajet d'une donnée |
+|---|---|
+| **Tube / file de messages** | processus émetteur → **tampon du noyau** → processus récepteur (**deux recopies**) |
+| **Mémoire partagée** | le processus **écrit directement** dans la zone que l'autre **lit directement** (**zéro recopie**) |
+
+> La mémoire partagée est, de loin, l'IPC le **plus rapide** : aucune donnée ne transite par le noyau, aucun appel système n'est nécessaire pour **chaque** échange — une fois le segment attaché, lire et écrire sont de **simples accès mémoire**. C'est le mécanisme de choix pour échanger de **gros volumes** de données entre processus.
+
+Cette rapidité a une contrepartie qu'il faut énoncer immédiatement (on y revient en fin de chapitre) : la mémoire partagée **ne fournit aucune synchronisation**. Un tube fait bloquer un lecteur tant que rien n'est écrit ; une file fait attendre un message. La mémoire partagée, elle, ne fait **rien** de tel — c'est une zone de mémoire brute, sans aucun garde-fou.
+
+## Le cycle de vie d'un segment
+
+L'utilisation d'un segment de mémoire partagée suit **cinq étapes** bien distinctes. Les garder en tête, c'est ne jamais se tromper.
+
+1. **Créer** (ou récupérer) le segment — `shmget` ;
+2. **Attacher** le segment à son espace d'adressage — `shmat` — ce qui donne un **pointeur** ;
+3. **Utiliser** le segment — lire et écrire via le pointeur, comme de la mémoire ordinaire ;
+4. **Détacher** le segment de son espace d'adressage — `shmdt` ;
+5. **Supprimer** le segment du noyau — `shmctl` avec `IPC_RMID`.
+
+Une nuance capitale, conséquence de la persistance des objets IPC : les étapes **2 et 4** (attacher / détacher) sont **propres à chaque processus** — chacun attache et détache **pour lui-même**. Les étapes **1 et 5** (créer / supprimer) concernent l'**objet IPC global** — un **seul** processus crée le segment, un **seul** le supprime, et le segment **survit** entre-temps à tous les détachements.
+
+## Étape 1 — créer le segment : `shmget`
+
+`shmget` crée ou récupère un segment, selon le **motif `*get`** du chapitre 1 :
+
+```c
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
+int shmget(key_t key, size_t size, int shmflg);
+```
+
+- **`key`** — la **clé IPC** : issue de `ftok`, ou `IPC_PRIVATE` ;
+- **`size`** — la **taille du segment, en octets**. À la **création**, c'est la taille demandée ; pour seulement **récupérer** un segment existant, on peut passer `0` ;
+- **`shmflg`** — les **drapeaux** : bits de droits en octal, combinés à `IPC_CREAT` et/ou `IPC_EXCL`.
+
+`shmget` renvoie l'**identifiant** du segment (le `shmid`, un `int`), ou **`-1`** + `errno` en cas d'échec.
+
+```c
+key_t cle  = ftok("/etc/hosts", 70);
+int   shmid = shmget(cle, 4096, IPC_CREAT | 0666);   /* segment de 4096 octets */
+if (shmid == -1) { perror("shmget"); exit(EXIT_FAILURE); }
+```
+
+> ⚠️ La **taille `size`** est fixée à la **création** et ne peut **plus changer** : un segment de mémoire partagée n'est **pas redimensionnable**. Il faut donc la dimensionner correctement dès le départ — souvent `sizeof` de la structure que l'on veut partager. Note : un processus qui ne fait que **rejoindre** un segment existant peut passer `size = 0` (la taille réelle est déjà fixée), mais ne doit alors évidemment pas écrire au-delà de la taille réelle.
+
+## Étape 2 — attacher le segment : `shmat`
+
+Créer le segment ne suffit pas : il faut le faire **entrer dans l'espace d'adressage** du processus pour pouvoir y accéder. C'est le rôle de `shmat` (*shared memory attach*).
+
+```c
+#include <sys/types.h>
+#include <sys/shm.h>
+
+void *shmat(int shmid, const void *shmaddr, int shmflg);
+```
+
+- **`shmid`** — l'**identifiant** du segment (renvoyé par `shmget`) ;
+- **`shmaddr`** — l'adresse **souhaitée** d'attachement. On passe presque toujours **`NULL`** : le noyau choisit lui-même une adresse libre **appropriée** — le choix portable et recommandé ;
+- **`shmflg`** — des **options**. `0` pour un accès en lecture **et** écriture ; `SHM_RDONLY` pour un attachement en **lecture seule**.
+
+> **`shmat` renvoie un POINTEUR** : l'adresse, dans l'espace d'adressage du processus appelant, à laquelle le segment est désormais accessible. C'est par **ce pointeur** que l'on lit et écrit le segment, comme n'importe quelle zone mémoire. En cas d'**échec**, `shmat` renvoie la valeur spéciale **`(void *) -1`** — et **non** `NULL`.
+
+```c
+/* attache le segment ; on recoit un pointeur utilisable */
+char *zone = (char *) shmat(shmid, NULL, 0);
+if (zone == (void *) -1) {            /* test de l'echec : (void *) -1, pas NULL */
+    perror("shmat");
+    exit(EXIT_FAILURE);
+}
+/* a partir d'ici, `zone` pointe sur les `size` octets partages */
+```
+
+> ⚠️ `shmat` signale l'échec par **`(void *) -1`**, pas par `NULL`. Tester `if (zone == NULL)` est donc **faux** et laisserait passer l'erreur. La forme correcte est `if (zone == (void *) -1)`. C'est une exception notable : la plupart des fonctions qui renvoient un pointeur signalent l'échec par `NULL`, mais `0` (donc `NULL`) est ici une adresse d'attachement potentiellement légitime — d'où le choix de `-1`.
+
+Souvent, on attache un segment **typé** : on déclare la structure partagée, et on convertit le pointeur renvoyé par `shmat`.
+
+```c
+struct donnees_partagees {
+    int   compteur;
+    char  message[128];
+};
+
+/* on cree un segment a la taille exacte de la structure */
+int shmid = shmget(cle, sizeof(struct donnees_partagees), IPC_CREAT | 0666);
+
+/* on attache et on interprete le pointeur comme un pointeur de structure */
+struct donnees_partagees *d = (struct donnees_partagees *) shmat(shmid, NULL, 0);
+if (d == (void *) -1) { perror("shmat"); exit(EXIT_FAILURE); }
+
+d->compteur = 0;                       /* ecriture directe : aucun appel systeme */
+strcpy(d->message, "etat initial");
+```
+
+## Étape 3 — utiliser le segment
+
+Une fois le pointeur obtenu, **il n'y a plus d'API** : lire et écrire le segment, ce sont de **simples accès mémoire** par le pointeur. C'est tout l'intérêt — et toute la rapidité — de la mémoire partagée. Deux processus ayant chacun attaché le même segment voient **les mêmes données** : si l'un fait `d->compteur = 42`, l'autre, en relisant `d->compteur`, lit `42` **immédiatement**.
+
+## Étape 4 — détacher le segment : `shmdt`
+
+Quand un processus n'a plus besoin du segment, il le **détache** de son espace d'adressage avec `shmdt` (*shared memory detach*).
+
+```c
+#include <sys/types.h>
+#include <sys/shm.h>
+
+int shmdt(const void *shmaddr);
+```
+
+- **`shmaddr`** — l'**adresse** rendue par `shmat` (le pointeur d'attachement).
+
+`shmdt` renvoie **`0`** en cas de succès, **`-1`** + `errno` en cas d'échec.
+
+```c
+if (shmdt(d) == -1) { perror("shmdt"); exit(EXIT_FAILURE); }
+/* a partir d'ici, dereferencer `d` est une erreur : le segment n'est plus
+   dans l'espace d'adressage de ce processus */
+```
+
+> ⚠️ Il faut bien comprendre ce que `shmdt` **ne fait pas**. `shmdt` **ne détruit PAS le segment** : il le retire **seulement de l'espace d'adressage du processus appelant**. Le segment **continue d'exister** dans le noyau, et **les autres processus** qui l'ont attaché **continuent de l'utiliser** normalement. C'est l'exact parallèle de `close`/`unlink` pour un FIFO : `shmdt` est comme `close` (libère l'accès local), la **suppression** réelle du segment, c'est `shmctl(..., IPC_RMID)`.
+
+## Étape 5 — supprimer le segment : `shmctl`
+
+La file de messages avait `msgctl` ; le segment de mémoire partagée a **`shmctl`**, sur le même modèle.
+
+```c
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
+int shmctl(int shmid, int cmd, struct shmid_ds *buf);
+```
+
+- **`shmid`** — l'identifiant du segment ;
+- **`cmd`** — la **commande** ;
+- **`buf`** — un pointeur vers une `struct shmid_ds` (utilisé par `IPC_STAT` et `IPC_SET` ; peut être `NULL` pour `IPC_RMID`).
+
+`shmctl` renvoie **`0`** en cas de succès, **`-1`** + `errno` en cas d'échec. Les commandes essentielles :
+
+| `cmd` | Effet |
+|---|---|
+| **`IPC_STAT`** | **copie** les informations du segment dans `*buf` (`struct shmid_ds`) |
+| **`IPC_SET`** | **modifie** certains champs du segment (droits, propriétaire) depuis `*buf` |
+| **`IPC_RMID`** | **marque le segment pour destruction** |
+
+La structure `struct shmid_ds` renseigne notamment sur la **taille** du segment (`shm_segsz`) et le **nombre de processus qui l'ont attaché** (`shm_nattch`) — l'information qu'affiche la colonne `nattch` de la commande `ipcs`.
+
+La sémantique de `IPC_RMID` pour un segment mérite une précision :
+
+> `IPC_RMID` **marque** le segment pour destruction. Si des processus l'ont **encore attaché**, la destruction effective est **différée** : le segment reste utilisable par eux, et n'est **réellement libéré** que lorsque le **dernier** processus l'aura **détaché** (`shmdt`) ou se sera terminé. Un usage idiomatique consiste donc à appeler `shmctl(..., IPC_RMID)` **juste après que tous les processus ont attaché** le segment : il sera alors automatiquement libéré dès le dernier détachement, sans risque d'oubli.
+
+```c
+/* supprimer le segment du noyau */
+if (shmctl(shmid, IPC_RMID, NULL) == -1) {
+    perror("shmctl IPC_RMID");
+    exit(EXIT_FAILURE);
+}
+```
+
+> ⚠️ Comme tout objet IPC System V, un segment de mémoire partagée est **persistant dans le noyau**. Un programme qui crée un segment mais oublie `shmctl(..., IPC_RMID)` laisse un segment **orphelin** — visible avec `ipcs`, à supprimer avec `ipcrm -m`. C'est d'autant plus gênant qu'un segment peut être **volumineux** (plusieurs Mo) : la fuite immobilise alors une **quantité de mémoire** notable.
+
+## Le danger central : aucune synchronisation
+
+C'est le point le plus important du chapitre, et la grande question d'examen.
+
+> La mémoire partagée **ne fournit AUCUN mécanisme de synchronisation**. Contrairement au tube (qui fait bloquer le lecteur sur tube vide) ou à la file de messages (qui fait attendre un message), un segment partagé est une **zone de mémoire brute** : rien n'empêche deux processus d'**écrire au même endroit en même temps**, rien ne **signale** à un lecteur qu'une donnée est **prête**.
+
+On retrouve **exactement** le problème du Module 5 — l'**accès concurrent** à une donnée partagée, la **condition de course** — mais cette fois **entre processus** au lieu de threads. Si deux processus incrémentent `d->compteur` sans précaution, l'opération `compteur++` n'étant **pas atomique**, des **mises à jour sont perdues**. Et si un processus lit `d->message` pendant qu'un autre l'écrit, il peut lire un message **à moitié écrit**, incohérent.
+
+> ⚠️ **La mémoire partagée doit presque toujours être combinée avec un outil de synchronisation.** Seule, elle expose aux conditions de course. La parade : encadrer chaque accès au segment par un **sémaphore** — typiquement un **sémaphore System V** (chapitre 2), de la **même famille IPC**, donc lui aussi partageable entre processus quelconques. C'est l'association canonique : **mémoire partagée pour les données, sémaphore pour l'accès**. La mémoire partagée transporte, le sémaphore **protège**.
+
+Concrètement, on déclare un sémaphore binaire (valeur initiale `1`) faisant office de **verrou**, et tout accès au segment se fait entre un `P` et un `V` :
+
+```c
+/* d : pointeur sur le segment partage (shmat)
+   semid : ensemble d'un semaphore binaire, valeur initiale 1 (semctl SETVAL) */
+
+P(semid);                         /* entree en section critique : verrouille */
+d->compteur += 1;                 /* acces protege au segment partage        */
+strcpy(d->message, "mis a jour");
+V(semid);                         /* sortie de section critique : libere     */
+```
+
+Le segment partagé joue le rôle de la **variable globale** du Module 5 ; le sémaphore System V joue le rôle du **mutex**. La leçon est la même qu'avec les threads : **toute donnée partagée et modifiée doit être protégée**.
+
+## Récapitulatif des appels
+
+| Appel | Rôle | Renvoie |
+|---|---|---|
+| **`shmget(key, size, shmflg)`** | crée / récupère un segment | l'identifiant `shmid`, ou `-1` |
+| **`shmat(shmid, NULL, shmflg)`** | attache le segment à l'espace d'adressage | un **pointeur**, ou `(void *) -1` |
+| *(accès via le pointeur)* | lire / écrire | — |
+| **`shmdt(ptr)`** | détache le segment **pour ce processus** | `0`, ou `-1` |
+| **`shmctl(shmid, IPC_RMID, NULL)`** | supprime le segment du noyau | `0`, ou `-1` |
+
+> **À retenir**
+> - Un **segment de mémoire partagée** est une zone mémoire que plusieurs processus font apparaître dans **leur propre espace d'adressage** ; chacun y accède par un **pointeur**, et toute écriture est **instantanément visible** par les autres.
+> - C'est l'IPC le **plus rapide** : **aucune recopie** par le noyau (contrairement aux tubes et files de messages), de simples accès mémoire une fois le segment attaché.
+> - Cycle de vie en **cinq étapes** : **créer** (`shmget`) → **attacher** (`shmat`) → **utiliser** (pointeur) → **détacher** (`shmdt`) → **supprimer** (`shmctl IPC_RMID`). Créer/supprimer concernent l'**objet global** ; attacher/détacher sont **propres à chaque processus**.
+> - **`shmget(key, size, shmflg)`** crée le segment (taille **fixée définitivement**). **`shmat`** l'attache et **renvoie un pointeur** — l'échec se teste par **`(void *) -1`**, **pas** `NULL`.
+> - **`shmdt(ptr)`** détache le segment **du seul processus appelant** : il **ne le détruit pas**. La destruction réelle, c'est **`shmctl(shmid, IPC_RMID, NULL)`** ; avec des processus encore attachés, elle est **différée** au dernier détachement.
+> - Le segment est **persistant dans le noyau** : oublier `IPC_RMID` laisse un segment orphelin (potentiellement volumineux) — à voir avec `ipcs`, à supprimer avec `ipcrm -m`.
+> - **Danger central** : la mémoire partagée **n'offre aucune synchronisation**. Seule, elle expose aux **conditions de course** entre processus. Elle doit être **combinée à un sémaphore** (System V) : **mémoire partagée pour les données, sémaphore pour protéger l'accès**.

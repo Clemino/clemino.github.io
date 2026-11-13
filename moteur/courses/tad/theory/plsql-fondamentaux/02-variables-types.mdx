@@ -1,0 +1,164 @@
+---
+title: Variables et types PL/SQL
+slug: variables-types
+order: 2
+estimatedReadMin: 8
+concepts: [plsql-variable-scalaire, plsql-rowtype, plsql-record, plsql-table, plsql-varray]
+source: "CM5, slides 7-10"
+---
+
+## Trois familles de types
+
+PL/SQL distingue trois familles :
+
+1. **Scalaires** : nombres, chaînes, dates, booléens…
+2. **Composés** : RECORD, TABLE (associative), VARRAY.
+3. **Curseurs** (cf. CM6).
+
+## Variables scalaires
+
+### Types prédéfinis
+
+- `NUMBER(p, s)` — nombre avec précision et échelle.
+- `INTEGER`, `PLS_INTEGER` — entiers.
+- `VARCHAR2(n)` — chaîne de longueur variable jusqu'à `n`.
+- `CHAR(n)` — chaîne de longueur fixe.
+- `DATE` — date avec heure.
+- `BOOLEAN` — vrai/faux/null (PL/SQL uniquement, n'existe pas en SQL).
+
+### Types dérivés : `%TYPE` et `%ROWTYPE`
+
+PL/SQL permet de **dériver** un type d'une colonne ou d'une table existante. Quand le schéma change, le code suit automatiquement.
+
+```sql
+-- type d'une colonne
+v_nom client.nom%TYPE;
+
+-- type d'une ligne entière
+v_client client%ROWTYPE;
+```
+
+`v_client` aura tous les attributs de la table `client`, accessibles par notation pointée : `v_client.id`, `v_client.nom`, etc.
+
+## Affectation
+
+⚠️ **Trois formes** d'affectation, à ne pas confondre :
+
+### Affectation classique : `:=`
+
+```sql
+v_tva := 19.6;
+```
+
+### Affectation depuis une requête : `SELECT ... INTO`
+
+```sql
+v_etudiant etudiant%ROWTYPE;
+...
+SELECT * INTO v_etudiant FROM etudiant WHERE id = 42;
+```
+
+La requête **doit renvoyer exactement une ligne**, sinon :
+
+- 0 ligne → exception `NO_DATA_FOUND`.
+- > 1 ligne → exception `TOO_MANY_ROWS`.
+
+### Affectation depuis un curseur : `FETCH`
+
+```sql
+FETCH mon_curseur INTO v_ligne;
+```
+
+(Détails dans le chapitre Curseurs du CM6.)
+
+## Type composé : RECORD
+
+Un `RECORD` est un type composé regroupant **plusieurs champs typés** :
+
+```sql
+TYPE t_rec_eleve IS RECORD (
+  nom    VARCHAR2(50),
+  prenom VARCHAR2(30),
+  age    NUMBER(3)
+);
+
+v_eleve t_rec_eleve;
+```
+
+On accède aux champs par notation pointée : `v_eleve.nom := 'Dupont';`.
+
+## Type tableau : TABLE associative et VARRAY
+
+### TABLE associative
+
+Tableau **associatif**, indexé par un entier `PLS_INTEGER` ou une chaîne `VARCHAR2`. Taille **dynamique**.
+
+```sql
+TYPE tab_noms IS TABLE OF eleve.nom%TYPE
+  INDEX BY PLS_INTEGER;
+
+v_noms tab_noms;
+-- affectations
+v_noms(3308) := 'toto';
+v_noms(6712) := 'titi';
+```
+
+### VARRAY
+
+Tableau **classique** à taille **variable mais bornée** :
+
+```sql
+TYPE tab_jours IS VARRAY(7) OF VARCHAR2(8);
+
+v_jours tab_jours;
+v_jours := tab_jours('lundi', 'mardi', 'mercredi', 'jeudi',
+                     'vendredi', 'samedi', 'dimanche');
+```
+
+### Récapitulatif
+
+| Type | Indexation | Taille | Choix |
+|---|---|---|---|
+| `RECORD` | Champs nommés | Fixée | Structure homogène |
+| `TABLE` | Entier ou chaîne | Dynamique | Parcours/recherche |
+| `VARRAY` | Entier 1..N | Bornée | Taille connue à l'avance |
+
+> Une dimension par défaut. Possibilité de construire des `TABLE OF TABLE` ou `VARRAY OF VARRAY` pour des structures multidimensionnelles.
+
+## Parcours d'un tableau
+
+### Tableau associatif
+
+```sql
+i := v_noms.FIRST;
+WHILE i IS NOT NULL LOOP
+  DBMS_OUTPUT.PUT_LINE('Élève ' || v_noms(i) || ', ID : ' || TO_CHAR(i));
+  i := v_noms.NEXT(i);
+END LOOP;
+```
+
+Ou plus simplement, si la plage des indices est continue :
+
+```sql
+FOR i IN v_noms.FIRST..v_noms.LAST LOOP
+  DBMS_OUTPUT.PUT_LINE(v_noms(i));
+END LOOP;
+```
+
+### VARRAY (indexé à partir de 1)
+
+```sql
+FOR i IN 1..v_jours.COUNT LOOP
+  DBMS_OUTPUT.PUT_LINE(v_jours(i));
+END LOOP;
+```
+
+> Le premier élément d'un VARRAY a l'indice **1** (pas 0). La taille est donnée par `.COUNT`.
+
+> **À retenir**
+> - Scalaires : `NUMBER`, `VARCHAR2`, `DATE`, `BOOLEAN`.
+> - Types dérivés : `table.col%TYPE` et `table%ROWTYPE`.
+> - Affectations : `:=`, `SELECT INTO`, `FETCH INTO`.
+> - `RECORD` (struct nommée), `TABLE` (associative), `VARRAY` (tableau borné).
+> - VARRAY indexé à partir de 1 ; `.COUNT` donne la taille.
+> - Méthodes de table : `FIRST`, `LAST`, `NEXT(i)`, `PRIOR(i)`, `COUNT`, `EXISTS(i)`.

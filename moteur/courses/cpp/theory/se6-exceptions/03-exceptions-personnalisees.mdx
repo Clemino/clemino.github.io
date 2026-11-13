@@ -1,0 +1,206 @@
+---
+title: Exceptions personnalisées
+slug: exceptions-personnalisees
+order: 3
+estimatedReadMin: 10
+concepts: [classe-exception-personnalisee, throw, selection-catch-par-type]
+source: "Cours 6 — Gestion des exceptions"
+---
+
+## Lancer une valeur ne suffit pas toujours
+
+On peut lancer un `int`, un `double` ou un `char` — un type fondamental. C'est simple, mais **pauvre** : un `int` lancé ne dit ni *où* l'erreur s'est produite, ni *à quel point* elle est grave, ni *quoi afficher* à l'utilisateur. Une seule valeur ne porte qu'une seule information.
+
+> Pour transmettre une erreur **riche**, on lance un **objet** d'une classe. Cet objet peut regrouper **plusieurs attributs** : une phrase décrivant l'erreur, un numéro d'erreur, un niveau de gravité, l'heure à laquelle elle est survenue...
+
+Définir sa propre **classe d'exception**, c'est concevoir un type dont le seul rôle est de **transporter le diagnostic** d'une erreur. C'est ce que propose le cours avec la classe `Erreur`.
+
+## Une classe d'exception est une classe ordinaire
+
+Il n'existe aucun mot-clé spécial : une classe d'exception est une **classe normale**. Ce qui en fait une « exception », c'est l'**usage** — on en lance une instance avec `throw`. La forme la plus simple, vue dans le cours, transporte un unique numéro d'erreur :
+
+```cpp
+#include <iostream>
+
+class Erreur {
+    public:
+        Erreur(int n = 0) : _val(n) {}
+        int get_val() const { return _val; }
+    private:
+        int _val;          // numéro de l'erreur
+};
+```
+
+Cette classe a tout d'une classe ordinaire : un **constructeur** qui initialise l'attribut, un **accesseur** `get_val()` pour le relire, un attribut **privé** `_val`. Rien de plus.
+
+## Lancer et rattraper un objet `Erreur`
+
+On lance une exception personnalisée en **construisant un objet** et en le passant à `throw`. Reprenons l'exemple du cours : une méthode `f1()` lève un `Erreur` portant le numéro `10`.
+
+```cpp
+#include <iostream>
+
+class Erreur {
+    public:
+        Erreur(int n = 0) : _val(n) {}
+        int get_val() const { return _val; }
+    private:
+        int _val;
+};
+
+class Essai {
+    public:
+        Essai()  { std::cout << "Constructeur d'Essai\n"; }
+        ~Essai() { std::cout << "destructeur d'Essai\n"; }
+        void f1() {
+            throw Erreur(10);   // construit un Erreur initialisé à 10, et le lance
+        }
+};
+
+int main() {
+    try {
+        Essai e1;
+        e1.f1();
+        std::cout << "bla bla bla\n";          // jamais atteint
+    }
+    catch (const Erreur& e) {                   // rattrape l'objet Erreur
+        std::cout << "Erreur numero : " << e.get_val() << '\n';
+    }
+    return 0;
+}
+```
+
+L'expression `throw Erreur(10)` fait deux choses : elle **construit** une instance de `Erreur` initialisée à `10`, puis la **lance**. Le `catch` la récupère par référence constante et lit son numéro via `get_val()`. Affichage :
+
+```text
+Constructeur d'Essai
+destructeur d'Essai
+Erreur numero : 10
+```
+
+On retrouve le **déroulement de pile** du chapitre précédent : l'objet local `e1` est détruit (son destructeur s'affiche) **avant** l'entrée dans le `catch`. La ligne `bla bla bla` est sautée — le `throw` a rompu la séquence.
+
+## Transporter plusieurs informations
+
+L'intérêt d'une classe d'exception se révèle quand elle porte **plusieurs attributs**. Le cours enrichit `Erreur` pour qu'elle transporte tout le diagnostic d'une erreur :
+
+- une **phrase** décrivant l'erreur ;
+- le **numéro** de l'erreur ;
+- le **niveau** de gravité (erreur fatale, erreur mineure...) ;
+- éventuellement l'**heure** à laquelle elle est survenue.
+
+```cpp
+#include <iostream>
+#include <string>
+
+class Erreur {
+    public:
+        Erreur(int numero = 0, std::string phrase = "", int niveau = 0)
+            : m_numero(numero), m_phrase(phrase), m_niveau(niveau) {}
+
+        std::string getPhrase() const { return m_phrase; }
+        int getNumero() const         { return m_numero; }
+        int getNiveau() const         { return m_niveau; }
+
+    private:
+        int         m_numero;   // numéro de l'erreur
+        std::string m_phrase;   // description de l'erreur
+        int         m_niveau;   // niveau de gravité de l'erreur
+};
+```
+
+À la levée, on **remplit** ces champs ; au rattrapage, le gestionnaire les **interroge** pour réagir finement — afficher le message, journaliser le numéro, décider d'arrêter ou non selon le niveau.
+
+```cpp
+int division(int a, int b) {
+    if (b == 0)
+        throw Erreur(1, "Division par zero", 2);   // numéro 1, niveau 2
+    return a / b;
+}
+
+int main() {
+    int a, b;
+    std::cout << "Valeur pour a : ";  std::cin >> a;
+    std::cout << "Valeur pour b : ";  std::cin >> b;
+
+    try {
+        std::cout << a << " / " << b << " = " << division(a, b) << '\n';
+    }
+    catch (const Erreur& e) {
+        std::cerr << "ERREUR        : " << e.getPhrase() << '\n';
+        std::cerr << "ERREUR Numero : " << e.getNumero() << '\n';
+        std::cerr << "ERREUR Niveau : " << e.getNiveau() << '\n';
+    }
+    return 0;
+}
+```
+
+Une seule exception transmet ici **trois renseignements** d'un coup. C'est tout l'avantage de l'objet sur la valeur brute : le `catch` reçoit un **diagnostic complet**, pas un simple code.
+
+## Le constructeur de copie et le mécanisme des exceptions
+
+Le mécanisme des exceptions a parfois besoin de **copier** l'objet lancé (par exemple lors d'une capture par valeur). Une classe d'exception doit donc être **copiable**. Pour des attributs simples (`int`, `std::string`), le constructeur de copie **synthétisé** par le compilateur convient. On peut aussi l'écrire explicitement, comme dans la version `erreur` du cours :
+
+```cpp
+class erreur {
+    public:
+        int cause;                                      // cause de l'exception
+        erreur(int c) : cause(c) {}                      // constructeur
+        erreur(const erreur& source) : cause(source.cause) {}  // constructeur de copie
+};
+```
+
+> Comme une classe d'exception peut être **copiée** par le mécanisme des exceptions, elle doit rester copiable. Avec des attributs simples, la copie **par défaut** suffit ; si la classe gère une ressource (pointeur, allocation `new`), elle doit respecter la **règle des trois** (vue au cours 2).
+
+## Plusieurs types d'exceptions, sélectionnés par le `catch`
+
+Une application définit souvent **plusieurs** classes d'exception. Comme le `catch` choisit par **type**, on dédie un gestionnaire à chacune. Le cours illustre cela en lançant, selon un choix de l'utilisateur, soit un objet `erreur`, soit un `int`, soit un objet `other` représentant « toute autre exception » :
+
+```cpp
+#include <iostream>
+
+class erreur {
+    public:
+        int cause;
+        erreur(int c) : cause(c) {}
+};
+
+class other {};        // classe vide : représente « toutes les autres exceptions »
+
+int main() {
+    int i;
+    std::cout << "Tapez 0 pour une exception Erreur, 1 pour une exception entiere : ";
+    std::cin >> i;
+
+    try {
+        switch (i) {
+            case 0: { erreur a(0); throw a; }   // on lance un objet erreur
+                                                 // (throw transfère le contrôle hors du switch — pas besoin de break)
+            case 1: { int a = 1;   throw a; }   // on lance un entier
+                                                 // (idem : throw sort immédiatement, pas de fall-through)
+            default: { other c;    throw c; }   // on lance un objet other
+        }
+    }
+    catch (const erreur& tmp) {                  // exception de type erreur
+        std::cout << "Erreur erreur ! (cause " << tmp.cause << ")\n";
+    }
+    catch (int tmp) {                            // exception de type int
+        std::cout << "Erreur int ! (cause " << tmp << ")\n";
+    }
+    catch (...) {                                // toutes les autres (dont other)
+        std::cout << "Exception inattendue !\n";
+    }
+    return 0;
+}
+```
+
+Chaque `catch` traite **un type** d'exception ; le `catch(...)` final capte ce qui reste — ici un objet `other`, dont on ne peut pas récupérer le contenu. Définir une **classe par catégorie d'erreur** rend le code lisible : le type de l'exception **est** déjà une partie du diagnostic.
+
+> ⚠️ Comme au chapitre précédent, l'**ordre** des `catch` reste déterminant. Si deux classes d'exception sont liées par héritage, placez toujours la **dérivée avant la base** ; et le `catch(...)`, compatible avec tout, **toujours en dernier**.
+
+> **À retenir**
+> - Une **classe d'exception** est une classe **ordinaire** : aucun mot-clé spécial, c'est son **usage avec `throw`** qui en fait une exception.
+> - Lancer un **objet** plutôt qu'une valeur permet de transporter un **diagnostic riche** : phrase, numéro, niveau de gravité, heure...
+> - On lève une exception personnalisée en **construisant l'objet** dans le `throw` (`throw Erreur(10)`) ; le `catch` la récupère par **`const&`** et interroge ses accesseurs.
+> - Une classe d'exception doit rester **copiable** (le mécanisme peut la copier) : copie par défaut pour des attributs simples, **règle des trois** si elle gère une ressource.
+> - Avec **plusieurs classes** d'exception, on dédie un `catch` à chaque **type** ; on garde l'ordre **dérivée avant base** et `catch(...)` en dernier.

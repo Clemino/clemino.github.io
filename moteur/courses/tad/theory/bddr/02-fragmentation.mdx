@@ -1,0 +1,134 @@
+---
+title: Fragmentation horizontale, verticale, mixte
+slug: fragmentation
+order: 2
+estimatedReadMin: 9
+concepts: [fragmentation-horizontale, fragmentation-verticale, fragmentation-mixte]
+source: "CM4, slides 9-13, 18-22"
+---
+
+## Principe
+
+La **fragmentation** consiste à **répartir une relation (table) sur plusieurs sites**. Sur chaque site est stockée une **partie** de la relation. Le principal problème est de pouvoir **recomposer la relation initiale** par des opérations relationnelles.
+
+Trois techniques existent, en correspondance avec les opérateurs de l'**algèbre relationnelle** :
+
+| Découpage | Opérateur algébrique | Reconstruction |
+|---|---|---|
+| **Horizontal** | Sélection (σ) | Union (∪) |
+| **Vertical** | Projection (π) | Jointure (⋈) |
+| **Mixte** | Sélection + projection | Combinaison |
+
+## Fragmentation horizontale
+
+On considère une relation **R** et un attribut **Att** dont on liste les valeurs possibles `{vAtt₁, vAtt₂, …, vAttₙ}`.
+
+Sur chaque site `i`, on stocke la sélection des lignes dont l'attribut vaut la i-ème valeur :
+
+```text
+fragment_i  =  σ (R ; Att = vAtt_i)
+```
+
+La relation initiale se reconstruit par **union** de tous les fragments :
+
+```text
+R  =  fragment_1  ∪  fragment_2  ∪  …  ∪  fragment_n
+```
+
+### Exemple
+
+Relation `Client(NoClient, Nom, Ville)`, fragmentée par `Ville` :
+
+```
+Client1 = σ_{Ville = 'Paris'}(Client)         -- stocké sur site Paris
+Client2 = σ_{Ville ≠ 'Paris'}(Client)         -- stocké sur les autres sites
+```
+
+```
+Client                            Client1                  Client2
+NoClient | Nom    | Ville         NoClient|Nom   |Ville    NoClient|Nom   |Ville
+C1       | Dupont | Paris         C1      |Dupont|Paris    C2      |Martin|Marseille
+C2       | Martin | Marseille     C3      |Martin|Paris    C4      |Talon |Lille
+C3       | Martin | Paris
+C4       | Talon  | Lille
+```
+
+Reconstruction : `Client = Client1 ∪ Client2`.
+
+### Vue distante
+
+En Oracle, on accède à un fragment distant via un **database link** et la notation `table@lien`. La vue de reconstruction s'écrit :
+
+```sql
+CREATE VIEW V1 AS
+  SELECT NoClient, Nom, Ville FROM Client1@site1
+  UNION
+  SELECT NoClient, Nom, Ville FROM Client2@site2;
+```
+
+## Fragmentation verticale
+
+Une relation **R** est fragmentée verticalement quand on partage ses **attributs** entre sites.
+
+Soit `(Att_{1,1}, …, Att_{1,k₁})`, … , `(Att_{n,1}, …, Att_{n,kₙ})` une liste d'ensembles d'attributs de R. Deux contraintes :
+
+1. **Chaque ensemble doit contenir une clé** de R (pour reconstruire par jointure).
+2. **La réunion des ensembles doit recouvrir tous les attributs** de R.
+
+Sur le site `i`, on stocke la projection sur le i-ème ensemble d'attributs :
+
+```text
+fragment_i  =  π (R ; Att_i,1 , … , Att_i,ki)
+```
+
+### Reconstruction
+
+```sql
+CREATE VIEW V1 AS
+  SELECT Table1.cle, Table1.attr1, Table2.attr2
+  FROM Table1@site1, Table2@site2
+  WHERE Table1.cle = Table2.cle;
+```
+
+C'est une jointure naturelle sur la clé.
+
+## Fragmentation mixte
+
+1. On considère une relation **R**.
+2. On la fragmente **verticalement** (projections).
+3. Chaque fragment vertical peut être lui-même **décomposé horizontalement** (sélections).
+
+L'inverse est possible mais moins fréquent. La fragmentation mixte sert quand :
+
+- certains attributs sont surtout consultés à un endroit (Salaire à la DRH par exemple),
+- d'autres attributs sont consultés un peu partout mais regroupés par valeur (Adresse par ville).
+
+## Exemple pratique
+
+Relations :
+
+- `Employé(nss, nom, loc, ...)`
+- `Taux(pays, valeur, ...)`
+
+Contexte :
+
+- 12 bureaux d'environ même taille, dont 6 à Paris, 4 à Marseille, 2 à Lyon.
+- 80% des requêtes dans une ville portent sur **les employés de cette ville**.
+- 10% des requêtes portent sur la table `Taux`.
+
+**Solution recommandée** :
+
+- Créer 3 bases : P (Paris), M (Marseille), L (Lyon).
+- Sur chaque base : **fragment horizontal d'Employé** filtré sur sa ville + **réplique complète de `Taux`** (parce que peu volumineuse et nécessaire partout).
+
+Si trop coûteux :
+
+- Fusionner M et L (les plus petites villes).
+- Ou maintenir une seule copie de `Taux` sur le site M.
+
+> **À retenir**
+> - **Horizontale** = sélection (σ), reconstruction par **UNION**.
+> - **Verticale** = projection (π), reconstruction par **jointure naturelle** sur la clé. Chaque fragment doit contenir la clé.
+> - **Mixte** = vertical puis horizontal (ou inverse).
+> - Le choix dépend du **pattern d'accès** : où sont émises les requêtes, sur quels attributs portent-elles.
+> - On combine souvent fragmentation et réplication (fragmenter ce qui est local, répliquer ce qui est partagé).

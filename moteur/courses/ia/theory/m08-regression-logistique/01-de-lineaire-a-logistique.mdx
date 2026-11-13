@@ -1,0 +1,157 @@
+---
+title: "De la régression linéaire à la logistique"
+slug: de-lineaire-a-logistique
+order: 1
+estimatedReadMin: 15
+concepts: [regression-logistique, apprentissage-supervise, variable-cible-binaire, classification, regression, fonction-sigmoide]
+source: "ING2_GI_IA_RegLog_Slides.pdf"
+---
+
+## De quoi s'agit-il ? La régression logistique
+
+Les modules précédents ont présenté plusieurs méthodes de classification —
+l'arbre de décision, les méthodes d'ensemble, le classifieur bayésien naïf. Ce
+module en aborde une nouvelle : la **régression logistique**. Le cours en donne
+d'emblée les trois traits caractéristiques.
+
+- C'est une méthode d'**apprentissage supervisé de classification** : comme les
+  méthodes précédentes, elle apprend à partir d'exemples **étiquetés** pour
+  classer de nouvelles instances.
+- Elle s'applique à une **variable cible binaire** : la variable à prédire `Y`
+  ne prend que **deux valeurs**.
+- Elle accepte des **variables explicatives mixtes** : les attributs `X` qui
+  servent à la prédiction peuvent être de nature variée — numériques comme
+  qualitatifs.
+
+Le cours rappelle l'importance **historique** de cette méthode :
+**historiquement, la régression logistique fut la première méthode utilisée
+pour aborder la modélisation d'une variable binaire de Bernoulli** : décès ou
+survie d'un patient, absence ou présence d'une pathologie, possession ou non
+d'un produit, bon ou mauvais client… Elle est **encore très utilisée**,
+notamment en **épidémiologie** et en **marketing (scoring)**, car elle est
+**robuste et passe à l'échelle des données massives**.
+
+> **À retenir** : la **régression logistique** est une méthode d'**apprentissage
+> supervisé de classification** à **variable cible binaire** et à **variables
+> explicatives mixtes**. Historiquement la **première méthode** pour modéliser
+> une variable binaire de Bernoulli, elle reste très employée en
+> **épidémiologie** et en **marketing**, car **robuste** et **adaptée aux
+> données massives**.
+
+## Modéliser la probabilité de la classe positive
+
+Le cours établit le lien avec la **régression linéaire polynomiale**. Le point
+de départ est le même que pour le classifieur bayésien naïf : **comme la méthode
+Naïve Bayes, la régression logistique va modéliser la probabilité pour que la
+variable cible appartienne à la classe positive**. On note cette probabilité :
+
+`p(x) = P(Y = 1 | X = x)`
+
+C'est la **probabilité que `Y` vaille `1`**, c'est-à-dire que l'instance
+appartienne à la **classe positive**, **sachant que la variable explicative `X`
+prend la valeur `x`**. La variable cible `Y` est traitée comme une **variable
+aléatoire de Bernoulli** de paramètre `p(x)` : le cours écrit `Y` **suit une loi
+de Bernoulli `B(p(x))`**.
+
+Cette quantité `p(x)` est l'**objet central** de tout le module. La régression
+logistique est entièrement consacrée à **construire un modèle de `p(x)`** : une
+fois `p(x)` connu, classer une instance dont on observe `x` sera immédiat (c'est
+l'objet de la section suivante).
+
+> **À retenir** : la régression logistique **modélise la probabilité de la
+> classe positive** `p(x) = P(Y = 1 | X = x)`. La cible `Y` est une **variable
+> de Bernoulli** `B(p(x))` : tout le travail consiste à **construire un modèle
+> de `p(x)`**.
+
+## La tentation de la régression linéaire — et son échec
+
+La première idée, naturelle, est de **modéliser `p(x)` par une régression
+linéaire**. Le modèle s'écrirait alors :
+
+`p(x) = a₀ + a₁x + ε`
+
+où `a₀` et `a₁` sont les coefficients à estimer et `ε` le terme d'erreur. Cette
+écriture est exactement celle de la régression linéaire simple, appliquée à la
+probabilité `p(x)`.
+
+Le cours est catégorique sur le résultat : **le modèle n'est pas adapté aux
+données et le résultat n'appartient pas à `[0,1]`**.
+
+Le problème est de **nature** : `p(x)` est une **probabilité**, elle est donc
+**bornée** entre `0` et `1`. Or une fonction **affine** `a₀ + a₁x` est une
+**droite** : elle prend, lorsque `x` parcourt son domaine, **toutes les valeurs
+réelles** — y compris des valeurs **négatives** et des valeurs **supérieures à
+`1`**. Une droite ne peut donc **jamais** rester confinée dans `[0,1]` : pour
+des `x` assez grands ou assez petits, elle produit des « probabilités »
+**aberrantes**.
+
+Le cours illustre ce constat sur un exemple : la **maladie** `Y` (à valeurs dans
+`{0,1}`) en fonction de l'**âge** `X` (sur l'intervalle `[20,100]`). Le nuage de
+points montre les patients malades (`Y = 1`) plutôt aux âges élevés, les
+patients sains (`Y = 0`) plutôt aux âges faibles. La **droite de régression
+linéaire** ajustée sur ce nuage **traverse** la bande `[0,1]` mais **ne s'y
+arrête pas** : elle dépasse `1` vers les grands âges et passerait sous `0` vers
+les petits âges.
+
+| Exigence sur `p(x)` | Régression linéaire `a₀ + a₁x` |
+| --- | --- |
+| Doit rester dans `[0,1]` (c'est une probabilité) | Prend **toutes** les valeurs réelles — sort de `[0,1]` |
+| Doit avoir une forme « en S » épousant le nuage | Est une **droite** : forme inadaptée |
+
+> ⚠️ Modéliser `p(x)` par une **régression linéaire** `p(x) = a₀ + a₁x + ε`
+> **échoue** : `a₀ + a₁x` est une **droite**, qui prend **toutes** les valeurs
+> réelles. Le résultat **n'appartient pas à `[0,1]`** — alors que `p(x)` est une
+> **probabilité**.
+
+## La solution : une fonction sigmoïde
+
+Puisqu'une droite ne convient pas, le cours énonce ce que le modèle **doit**
+être : **le modèle doit être une fonction sigmoïde à valeur dans `[0,1]`**.
+
+Une fonction **sigmoïde** est une fonction en **forme de S**. Deux propriétés en
+font le bon candidat pour modéliser `p(x)`.
+
+- Elle est **bornée** : ses valeurs restent confinées dans `[0,1]`, comme l'exige
+  une probabilité. Quelle que soit la valeur de `x`, le modèle produit donc une
+  probabilité **valide**.
+- Sa forme **en S** épouse le comportement observé : `p(x)` reste proche de `0`
+  d'un côté, proche de `1` de l'autre, avec une **transition douce** entre les
+  deux. Sur l'exemple maladie–âge, la courbe sigmoïde colle bien plus au nuage de
+  points que la droite : faible probabilité de maladie aux âges jeunes, forte aux
+  âges élevés, montée progressive entre les deux.
+
+Comment passer d'une régression linéaire — qui produit un nombre réel
+quelconque — à une probabilité dans `[0,1]` ? Par une **fonction de transfert**
+qui **comprime** la sortie de la partie linéaire dans l'intervalle `]0,1[`. Le
+cours nomme cette fonction de transfert : il s'agit du **LOGIT inverse**.
+
+C'est précisément l'objet de la section suivante : la **fonction de transfert
+LOGIT inverse**, la fonction **sigmoïde** de la régression logistique, qui
+transforme la sortie linéaire en une probabilité et donne au modèle sa forme
+en S.
+
+> **À retenir** : le modèle de `p(x)` **doit être une fonction sigmoïde** — une
+> courbe en **S à valeurs dans `[0,1]`** — pour que `p(x)` reste une probabilité
+> **valide**. On passe de la régression linéaire à cette sigmoïde par une
+> **fonction de transfert** : le **LOGIT inverse**.
+
+## Synthèse de la section
+
+La **régression logistique** est une méthode d'**apprentissage supervisé de
+classification**, à **variable cible binaire** et à **variables explicatives
+mixtes** ; **historiquement la première** méthode pour modéliser une variable
+binaire de Bernoulli, elle reste très utilisée en **épidémiologie** et en
+**marketing** pour sa **robustesse** et son **passage à l'échelle**. Comme le
+classifieur bayésien naïf, elle **modélise la probabilité de la classe
+positive** `p(x) = P(Y = 1 | X = x)`, la cible `Y` étant une **variable de
+Bernoulli** `B(p(x))`. Modéliser `p(x)` par une **régression linéaire**
+`p(x) = a₀ + a₁x + ε` **échoue** : une droite prend **toutes** les valeurs
+réelles, donc le résultat **n'appartient pas à `[0,1]`** alors que `p(x)` est une
+probabilité. Le modèle **doit** donc être une **fonction sigmoïde** — une courbe
+en **S** confinée dans `[0,1]` — obtenue à partir de la régression linéaire par
+une **fonction de transfert**, le **LOGIT inverse**.
+
+> **À retenir** : la régression logistique modélise `p(x) = P(Y=1|X=x)`. La
+> **régression linéaire** ne convient pas — sa **droite** sort de `[0,1]`. Le
+> modèle doit être une **sigmoïde** à valeurs dans `[0,1]`, construite par la
+> **fonction de transfert LOGIT inverse**.

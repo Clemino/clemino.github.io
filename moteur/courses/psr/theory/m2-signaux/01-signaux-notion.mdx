@@ -1,0 +1,172 @@
+---
+title: "Notion de signal et signaux standard"
+slug: signaux-notion
+order: 1
+estimatedReadMin: 13
+concepts: [signal, signal-asynchrone, signal-h, action-par-defaut, sigint, sigquit, sigkill, sigterm, sigsegv, sigchld, sigusr, sigalrm, sigstop-sigcont]
+source: "Cours 2 — Les signaux"
+---
+
+## Pourquoi les signaux ?
+
+Deux processus UNIX peuvent éventuellement **partager le même code** — c'est le système qui en décide — mais les **espaces mémoire** réservés à leurs variables sont **complètement étanches** : un processus n'a **aucun accès** aux variables d'un autre processus. C'est la conséquence directe de l'isolation des espaces d'adressage vue au Module 1.
+
+On peut pourtant vouloir construire une **application multitâche** dont les processus doivent **se synchroniser** ou **échanger des informations**. Le système fournit pour cela plusieurs mécanismes, qu'on classe en deux familles :
+
+- la **synchronisation** — par **signaux** ou par **sémaphores** ;
+- la **communication de données** — par **fichiers**, par **tubes** (pipes), par **files de messages** ou par **segments de mémoire partagée**.
+
+Ce module traite du tout premier de ces mécanismes : le **signal**. C'est l'outil le plus léger, mais aussi le plus subtil — il faut le manipuler avec rigueur.
+
+## Qu'est-ce qu'un signal ?
+
+> Un **signal** est une **interruption logicielle asynchrone** d'un processus. Il peut être envoyé **par un processus** ou **par le noyau**.
+
+Chaque mot de cette définition compte :
+
+- **Interruption logicielle** — le signal joue, pour un processus, le rôle qu'une interruption matérielle joue pour le processeur. Comme une interruption matérielle, il **interrompt le traitement en cours** pour exécuter automatiquement une action associée. On parle de **programmation événementielle** : le code ne demande pas « ai-je reçu un signal ? », il **réagit** quand le signal arrive.
+- **Asynchrone** — le signal arrive à un **instant imprévisible**, sans rapport avec l'endroit où en est le code du processus destinataire. Cette imprévisibilité est la **source principale de difficulté** de toute la programmation par signaux.
+- **Envoyé par un processus ou par le noyau** — un signal a toujours une origine. Soit un autre processus l'a explicitement émis (par `kill`, par exemple), soit le **noyau** l'a généré en réaction à un événement (une erreur, la frappe d'une touche, la fin d'une temporisation).
+
+Les signaux sont **identifiés** de deux manières équivalentes :
+
+- un **numéro entier** (par exemple `2`, `9`, `15`) ;
+- un **nom symbolique** (par exemple `SIGINT`, `SIGKILL`, `SIGTERM`).
+
+Tous ces noms et numéros sont décrits dans l'en-tête **`<signal.h>`**.
+
+> ⚠️ Le **numéro** d'un signal n'est **pas garanti identique d'un système à l'autre** : `SIGUSR1` vaut 10 sous Linux/x86 mais 30 sous macOS, par exemple. Dans tout code portable, on utilise **toujours le nom symbolique** (`SIGUSR1`), **jamais le numéro nu** (`10`). Le numéro n'est mentionné dans ce cours qu'à titre indicatif.
+
+## La réception d'un signal
+
+Comment réagit un processus qui reçoit un signal ? La séquence est, du point de vue du processus, la suivante :
+
+1. il **interrompt** le traitement en cours ;
+2. il **exécute l'action** associée au signal ;
+3. il **reprend** l'exécution du traitement interrompu, là où il en était.
+
+Un signal est donc, schématiquement :
+
+- **envoyé** par un processus ;
+- **reçu** par un autre processus (éventuellement le même) ;
+- **véhiculé** par le noyau, qui sert d'intermédiaire.
+
+### Le cas d'un processus endormi
+
+Si le processus destinataire était **endormi** au moment où le signal arrive, il est **réveillé par le signal**. Son comportement après le traitement dépend de **ce qu'il attendait** :
+
+- s'il était dans une **temporisation** (un `sleep`) et qu'il a été réveillé **avant la fin** de celle-ci, il **ne se rendort pas** : le `sleep` est écourté ;
+- s'il attendait la **fin d'une entrée-sortie**, il **continue à attendre** après le traitement du signal.
+
+## Comportement associé à la réception d'un signal
+
+À chaque signal est associé, par défaut, un **comportement**. Trois grandes attitudes sont possibles vis-à-vis d'un signal :
+
+1. **Exécuter le comportement par défaut.** Le système prévoit pour chaque signal une action standard. Le plus souvent il s'agit de la **terminaison anormale du processus** (par exemple sur une violation de mémoire ou une division par zéro).
+2. **Ignorer le signal.** Le processus peut décider qu'un signal donné ne produira **aucun effet**.
+3. **Redéfinir le comportement.** Le processus peut associer au signal une **fonction spécifique** de son choix, qui sera exécutée à la réception — c'est le **gestionnaire** (ou *handler*), étudié au chapitre 3.
+
+### Les cinq actions par défaut
+
+L'action par défaut d'un signal est, plus précisément, l'une de **cinq** possibilités. C'est un point que les examens aiment vérifier — il faut les connaître :
+
+| Action par défaut | Effet | Exemples de signaux |
+|---|---|---|
+| **`exit`** (terminer) | provoque la **terminaison** du processus | `SIGINT`, `SIGTERM`, `SIGKILL`, `SIGALRM` |
+| **`core`** (terminer + image) | **sauvegarde l'état de la mémoire** (fichier *core*) puis termine le processus | `SIGSEGV`, `SIGBUS`, `SIGFPE`, `SIGQUIT` |
+| **`stop`** (suspendre) | **suspend** (gèle) l'exécution du processus | `SIGSTOP`, `SIGTSTP` |
+| **`ignore`** (ignorer) | le signal est **ignoré** : aucun effet | `SIGCHLD`, `SIGURG` |
+| **`continue`** (reprendre) | fait **reprendre** l'exécution d'un processus suspendu | `SIGCONT` |
+
+Le fichier *core* produit par l'action `core` est une **image mémoire** du processus au moment de sa mort : un débogueur (comme `gdb`) peut l'analyser après coup pour comprendre le plantage. C'est la seule différence entre `exit` et `core` : `core` termine **et** laisse une trace exploitable.
+
+## L'origine des signaux
+
+D'où viennent concrètement les signaux ? Trois sources principales.
+
+### La frappe de caractères au clavier
+
+Le **terminal** transforme certaines combinaisons de touches en signaux envoyés au processus de **premier plan** :
+
+| Touche | Signal | Effet par défaut |
+|---|---|---|
+| `Ctrl-C` | `SIGINT` | interruption — terminer le processus |
+| `Ctrl-\` | `SIGQUIT` | « quit » — terminer + fichier *core* |
+| `Ctrl-Z` | `SIGTSTP` | suspendre le processus |
+
+C'est ce qui explique qu'un `Ctrl-C` arrête un programme : la touche déclenche `SIGINT`, dont l'action par défaut est de terminer le processus.
+
+### Les erreurs du programme
+
+Lorsqu'un processus commet une faute, c'est le **noyau** qui détecte l'erreur et lui **transmet un signal** :
+
+- un accès mémoire interdit (déréférencement d'un pointeur invalide) → **`SIGSEGV`** ;
+- une division entière par zéro, un dépassement arithmétique → **`SIGFPE`** ;
+- une instruction machine illégale → **`SIGILL`**.
+
+Ces signaux ont une action par défaut **`core`** : le processus meurt en laissant une image mémoire.
+
+### Les primitives système
+
+Un processus peut **explicitement** envoyer un signal. En C, les primitives sont **`kill`**, **`raise`** et **`alarm`** (étudiées au chapitre 2). Depuis le shell, la commande **`kill`** fait de même :
+
+```text
+$ kill -KILL 2400
+$ kill -9 2400
+```
+
+Ces deux commandes sont équivalentes : elles envoient le signal **`SIGKILL`** (de numéro 9) au processus de PID **2400**. On peut désigner le signal par son **nom** (`-KILL`) ou par son **numéro** (`-9`).
+
+La commande `kill -l` (la lettre « l », pour *list*) affiche la **liste complète** des signaux du système.
+
+## Les signaux standard à connaître
+
+Le système définit de nombreux signaux. Voici les **plus fréquemment utilisés**, ceux qu'il faut maîtriser :
+
+| Signal | Rôle | Action par défaut |
+|---|---|---|
+| `SIGHUP` (1) | terminaison du processus *leader* (fermeture du terminal) | terminer |
+| `SIGINT` (2) | frappe d'interruption (`Ctrl-C`) | terminer |
+| `SIGQUIT` (3) | frappe de *quit* (`Ctrl-\`) | terminer + *core* |
+| `SIGILL` (4) | instruction illégale | terminer + *core* |
+| `SIGABRT` (6) | problème matériel ou appel de `abort()` | terminer + *core* |
+| `SIGBUS` (7) | erreur d'accès à la mémoire | terminer + *core* |
+| `SIGFPE` (8) | erreur arithmétique (division par zéro…) | terminer + *core* |
+| `SIGKILL` (9) | **terminaison forcée** — réaction **non redéfinissable** | terminer |
+| `SIGUSR1` (10) | signal **utilisateur** n° 1 — libre d'emploi | terminer |
+| `SIGSEGV` (11) | violation mémoire | terminer + *core* |
+| `SIGUSR2` (12) | signal **utilisateur** n° 2 — libre d'emploi | terminer |
+| `SIGPIPE` (13) | écriture dans un tube sans lecteur | terminer |
+| `SIGALRM` (14) | fin de temporisateur (`alarm`) | terminer |
+| `SIGTERM` (15) | demande de **terminaison normale** | terminer |
+| `SIGCHLD` (17) | terminaison ou arrêt d'un fils | **ignoré** |
+| `SIGCONT` (18) | continuation d'un processus arrêté par `SIGSTOP` | reprendre |
+| `SIGSTOP` (19) | **suspension** d'exécution — réaction **non redéfinissable** | suspendre |
+| `SIGTSTP` (20) | frappe de suspension au clavier (`Ctrl-Z`) | suspendre |
+
+Quelques signaux méritent un commentaire particulier.
+
+- **`SIGINT` vs `SIGTERM` vs `SIGKILL`.** Ce sont trois manières de demander à un processus de s'arrêter, par **politesse décroissante**. `SIGINT` (le `Ctrl-C`) et `SIGTERM` sont des demandes **polies** : le processus peut les **intercepter** pour faire un nettoyage avant de partir (fermer ses fichiers, libérer ses ressources). `SIGKILL`, lui, est une **exécution sommaire** : il ne peut être ni intercepté ni ignoré, le processus meurt **sans pouvoir réagir**.
+- **`SIGUSR1` et `SIGUSR2`.** Ce sont les **deux seuls signaux laissés libres** pour l'usage du programmeur. Le système ne leur attribue aucune sémantique : c'est à l'application de décider ce qu'ils signifient. On les utilise typiquement pour faire **communiquer ou se synchroniser** deux processus que l'on écrit soi-même.
+- **`SIGCHLD`.** Le noyau l'envoie **automatiquement au père** chaque fois qu'un de ses fils se **termine** (ou est arrêté). Son action par défaut est **`ignore`**, mais on l'intercepte très souvent : c'est le moyen propre d'éviter les processus **zombies** vus au Module 1 — le père est prévenu par `SIGCHLD` et peut faire son `wait` au bon moment.
+- **`SIGSEGV` et `SIGFPE`.** Ce sont les signaux des **bogues** classiques : le fameux « erreur de segmentation » est tout simplement la réception d'un `SIGSEGV` dont l'action par défaut (`core`) a tué le programme.
+
+> ⚠️ **`SIGKILL` (9) et `SIGSTOP` (19) sont les deux signaux dont la réaction ne peut JAMAIS être redéfinie.** On ne peut ni leur associer un gestionnaire, ni les ignorer, ni les bloquer. Cette règle est **absolue** et garantit qu'un administrateur conserve toujours un moyen de **tuer** (`SIGKILL`) ou de **geler** (`SIGSTOP`) n'importe quel processus, même un processus mal écrit qui tenterait de s'en protéger. Une question d'examen très fréquente : « peut-on intercepter `SIGKILL` ? » — la réponse est **non**.
+
+## Les signaux ne sont pas une file de messages
+
+Une dernière propriété, capitale, des signaux standard (numéros 1 à 31) : ils **ne sont pas mis en file d'attente** (*not queued*).
+
+Concrètement, un signal a, pour chaque processus, **un seul bit** « en attente ». Si le signal `SIGUSR1` est envoyé **trois fois de suite** à un processus alors qu'il est bloqué ou occupé, le bit est positionné… **une seule fois**. À la délivrance, le processus ne verra **qu'un seul `SIGUSR1`** : les deux autres sont **perdus**.
+
+> ⚠️ Les signaux standard ne se **comptent pas** et ne se **cumulent pas**. Si N exemplaires d'un même signal arrivent avant qu'il ne soit traité, le processus n'en reçoit **qu'un seul**. Il ne faut donc **jamais** se servir des signaux pour **compter** des événements, ni supposer qu'à N envois correspondront N réceptions. Pour transmettre une quantité, un signal ne suffit pas — il faut un vrai canal de données (tube, mémoire partagée). C'est une **limite fondamentale**, pas un défaut d'implémentation.
+
+> **À retenir**
+> - Un **signal** est une **interruption logicielle asynchrone** d'un processus, envoyée par un **processus** ou par le **noyau** et **véhiculée par le noyau**.
+> - Un signal est identifié par un **numéro** et un **nom symbolique** (`<signal.h>`) ; en code portable, on utilise **toujours le nom**, jamais le numéro.
+> - À la réception, le processus **interrompt** son traitement, **exécute l'action** associée, puis **reprend** où il en était ; un processus endormi est **réveillé**.
+> - Trois attitudes face à un signal : **action par défaut**, **ignorer**, **redéfinir** (gestionnaire). L'action par défaut est l'une de **cinq** : `exit`, `core`, `stop`, `ignore`, `continue`.
+> - Origines des signaux : **frappe clavier** (`Ctrl-C`→`SIGINT`, `Ctrl-\`→`SIGQUIT`, `Ctrl-Z`→`SIGTSTP`), **erreurs** détectées par le noyau (`SIGSEGV`, `SIGFPE`), **primitives** (`kill`, `raise`, `alarm`).
+> - Signaux clés : `SIGINT`/`SIGTERM`/`SIGKILL` (arrêt, politesse décroissante), `SIGUSR1`/`SIGUSR2` (libres pour le programmeur), `SIGCHLD` (fin d'un fils), `SIGSEGV`/`SIGFPE` (bogues).
+> - **`SIGKILL` et `SIGSTOP` ne sont ni interceptables, ni ignorables, ni blocables.**
+> - Les signaux standard **ne sont pas mis en file** : N envois rapprochés du même signal ne donnent qu'**une seule** réception — ne jamais s'en servir pour **compter**.

@@ -1,0 +1,270 @@
+---
+title: "Poids, biais et nombre de paramètres"
+slug: poids-et-biais
+order: 5
+estimatedReadMin: 18
+concepts: [parametre-reseau, hyperparametre-reseau, poids, biais, nombre-de-parametres, couche-de-neurones, couche-cachee, softmax, fonction-sigmoide, fonction-activation-lineaire]
+source: "RNA_HSe_Fr_2324.pdf"
+---
+
+## Paramètres et hyperparamètres
+
+Pour clore le module, le cours fait le bilan de **tout ce dont on a besoin pour
+définir et faire fonctionner un réseau de neurones**. Il en dresse la liste —
+**au moins** ces paramètres :
+
+- le **nombre de couches `L`** (c'est-à-dire, en réalité, le nombre de couches
+  **cachées** `L − 2`) ;
+- le **nombre de neurones dans chaque couche** ;
+- la **fonction d'activation de chaque couche** ;
+- les **poids et les biais** des connexions entre les neurones — c'est-à-dire la
+  **définition de chaque neurone caché ou de sortie**.
+
+En se demandant **comment déterminer** ces différents paramètres, le cours
+constate qu'**il y a une différence essentielle** entre deux catégories : les
+**paramètres** d'un côté, les **hyperparamètres** de l'autre.
+
+| | **Paramètres** | **Hyperparamètres** |
+| --- | --- | --- |
+| De quoi s'agit-il | Les **poids** et les **biais** | Le **nombre de couches**, le **nombre de neurones** par couche, la **fonction d'activation** de chaque couche |
+| Qui les fixe | L'**algorithme d'apprentissage** | Le **concepteur** du réseau |
+| Comment | **Calculés** à partir du jeu d'apprentissage | **Essais successifs**, ajustés selon les résultats |
+
+**Les hyperparamètres sont fixés par le concepteur du réseau**, qui peut — du
+moins pour certains — **essayer plusieurs valeurs et les ajuster en fonction des
+résultats** auxquels elles conduisent.
+
+**En revanche, le concepteur n'a pas la main sur les poids et les biais**, parce
+que **leurs valeurs doivent être celles, ou faire partie de celles, qui
+permettent de calculer la fonction que le réseau est censé représenter**. Un
+**algorithme** utilise un **ensemble d'apprentissage** `D = {(Xᵢ, Yᵢ)}` pour
+déterminer les poids et les biais de manière que les `Ŷᵢ` (sorties du réseau,
+valeurs **prédites** de `Y`) soient aussi proches que possible des `Yᵢ` (valeurs
+**cibles** de `Y`). Autrement dit, **le réseau doit apprendre ses paramètres**.
+
+> **À retenir** : pour définir un réseau, il faut le **nombre de couches**, le
+> **nombre de neurones** par couche, les **activations**, et les **poids et
+> biais**. Les **hyperparamètres** (couches, neurones, activations) sont fixés
+> par le **concepteur** ; les **paramètres** (poids, biais) sont **appris** par
+> un algorithme sur le jeu d'apprentissage.
+
+## La détermination des hyperparamètres
+
+Comment fixer les hyperparamètres ? Le cours est clair : **il n'existe pas de
+véritables règles pour les déterminer.** **En règle générale, ils sont
+déterminés en essayant plusieurs valeurs et en prenant celles qui donnent les
+meilleures performances** — tout en **gardant un coût raisonnable** pour le
+réseau et en **évitant le sur-apprentissage**.
+
+Le cours apporte cependant une **précision importante** : on peut **exclure de la
+liste des hyperparamètres le nombre de neurones des couches d'entrée et de
+sortie**. Ces deux « paramètres » ne sont **pas** à régler par essais : ils sont
+**en réalité déterminés par la fonction que le réseau doit représenter**.
+
+- **Le nombre de neurones de la couche d'entrée n'est rien d'autre que le nombre
+  de variables (indépendantes) de cette fonction.**
+- **Le nombre de neurones de la couche de sortie se déduit naturellement du
+  nombre de variables dépendantes.**
+
+Autrement dit, les couches d'entrée et de sortie sont **dictées par le
+problème**, et non choisies. Les **vrais** hyperparamètres à régler par essais
+sont donc le **nombre de couches cachées**, le **nombre de neurones de chaque
+couche cachée** et les **fonctions d'activation**.
+
+> **À retenir** : il n'existe **pas de règles** pour les hyperparamètres : on
+> **essaie plusieurs valeurs** et l'on garde les meilleures, à coût raisonnable
+> et **sans sur-apprentissage**. Mais le nombre de neurones des couches
+> d'**entrée** et de **sortie** n'est **pas** un hyperparamètre : il est
+> **dicté par le problème**.
+
+## Dimensionner la couche d'entrée et la couche de sortie
+
+Puisque les couches d'entrée et de sortie sont dictées par le problème, le cours
+précise **comment les dimensionner**.
+
+**La couche d'entrée.** Son nombre de neurones est le **nombre de variables
+indépendantes** du problème — c'est-à-dire le nombre d'attributs décrivant chaque
+instance.
+
+**La couche de sortie.** Son dimensionnement dépend du **type de problème**. Le
+cours distingue trois cas.
+
+| Type de problème | Nombre `m` de neurones de sortie | Sortie de chaque neurone |
+| --- | --- | --- |
+| **Régression** (à une ou plusieurs sorties) | Égal au **nombre de variables à prédire** | La valeur prédite |
+| **Classification binaire** | **Un seul** neurone | La **probabilité** d'une classe choisie comme **classe de référence** |
+| **Classification à trois classes ou plus** (multi-classes ou multi-étiquettes) | Égal au **nombre de classes** | La **probabilité** d'une classe |
+
+Trois commentaires précisent ce tableau, en lien avec les fonctions
+d'activation du chapitre 1.
+
+- En **régression**, **le nombre `m` de neurones de la couche de sortie est tout
+  simplement égal à celui des variables à prédire** ; l'activation de sortie est
+  la fonction **linéaire**.
+- En **classification binaire**, **la couche de sortie aura un seul neurone dont
+  la sortie donnera la probabilité d'une classe choisie comme classe de
+  référence** ; l'activation de sortie est la **sigmoïde**, dont les valeurs sont
+  dans `[0,1]`.
+- En **classification à trois classes ou plus**, **le nombre `m` de neurones de
+  la couche de sortie est égal à celui des classes ; chaque sortie donnera la
+  probabilité d'une classe** ; l'activation de sortie est la **softmax**, dont
+  les `m` sorties, positives et de somme `1`, s'interprètent comme des
+  probabilités.
+
+> **À retenir** : la couche d'**entrée** a autant de neurones que de **variables
+> indépendantes**. La couche de **sortie** : `m` = nombre de **variables à
+> prédire** (**régression**, activation linéaire) ; **un seul** neurone
+> (**classification binaire**, sigmoïde, probabilité de la classe de référence)
+> ; `m` = nombre de **classes** (**multi-classification**, softmax, une
+> probabilité par classe).
+
+## Compter les poids et les biais d'un neurone
+
+Reste à **compter les paramètres** — les poids et les biais — d'un réseau. Le
+décompte repose sur deux propriétés établies aux chapitres précédents.
+
+**Les poids d'un neurone.** Le réseau étant **totalement connecté**, **le nombre
+de poids d'un neurone de la couche `l` est égal au nombre de neurones de la
+couche `l − 1`** : ce neurone reçoit une entrée — donc affecte un poids — par
+neurone de la couche précédente.
+
+**Le biais d'un neurone.** **Chaque neurone a un biais `b` qui lui est propre** :
+**un seul** biais par neurone.
+
+Donc, pour un neurone de la couche `l`, le nombre de paramètres est :
+
+```text
+nombre de paramètres d'un neurone = (nombre de neurones de la couche l−1)  +  1
+```
+
+le **`+ 1`** comptant le **biais**.
+
+> **À retenir** : un neurone de la couche `l` possède autant de **poids** que la
+> couche `l − 1` a de **neurones** (réseau **totalement connecté**), plus **un
+> biais**. Soit **(neurones de la couche `l − 1`) + 1** paramètres par neurone.
+
+## Compter les paramètres d'une couche et d'un réseau
+
+Une **couche** est un **tableau de neurones**, tous reliés de la même façon à la
+couche précédente. Le nombre de paramètres d'une couche est donc le nombre de
+paramètres d'**un** de ses neurones, **multiplié par le nombre de neurones de la
+couche** :
+
+```text
+paramètres d'une couche l = ( (neurones de la couche l−1) + 1 ) × (neurones de la couche l)
+```
+
+Le **nombre total de paramètres du réseau** est la **somme** de ce décompte sur
+**toutes les couches qui calculent** — les couches cachées et la couche de
+sortie. La **couche d'entrée**, qui **sert juste à introduire les données** et
+ne fait **aucun calcul**, n'a **ni poids ni biais** : elle ne compte pas.
+
+> **À retenir** : une **couche** `l` a
+> **((neurones de `l − 1`) + 1) × (neurones de `l`)** paramètres. Le **total du
+> réseau** est la **somme** sur les couches **cachées** et la couche de
+> **sortie** ; la couche d'**entrée**, sans calcul, n'a **aucun paramètre**.
+
+## Un exemple : un réseau pour le jeu de données Iris
+
+Le cours propose d'**appliquer** ces notions à un **réseau pour le jeu de
+données Iris** — un problème de **multi-classification**. La démarche soulève
+quatre questions : les **variables indépendantes** et les **modalités de la
+classe** ? l'**architecture** du réseau ? les **fonctions d'activation** ?
+
+Le jeu **Iris** décrit chaque fleur par **`4` variables** numériques (longueur
+et largeur des sépales et des pétales) et la classe `Species` a **`3`
+modalités** (`setosa`, `versicolor`, `virginica`). On en **déduit** :
+
+- la **couche d'entrée** a **`4` neurones** (les `4` variables indépendantes) ;
+- la **couche de sortie** a **`3` neurones** (les `3` classes), à activation
+  **softmax** (multi-classification) — chaque sortie donne la **probabilité**
+  d'une classe ;
+- on ajoute **une couche cachée**, par exemple de **`5` neurones**, à activation
+  **sigmoïde**.
+
+Avec une bibliothèque comme Keras, ce réseau se décrit en empilant des couches
+**denses** (totalement connectées). Le code suivant est à **lire** :
+
+```python
+from keras.models import Sequential
+from keras.layers import Dense
+
+nn = Sequential()
+# Couche cachée : 5 neurones, 4 entrées, activation sigmoïde
+nn.add(Dense(5, input_dim=4, activation='sigmoid'))
+# Couche de sortie : 3 neurones (3 classes), activation softmax
+nn.add(Dense(3, activation='softmax'))
+
+nn.summary()   # affiche le nombre de paramètres de chaque couche
+```
+
+Appliquons le décompte de la section précédente à ce réseau `4 → 5 → 3`.
+
+| Couche | Neurones | Entrées (couche précédente) | Paramètres : (entrées + 1) × neurones |
+| --- | --- | --- | --- |
+| Couche d'entrée | `4` | — | `0` (aucun calcul) |
+| Couche cachée | `5` | `4` | `(4 + 1) × 5 = 25` |
+| Couche de sortie | `3` | `5` | `(5 + 1) × 3 = 18` |
+| **Total** | | | **`43`** |
+
+La couche cachée totalise **`25` paramètres** : chacun de ses `5` neurones a `4`
+poids (vers les `4` entrées) et `1` biais, soit `5` paramètres, donc
+`5 × 5 = 25`. La couche de sortie totalise **`18` paramètres** : chacun de ses
+`3` neurones a `5` poids (vers les `5` neurones cachés) et `1` biais, soit `6`
+paramètres, donc `3 × 6 = 18`. Le réseau a en tout **`43` paramètres** — `43`
+poids et biais que l'algorithme de **rétropropagation** devra **apprendre** sur
+le jeu d'apprentissage. C'est précisément ce qu'affiche `nn.summary()`.
+
+> **À retenir** : pour le réseau **Iris** `4 → 5 → 3` (couche cachée
+> **sigmoïde**, sortie **softmax**), la couche cachée a **`(4+1)×5 = 25`**
+> paramètres, la couche de sortie **`(5+1)×3 = 18`**, soit **`43`** paramètres
+> au total — ceux que la rétropropagation doit apprendre.
+
+## Conclusion du module
+
+Le cours conclut : **dans ce premier chapitre consacré aux réseaux de neurones,
+on a présenté les réseaux de neurones « standards », leur architecture et leur
+fonctionnement.** Le qualificatif **« standard »** annonce la suite : ces
+réseaux totalement connectés sont la **base** sur laquelle se construisent les
+architectures plus spécialisées de l'**apprentissage profond** — à commencer par
+les réseaux convolutifs, objet du module suivant.
+
+Le chemin parcouru se résume ainsi : le **neurone formel** (somme pondérée puis
+activation) et les **fonctions d'activation** ; le **perceptron**, sa **limite**
+(la séparabilité linéaire, le **XOR**) et le **perceptron multicouche** ; la
+**propagation avant** qui calcule les sorties ; la **rétropropagation** qui, par
+**descente du gradient**, apprend les **poids et les biais** ; et enfin le
+décompte de ces **paramètres**, distingués des **hyperparamètres** fixés par le
+concepteur.
+
+> **À retenir** : ce module a présenté les réseaux de neurones **« standards »**
+> — **architecture** et **fonctionnement**. Du **neurone formel** à la
+> **rétropropagation**, ils constituent la **base** de l'**apprentissage
+> profond**.
+
+## Synthèse de la section
+
+Définir un réseau exige le **nombre de couches**, le **nombre de neurones** par
+couche, les **fonctions d'activation**, et les **poids et biais**. Ces éléments
+se répartissent en deux catégories : les **paramètres** (poids et biais),
+**appris** par un algorithme sur le jeu d'apprentissage, et les
+**hyperparamètres** (couches, neurones, activations), fixés par le **concepteur**
+par **essais successifs** — sans règle, en visant les meilleures performances,
+un coût raisonnable et l'absence de **sur-apprentissage**. Le nombre de neurones
+des couches d'**entrée** et de **sortie** n'est **pas** un hyperparamètre : il
+est **dicté par le problème** — la couche d'entrée a autant de neurones que de
+**variables indépendantes** ; la couche de sortie a `m` = nombre de variables à
+prédire (**régression**, linéaire), **un seul** neurone (**binaire**, sigmoïde)
+ou `m` = nombre de **classes** (**multi-classification**, softmax). Le **décompte
+des paramètres** repose sur deux faits : un neurone a autant de **poids** que la
+couche précédente a de **neurones** (réseau **totalement connecté**) et **un
+biais** ; une couche `l` a donc **((neurones de `l − 1`) + 1) × (neurones de
+`l`)** paramètres, le total du réseau étant la **somme** sur les couches qui
+calculent (la couche d'entrée n'en a aucun). Sur l'exemple **Iris** `4 → 5 → 3`,
+cela donne `25 + 18 = 43` paramètres. Le module a ainsi présenté les réseaux
+**« standards »**, **base** de l'apprentissage profond.
+
+> **À retenir** : **paramètres** (poids, biais) **appris** vs **hyperparamètres**
+> (couches, neurones, activations) **choisis**. Entrée et sortie **dictées par
+> le problème**. Une couche a **((neurones précédents) + 1) × (neurones))**
+> paramètres ; le réseau **Iris** `4 → 5 → 3` en compte **`43`**.

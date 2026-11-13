@@ -1,0 +1,147 @@
+---
+title: Conteneurs STL
+slug: conteneurs-stl
+order: 3
+estimatedReadMin: 11
+concepts: [conteneur-stl, vector-list-map, classe-template]
+source: "Cours 7 — Templates & STL"
+---
+
+## La STL : ne pas réinventer la roue
+
+Le chapitre précédent montrait comment écrire ses propres classes templates — un `Vector<T>`, par exemple. Mais coder soi-même un vecteur, une liste, une table associative, c'est du travail délicat et déjà fait. C'est l'idée résumée par Stroustrup :
+
+> *« Don't reinvent the wheel ! »*
+
+La **STL** (*Standard Template Library*) est la partie de la bibliothèque standard de C++ qui fournit, **toute prête**, une collection de **structures de données et d'algorithmes fondamentaux**. Ce sont des bibliothèques **bien codées, testées et optimisées** : on s'appuie dessus plutôt que de réécrire.
+
+La STL repose entièrement sur les **templates** : chacun de ses composants est générique. Elle s'organise en quatre familles, qui sont les quatre chapitres restants de ce module :
+
+- les **conteneurs** — `vector`, `list`, `map`, `stack`… (ce chapitre) ;
+- les **itérateurs** — la manière uniforme de parcourir un conteneur ;
+- les **algorithmes** — tri, recherche, comptage… ;
+- les **foncteurs** — des objets-fonctions qui paramètrent les algorithmes.
+
+## Qu'est-ce qu'un conteneur ?
+
+> Un **conteneur** est une classe template qui **représente une structure de données** : il stocke une collection d'éléments d'un type donné et offre les opérations pour les gérer. C'est une classe template — on l'instancie avec le type de ses éléments : `vector<int>`, `list<double>`, `map<string, int>`.
+
+Le cours distingue **deux grandes catégories** de conteneurs.
+
+### Conteneurs séquentiels
+
+Les éléments sont **ordonnés** : ils occupent des positions successives. On peut parcourir le conteneur **dans cet ordre**, et insérer ou supprimer un élément à un endroit **explicitement choisi**. Le programmeur décide où va chaque élément.
+
+Exemples : `vector`, `list`, `deque`, `stack`, `queue`.
+
+### Conteneurs associatifs
+
+Les éléments sont identifiés par une **clé** et **ordonnés automatiquement** selon cette clé. On ne choisit pas leur position : le conteneur les range lui-même pour rendre la recherche par clé rapide.
+
+Exemples : `set`, `multiset`, `map`, `multimap`.
+
+## Fonctionnalités communes à tous les conteneurs
+
+Quel que soit le conteneur, certaines méthodes existent toujours — c'est l'intérêt d'une bibliothèque uniforme :
+
+```cpp
+int  size()  const;   // nombre d'éléments contenus
+bool empty() const;   // true si le conteneur est vide
+// ... clear(), begin(), end() ...
+```
+
+## `std::vector` : le tableau dynamique
+
+`std::vector` est le conteneur séquentiel de premier choix : un **tableau** dont la taille s'ajuste automatiquement. Il offre l'**accès direct** (en temps constant) à n'importe quelle case par son indice.
+
+```cpp
+#include <vector>
+
+std::vector<int> v;          // vecteur vide
+v.push_back(6);              // ajoute 6 à la fin       -> {6}
+v.push_back(3);              // ajoute 3 à la fin       -> {6, 3}
+v.push_back(5);              //                         -> {6, 3, 5}
+
+std::cout << v.size() << '\n';   // 3
+std::cout << v[0]     << '\n';   // 6   -- accès direct par indice
+v[1] = 99;                       // modification par indice
+
+v.pop_back();                    // retire le dernier  -> {6, 99}
+int dernier = v.back();          // référence au dernier élément
+```
+
+Opérations essentielles : `push_back` (ajout en fin), `pop_back` (retrait en fin), `operator[]` (accès par indice), `back()` / `front()` (dernier / premier élément), `size()`, `empty()`. C'est avec un `vector<double>` que le cours représente un `Polynome`.
+
+## `std::list` : la liste doublement chaînée
+
+`std::list` est aussi un conteneur séquentiel, mais réalisé en **liste chaînée**. Conséquence : pas d'accès direct par indice (`l[i]` n'existe pas), mais des insertions et suppressions **rapides à n'importe quelle position**, y compris en tête.
+
+```cpp
+#include <list>
+
+std::list<int> l;
+for (int i = 0; i < 5; ++i)
+    l.push_back((10 + 2 * i) % 5 + i);   // contenu : {0, 3, 6, 4, 7}
+
+l.sort();        // trie sur place        -> {0, 3, 4, 6, 7}
+l.reverse();     // inverse l'ordre       -> {7, 6, 4, 3, 0}
+
+std::cout << l.front() << ' ' << l.back() << '\n';   // 7 0
+```
+
+`std::list` offre en plus `push_front` / `pop_front` (ajout/retrait en tête) et `remove(valeur)` (supprime toutes les occurrences d'une valeur) — opérations qu'un `vector` ne propose pas efficacement.
+
+## `std::deque` : la file à deux bouts
+
+`std::deque` (*double-ended queue*) est une **généralisation des piles et des files** : on peut ajouter et retirer des éléments **par les deux extrémités** (`push_back`, `push_front`, `pop_back`, `pop_front`), tout en conservant l'accès par indice.
+
+## `std::map` : la table associative
+
+`std::map` est le conteneur associatif type : il **associe à chaque clé une valeur**. On l'instancie avec **deux** types — le type de la clé et le type de la valeur :
+
+```cpp
+#include <map>
+
+std::map<std::string, std::string> repertoire;
+
+// insertion / accès par l'opérateur []
+repertoire["Jean Martin"]    = "01.02.03.04.05";
+repertoire["Francois Martin"] = "02.03.04.05.06";
+repertoire["Louis Dupont"]    = "03.04.05.06.07";
+
+// insertion explicite avec insert et une paire
+repertoire.insert(std::pair<std::string, std::string>("Louis Martin", "04.05.06.07.08"));
+
+std::cout << repertoire["Jean Martin"] << '\n';   // 01.02.03.04.05
+```
+
+Deux façons d'insérer : `m[cle] = valeur` (crée l'entrée si la clé est absente, sinon écrase la valeur), ou `m.insert(std::pair<Cle, Valeur>(...))`. Les entrées sont automatiquement **triées par clé**. C'est ce conteneur que le cours emploie dans la classe `Contact` pour ranger les numéros de téléphone — clé `"Domicile"`, `"Travail"` ou `"Portable"`, valeur le numéro.
+
+`std::set` est le cousin de `map` : il stocke des **clés seules** (un ensemble trié sans doublon, sans valeur associée). `multimap` et `multiset` en sont les variantes **autorisant les doublons** de clé.
+
+## Comment choisir son conteneur
+
+Le cours fournit un arbre de décision. Les questions qui le guident :
+
+- **L'ordre d'insertion est-il important ?** Si oui et qu'on veut « dernier entré, premier sorti » → `stack` ; « premier entré, premier sorti » → `queue` ; « le plus grand élément en premier » → `priority_queue`.
+- **Les éléments sont-ils associés à une clé ?** Si oui → un conteneur associatif : `map` / `multimap` si clés et valeurs séparées, `set` / `multiset` sinon ; les variantes `multi` autorisent les doublons.
+- **Sinon, parmi les séquentiels** : beaucoup d'insertions/suppressions **au milieu** → `list` ; insertions/suppressions **en tête** → `deque` ; surtout de l'**accès direct au n-ième élément** sans gros changements de taille → `vector`.
+
+Quelques repères pratiques :
+
+| Besoin dominant | Conteneur conseillé |
+|---|---|
+| Accès direct par indice, ajouts en fin | `std::vector` |
+| Insertions/suppressions fréquentes au milieu ou en tête | `std::list` |
+| Ajouts/retraits aux deux extrémités | `std::deque` |
+| Associer une valeur à une clé, recherche rapide par clé | `std::map` |
+| Ensemble trié de valeurs uniques | `std::set` |
+
+> En cas de doute, **`std::vector` est le choix par défaut** : c'est le plus simple, le plus compact en mémoire et le plus rapide pour la majorité des usages. On ne change de conteneur que lorsqu'un besoin précis (insertions au milieu, recherche par clé…) le justifie.
+
+> **À retenir**
+> - La **STL** fournit des structures de données et algorithmes fondamentaux, prêts à l'emploi et optimisés — *« don't reinvent the wheel »* ; tout y repose sur les **templates**.
+> - Un **conteneur** est une classe template qui représente une structure de données ; on l'instancie avec le type de ses éléments (`vector<int>`).
+> - Deux catégories : **séquentiels** (`vector`, `list`, `deque`) — éléments ordonnés à une position choisie ; **associatifs** (`map`, `set`, `multimap`, `multiset`) — éléments rangés automatiquement selon une **clé**.
+> - Tous offrent `size()` et `empty()` ; `vector` ajoute l'accès direct `v[i]` et `push_back`/`pop_back`, `list` ajoute `push_front`/`remove`, `map` associe **clé → valeur** et trie par clé.
+> - **Choisir** : ordre/clé/position des insertions guident le choix ; `std::vector` est le conteneur par défaut quand aucun besoin particulier ne tranche.

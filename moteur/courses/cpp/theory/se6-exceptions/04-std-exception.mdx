@@ -1,0 +1,192 @@
+---
+title: std::exception et hiérarchie
+slug: std-exception
+order: 4
+estimatedReadMin: 10
+concepts: [std-exception, methode-what, classe-exception-personnalisee, catch-tous]
+source: "Cours 6 — Gestion des exceptions"
+---
+
+## Une racine commune pour toutes les exceptions
+
+Le chapitre précédent a montré comment écrire **sa propre** classe d'exception. Mais la bibliothèque standard en lève aussi : un `std::vector` accédé hors bornes, un `new` qui échoue, une conversion impossible... Si chaque classe d'exception était indépendante, il faudrait un `catch` pour chacune.
+
+La bibliothèque standard évite cela grâce à une **classe de base commune** : `std::exception`, déclarée dans l'en-tête **`<exception>`**.
+
+> **`std::exception`** est la classe **de base de toutes les exceptions lancées par la bibliothèque standard**. Pour l'utiliser dans son propre code, on **dérive** sa classe d'exception de `std::exception`.
+
+L'interface de cette classe se réduit à l'essentiel :
+
+```cpp
+// (vue simplifiée de std::exception)
+class exception {
+    public:
+        exception() noexcept;
+        exception(const exception& other) noexcept;
+        exception& operator=(const exception& other) noexcept;
+        virtual ~exception();
+        virtual const char* what() const noexcept;   // décrit l'erreur
+};
+```
+
+## La méthode virtuelle `what()`
+
+Le membre central de `std::exception` est la méthode **`what()`**.
+
+> **`what()`** est une méthode **virtuelle** qui renvoie une **description textuelle** de l'erreur, sous la forme d'une chaîne C (`const char*`). C'est le point d'entrée standard pour obtenir le **message** d'une exception.
+
+Parce que `what()` est **virtuelle**, un `catch` qui reçoit l'exception par référence à la base `std::exception` et appelle `e.what()` obtient — par **liaison dynamique** (cours 4) — le message du **type réel** de l'exception. Une seule ligne de code affiche correctement le message de **n'importe quelle** exception standard.
+
+## Dériver sa classe de `std::exception`
+
+Pour qu'une exception personnalisée s'intègre à l'écosystème standard, on la fait **hériter** de `std::exception` et on **redéfinit `what()`**. Voici la classe `Erreur` du cours, cette fois dérivée de `std::exception` :
+
+```cpp
+#include <exception>
+#include <string>
+
+class Erreur : public std::exception {              // dérive de std::exception
+    public:
+        Erreur(int numero = 0, std::string phrase = "", int niveau = 0) noexcept
+            : m_numero(numero), m_phrase(phrase), m_niveau(niveau) {}
+
+        // redéfinition de what() : même signature que dans la classe de base
+        const char* what() const noexcept override {
+            return m_phrase.c_str();                 // chaîne C tirée de la std::string
+        }
+
+        int getNumero() const noexcept { return m_numero; }
+        int getNiveau() const noexcept { return m_niveau; }
+
+        ~Erreur() noexcept override = default;
+
+    private:
+        int         m_numero;
+        std::string m_phrase;
+        int         m_niveau;
+};
+```
+
+Trois points méritent attention :
+
+- **`public std::exception`** : `Erreur` *est-une* `std::exception` ; un objet `Erreur` peut donc être rattrapé partout où l'on attend une `std::exception`.
+- **`const char* what() const noexcept override`** : la signature **reproduit exactement** celle de la base — `what` doit être `const`, ne renvoyer aucune exception, et renvoyer un `const char*`. Le mot-clé **`override`** demande au compilateur de **vérifier** cette redéfinition. Comme `m_phrase` est une `std::string`, on en extrait la chaîne C avec **`c_str()`**.
+- **`noexcept`** : on garantit que ces méthodes ne lèvent **pas** elles-mêmes d'exception — il serait absurde qu'obtenir le message d'une erreur en provoque une autre.
+
+> Le cours, écrit pour une norme ancienne, note `what()` et le destructeur avec la spécification `throw()` — l'ancienne façon d'annoncer « cette fonction ne lève pas d'exception ». En C++ moderne, cette forme est remplacée par **`noexcept`**, qui a le même sens. Préférez `noexcept` dans tout code récent.
+
+L'usage est ensuite identique à n'importe quelle exception personnalisée — mais le `catch` peut maintenant être typé sur la **base** :
+
+```cpp
+#include <iostream>
+
+int division(int a, int b) {
+    if (b == 0)
+        throw Erreur(1, "Division par zero", 2);
+    return a / b;
+}
+
+int main() {
+    try {
+        std::cout << division(10, 0) << '\n';
+    }
+    catch (const std::exception& e) {           // capture par la classe de base
+        std::cerr << "ERREUR : " << e.what() << '\n';   // what() redéfini -> message
+    }
+    return 0;
+}
+```
+
+## La hiérarchie des exceptions standard
+
+`std::exception` n'est pas seule : la bibliothèque en dérive toute une **hiérarchie** de classes prêtes à l'emploi, déclarées dans l'en-tête **`<stdexcept>`**. Deux grandes familles s'en détachent.
+
+> - **`std::logic_error`** regroupe les erreurs de **logique** du programme — des fautes **évitables**, détectables en relisant le code (mauvais argument, index hors bornes...).
+> - **`std::runtime_error`** regroupe les erreurs détectables seulement à l'**exécution** — des causes **extérieures** au raisonnement du code (dépassement de capacité, ressource indisponible...).
+
+Chacune possède des sous-classes plus précises, avec des relations d'héritage précises :
+
+| Classe | Hérite de | En-tête | Signale |
+|---|---|---|---|
+| `std::exception` | *(racine)* | `<exception>` | toute exception standard |
+| `std::logic_error` | `std::exception` | `<stdexcept>` | erreur de logique du programme |
+| `std::invalid_argument` | `std::logic_error` | `<stdexcept>` | argument invalide passé à une fonction |
+| `std::domain_error` | `std::logic_error` | `<stdexcept>` | valeur hors du domaine mathématique |
+| `std::length_error` | `std::logic_error` | `<stdexcept>` | taille demandée trop grande |
+| `std::out_of_range` | `std::logic_error` | `<stdexcept>` | index ou position hors bornes |
+| `std::runtime_error` | `std::exception` | `<stdexcept>` | erreur détectée à l'exécution |
+| `std::range_error` | `std::runtime_error` | `<stdexcept>` | résultat hors de la plage représentable |
+| `std::overflow_error` | `std::runtime_error` | `<stdexcept>` | dépassement de capacité arithmétique |
+| `std::underflow_error` | `std::runtime_error` | `<stdexcept>` | sous-dépassement arithmétique |
+| `std::bad_alloc` | `std::exception` | `<new>` | échec d'une allocation `new` |
+
+**Conséquence directe pour l'ordre des `catch`** : puisque `std::out_of_range`, `std::invalid_argument`, `std::domain_error` et `std::length_error` dérivent toutes de `std::logic_error`, un `catch (const std::logic_error&)` les capture **toutes** — exactement comme un `catch (const std::exception&)` capturerait la hiérarchie entière. Il faut donc toujours placer le `catch` le plus spécifique en premier : `catch (const std::out_of_range&)` avant `catch (const std::logic_error&)`, lui-même avant `catch (const std::exception&)`, sous peine de rendre les gestionnaires précis inatteignables (code mort).
+
+Toutes héritent, directement ou indirectement, de `std::exception` : toutes répondent donc à `what()`. Les classes de `<stdexcept>` se construisent avec un **message** que `what()` restituera :
+
+```cpp
+#include <stdexcept>
+#include <vector>
+#include <iostream>
+
+int element(const std::vector<int>& v, std::size_t i) {
+    if (i >= v.size())
+        throw std::out_of_range("indice hors bornes");   // erreur de logique
+    return v[i];
+}
+
+int main() {
+    std::vector<int> v{10, 20, 30};
+    try {
+        std::cout << element(v, 5) << '\n';
+    }
+    catch (const std::out_of_range& e) {
+        std::cerr << "Hors bornes : " << e.what() << '\n';
+    }
+    return 0;
+}
+```
+
+> La méthode `at()` de `std::vector` et de `std::string` lève d'elle-même `std::out_of_range` quand l'index est invalide — contrairement à l'`operator[]`, qui ne vérifie rien. C'est un exemple direct d'exception standard rencontrée sans l'avoir écrite.
+
+## Capturer par `const std::exception&`
+
+La hiérarchie offre une stratégie de capture très puissante. Comme **toutes** les exceptions standard — et toutes les classes personnalisées qui en dérivent — héritent de `std::exception`, **un seul** `catch` typé sur la base les attrape **toutes** :
+
+```cpp
+try {
+    // code lançant std::out_of_range, std::bad_alloc, un Erreur dérivé...
+}
+catch (const std::exception& e) {       // attrape TOUTE la hiérarchie
+    std::cerr << "Erreur : " << e.what() << '\n';   // message du type réel
+}
+```
+
+C'est l'idiome recommandé pour un gestionnaire **général** : capture **par référence constante** (pas de copie, pas de **slicing** du type dérivé) sur la base `std::exception`, et appel de `what()` qui, étant **virtuelle**, livre le message du type réel.
+
+On combine alors avec l'ordonnancement vu au chapitre 2 : les `catch` **précis** d'abord (pour réagir spécifiquement à telle erreur), un `catch (const std::exception&)` ensuite (filet pour toute la hiérarchie standard), et éventuellement un `catch(...)` en tout dernier (pour ce qui ne dérive même pas de `std::exception`).
+
+```cpp
+try {
+    // ...
+}
+catch (const std::out_of_range& e) {     // 1. cas précis
+    std::cerr << "hors bornes : " << e.what() << '\n';
+}
+catch (const std::exception& e) {        // 2. toute la hiérarchie standard
+    std::cerr << "exception : " << e.what() << '\n';
+}
+catch (...) {                            // 3. ultime filet
+    std::cerr << "exception non standard\n";
+}
+```
+
+> ⚠️ La capture par `const std::exception&` ne fonctionne que si l'exception **dérive** de `std::exception`. Une exception lancée comme `int`, `std::string` ou objet d'une classe **non dérivée** lui échappe — d'où l'intérêt, d'une part, de **toujours faire hériter ses classes d'exception de `std::exception`**, et d'autre part de conserver un `catch(...)` final.
+
+> **À retenir**
+> - **`std::exception`** (en-tête `<exception>`) est la **classe de base** de toutes les exceptions standard ; on dérive ses propres classes d'exception pour s'y intégrer.
+> - La méthode **`what()`** est **virtuelle** et renvoie la **description** de l'erreur (`const char*`) ; on la **redéfinit** avec `override` dans sa classe dérivée.
+> - La signature exacte à reproduire est `const char* what() const noexcept` ; le cours ancien écrivait `throw()`, équivalent du **`noexcept`** moderne.
+> - La hiérarchie de `<stdexcept>` distingue **`std::logic_error`** (fautes de logique évitables : `out_of_range`, `invalid_argument`...) et **`std::runtime_error`** (erreurs d'exécution : `overflow_error`...).
+> - Capturer par **`const std::exception&`** attrape **toute la hiérarchie** d'un seul `catch`, sans copie ni slicing, et `what()` virtuel livre le message du **type réel**.
+> - Bonne pratique : `catch` **précis** d'abord, `catch (const std::exception&)` ensuite, **`catch(...)`** en dernier filet.

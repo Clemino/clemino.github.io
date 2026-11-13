@@ -1,0 +1,182 @@
+---
+title: "Données partagées et conditions de course"
+slug: partage-donnees
+order: 2
+estimatedReadMin: 16
+concepts: [memoire-partagee-threads, acces-concurrent, condition-course, operation-non-atomique, section-critique, non-determinisme, perte-de-maj]
+source: "Cours 4 — Les threads POSIX"
+---
+
+Le chapitre précédent a établi le fait fondamental : les threads d'un même processus **partagent l'espace d'adressage** — donc les variables globales, les variables statiques et le tas. Ce partage est l'**atout** du thread (communication immédiate), mais il est aussi son **piège**. Ce chapitre montre **pourquoi**, et donne un nom au bogue le plus redouté du multi-threading : la **condition de course**.
+
+## L'atout et le piège du partage
+
+Avec des **processus** (`fork`), partager une variable demande un effort : il faut un IPC (tube, mémoire partagée…). Avec des **threads**, c'est l'inverse : une variable globale est **automatiquement vue par tous les threads**. Aucune déclaration spéciale, aucune primitive — il suffit qu'elle soit globale.
+
+```c
+#include <pthread.h>
+#include <stdio.h>
+
+int compteur = 0;          /* variable GLOBALE : partagee par tous les threads */
+
+void *travail(void *arg) {
+    (void) arg;
+    compteur = compteur + 1;   /* ce thread modifie la variable commune */
+    return NULL;
+}
+```
+
+Cette facilité est trompeuse. Tant qu'**un seul** thread accède à `compteur`, tout va bien. Mais dès que **plusieurs** threads y accèdent **« en même temps »**, et qu'au moins un l'**écrit**, on entre dans un terrain miné. On parle d'**accès concurrent** : plusieurs threads atteignent **la même donnée** dans un intervalle de temps où leurs exécutions se **chevauchent**.
+
+## Le cœur du problème : `compteur++` n'est pas atomique
+
+L'intuition du débutant est qu'une instruction comme `compteur++` (ou `compteur = compteur + 1`) est **une seule action indivisible**. **C'est faux.** Au niveau du processeur, incrémenter une variable en mémoire se décompose en **trois opérations distinctes** — un schéma **lecture–modification–écriture** (*read–modify–write*) :
+
+1. **lire** la valeur de `compteur` depuis la mémoire vers un **registre** du processeur ;
+2. **modifier** le registre (lui ajouter 1) ;
+3. **écrire** le contenu du registre dans la case mémoire de `compteur`.
+
+En pseudo-assembleur :
+
+```text
+    LOAD   R1, compteur     ; 1. lire   : R1 <- valeur en memoire
+    ADD    R1, 1            ; 2. modifier : R1 <- R1 + 1
+    STORE  compteur, R1     ; 3. ecrire : memoire <- R1
+```
+
+Une opération est dite **atomique** si elle s'exécute **« d'un seul tenant »** : rien ne peut s'intercaler en son milieu. Or `compteur++` est composé de **trois** étapes : ce n'est **pas une opération atomique**.
+
+Pourquoi est-ce grave ? Parce que l'**ordonnanceur** peut **interrompre** un thread **entre deux de ces étapes** pour donner la main à un autre thread. Le second thread peut alors lire `compteur` **avant** que le premier ait écrit son résultat. Les deux threads travaillent sur une **valeur périmée**.
+
+## La condition de course
+
+C'est exactement ce scénario que l'on appelle une **condition de course** (en anglais *race condition*) :
+
+> Une **condition de course** est un défaut où le **résultat** d'un programme dépend de l'**ordre d'exécution** non maîtrisé de plusieurs threads (ou processus) accédant à une **donnée partagée**. Deux exécutions du **même programme**, avec les **mêmes entrées**, peuvent produire des **résultats différents**.
+
+Déroulons un cas concret. Deux threads, A et B, exécutent chacun `compteur++`. `compteur` vaut **5** au départ ; le résultat **attendu** est **7** (deux incréments). Voici un **entrelacement malheureux** :
+
+```text
+  compteur vaut 5 au depart
+
+  Thread A : LOAD  R1, compteur     ; A lit  5  -> R1 = 5
+  --- l'ordonnanceur bascule sur B ---
+  Thread B : LOAD  R1, compteur     ; B lit  5  -> R1 = 5   (valeur PERIMEE !)
+  Thread B : ADD   R1, 1            ; B calcule 6
+  Thread B : STORE compteur, R1     ; B ecrit 6  -> compteur = 6
+  --- l'ordonnanceur rebascule sur A ---
+  Thread A : ADD   R1, 1            ; A calcule 6  (a partir de son vieux 5)
+  Thread A : STORE compteur, R1     ; A ecrit 6  -> compteur = 6
+
+  RESULTAT : compteur = 6   (on attendait 7)
+```
+
+Le compte final est **6** au lieu de **7** : **un incrément a été perdu**. C'est ce qu'on appelle une **perte de mise à jour** (*lost update*). La cause : B a lu `compteur` **pendant** que A travaillait encore dessus, donc B a écrasé le travail de A.
+
+À l'inverse, si l'ordonnanceur avait laissé A finir ses **trois** étapes avant de lancer B, le résultat aurait été **7** — correct. Le programme est donc **parfois juste, parfois faux**, selon un ordonnancement que **personne ne contrôle**.
+
+## Le non-déterminisme : un bogue qui se cache
+
+C'est ce qui rend les conditions de course **redoutables** : le programme est **non déterministe**.
+
+> ⚠️ Une condition de course produit un bogue **intermittent**. Le programme peut donner le **bon résultat** des milliers de fois — parce que les entrelacements malheureux sont rares — puis **échouer** une fois, sur une autre machine, sous une autre charge système, ou simplement « par malchance ». Un bogue qui ne se reproduit **pas à volonté** est extrêmement difficile à diagnostiquer. **Ne jamais conclure qu'un code concurrent est correct parce qu'il a « marché plusieurs fois ».**
+
+## Une démonstration chiffrée
+
+L'expérience suivante rend le bogue **visible**. Cinq threads, numérotés de 0 à 4, ajoutent chacun **1 000 000 fois** leur numéro d'ordre à une variable globale `somme`. Le total **attendu** est :
+
+```text
+(0 + 1 + 2 + 3 + 4) x 1 000 000 = 10 000 000
+```
+
+Voici le programme — **volontairement incorrect**, sans aucune protection :
+
+```c
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#define NB_THREADS 5
+
+long somme = 0;             /* variable GLOBALE en acces concurrent */
+
+void *ajouter(void *arg) {
+    long num = (long) arg;
+    for (int i = 0; i < 1000000; i++) {
+        somme = somme + num;        /* lecture-modification-ecriture NON atomique */
+    }
+    return NULL;
+}
+
+int main(void) {
+    pthread_t thr[NB_THREADS];
+
+    for (long i = 0; i < NB_THREADS; i++)
+        pthread_create(&thr[i], NULL, ajouter, (void *) i);
+
+    for (int i = 0; i < NB_THREADS; i++)
+        pthread_join(thr[i], NULL);
+
+    printf("somme = %ld (attendu : 10000000)\n", somme);
+    return 0;
+}
+```
+
+À l'exécution, plusieurs lancements **successifs** donnent typiquement :
+
+```text
+$ ./somme
+somme = 4174085 (attendu : 10000000)
+$ ./somme
+somme = 1584736 (attendu : 10000000)
+$ ./somme
+somme = 3519507 (attendu : 10000000)
+```
+
+Le résultat **varie** d'une exécution à l'autre, et il est **toujours faux** (toujours **inférieur** à 10 000 000 — chaque collision ne fait que *perdre* un ajout). C'est la **signature** d'une condition de course : les `somme = somme + num` de threads différents se **chevauchent** et s'**écrasent**.
+
+> ⚠️ Le défaut n'est **pas** dans la logique du calcul — l'algorithme « chacun ajoute son numéro 1 000 000 fois » est juste. Le défaut est l'**absence de protection** de l'accès concurrent à `somme`. Le code semble correct ligne à ligne ; il est faux **à cause de la concurrence**.
+
+> ⚠️ **La course ne se manifeste de façon fiable qu'avec un nombre d'itérations suffisamment grand.** Avec seulement 100 itérations, chaque thread termine en un seul quantum d'ordonnanceur et les sections `lire–modifier–écrire` ne s'entrelacent jamais : le programme produirait `1000` à chaque exécution, donnant faussement l'impression qu'il est correct. De plus, la compilation **doit se faire sans optimisation** (`-O0`) : à `-O2` ou plus, le compilateur peut garder `somme` dans un registre tout au long de la boucle et ne mettre à jour la mémoire qu'une seule fois à la fin — ce qui supprime l'entrelacement et masque complètement la course. L'option `-O0` est indispensable pour observer le bogue.
+
+## La section critique
+
+Pour nommer la solution, il faut d'abord nommer la **zone à problème**.
+
+> Une **section critique** est une **portion de code** qui accède à une **ressource partagée** (typiquement une variable globale en lecture/écriture) et qui **ne doit être exécutée que par un seul thread à la fois**. Tant qu'un thread est « dans » la section critique, **aucun autre** thread ne doit y entrer.
+
+Dans le programme ci-dessus, la section critique est l'instruction `somme = somme + num` : c'est là que se produit le `read–modify–write` qui doit être **indivisible**.
+
+La propriété recherchée porte un nom : l'**exclusion mutuelle**. Il s'agit de **garantir** qu'à tout instant, **au plus un** thread exécute la section critique. Si l'exclusion mutuelle est assurée, les trois étapes `lire / modifier / écrire` d'un thread se déroulent **sans qu'aucun autre thread ne s'intercale** — la condition de course disparaît.
+
+Le cours formule le principe ainsi : il faut **un mécanisme** qui rende la section critique **atomique du point de vue des autres threads**. Ce mécanisme existe — c'est l'objet des trois chapitres suivants :
+
+- le **mutex** (chapitre 3) — le verrou d'exclusion mutuelle, l'outil de base ;
+- les **variables de condition** (chapitre 4) — pour faire **attendre** un thread qu'une condition devienne vraie ;
+- les **sémaphores** POSIX (chapitre 5) — un compteur de synchronisation, plus général.
+
+## Quelles données sont concernées ?
+
+Toute donnée **partagée** et **modifiée** par au moins un thread est exposée. En pratique :
+
+- les **variables globales** — partagées par construction ;
+- les **variables statiques locales** (`static` dans une fonction) — également partagées ;
+- la **mémoire allouée sur le tas** (`malloc`) dont l'adresse est connue de plusieurs threads.
+
+À l'inverse, **ne sont pas concernées** :
+
+- les **variables locales** ordinaires (non `static`) d'une fonction de thread — chaque thread a sa **propre pile**, donc sa **propre copie** ; aucune collision possible.
+
+C'est un point rassurant : une variable locale comme le `int i` d'une boucle, ou le `long num` reçu en argument, est **privée au thread** et n'a **pas besoin** de protection. Seules les **données réellement communes** doivent être placées en section critique.
+
+> ⚠️ Une lecture seule **ne suffit pas** à elle seule à créer une course : c'est la combinaison **« au moins un écrivain »** + **« accès concurrent »** qui est dangereuse. Si une donnée partagée est **uniquement lue** par tous les threads (jamais modifiée après le lancement), elle ne provoque pas de course. Le problème naît dès qu'**un** thread l'**écrit** pendant que d'autres y accèdent.
+
+> **À retenir**
+> - Les threads d'un processus **partagent** les variables globales, les variables `static` et le tas : c'est immédiat, mais c'est un **piège**.
+> - Une instruction comme **`compteur++`** n'est **pas atomique** : elle se décompose en **lire → modifier → écrire**, et l'ordonnanceur peut **interrompre** un thread entre ces étapes.
+> - Une **condition de course** (*race condition*) est un défaut où le **résultat dépend de l'ordre d'exécution** non maîtrisé des threads : le même programme peut donner des **résultats différents** d'une exécution à l'autre.
+> - Une course typique provoque une **perte de mise à jour** : un thread écrit une valeur calculée à partir d'une donnée **périmée** et **écrase** le travail d'un autre.
+> - Le bogue est **non déterministe** et **intermittent** : un code concurrent qui « a marché plusieurs fois » n'est **pas** pour autant correct.
+> - Une **section critique** est une portion de code accédant à une donnée partagée qui ne doit être exécutée que par **un seul thread à la fois** ; la propriété recherchée est l'**exclusion mutuelle**.
+> - Sont exposées les données **partagées et modifiées** (globales, `static`, tas) ; les **variables locales** ordinaires, propres à la pile de chaque thread, **n'ont pas besoin de protection**.
+> - La solution — mutex, variables de condition, sémaphores — fait l'objet des chapitres 3 à 5.

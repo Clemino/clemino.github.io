@@ -1,0 +1,350 @@
+---
+title: "Prétraitement et représentation du texte"
+slug: pretraitement-representation
+order: 2
+estimatedReadMin: 24
+concepts: [tokenisation, etiquetage-morphosyntaxique, racinisation, lemmatisation, sac-de-mots, tf-idf, n-gramme]
+source: "Intro_NLP.pdf"
+---
+
+## L'analyse lexicale
+
+Le chapitre précédent a présenté la **chaîne de traitement** du NLP. Sa
+**première couche** est l'**analyse lexicale**. Le cours la définit ainsi :
+
+> L'**analyse lexicale** est l'analyse des textes **au niveau du mot**.
+
+Pour mener cette analyse, le cours indique qu'il faut d'abord **transformer un
+texte brut en une séquence de mots et d'autres unités de base**. C'est le rôle
+de la **tokenisation**. Ensuite, on **assigne à chaque unité une catégorie**
+appelée son **étiquette morphosyntaxique** (*part-of-speech tag*, ou tag POS).
+
+Le cours ajoute que l'analyse lexicale **nécessite un lexique** :
+
+> Un **lexique** est une **base de données** contenant les **mots autorisés**
+> ainsi que des **informations grammaticales et sémantiques** à leur sujet.
+
+Le lexique est donc le « dictionnaire » de référence du système : il dit quels
+mots existent et ce qu'on sait de chacun.
+
+> **À retenir** : l'**analyse lexicale** est l'analyse du texte **au niveau du
+> mot**. Elle suppose de **tokeniser** le texte, puis d'**étiqueter** chaque
+> unité par sa catégorie grammaticale (**tag POS**), et elle s'appuie sur un
+> **lexique** — base de données des mots autorisés et de leurs informations.
+
+## La tokenisation
+
+Le cours présente la **tokenisation** comme la **toute première opération** à
+appliquer au texte traité :
+
+> La **tokenisation** est la **première opération** qui doit être appliquée au
+> texte à traiter. Elle consiste à **découper le document en tokens** : **mots,
+> signes de ponctuation, nombres** et autres **éléments discrets**.
+
+Le point important est qu'un **token n'est pas seulement un mot** : la
+ponctuation, les nombres et d'autres éléments forment aussi des tokens. Le cours
+donne un **exemple** détaillé. La tokenisation de la chaîne :
+
+```text
+Ernest Hemingway (July 21, 1899 - July 2, 1961) was an American novelist.
+```
+
+produit la liste de tokens suivante :
+
+```text
+'Ernest', 'Hemingway', '(', 'July', '21', ',', '1899', '-', 'July',
+'2', ',', '1961', ')', 'was', 'an', 'American', 'novelist', '.'
+```
+
+On observe bien que chaque **mot** (`Ernest`, `Hemingway`, `was`…), chaque
+**nombre** (`21`, `1899`, `2`, `1961`) et chaque **signe de ponctuation** (`(`,
+`,`, `-`, `)`, `.`) devient un **token distinct**.
+
+> **À retenir** : la **tokenisation** est la **première opération** du
+> traitement d'un texte. Elle **découpe le document en tokens** : non seulement
+> les **mots**, mais aussi les **nombres** et les **signes de ponctuation**, qui
+> sont chacun des **unités discrètes** séparées.
+
+## Les catégories grammaticales (parts of speech)
+
+Une fois le texte tokenisé, on attribue à chaque mot sa **catégorie
+grammaticale**. Le cours signale qu'il **existe plusieurs classifications POS**,
+et en présente une **liste de neuf catégories** souvent rencontrées :
+
+| Catégorie (POS) | Exemples du cours |
+| --- | --- |
+| **Adjectif** (*Adjective*) | High, Nice, Ugly, Wide |
+| **Adverbe** (*Adverb*) | Easily, Here, Now, Often |
+| **Conjonction** (*Conjunction*) | And, But, For, Yet |
+| **Déterminant** (*Determiner*) | A, An, That, The |
+| **Nom** (*Noun*) | Bike, Car, Cat, Dog |
+| **Préposition** (*Preposition*) | At, In, From, On |
+| **Pronom** (*Pronoun*) | I, He, It, Us |
+| **Nom propre** (*Proper noun*) | Albert, France, Python |
+| **Verbe** (*Verb*) | Does, Open, Read, Went |
+
+Le cours souligne que **l'attribution d'un tag POS peut être complexe**. C'est
+le cas, par exemple, **quand un même mot a plus d'une catégorie possible** :
+
+> Exemple : *« He likes to **fish**. »* (verbe) et *« He caught a **fish**. »*
+> (nom).
+
+Comment le système choisit-il ? Le cours répond :
+
+> Les mots ayant **plus d'une catégorie possible** se voient attribuer la
+> **catégorie la plus probable**, **en fonction du contexte** dans lequel ils
+> apparaissent.
+
+Enfin, le cours précise le sort de la ponctuation :
+
+> Les **signes de ponctuation n'ont pas de tag POS**. Selon l'objectif de
+> l'application, ils peuvent être **supprimés ou non** avant l'étiquetage POS.
+
+> **À retenir** : l'**étiquetage morphosyntaxique** attribue à chaque mot une
+> **catégorie grammaticale** parmi des classes comme **nom, verbe, adjectif,
+> adverbe, déterminant, pronom, préposition, conjonction, nom propre**. Quand un
+> mot est **ambigu** (ex. *fish*), on choisit la catégorie **la plus probable
+> selon le contexte**. La **ponctuation n'a pas de tag**.
+
+## La racinisation (stemming)
+
+Le cours présente ensuite deux opérations qui **ramènent les mots à une forme
+plus simple**. La première est la **racinisation** (*stemming*) :
+
+> La **racinisation** (*stemming*) est une opération qui **identifie les mots
+> morphologiquement complexes**, les **décompose** en une **racine** (*stem*)
+> invariante (= forme de base) et des **affixes**, et **supprime les affixes**.
+
+Le cours illustre l'opération par plusieurs **exemples** :
+
+```text
+goes      = go + es        →  go
+computers = computer + s   →  computer
+commanded = command + ed   →  command
+studies   = studi + es     →  studi
+studying  = study + ing    →  study
+meeting   = meet + ing     →  meet
+```
+
+Le cours attire l'attention sur une **limite** de la racinisation, visible avec
+le mot *studies* :
+
+> Comme le montre l'exemple du mot *studies*, **les racines ne sont pas toujours
+> des mots valides**.
+
+En effet, *studies* est ramené à `studi`, qui **n'est pas un mot de l'anglais**.
+La racinisation est une opération **purement morphologique** : elle coupe les
+affixes sans garantir que ce qui reste soit un mot réel.
+
+> **À retenir** : la **racinisation** (*stemming*) décompose les mots
+> **morphologiquement complexes** en une **racine invariante** et des
+> **affixes**, puis **supprime les affixes**. C'est une opération mécanique :
+> la racine obtenue **n'est pas toujours un mot valide** (ex. *studies* → `studi`).
+
+## La lemmatisation
+
+La seconde opération de réduction est la **lemmatisation**. Le cours la présente
+comme une **autre façon** de ramener les mots à une forme de base :
+
+> La **lemmatisation** est une autre opération qui vise à **réduire les mots à
+> des formes de base** appelées **lemmes** (*lemmas*), également appelées
+> **formes de dictionnaire**.
+
+La différence avec la racinisation est précisée :
+
+> Pour cela, un algorithme de lemmatisation doit **connaître le tag POS du mot**
+> ainsi qu'un **ensemble de règles** expliquant comment les **différentes formes
+> d'un mot** sont obtenues.
+
+La lemmatisation est donc **plus informée** que la racinisation : elle utilise
+la **catégorie grammaticale** du mot et un ensemble de **règles** de flexion.
+Le cours donne ces **exemples** :
+
+```text
+better            →  good
+saw   (le verbe)  →  see
+saw   (le nom)    →  saw
+meeting (le verbe) →  meet
+meeting (le nom)   →  meeting
+```
+
+Ces exemples sont parlants. *better* est ramené à *good* — ce qu'une simple
+coupure d'affixes ne saurait faire. Et le mot *saw*, selon qu'il est **verbe**
+ou **nom**, donne deux lemmes différents (*see* ou *saw*) : c'est bien le **tag
+POS** qui permet de trancher. Contrairement à la racinisation, la lemmatisation
+produit toujours un **mot de dictionnaire**.
+
+| Critère | Racinisation (*stemming*) | Lemmatisation |
+| --- | --- | --- |
+| Résultat | Une **racine** | Un **lemme** (forme de dictionnaire) |
+| Méthode | **Couper les affixes** | **Règles** + **tag POS** du mot |
+| Mot valide ? | **Pas toujours** (ex. `studi`) | **Toujours** un mot de dictionnaire |
+| Information requise | Aucune (purement morphologique) | **Catégorie grammaticale** du mot |
+
+> **À retenir** : la **lemmatisation** réduit les mots à leur **lemme** — leur
+> **forme de dictionnaire**. À la différence de la racinisation, elle a besoin
+> du **tag POS** du mot et d'un **ensemble de règles** ; elle produit donc
+> toujours un **mot valide** et gère les cas irréguliers (*better* → *good*,
+> *saw* → *see* ou *saw* selon la catégorie).
+
+## Représenter un texte : du texte aux vecteurs
+
+Les opérations précédentes — tokenisation, étiquetage, racinisation,
+lemmatisation — **préparent** le texte. Mais pour qu'un algorithme de *machine
+learning* puisse le traiter, il faut le **représenter sous une forme
+numérique** : un **vecteur de nombres**. Cette section présente les
+représentations classiques du texte évoquées dans le cours et les travaux
+pratiques.
+
+> **À retenir** : après le **prétraitement** (tokenisation, étiquetage,
+> racinisation, lemmatisation), un texte doit être **représenté
+> numériquement** — transformé en **vecteur** — pour être exploitable par un
+> algorithme d'apprentissage.
+
+## Le modèle du sac de mots (bag-of-words)
+
+La représentation la plus simple est le **sac de mots** (*bag-of-words*).
+L'idée : on dispose d'un **vocabulaire** (l'ensemble des mots retenus du
+corpus), et chaque **document** est décrit par les **occurrences** de ces mots
+qu'il contient.
+
+Le qualificatif **« sac »** est essentiel : un sac est une collection **sans
+ordre**. Le modèle **ne tient donc pas compte de l'ordre des mots** — il ne
+retient que **quels mots apparaissent, et combien de fois**. Les phrases
+*« le chat mange la souris »* et *« la souris mange le chat »* ont, dans ce
+modèle, **exactement la même représentation**.
+
+Concrètement, si le vocabulaire compte `V` mots, chaque document devient un
+**vecteur de dimension `V`** : la composante `i` est le **nombre
+d'occurrences** du `i`-ème mot du vocabulaire dans le document. Prenons un
+vocabulaire jouet `{ chat, chien, mange, dort }` et deux documents :
+
+```text
+Vocabulaire :        chat  chien  mange  dort
+D1 : "le chat dort"     1      0      0      1
+D2 : "le chien mange"   0      1      1      0
+```
+
+Chaque document est ainsi ramené à un **vecteur de comptes**, directement
+utilisable par un classifieur. C'est cette représentation qui est, par exemple,
+au cœur d'un **classifieur bayésien naïf** appliqué à du texte (analyse de
+sentiments), comme le suggèrent les travaux pratiques du module.
+
+> **À retenir** : le **sac de mots** (*bag-of-words*) représente un document par
+> les **occurrences** de ses mots **sans tenir compte de leur ordre** : chaque
+> document devient un **vecteur de comptes** de dimension égale à la taille du
+> **vocabulaire**.
+
+## La pondération TF-IDF
+
+Le sac de mots a une **faiblesse** : il traite tous les mots de la même façon.
+Or des mots très **fréquents** dans toute une collection (articles,
+prépositions…) sont peu **informatifs**, alors qu'un mot **rare** est souvent
+plus **discriminant**. La pondération **TF-IDF** corrige ce défaut en
+combinant **deux quantités**.
+
+**Première quantité — la fréquence du terme (TF, *Term Frequency*).** Elle
+mesure l'importance d'un terme `t` **dans un document `d`** : plus `t` apparaît
+souvent dans `d`, plus `TF(t, d)` est grand.
+
+```text
+TF(t, d) = (nombre d'occurrences du terme t dans le document d)
+           ───────────────────────────────────────────────────
+                  (nombre total de termes du document d)
+```
+
+**Seconde quantité — la fréquence inverse de document (IDF, *Inverse Document
+Frequency*).** Elle mesure la **rareté** du terme `t` **dans tout le corpus** :
+un terme présent dans **peu de documents** est jugé plus discriminant.
+
+```text
+                      (nombre total de documents N)
+IDF(t) = log ( ───────────────────────────────────────── )
+               (nombre de documents contenant le terme t)
+```
+
+**La pondération TF-IDF** est le **produit** de ces deux quantités :
+
+```text
+TF-IDF(t, d) = TF(t, d) × IDF(t)
+```
+
+La lecture de cette formule est éclairante. Le score `TF-IDF(t, d)` est
+**élevé** quand le terme `t` est **fréquent dans le document `d`** (TF grand)
+**et** présent dans **peu d'autres documents** (IDF grand). À l'inverse, un
+terme qui apparaît **partout** dans le corpus a un IDF **proche de 0** : son
+TF-IDF est faible, quel que soit son nombre d'occurrences. TF-IDF **valorise
+donc les termes caractéristiques d'un document**, et **pénalise les mots
+banals**.
+
+| Composante | Mesure | Effet |
+| --- | --- | --- |
+| **TF** | Fréquence du terme **dans le document** | Plus le terme est répété, plus le score monte |
+| **IDF** | **Rareté** du terme **dans le corpus** | Plus le terme est rare, plus le score monte |
+| **TF-IDF** | Le **produit TF × IDF** | Valorise les termes **fréquents et rares** : les plus **discriminants** |
+
+> **À retenir** : la pondération **TF-IDF** d'un terme est le **produit**
+> `TF × IDF` : la **fréquence** du terme **dans le document** (TF) multipliée par
+> sa **rareté dans le corpus** (IDF). Elle est **élevée** pour les termes
+> **fréquents dans un document mais rares ailleurs** — les termes
+> **discriminants** —, et **faible** pour les mots **banals**.
+
+## Les n-grammes
+
+Le sac de mots et le TF-IDF ont un point commun : ils **perdent l'ordre des
+mots**. Or l'ordre porte du sens — *« n'est pas bon »* et *« est bon »* ne
+veulent pas dire la même chose. Les **n-grammes** réintroduisent une part de
+**contexte local**.
+
+Un **n-gramme** est une **séquence de `n` unités consécutives** d'un texte. Le
+plus souvent ces unités sont des **mots** (on parle alors de n-grammes de
+mots), mais ce peuvent aussi être des **caractères**. Selon la valeur de `n` :
+
+- `n = 1` : **unigramme** — un seul mot ; on retombe sur le sac de mots ;
+- `n = 2` : **bigramme** — un couple de mots consécutifs ;
+- `n = 3` : **trigramme** — un triplet de mots consécutifs.
+
+Prenons la phrase *« le chat noir dort »*. Ses n-grammes de mots sont :
+
+```text
+Unigrammes : "le"  "chat"  "noir"  "dort"
+Bigrammes  : "le chat"  "chat noir"  "noir dort"
+Trigrammes : "le chat noir"  "chat noir dort"
+```
+
+L'intérêt est clair : un bigramme comme *« chat noir »* capture une
+**association de mots** qu'un sac de mots, lui, séparerait. En représentant un
+texte par ses **bigrammes** ou ses **trigrammes** plutôt que par ses seuls
+mots isolés, on conserve une part de l'**ordre** et donc du **contexte**. Les
+n-grammes sont aussi, comme on le verra au chapitre suivant, à la base des
+**modèles de langage** statistiques, qui prédisent un mot à partir des `n − 1`
+précédents.
+
+> **À retenir** : un **n-gramme** est une **séquence de `n` unités
+> consécutives** (mots ou caractères) : **unigramme** (`n=1`), **bigramme**
+> (`n=2`), **trigramme** (`n=3`). Les n-grammes **réintroduisent le contexte
+> local** que le sac de mots perd, et fondent les **modèles de langage**
+> statistiques.
+
+## Synthèse de la section
+
+L'**analyse lexicale** est la **première couche** du traitement : l'analyse du
+texte **au niveau du mot**, appuyée sur un **lexique**. Elle commence par la
+**tokenisation**, qui découpe le document en **tokens** — mots, **nombres** et
+**ponctuation**. On attribue ensuite à chaque mot sa **catégorie grammaticale**
+(**tag POS**), en choisissant, pour un mot ambigu, la catégorie **la plus
+probable selon le contexte**. Deux opérations ramènent les mots à une forme de
+base : la **racinisation**, purement morphologique, qui coupe les affixes mais
+peut produire une racine **non valide** ; et la **lemmatisation**, qui utilise
+le **tag POS** et des **règles** pour produire un **lemme** — toujours un mot de
+dictionnaire. Pour être exploité par un algorithme, le texte est ensuite
+**vectorisé** : le **sac de mots** le représente par les **occurrences** de ses
+mots, **sans ordre** ; la pondération **TF-IDF** (`TF × IDF`) valorise les
+termes **fréquents dans un document mais rares dans le corpus** ; et les
+**n-grammes** réintroduisent le **contexte local** en considérant des
+**séquences de `n` mots consécutifs**.
+
+> **À retenir** : le **prétraitement** d'un texte enchaîne **tokenisation**,
+> **étiquetage POS**, **racinisation** et **lemmatisation** ; sa
+> **représentation** numérique passe par le **sac de mots**, la pondération
+> **TF-IDF** et les **n-grammes**, qui rétablissent une part du **contexte**.

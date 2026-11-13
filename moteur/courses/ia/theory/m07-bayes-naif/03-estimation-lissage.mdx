@@ -1,0 +1,203 @@
+---
+title: "Estimation des probabilités et lissage"
+slug: estimation-lissage
+order: 3
+estimatedReadMin: 18
+concepts: [estimation-de-probabilite, probabilite-a-priori, probabilite-conditionnelle, probleme-de-probabilite-nulle, lissage-de-laplace, jeu-d-apprentissage]
+source: "Slides_Bayes.pdf"
+---
+
+## Estimer les probabilités à partir des données
+
+La section 2 a montré **quelles** probabilités l'algorithme doit connaître :
+les probabilités a priori `Pr(Cⱼ)` et les probabilités conditionnelles
+`Pr(Aᵢ = aᵢ / Cⱼ)`. Cette section explique **comment les obtenir** à partir de
+l'ensemble d'apprentissage `D` — et comment corriger un défaut de cette
+estimation.
+
+Le principe général est celui de l'**estimation par les fréquences** :
+une probabilité inconnue est **approchée par la proportion observée** de
+l'événement correspondant dans les données. Le classifieur ne « connaît » pas
+les vraies probabilités du phénomène ; il les **estime** en **comptant** dans
+`D`. C'est pourquoi toutes les formules de cette section sont des **rapports de
+comptages** — des effectifs.
+
+> **À retenir** : le classifieur **ne connaît pas** les probabilités du
+> phénomène : il les **estime** à partir de l'ensemble d'apprentissage `D`, en
+> **comptant** des exemples. Toute estimation est un **rapport d'effectifs** —
+> une **fréquence observée**.
+
+## Estimer la probabilité a priori `Pr(Cⱼ)`
+
+La première probabilité à estimer est la probabilité **a priori** d'une classe.
+Comme l'a indiqué la section 2, `Pr(Cⱼ)` est **la probabilité qu'une instance
+appartienne à `Cⱼ`**, et elle s'estime à l'aide de l'ensemble d'apprentissage
+`D` : c'est la **proportion des éléments (exemples) de `D` appartenant à `Cⱼ`**.
+
+> **Estimation de la probabilité a priori.**
+>
+> `Pr(Cⱼ) ≃ (Nombre d'exemples de la classe Cⱼ) / (Nombre total d'exemples dans
+> l'ensemble d'apprentissage)`
+
+Le **numérateur** compte les exemples portant l'étiquette `Cⱼ` ; le
+**dénominateur** est la **taille totale** de `D`. Le résultat est la
+**fréquence** de la classe `Cⱼ` dans les données. Si une classe est très
+représentée, son `Pr(Cⱼ)` estimé est élevé ; si elle est rare, il est faible.
+
+> **À retenir** : `Pr(Cⱼ)` s'estime par la **proportion** d'exemples de classe
+> `Cⱼ` dans `D` : `(nombre d'exemples de classe Cⱼ) / (nombre total
+> d'exemples)`.
+
+## Estimer la probabilité conditionnelle `Pr(Aᵢ = aᵢ / Cⱼ)`
+
+La seconde probabilité à estimer est la probabilité conditionnelle d'une
+**valeur d'attribut**, sachant une classe. Le cours rappelle d'abord que ces
+probabilités n'ont de sens qu'**accompagnées de l'hypothèse d'indépendance** :
+c'est elle qui permet d'écrire `Pr(A₁ = a₁, …, Aₚ = aₚ / Cⱼ) = Πᵢ Pr(Aᵢ = aᵢ /
+Cⱼ)`, donc de ne travailler qu'avec des probabilités **portant sur un seul
+attribut**.
+
+Chacune de ces probabilités conditionnelles `Pr(Aᵢ = aᵢ / Cⱼ)` s'estime, là
+encore, par une **proportion** :
+
+> **Estimation de la probabilité conditionnelle.** `Pr(Aᵢ = aᵢ / Cⱼ)` est la
+> **proportion des données de `Cⱼ` pour lesquelles `Aᵢ = aᵢ`** :
+>
+> `Pr(Aᵢ = aᵢ / Cⱼ) ≃ (Nombre d'exemples avec Aᵢ = aᵢ et C = Cⱼ) / (Nombre
+> d'exemples de la classe Cⱼ)`
+
+Attention à bien identifier l'**ensemble de référence** : on ne regarde **pas**
+tout `D`, mais **uniquement les exemples de la classe `Cⱼ`**. Parmi eux, on
+compte la proportion de ceux qui présentent la valeur `aᵢ` sur l'attribut `Aᵢ`.
+
+- Le **numérateur** compte les exemples qui vérifient **les deux conditions à la
+  fois** : `Aᵢ = aᵢ` **et** `C = Cⱼ`.
+- Le **dénominateur** compte **tous** les exemples de la classe `Cⱼ`.
+
+Le tableau ci-dessous résume les deux estimations de cette section.
+
+| Probabilité | Numérateur | Dénominateur |
+| --- | --- | --- |
+| `Pr(Cⱼ)` | Exemples de classe `Cⱼ` | Tous les exemples de `D` |
+| `Pr(Aᵢ = aᵢ / Cⱼ)` | Exemples avec `Aᵢ = aᵢ` **et** `C = Cⱼ` | Exemples de classe `Cⱼ` |
+
+> **À retenir** : `Pr(Aᵢ=aᵢ/Cⱼ)` s'estime par la **proportion**, **parmi les
+> exemples de classe `Cⱼ`** (et non parmi tout `D`), de ceux pour lesquels
+> `Aᵢ = aᵢ` : `(exemples avec Aᵢ=aᵢ et C=Cⱼ) / (exemples de classe Cⱼ)`.
+
+## Le problème de la probabilité nulle
+
+Cette estimation par les fréquences souffre d'un **défaut** que le cours énonce
+sous le titre « valeurs absentes ». La question posée est la suivante :
+
+> **Que se passe-t-il si**, dans l'ensemble d'apprentissage, le **nombre
+> d'exemples** tels que `Aᵢ = a` pour un attribut donné `Aᵢ`, une valeur donnée
+> `a` et une classe donnée `Cⱼ`, **est égal à `0`** ?
+
+Autrement dit : une valeur `a` d'un attribut **n'apparaît jamais** en compagnie
+d'une classe `Cⱼ` dans les données d'apprentissage. C'est une situation
+fréquente, surtout lorsque `D` est de taille modeste : il n'est pas rare qu'une
+combinaison « valeur — classe » donnée soit simplement **absente** des exemples.
+
+Que produit alors l'estimation ? Le numérateur de `Pr(Aᵢ = a / Cⱼ)` vaut `0`,
+donc l'estimation donne :
+
+`Pr(Aᵢ = a / Cⱼ) = 0`
+
+et la conséquence est **disproportionnée**. Le cours la décrit ainsi : « pour
+**chaque instance `d`** telle que `Aᵢ = a`, on aura `Pr(d / Cⱼ) = 0`, et par
+conséquent `Pr(Cⱼ / d) = 0`. »
+
+La raison est purement arithmétique. La vraisemblance est un **produit** :
+`Pr(d / Cⱼ) = Πᵢ Pr(Aᵢ = aᵢ / Cⱼ)`. Or **un seul facteur nul annule tout le
+produit**. Il suffit donc qu'**un seul attribut** porte une valeur jamais vue
+avec `Cⱼ` pour que `Pr(d / Cⱼ)` s'effondre à `0`, et avec lui `Pr(Cⱼ / d)`.
+
+Le cours souligne la gravité du problème : « il s'ensuit que, pour une instance
+`d` donnée, on peut avoir `Pr(Cⱼ / d) = 0` pour **une ou plusieurs classes**
+`Cⱼ`, **éventuellement pour toutes les classes** ! » Dans ce dernier cas, le
+classifieur est **incapable de décider** : toutes les probabilités a posteriori
+sont nulles, plus rien ne les départage.
+
+Le défaut est d'autant plus choquant qu'une **valeur absente des données ne
+signifie nullement une probabilité réellement nulle** : c'est seulement que
+l'ensemble d'apprentissage, fini, ne l'a pas rencontrée. L'estimation par
+simple fréquence est ici **trop brutale**.
+
+> ⚠️ La vraisemblance `Pr(d/Cⱼ)` est un **produit** : **un seul facteur nul
+> annule tout**. Si une valeur d'attribut n'apparaît **jamais** avec une classe
+> dans `D`, l'estimation donne `Pr(Aᵢ=a/Cⱼ) = 0`, donc `Pr(d/Cⱼ) = 0` et
+> `Pr(Cⱼ/d) = 0` — **pour une, plusieurs, voire toutes les classes**.
+
+## Le lissage de Laplace
+
+Pour **éviter ces situations**, le cours propose de **définir `Pr(Aᵢ = aᵢ / Cⱼ)`
+par une estimation légèrement différente**. C'est le **lissage de Laplace**.
+
+L'idée : **ajouter un petit nombre `λ`** (par exemple `λ = 1`) au nombre
+d'exemples avec `Aᵢ = a` et `C = Cⱼ`, et ce **pour chaque attribut `Aᵢ`, chaque
+valeur `a` et chaque classe `Cⱼ`**. L'estimation devient :
+
+> **Lissage de Laplace.**
+>
+> `Pr(Aᵢ = a / Cⱼ) = (λ + Nombre d'exemples avec Aᵢ = a et C = Cⱼ) / (mᵢ·λ +
+> Nombre d'exemples de la classe Cⱼ)`
+>
+> où **`mᵢ` est le nombre de valeurs possibles de l'attribut `Aᵢ`**.
+
+Examinons cette formule terme à terme.
+
+- Au **numérateur**, on ajoute `λ` au comptage. Conséquence directe : le
+  numérateur est **toujours au moins égal à `λ > 0`**. Même si la valeur `a`
+  n'apparaît **jamais** avec `Cⱼ`, l'estimation vaut `λ / (mᵢ·λ + …)`, un nombre
+  **strictement positif**. **Plus aucune probabilité nulle** — donc plus aucun
+  produit annulé.
+- Au **dénominateur**, on ajoute `mᵢ·λ`, où `mᵢ` est le **nombre de valeurs
+  possibles de l'attribut `Aᵢ`**. Ce terme correctif n'est pas arbitraire : on a
+  ajouté `λ` au numérateur **pour chacune des `mᵢ` valeurs** de l'attribut, donc
+  `mᵢ·λ` au total ; le dénominateur l'absorbe pour que, en sommant
+  `Pr(Aᵢ = a / Cⱼ)` sur **toutes** les valeurs `a` de l'attribut, on retrouve
+  bien **`1`**. L'estimation reste ainsi une **distribution de probabilité
+  valide**.
+
+| Estimation | `Pr(Aᵢ = a / Cⱼ)` |
+| --- | --- |
+| **Sans lissage** | `(nb exemples Aᵢ=a et C=Cⱼ) / (nb exemples de Cⱼ)` |
+| **Avec lissage de Laplace** | `(λ + nb exemples Aᵢ=a et C=Cⱼ) / (mᵢ·λ + nb exemples de Cⱼ)` |
+
+Le paramètre `λ` règle l'**intensité** du lissage. Avec `λ = 1` — le choix
+courant, cité par le cours —, on parle de **lissage de Laplace** au sens strict.
+Plus `λ` est grand, plus l'estimation est **tirée vers une valeur uniforme**,
+loin de la fréquence brute ; plus `λ` est petit, plus elle **reste proche** du
+comptage observé. Lorsque les effectifs sont grands, l'ajout de `λ` devient
+négligeable et l'estimation lissée **tend vers la fréquence ordinaire** : le
+lissage ne fait sentir son effet que là où les comptages sont **faibles ou
+nuls** — précisément là où l'estimation brute était dangereuse.
+
+> **À retenir** : le **lissage de Laplace** remplace l'estimation brute par
+> `Pr(Aᵢ=a/Cⱼ) = (λ + nb exemples Aᵢ=a et C=Cⱼ) / (mᵢ·λ + nb exemples de Cⱼ)`,
+> où `mᵢ` est le **nombre de valeurs possibles** de `Aᵢ`. Le `λ` au numérateur
+> rend l'estimation **strictement positive** (plus de zéros) ; le `mᵢ·λ` au
+> dénominateur **préserve une distribution valide**.
+
+## Synthèse de la section
+
+Le classifieur bayésien naïf **estime** ses probabilités à partir de l'ensemble
+d'apprentissage `D`, par des **proportions**. La probabilité **a priori**
+`Pr(Cⱼ)` est la fraction d'exemples de classe `Cⱼ` parmi tout `D`. La
+probabilité **conditionnelle** `Pr(Aᵢ=aᵢ/Cⱼ)` est la fraction d'exemples
+vérifiant `Aᵢ = aᵢ` **parmi les seuls exemples de classe `Cⱼ`**. Cette
+estimation par fréquences a un **défaut grave** : si une valeur d'attribut
+n'apparaît **jamais** avec une classe dans `D`, l'estimation donne `0` ; comme
+la vraisemblance est un **produit**, un seul facteur nul **annule** `Pr(d/Cⱼ)`,
+donc `Pr(Cⱼ/d)` — pour une, plusieurs, voire **toutes** les classes, rendant la
+décision impossible. La parade est le **lissage de Laplace** : on **ajoute `λ`**
+(souvent `1`) au numérateur et `mᵢ·λ` au dénominateur, `mᵢ` étant le nombre de
+valeurs de l'attribut. L'estimation devient ainsi **strictement positive** —
+plus aucune probabilité nulle — tout en restant une **distribution de
+probabilité valide**.
+
+> **À retenir** : `Pr(Cⱼ)` et `Pr(Aᵢ=aᵢ/Cⱼ)` s'estiment par des **fréquences**
+> dans `D`. Une combinaison absente donne une probabilité **nulle** qui
+> **annule tout le produit** `Pr(d/Cⱼ)` : on l'évite par le **lissage de
+> Laplace**, `Pr(Aᵢ=a/Cⱼ) = (λ + …) / (mᵢ·λ + …)`.

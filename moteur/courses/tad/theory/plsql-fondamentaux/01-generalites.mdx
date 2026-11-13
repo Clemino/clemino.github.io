@@ -1,0 +1,79 @@
+---
+title: Généralités sur PL/SQL
+slug: generalites-plsql
+order: 1
+estimatedReadMin: 5
+concepts: [plsql-bloc, dbms-output]
+source: "CM5, slides 1-6"
+---
+
+## Qu'est-ce que PL/SQL ?
+
+**PL/SQL** (Procedural Language / SQL) est le langage propre à Oracle pour **déporter les traitements de manipulation de données vers le SGBD**. Plutôt que de faire transiter les données vers une application qui calcule, on fait calculer le SGBD lui-même.
+
+Le code PL/SQL est **stocké dans la base** sous plusieurs formes :
+
+- **Triggers** : code déclenché par un événement (CM5).
+- **Fonctions / procédures** : code nommé invocable (CM6).
+- **Packages** : regroupement de fonctions/procédures/exceptions/curseurs (CM6).
+
+PL/SQL fournit ainsi un **ensemble de fonctionnalités communes** à toutes les applications et tous les utilisateurs qui se connectent à la base.
+
+## Structure d'un bloc PL/SQL
+
+Tout programme PL/SQL est structuré autour de **deux blocs principaux** :
+
+- **Déclaration** : `DECLARE` introduit la déclaration des variables, types, exceptions, curseurs.
+- **Exécution** : `BEGIN ... END;` encadre le code exécutable.
+
+Optionnellement, un **bloc de gestion d'exceptions** termine l'exécution :
+
+```sql
+DECLARE
+  <bloc de variables>
+BEGIN
+  <bloc de traitements>
+EXCEPTION
+  WHEN err1 THEN ...
+  WHEN err2 THEN ...
+  WHEN OTHERS THEN ...
+END;
+```
+
+> ⚠️ Le point-virgule final `END;` est obligatoire et le `/` qui suit (en SQL\*Plus) signifie « exécute le bloc ».
+
+### Bloc anonyme
+
+Un **bloc anonyme** est un bloc PL/SQL sans nom, exécuté immédiatement. Très utile pour tester :
+
+```sql
+DECLARE
+  v_total NUMBER := 0;
+BEGIN
+  SELECT SUM(montant) INTO v_total FROM Facture;
+  DBMS_OUTPUT.PUT_LINE('Total : ' || v_total);
+END;
+/
+```
+
+## Sortie standard
+
+Pour afficher des messages, on utilise le package Oracle prédéfini **`DBMS_OUTPUT`** :
+
+```sql
+DBMS_OUTPUT.PUT_LINE('Coucou ' || TO_CHAR(12));
+```
+
+> ⚠️ La sortie n'est visible que si l'option est **activée** :
+>
+> ```sql
+> SET SERVEROUTPUT ON;
+> ```
+
+Sinon, les messages sont stockés mais jamais affichés.
+
+> **À retenir**
+> - PL/SQL = langage procédural propre à Oracle, **stocké en base** (triggers, procédures, packages).
+> - Bloc structuré : `DECLARE`, `BEGIN`, optionnel `EXCEPTION`, `END;`.
+> - Bloc anonyme = sans nom, exécuté immédiatement.
+> - `DBMS_OUTPUT.PUT_LINE(...)` affiche un message, à activer par `SET SERVEROUTPUT ON`.

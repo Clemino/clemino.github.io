@@ -1,0 +1,315 @@
+[
+  {
+    "chapterSlug": "analyse-asymptotique",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "`3n^2 + 10n + 7` est :",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Theta(n^2)"
+        },
+        {
+          "id": "b",
+          "label": "Theta(n)"
+        },
+        {
+          "id": "c",
+          "label": "Theta(log n)"
+        },
+        {
+          "id": "d",
+          "label": "Theta(1)"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le terme dominant est quadratique.",
+    "concepts": [
+      "theta",
+      "big-o"
+    ]
+  },
+  {
+    "chapterSlug": "analyse-asymptotique",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque algorithme a son ordre typique.",
+    "payload": {
+      "left": [
+        {
+          "id": "seq",
+          "label": "Recherche sequentielle pire cas"
+        },
+        {
+          "id": "bin",
+          "label": "Recherche dichotomique"
+        },
+        {
+          "id": "mat",
+          "label": "Produit matriciel classique"
+        },
+        {
+          "id": "access",
+          "label": "Acces tableau par indice"
+        }
+      ],
+      "right": [
+        {
+          "id": "lin",
+          "label": "Theta(n)"
+        },
+        {
+          "id": "log",
+          "label": "Theta(log n)"
+        },
+        {
+          "id": "cub",
+          "label": "Theta(n^3)"
+        },
+        {
+          "id": "const",
+          "label": "Theta(1)"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "seq": "lin",
+        "bin": "log",
+        "mat": "cub",
+        "access": "const"
+      }
+    },
+    "explanation": "Ces ordres sont les classiques du cours.",
+    "concepts": [
+      "complexity",
+      "worst-case"
+    ]
+  },
+  {
+    "chapterSlug": "analyse-asymptotique",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une borne en O(n^2) suffit a dire que l'algorithme est exactement quadratique.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "O est seulement une borne superieure ; Theta donne un encadrement serre.",
+    "concepts": [
+      "big-o",
+      "theta"
+    ]
+  },
+  {
+    "chapterSlug": "recursivite-diviser-regner",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "La recurrence `T(n)=2T(n/2)+Theta(n)` donne :",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Theta(n log n)"
+        },
+        {
+          "id": "b",
+          "label": "Theta(n^2)"
+        },
+        {
+          "id": "c",
+          "label": "Theta(log n)"
+        },
+        {
+          "id": "d",
+          "label": "Theta(2^n)"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "C'est le schema du tri fusion : cout lineaire par niveau et log n niveaux.",
+    "concepts": [
+      "recurrence",
+      "master"
+    ]
+  },
+  {
+    "chapterSlug": "recursivite-diviser-regner",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pourquoi Fibonacci recursif naif est couteux ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il recalcule massivement les memes sous-problemes."
+        },
+        {
+          "id": "b",
+          "label": "Il utilise une boucle for cachee."
+        },
+        {
+          "id": "c",
+          "label": "Il a toujours un seul appel recursif."
+        },
+        {
+          "id": "d",
+          "label": "Il trie la liste a chaque etape."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Les appels se dedoublent et repassent par les memes valeurs.",
+    "concepts": [
+      "recurrence",
+      "recursion"
+    ]
+  },
+  {
+    "chapterSlug": "recursivite-diviser-regner",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Remets dans l'ordre l'analyse d'un diviser pour regner.",
+    "payload": {
+      "items": [
+        {
+          "id": "a",
+          "label": "Identifier le nombre de sous-problemes a"
+        },
+        {
+          "id": "b",
+          "label": "Identifier le facteur de reduction b"
+        },
+        {
+          "id": "c",
+          "label": "Evaluer le cout hors recursion f(n)"
+        },
+        {
+          "id": "d",
+          "label": "Comparer f(n) a n^(log_b a)"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Ce sont les parametres du theoreme maitre.",
+    "concepts": [
+      "master"
+    ]
+  },
+  {
+    "chapterSlug": "invariants-correction",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quel est le role d'un invariant de boucle ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une propriete vraie avant et apres chaque iteration."
+        },
+        {
+          "id": "b",
+          "label": "Une variable qui ne change jamais syntaxiquement."
+        },
+        {
+          "id": "c",
+          "label": "Un test execute seulement a la fin."
+        },
+        {
+          "id": "d",
+          "label": "Une estimation du cache processeur."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "L'invariant sert a prouver la correction partielle.",
+    "concepts": [
+      "invariant-loop",
+      "correction"
+    ]
+  },
+  {
+    "chapterSlug": "invariants-correction",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "La terminaison et la correction partielle suffisent ensemble a etablir la correction totale.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Correction totale = correction partielle + terminaison.",
+    "concepts": [
+      "termination",
+      "correction"
+    ]
+  },
+  {
+    "chapterSlug": "invariants-correction",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pour une boucle `while (i < n)` ou `i` augmente de 1, quel variant naturel prouve la terminaison ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "`n - i`"
+        },
+        {
+          "id": "b",
+          "label": "`i - n` qui augmente"
+        },
+        {
+          "id": "c",
+          "label": "`n + i`"
+        },
+        {
+          "id": "d",
+          "label": "`i * n`"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "`n-i` decroit vers 0 tant que la boucle continue.",
+    "concepts": [
+      "termination"
+    ]
+  }
+]

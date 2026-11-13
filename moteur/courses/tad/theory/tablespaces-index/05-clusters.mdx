@@ -1,0 +1,106 @@
+---
+title: Clusters Oracle
+slug: clusters
+order: 5
+estimatedReadMin: 7
+concepts: [cluster, maitre-detail]
+source: "CM2, slides 20-25"
+---
+
+## Pourquoi des clusters ?
+
+Dans un MCD, les associations **(1,1)–(1,n)** sont très fréquentes. En base relationnelle, elles donnent lieu à une **clé étrangère** côté (1,1) qui pointe vers la clé primaire côté (1,n).
+
+**Exemples classiques :**
+
+- Une **facture** est associée à un **client**.
+- Une **ligne de commande** est associée à une **commande**.
+- Un **film** est associé à un **réalisateur**.
+
+On parle alors de **relations maître-détails** : la table « maître » côté (1,n) (Client, Commande, Réalisateur) et la table « détails » côté (1,1) (Facture, Ligne, Film).
+
+## Le problème : les jointures naturelles fréquentes
+
+Avec ce schéma, on enchaîne des **requêtes de jointure naturelle** entre la table maître et la table détail :
+
+```sql
+SELECT C.nom, F.numero, F.montant
+FROM Client C, Facture F
+WHERE C.id = F.id_client;
+```
+
+Si les deux tables sont stockées dans des segments différents, Oracle doit lire des blocs disque dispersés. Sur des volumétries importantes, c'est coûteux.
+
+## Le cluster : stockage groupé
+
+Un **cluster** est un objet Oracle qui **stocke ensemble** des lignes de tables ayant des colonnes en commun (typiquement les colonnes de jointure maître-détails). Le cluster **remplace le tablespace** comme conteneur physique pour ces tables.
+
+**Bénéfices** :
+
+- Les lignes ayant les mêmes valeurs sur les colonnes communes sont **physiquement proches** sur le disque → moins d'E/S.
+- Les colonnes communes ne sont **pas physiquement dupliquées** : Oracle ne les stocke qu'une fois.
+- Un **index de cluster** sur les colonnes communes est créé.
+
+## Syntaxe
+
+### Créer le cluster
+
+```sql
+CREATE CLUSTER cluster_facturation (
+    cli_id NUMBER
+)
+SIZE 1024
+TABLESPACE users;
+```
+
+`SIZE` indique la taille du bloc de cluster en octets.
+
+### Créer l'index du cluster
+
+```sql
+CREATE INDEX idx_cluster_facturation
+  ON CLUSTER cluster_facturation;
+```
+
+Sans cet index, le cluster est inutilisable.
+
+### Créer les tables dans le cluster
+
+```sql
+CREATE TABLE Client (
+    cli_id NUMBER PRIMARY KEY,
+    nom    VARCHAR2(50)
+)
+CLUSTER cluster_facturation (cli_id);
+
+CREATE TABLE Facture (
+    fac_id  NUMBER PRIMARY KEY,
+    cli_id  NUMBER REFERENCES Client(cli_id),
+    montant NUMBER(10,2)
+)
+CLUSTER cluster_facturation (cli_id);
+```
+
+La clause `CLUSTER nomCluster(colT1, ...)` lie chaque table aux colonnes du cluster.
+
+## Mise en cluster d'une table existante
+
+Une table déjà créée ne peut pas être mise en cluster directement. Il faut :
+
+1. Créer une nouvelle table avec l'option `CLUSTER`,
+2. Copier le contenu de la table initiale (`INSERT INTO ... SELECT ...`),
+3. Supprimer l'ancienne table,
+4. Renommer éventuellement la nouvelle.
+
+## Limites
+
+- Un cluster est intéressant **uniquement** si on accède **toujours conjointement** aux deux tables.
+- Si la table maître ou détail est très souvent interrogée seule, les bénéfices disparaissent.
+- Les insertions dans les tables clusterisées sont **un peu plus lentes** car Oracle doit trouver le bon emplacement physique.
+
+> **À retenir**
+> - Cluster = stockage groupé de tables ayant des **colonnes communes** (typiquement jointure maître-détails).
+> - Remplace le tablespace pour ces tables, **ne duplique pas** les colonnes communes.
+> - Workflow : `CREATE CLUSTER` → `CREATE INDEX ON CLUSTER` → `CREATE TABLE ... CLUSTER`.
+> - Bénéfique uniquement si les requêtes consomment **systématiquement** les deux tables conjointement.
+> - Pour clusteriser une table existante : créer-copier-supprimer-renommer.

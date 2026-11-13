@@ -1,0 +1,515 @@
+[
+  {
+    "chapterSlug": "qu-est-ce-que-l-ia",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "D'après les extraits du projet de la conférence de Dartmouth, quel objectif fut fixé à la discipline ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Construire des machines de calcul plus rapides que les humains"
+        },
+        {
+          "id": "b",
+          "label": "Faire en sorte que les machines utilisent le langage, forment des abstractions et des concepts, et résolvent des problèmes réservés aux humains"
+        },
+        {
+          "id": "c",
+          "label": "Remplacer entièrement les travailleurs humains par des automates"
+        },
+        {
+          "id": "d",
+          "label": "Inventer un nouveau langage de programmation universel"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Les extraits du projet de Dartmouth posent comme objectif de trouver un moyen pour que les machines utilisent le langage, forment des abstractions et des concepts, résolvent des problèmes habituellement réservés aux humains et se perfectionnent.",
+    "concepts": [
+      "conference-de-dartmouth"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "qu-est-ce-que-l-ia",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "D'après le cours, que doit au moins savoir faire une machine pour être considérée comme intelligente au sens du test de Turing ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Comprendre le langage naturel"
+        },
+        {
+          "id": "b",
+          "label": "Savoir raisonner"
+        },
+        {
+          "id": "c",
+          "label": "S'exprimer dans le langage naturel"
+        },
+        {
+          "id": "d",
+          "label": "Trier des tableaux très rapidement"
+        },
+        {
+          "id": "e",
+          "label": "Calculer un grand nombre de décimales"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Le cours retient du test de Turing que, pour être considérée comme intelligente, une machine doit au moins comprendre le langage naturel, savoir raisonner et s'exprimer dans le langage naturel. Le tri rapide et le calcul de décimales ne relèvent pas de l'intelligence.",
+    "concepts": [
+      "test-de-turing"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "qu-est-ce-que-l-ia",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez les faits relatifs aux deux exemples liés au test de Turing.",
+    "payload": {
+      "template": "En 1997, l'ordinateur {{machine}} d'IBM bat le champion du monde des échecs Gary Kasparov. En 2023, {{chercheur}} affirme que ChatGPT passe haut la main le test de Turing.",
+      "slots": [
+        {
+          "id": "machine",
+          "placeholder": "nom de l'ordinateur"
+        },
+        {
+          "id": "chercheur",
+          "placeholder": "nom du chercheur"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "machine": "Deep Blue",
+        "chercheur": [
+          "Yoshua Bengio",
+          "Bengio"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "En 1997, Deep Blue d'IBM bat Gary Kasparov sur le score de 3,5 à 2,5. En 2023, Yoshua Bengio affirme dans une interview au journal Le Monde que ChatGPT passe haut la main le test de Turing.",
+    "concepts": [
+      "test-de-turing"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "qu-est-ce-que-l-ia",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Lors du match de 1997, qu'ont observé des observateurs avertis à propos du jeu de Deep Blue, au point que Kasparov accuse IBM d'avoir triché ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Que la machine jouait beaucoup trop lentement pour être un ordinateur"
+        },
+        {
+          "id": "b",
+          "label": "Que la machine avait joué avec « subtilité » et « nuance »"
+        },
+        {
+          "id": "c",
+          "label": "Que la machine répétait toujours les mêmes coups d'ouverture"
+        },
+        {
+          "id": "d",
+          "label": "Que la machine ne respectait pas les règles des échecs"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Des observateurs avertis ont trouvé que Deep Blue avait joué avec « subtilité » et « nuance » ; d'autres déclaraient que, sans le savoir, on aurait pu prendre son jeu pour celui de l'un des meilleurs joueurs humains du monde. C'est ce qui amène Kasparov à soupçonner une tricherie.",
+    "concepts": [
+      "test-de-turing"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "qu-est-ce-que-l-ia",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qui a proposé le test de Turing, et à quelle époque ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Alan Turing, dans les années 1950"
+        },
+        {
+          "id": "b",
+          "label": "Arthur Samuel, dans les années 1990"
+        },
+        {
+          "id": "c",
+          "label": "Yoshua Bengio, en 2023"
+        },
+        {
+          "id": "d",
+          "label": "Geoffrey Hinton, en 2012"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le test de Turing est une définition opérationnelle célèbre de l'intelligence artificielle, proposée par Alan Turing dans les années 1950.",
+    "concepts": [
+      "test-de-turing"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Vrai ou faux : aujourd'hui, il est généralement admis qu'un système intelligent est nécessairement un système apprenant.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Le cours indique qu'aujourd'hui, il est généralement admis qu'un système intelligent est nécessairement un système apprenant.",
+    "concepts": [
+      "apprentissage-automatique"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Vrai ou faux : les réseaux de neurones sont l'une des méthodes de l'apprentissage supervisé.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Le cours indique explicitement que les réseaux de neurones sont l'une des méthodes de l'apprentissage supervisé.",
+    "concepts": [
+      "reseau-de-neurones",
+      "apprentissage-supervise"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Comment le cours définit-il la profondeur d'un réseau de neurones ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Son nombre de couches"
+        },
+        {
+          "id": "b",
+          "label": "Son nombre d'entrées numériques"
+        },
+        {
+          "id": "c",
+          "label": "La quantité de données utilisée pour l'entraîner"
+        },
+        {
+          "id": "d",
+          "label": "Le nombre de langues qu'il traite"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La profondeur d'un réseau de neurones est son nombre de couches. Un réseau profond (deep) est un réseau ayant plus de couches qu'un réseau standard.",
+    "concepts": [
+      "apprentissage-profond",
+      "reseau-de-neurones"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "À quoi servent les couches supplémentaires d'un réseau de neurones profond ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "À représenter les données selon différents niveaux d'abstraction"
+        },
+        {
+          "id": "b",
+          "label": "À mémoriser intégralement les exemples d'entraînement"
+        },
+        {
+          "id": "c",
+          "label": "À réduire le nombre de paramètres à apprendre"
+        },
+        {
+          "id": "d",
+          "label": "À supprimer la phase d'apprentissage"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Les couches supplémentaires d'un réseau profond servent à représenter les données selon différents niveaux d'abstraction : par exemple, pour une image, les pixels, puis les groupes de pixels, puis les arêtes et les objets.",
+    "concepts": [
+      "apprentissage-profond"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quel titre d'article exprime bien l'idée de base des transformeurs ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "« Attention is all you need »"
+        },
+        {
+          "id": "b",
+          "label": "« Deep Blue versus Kasparov »"
+        },
+        {
+          "id": "c",
+          "label": "« Computing Machinery and Intelligence »"
+        },
+        {
+          "id": "d",
+          "label": "« The Dartmouth Proposal »"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "L'idée de base des transformeurs est bien exprimée par le titre de l'article qui les a introduits : « Attention is all you need ».",
+    "concepts": [
+      "transformeur"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Vrai ou faux : aujourd'hui, ce sont les transformeurs qui sont à la base des modèles massifs de langage (LLM).",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Le cours indique que ce sont les transformeurs qui sont à la base de l'une des principales réalisations de l'IA générative : les modèles massifs de langage (LLM).",
+    "concepts": [
+      "transformeur",
+      "grand-modele-de-langage"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque type d'IA à la tâche qui la caractérise.",
+    "payload": {
+      "left": [
+        {
+          "id": "disc",
+          "label": "IA discriminative"
+        },
+        {
+          "id": "gen",
+          "label": "IA générative"
+        }
+      ],
+      "right": [
+        {
+          "id": "classer",
+          "label": "Recevoir un objet en entrée et le classer (fournir une classe)"
+        },
+        {
+          "id": "creer",
+          "label": "Recevoir une description (prompt) et produire un nouvel objet"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "disc": "classer",
+        "gen": "creer"
+      }
+    },
+    "explanation": "Une tâche typique d'un modèle discriminatif consiste à recevoir un objet en entrée et à le classer (fournir une classe). Une tâche typique d'un modèle génératif consiste à recevoir une description — un prompt — et à produire un nouvel objet (texte, image, vidéo).",
+    "concepts": [
+      "ia-generative"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "applications-et-programmes",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Vrai ou faux : la reconnaissance de la parole est incluse, dans le cours, dans la reconnaissance des formes.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Le cours inclut la reconnaissance de la parole dans la reconnaissance des formes ; elle a connu de multiples applications comme l'interface homme/machine et la transcription des données audio en texte.",
+    "concepts": [
+      "applications-de-l-ia"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "applications-et-programmes",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Selon le cours, quels types de jeux ont été considérés par l'IA ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Des jeux à un, deux ou plusieurs joueurs"
+        },
+        {
+          "id": "b",
+          "label": "Des jeux à information complète ou incomplète"
+        },
+        {
+          "id": "c",
+          "label": "Des jeux déterministes ou stochastiques"
+        },
+        {
+          "id": "d",
+          "label": "Uniquement les jeux d'échecs"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Tous les types de jeux ont été considérés : à un, deux ou plusieurs joueurs ; à information complète ou incomplète ; déterministes ou stochastiques. L'IA ne s'est donc pas limitée aux échecs.",
+    "concepts": [
+      "applications-de-l-ia"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "applications-et-programmes",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Vrai ou faux : derrière chaque application de l'IA — vision, langage, jeux — on retrouve le même principe : le programme apprend à accomplir sa tâche.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Le dénominateur commun de toutes les réalisations de l'IA est que le programme n'est pas explicitement programmé pour la tâche : il apprend à l'accomplir.",
+    "concepts": [
+      "apprentissage-automatique",
+      "applications-de-l-ia"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "applications-et-programmes",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ordonnez chronologiquement ces jalons de l'IA évoqués dans le module.",
+    "payload": {
+      "items": [
+        {
+          "id": "alphago",
+          "label": "AlphaGo bat Lee Sedol au jeu de Go"
+        },
+        {
+          "id": "dartmouth",
+          "label": "Conférence fondatrice de Dartmouth"
+        },
+        {
+          "id": "deepblue",
+          "label": "Deep Blue bat Kasparov aux échecs"
+        },
+        {
+          "id": "eccv",
+          "label": "À ECCV, le réseau profond de Hinton fait chuter l'erreur de 27 % à 17 %"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "dartmouth",
+        "deepblue",
+        "eccv",
+        "alphago"
+      ]
+    },
+    "explanation": "Ordre chronologique : conférence de Dartmouth (1956), Deep Blue bat Kasparov (1997), réseau profond de Hinton à ECCV (2012), AlphaGo bat Lee Sedol au Go (2016).",
+    "concepts": [
+      "conference-de-dartmouth",
+      "applications-de-l-ia"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  }
+]

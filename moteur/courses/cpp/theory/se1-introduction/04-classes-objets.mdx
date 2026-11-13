@@ -1,0 +1,260 @@
+---
+title: Classes et objets
+slug: classes-objets
+order: 4
+estimatedReadMin: 12
+concepts: [classe, encapsulation, membre-prive-public, header-impl, accesseur]
+source: "Cours 1 — Introduction au C++"
+---
+
+## De la fonction à l'objet
+
+Jusqu'ici, programmer consistait à écrire des fonctions qui manipulent des données séparées. La **programmation orientée objet** réunit, dans une même entité, les **données** et les **opérations** qui agissent sur elles.
+
+> Une **classe** est un **type défini par le programmeur**. Elle décrit une catégorie d'entités par ses **attributs** (les données) et ses **méthodes** (les comportements).
+
+Un **objet** est une **instance** concrète d'une classe : la classe est le moule, l'objet est ce qui en sort. La classe `Point` est un plan ; `p1` et `p2` sont deux points bien réels.
+
+## Syntaxe d'une classe
+
+Une classe se déclare avec le mot-clé **`class`**, suivi du nom et d'un bloc terminé par un **point-virgule**.
+
+```cpp
+class Point {
+    private:
+        int x, y;          // attributs (données membres)
+
+    public:
+        Point(int x, int y);   // constructeur
+        int getX();            // méthodes (fonctions membres)
+        int getY();
+        void setX(int x);
+        void setY(int y);
+};   // <-- ne pas oublier le point-virgule
+```
+
+Cette classe `Point` — l'exemple fil rouge du cours — possède :
+
+- deux **attributs** `x` et `y` (les coordonnées) ;
+- des **méthodes** : un constructeur `Point(...)`, des *getters* `getX`/`getY`, des *setters* `setX`/`setY`.
+
+> ⚠️ Le `;` après l'accolade fermante d'une classe est **obligatoire**. L'oublier produit des messages d'erreur déroutants sur la ligne *suivante* : c'est l'une des erreurs de débutant les plus fréquentes.
+
+## L'encapsulation : public et private
+
+Au sein d'une classe, chaque membre relève d'un **niveau d'accès** :
+
+- **`private`** — le membre n'est accessible **qu'à l'intérieur** de la classe (par ses propres méthodes). C'est le défaut pour une `class`.
+- **`public`** — le membre est accessible depuis **n'importe quel code** qui utilise la classe.
+
+Ce mécanisme réalise l'**encapsulation** : un principe fondamental de la POO. On rend les **attributs `private`** (l'état interne est protégé) et on n'expose en `public` qu'une **interface** de méthodes choisies.
+
+Pourquoi ? Parce que le code extérieur ne peut alors **pas** mettre l'objet dans un état incohérent en touchant directement aux attributs : il doit passer par les méthodes, qui contrôlent ce qui se passe.
+
+```cpp
+Point p(3, 4);
+p.setX(10);     // OK : setX est public
+int a = p.x;    // ERREUR : x est private, inaccessible de l'extérieur
+```
+
+L'extérieur dialogue avec l'objet uniquement par son interface publique : c'est ce qui rend les classes robustes et faciles à faire évoluer.
+
+## Le constructeur
+
+Le **constructeur** est une méthode spéciale qui **porte le nom de la classe** et **n'a pas de type de retour**. Il est appelé **automatiquement** à la création d'un objet et sert à **initialiser les attributs**.
+
+```cpp
+Point::Point(int x, int y) : x(x), y(y) {}
+```
+
+La partie après `:` est la **liste d'initialisation** : elle initialise directement chaque attribut (`x` reçoit le paramètre `x`, `y` reçoit `y`). C'est la façon recommandée d'initialiser les attributs en C++.
+
+> ⚠️ Sans liste d'initialisation, on écrirait dans le corps `{ this->x = x; }`. Le mot-clé **`this`** est un pointeur vers l'objet courant ; `this->x` le lève l'ambiguïté entre l'attribut `x` et le paramètre `x` qui portent le même nom.
+
+## Instancier un objet
+
+Une fois la classe définie, on crée des objets comme des variables d'un type ordinaire.
+
+```cpp
+Point p1(0, 0);     // construit p1 en appelant Point(int, int)
+Point p2(1, 1);     // construit p2
+```
+
+On appelle ensuite une méthode sur un objet avec l'**opérateur point `.`** :
+
+```cpp
+p1.setX(5);                       // appel d'une méthode
+cout << "x = " << p1.getX();      // récupère une valeur via un getter
+```
+
+## Les accesseurs : getters et setters
+
+Si les attributs sont `private`, comment le code extérieur lit-il ou modifie-t-il l'état d'un objet ? Grâce aux **accesseurs** : des méthodes `public` dédiées.
+
+- un **getter** (accesseur en lecture) **renvoie** la valeur d'un attribut ;
+- un **setter** (accesseur en écriture) **modifie** la valeur d'un attribut.
+
+```cpp
+int  Point::getX()        { return x; }    // getter
+void Point::setX(int px)  { x = px; }      // setter
+```
+
+Le setter est l'**endroit idéal pour valider** une donnée avant de l'accepter — par exemple refuser un rayon négatif. C'est tout l'intérêt de passer par une méthode plutôt que d'écrire directement dans l'attribut.
+
+> ⚠️ Un getter ne modifie pas l'objet : on le déclare **`const`** — `int getX() const;`. Cela documente l'intention et permet d'appeler le getter même sur un objet constant.
+
+## La séparation header / implémentation
+
+C'est le point d'organisation central de ce chapitre. En C++, le code d'une classe se répartit dans **deux fichiers** :
+
+- le **fichier d'en-tête `.h`** — il **déclare** la classe : c'est l'**interface**, le *quoi*.
+- le **fichier d'implémentation `.cpp`** — il **définit** le corps des méthodes : c'est le *comment*.
+
+```text
+                Point.h  (interface : déclare Point)
+                  ▲                    ▲
+        #include  │                    │  #include
+                  │                    │
+   main.cpp  ──────┘                    └──────  Point.cpp
+   (utilise Point)                      (définit Point)
+```
+
+Tout fichier qui veut **utiliser** la classe inclut le `.h` ; le `.cpp` qui **implémente** la classe inclut aussi le `.h`. Cette séparation permet la **compilation séparée** : modifier le corps d'une méthode ne recompile que son `.cpp`.
+
+### Le fichier Point.h — l'interface
+
+```cpp
+#ifndef POINT_H
+#define POINT_H
+
+class Point {
+    private:
+        int x, y;
+
+    public:
+        Point(int x, int y);
+        int getX();
+        int getY();
+        void setX(int x);
+        void setY(int y);
+};
+
+#endif
+```
+
+Le trio `#ifndef` / `#define` / `#endif` est le **gardien d'inclusion** (*include guard*). Il garantit que le contenu de l'en-tête n'est inséré **qu'une seule fois** par fichier, même si plusieurs `#include` y mènent. Sans lui, la classe serait déclarée plusieurs fois → erreur de compilation.
+
+### Le fichier Point.cpp — l'implémentation
+
+```cpp
+#include "Point.h"
+
+Point::Point(int x, int y) : x(x), y(y) {}
+int  Point::getX()        { return x; }
+int  Point::getY()        { return y; }
+void Point::setX(int px)  { this->x = px; }
+void Point::setY(int py)  { this->y = py; }
+```
+
+Hors de la classe, chaque méthode doit indiquer **à quelle classe elle appartient** grâce à l'**opérateur de résolution de portée `::`**. `Point::getX` se lit *« la méthode `getX` de la classe `Point` »*. Sans le `Point::`, le compilateur croirait à une simple fonction libre.
+
+### Le fichier main.cpp — l'utilisation
+
+```cpp
+#include <iostream>
+#include "Point.h"
+using namespace std;
+
+int main() {
+    int a, b;
+    Point p(0, 0);
+    cout << "saisir x : "; cin >> a;
+    cout << "saisir y : "; cin >> b;
+    p.setX(a);
+    p.setY(b);
+    cout << "x = " << p.getX() << " y = " << p.getY() << endl;
+    return 0;
+}
+```
+
+## Une classe qui en utilise une autre
+
+Une classe peut avoir pour attribut un objet d'une **autre classe** : c'est la composition. Le cours illustre cela avec une classe `Cercle` qui contient un `Point` (son centre).
+
+```cpp
+#ifndef CERCLE_H
+#define CERCLE_H
+
+#include "Point.h"   // Cercle utilise Point : il faut son interface
+
+class Cercle {
+    private:
+        Point centre;     // un attribut de type Point
+        double rayon;
+
+    public:
+        Cercle(Point c, double r);
+        Point getCentre();
+        double getRayon();
+        void setCentre(Point c);
+        void setRayon(double r);
+        double perimetre();
+        double aire();
+        bool chevauche(Cercle c);
+};
+
+#endif
+```
+
+Dans `Cercle.cpp`, le constructeur initialise son attribut objet `centre` **dans la liste d'initialisation** :
+
+```cpp
+#include "Cercle.h"
+
+Cercle::Cercle(Point c, double r) : centre(c), rayon(r) {}
+double Cercle::getRayon()        { return rayon; }
+double Cercle::perimetre()       { return 2 * 3.14 * rayon; }
+double Cercle::aire()            { return 3.14 * rayon * rayon; }
+```
+
+Les méthodes `perimetre` et `aire` montrent qu'une classe expose aussi des **comportements métier**, pas seulement des accesseurs. Une méthode peut interroger un autre objet via son interface publique :
+
+```cpp
+bool Cercle::chevauche(Cercle c2) {
+    double x1 = centre.getX();          // mon centre, via getX()
+    double x2 = c2.getCentre().getX();  // le centre de l'autre cercle
+    // ... calcul de la distance, comparaison aux rayons
+    return true;
+}
+```
+
+Côté `main`, on assemble le tout :
+
+```cpp
+#include <iostream>
+#include "Cercle.h"
+using namespace std;
+
+int main() {
+    Point p1(0, 0);
+    Point p2(1, 1);
+    Cercle c1(p1, 1);
+    Cercle c2(p2, 2);
+    cout << "perimetre de C1 : " << c1.perimetre() << endl;
+    cout << "aire de C1 : "      << c1.aire()      << endl;
+    if (c1.chevauche(c2))
+        cout << "c1 et c2 se chevauchent" << endl;
+    else
+        cout << "c1 et c2 ne se chevauchent pas" << endl;
+    return 0;
+}
+```
+
+> **À retenir**
+> - Une **classe** (`class`) est un type créé par le programmeur : des **attributs** (données) + des **méthodes** (comportements). Un **objet** en est une **instance**.
+> - Le bloc de classe se termine par un **`;`** obligatoire.
+> - **`private`** = accessible seulement dans la classe (défaut) ; **`public`** = accessible partout. Attributs `private` + interface `public` = **encapsulation**.
+> - Le **constructeur** porte le nom de la classe, n'a pas de type de retour, initialise les attributs via la **liste d'initialisation** `: x(x), y(y)`.
+> - Les **accesseurs** (*getters*/*setters*) donnent un accès **contrôlé** aux attributs privés ; un getter se déclare `const`.
+> - **Séparation header/implémentation** : le `.h` **déclare** l'interface (avec un *include guard* `#ifndef`/`#define`/`#endif`), le `.cpp` **définit** les méthodes, préfixées par `Classe::`.
+> - On instancie comme une variable (`Point p(0,0);`) et on appelle une méthode avec l'opérateur point (`p.getX()`).

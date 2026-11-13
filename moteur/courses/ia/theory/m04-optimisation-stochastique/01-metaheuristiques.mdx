@@ -1,0 +1,262 @@
+---
+title: "Optimisation et métaheuristiques"
+slug: metaheuristiques
+order: 1
+estimatedReadMin: 14
+concepts: [optimisation-combinatoire, optimisation-continue, optimum-local, optimum-global, voisinage, metaheuristique, exploration-exploitation]
+source: "Optimisationstochastique-1.pdf"
+---
+
+## Qu'est-ce qu'un problème d'optimisation ?
+
+**Optimiser**, c'est chercher la **meilleure solution** possible parmi un ensemble de
+candidates. La métaphore du module est éloquente : optimiser, c'est **chercher une
+aiguille dans une botte de foin** — et, plus encore, chercher la *plus belle* des
+aiguilles. La difficulté n'est pas seulement de trouver *une* solution, mais de
+trouver **la meilleure**.
+
+Formellement, on dispose d'une **fonction objectif** `f` qui associe à chaque
+solution candidate `X` une valeur numérique `f(X)`. Résoudre le problème
+d'optimisation, c'est trouver la solution qui rend `f` **extrémale**. Deux situations
+se présentent :
+
+- un **problème de minimisation** : on cherche le `X` qui rend `f(X)` **le plus petit
+  possible** ;
+- un **problème de maximisation** : on cherche le `X` qui rend `f(X)` **le plus grand
+  possible**.
+
+Les deux sont équivalents : maximiser `f` revient à minimiser `−f`. Dans tout ce
+module, et conformément au cours, **nous raisonnerons sur un problème de
+minimisation**.
+
+> **À retenir** : optimiser, c'est trouver la solution `X` qui rend une **fonction
+> objectif `f`** extrémale — la **plus petite** (minimisation) ou la **plus grande**
+> (maximisation). Le module traite la **minimisation**.
+
+## Optimum local et optimum global
+
+Représentons une fonction `f(X)` à minimiser, tracée sur un axe `X`. Sa courbe
+présente des **creux** et des **bosses**. Tous les creux ne se valent pas, et c'est
+là que se joue la difficulté de l'optimisation.
+
+- Un **optimum local** est une solution **meilleure que toutes celles de son
+  voisinage immédiat**. C'est le fond d'un creux : autour de lui, tout point est
+  moins bon. Mais ce n'est qu'un *creux parmi d'autres* — rien ne garantit qu'il soit
+  le plus profond.
+- L'**optimum global**, noté `x*`, est la **meilleure solution sur tout le domaine**.
+  C'est le creux **le plus profond** de toute la courbe : aucune autre solution, où
+  qu'elle se trouve, ne fait mieux.
+
+La courbe type du cours comporte ainsi **plusieurs optima locaux** et **un seul
+optimum global `x*`**. Le but de l'optimisation est d'atteindre `x*`. Le piège, lui,
+porte un nom : se laisser **enfermer dans un optimum local** en croyant avoir trouvé
+le meilleur.
+
+| Notion | Définition | Image de la courbe |
+| --- | --- | --- |
+| Optimum local | Meilleur que tout son **voisinage immédiat** | Fond d'**un** creux quelconque |
+| Optimum global `x*` | Meilleur sur **tout le domaine** | Creux **le plus profond** de tous |
+
+> ⚠️ Un **optimum local** n'est pas l'**optimum global**. Une méthode qui s'arrête au
+> premier creux rencontré peut renvoyer une solution **bien pire** que `x*` : tout
+> l'enjeu des métaheuristiques est de **s'échapper** des optima locaux.
+
+## Le voisinage d'une solution
+
+La notion d'**optimum local** repose sur celle de **voisinage**. Le voisinage d'une
+solution est l'**ensemble des solutions qui en sont proches**. Sa définition dépend
+de la nature des variables du problème :
+
+- **variables discrètes** : un voisin s'obtient par un **décalage de composantes de
+  la donnée** — on modifie légèrement la solution en réarrangeant ses éléments ;
+- **variables continues** : le voisinage est une **hypersphère** ou un **hypercube
+  centré autour de la donnée** — l'ensemble des points situés à une faible distance.
+
+Le voisinage est donc une **région locale** de l'espace de recherche. Sur la courbe
+`f(X)`, on visualise un **voisinage de points** comme une petite fenêtre encadrant
+une solution et ses proches. C'est dans cette fenêtre que se lit le caractère
+**local** d'un optimum.
+
+Le voisinage joue un rôle central dans les méthodes de ce module : explorer le
+voisinage d'une solution, c'est **générer de nouvelles solutions candidates** à
+partir d'une solution courante. La section sur le recuit simulé y reviendra avec la
+notion de **perturbation**.
+
+> **À retenir** : le **voisinage** d'une solution est l'ensemble des solutions
+> **proches** — décalage de composantes (cas discret), hypersphère ou hypercube (cas
+> continu). C'est sur lui que repose la définition d'**optimum local**.
+
+## Combinatoire ou continu : la typologie des problèmes
+
+L'optimisation se scinde d'abord en **deux grandes familles**, selon la nature des
+variables.
+
+**L'optimisation combinatoire** porte sur des **variables discrètes**. L'ensemble des
+solutions y est *fini*, mais sa taille explose avec celle du problème. Le cours
+recense plusieurs problèmes combinatoires emblématiques :
+
+- le **voyageur de commerce** (étudié en détail à la section suivante) ;
+- la **tournée de véhicules** ;
+- la **coloration de graphe** ;
+- le **sac à dos** ;
+- la **planification**…
+
+**L'optimisation continue** porte sur des **variables continues**. Les problèmes
+peuvent y prendre la forme :
+
+- d'une **fonction analytique** (les fonctions *benchmarks* servant à tester les
+  algorithmes) ;
+- d'une **expression non analytique** (code de calcul, problème inverse) ;
+- de **problèmes variés** issus de la géométrie, de la chimie, de la physique…
+
+Au-delà de cette première coupure, le cours dresse une **typologie plus fine** des
+problèmes d'optimisation :
+
+- problèmes de **minimisation / maximisation** ;
+- problèmes **mono-objectif**, **multi-objectifs**, *« many »-objectifs* ;
+- problèmes à variables **discrètes / continues / mixtes** ;
+- problèmes **sous contraintes** ;
+- problèmes **à grande dimension** ;
+- problèmes **dynamiques**.
+
+> **À retenir** : l'optimisation se partage entre **combinatoire** (variables
+> **discrètes**, ensemble fini mais immense — TSP, sac à dos…) et **continue**
+> (variables **continues** — fonctions analytiques, codes de calcul…), avec une
+> typologie fine (mono/multi-objectif, contraintes, grande dimension, dynamique).
+
+## L'optimisation difficile et la malédiction de la dimension
+
+Toutes les méthodes d'optimisation ne se valent pas, et tous les problèmes ne sont
+pas accessibles aux mêmes méthodes. Le cours organise le domaine autour d'une
+distinction décisive : celle de l'**optimisation difficile**.
+
+Pour les problèmes combinatoires, on peut parfois disposer d'une **méthode exacte
+(dédiée)**, qui fournit la solution optimale. Mais lorsque aucune méthode exacte
+efficace n'existe, on entre dans le domaine de l'**optimisation difficile** : il faut
+alors recourir à des **méthodes approchées**. Pour les problèmes continus, on
+distingue le cas **linéaire** (relevant de la *programmation linéaire*) du cas **non
+linéaire**, lui aussi rangé du côté de l'optimisation difficile.
+
+Une cause majeure de cette difficulté est la **malédiction de la dimension** (*curse
+of dimensionality*). L'idée : à mesure que le **nombre de variables augmente**, le
+volume de l'espace de recherche **croît de manière explosive**. Le cours l'illustre
+en découpant un domaine en régions : `4` régions en dimension `1`, `16` en dimension
+`2`, `64` en dimension `3` — l'espace à fouiller est multiplié à chaque dimension
+ajoutée. Couvrir convenablement un tel espace devient vite **hors de portée**.
+
+> ⚠️ La **malédiction de la dimension** : le volume de l'espace de recherche
+> **explose** avec le nombre de variables. C'est l'une des raisons pour lesquelles
+> les problèmes d'**optimisation difficile** échappent aux méthodes exactes.
+
+## Les méthodes approchées : heuristiques et métaheuristiques
+
+Face à l'optimisation difficile, les **méthodes approchées** renoncent à *garantir*
+l'optimum global, mais cherchent une **bonne solution en un temps raisonnable**. Le
+cours en distingue deux sortes.
+
+- Les **heuristiques (spécialisées)** : des méthodes **conçues pour un problème
+  précis**, exploitant ses particularités.
+- Les **métaheuristiques** : des méthodes **génériques**, applicables à de
+  nombreux problèmes, et capables d'une recherche **globale**.
+
+Les métaheuristiques se subdivisent elles-mêmes, notamment, en méthodes de
+**voisinage** (qui font évoluer une solution dans son voisinage) et en méthodes
+**distribuées** (qui font travailler une population de solutions). Le **recuit
+simulé**, cœur de ce module, est une métaheuristique de voisinage.
+
+> **À retenir** : pour l'optimisation **difficile**, on emploie des **méthodes
+> approchées** — soit des **heuristiques spécialisées** (taillées pour un problème),
+> soit des **métaheuristiques génériques** (applicables largement, recherche
+> globale).
+
+## Ce qui caractérise une métaheuristique
+
+Selon le cours, **les métaheuristiques sont des méthodes** :
+
+- **globales** : elles cherchent l'optimum **global**, et non un simple optimum local ;
+- **stochastiques** : elles font intervenir le **hasard** dans leur déroulement ;
+- **génériques**, *même si dépendantes du contexte continu ou discret* : un même
+  schéma s'adapte à de nombreux problèmes ;
+- **qui ne garantissent pas l'optimalité** : elles renvoient une **bonne** solution,
+  sans certitude qu'elle soit *la* meilleure ;
+- **basées sur des analogies** avec la **biologie**, la **physique**, l'**éthologie**…
+  Le recuit simulé, on le verra, s'inspire de la **physique des matériaux**.
+
+C'est cet usage du hasard qui justifie le titre du module : **optimisation
+stochastique**.
+
+## Les éléments constitutifs d'une métaheuristique
+
+Le cours décompose la **structure commune** des métaheuristiques. Elles sont
+généralement composées :
+
+- d'**une ou plusieurs** (population) **solutions initiales** ;
+- d'une **stratégie de génération de nouvelle solution basée sur l'aléatoire** ;
+- d'un **critère d'acceptation** d'une nouvelle solution ;
+- de **coefficients de contrôle** du comportement de l'algorithme ;
+- du **partage d'information** et de l'usage d'une **mémoire** des solutions
+  explorées ;
+- d'un **critère de convergence** qui décide de l'arrêt.
+
+Deux choix méritent d'être détaillés dès maintenant : l'**initialisation** et le
+compromis **exploration / exploitation**.
+
+**L'initialisation.** On peut produire la ou les solutions de départ :
+
+- **aléatoirement** ;
+- de **manière intelligente** — *sampling*, **hypercubes latins**, **séquence de
+  Halton**, etc. — pour mieux couvrir l'espace de recherche.
+
+> **À retenir** : une métaheuristique combine **solution(s) initiale(s)**, une
+> **génération aléatoire** de nouvelles solutions, un **critère d'acceptation**, des
+> **coefficients de contrôle**, une éventuelle **mémoire**, et un **critère de
+> convergence**.
+
+## Exploration contre exploitation
+
+Toute recherche met en tension **deux comportements opposés et complémentaires**.
+
+- L'**exploration** : *parcourir largement* l'espace de recherche, visiter des
+  régions variées et **éloignées**, pour ne pas passer à côté de l'optimum global.
+  Le cours l'image par la **carte et la boussole** du voyageur.
+- L'**exploitation** : *creuser intensivement* le voisinage d'une **bonne solution
+  déjà connue**, pour l'affiner. Le cours l'image par l'enfant **penché au sol**,
+  concentré sur un détail.
+
+Trop d'exploration, et l'algorithme erre sans jamais affiner une solution. Trop
+d'exploitation, et il s'**enferme dans le premier optimum local** rencontré. **Une
+bonne métaheuristique sait doser les deux** — et, mieux encore, **basculer
+progressivement** de l'exploration vers l'exploitation au fil de la recherche. C'est
+exactement ce que réalisera le **refroidissement** du recuit simulé : explorer
+largement au début, exploiter finement à la fin.
+
+La recherche locale s'appuie d'ailleurs sur des outils dédiés au **voisinage** :
+méthodes du **gradient**, **Newton-Raphson**, **dichotomie**, **polytope de
+Nelder-Mead**… que l'on peut **hybrider** avec les métaheuristiques.
+
+> ⚠️ **Exploration** et **exploitation** tirent dans des sens **opposés** : trop
+> explorer, c'est ne rien affiner ; trop exploiter, c'est se **piéger** dans un
+> optimum local. Une métaheuristique doit **équilibrer** les deux.
+
+## Synthèse de la section
+
+**Optimiser**, c'est trouver la solution `X` minimisant (ou maximisant) une **fonction
+objectif `f`** ; ce module traite la **minimisation**. Sur la courbe de `f`, il faut
+distinguer les **optima locaux** (meilleurs que leur **voisinage** immédiat
+seulement) de l'unique **optimum global `x*`** — le piège étant de s'**enfermer dans
+un optimum local**. Le **voisinage** d'une solution se définit par décalage de
+composantes (discret) ou par une hypersphère/hypercube (continu). Les problèmes se
+partagent entre optimisation **combinatoire** (variables discrètes : TSP, sac à
+dos…) et **continue** ; les plus durs relèvent de l'**optimisation difficile**,
+aggravée par la **malédiction de la dimension**. On les attaque par des **méthodes
+approchées** : **heuristiques** spécialisées ou **métaheuristiques** génériques. Une
+métaheuristique est **globale, stochastique, générique**, **ne garantit pas
+l'optimalité**, et repose sur une **analogie** avec la nature ; elle se construit
+autour de solution(s) initiale(s), d'une génération aléatoire, d'un critère
+d'acceptation et d'un critère de convergence, en arbitrant sans cesse entre
+**exploration** et **exploitation**.
+
+> **À retenir** : retenir trois couples — **optimum local / optimum global**,
+> **combinatoire / continu**, **exploration / exploitation** — et la définition d'une
+> **métaheuristique** : méthode **globale, stochastique, générique**, **sans garantie
+> d'optimalité**, inspirée de la nature.

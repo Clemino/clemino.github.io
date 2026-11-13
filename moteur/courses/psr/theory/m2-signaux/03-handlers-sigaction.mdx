@@ -1,0 +1,302 @@
+---
+title: "Capturer un signal : signal, sigaction"
+slug: handlers-sigaction
+order: 3
+estimatedReadMin: 17
+concepts: [gestionnaire-signal, signal-fonction, sigaction, sig-dfl-ign, async-signal-safe, strsignal, sigchld]
+source: "Cours 2 — Les signaux"
+---
+
+Le chapitre précédent a montré comment **émettre** un signal. Voici maintenant la **seconde moitié** du mécanisme : comment un processus **capture** un signal pour exécuter sa propre fonction de traitement, au lieu de subir l'action par défaut.
+
+## Le principe du déroutement
+
+Quand un signal est intercepté, sa réception provoque un **déroutement** : le processus interrompt son code et exécute une **routine spécifique de traitement** — le **gestionnaire** (en anglais *handler*). Après le traitement, le processus **reprend exactement où il avait été interrompu**.
+
+Trois manières, donc, de répondre à un signal — récapitulons :
+
+1. **Action par défaut** — le système applique le comportement standard du signal.
+2. **Ignorer** le signal — aucun effet.
+3. **Intercepter** le signal — un gestionnaire est invoqué, puis le code reprend.
+
+Le déroutement peut s'installer de deux façons : depuis un programme C, par les appels système **`signal()`** et **`sigaction()`** ; depuis le shell, par la commande **`trap`** (`trap 'commande' signal1 signal2 ...`). Ce chapitre traite des deux appels C.
+
+## La méthode historique : `signal()`
+
+L'appel système **`signal()`** installe un gestionnaire pour un signal donné :
+
+```c
+#include <signal.h>
+
+void (*signal(int signum, void (*handler)(int)))(int);
+```
+
+Ce prototype est notoirement difficile à lire. Décortiquons-le :
+
+- **`signum`** — le signal à intercepter (`SIGINT`, `SIGUSR1`…) ;
+- **`handler`** — un **pointeur sur fonction** : l'adresse de la fonction qui traitera le signal. Cette fonction prend **un seul argument entier** (le numéro du signal reçu) et ne renvoie rien (`void`) ;
+- la **valeur de retour** de `signal()` est l'**ancien** gestionnaire (celui qui était installé avant) ; en cas d'échec, `signal()` renvoie la constante **`SIG_ERR`**.
+
+À la place d'un pointeur de fonction, `handler` peut prendre l'une de **deux constantes prédéfinies** :
+
+- **`SIG_DFL`** — rétablir le **comportement par défaut** du signal ;
+- **`SIG_IGN`** — **ignorer** le signal.
+
+### Le gestionnaire : une fonction `void f(int)`
+
+Un gestionnaire est une fonction ordinaire dont la signature est imposée : `void` en retour, un `int` en paramètre. Cet entier reçoit le **numéro du signal** qui a déclenché le déroutement — ce qui permet d'utiliser **un même gestionnaire pour plusieurs signaux** et de les distinguer à l'intérieur.
+
+L'exemple suivant (fidèle au cours) installe un gestionnaire commun pour trois signaux clavier, et illustre au passage que `SIGKILL` ne peut **pas** être intercepté :
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <signal.h>
+
+/* gestionnaire commun a plusieurs signaux */
+void handler(int sig) {
+    printf("Bien recu %d %s\n", sig, strsignal(sig));
+    if (sig == SIGINT) {
+        printf("Fin volontaire\n");
+        exit(1);
+    }
+}
+
+int main(void) {
+    signal(SIGINT,  handler);   /* Ctrl-C  : signal 2  */
+    signal(SIGQUIT, handler);   /* Ctrl-\  : signal 3  */
+    signal(SIGTSTP, handler);   /* Ctrl-Z  : signal 20 */
+
+    /* SIGKILL n'est PAS deroutable : signal() echoue avec SIG_ERR */
+    if (signal(SIGKILL, handler) == SIG_ERR)
+        perror("SIGKILL");
+
+    for (;;) ;                  /* boucle d'attente */
+    return 0;
+}
+```
+
+La fonction **`strsignal(int sig)`** (déclarée dans `<string.h>`) renvoie une **chaîne décrivant le signal** correspondant au numéro `sig` — pratique pour afficher un message lisible.
+
+### Ignorer un signal avec `SIG_IGN`
+
+Pour rendre un signal **inopérant**, on l'installe avec `SIG_IGN`. Le programme suivant rend `Ctrl-C` sans effet — on ne pourra plus l'arrêter qu'avec `kill -9` :
+
+```c
+/* Rendre Ctrl-C (SIGINT) inoperant.
+   L'arret de ce programme devra se faire avec : kill -9 <pid> */
+#include <signal.h>
+
+int main(void) {
+    signal(SIGINT, SIG_IGN);    /* SIGINT desormais ignore */
+    for (;;) ;
+    return 0;
+}
+```
+
+### Le problème de portabilité de `signal()`
+
+`signal()` est simple, mais elle traîne un **lourd passé**. Historiquement, deux comportements incompatibles ont coexisté :
+
+- la sémantique **System V** — après réception du signal, le gestionnaire est **automatiquement désinstallé** : le signal **revient au comportement par défaut**. Si l'on veut continuer à intercepter le signal, il faut **réinstaller** le gestionnaire à chaque fois, **depuis l'intérieur du gestionnaire** ;
+- la sémantique **BSD** — le gestionnaire **reste installé** après chaque déclenchement.
+
+> ⚠️ Le comportement exact de `signal()` **dépend du système** et de ses options de compilation. Sur un système à sémantique System V, un gestionnaire installé par `signal()` ne fonctionne **qu'une seule fois** : au deuxième signal, c'est l'action **par défaut** qui s'applique — souvent la **terminaison** du processus. C'est un piège classique. La réinstallation `signal(sig, handler)` **en tête du gestionnaire** atténue le problème, mais elle laisse une **fenêtre de course** : entre le déclenchement et la réinstallation, un deuxième signal frapperait le comportement par défaut.
+
+À cause de ces ambiguïtés, **`signal()` est considérée comme non fiable pour du code sérieux**. La norme POSIX recommande de lui préférer **`sigaction()`**.
+
+## La méthode recommandée : `sigaction()`
+
+L'appel système **`sigaction()`** remplace avantageusement `signal()`. Il associe un signal à un **contexte de déroutement** complet, décrit par une **structure** :
+
+```c
+#include <signal.h>
+
+int sigaction(int signum, const struct sigaction *act,
+              struct sigaction *oldact);
+```
+
+- **`signum`** — le signal à configurer ;
+- **`act`** — un pointeur vers la **nouvelle** configuration (peut être `NULL` pour seulement *consulter*) ;
+- **`oldact`** — où ranger l'**ancienne** configuration (peut être `NULL` si on ne s'en soucie pas).
+
+`sigaction` renvoie **`0`** en cas de succès et **`-1`** en cas d'erreur.
+
+### La structure `struct sigaction`
+
+Toute la configuration tient dans cette structure :
+
+```c
+struct sigaction {
+    void     (*sa_handler)(int);  /* SIG_DFL, SIG_IGN, ou un pointeur de gestionnaire */
+    sigset_t   sa_mask;           /* signaux a BLOQUER pendant l'execution du gestionnaire */
+    int        sa_flags;          /* options modifiant le comportement */
+    /* (champ sa_sigaction pour les gestionnaires etendus, non traite ici) */
+};
+```
+
+Examinons les trois champs essentiels :
+
+- **`sa_handler`** — le **seul champ obligatoire**. C'est un pointeur sur la fonction de traitement, ou l'une des constantes `SIG_DFL` / `SIG_IGN`. Il joue exactement le rôle du paramètre `handler` de `signal()`.
+- **`sa_mask`** — un **ensemble de signaux** (voir chapitre 4) qui seront **bloqués pendant toute l'exécution du gestionnaire**. C'est une garantie précieuse : on peut empêcher un signal d'interrompre le traitement d'un autre. Le signal qui a déclenché le gestionnaire est, lui, **automatiquement bloqué** pendant son propre traitement.
+- **`sa_flags`** — un OU binaire d'**options**. La plus utile est **`SA_RESTART`** : elle demande de **reprendre automatiquement** les appels système lents (comme `read`) qui auraient été interrompus par le signal, au lieu de les faire échouer avec `EINTR`.
+
+> ⚠️ Avant de remplir une `struct sigaction`, **initialisez-la entièrement** — typiquement en mettant `sa_mask` à l'ensemble vide avec `sigemptyset(&act.sa_mask)` et `sa_flags` à `0`. Une structure laissée avec des champs non initialisés (variable locale) contient des **valeurs aléatoires** : `sa_flags` ou `sa_mask` parasites produisent un comportement **imprévisible**. C'est l'erreur de débutant la plus fréquente avec `sigaction`.
+
+### Exemple complet avec `sigaction()`
+
+Voici l'équivalent rigoureux de l'exemple précédent, écrit avec `sigaction()` :
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <signal.h>
+
+void handler(int sig) {
+    printf("Bien recu %d %s\n", sig, strsignal(sig));
+    if (sig == SIGINT) {
+        printf("Fin volontaire\n");
+        exit(1);
+    }
+}
+
+int main(void) {
+    struct sigaction act;
+
+    act.sa_handler = handler;       /* fonction de traitement       */
+    sigemptyset(&act.sa_mask);      /* aucun signal bloque en plus  */
+    act.sa_flags = 0;               /* aucune option particuliere   */
+
+    sigaction(SIGINT,  &act, NULL); /* Ctrl-C  */
+    sigaction(SIGQUIT, &act, NULL); /* Ctrl-\  */
+    sigaction(SIGTSTP, &act, NULL); /* Ctrl-Z  */
+
+    /* SIGKILL reste non deroutable : sigaction echoue avec -1 */
+    if (sigaction(SIGKILL, &act, NULL) == -1)
+        perror("SIGKILL");
+
+    for (;;) ;
+    return 0;
+}
+```
+
+Contrairement à `signal()`, le gestionnaire installé par `sigaction()` **reste installé** après chaque déclenchement : pas de réinstallation, pas de fenêtre de course. C'est la raison principale de le préférer.
+
+### `signal()` vs `sigaction()`
+
+| Critère | `signal()` | `sigaction()` |
+|---|---|---|
+| Portabilité | comportement **ambigu** (System V / BSD) | comportement **défini par POSIX**, identique partout |
+| Persistance du gestionnaire | **incertaine** (peut se désinstaller) | gestionnaire **persistant** |
+| Contrôle du masque pendant le traitement | **aucun** | champ `sa_mask` |
+| Options (`SA_RESTART`…) | aucune | champ `sa_flags` |
+| Verdict | à éviter pour du code sérieux | **recommandé** |
+
+## La règle d'or : un gestionnaire doit être *async-signal-safe*
+
+Un gestionnaire de signal s'exécute dans un contexte **très particulier** : il **interrompt** le code principal à un point **quelconque**, choisi par personne. Au moment où le gestionnaire démarre, le programme peut être **en plein milieu** d'une opération de la bibliothèque C — par exemple à l'intérieur de `printf`, qui n'a pas fini de mettre à jour ses tampons internes.
+
+Si le gestionnaire appelle alors **lui aussi** `printf`, il réentre dans une fonction **déjà en cours** et dont les structures internes sont **dans un état incohérent**. Le résultat est imprévisible : affichage corrompu, blocage (*deadlock*), voire plantage.
+
+> ⚠️ **N'appelez dans un gestionnaire que des fonctions *async-signal-safe*.** Une fonction est dite *async-signal-safe* si elle peut être appelée **sans risque** depuis un gestionnaire. La norme POSIX en fournit une liste précise : on y trouve `write`, `_exit`, `kill`, `signal`, `sigaction`, `read`, `alarm`, `pause`… mais **`printf`, `malloc`, `free`, `scanf`, `exit` (celui de la bibliothèque) n'en font PAS partie**. Les appeler dans un gestionnaire est un **comportement indéfini**.
+
+> ⚠️ Les exemples de ce module — et ceux du cours — utilisent `printf` dans les gestionnaires **pour rester lisibles**. C'est une simplification pédagogique **tolérée en TP**, mais à proscrire dans tout code réel. Dans un gestionnaire correct, on remplace `printf("...")` par `write(STDOUT_FILENO, "...", longueur)` (qui, lui, est sûr), et `exit()` par **`_exit()`** (la version *async-signal-safe* de la terminaison).
+
+### Le bon réflexe : `volatile sig_atomic_t`
+
+Un gestionnaire correct fait donc **le moins de choses possible**. Le motif idéal : le gestionnaire se contente de **positionner un drapeau**, et c'est le **code principal** qui, en voyant le drapeau changer, fait le vrai travail.
+
+Ce drapeau doit être déclaré **`volatile sig_atomic_t`** :
+
+- **`volatile`** interdit au compilateur d'optimiser les accès à la variable — il doit la **relire en mémoire** à chaque fois, car elle peut changer « par surprise » dans le gestionnaire ;
+- **`sig_atomic_t`** est un type entier dont la **lecture et l'écriture sont atomiques** : elles ne peuvent pas être coupées en deux par un signal.
+
+```c
+#include <stdio.h>
+#include <signal.h>
+#include <unistd.h>
+
+/* drapeau partage entre le gestionnaire et le main */
+volatile sig_atomic_t doit_quitter = 0;
+
+void handler(int sig) {
+    (void) sig;
+    doit_quitter = 1;          /* SEULE action : poser le drapeau */
+}
+
+int main(void) {
+    struct sigaction act;
+    act.sa_handler = handler;
+    sigemptyset(&act.sa_mask);
+    act.sa_flags = 0;
+    sigaction(SIGINT, &act, NULL);
+
+    while (!doit_quitter) {     /* le vrai travail est ici, dans le main */
+        printf("je travaille...\n");
+        sleep(1);
+    }
+    printf("Arret propre demande par SIGINT.\n");
+    return 0;
+}
+```
+
+Ici le gestionnaire ne fait qu'une chose **atomique et sûre** : `doit_quitter = 1`. Tout le reste — l'affichage, la sortie de boucle — se passe dans le `main`, en dehors du contexte dangereux du gestionnaire.
+
+## Un cas d'usage majeur : intercepter `SIGCHLD`
+
+L'interception de **`SIGCHLD`** est l'application la plus utile des gestionnaires, et un grand classique d'examen. Rappel du Module 1 : un fils terminé non récupéré par `wait` devient un **zombie**. Or le noyau envoie **`SIGCHLD`** au père **dès qu'un fils se termine**. Il suffit donc d'installer un gestionnaire de `SIGCHLD` qui appelle `wait` : le père récupère ses fils **automatiquement**, sans avoir à bloquer dans un `wait` explicite.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
+
+/* recupere tout fils termine des qu'un SIGCHLD arrive */
+void recolte(int sig) {
+    (void) sig;
+    /* WNOHANG + boucle : plusieurs fils peuvent finir "en meme temps",
+       or les SIGCHLD ne se mettent pas en file (chapitre 1). */
+    while (waitpid(-1, NULL, WNOHANG) > 0)
+        ;
+}
+
+int main(void) {
+    struct sigaction act;
+    act.sa_handler = recolte;
+    sigemptyset(&act.sa_mask);
+    act.sa_flags = 0;
+    sigaction(SIGCHLD, &act, NULL);
+
+    for (int i = 0; i < 3; i++) {
+        if (fork() == 0) {              /* trois fils */
+            printf("Fils %d (PID %d)\n", i, (int) getpid());
+            exit(0);
+        }
+    }
+
+    /* le pere vaque a ses occupations : pas de wait explicite,
+       les fils sont recoltes par le gestionnaire de SIGCHLD.
+       Note : l'ordre d'affichage des fils et du pere n'est pas garanti —
+       l'exemple illustre le patron de recolte par gestionnaire, pas une
+       sortie deterministe. */
+    for (int t = 0; t < 5; t++) {
+        printf("Pere : je travaille...\n");
+        sleep(1);
+    }
+    return 0;
+}
+```
+
+> ⚠️ Le gestionnaire de `SIGCHLD` appelle `waitpid` **dans une boucle** avec l'option **`WNOHANG`**. C'est indispensable : si **plusieurs** fils se terminent dans un intervalle très court, le père ne recevra **qu'un seul `SIGCHLD`** (les signaux standard ne se mettent pas en file — chapitre 1). Un seul `wait` ne récolterait qu'un seul fils, laissant les autres zombies. La **boucle** `while (waitpid(...) > 0)` vide tous les fils terminés ; `WNOHANG` la fait s'arrêter (retour `0`) dès qu'il n'y en a plus, sans bloquer.
+
+> **À retenir**
+> - **Intercepter** un signal installe un **gestionnaire** (*handler*) : à la réception, le processus déroute vers cette fonction `void f(int)`, puis reprend où il en était. L'argument entier reçoit le **numéro du signal**.
+> - **`signal(signum, handler)`** est simple mais **non portable** : son comportement (gestionnaire persistant ou non) **dépend du système**. À **éviter** pour du code sérieux.
+> - **`sigaction(signum, &act, &old)`** est la méthode **recommandée par POSIX** : comportement **défini et identique partout**, gestionnaire **persistant**, contrôle du masque (`sa_mask`) et des options (`sa_flags`, dont `SA_RESTART`). **Toujours initialiser** la `struct sigaction` (`sigemptyset` + `sa_flags = 0`).
+> - `SIG_DFL` rétablit l'action par défaut, `SIG_IGN` ignore le signal ; `SIGKILL` et `SIGSTOP` **ne peuvent pas** être interceptés (échec `SIG_ERR` / `-1`).
+> - Un gestionnaire doit n'appeler que des fonctions **async-signal-safe** (`write`, `_exit`, `kill`…) : **jamais** `printf`, `malloc`, `exit`. Le motif sûr : le gestionnaire **pose un drapeau** `volatile sig_atomic_t`, le code principal fait le reste.
+> - Cas d'usage majeur : un gestionnaire de **`SIGCHLD`** qui appelle `waitpid(-1, ..., WNOHANG)` **en boucle** récolte les fils terminés automatiquement et **évite les zombies**.

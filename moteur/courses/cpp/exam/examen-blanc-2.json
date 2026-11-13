@@ -1,0 +1,262 @@
+{
+  "slug": "examen-blanc-2",
+  "title": "Examen blanc 2 — Héritage, polymorphisme et flux",
+  "description": "Partiel couvrant les modules SE4 et SE5 : héritage et relation est-un, redéfinition et méthodes virtuelles, classes abstraites, collections polymorphes, flux standard et fichiers. Quatorze questions à difficulté croissante, à traiter en 90 minutes.",
+  "durationMinutes": 90,
+  "totalPoints": 20,
+  "exercises": [
+    {
+      "chapterSlug": "heritage",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Quelle relation conceptuelle l'héritage public modélise-t-il entre une classe dérivée et sa classe de base ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "La relation « possède un » (composition)." },
+          { "id": "b", "label": "La relation « est un » (spécialisation)." },
+          { "id": "c", "label": "La relation « utilise un » (dépendance)." },
+          { "id": "d", "label": "La relation « crée un » (fabrique)." }
+        ]
+      },
+      "solution": { "correct": ["b"] },
+      "explanation": "L'héritage public modélise la relation **« est un »** : une classe dérivée est une version plus spécialisée de sa classe de base (un `Etudiant` est une `Personne`). La relation « possède un » correspond à la composition (un attribut membre), pas à l'héritage.",
+      "concepts": ["heritage", "classe-base-derivee"]
+    },
+    {
+      "chapterSlug": "heritage",
+      "type": "TRUE_FALSE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Sous héritage, le constructeur de la classe de base est appelé **avant** celui de la classe dérivée, et les destructeurs s'exécutent dans l'ordre inverse.",
+      "payload": {},
+      "solution": { "value": true },
+      "explanation": "Vrai : à la construction d'un objet dérivé, le constructeur de la **base** s'exécute en premier (la sous-partie base doit exister avant qu'on initialise la partie dérivée), puis celui de la dérivée. Les destructeurs suivent l'ordre **inverse** : dérivée d'abord, base ensuite.",
+      "concepts": ["ordre-construction-heritage", "classe-base-derivee"]
+    },
+    {
+      "chapterSlug": "redefinition-virtual",
+      "type": "MCQ_MULTI",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Quelles affirmations sur une méthode déclarée `virtual` dans la classe de base sont correctes ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Un appel via pointeur ou référence exécute la version du type réel de l'objet." },
+          { "id": "b", "label": "Elle permet la liaison dynamique (résolution à l'exécution)." },
+          { "id": "c", "label": "Le mot-clé override fait vérifier par le compilateur qu'une redéfinition existe bien." },
+          { "id": "d", "label": "Sans virtual, un appel via pointeur de base exécute toujours la version de la base." },
+          { "id": "e", "label": "Une méthode virtuelle ne peut jamais être redéfinie dans une dérivée." }
+        ]
+      },
+      "solution": { "correct": ["a", "b", "c", "d"] },
+      "explanation": "Une méthode `virtual` est résolue en **liaison dynamique** : l'appel via pointeur/référence exécute la version du **type réel** de l'objet. `override` fait vérifier par le compilateur que la signature redéfinit bien une virtuelle. Sans `virtual`, c'est le **type déclaré** du pointeur qui décide (liaison statique). Une virtuelle est justement faite pour être redéfinie.",
+      "concepts": ["methode-virtuelle", "liaison-dynamique", "redefinition", "override-final"]
+    },
+    {
+      "chapterSlug": "classes-abstraites",
+      "type": "FILL_BLANK",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Complète la déclaration d'une **méthode virtuelle pure** `aire` dans la classe abstraite `Forme`.",
+      "payload": {
+        "template": "class Forme {\n    public:\n        {{kw}} double aire() const {{pur}};\n};",
+        "slots": [
+          { "id": "kw", "width": "sm" },
+          { "id": "pur", "width": "sm" }
+        ]
+      },
+      "solution": {
+        "answers": { "kw": "virtual", "pur": "= 0" },
+        "caseSensitive": false
+      },
+      "explanation": "Une **méthode virtuelle pure** se déclare `virtual` suivie de `= 0` à la place du corps : `virtual double aire() const = 0;`. Elle n'a aucune définition dans la base et **impose** sa signature aux classes dérivées. Une classe contenant au moins une virtuelle pure est **abstraite** : elle ne peut pas être instanciée.",
+      "concepts": ["methode-virtuelle-pure", "classe-abstraite"]
+    },
+    {
+      "chapterSlug": "redefinition-virtual",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Quelle est la sortie exacte de ce programme ? Les méthodes `crier` sont virtuelles.",
+      "payload": {
+        "program": "#include <iostream>\nusing namespace std;\n\nclass Animal {\n    public:\n        virtual void crier() const { cout << \"...\" << endl; }\n        virtual ~Animal() {}\n};\n\nclass Chien : public Animal {\n    public:\n        void crier() const override { cout << \"Wouf\" << endl; }\n};\n\nclass Chat : public Animal {\n    public:\n        void crier() const override { cout << \"Miaou\" << endl; }\n};\n\nint main() {\n    Animal* a = new Chien();\n    Animal* b = new Chat();\n    a->crier();\n    b->crier();\n    delete a;\n    delete b;\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "Wouf\nMiaou" },
+      "explanation": "`crier` étant `virtual`, l'appel via un pointeur `Animal*` exécute la version du **type réel** de l'objet pointé : `a` pointe un `Chien` donc `crier()` affiche `Wouf`, `b` pointe un `Chat` donc `Miaou`. C'est la liaison dynamique, cœur du polymorphisme.",
+      "concepts": ["polymorphisme", "liaison-dynamique", "methode-virtuelle"]
+    },
+    {
+      "chapterSlug": "heritage",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Quelle est la sortie exacte de ce programme à trois niveaux d'héritage ?",
+      "payload": {
+        "program": "#include <iostream>\nusing namespace std;\n\nclass Base {\n    public:\n        Base() { cout << \"Base() \"; }\n        ~Base() { cout << \"~Base() \"; }\n};\n\nclass Milieu : public Base {\n    public:\n        Milieu() { cout << \"Milieu() \"; }\n        ~Milieu() { cout << \"~Milieu() \"; }\n};\n\nclass Derivee : public Milieu {\n    public:\n        Derivee() { cout << \"Derivee() \"; }\n        ~Derivee() { cout << \"~Derivee() \"; }\n};\n\nint main() {\n    Derivee d;\n    cout << \"| \";\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "Base() Milieu() Derivee() | ~Derivee() ~Milieu() ~Base()" },
+      "explanation": "À la construction de `d`, les constructeurs s'enchaînent du plus général au plus spécialisé : `Base()`, `Milieu()`, `Derivee()`. Après l'affichage de `|`, à la fin du `main`, les destructeurs s'exécutent dans l'ordre **strictement inverse** : `~Derivee()`, `~Milieu()`, `~Base()`.",
+      "concepts": ["ordre-construction-heritage", "destructeur"]
+    },
+    {
+      "chapterSlug": "polymorphisme-collections",
+      "type": "MATCHING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Associe chaque notion liée au polymorphisme à sa définition.",
+      "payload": {
+        "left": [
+          { "id": "poly", "label": "Polymorphisme" },
+          { "id": "liaison", "label": "Liaison dynamique" },
+          { "id": "coll", "label": "Collection polymorphe" },
+          { "id": "abstraite", "label": "Classe abstraite" }
+        ],
+        "right": [
+          { "id": "r1", "label": "Appeler une méthode sans connaître le type exact de l'objet" },
+          { "id": "r2", "label": "Choix de la méthode fait à l'exécution selon le type réel" },
+          { "id": "r3", "label": "Conteneur de pointeurs vers la base regroupant des objets dérivés" },
+          { "id": "r4", "label": "Classe non instanciable contenant une méthode virtuelle pure" }
+        ]
+      },
+      "solution": { "pairs": { "poly": "r1", "liaison": "r2", "coll": "r3", "abstraite": "r4" } },
+      "explanation": "Le **polymorphisme** est la capacité d'appeler une méthode sans connaître le type exact de l'objet. La **liaison dynamique** en est le mécanisme : le choix de la méthode se fait à l'exécution selon le type réel. Une **collection polymorphe** est un conteneur de pointeurs vers la base (ex. `vector<Base*>`). Une **classe abstraite** contient une virtuelle pure et n'est pas instanciable.",
+      "concepts": ["polymorphisme", "liaison-dynamique", "collection-polymorphe", "classe-abstraite"]
+    },
+    {
+      "chapterSlug": "heritage",
+      "type": "CODE_WRITE",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Écris les classes `Vehicule` (base) et `Voiture` (dérivée). Le constructeur de `Voiture` doit appeler explicitement celui de `Vehicule`. Le `main` est fourni.",
+      "payload": {
+        "spec": "Classe Vehicule : attributs protected string marque et int vitesse ; constructeur Vehicule(string m, int v) ; methode afficher() const qui ecrit 'marque a vitesse km/h' suivi d'un retour a la ligne. Classe Voiture derive publiquement de Vehicule : attribut prive int portes ; constructeur Voiture(string m, int v, int p) appelant Vehicule(m, v) dans sa liste d'initialisation ; methode afficherDetails() const qui appelle afficher() puis ecrit 'portes portes' suivi d'un retour a la ligne. Ne pas modifier le main.",
+        "std": "c++17",
+        "compare": "trimmed",
+        "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\n// definis les classes Vehicule et Voiture ici\n\nint main() {\n    string m;\n    int v, p;\n    cin >> m >> v >> p;\n    Voiture voit(m, v, p);\n    voit.afficherDetails();\n    return 0;\n}\n",
+        "tests": [
+          { "name": "renault", "stdin": "Renault 130 5", "expectedStdout": "Renault a 130 km/h\n5 portes" },
+          { "name": "peugeot", "stdin": "Peugeot 180 3", "expectedStdout": "Peugeot a 180 km/h\n3 portes" },
+          { "name": "cache", "stdin": "Tesla 200 4", "expectedStdout": "Tesla a 200 km/h\n4 portes", "hidden": true }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Vehicule {\n    protected:\n        string marque;\n        int vitesse;\n    public:\n        Vehicule(string m, int v) : marque(m), vitesse(v) {}\n        void afficher() const {\n            cout << marque << \" a \" << vitesse << \" km/h\" << endl;\n        }\n};\n\nclass Voiture : public Vehicule {\n    private:\n        int portes;\n    public:\n        Voiture(string m, int v, int p) : Vehicule(m, v), portes(p) {}\n        void afficherDetails() const {\n            afficher();\n            cout << portes << \" portes\" << endl;\n        }\n};\n\nint main() {\n    string m;\n    int v, p;\n    cin >> m >> v >> p;\n    Voiture voit(m, v, p);\n    voit.afficherDetails();\n    return 0;\n}"
+      },
+      "explanation": "Le constructeur de `Voiture` appelle explicitement celui de `Vehicule` dans sa **liste d'initialisation** : `Voiture(...) : Vehicule(m, v), portes(p) {}`. Les attributs `marque` et `vitesse` sont `protected`, donc accessibles dans `Voiture`. La méthode `afficherDetails` réutilise `afficher()` héritée de la base — c'est la réutilisation de code permise par l'héritage.",
+      "concepts": ["heritage", "ordre-construction-heritage", "acces-protected", "classe-base-derivee"]
+    },
+    {
+      "chapterSlug": "polymorphisme-collections",
+      "type": "CODE_WRITE",
+      "difficulty": 3,
+      "points": 3,
+      "prompt": "Écris les classes `Employe` (base) et `Manager` (dérivée), conçues pour une **collection polymorphe**. `salaire()` doit être virtuelle. Le `main` parcourt un `vector<Employe*>` et somme les salaires.",
+      "payload": {
+        "spec": "Classe Employe : attribut protected int salaireBase ; constructeur Employe(int s) ; methode virtuelle int salaire() const renvoyant salaireBase ; destructeur virtuel. Classe Manager derive publiquement de Employe : attribut prive int prime ; constructeur Manager(int s, int p) appelant Employe(s) ; redefinit salaire() pour renvoyer salaireBase + prime (avec override). Ne pas modifier le main.",
+        "std": "c++17",
+        "compare": "trimmed",
+        "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\n// definis les classes Employe et Manager ici\n\nint main() {\n    vector<Employe*> equipe;\n    equipe.push_back(new Employe(2000));\n    equipe.push_back(new Manager(3000, 500));\n    equipe.push_back(new Employe(2500));\n    int total = 0;\n    for (Employe* e : equipe) {\n        total += e->salaire();\n    }\n    cout << \"total = \" << total << endl;\n    for (Employe* e : equipe) {\n        delete e;\n    }\n    return 0;\n}\n",
+        "tests": [
+          { "name": "equipe mixte", "stdin": "", "expectedStdout": "total = 8000" }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Employe {\n    protected:\n        int salaireBase;\n    public:\n        Employe(int s) : salaireBase(s) {}\n        virtual int salaire() const { return salaireBase; }\n        virtual ~Employe() {}\n};\n\nclass Manager : public Employe {\n    private:\n        int prime;\n    public:\n        Manager(int s, int p) : Employe(s), prime(p) {}\n        int salaire() const override { return salaireBase + prime; }\n};\n\nint main() {\n    vector<Employe*> equipe;\n    equipe.push_back(new Employe(2000));\n    equipe.push_back(new Manager(3000, 500));\n    equipe.push_back(new Employe(2500));\n    int total = 0;\n    for (Employe* e : equipe) {\n        total += e->salaire();\n    }\n    cout << \"total = \" << total << endl;\n    for (Employe* e : equipe) {\n        delete e;\n    }\n    return 0;\n}"
+      },
+      "explanation": "`salaire()` est `virtual` : dans la boucle, `e->salaire()` exécute la version du **type réel** de chaque objet — `Employe::salaire()` pour les employés (2000 et 2500), `Manager::salaire()` pour le manager (3000 + 500 = 3500). Total : 2000 + 3500 + 2500 = 8000. Le destructeur virtuel garantit que `delete e` détruit correctement les objets dérivés via un pointeur de base.",
+      "concepts": ["collection-polymorphe", "methode-virtuelle", "liaison-dynamique", "polymorphisme"]
+    },
+    {
+      "chapterSlug": "flux-standard",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Quelle est la sortie exacte de ce programme utilisant des manipulateurs de flux ?",
+      "payload": {
+        "program": "#include <iostream>\n#include <iomanip>\nusing namespace std;\n\nint main() {\n    double prix = 3.14159;\n    cout << fixed << setprecision(2) << prix << endl;\n    cout << setw(6) << 42 << endl;\n    bool actif = true;\n    cout << boolalpha << actif << endl;\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "3.14\n    42\ntrue" },
+      "explanation": "`fixed` + `setprecision(2)` affiche `prix` avec exactement 2 décimales : `3.14`. `setw(6)` réserve un champ de 6 caractères, `42` est donc précédé de 4 espaces. `boolalpha` affiche les booléens en toutes lettres : `true` au lieu de `1`.",
+      "concepts": ["manipulateurs-flux", "flux-cout-cin-cerr"]
+    },
+    {
+      "chapterSlug": "fichiers-fstream",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Quelle est la sortie exacte de ce programme ? Il écrit dans un fichier puis le relit.",
+      "payload": {
+        "program": "#include <iostream>\n#include <fstream>\n#include <string>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"notes.txt\");\n    sortie << 12 << endl;\n    sortie << 15 << endl;\n    sortie << 9 << endl;\n    sortie.close();\n\n    ifstream entree(\"notes.txt\");\n    int note;\n    int somme = 0;\n    int nb = 0;\n    while (entree >> note) {\n        somme += note;\n        nb++;\n    }\n    entree.close();\n    cout << \"nb = \" << nb << endl;\n    cout << \"somme = \" << somme << endl;\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "nb = 3\nsomme = 36" },
+      "explanation": "Le programme écrit trois entiers (12, 15, 9) dans `notes.txt`, ferme le fichier, puis le rouvre en lecture. La boucle `while (entree >> note)` lit chaque entier jusqu'à l'échec de l'extraction (fin de fichier) : 3 valeurs lues, somme 12 + 15 + 9 = 36.",
+      "concepts": ["ifstream-ofstream-fstream", "etat-flux", "eof-fail-bad"]
+    },
+    {
+      "chapterSlug": "fichiers-fstream",
+      "type": "CODE_WRITE",
+      "difficulty": 3,
+      "points": 3,
+      "prompt": "Écris un programme qui lit un entier `n`, écrit les carrés de 1 à n (un par ligne) dans le fichier `carres.txt`, puis relit ce fichier et affiche la somme des carrés.",
+      "payload": {
+        "spec": "Lire un entier n. Ouvrir carres.txt en ecriture avec un ofstream, y ecrire i*i pour i de 1 a n, un par ligne, puis fermer. Rouvrir carres.txt en lecture avec un ifstream, lire tous les entiers, calculer leur somme. Afficher 'somme des carres = ' suivi de la somme.",
+        "std": "c++17",
+        "compare": "trimmed",
+        "starterCode": "#include <iostream>\n#include <fstream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    // ecris les carres dans carres.txt, puis relis-les et affiche la somme\n    return 0;\n}\n",
+        "tests": [
+          { "name": "trois", "stdin": "3", "expectedStdout": "somme des carres = 14" },
+          { "name": "cinq", "stdin": "5", "expectedStdout": "somme des carres = 55" },
+          { "name": "un", "stdin": "1", "expectedStdout": "somme des carres = 1", "hidden": true }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <iostream>\n#include <fstream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    ofstream sortie(\"carres.txt\");\n    for (int i = 1; i <= n; i++) {\n        sortie << i * i << endl;\n    }\n    sortie.close();\n\n    ifstream entree(\"carres.txt\");\n    if (!entree.is_open()) {\n        cerr << \"erreur\" << endl;\n        return 1;\n    }\n    int valeur;\n    int somme = 0;\n    while (entree >> valeur) {\n        somme += valeur;\n    }\n    entree.close();\n    cout << \"somme des carres = \" << somme << endl;\n    return 0;\n}"
+      },
+      "explanation": "On ouvre `carres.txt` avec un `ofstream` (mode écriture, qui écrase le fichier), on y écrit `i*i` ligne par ligne avec `<<`, puis on ferme avec `close()`. On rouvre ensuite le fichier avec un `ifstream` et la boucle `while (entree >> valeur)` lit tous les entiers jusqu'à la fin de fichier en accumulant la somme. Pour n = 3 : 1 + 4 + 9 = 14.",
+      "concepts": ["ifstream-ofstream-fstream", "mode-ouverture", "etat-flux"]
+    },
+    {
+      "chapterSlug": "redefinition-virtual",
+      "type": "CODE_FIX",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Ce programme doit afficher l'aire du disque (`12`), mais il affiche `0`. Le code compile et s'exécute sans erreur. Corrige le bug pour que la liaison dynamique fonctionne.",
+      "payload": {
+        "spec": "La classe Forme a une methode aire() const. La classe Disque derive de Forme, a un attribut prive double rayon, et redefinit aire() pour renvoyer 3 * rayon * rayon. Le main appelle aire() via un pointeur Forme* visant un Disque de rayon 2 : le resultat attendu est 12.",
+        "std": "c++17",
+        "compare": "trimmed",
+        "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Forme {\n    public:\n        double aire() const { return 0; }\n        virtual ~Forme() {}\n};\n\nclass Disque : public Forme {\n    private:\n        double rayon;\n    public:\n        Disque(double r) : rayon(r) {}\n        double aire() const { return 3 * rayon * rayon; }\n};\n\nint main() {\n    Disque d(2);\n    Forme* f = &d;\n    cout << f->aire() << endl;\n    return 0;\n}\n",
+        "tests": [
+          { "name": "disque rayon 2", "stdin": "", "expectedStdout": "12" }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual double aire() const { return 0; }\n        virtual ~Forme() {}\n};\n\nclass Disque : public Forme {\n    private:\n        double rayon;\n    public:\n        Disque(double r) : rayon(r) {}\n        double aire() const override { return 3 * rayon * rayon; }\n};\n\nint main() {\n    Disque d(2);\n    Forme* f = &d;\n    cout << f->aire() << endl;\n    return 0;\n}"
+      },
+      "explanation": "Le bug : `aire()` n'est **pas** déclarée `virtual` dans `Forme`. L'appel `f->aire()` est alors résolu en **liaison statique** d'après le type déclaré du pointeur (`Forme*`), donc `Forme::aire()` qui renvoie 0. Il faut ajouter `virtual` devant `aire()` dans la base : l'appel devient dynamique et exécute `Disque::aire()` (3 × 2 × 2 = 12). L'ajout d'`override` dans la dérivée sécurise la redéfinition.",
+      "concepts": ["methode-virtuelle", "liaison-dynamique", "redefinition", "override-final"]
+    },
+    {
+      "chapterSlug": "etats-positionnement",
+      "type": "CODE_FIX",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Ce programme doit compter le nombre de **lignes** d'un fichier. Il affiche `6` au lieu de `3`. Corrige la lecture.",
+      "payload": {
+        "spec": "Le programme ecrit trois lignes ('ligne A', 'ligne B', 'ligne C') dans journal.txt, puis le relit pour compter ses lignes. Le resultat attendu est 3.",
+        "std": "c++17",
+        "compare": "trimmed",
+        "starterCode": "#include <iostream>\n#include <fstream>\n#include <string>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"journal.txt\");\n    sortie << \"ligne A\" << endl;\n    sortie << \"ligne B\" << endl;\n    sortie << \"ligne C\" << endl;\n    sortie.close();\n\n    ifstream entree(\"journal.txt\");\n    string ligne;\n    int compte = 0;\n    while (entree >> ligne) {\n        compte++;\n    }\n    entree.close();\n    cout << \"nombre de lignes = \" << compte << endl;\n    return 0;\n}\n",
+        "tests": [
+          { "name": "trois lignes", "stdin": "", "expectedStdout": "nombre de lignes = 3" }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <iostream>\n#include <fstream>\n#include <string>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"journal.txt\");\n    sortie << \"ligne A\" << endl;\n    sortie << \"ligne B\" << endl;\n    sortie << \"ligne C\" << endl;\n    sortie.close();\n\n    ifstream entree(\"journal.txt\");\n    string ligne;\n    int compte = 0;\n    while (getline(entree, ligne)) {\n        compte++;\n    }\n    entree.close();\n    cout << \"nombre de lignes = \" << compte << endl;\n    return 0;\n}"
+      },
+      "explanation": "Le bug : l'opérateur `>>` lit **mot par mot** et s'arrête à chaque espace. Chaque ligne `ligne A` contient deux mots, le programme compte donc 3 × 2 = 6. Pour compter des lignes entières (espaces compris) il faut `std::getline(entree, ligne)`, qui lit jusqu'au saut de ligne : 3 lignes correctement comptées.",
+      "concepts": ["getline", "etat-flux", "ifstream-ofstream-fstream"]
+    }
+  ]
+}

@@ -1,0 +1,909 @@
+[
+ {
+  "chapterSlug": "definition-classifications",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Lequel de ces contrats est unilatéral ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La donation"
+    },
+    {
+     "id": "b",
+     "label": "La vente"
+    },
+    {
+     "id": "c",
+     "label": "Le bail"
+    },
+    {
+     "id": "d",
+     "label": "Le contrat d'assurance"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Dans la donation, seul le donateur s'oblige : il n'y a pas de réciprocité des obligations.",
+  "hint": "Cherche le contrat où une seule partie s'oblige.",
+  "concepts": [
+   "contrat-synallagmatique"
+  ],
+  "source": "CM, Section 2, §1 et §2 (p. 2-3) ; TD n° 2, doc. 1"
+ },
+ {
+  "chapterSlug": "definition-classifications",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Un contrat unilatéral est un acte juridique unilatéral.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Le contrat unilatéral naît d'un accord de volontés ; seule l'une des parties s'y oblige. L'acte unilatéral n'émane que d'une volonté.",
+  "hint": "Compte les volontés nécessaires à sa formation.",
+  "concepts": [
+   "contrat-synallagmatique",
+   "acte-unilateral"
+  ],
+  "source": "CM, Section 2, §1 et §2 (p. 2-3) ; TD n° 2, doc. 1"
+ },
+ {
+  "chapterSlug": "definition-classifications",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque catégorie de contrat à un exemple.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Contrat aléatoire"
+    },
+    {
+     "id": "l1",
+     "label": "Contrat réel"
+    },
+    {
+     "id": "l2",
+     "label": "Contrat solennel"
+    },
+    {
+     "id": "l3",
+     "label": "Contrat d'adhésion"
+    },
+    {
+     "id": "l4",
+     "label": "Contrat à titre gratuit"
+    }
+   ],
+   "right": [
+    {
+     "id": "r2",
+     "label": "Le contrat de mariage"
+    },
+    {
+     "id": "r0",
+     "label": "L'assurance"
+    },
+    {
+     "id": "r4",
+     "label": "La donation"
+    },
+    {
+     "id": "r1",
+     "label": "Le dépôt"
+    },
+    {
+     "id": "r3",
+     "label": "L'abonnement téléphonique"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2",
+    "l3": "r3",
+    "l4": "r4"
+   }
+  },
+  "explanation": "Ce sont les exemples du cours et du tableau du TD n° 2.",
+  "hint": "Pour chacun, cherche le critère : l'incertitude, la remise d'une chose, la forme, la négociation, la contrepartie.",
+  "concepts": [
+   "contrat-aleatoire",
+   "contrat-consensuel",
+   "contrat-adhesion",
+   "contrat-onereux"
+  ],
+  "source": "CM, Section 2, §1 et §2 (p. 2-3) ; TD n° 2, doc. 1"
+ },
+ {
+  "chapterSlug": "definition-classifications",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel contrat ne se forme que par la remise de la chose ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le contrat consensuel"
+    },
+    {
+     "id": "b",
+     "label": "Le contrat réel"
+    },
+    {
+     "id": "c",
+     "label": "Le contrat d'adhésion"
+    },
+    {
+     "id": "d",
+     "label": "Le contrat solennel"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "Article 1109 : le contrat réel, comme le dépôt ou le prêt, suppose la remise de la chose.",
+  "hint": "Pense au dépôt : tant que rien n'est confié, rien n'est formé.",
+  "concepts": [
+   "contrat-consensuel"
+  ],
+  "source": "CM, Section 2, §1 et §2 (p. 2-3) ; TD n° 2, doc. 1"
+ },
+ {
+  "chapterSlug": "definition-classifications",
+  "type": "FILL_BLANK",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Complète l'article 1101.",
+  "payload": {
+   "template": "Le contrat est un {{a}} de volontés entre deux ou plusieurs personnes destiné à créer, modifier, transmettre ou éteindre des obligations.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "md"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "accord"
+    ]
+   }
+  },
+  "explanation": "Le contrat est un acte juridique conventionnel : les volontés se rencontrent et s'entendent.",
+  "hint": "Les volontés ne se contentent pas de coexister : elles s'entendent.",
+  "concepts": [
+   "definition-contrat"
+  ],
+  "source": "CM, Section 2, §1 et §2 (p. 2-3) ; TD n° 2, doc. 1"
+ },
+ {
+  "chapterSlug": "definition-classifications",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "En cas d'incompatibilité, la règle spéciale d'un contrat nommé l'emporte sur la règle générale.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Article 1105 : les règles générales s'appliquent sous réserve des règles particulières.",
+  "hint": "Relis l'article 1105 sur les contrats nommés.",
+  "concepts": [
+   "contrat-nomme"
+  ],
+  "source": "CM, Section 2, §1 et §2 (p. 2-3) ; TD n° 2, doc. 1"
+ },
+ {
+  "chapterSlug": "definition-classifications",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quelle formule le tableau du TD n° 2 associe-t-il au contrat aléatoire ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'aléa chasse la lésion"
+    },
+    {
+     "id": "b",
+     "label": "La lésion y est toujours une cause de nullité"
+    },
+    {
+     "id": "c",
+     "label": "Il est présumé conclu à titre gratuit"
+    },
+    {
+     "id": "d",
+     "label": "L'aléa y est une cause de nullité"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Dans le contrat aléatoire, l'incertitude est voulue : on ne peut pas se plaindre d'un déséquilibre ou d'une erreur sur ce qui était incertain.",
+  "hint": "Ce qu'on a accepté comme incertain ne peut pas ensuite être reproché.",
+  "concepts": [
+   "contrat-aleatoire"
+  ],
+  "source": "CM, Section 2, §1 et §2 (p. 2-3) ; TD n° 2, doc. 1"
+ },
+ {
+  "chapterSlug": "definition-classifications",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Selon le tableau du TD n° 2, comment s'interprète un contrat d'adhésion ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Selon les seuls usages du secteur"
+    },
+    {
+     "id": "b",
+     "label": "En faveur du créancier"
+    },
+    {
+     "id": "c",
+     "label": "En faveur de celui qui a rédigé les conditions"
+    },
+    {
+     "id": "d",
+     "label": "Contre celui qui l'a proposé"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Article 1190 : le contrat d'adhésion s'interprète contre celui qui l'a proposé ; le contrat de gré à gré, en faveur du débiteur.",
+  "hint": "Le doute profite à celui qui n'a pas pu négocier.",
+  "concepts": [
+   "contrat-adhesion"
+  ],
+  "source": "CM, Section 2, §1 et §2 (p. 2-3) ; TD n° 2, doc. 1"
+ },
+ {
+  "chapterSlug": "principes-directeurs",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quelle limite l'article 1102 pose-t-il à la liberté contractuelle ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'accord préalable du juge"
+    },
+    {
+     "id": "b",
+     "label": "Les règles qui intéressent l'ordre public"
+    },
+    {
+     "id": "c",
+     "label": "L'obligation de conclure le contrat par écrit et devant notaire"
+    },
+    {
+     "id": "d",
+     "label": "Le libre choix du cocontractant"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "La liberté contractuelle ne permet pas de déroger aux règles qui intéressent l'ordre public (art. 1102, al. 2).",
+  "hint": "Relis le second alinéa de l'article 1102.",
+  "concepts": [
+   "liberte-contractuelle"
+  ],
+  "source": "CM, Section 2, §3 (p. 3-4) ; TD n° 2, doc. 2"
+ },
+ {
+  "chapterSlug": "principes-directeurs",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque article à son principe.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Article 1102"
+    },
+    {
+     "id": "l1",
+     "label": "Article 1103"
+    },
+    {
+     "id": "l2",
+     "label": "Article 1104"
+    },
+    {
+     "id": "l3",
+     "label": "Article 1193"
+    }
+   ],
+   "right": [
+    {
+     "id": "r0",
+     "label": "Liberté contractuelle"
+    },
+    {
+     "id": "r3",
+     "label": "Modification par consentement mutuel"
+    },
+    {
+     "id": "r1",
+     "label": "Force obligatoire"
+    },
+    {
+     "id": "r2",
+     "label": "Bonne foi"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2",
+    "l3": "r3"
+   }
+  },
+  "explanation": "Les trois principes directeurs ouvrent le droit des contrats ; l'article 1193 tire une conséquence de la force obligatoire.",
+  "hint": "Les trois principes se suivent ; le quatrième texte est une conséquence du deuxième.",
+  "concepts": [
+   "liberte-contractuelle",
+   "force-obligatoire",
+   "bonne-foi"
+  ],
+  "source": "CM, Section 2, §3 (p. 3-4) ; TD n° 2, doc. 2"
+ },
+ {
+  "chapterSlug": "principes-directeurs",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Depuis la réforme, la bonne foi ne s'impose qu'à l'exécution du contrat.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "L'article 1104 vise la négociation, la formation et l'exécution. C'est l'ancien article 1134, alinéa 3, qui ne visait que l'exécution.",
+  "hint": "Compte les temps du contrat cités par l'article 1104.",
+  "concepts": [
+   "bonne-foi"
+  ],
+  "source": "CM, Section 2, §3 (p. 3-4) ; TD n° 2, doc. 2"
+ },
+ {
+  "chapterSlug": "principes-directeurs",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Une clause peut écarter l'exigence de bonne foi entre professionnels.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "L'article 1104 est d'ordre public : les parties ne peuvent pas y déroger.",
+  "hint": "Quelle est la nature de la disposition sur la bonne foi ?",
+  "concepts": [
+   "bonne-foi",
+   "regles-suppletives"
+  ],
+  "source": "CM, Section 2, §3 (p. 3-4) ; TD n° 2, doc. 2"
+ },
+ {
+  "chapterSlug": "principes-directeurs",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Qu'est-ce qu'une règle supplétive ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Une règle à laquelle les parties peuvent déroger"
+    },
+    {
+     "id": "b",
+     "label": "Une règle d'ordre public"
+    },
+    {
+     "id": "c",
+     "label": "Une règle propre aux contrats nommés, fixée par un texte spécial"
+    },
+    {
+     "id": "d",
+     "label": "Une règle créée par le juge"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "La plupart des règles du droit des contrats sont supplétives ; les parties ne peuvent pas déroger aux règles d'ordre public.",
+  "hint": "Elle s'applique seulement si les parties n'en ont pas décidé autrement.",
+  "concepts": [
+   "regles-suppletives"
+  ],
+  "source": "CM, Section 2, §3 (p. 3-4) ; TD n° 2, doc. 2"
+ },
+ {
+  "chapterSlug": "principes-directeurs",
+  "type": "FILL_BLANK",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Complète l'article 1103.",
+  "payload": {
+   "template": "Les contrats légalement formés tiennent lieu de {{a}} à ceux qui les ont faits.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "md"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "loi"
+    ]
+   }
+  },
+  "explanation": "C'est la force obligatoire du contrat, héritée de l'ancien article 1134, alinéa 1er.",
+  "hint": "Le contrat s'impose aux parties comme la norme votée par le Parlement.",
+  "concepts": [
+   "force-obligatoire"
+  ],
+  "source": "CM, Section 2, §3 (p. 3-4) ; TD n° 2, doc. 2"
+ },
+ {
+  "chapterSlug": "reforme-2016",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel texte a ratifié l'ordonnance du 10 février 2016 ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La loi du 20 avril 2018"
+    },
+    {
+     "id": "b",
+     "label": "La loi du 10 février 2017"
+    },
+    {
+     "id": "c",
+     "label": "Le décret du 1er octobre 2016"
+    },
+    {
+     "id": "d",
+     "label": "La loi du 20 avril 2016"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "La loi n° 2018-287 du 20 avril 2018 ratifie l'ordonnance et en modifie certains articles.",
+  "hint": "La ratification intervient deux ans après l'ordonnance.",
+  "concepts": [
+   "reforme-2016",
+   "loi-ratification"
+  ],
+  "source": "CM, Section 1, §3 (p. 1-2)"
+ },
+ {
+  "chapterSlug": "reforme-2016",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quels objectifs le rapport au Président de la République assigne-t-il à la réforme ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Rendre le droit français plus attractif"
+    },
+    {
+     "id": "b",
+     "label": "Interdire au juge de modifier un contrat"
+    },
+    {
+     "id": "c",
+     "label": "Rendre le droit des contrats plus accessible"
+    },
+    {
+     "id": "d",
+     "label": "Supprimer la liberté contractuelle"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "c"
+   ]
+  },
+  "explanation": "Accessibilité et lisibilité d'une part, attractivité du droit français dans la concurrence des systèmes juridiques d'autre part.",
+  "hint": "Un objectif pour les justiciables, un objectif tourné vers l'étranger.",
+  "concepts": [
+   "reforme-2016"
+  ],
+  "source": "CM, Section 1, §3 (p. 1-2)"
+ },
+ {
+  "chapterSlug": "reforme-2016",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Selon le cours, la réforme renforce les pouvoirs du juge tout en incitant les parties à régler seules leurs difficultés.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Deux forces contraires : la judiciarisation et la déjudiciarisation du contrat.",
+  "hint": "Le cours parle de deux forces contradictoires.",
+  "concepts": [
+   "reforme-2016"
+  ],
+  "source": "CM, Section 1, §3 (p. 1-2)"
+ },
+ {
+  "chapterSlug": "application-temps",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Un bail commercial est conclu en 2014 et le procès a lieu en 2024. Quel droit s'applique ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le droit choisi par le locataire"
+    },
+    {
+     "id": "b",
+     "label": "Le droit issu de la loi de ratification"
+    },
+    {
+     "id": "c",
+     "label": "Le droit antérieur à la réforme"
+    },
+    {
+     "id": "d",
+     "label": "Le droit issu de la réforme, puisque le procès est postérieur"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Article 9 de l'ordonnance : les contrats conclus avant le 1er octobre 2016 demeurent soumis à la loi ancienne.",
+  "hint": "Le droit applicable dépend de la date de conclusion du contrat.",
+  "concepts": [
+   "application-temps"
+  ],
+  "source": "TD n° 2, doc. 5 et 6"
+ },
+ {
+  "chapterSlug": "application-temps",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Les contrats conclus avant le 1er octobre 2016 restent soumis à la loi ancienne, même pour leurs effets légaux.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "La loi de ratification l'a précisé : y compris pour leurs effets légaux et pour les dispositions d'ordre public.",
+  "hint": "La loi de 2018 a complété l'article 9 de l'ordonnance.",
+  "concepts": [
+   "application-temps"
+  ],
+  "source": "TD n° 2, doc. 5 et 6"
+ },
+ {
+  "chapterSlug": "application-temps",
+  "type": "MCQ_SINGLE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Quelles dispositions de l'ordonnance s'appliquent dès le 1er octobre 2016, même aux contrats antérieurs ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'article 1195 sur l'imprévision"
+    },
+    {
+     "id": "b",
+     "label": "Les alinéas 3 et 4 de l'article 1123"
+    },
+    {
+     "id": "c",
+     "label": "L'article 1143 sur l'abus de dépendance"
+    },
+    {
+     "id": "d",
+     "label": "L'alinéa 2 de l'article 1124"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "L'article 9 rend immédiatement applicables l'action interrogatoire du pacte de préférence et les articles 1158 et 1183.",
+  "hint": "Elles permettent à un tiers d'interroger le bénéficiaire d'un pacte.",
+  "concepts": [
+   "application-temps",
+   "action-interrogatoire"
+  ],
+  "source": "TD n° 2, doc. 5 et 6"
+ },
+ {
+  "chapterSlug": "application-temps",
+  "type": "ORDERING",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Remets ces étapes dans l'ordre chronologique.",
+  "payload": {
+   "items": [
+    {
+     "id": "i2",
+     "label": "La loi de ratification"
+    },
+    {
+     "id": "i0",
+     "label": "L'ordonnance portant réforme du droit des contrats"
+    },
+    {
+     "id": "i3",
+     "label": "L'entrée en vigueur de la loi de ratification"
+    },
+    {
+     "id": "i1",
+     "label": "L'entrée en vigueur de l'ordonnance"
+    }
+   ]
+  },
+  "solution": {
+   "order": [
+    "i0",
+    "i1",
+    "i2",
+    "i3"
+   ]
+  },
+  "explanation": "10 février 2016, 1er octobre 2016, 20 avril 2018, 1er octobre 2018.",
+  "hint": "Chaque texte entre en vigueur un 1er octobre.",
+  "concepts": [
+   "reforme-2016",
+   "loi-ratification"
+  ],
+  "source": "TD n° 2, doc. 5 et 6"
+ },
+ {
+  "chapterSlug": "application-temps",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Que décide le TJ Paris, le 21 mars 2024, sur la demande de révision des loyers pour imprévision ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Il applique l'article 1195 en l'interprétant par anticipation"
+    },
+    {
+     "id": "b",
+     "label": "Il réduit les loyers pendant toute la durée de la crise sanitaire"
+    },
+    {
+     "id": "c",
+     "label": "Il impose aux parties une renégociation sous son contrôle"
+    },
+    {
+     "id": "d",
+     "label": "Il la rejette : l'article 1195 ne s'applique pas"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Les baux datent de 2010 et 2014 : « toute application rétroactive de l'imprévision, même sous couvert d'interprétation du droit ancien à la lumière du droit nouveau, est constamment refusée ».",
+  "hint": "Regarde la date de conclusion des baux.",
+  "concepts": [
+   "interpretation-anticipation",
+   "imprevision"
+  ],
+  "source": "TD n° 2, doc. 5 et 6"
+ },
+ {
+  "chapterSlug": "application-temps",
+  "type": "TRUE_FALSE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Selon la loi de ratification, ses modifications de l'article 1143 ont un caractère interprétatif.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "L'article 16 de la loi de 2018 range 1143 parmi les modifications interprétatives, avec notamment l'article 1112.",
+  "hint": "La loi distingue les articles applicables aux actes nouveaux et les modifications interprétatives.",
+  "concepts": [
+   "loi-ratification"
+  ],
+  "source": "TD n° 2, doc. 5 et 6"
+ },
+ {
+  "chapterSlug": "td-seance-2",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Dans l'arrêt du 18 janvier 2023, quelle erreur la cour d'appel a-t-elle commise ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Admettre une convention d'assistance sans écrit"
+    },
+    {
+     "id": "b",
+     "label": "Refuser d'indemniser la personne assistée"
+    },
+    {
+     "id": "c",
+     "label": "Exiger que l'aide ait été offerte spontanément"
+    },
+    {
+     "id": "d",
+     "label": "Appliquer l'article 1101 issu de la réforme"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Dans une convention d'assistance bénévole, l'assistance peut être spontanément apportée par l'assistant ou sollicitée par l'assisté.",
+  "hint": "La Cour rappelle d'où peut venir l'initiative de l'aide.",
+  "concepts": [
+   "assistance-benevole"
+  ],
+  "source": "TD n° 2, doc. 3 et 6"
+ },
+ {
+  "chapterSlug": "td-seance-2",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Pour le TJ Paris (2024), le bailleur avait manqué à son obligation de délivrance pendant la crise sanitaire.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Les locaux ont été mis à disposition ; les restrictions d'exploitation étaient le seul fait du législateur. L'exception d'inexécution est rejetée.",
+  "hint": "Demande-toi qui est à l'origine des restrictions d'ouverture.",
+  "concepts": [
+   "interpretation-anticipation"
+  ],
+  "source": "TD n° 2, doc. 3 et 6"
+ },
+ {
+  "chapterSlug": "td-seance-2",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Comment D. Houtcieff qualifie-t-il la convention d'assistance bénévole ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Un engagement unilatéral"
+    },
+    {
+     "id": "b",
+     "label": "Un quasi-contrat"
+    },
+    {
+     "id": "c",
+     "label": "Un contrat involontaire"
+    },
+    {
+     "id": "d",
+     "label": "Un délit civil"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Le titre de sa note : « La convention d'assistance bénévole : l'hypothèse du contrat involontaire ».",
+  "hint": "Le titre de sa note met en avant l'absence de volonté de s'engager.",
+  "concepts": [
+   "assistance-benevole"
+  ],
+  "source": "TD n° 2, doc. 3 et 6"
+ },
+ {
+  "chapterSlug": "td-seance-2",
+  "type": "WRITING",
+  "difficulty": 3,
+  "points": 4,
+  "prompt": "Note de la séance 2 : dans quelle mesure les juges peuvent-ils interpréter l'ancien code civil à la lumière de la réforme de 2016 ? Rédige un plan détaillé.",
+  "payload": {
+   "modelAnswer": "Introduction : l'article 9 de l'ordonnance soumet les contrats conclus avant le 1er octobre 2016 à la loi ancienne, y compris pour leurs effets légaux. Pourtant, la jurisprudence étant déclarative, un revirement s'applique aux litiges en cours. La question est de savoir jusqu'où le juge peut lire l'ancien droit à la lumière du nouveau.\n\nI. Une interprétation admise. A. L'« évolution du droit des obligations » comme guide (Ch. mixte, 24 février 2017). B. L'exemple de la promesse unilatérale : refus en 2018, revirement en 2021, ralliement de la chambre commerciale en 2023, sans droit acquis à une jurisprudence constante.\n\nII. Une interprétation limitée. A. La lettre de l'article 9 : un contrat ancien reste étanche au droit nouveau. B. La résistance de l'imprévision : TJ Paris, 21 mars 2024, et la jurisprudence Canal de Craponne, qu'un revirement brutal déstabiliserait.",
+   "rubric": [
+    {
+     "id": "c0",
+     "label": "L'article 9 de l'ordonnance et sa précision de 2018 sont exposés"
+    },
+    {
+     "id": "c1",
+     "label": "L'effet déclaratif ou rétroactif de la jurisprudence est expliqué"
+    },
+    {
+     "id": "c2",
+     "label": "La promesse unilatérale sert d'exemple d'interprétation admise"
+    },
+    {
+     "id": "c3",
+     "label": "Le refus de l'imprévision (TJ Paris, 2024) sert d'exemple de limite"
+    },
+    {
+     "id": "c4",
+     "label": "Le plan répond à la question « dans quelle mesure » et ne se contente pas de décrire"
+    }
+   ]
+  },
+  "solution": {},
+  "explanation": "Ce plan n'est qu'un exemple d'entraînement, pas un corrigé officiel.",
+  "concepts": [
+   "interpretation-anticipation",
+   "application-temps"
+  ],
+  "source": "TD n° 2, exercice 2 et doc. 5 et 6 ; TD n° 3, doc. 9"
+ }
+]

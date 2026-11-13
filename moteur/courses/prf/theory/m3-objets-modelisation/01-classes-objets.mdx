@@ -1,0 +1,29 @@
+---
+title: "Classes, objets et constructeurs"
+slug: classes-objets
+order: 1
+estimatedReadMin: 12
+concepts: [class, object, constructeur, val, var]
+source: "POO/Scala_03.pdf; POO/classe (4) (2).pdf"
+---
+## Scala est aussi objet
+
+Tout objet combine donnees et methodes. Les parametres de classe peuvent devenir des champs s'ils sont precedes de `val` ou `var`.
+
+```scala
+class Point(val x: Int, val y: Int):
+  def norme2: Int = x * x + y * y
+```
+
+Sans `val` ou `var`, un parametre de constructeur n'est pas automatiquement un attribut public.
+
+## Methodes et etat
+
+Une methode pure lit l'etat et renvoie une valeur sans mutation. Un `var` interne rend le raisonnement plus proche de l'imperatif et doit etre justifie.
+
+## Objets singletons
+
+`object Main` ou `object Utils` cree une valeur unique. Un objet est souvent utilise comme point d'entree, namespace ou fabrique.
+
+> **A retenir**  
+> En Scala, objet et fonctionnel coexistent : privilegie les objets immutables et les methodes pures.

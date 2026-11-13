@@ -1,0 +1,1096 @@
+[
+  {
+    "chapterSlug": "qu-est-ce-que-l-ia",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Selon le cours, comment vaut-il mieux aborder l'intelligence artificielle plutôt que par une définition unique et fermée ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Par son vocabulaire, quelques-uns de ses concepts et quelques-unes de ses réalisations"
+        },
+        {
+          "id": "b",
+          "label": "Par la seule étude du code source de ChatGPT"
+        },
+        {
+          "id": "c",
+          "label": "Par la résolution de systèmes de milliers d'équations"
+        },
+        {
+          "id": "d",
+          "label": "Par l'apprentissage par cœur d'une définition de référence"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours introduit l'IA à travers son vocabulaire, quelques-uns de ses concepts et quelques-unes de ses réalisations. On n'apprend pas l'IA par une définition apprise par cœur, mais en confrontant des exemples de programmes intelligents et non intelligents.",
+    "concepts": [
+      "intelligence-artificielle"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "qu-est-ce-que-l-ia",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Parmi ces programmes, lequel est considéré comme un exemple d'IA ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un programme qui trie un tableau de très grande taille"
+        },
+        {
+          "id": "b",
+          "label": "Un programme qui calcule le nombre Π avec autant de décimales qu'on veut"
+        },
+        {
+          "id": "c",
+          "label": "Un programme capable de reconnaître des visages"
+        },
+        {
+          "id": "d",
+          "label": "Un programme qui résout un système ayant des milliers d'équations"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "Reconnaître des visages fait partie du groupe 2 (« ceci est de l'IA »). Le tri d'un grand tableau, le calcul de Π et la résolution d'un grand système d'équations relèvent du groupe 1 : la machine ne fait qu'exécuter des ordres explicites.",
+    "concepts": [
+      "programme-intelligent"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "qu-est-ce-que-l-ia",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Vrai ou faux : la différence entre un programme intelligent et un programme classique tient à la quantité de calculs ou à la puissance mobilisée.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Un programme du groupe 1 (trier un immense tableau, résoudre des milliers d'équations) demande beaucoup de puissance sans être intelligent. Ce qui caractérise un programme intelligent, c'est son autonomie, pas sa puissance de calcul.",
+    "concepts": [
+      "programme-intelligent"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "qu-est-ce-que-l-ia",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Qu'est-ce qui caractérise réellement les programmes du groupe 2 (« ceci est de l'IA ») par rapport à ceux du groupe 1 ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Ils disposent de plus de puissance grâce à leurs composants électroniques"
+        },
+        {
+          "id": "b",
+          "label": "Ils font preuve d'autonomie : ils exécutent des tâches pour lesquelles ils n'ont pas été explicitement programmés"
+        },
+        {
+          "id": "c",
+          "label": "Ils appliquent une recette fournie pas à pas par le programmeur"
+        },
+        {
+          "id": "d",
+          "label": "Ils traitent toujours des volumes de données plus importants"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Dans le groupe 2, la machine fait preuve d'autonomie : elle exécute des tâches pour lesquelles elle n'a pas été explicitement programmée (par exemple le choix d'un coup aux échecs). Pour cela, elle est amenée à raisonner, à déduire et à généraliser. Dans le groupe 1, elle se contente d'exécuter des ordres explicites.",
+    "concepts": [
+      "programme-intelligent",
+      "intelligence-artificielle"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "qu-est-ce-que-l-ia",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi les facultés suivantes, lesquelles sont citées dans le cours comme participant à ce que l'on appelle l'intelligence ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Apprendre"
+        },
+        {
+          "id": "b",
+          "label": "Analyser"
+        },
+        {
+          "id": "c",
+          "label": "Compiler"
+        },
+        {
+          "id": "d",
+          "label": "Anticiper"
+        },
+        {
+          "id": "e",
+          "label": "Démontrer"
+        },
+        {
+          "id": "f",
+          "label": "Trier"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "d",
+        "e"
+      ]
+    },
+    "explanation": "Le cours cite, parmi les facultés les plus importantes : apprendre, analyser, comprendre, anticiper, démontrer. « Compiler » et « trier » ne sont pas des facultés de l'intelligence : ce sont des opérations d'exécution explicite.",
+    "concepts": [
+      "programme-intelligent"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "qu-est-ce-que-l-ia",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complétez la phrase sur la conférence fondatrice de l'IA.",
+    "payload": {
+      "template": "La conférence fondatrice de l'intelligence artificielle s'est tenue au {{lieu}} College en {{annee}}.",
+      "slots": [
+        {
+          "id": "lieu",
+          "placeholder": "ville/collège"
+        },
+        {
+          "id": "annee",
+          "placeholder": "année"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "lieu": "Dartmouth",
+        "annee": "1956"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "L'IA naît officiellement en 1956 lors de la conférence fondatrice tenue au Dartmouth College (Hanover, New Hampshire).",
+    "concepts": [
+      "conference-de-dartmouth"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "qu-est-ce-que-l-ia",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Le test de Turing se présente comme un jeu mettant en scène combien d'acteurs ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Deux acteurs"
+        },
+        {
+          "id": "b",
+          "label": "Trois acteurs"
+        },
+        {
+          "id": "c",
+          "label": "Quatre acteurs"
+        },
+        {
+          "id": "d",
+          "label": "Un seul acteur"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Le test de Turing met en scène trois acteurs : un interrogateur, un programme informatique et un autre humain.",
+    "concepts": [
+      "test-de-turing"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "qu-est-ce-que-l-ia",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Selon le test de Turing, à quelle condition considère-t-on qu'une machine est intelligente ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Si elle calcule plus vite que l'humain qui l'interroge"
+        },
+        {
+          "id": "b",
+          "label": "Si l'interrogateur est incapable de dire lequel de ses deux interlocuteurs est une machine et lequel est un humain"
+        },
+        {
+          "id": "c",
+          "label": "Si elle bat un champion du monde dans un jeu"
+        },
+        {
+          "id": "d",
+          "label": "Si elle réussit à mémoriser toutes les questions posées"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "On considère que la machine est intelligente si, après une conversation menée sans indice sur les identités, l'interrogateur est incapable de distinguer la machine de l'humain.",
+    "concepts": [
+      "test-de-turing"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "qu-est-ce-que-l-ia",
+    "type": "TRUE_FALSE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Vrai ou faux : passer le test de Turing prouve qu'une machine « pense » comme un humain et possède une conscience.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Le test de Turing évalue l'indistinguabilité dans une conversation : c'est un critère de comportement observable, pas une mesure de conscience. Passer le test ne prouve pas que la machine pense réellement comme un humain.",
+    "concepts": [
+      "test-de-turing"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "qu-est-ce-que-l-ia",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque repère du chapitre à sa caractérisation correcte.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Conférence de Dartmouth (1956)"
+        },
+        {
+          "id": "l2",
+          "label": "Test de Turing"
+        },
+        {
+          "id": "l3",
+          "label": "Programme du groupe 1"
+        },
+        {
+          "id": "l4",
+          "label": "Programme du groupe 2"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Conférence fondatrice de l'IA"
+        },
+        {
+          "id": "r2",
+          "label": "Définition opérationnelle de l'intelligence fondée sur la conversation"
+        },
+        {
+          "id": "r3",
+          "label": "Programme explicitement programmé, pure exécution d'ordres"
+        },
+        {
+          "id": "r4",
+          "label": "Programme autonome, non explicitement programmé pour la tâche"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4"
+      }
+    },
+    "explanation": "La conférence de Dartmouth (1956) est la conférence fondatrice de l'IA ; le test de Turing en est une définition opérationnelle fondée sur la conversation ; le groupe 1 rassemble des programmes explicitement programmés (pure exécution) ; le groupe 2, des programmes autonomes non explicitement programmés pour la tâche.",
+    "concepts": [
+      "conference-de-dartmouth",
+      "test-de-turing",
+      "programme-intelligent"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ordonnez les notions de la chaîne de concepts emboîtés de l'IA, du concept le plus général au plus spécifique.",
+    "payload": {
+      "items": [
+        {
+          "id": "ml",
+          "label": "Machine learning"
+        },
+        {
+          "id": "ia",
+          "label": "Intelligence artificielle"
+        },
+        {
+          "id": "dl",
+          "label": "Deep learning"
+        },
+        {
+          "id": "rn",
+          "label": "Réseaux de neurones"
+        },
+        {
+          "id": "llm",
+          "label": "LLM"
+        },
+        {
+          "id": "gen",
+          "label": "IA générative"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "ia",
+        "ml",
+        "rn",
+        "dl",
+        "gen",
+        "llm"
+      ]
+    },
+    "explanation": "Le cours présente la chaîne emboîtée : Intelligence artificielle → Machine learning → Réseaux de neurones → Deep learning → IA générative → LLM. Chaque notion est incluse dans la précédente.",
+    "concepts": [
+      "intelligence-artificielle",
+      "apprentissage-automatique",
+      "reseau-de-neurones",
+      "apprentissage-profond",
+      "ia-generative",
+      "grand-modele-de-langage"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complétez la définition du machine learning donnée dans le cours.",
+    "payload": {
+      "template": "Étant donné un programme conçu pour exécuter une tâche T, on dit qu'il {{verbe}} si sa {{critere}} dans l'exécution de cette tâche s'améliore avec l'expérience.",
+      "slots": [
+        {
+          "id": "verbe",
+          "placeholder": "verbe"
+        },
+        {
+          "id": "critere",
+          "placeholder": "ce qui s'améliore"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "verbe": "apprend",
+        "critere": "performance"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Définition du ML : étant donné un programme conçu pour exécuter une tâche T, on dit que ce programme apprend si sa performance dans l'exécution de cette tâche s'améliore avec l'expérience.",
+    "concepts": [
+      "apprentissage-automatique"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quels systèmes intelligents, célèbres pour ne pas inclure d'apprentissage, ont dominé l'IA de la fin des années soixante au milieu des années quatre-vingt ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Les systèmes experts"
+        },
+        {
+          "id": "b",
+          "label": "Les réseaux convolutifs"
+        },
+        {
+          "id": "c",
+          "label": "Les grands modèles de langage"
+        },
+        {
+          "id": "d",
+          "label": "Les transformeurs"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Historiquement, il a existé des systèmes intelligents sans apprentissage : les plus célèbres sont les systèmes experts, qui ont dominé l'IA de la fin des années soixante jusqu'au milieu des années quatre-vingt.",
+    "concepts": [
+      "apprentissage-automatique"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "En quoi consiste l'apprentissage supervisé, l'une des trois approches du machine learning ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Apprendre à partir d'exemples et généraliser"
+        },
+        {
+          "id": "b",
+          "label": "Apprendre sans aucune donnée, par pur raisonnement logique"
+        },
+        {
+          "id": "c",
+          "label": "Mémoriser exactement chaque exemple fourni sans le généraliser"
+        },
+        {
+          "id": "d",
+          "label": "Programmer explicitement chaque règle à la main"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "L'apprentissage supervisé consiste à apprendre à partir d'exemples et à généraliser : on montre par exemple des images de chats pour que le système reconnaisse les chats en général. L'idée centrale est la généralisation, pas la mémorisation.",
+    "concepts": [
+      "apprentissage-supervise"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Du point de vue mathématique, qu'est-ce qu'un réseau de neurones vu comme une boîte noire ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une base de données d'exemples étiquetés"
+        },
+        {
+          "id": "b",
+          "label": "Une fonction de R^n dans R^m, avec des entrées numériques et des sorties numériques"
+        },
+        {
+          "id": "c",
+          "label": "Un ensemble de règles logiques écrites par un expert"
+        },
+        {
+          "id": "d",
+          "label": "Un programme de tri appliqué à des images"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Vu comme une boîte noire, un réseau de neurones est un système ayant des entrées numériques et des sorties numériques : du point de vue mathématique, c'est une fonction de R^n dans R^m.",
+    "concepts": [
+      "reseau-de-neurones"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ordonnez les couches d'un réseau de neurones, de l'entrée des données vers la sortie du réseau.",
+    "payload": {
+      "items": [
+        {
+          "id": "cachees",
+          "label": "Les couches cachées"
+        },
+        {
+          "id": "entree",
+          "label": "La couche d'entrée"
+        },
+        {
+          "id": "sortie",
+          "label": "La couche de sortie"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "entree",
+        "cachees",
+        "sortie"
+      ]
+    },
+    "explanation": "Un réseau de neurones se compose d'une suite de couches : la couche d'entrée introduit les données, les couches cachées font des calculs intermédiaires, et la couche de sortie transmet les résultats à l'extérieur.",
+    "concepts": [
+      "reseau-de-neurones"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Selon le cours, quelles deux conditions ont rendu le deep learning possible (vers 2010) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La gigantesque quantité de données disponibles (le « Big data »)"
+        },
+        {
+          "id": "b",
+          "label": "L'explosion de la puissance des machines, notamment grâce aux GPU"
+        },
+        {
+          "id": "c",
+          "label": "L'invention du test de Turing"
+        },
+        {
+          "id": "d",
+          "label": "La disparition des systèmes experts"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b"
+      ]
+    },
+    "explanation": "Le deep learning n'a été possible que grâce à deux conditions : la gigantesque quantité de données disponibles (le « Big data ») et l'explosion de la puissance des machines, notamment grâce aux GPU. Ces conditions ont été réunies vers 2010.",
+    "concepts": [
+      "apprentissage-profond"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "MATCHING",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Associez chaque type de réseau profond au domaine où il est surtout utilisé.",
+    "payload": {
+      "left": [
+        {
+          "id": "conv",
+          "label": "Réseaux convolutifs (ConvNet)"
+        },
+        {
+          "id": "rec",
+          "label": "Réseaux récurrents (RNN)"
+        }
+      ],
+      "right": [
+        {
+          "id": "img",
+          "label": "Traitement d'images et de la parole"
+        },
+        {
+          "id": "nlp",
+          "label": "Traitement du langage naturel"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "conv": "img",
+        "rec": "nlp"
+      }
+    },
+    "explanation": "Les réseaux convolutifs (ConvNet) sont surtout utilisés en traitement d'images et de la parole, et doivent leur nom à l'opération de convolution. Les réseaux récurrents (RNN), qui contiennent des cycles, sont surtout utilisés dans le traitement du langage naturel.",
+    "concepts": [
+      "apprentissage-profond",
+      "reseau-de-neurones"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "ORDERING",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ordonnez les étapes de l'évolution des architectures neuronales qui mène des RNN aux transformeurs.",
+    "payload": {
+      "items": [
+        {
+          "id": "attention",
+          "label": "Ajout du mécanisme d'attention aux encodeurs-décodeurs"
+        },
+        {
+          "id": "rnn",
+          "label": "Réseaux récurrents (RNN)"
+        },
+        {
+          "id": "transfo",
+          "label": "Introduction des transformeurs"
+        },
+        {
+          "id": "encdec",
+          "label": "Architectures encodeurs-décodeurs (deux RNN bout à bout)"
+        },
+        {
+          "id": "lstm",
+          "label": "LSTM et GRU (RNN à mémoire plus longue)"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "rnn",
+        "lstm",
+        "encdec",
+        "attention",
+        "transfo"
+      ]
+    },
+    "explanation": "L'évolution part des RNN, puis introduit les LSTM et GRU (mémoire plus longue), puis les architectures encodeurs-décodeurs (deux RNN bout à bout, utilisées pour la traduction automatique), puis le mécanisme d'attention, et enfin les transformeurs (« Attention is all you need »).",
+    "concepts": [
+      "transformeur",
+      "reseau-de-neurones"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quel est le principal objectif d'un modèle de langage (LM) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Trier les mots d'une langue par ordre alphabétique"
+        },
+        {
+          "id": "b",
+          "label": "« Deviner » le mot qui suit une séquence de mots, en calculant la probabilité de chaque mot"
+        },
+        {
+          "id": "c",
+          "label": "Compter le nombre de lettres dans un texte"
+        },
+        {
+          "id": "d",
+          "label": "Classer des images dans des catégories"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Le principal objectif d'un modèle de langage est de « deviner » le mot qui vient à la suite d'une séquence de mots, c'est-à-dire de calculer la probabilité de chaque mot connaissant la première partie de la séquence. Cela lui permet de générer des textes.",
+    "concepts": [
+      "modele-de-langage"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi les modèles suivants, lesquels sont cités dans le cours comme principaux LLM ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "BERT"
+        },
+        {
+          "id": "b",
+          "label": "GPT"
+        },
+        {
+          "id": "c",
+          "label": "LLAMA"
+        },
+        {
+          "id": "d",
+          "label": "AlphaGo"
+        },
+        {
+          "id": "e",
+          "label": "Deep Blue"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Le cours cite comme principaux LLM : BERT, GPT et LLAMA. AlphaGo (jeu de Go) et Deep Blue (échecs) sont des programmes de jeu, pas des modèles de langage.",
+    "concepts": [
+      "grand-modele-de-langage"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "paysage-de-l-ia",
+    "type": "FILL_BLANK",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Complétez la phrase sur la généralisation dans les modèles de langage.",
+    "payload": {
+      "template": "Un modèle de langage n'apprend pas par cœur les séquences de mots : il doit pouvoir {{action}}. Pour cela, les mots sont représentés par des {{representation}} de nombres.",
+      "slots": [
+        {
+          "id": "action",
+          "placeholder": "verbe"
+        },
+        {
+          "id": "representation",
+          "placeholder": "type de représentation"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "action": [
+          "généraliser",
+          "generaliser"
+        ],
+        "representation": [
+          "vecteurs",
+          "vecteur"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Un modèle de langage n'apprend pas par cœur : il doit pouvoir généraliser. La généralisation est rendue possible par la représentation des mots sous forme de vecteurs de nombres : deux mots similaires ont des représentations proches.",
+    "concepts": [
+      "modele-de-langage"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "applications-et-programmes",
+    "type": "MCQ_MULTI",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quels sont les trois grands domaines d'applications dans lesquels l'IA a connu des succès ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La reconnaissance des formes et la vision par ordinateur"
+        },
+        {
+          "id": "b",
+          "label": "Le traitement du langage naturel"
+        },
+        {
+          "id": "c",
+          "label": "Les jeux"
+        },
+        {
+          "id": "d",
+          "label": "La compilation de programmes"
+        },
+        {
+          "id": "e",
+          "label": "Le tri de fichiers"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "L'IA a connu des succès dans trois grands domaines d'applications : la reconnaissance des formes et la vision par ordinateur, le traitement du langage naturel (NLP) et les jeux.",
+    "concepts": [
+      "applications-de-l-ia"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "applications-et-programmes",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle a été, historiquement, la première application importante de la reconnaissance des formes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La reconnaissance des chiffres manuscrits"
+        },
+        {
+          "id": "b",
+          "label": "La reconnaissance des visages"
+        },
+        {
+          "id": "c",
+          "label": "La conduite de véhicules autonomes"
+        },
+        {
+          "id": "d",
+          "label": "L'imagerie médicale"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Historiquement, la première application importante de la reconnaissance des formes a été la reconnaissance des chiffres manuscrits. Sont venues ensuite, par exemple, la reconnaissance des empreintes digitales, des visages et des objets dans une scène.",
+    "concepts": [
+      "applications-de-l-ia"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "applications-et-programmes",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Selon le cours, que signifie « manipuler » les langues humaines dans le cadre du traitement du langage naturel (NLP) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Analyser"
+        },
+        {
+          "id": "b",
+          "label": "Comprendre"
+        },
+        {
+          "id": "c",
+          "label": "Générer"
+        },
+        {
+          "id": "d",
+          "label": "Compiler"
+        },
+        {
+          "id": "e",
+          "label": "Chiffrer"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Dans le cadre du NLP, « manipuler » les langues humaines signifie trois opérations : analyser, comprendre et générer.",
+    "concepts": [
+      "applications-de-l-ia"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "applications-et-programmes",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la phrase sur les débuts de l'IA dans les jeux.",
+    "payload": {
+      "template": "À la fin des années 50, {{personne}} a conçu le premier programme capable de jouer aux {{jeu}} de manière autonome et mieux que son concepteur.",
+      "slots": [
+        {
+          "id": "personne",
+          "placeholder": "nom"
+        },
+        {
+          "id": "jeu",
+          "placeholder": "jeu"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "personne": [
+          "Arthur Samuel",
+          "Samuel"
+        ],
+        "jeu": [
+          "dames",
+          "jeu de dames"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "À la fin des années 50, Arthur Samuel a conçu le premier programme capable de jouer aux dames de manière autonome et mieux que son concepteur.",
+    "concepts": [
+      "applications-de-l-ia",
+      "programme-intelligent"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "applications-et-programmes",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque succès spectaculaire de l'IA dans les jeux à son année et à son jeu.",
+    "payload": {
+      "left": [
+        {
+          "id": "db",
+          "label": "Deep Blue"
+        },
+        {
+          "id": "ag",
+          "label": "AlphaGo"
+        }
+      ],
+      "right": [
+        {
+          "id": "echecs",
+          "label": "Bat Kasparov aux échecs en 1997"
+        },
+        {
+          "id": "go",
+          "label": "Bat Lee Sedol au jeu de Go en 2016"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "db": "echecs",
+        "ag": "go"
+      }
+    },
+    "explanation": "Deux succès spectaculaires de l'IA dans les jeux : Deep Blue, qui bat Kasparov aux échecs en 1997, et AlphaGo, qui bat le champion du monde du jeu de Go, Lee Sedol, en 2016.",
+    "concepts": [
+      "applications-de-l-ia"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  },
+  {
+    "chapterSlug": "applications-et-programmes",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Comment un programme peut-il exécuter des tâches pour lesquelles il n'a pas été explicitement programmé ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il apprend à le faire"
+        },
+        {
+          "id": "b",
+          "label": "Il demande au programmeur d'écrire chaque règle"
+        },
+        {
+          "id": "c",
+          "label": "Il dispose simplement de plus de puissance électronique"
+        },
+        {
+          "id": "d",
+          "label": "Il copie les réponses d'un autre programme"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Un programme peut exécuter des tâches pour lesquelles il n'a pas été explicitement programmé parce qu'il apprend à le faire. C'est ce constat qui fonde l'apprentissage automatique (machine learning).",
+    "concepts": [
+      "apprentissage-automatique",
+      "programme-intelligent"
+    ],
+    "source": "Intro_IA_Slides1.pdf"
+  }
+]

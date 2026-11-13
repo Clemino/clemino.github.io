@@ -1,0 +1,25 @@
+---
+title: "Graphe d'accessibilite"
+slug: graphe-accessibilite
+order: 1
+estimatedReadMin: 14
+concepts: [reachability-graph, marking, firing, resettable]
+source: "Petri net/UP2-2-RdP-slides.pdf; Petri net/mcar_cours2_ReseauxDePetri.2x1.pdf"
+---
+## Construire le graphe
+
+Le graphe d'accessibilite contient les marquages atteignables depuis `M0`. Une arete etiquetee par `t` relie `M` a `M'` si `t` est franchissable en `M` et produit `M'`.
+
+## Methode
+
+1. Liste les transitions franchissables en `M0`.
+2. Calcule les marquages obtenus.
+3. Repete sur chaque nouveau marquage.
+4. Arrete quand aucun marquage nouveau n'apparait.
+
+## Reinitialisation
+
+Un reseau est reinitialisable si le marquage initial est atteignable depuis tout marquage atteignable.
+
+> **A retenir**  
+> Le graphe d'accessibilite est l'outil le plus concret pour detecter blocages, cycles et retours au marquage initial.

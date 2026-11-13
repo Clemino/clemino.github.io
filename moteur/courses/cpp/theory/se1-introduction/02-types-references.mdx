@@ -1,0 +1,262 @@
+---
+title: Types, références et const
+slug: types-references
+order: 2
+estimatedReadMin: 11
+concepts: [reference, passage-par-reference, const, auto-bool]
+source: "Cours 1 — Introduction au C++"
+---
+
+## Les variables
+
+Une variable possède trois caractéristiques : un **nom**, une **valeur** et un **type**.
+
+Par **convention** de codage, un nom de variable :
+
+- commence par une **minuscule** ;
+- se décompose en plusieurs mots **collés** ;
+- chaque nouveau mot (sauf le premier) commence par une **majuscule**.
+
+C'est la convention *camelCase*, par exemple `tauxOccupationSol` ou `nombreFollowers`. Un nom doit être en anglais, cohérent dans tout le projet, et ne peut pas être un mot réservé du langage (`if`, `main`, etc.) ni commencer par un chiffre.
+
+## Les types de base
+
+Le C++ reprend les **types primitifs du C** :
+
+- `int` — entier ;
+- `char` — caractère ;
+- `float` — réel simple précision ;
+- `double` — réel double précision.
+
+S'y ajoutent deux nouveautés importantes du C++.
+
+### Le type bool
+
+Le C ne possédait pas de vrai type booléen. Le C++ introduit **`bool`**, qui ne prend que deux valeurs : **`true`** ou **`false`**.
+
+```cpp
+bool estMonAmi = true;   // cet utilisateur est-il mon ami ?
+bool estVide   = false;
+```
+
+### Le type auto
+
+Le mot-clé **`auto`** demande au compilateur de **déduire** le type de la variable à partir de la valeur qui l'initialise. C'est la **déduction de type**.
+
+```cpp
+auto ch = 'x';        // le compilateur déduit : char
+auto z  = sqrt(y);    // le type est celui que renvoie sqrt : double
+```
+
+`auto` ne fonctionne **que** si la variable est initialisée immédiatement (le compilateur a besoin d'une valeur pour déduire le type). Il rend le code plus court et plus robuste aux changements de types.
+
+## Initialisation : `()` contre `{}`
+
+En C, on initialisait avec `=`. Le C++ propose en plus deux formes équivalentes : entre **parenthèses** ou entre **accolades**.
+
+```cpp
+double d1 = 2.3;          // forme historique (héritée du C)
+double d2(2.3);           // initialisation directe, parenthèses
+double d3{2.3};           // initialisation directe, accolades (C++ moderne)
+
+string eisi{"POSE"};      // fonctionne aussi pour les objets
+```
+
+Exemple complet, dans l'esprit du cours :
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() {
+    int ageUser(18);
+    int nombreFollowers(432);   // le nombre d'amis qui te suivent
+    double pi(3.14159);
+    bool estMonAmi(true);       // cet utilisateur est-il mon ami ?
+    char lettre('a');
+    return 0;
+}
+```
+
+La différence entre les deux n'est **pas** cosmétique. L'initialisation par accolades `{}` interdit les **conversions avec perte d'information** (*narrowing*) :
+
+```cpp
+int i = 7.2;     // OK : conversion silencieuse, i vaut 7 (perte du .2 !)
+int j{7.2};      // ERREUR de compilation : 7.2 ne tient pas exactement dans un int
+```
+
+> ⚠️ La forme `{}` est **plus sûre** : elle transforme une conversion dangereuse en erreur de compilation, donc détectée immédiatement plutôt qu'à l'exécution. Préférez `{}` dans le code moderne.
+
+## Le qualificateur const
+
+Le mot-clé **`const`** rend une variable **non modifiable** : toute tentative d'écriture après l'initialisation provoque une erreur de compilation.
+
+```cpp
+const int cst1 = 42;
+cst1 = 10;          // ERREUR : on ne peut pas modifier une constante
+```
+
+`const` poursuit deux objectifs :
+
+- **éviter les modifications par erreur** — l'intention « cette valeur ne doit pas changer » est vérifiée par le compilateur ;
+- **aider l'optimisation** — le compilateur sait que la valeur est figée.
+
+`const` s'utilise dans plusieurs contextes :
+
+```cpp
+const int cst1 = 42;                          // variable constante
+const char* fonction1() { return "Du texte"; } // valeur de retour constante
+void fonction2(const int tab) { /* ... */ }    // paramètre non modifiable
+void methodeClasse(/* ... */) const { /* ... */ } // méthode qui ne modifie pas l'objet
+```
+
+Le dernier cas — `const` placé **après** la liste des paramètres d'une **méthode** — promet que la méthode ne modifie pas l'objet sur lequel elle est appelée. Un *getter* est typiquement une méthode `const` (voir le chapitre Classes et objets).
+
+### Petit test : lire une déclaration
+
+La lecture d'une déclaration mêlant `const`, `*`, `[]` et `()` se fait **de l'intérieur vers l'extérieur**, en partant du nom déclaré. Deux cas classiques à savoir décoder :
+
+```cpp
+const int* pi[12];              // (1)
+void (*pf)(int* const pi);      // (2)
+```
+
+- **(1)** `const int* pi[12];` se lit : *« `pi` est un tableau de 12 pointeurs, chacun pointant vers un entier constant »*. On part de `pi`, puis `[12]` (tableau), puis `*` (de pointeurs), puis `const int` (vers des entiers constants).
+- **(2)** `void (*pf)(int* const pi);` se lit : *« `pf` est un pointeur sur une fonction qui prend un paramètre `int* const` — un pointeur constant vers un entier — et ne retourne rien (`void`) »*. Les parenthèses autour de `*pf` sont indispensables : sans elles, `void *pf(...)` déclarerait une fonction renvoyant un `void*`, et non un pointeur de fonction.
+
+Côté chaînes littérales : `const char* pc = "Coucou !";` est correct (le texte littéral ne doit pas être modifié) ; `char* pc = "Coucou !";` est dangereux et refusé en C++ moderne.
+
+Notez le mot-clé voisin **`volatile`**, qui fait l'inverse : il **interdit au compilateur d'optimiser** les accès à une variable, car celle-ci peut changer en dehors du programme (matériel, autre thread).
+
+## Les chaînes de caractères
+
+Le C manipulait les chaînes comme des tableaux de `char` terminés par `\0` — pénible et source d'erreurs. Le C++ fournit un véritable **type objet `string`**, dans l'en-tête `<string>` :
+
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    string nomUser("leVolontaire");
+    return 0;
+}
+```
+
+`string` gère automatiquement sa propre mémoire, connaît sa longueur, se compare et se concatène avec des opérateurs naturels (`+`, `==`). C'est l'objet qu'il faut utiliser pour tout texte.
+
+## Les références (alias) &
+
+Une **référence** est un **alias** : un second nom pour une variable qui existe déjà. On la déclare en plaçant le symbole **`&`** après le type.
+
+```cpp
+int prixRevient(16);          // déclaration d'une variable
+int& prixAchat(prixRevient);  // prixAchat est une référence vers prixRevient
+```
+
+On dit que `prixAchat` **fait référence à** `prixRevient` : ce sont deux noms pour **la même case mémoire**. Modifier l'un modifie l'autre.
+
+Deux règles essentielles :
+
+1. La référence doit être **du même type** que la variable référencée.
+2. Une référence doit **obligatoirement être initialisée** à sa déclaration, et elle ne peut **plus jamais** être réattachée à une autre variable.
+
+```cpp
+int i = 0;
+int& ri = i;     // ri est un identificateur synonyme de i
+ri = ri + 1;     // manipulation de i via ri : maintenant i vaut 1
+```
+
+## Référence ou pointeur ?
+
+Référence et pointeur permettent tous deux de manipuler une variable « à distance », mais la référence donne un code **plus clair et plus sûr**.
+
+Avec un **pointeur**, il faut prendre l'adresse (`&`) et déréférencer (`*`) :
+
+```cpp
+int i = 0;
+int* pi = &i;        // pi contient l'adresse de i
+*pi = *pi + 1;       // manipulation de i via pi
+```
+
+Avec une **référence**, la syntaxe est celle d'une variable ordinaire :
+
+```cpp
+int i = 0;
+int& ri = i;         // ri est un synonyme de i
+ri = ri + 1;         // manipulation de i via ri
+```
+
+| | Pointeur | Référence |
+|---|---|---|
+| Initialisation | Facultative | **Obligatoire** |
+| Peut être nul | Oui (`nullptr`) | Non — réfère toujours à quelque chose |
+| Réaffectation | Oui, peut changer de cible | **Non**, lié à vie |
+| Syntaxe | `*` pour déréférencer | Comme une variable normale |
+
+## Passage des paramètres
+
+C'est l'application la plus importante des références. Une fonction peut recevoir ses paramètres de trois façons.
+
+### Passage par valeur
+
+La fonction reçoit une **copie**. Modifier le paramètre **n'affecte pas** la variable de l'appelant. Pour un gros objet, la copie coûte cher.
+
+```cpp
+void parValeur(int i) {
+    i = 2;   // modifie seulement la copie locale
+}
+```
+
+### Passage par référence
+
+On ajoute `&` au paramètre. La fonction travaille **directement sur la variable de l'appelant** : aucune copie, et les modifications sont **visibles à l'extérieur**.
+
+```cpp
+void parReference(int& i) {
+    i = 2;   // modifie le paramètre passé en référence
+    return;
+}
+
+int main() {
+    int n = 0;
+    parReference(n);   // après l'appel, n vaut 2
+    return 0;
+}
+```
+
+Le passage par référence est **plus efficace** : il évite la copie. Quand on veut l'efficacité **sans** autoriser la modification, on combine avec `const` :
+
+```cpp
+void afficher(const string& texte) {  // pas de copie, et texte protégé en lecture seule
+    cout << texte << endl;
+}
+```
+
+C'est la forme idéale pour passer un gros objet qu'on ne veut que consulter.
+
+### Passage par pointeur
+
+Possible aussi : on passe une **adresse** (avec `&`) et la fonction déréférence (avec `*`). Plus verbeux que la référence et le pointeur peut être nul.
+
+```cpp
+void parPointeur(int* pi) {
+    *pi = 2;
+}
+
+int main() {
+    int n = 0;
+    parPointeur(&n);   // on passe l'adresse de n ; après l'appel n vaut 2
+    return 0;
+}
+```
+
+En C++ moderne, on **préfère la référence** au pointeur dès que le paramètre doit toujours désigner un objet existant.
+
+> **À retenir**
+> - Types de base hérités du C : `int`, `char`, `float`, `double`. Nouveautés C++ : **`bool`** (`true`/`false`) et **`auto`** (déduction de type, exige une initialisation).
+> - Initialisation possible par `=`, `()` ou `{}`. La forme `{}` **interdit les conversions avec perte** : préférez-la.
+> - **`const`** rend une variable non modifiable : sécurise le code et aide l'optimisation. Une méthode `const` ne modifie pas son objet.
+> - `string` (`#include <string>`) est le vrai type texte du C++, à préférer aux tableaux de `char`.
+> - Une **référence** (`type&`) est un alias : même type, **initialisation obligatoire**, jamais réattachée. Plus claire et plus sûre qu'un pointeur.
+> - Passage **par valeur** = copie isolée ; **par référence** = pas de copie, modifications visibles ; **`const&`** = efficacité sans modification ; **par pointeur** = via une adresse.

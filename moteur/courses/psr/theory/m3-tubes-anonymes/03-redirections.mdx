@@ -1,0 +1,164 @@
+---
+title: "dup/dup2 et redirection des descripteurs"
+slug: redirections
+order: 3
+estimatedReadMin: 16
+concepts: [table-descripteurs, descripteurs-standard, redirection, dup, dup2, stdin-stdout-tube]
+source: "Cours 3 — Les tubes"
+---
+
+Les chapitres précédents ont relié deux processus par un tube et fait circuler des données avec `read` et `write` **sur les descripteurs du tube** (`fd[0]`, `fd[1]`). Mais beaucoup de programmes — à commencer par les commandes UNIX standard — ne connaissent pas ces descripteurs : ils lisent sur l'**entrée standard** et écrivent sur la **sortie standard**. Pour brancher un tel programme sur un tube, il faut **rediriger** ses descripteurs standard. C'est le rôle de **`dup`** et **`dup2`**.
+
+## Rappel : la table des descripteurs
+
+Chaque processus possède une **table des descripteurs de fichiers** (en anglais *file descriptor table*). C'est un tableau d'entiers : chaque **descripteur** est un **indice** dans cette table, et chaque case **pointe** vers un objet ouvert (un fichier, un tube, un terminal…).
+
+Quand on appelle `pipe(fd)`, le noyau choisit **les deux plus petits indices libres** de la table et y range les deux extrémités du tube. Quand on `close` un descripteur, sa case redevient **libre** — et sera réutilisée par la prochaine ouverture.
+
+## Les trois descripteurs standard
+
+À la création d'un processus, **trois descripteurs** sont déjà ouverts. Leurs indices, leurs noms symboliques (définis dans `<unistd.h>`) et leur rôle :
+
+| Indice | Constante (`<unistd.h>`) | Rôle | Flux C habituel |
+|---|---|---|---|
+| **0** | `STDIN_FILENO` | **entrée standard** — d'où le programme **lit** | `stdin`, `scanf` |
+| **1** | `STDOUT_FILENO` | **sortie standard** — où le programme **écrit** | `stdout`, `printf` |
+| **2** | `STDERR_FILENO` | **sortie d'erreur** standard | `stderr`, `perror` |
+
+Par défaut, ces trois descripteurs sont raccordés au **terminal** : un `printf` (qui passe par le descripteur 1) s'affiche à l'écran, un `scanf` (descripteur 0) lit ce qu'on tape au clavier.
+
+L'**idée centrale** de ce chapitre est la suivante :
+
+> Si l'on parvient à faire pointer le descripteur **1** (sortie standard) vers **l'extrémité d'écriture d'un tube**, alors tout `printf` du programme **écrira dans le tube** — sans que le programme ait à le savoir. Symétriquement, faire pointer le descripteur **0** vers **l'extrémité de lecture d'un tube** fait que tout `scanf` **lira dans le tube**.
+
+C'est ce que fait le **shell** quand il interprète `cmd1 | cmd2` : il « branche » la sortie standard de `cmd1` et l'entrée standard de `cmd2` sur un tube. Pour réaliser ce branchement en C, il faut un outil capable de **dupliquer** un descripteur — `dup` ou `dup2`.
+
+## `dup` : dupliquer sur le plus petit indice libre
+
+L'appel système **`dup`**, déclaré dans `<unistd.h>`, crée une **copie** d'un descripteur :
+
+```c
+#include <unistd.h>
+
+int dup(int ancien);
+```
+
+`dup(ancien)` alloue le **plus petit indice libre** de la table des descripteurs et le fait pointer vers le **même objet** que `ancien`. Elle renvoie ce nouvel indice (ou `-1` en cas d'échec).
+
+Le mot **« copie »** est essentiel. Après `int neuf = dup(ancien);` :
+
+- `ancien` et `neuf` sont **deux descripteurs distincts** (deux indices différents) ;
+- mais ils désignent **le même objet** sous-jacent (le même fichier, le même tube) ;
+- lire ou écrire via l'un **équivaut** à lire ou écrire via l'autre.
+
+Le fait que `dup` choisisse **toujours le plus petit indice libre** permet une astuce de redirection. Pour rediriger la sortie standard vers un tube, on peut **fermer** le descripteur 1, puis appeler `dup` sur l'extrémité d'écriture du tube : comme 1 vient d'être libéré, c'est **lui** que `dup` va réattribuer.
+
+```c
+/* Rediriger la sortie standard (1) vers l'ecriture du tube fd[1], avec dup */
+close(STDOUT_FILENO);   /* libere l'indice 1                              */
+dup(fd[1]);             /* dup prend le + petit libre = 1 -> pointe le tube */
+/* desormais, tout printf ecrit dans le tube */
+```
+
+Cette technique en **deux temps** (`close` puis `dup`) fonctionne, mais elle est **fragile** : entre le `close` et le `dup`, l'indice 1 est momentanément invalide, et si un signal ou un autre traitement intervient, le résultat est imprévisible. C'est pourquoi on lui préfère presque toujours `dup2`.
+
+## `dup2` : dupliquer sur un indice imposé
+
+L'appel système **`dup2`** fait la même chose que `dup`, mais en laissant **choisir l'indice de destination** :
+
+```c
+#include <unistd.h>
+
+int dup2(int ancien, int nouveau);
+```
+
+`dup2(ancien, nouveau)` fait pointer le descripteur `nouveau` vers le **même objet** que `ancien`. Son comportement, point par point :
+
+- si `nouveau` était **déjà ouvert**, `dup2` le **ferme d'abord** automatiquement ;
+- puis il fait de `nouveau` une **copie** de `ancien` (les deux désignent le même objet) ;
+- le tout de façon **atomique** : il n'y a **aucun instant** où `nouveau` serait invalide.
+
+`dup2` renvoie `nouveau` en cas de succès, `-1` en cas d'échec.
+
+C'est exactement l'outil de la redirection. La phrase à retenir :
+
+> **`dup2(fd[1], STDOUT_FILENO)`** redirige la **sortie standard** sur l'extrémité d'écriture du tube : après cet appel, tout `printf` (et tout `write` sur le descripteur 1) **écrit dans le tube**. De même, **`dup2(fd[0], STDIN_FILENO)`** redirige l'**entrée standard** sur l'extrémité de lecture du tube : tout `scanf` (et tout `read` sur le descripteur 0) **lit dans le tube**.
+
+`dup2` réalise en **un seul appel atomique** ce que `close` + `dup` faisait en deux temps : il **ferme** l'ancienne destination (le descripteur 1 raccordé au terminal) **et** la réoriente vers le tube. Plus de fenêtre fragile.
+
+> ⚠️ Préférez **`dup2`** à `dup` pour les redirections. `dup` impose la séquence `close` puis `dup`, qui laisse le descripteur cible **invalide** entre les deux appels — une fenêtre de course. `dup2(ancien, nouveau)` est **atomique** et **explicite** : on **désigne** la destination au lieu de la déduire du « plus petit indice libre ». Tout le reste de ce module utilise `dup2`.
+
+## Le motif complet de redirection
+
+Une fois `dup2` exécuté, **deux descripteurs** désignent la même extrémité du tube : le descripteur standard (0 ou 1) **et** le descripteur d'origine du tube (`fd[0]` ou `fd[1]`). Ce **doublon doit être fermé**.
+
+Le motif de redirection correct comporte donc **toujours trois étapes**, dans cet ordre :
+
+1. **`dup2`** — rediriger le descripteur standard sur l'extrémité du tube ;
+2. **`close`** de l'**ancien** descripteur du tube (`fd[0]` ou `fd[1]`), devenu **redondant** ;
+3. **`close`** de l'**autre** extrémité du tube, **inutile** dans ce processus (la règle d'or du chapitre 2 reste valable).
+
+Illustrons avec un fils dont on redirige la **sortie** vers le tube :
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main(void) {
+    int fd[2];
+
+    if (pipe(fd) == -1) { perror("pipe"); exit(EXIT_FAILURE); }
+
+    pid_t pid = fork();
+    if (pid == -1) { perror("fork"); exit(EXIT_FAILURE); }
+
+    if (pid == 0) {                       /* ===== le FILS : ecrit dans le tube ===== */
+        dup2(fd[1], STDOUT_FILENO);       /* 1. la sortie standard pointe le tube     */
+        close(fd[1]);                     /* 2. ferme le doublon (fd[1] == sortie)    */
+        close(fd[0]);                     /* 3. ferme l'extremite de lecture inutile  */
+
+        printf("ce printf part dans le tube\n");   /* va dans le tube, pas a l'ecran  */
+        fflush(stdout);
+        exit(EXIT_SUCCESS);
+    } else {                              /* ===== le PERE : lit dans le tube ======= */
+        char buff[100];
+        close(fd[1]);                     /* le pere n'ecrit pas : ferme l'ecriture   */
+        ssize_t n = read(fd[0], buff, sizeof(buff) - 1);
+        if (n < 0) { perror("read"); exit(EXIT_FAILURE); }
+        buff[n] = '\0';
+        close(fd[0]);
+        printf("le pere a lu : %s", buff);
+        wait(NULL);
+    }
+    return 0;
+}
+```
+
+Après les trois étapes côté fils, le tube n'a plus, **dans le fils**, qu'**un seul** descripteur d'écriture : le descripteur **1**. Le `printf` du fils part donc dans le tube, et le père le récupère par `read`.
+
+> ⚠️ **Fermez le descripteur du tube redevenu redondant après `dup2`.** Une fois `dup2(fd[1], STDOUT_FILENO)` exécuté, `fd[1]` **et** le descripteur 1 pointent la **même** extrémité d'écriture. Si l'on **oublie** de fermer `fd[1]`, il reste **un descripteur d'écriture de trop** : le lecteur ne verra **jamais** la fin de fichier (chapitre 2), et son `read` bloquera indéfiniment. La redirection ne **dispense pas** de fermer les descripteurs — elle en **ajoute** un à fermer.
+
+> ⚠️ Une subtilité de mise en page : `printf` écrit dans un **tampon** (*buffer*) de la bibliothèque C, qui n'est pas forcément vidé vers le descripteur immédiatement. Quand la sortie standard est un **tube** (et non un terminal), ce tampon n'est vidé qu'à la **fin du programme**, par un `exit`, ou par un appel explicite à **`fflush(stdout)`**. Si l'on attend une donnée « tout de suite » de l'autre côté du tube, penser à `fflush`.
+
+## Pourquoi rediriger ? Le lien avec `exec`
+
+Pourquoi se donner toute cette peine, alors que le chapitre 2 écrivait directement sur `fd[1]` ?
+
+Parce qu'on veut souvent faire exécuter au fils **un autre programme**, par `exec` (Module 1). Or un programme lancé par `exec` — par exemple la commande `wc` ou `sort` — **ne connaît pas** le tableau `fd` : il a été écrit indépendamment, il lit sur l'**entrée standard** et écrit sur la **sortie standard**, point.
+
+Le seul moyen de le **brancher** sur le tube est donc de **rediriger ses descripteurs standard avant le `exec`**. La redirection survit au recouvrement :
+
+> ⚠️ Un `exec` **remplace** le code, les données et la pile du processus — mais il **conserve la table des descripteurs**. Une redirection installée par `dup2` **avant** le `exec` reste donc **active** dans le nouveau programme. C'est précisément ce qui permet de brancher une commande quelconque sur un tube : on **redirige d'abord** (`dup2` + `close`), on **exec ensuite**.
+
+L'ordre est donc immuable : **`pipe` → `fork` → (dans le fils) `dup2` + `close` → `exec`**. C'est l'ossature du pipeline, que le chapitre 4 va assembler en entier.
+
+> **À retenir**
+> - Chaque processus a une **table des descripteurs** ; un descripteur est un **indice** vers un objet ouvert. Les **trois descripteurs standard** sont **0** (`STDIN_FILENO`, entrée), **1** (`STDOUT_FILENO`, sortie), **2** (`STDERR_FILENO`, erreur).
+> - **Rediriger** un descripteur standard vers une extrémité de tube fait que `scanf`/`read` (0) ou `printf`/`write` (1) opèrent **sur le tube** sans que le programme le sache.
+> - **`dup(ancien)`** crée une **copie** du descripteur sur le **plus petit indice libre** ; `ancien` et la copie désignent le **même objet**.
+> - **`dup2(ancien, nouveau)`** fait de `nouveau` une copie de `ancien` sur un indice **imposé**, en fermant d'abord `nouveau` s'il était ouvert, de façon **atomique** : c'est l'outil recommandé pour rediriger.
+> - **`dup2(fd[1], STDOUT_FILENO)`** redirige la sortie vers le tube ; **`dup2(fd[0], STDIN_FILENO)`** redirige l'entrée depuis le tube.
+> - Motif complet en **trois étapes** : `dup2`, puis **`close` du descripteur de tube redondant**, puis `close` de l'autre extrémité inutile. Oublier le `close` du doublon empêche la **fin de fichier**.
+> - Une redirection posée par `dup2` **survit à un `exec`** : on **redirige avant**, on **exec après** — ce qui permet de brancher une commande quelconque sur un tube.

@@ -1,0 +1,495 @@
+{
+  "slug": "examen-blanc",
+  "title": "Examen blanc",
+  "description": "Tout le cours, 45 minutes, noté sur 20. Calculs d'équité et de risque, AI Act, explicabilité et décision.",
+  "durationMinutes": 45,
+  "exercises": [
+    {
+      "chapterSlug": "dossier-de-confiance",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Que doit porter chaque pièce d'un dossier de confiance pour être vérifiable ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Un identifiant de preuve, une version, un responsable et une date"
+          },
+          {
+            "id": "b",
+            "label": "Une note sur 20, un avis et une signature"
+          },
+          {
+            "id": "c",
+            "label": "Un score global, un seuil et une métrique"
+          },
+          {
+            "id": "d",
+            "label": "Un auteur, un titre et un résumé"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "Ces quatre éléments rendent chaque affirmation vérifiable.",
+      "hint": "Pense à la traçabilité d'une preuve.",
+      "concepts": [
+        "dossier-de-confiance"
+      ],
+      "source": "Diapositives 2"
+    },
+    {
+      "chapterSlug": "prioriser-risques",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Un risque est coté gravité 3 et probabilité 4. Quel est son score ?",
+      "payload": {},
+      "solution": {
+        "value": 12,
+        "absTol": 0
+      },
+      "explanation": "3 × 4 = 12 : au seuil de suspension du TD.",
+      "hint": "Multiplie les deux cotations.",
+      "concepts": [
+        "matrice-risques"
+      ],
+      "source": "Diapositives 5"
+    },
+    {
+      "chapterSlug": "prioriser-risques",
+      "type": "TRUE_FALSE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Selon la convention du TD, un risque de score 12 entraîne la suspension avant traitement.",
+      "payload": {},
+      "solution": {
+        "value": true
+      },
+      "explanation": "La suspension s'applique à partir d'un score de 12.",
+      "hint": "Le seuil est inclus.",
+      "concepts": [
+        "matrice-risques"
+      ],
+      "source": "Diapositives 5"
+    },
+    {
+      "chapterSlug": "registre-tracabilite",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Dans la trace d'une décision, que contient l'élément « Entrée » ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Un identifiant pseudonymisé et la version des données utiles"
+          },
+          {
+            "id": "b",
+            "label": "Le nom de la personne et son dossier complet"
+          },
+          {
+            "id": "c",
+            "label": "Le code et les dépendances du modèle"
+          },
+          {
+            "id": "d",
+            "label": "L'action décidée et son auteur"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "La personne est désignée par un identifiant pseudonymisé.",
+      "hint": "La trace ne doit pas exposer l'identité en clair.",
+      "concepts": [
+        "trace-decision"
+      ],
+      "source": "Diapositives 8"
+    },
+    {
+      "chapterSlug": "documentation-derive",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Le jour, 891 piétons sur 900 sont détectés ; la nuit, 80 sur 100. Quel est le rappel de nuit, en % ?",
+      "payload": {
+        "unit": "%"
+      },
+      "solution": {
+        "value": 80,
+        "absTol": 0.05
+      },
+      "explanation": "80 / 100 = 80 %, contre 99 % le jour.",
+      "hint": "Ne regarde que les piétons de nuit.",
+      "concepts": [
+        "resultats-desagreges"
+      ],
+      "source": "Diapositives 12"
+    },
+    {
+      "chapterSlug": "documentation-derive",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Les entrées gardent la même distribution, mais la relation entre entrées et cible change. Quelle dérive est-ce ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Une dérive du concept"
+          },
+          {
+            "id": "b",
+            "label": "Une dérive des données"
+          },
+          {
+            "id": "c",
+            "label": "Une dérive de prévalence"
+          },
+          {
+            "id": "d",
+            "label": "Aucune dérive"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "Pₜ(Y∣X) ≠ P₀(Y∣X) : c'est une dérive du concept.",
+      "hint": "Le concept relie les entrées à la cible.",
+      "concepts": [
+        "derive"
+      ],
+      "source": "Diapositives 11"
+    },
+    {
+      "chapterSlug": "mesurer-ecarts",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Un groupe est sélectionné à 30 %, le groupe de référence à 60 %. Quel est le ratio de sélection ?",
+      "payload": {},
+      "solution": {
+        "value": 0.5,
+        "absTol": 0.01
+      },
+      "explanation": "30 % ÷ 60 % = 0,5, sous le repère de 0,80.",
+      "hint": "Divise par le taux du groupe de référence.",
+      "concepts": [
+        "ratio-selection"
+      ],
+      "source": "Diapositives 14"
+    },
+    {
+      "chapterSlug": "mesurer-ecarts",
+      "type": "TRUE_FALSE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "La parité démographique compare les taux de sélection en tenant compte de la qualification Y.",
+      "payload": {},
+      "solution": {
+        "value": false
+      },
+      "explanation": "Elle ignore Y.",
+      "hint": "Regarde sa formule.",
+      "concepts": [
+        "parite-demographique"
+      ],
+      "source": "Diapositives 15"
+    },
+    {
+      "chapterSlug": "egalite-des-chances",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Sur 400 personnes qualifiées, 300 sont sélectionnées. Quel est le TPR, en % ?",
+      "payload": {
+        "unit": "%"
+      },
+      "solution": {
+        "value": 75,
+        "absTol": 0.05
+      },
+      "explanation": "300 / 400 = 75 %.",
+      "hint": "Divise les sélectionnés qualifiés par le nombre de qualifiés.",
+      "concepts": [
+        "egalite-des-chances"
+      ],
+      "source": "Diapositives 16"
+    },
+    {
+      "chapterSlug": "egalite-des-chances",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "VP = 30, FN = 20, FP = 10, VN = 40. Quelle est l'accuracy ?",
+      "payload": {},
+      "solution": {
+        "value": 0.7,
+        "absTol": 0.01
+      },
+      "explanation": "(VP + VN) / N = 70 / 100 = 0,7.",
+      "hint": "N est la somme des quatre effectifs.",
+      "concepts": [
+        "matrice-de-confusion"
+      ],
+      "source": "Diapositives 19"
+    },
+    {
+      "chapterSlug": "attenuer-biais",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Quelle limite accompagne un rééquilibrage des données avant l'apprentissage ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Il ne corrige pas une mauvaise cible"
+          },
+          {
+            "id": "b",
+            "label": "Il interdit toute revue humaine"
+          },
+          {
+            "id": "c",
+            "label": "Il rend le modèle impossible à expliquer"
+          },
+          {
+            "id": "d",
+            "label": "Il impose des seuils par groupe"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "Si la cible est un mauvais proxy, rééquilibrer les données ne règle rien.",
+      "hint": "Pense au cas du coût utilisé comme proxy du besoin.",
+      "concepts": [
+        "attenuation-biais"
+      ],
+      "source": "Diapositives 17"
+    },
+    {
+      "chapterSlug": "examiner-explication",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "LIME appliqué à une décision est une explication…",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Locale et post-hoc"
+          },
+          {
+            "id": "b",
+            "label": "Globale et post-hoc"
+          },
+          {
+            "id": "c",
+            "label": "Locale et issue d'un modèle interprétable"
+          },
+          {
+            "id": "d",
+            "label": "Globale et issue d'un modèle interprétable"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "LIME explique une décision après coup.",
+      "hint": "LIME figure à côté de SHAP dans le tableau.",
+      "concepts": [
+        "portee-explication"
+      ],
+      "source": "Diapositives 21"
+    },
+    {
+      "chapterSlug": "attribution-contrefactuel",
+      "type": "TRUE_FALSE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Un contrefactuel peut proposer de changer l'âge de la personne.",
+      "payload": {},
+      "solution": {
+        "value": false
+      },
+      "explanation": "L'âge est immuable : le changement doit être faisable.",
+      "hint": "Le recours doit être réalisable.",
+      "concepts": [
+        "contrefactuel"
+      ],
+      "source": "Diapositives 23"
+    },
+    {
+      "chapterSlug": "supervision-contestation",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Quelle étape du circuit de contestation confie le dossier à une personne compétente avec pouvoir de modification ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Le réexamen"
+          },
+          {
+            "id": "b",
+            "label": "La notification"
+          },
+          {
+            "id": "c",
+            "label": "L'explication"
+          },
+          {
+            "id": "d",
+            "label": "La trace"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "Le réexamen est mené par une personne compétente, qui peut modifier la décision.",
+      "hint": "C'est l'étape où la décision peut changer.",
+      "concepts": [
+        "contestation"
+      ],
+      "source": "Diapositives 26"
+    },
+    {
+      "chapterSlug": "ai-act",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Dans quel régime de l'AI Act un outil de recrutement entre-t-il en général ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Les systèmes à haut risque"
+          },
+          {
+            "id": "b",
+            "label": "Les pratiques interdites"
+          },
+          {
+            "id": "c",
+            "label": "Les obligations de transparence seules"
+          },
+          {
+            "id": "d",
+            "label": "Aucun régime particulier"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "Le recrutement figure parmi les exemples de haut risque, selon l'article 6.",
+      "hint": "Le recrutement est encadré sans être interdit.",
+      "concepts": [
+        "ai-act-qualification"
+      ],
+      "source": "Diapositives 28"
+    },
+    {
+      "chapterSlug": "llm-exploitation",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Quel contrôle s'applique à la frontière « Recherche » d'un système RAG ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Limiter le corpus et appliquer les droits avant récupération"
+          },
+          {
+            "id": "b",
+            "label": "Vérifier les sources citées et prévoir l'abstention en cas de doute"
+          },
+          {
+            "id": "c",
+            "label": "Permissions minimales sur les outils"
+          },
+          {
+            "id": "d",
+            "label": "Journaliser et tester les abus"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "On restreint ce que la recherche peut récupérer, en fonction des droits de l'utilisateur.",
+      "hint": "Il s'agit de ce que le système va chercher.",
+      "concepts": [
+        "controles-frontieres"
+      ],
+      "source": "Diapositives 33"
+    },
+    {
+      "chapterSlug": "comite-tableau-de-bord",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Quelle question décisive pose la perspective « Production » du comité ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Qui surveille, intervient et restaure le service ?"
+          },
+          {
+            "id": "b",
+            "label": "Les résultats résistent-ils à un test indépendant ?"
+          },
+          {
+            "id": "c",
+            "label": "L'usage et les données sont-ils qualifiés ?"
+          },
+          {
+            "id": "d",
+            "label": "Quels bénéfices et recours concrets ?"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "La production pense à l'exploitation au quotidien.",
+      "hint": "Pense à la panne et à la remise en service.",
+      "concepts": [
+        "comite-decision"
+      ],
+      "source": "Diapositives 36"
+    }
+  ]
+}

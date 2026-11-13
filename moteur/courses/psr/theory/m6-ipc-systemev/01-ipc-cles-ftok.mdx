@@ -1,0 +1,212 @@
+---
+title: "Mécanisme IPC System V : clés et ftok"
+slug: ipc-cles-ftok
+order: 1
+estimatedReadMin: 18
+concepts: [ipc-systemev, objet-ipc, persistance-noyau, cle-ipc, ftok, ipc-private, motif-get, ipc-creat, ipc-excl, droits-ipc, ipcs-ipcrm, fuite-ipc]
+source: "Cours 6 — Les files de messages (mécanisme IPC System V)"
+---
+
+Les Modules 3 et 4 ont montré les **tubes** ; le Module 5, la synchronisation **entre threads**. Il manque encore une famille complète d'outils de communication **entre processus** : les **IPC System V**. Ce sixième module les présente — et tout commence par une notion partagée par les trois objets de cette famille : la **clé**.
+
+## La famille des IPC System V
+
+> Les **IPC System V** (*System V Inter-Process Communication*) sont un ensemble de mécanismes de communication entre processus, hérités de la branche **System V** d'UNIX (AT&T). Ils regroupent **trois** types d'objets, manipulés par des appels système au schéma volontairement **uniforme**.
+
+Les trois objets de la famille :
+
+| Objet | Rôle | Sert à… |
+|---|---|---|
+| **Ensemble de sémaphores** | synchronisation | coordonner des processus, protéger une ressource (chapitre 2) |
+| **File de messages** | communication structurée | échanger des messages typés (chapitre 3) |
+| **Segment de mémoire partagée** | communication par mémoire commune | partager une zone de données (chapitre 4) |
+
+Ces trois objets, malgré leurs usages différents, partagent une **architecture commune** — et c'est tout l'intérêt de les étudier ensemble. Chacun :
+
+- est **identifié** par une **clé** de type `key_t` ;
+- se **crée** (ou se récupère) par un appel `*get(clé, drapeaux)` qui renvoie un **identifiant entier** ;
+- se **contrôle** par un appel `*ctl(...)` (consultation, modification, suppression) ;
+- est **persistant dans le noyau** et porte des **droits d'accès** de type UNIX.
+
+Maîtriser le chapitre courant — la **clé**, le motif `get`, les **drapeaux**, la **persistance** — c'est maîtriser le socle des trois objets. Les chapitres suivants ne feront que décliner ce socle.
+
+## Une propriété décisive : la persistance dans le noyau
+
+C'est la différence la plus importante avec les tubes, et il faut la comprendre dès maintenant.
+
+> Un objet IPC System V est **persistant dans le noyau** (*kernel-persistent*) : une fois créé, il **continue d'exister dans le système** même après la **terminaison de tous les processus** qui l'utilisaient. Il ne disparaît que de **deux** façons : par une **suppression explicite** (appel `*ctl` avec `IPC_RMID`, ou commande `ipcrm`), ou par l'**arrêt de la machine**.
+
+Comparons avec ce que les modules précédents ont montré :
+
+| Objet | Durée de vie |
+|---|---|
+| **Tube anonyme** | détruit automatiquement à la fermeture du dernier descripteur |
+| **Tube nommé (FIFO)** | l'i-nœud est persistant (système de fichiers) ; `unlink` explicite |
+| **Objet IPC System V** | **persistant dans le noyau** ; suppression explicite par `IPC_RMID` |
+
+Cette persistance a une conséquence à double tranchant :
+
+- **Un atout** : un processus peut créer un objet IPC, se terminer, et un **autre** processus lancé plus tard retrouve l'objet **intact** — données comprises. La communication ne dépend plus de la durée de vie du créateur.
+- **Un piège** : si aucun processus ne **supprime** l'objet, il **reste indéfiniment** dans le noyau, occupant des ressources. On parle de **fuite d'objet IPC** — la version System V de la « fuite mémoire ».
+
+> ⚠️ Un objet IPC System V **survit à tous ses processus**. Un programme qui crée une file de messages ou un segment de mémoire partagée mais **oublie de le supprimer** (`IPC_RMID`) laisse derrière lui un objet **orphelin** : il occupe une ressource noyau et **rien ne le nettoie automatiquement** — ni la fin du processus, ni la déconnexion de l'utilisateur. C'est l'erreur classique des IPC System V. La règle : **à toute création doit correspondre une suppression**.
+
+## La clé : un identifiant commun aux trois objets
+
+Un tube nommé se désigne par un **chemin** dans le système de fichiers. Un objet IPC System V, lui, **n'apparaît pas** dans le système de fichiers : il se désigne par un nombre, la **clé**.
+
+> Une **clé IPC** est une valeur numérique de type **`key_t`** (un entier, défini dans `<sys/types.h>`) qui sert d'**identité publique** d'un objet IPC. Deux processus qui veulent **partager le même objet** doivent fournir la **même clé** à leur appel `*get`. La clé joue, pour les IPC, le rôle que le **chemin** joue pour un FIFO.
+
+Le problème pratique est alors : **comment deux processus indépendants choisissent-ils la même clé ?** Tirer un nombre au hasard ne marche pas (ils ne tomberaient jamais d'accord) ; écrire une constante en dur (`#define CLE 1234`) marche mais risque la **collision** — un *autre* programme du système peut utiliser la même valeur. Il faut un procédé **reproductible** et **peu risqué**. C'est le rôle de `ftok`.
+
+## Dériver une clé d'un fichier : `ftok`
+
+La fonction **`ftok`** (*file to key*) **fabrique** une clé à partir d'un élément que **tous les processus concernés peuvent connaître** : un **chemin de fichier**.
+
+```c
+#include <sys/types.h>
+#include <sys/ipc.h>
+
+key_t ftok(const char *pathname, int proj_id);
+```
+
+Ses deux arguments :
+
+- **`pathname`** — le chemin d'un **fichier qui doit déjà exister** et être **accessible** par le processus. Typiquement un fichier du projet (par exemple le programme lui-même, ou un fichier de configuration).
+- **`proj_id`** — un **identifiant de projet** : un entier dont seuls les **8 bits de poids faible** sont utilisés, donc une valeur **entre 1 et 255** en pratique (la valeur 0 est à éviter). Il permet de dériver **plusieurs clés distinctes** du **même fichier**.
+
+`ftok` renvoie une valeur `key_t` exploitable, ou **`-1`** en cas d'échec (le fichier `pathname` n'existe pas ou est inaccessible), avec `errno` positionné.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+
+/* derive une cle IPC a partir d'un fichier existant */
+int main(void) {
+    key_t cle = ftok("/path/to/some/file", 65);   /* le fichier doit exister */
+    if (cle == (key_t) -1) {
+        perror("ftok");
+        exit(EXIT_FAILURE);
+    }
+    printf("La cle generee est : %d\n", (int) cle);
+    return 0;
+}
+```
+
+Le mécanisme repose sur une idée simple : `ftok` combine des informations **stables** du fichier `pathname` — son **numéro d'i-nœud** et l'identifiant de son **périphérique** — avec les 8 bits de `proj_id`. Le résultat est **déterministe** : tant que le fichier `pathname` reste le même et que `proj_id` est identique, **deux processus quelconques** qui appellent `ftok` obtiennent **rigoureusement la même clé**. Ils n'ont rien à se transmettre : il leur suffit de **convenir d'un chemin et d'un `proj_id`**.
+
+> ⚠️ Le fichier passé à `ftok` doit **exister** et **rester le même**. Trois pièges classiques : (1) si le fichier **n'existe pas**, `ftok` renvoie `-1` — il faut tester ce retour ; (2) si le fichier est **supprimé puis recréé**, son numéro d'i-nœud **change** et `ftok` produit une clé **différente** : les processus ne se retrouvent plus ; (3) `ftok` n'utilise que les **8 bits de poids faible** de `proj_id` — `ftok(p, 65)` et `ftok(p, 65 + 256)` donnent la **même** clé. Choisir un fichier **stable** et un `proj_id` dans `[1, 255]`.
+
+## La clé spéciale `IPC_PRIVATE`
+
+Il existe un cas où l'on **ne veut pas** de clé publique partageable : quand l'objet IPC ne doit servir qu'à des processus **apparentés** (un père et ses fils, qui hériteront l'identifiant de l'objet). On utilise alors la **constante** `IPC_PRIVATE` à la place d'une clé :
+
+```c
+int id = msgget(IPC_PRIVATE, IPC_CREAT | 0600);   /* file privee, anonyme */
+```
+
+> **`IPC_PRIVATE`** est une valeur de clé spéciale qui demande au noyau de créer un objet IPC **toujours neuf** et **sans clé publique** : aucun autre processus ne pourra le retrouver par `*get` puisqu'il n'a pas de clé. L'objet n'est accessible que par les processus à qui le créateur **transmet son identifiant** — typiquement les **fils** créés par `fork` après la création, qui héritent la valeur de l'identifiant.
+
+`IPC_PRIVATE` est donc l'analogue, pour les IPC System V, du **tube anonyme** : pas de nom public, partage par **héritage** entre processus apparentés. Une vraie clé `ftok` est, elle, l'analogue du **tube nommé** : identité publique, partage entre processus **quelconques**.
+
+## Le motif universel de création : l'appel `*get`
+
+Les trois objets se créent (ou se récupèrent) par un appel dont la **forme est toujours la même** :
+
+```c
+int identifiant = XXXget(key_t cle, int drapeaux);
+```
+
+- pour une **file de messages** : `msgget` ;
+- pour un **ensemble de sémaphores** : `semget` ;
+- pour un **segment de mémoire partagée** : `shmget`.
+
+Le principe commun :
+
+- le premier argument est la **clé** (issue de `ftok`, ou `IPC_PRIVATE`) ;
+- le second est un OU binaire de **drapeaux** : des **bits de droits** d'accès (en octal, comme pour un fichier) combinés avec d'éventuelles **options** `IPC_CREAT` / `IPC_EXCL` ;
+- la valeur de retour est un **identifiant** : un **entier** qui servira ensuite à **tous** les autres appels sur cet objet (`msgsnd`, `semop`, `shmat`, `*ctl`…). En cas d'échec, l'appel renvoie **`-1`** et positionne `errno`.
+
+> ⚠️ Il faut **distinguer rigoureusement la clé et l'identifiant**. La **clé** (`key_t`) est l'identité **publique et externe** de l'objet — choisie *avant* sa création, par `ftok`. L'**identifiant** (`int`) est un **numéro interne** attribué *par le noyau* en retour de `*get` — c'est le « descripteur » de l'objet. On **désigne** un objet à autrui par sa **clé** ; on **manipule** un objet par son **identifiant**. Confondre les deux est une erreur de débutant fréquente.
+
+Le parallèle avec l'ouverture d'un fichier est éclairant : `ftok` joue le rôle du **chemin**, `*get` celui de `open`, et l'**identifiant** celui du **descripteur de fichier**.
+
+## Les drapeaux : `IPC_CREAT` et `IPC_EXCL`
+
+Le second argument de `*get` encode à la fois les **droits** et la **politique de création**.
+
+### Les bits de droits
+
+Comme un fichier, un objet IPC porte des **droits d'accès UNIX** pour trois catégories d'utilisateurs (propriétaire, groupe, autres). On les exprime en **octal** : `0600` (lecture/écriture pour le seul propriétaire), `0644`, `0666` (lecture/écriture pour tous)… Pour les IPC, le droit de **lecture** autorise la **consultation** de l'objet, et le droit d'**écriture** autorise la **modification** (déposer un message, faire une opération sur un sémaphore, écrire dans un segment).
+
+### `IPC_CREAT` — créer si nécessaire
+
+> Le drapeau **`IPC_CREAT`** demande : « **crée** l'objet pour cette clé s'il **n'existe pas encore** ; s'il **existe déjà**, **renvoie simplement son identifiant** ». C'est l'option de la création **idempotente** : qu'on soit le premier ou le centième processus à appeler `*get` sur cette clé, on obtient l'identifiant de l'objet.
+
+Sans `IPC_CREAT`, l'appel `*get` ne fait que **récupérer** un objet **déjà existant** ; si la clé ne correspond à aucun objet, il échoue (`errno == ENOENT`). C'est le mode d'emploi d'un processus qui veut **rejoindre** un objet créé par un autre.
+
+### `IPC_EXCL` — exiger une création neuve
+
+> Le drapeau **`IPC_EXCL`**, **toujours combiné avec `IPC_CREAT`**, durcit la sémantique : « crée l'objet, mais **échoue** (`errno == EEXIST`) si un objet existe **déjà** pour cette clé ». Avec `IPC_CREAT | IPC_EXCL`, l'appel `*get` ne réussit **que si c'est lui qui vient de créer l'objet**.
+
+`IPC_EXCL` sert à **garantir** que l'on est bien le **créateur** de l'objet — utile pour savoir qui a la responsabilité de l'**initialiser** (par exemple positionner la valeur d'un sémaphore) et de le **supprimer**. Récapitulons les trois combinaisons :
+
+| Second argument de `*get` | Comportement |
+|---|---|
+| `0` *(droits seuls, sans `IPC_CREAT`)* | **récupère** un objet existant ; échec `ENOENT` s'il n'existe pas |
+| `IPC_CREAT \| 0644` | **récupère** l'objet s'il existe, le **crée** sinon (idempotent) |
+| `IPC_CREAT \| IPC_EXCL \| 0644` | **crée** l'objet ; échec `EEXIST` s'il **existe déjà** |
+
+> ⚠️ `IPC_EXCL` **seul n'a aucun effet** : il ne signifie « échouer si l'objet existe » qu'**en présence de `IPC_CREAT`**. On écrit donc toujours `IPC_CREAT | IPC_EXCL`. Et attention : un objet IPC étant **persistant dans le noyau**, un objet laissé par une exécution précédente fera **échouer** un `IPC_CREAT | IPC_EXCL` au lancement suivant — exactement comme un FIFO oublié fait échouer `mkfifo` avec `EEXIST`. Un programme robuste **tolère `EEXIST`** ou **nettoie** l'objet avant de le recréer.
+
+## Surveiller et nettoyer : les commandes `ipcs` et `ipcrm`
+
+Parce que les objets IPC sont persistants et **invisibles** dans le système de fichiers, le shell fournit **deux commandes dédiées** pour les inspecter et les supprimer.
+
+### `ipcs` — lister les objets IPC
+
+La commande **`ipcs`** affiche **tous les objets IPC System V** actuellement présents dans le système, classés par type :
+
+```text
+$ ipcs
+
+------ Message Queues --------
+key        msqid      owner      perms      used-bytes   messages
+0x41010001 0          smv        600        0            0
+
+------ Shared Memory Segments --------
+key        shmid      owner      perms      bytes        nattch     status
+0x00000000 32768      smv        600        524288       2
+
+------ Semaphore Arrays --------
+key        semid      owner      perms      nsems
+0x41010002 3          smv        600        2
+```
+
+Pour chaque objet, `ipcs` montre la **clé** (en hexadécimal), l'**identifiant** (en décimal), le **propriétaire**, les **droits** (en octal), et des informations propres au type (octets et nombre de messages d'une file ; taille et nombre d'attachements `nattch` d'un segment ; nombre de sémaphores `nsems` d'un ensemble). C'est l'outil de **diagnostic** numéro un : il permet de **voir** les objets que l'on a créés et, surtout, ceux qu'on a **oublié de supprimer**.
+
+### `ipcrm` — supprimer un objet IPC
+
+La commande **`ipcrm`** **supprime** un objet IPC, désigné par son **identifiant** ou par sa **clé** :
+
+```text
+$ ipcrm -q 0          # supprime la file de messages d'identifiant 0
+$ ipcrm -m 32768      # supprime le segment de memoire partagee d'identifiant 32768
+$ ipcrm -s 3          # supprime l'ensemble de semaphores d'identifiant 3
+$ ipcrm -Q 0x41010001 # supprime la file de messages de cle 0x41010001
+```
+
+`ipcrm` est le **filet de sécurité** : quand un programme s'est terminé sans nettoyer ses objets (un plantage, un `Ctrl-C` brutal), `ipcs` les révèle et `ipcrm` les **efface manuellement**. En pratique, pendant le développement, on enchaîne souvent `ipcs` (pour voir l'objet orphelin) puis `ipcrm` (pour le supprimer) avant de relancer le programme.
+
+> ⚠️ `ipcs` et `ipcrm` sont les **outils de survie** des IPC System V. Tant qu'on développe, on **vérifie régulièrement** avec `ipcs` qu'on ne laisse pas d'objets traîner, et on **nettoie** avec `ipcrm`. Un objet orphelin peut faire échouer la prochaine exécution (`IPC_EXCL`), ou pire, faire **réutiliser de vieilles données** : une file de messages oubliée garde **les anciens messages**, qu'un nouveau `msgrcv` lira comme s'ils venaient d'arriver.
+
+> **À retenir**
+> - Les **IPC System V** regroupent **trois objets** : ensembles de **sémaphores** (synchronisation), **files de messages** (communication structurée), segments de **mémoire partagée**. Tous partagent une architecture commune : une **clé**, un appel `*get`, un appel `*ctl`.
+> - Un objet IPC est **persistant dans le noyau** : il **survit à tous ses processus** et ne disparaît que par suppression explicite (`IPC_RMID` / `ipcrm`) ou arrêt de la machine. Oublier de le supprimer = **fuite d'objet IPC**.
+> - La **clé** (`key_t`) est l'identité **publique** d'un objet. **`ftok(pathname, proj_id)`** fabrique une clé **reproductible** à partir d'un **fichier existant** et d'un identifiant de projet (8 bits, donc `[1, 255]`) ; renvoie `-1` si le fichier est absent.
+> - **`IPC_PRIVATE`** crée un objet **neuf et sans clé publique**, partageable seulement par héritage entre processus **apparentés** (l'analogue du tube anonyme).
+> - Le motif **`*get(clé, drapeaux)`** crée ou récupère l'objet et renvoie un **identifiant** entier. Ne pas confondre la **clé** (externe, choisie par `ftok`) et l'**identifiant** (interne, attribué par le noyau).
+> - **`IPC_CREAT`** : crée l'objet s'il n'existe pas, le récupère sinon. **`IPC_EXCL`** (combiné à `IPC_CREAT`) : **échec `EEXIST`** si l'objet existe déjà — pour garantir qu'on est le créateur.
+> - Les commandes shell **`ipcs`** (lister les objets IPC) et **`ipcrm`** (supprimer un objet) sont indispensables au diagnostic et au nettoyage des objets orphelins.

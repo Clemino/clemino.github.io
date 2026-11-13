@@ -1,0 +1,39 @@
+---
+title: "Types, valeurs et blocs"
+slug: types-valeurs-blocs
+order: 2
+estimatedReadMin: 12
+concepts: [val, var, lazy-val, type-inference, type-hierarchy, unit, bloc]
+source: "Intro/Intro/Scala_01 (3).pdf; Intro/Intro/basics_scala.pdf"
+---
+## Typage statique et inference
+
+Scala est statiquement type : chaque expression a un type connu avant execution. L'inference evite souvent de l'ecrire.
+
+```scala
+val a = 3          // Int
+val b = 3.0        // Double
+val c = if (a > 0) a else 0
+```
+
+L'inference n'est pas magique : elle deduit le type le plus precis raisonnable a partir des branches et des appels.
+
+## val, var et lazy val
+
+`val` fixe une liaison immutable. `var` autorise une reassociation. `lazy val` attend le premier acces avant d'evaluer l'expression, puis memorise le resultat.
+
+```scala
+val x = { val y = 2; y + 1 } // 3
+lazy val lourd = calculLong()
+```
+
+## Hierarchie utile
+
+`Any` est le supertype general. `AnyVal` couvre les valeurs primitives comme `Int`, `Double`, `Boolean`, `Unit`. `AnyRef` couvre les references. `Nothing` est le type des expressions qui ne retournent jamais normalement, par exemple une exception.
+
+## Blocs
+
+Un bloc delimite une portee. Les definitions intermediaires ne sortent pas du bloc, et la derniere expression donne la valeur du bloc.
+
+> **A retenir**  
+> Dans les exercices, lis toujours un bloc de haut en bas, mais ne retiens comme valeur que sa derniere expression.

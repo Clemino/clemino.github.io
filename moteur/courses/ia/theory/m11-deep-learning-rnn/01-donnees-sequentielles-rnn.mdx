@@ -1,0 +1,250 @@
+---
+title: "Données séquentielles et RNN"
+slug: donnees-sequentielles-rnn
+order: 1
+estimatedReadMin: 20
+concepts: [donnees-sequentielles, reseau-recurrent, etat-cache, recurrence, depliage-temporel]
+source: "Slides_RNN_2526.pdf"
+---
+
+## Pourquoi un nouveau type de réseau ?
+
+Ce module ouvre le **second chapitre consacré à l'apprentissage profond**, celui
+des **réseaux de neurones récurrents (RNN)**. Pour comprendre leur intérêt, le
+cours commence par rappeler les **limites des réseaux vus jusqu'ici**.
+
+Les **réseaux de neurones standards** — totalement connectés et *feedforward* —
+ainsi que les **réseaux convolutifs** (eux aussi *feedforward*) partagent
+plusieurs caractéristiques :
+
+- ils acceptent en entrée **uniquement des données de taille fixe** (par exemple
+  les valeurs de variables explicatives ou une image). Cette taille est
+  déterminée par un **hyperparamètre important** : le **nombre de neurones dans
+  la couche d'entrée** ;
+- ils produisent une **sortie de taille fixe**. Cette taille est elle aussi
+  déterminée par un hyperparamètre important : le **nombre de neurones dans la
+  couche de sortie** ;
+- ils utilisent un **nombre fixe de couches** (encore un hyperparamètre).
+
+Le cours en tire la conséquence : **en raison de ces caractéristiques, il est
+difficile d'utiliser ces réseaux lorsque l'entrée et/ou la sortie est une
+séquence plutôt qu'un seul vecteur** — par exemple une **série chronologique de
+données boursières**.
+
+> **À retenir** : les réseaux **standards** et **convolutifs** sont
+> *feedforward* : ils traitent une entrée de **taille fixe**, produisent une
+> sortie de **taille fixe** et ont un **nombre fixe de couches**. Ils sont donc
+> **mal adaptés** lorsque l'entrée ou la sortie est une **séquence**.
+
+## Des réseaux feedforward aux réseaux récurrents
+
+Une **autre caractéristique commune** à ces réseaux est qu'ils **n'autorisent
+pas les cycles** : ils font circuler l'information dans **une seule direction
+(forward)**, de la couche d'entrée vers la couche de sortie, en passant par les
+couches cachées.
+
+Le cours énonce alors le pas décisif : **si nous relâchons cette dernière
+condition, nous obtenons des réseaux de neurones récurrents (RNN)**. En d'autres
+termes :
+
+> Les **RNN** sont des réseaux **avec des boucles** : cela signifie que la
+> sortie d'une couche, ou de plusieurs couches successives, ou de l'ensemble du
+> réseau, **peut être renvoyée vers son entrée** afin de calculer la **sortie
+> suivante**.
+
+La différence se voit bien si l'on compare les deux schémas. Dans un réseau
+**feedforward**, une entrée `X` traverse le bloc de traitement et produit une
+sortie `Y` ; rien ne revient en arrière. Dans un réseau **récurrent**, à
+l'instant `t`, le bloc reçoit l'entrée `Xᵗ`, produit la sortie `Yᵗ`, **mais
+produit aussi un état `hᵗ`** qui est **réinjecté** dans le bloc pour le
+traitement de l'instant suivant.
+
+| Aspect | Réseau feedforward | Réseau récurrent (RNN) |
+| --- | --- | --- |
+| **Cycles** | Interdits | Autorisés (**boucles**) |
+| **Circulation** | Une seule direction (forward) | La sortie **revient** vers l'entrée |
+| **Entrée / sortie** | Vecteurs de taille fixe | **Séquences** |
+| **Mémoire** | Aucune | Un **état** transmis dans le temps |
+
+> **À retenir** : un réseau **récurrent** s'obtient en **autorisant les cycles**
+> dans un réseau de neurones. La sortie d'une couche (ou de tout le réseau) est
+> **renvoyée vers l'entrée** pour calculer la sortie suivante : le RNN possède
+> donc une forme de **mémoire**.
+
+## Le réseau de Jordan : un premier exemple
+
+Le cours présente deux exemples historiques de réseaux récurrents. Le premier
+est le **réseau de Jordan**, **introduit par M. I. Jordan en 1986**.
+
+Il **comporte trois couches**. La particularité est que **la couche d'entrée
+contient aussi des unités d'état**. Ces couches sont connectées de la manière
+suivante :
+
+- les **connexions entraînables** relient les unités d'entrée et les unités
+  d'état à la couche cachée, puis la couche cachée à la couche de sortie ;
+- une **connexion « un pour un » avec un poids fixe de `1,0`** relie les **unités
+  de sortie** aux **unités d'état**.
+
+Autrement dit, le réseau de Jordan **recopie la sortie de l'instant précédent**
+dans les unités d'état, et ces unités d'état sont alors utilisées comme une
+**entrée supplémentaire**. Les équations sont :
+
+```text
+Hᵗ = σₕ(U·Xᵗ + V·Yᵗ⁻¹ + Bʰ)
+Yᵗ = σ_y(W·Hᵗ + Bʸ)
+```
+
+où **`U`, `V` et `W` sont des matrices de poids**, **`Bʰ` et `Bʸ` des vecteurs
+de biais**, et **`σₕ` et `σ_y` des fonctions d'activation**.
+
+> **À retenir** : le **réseau de Jordan** (1986) a **trois couches** ; sa couche
+> d'entrée contient des **unités d'état** qui **recopient la sortie précédente
+> `Yᵗ⁻¹`** (connexion « un pour un » de poids fixe `1,0`). Son état caché vaut
+> `Hᵗ = σₕ(U·Xᵗ + V·Yᵗ⁻¹ + Bʰ)`.
+
+## Le réseau d'Elman : un deuxième exemple
+
+Le second exemple est le **réseau d'Elman**, **introduit par J. L. Elman en
+1990**.
+
+Il **comporte lui aussi trois couches**, mais cette fois **la couche d'entrée
+contient des unités contexte** (et non des unités d'état). Les couches sont
+connectées comme suit :
+
+- les **connexions entraînables** relient les unités d'entrée et les unités de
+  contexte à la couche cachée, puis la couche cachée à la couche de sortie ;
+- une **connexion « un pour un » avec un poids fixe de `1.0`** relie les **unités
+  cachées** aux **unités de contexte**.
+
+La différence avec le réseau de Jordan est donc nette : ce que le réseau
+**recopie** dans les unités de contexte n'est plus la **sortie** précédente,
+mais l'**état de la couche cachée** précédente. Les équations sont :
+
+```text
+Hᵗ = σₕ(U·Xᵗ + V·Hᵗ⁻¹ + Bʰ)
+Yᵗ = σ_y(W·Hᵗ + Bʸ)
+```
+
+avec les mêmes notations que précédemment — **`U`, `V`, `W`** matrices de poids,
+**`Bʰ`, `Bʸ`** vecteurs de biais, **`σₕ`, `σ_y`** fonctions d'activation.
+
+| Réseau | Année | Unités ajoutées à l'entrée | Ce qui est recopié |
+| --- | --- | --- | --- |
+| **Jordan** | 1986 | Unités d'**état** | La **sortie** précédente `Yᵗ⁻¹` |
+| **Elman** | 1990 | Unités de **contexte** | L'**état caché** précédent `Hᵗ⁻¹` |
+
+C'est le schéma du **réseau d'Elman** — réinjecter l'**état caché** — qui
+correspond à la définition générale du RNN retenue dans la suite du cours.
+
+> **À retenir** : le **réseau d'Elman** (1990) a trois couches ; sa couche
+> d'entrée contient des **unités de contexte** qui **recopient l'état caché
+> précédent `Hᵗ⁻¹`** (connexion « un pour un » de poids fixe `1.0`). Son état
+> caché vaut `Hᵗ = σₕ(U·Xᵗ + V·Hᵗ⁻¹ + Bʰ)`.
+
+## La notion d'état caché
+
+Ces deux exemples introduisent la notion centrale du module : l'**état**
+réinjecté d'un instant à l'autre. Dans le RNN conventionnel — défini en détail
+dans la section suivante — cet état est l'**état de la couche cachée**, appelé
+**état caché (hidden state)** et noté `Hᵗ`.
+
+L'état caché joue le rôle d'une **mémoire**. À chaque instant `t`, la couche
+cachée calcule son nouvel état `Hᵗ` à partir de **deux** informations :
+
+- l'**entrée courante `Xᵗ`** ;
+- l'**état caché précédent `Hᵗ⁻¹`**.
+
+Comme `Hᵗ⁻¹` a lui-même été calculé à partir de `Hᵗ⁻²`, et ainsi de suite,
+**`Hᵗ` porte la trace de toute la sous-séquence déjà traitée**. C'est ce que le
+cours résumera ainsi : grâce à ses boucles, un RNN **« garde en mémoire » une
+synthèse des éléments de données déjà traités** et l'utilise lors du traitement
+de l'élément suivant.
+
+> **À retenir** : l'**état caché `Hᵗ`** est l'état de la couche cachée d'un RNN
+> à l'instant `t`. Il se calcule à partir de l'**entrée courante `Xᵗ`** et de
+> l'**état caché précédent `Hᵗ⁻¹`** : il **synthétise** ainsi toute la
+> sous-séquence déjà traitée et constitue la **mémoire** du réseau.
+
+## Déplier un RNN dans le temps
+
+Les boucles d'un RNN rendent son **flux d'information** difficile à lire
+directement. Le cours propose donc une représentation plus claire : **déplier
+(ou dérouler) le RNN dans le temps**.
+
+> **Déplier un RNN** dans le temps, c'est le considérer comme une **séquence de
+> copies** du même réseau — **une copie pour chaque valeur de `t`**.
+
+Sur le schéma replié `(a)`, on voit un **unique bloc** (la couche cachée) avec
+une **flèche qui boucle** sur lui-même ; les entrées `xₜ₋₁`, `xₜ`, `xₜ₊₁` et les
+sorties `hₜ₋₁`, `hₜ`, `hₜ₊₁` sont empilées. Sur le schéma déplié `(b)`, ce même
+réseau apparaît comme une **chaîne de blocs** :
+
+```text
+        hₜ₋₁        hₜ          hₜ₊₁
+         ↑           ↑            ↑
+hₜ₋₂ → [bloc] → hₜ₋₁ → [bloc] → hₜ → [bloc] → hₜ₊₁
+         ↑           ↑            ↑
+        xₜ₋₁        xₜ          xₜ₊₁
+```
+
+Chaque bloc reçoit **deux entrées** : l'entrée `xₜ` de l'instant courant **et**
+l'état caché `hₜ₋₁` venu du bloc précédent ; il produit l'état caché `hₜ`,
+transmis à la fois **vers le haut** (comme sortie) et **vers le bloc suivant**.
+
+Deux remarques importantes :
+
+- les blocs dépliés sont **des copies du même réseau** : ils **partagent les
+  mêmes poids et biais** (`U`, `V`, `W`, `Bʰ`, `Bᵒ`). Le dépliage ne crée pas de
+  nouveaux paramètres, il **représente** seulement le déroulement temporel ;
+- sur la figure du cours, **seule la couche cachée** a été représentée, pour
+  alléger le schéma.
+
+Ce dépliage est très utile : il rend le RNN **lisible comme un réseau
+profond**, et c'est lui qui permettra de comprendre l'**apprentissage** —
+la rétropropagation dans le temps — étudié dans la section suivante.
+
+> **À retenir** : **déplier** un RNN, c'est le représenter comme une **chaîne de
+> copies** du même réseau, une **par instant `t`**, toutes **partageant les
+> mêmes poids**. Chaque copie reçoit `xₜ` et l'état caché `hₜ₋₁`, et transmet
+> `hₜ` au maillon suivant.
+
+## Une remarque : couche récurrente et réseau profond
+
+Le cours ajoute une **remarque** importante sur le statut de ce qui est défini.
+Ce qui est véritablement défini dans un RNN conventionnel, c'est une **couche
+récurrente** — la **couche cachée**.
+
+Or **une telle couche peut être utilisée dans un réseau récurrent « profond
+(deep) »** comportant **plusieurs couches** et/ou dans un **réseau contenant
+différents types de couches**. Autrement dit, la couche récurrente est une
+**brique** : on peut en empiler plusieurs, ou la combiner avec des couches
+d'autres types (par exemple des couches entièrement connectées), exactement
+comme on combine des couches dans un réseau profond.
+
+> **À retenir** : ce qu'un RNN conventionnel définit, c'est en réalité une
+> **couche récurrente** (la couche cachée). Cette couche est une **brique** qui
+> peut s'intégrer dans un réseau récurrent **profond** (plusieurs couches) ou
+> dans un réseau **mélangeant différents types de couches**.
+
+## Synthèse de la section
+
+Les réseaux **standards** et **convolutifs** sont *feedforward* : ils traitent
+des entrées et des sorties de **taille fixe** et n'autorisent **pas les
+cycles** ; ils sont donc mal adaptés aux **séquences**. En **autorisant les
+cycles**, on obtient les **réseaux récurrents (RNN)**, dans lesquels la sortie
+d'une couche peut être **renvoyée vers l'entrée** pour calculer la sortie
+suivante. Deux exemples historiques l'illustrent : le **réseau de Jordan**
+(1986), dont les **unités d'état** recopient la **sortie précédente `Yᵗ⁻¹`**, et
+le **réseau d'Elman** (1990), dont les **unités de contexte** recopient l'**état
+caché précédent `Hᵗ⁻¹`**. C'est ce dernier schéma qui donne la notion centrale
+du module : l'**état caché `Hᵗ`**, calculé à partir de `Xᵗ` et de `Hᵗ⁻¹`, qui
+**synthétise** toute la sous-séquence déjà traitée et joue le rôle de
+**mémoire**. Pour rendre le flux d'information lisible, on **déplie** le RNN dans
+le temps : une **chaîne de copies** du même réseau, une par instant `t`, toutes
+**partageant les mêmes poids**. Enfin, ce qu'un RNN définit est une **couche
+récurrente** réutilisable dans un réseau **profond**.
+
+> **À retenir** : un **RNN** autorise les **boucles** et traite des
+> **séquences** ; il garde une **mémoire** via l'**état caché `Hᵗ`** calculé à
+> partir de `Xᵗ` et `Hᵗ⁻¹`. On le visualise en le **dépliant** en une chaîne de
+> copies du même réseau partageant les mêmes poids.

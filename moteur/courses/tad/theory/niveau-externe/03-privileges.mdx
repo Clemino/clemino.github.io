@@ -1,0 +1,94 @@
+---
+title: Privilèges système et privilèges objet
+slug: privileges
+order: 3
+estimatedReadMin: 7
+concepts: [privilege-systeme, privilege-objet, grant-revoke]
+source: "CM1, slides 12-15"
+---
+
+## Deux familles de privilèges
+
+Oracle distingue strictement **deux types** de privilèges :
+
+1. **Les privilèges système** : permettent de créer, modifier, supprimer **un type d'objet** dans la base.
+2. **Les privilèges objet** : permettent d'effectuer une action **sur un objet particulier** déjà existant.
+
+## Privilèges système
+
+Ils ont la forme `[ALTER|CREATE|DROP] [ANY] <OBJET>`. Le mot-clé **`ANY`** étend le privilège à *tous* les objets de ce type, dans tous les schémas.
+
+Quelques exemples emblématiques :
+
+| Privilège | ALTER | CREATE | DROP |
+|---|---|---|---|
+| `TABLE` | – | ✓ | – |
+| `ANY TABLE` | ✓ | ✓ | ✓ |
+| `PROCEDURE` | – | ✓ | – |
+| `ANY PROCEDURE` | ✓ | ✓ | ✓ |
+| `ROLE` | – | ✓ | – |
+| `ANY ROLE` | ✓ | – | ✓ |
+| `INDEX` (sur ses tables) | – | – | – |
+| `ANY INDEX` | ✓ | ✓ | ✓ |
+| `SEQUENCE` | – | ✓ | – |
+| `TRIGGER` | – | ✓ | – |
+| `VIEW` | – | ✓ | – |
+| `TABLESPACE` | ✓ | ✓ | ✓ |
+| `USER` | – | ✓ | ✓ |
+| `SESSION` | ✓ | ✓ | – |
+
+Et d'autres encore : `DATABASE`, `PROFILE`, `RESOURCE COST`, `ROLLBACK SEGMENT`, `SYSTEM`, `DATABASE LINK`, `PUBLIC DATABASE LINK`, `SYNONYM`, `PUBLIC SYNONYM`, `MATERIALIZED VIEW`, etc.
+
+### Octroi
+
+```sql
+GRANT CREATE TABLE TO udev;
+GRANT SELECT ANY TABLE TO Fred;
+GRANT CREATE ANY VIEW TO admin_role;
+```
+
+## Privilèges objet
+
+Ils permettent une **action ciblée** sur un objet précis (`ON nom_objet`). Le tableau de référence :
+
+| Privilège | Table | Vue | Séquence | Procédure / Fonction / Package | Vue matérialisée |
+|---|---|---|---|---|---|
+| `ALTER`     | ✓ | – | ✓ | – | – |
+| `DELETE`    | ✓ | ✓ | – | – | – |
+| `EXECUTE`   | – | – | – | ✓ | – |
+| `INDEX`     | ✓ | – | – | – | – |
+| `INSERT`    | ✓ | ✓ | – | – | – |
+| `REFERENCES`| ✓ | – | – | – | – |
+| `SELECT`    | ✓ | ✓ | ✓ | – | ✓ |
+| `UPDATE`    | ✓ | ✓ | – | – | – |
+
+### Exemples typiques
+
+```sql
+-- Droits CRUD sur une table
+GRANT SELECT, INSERT, UPDATE, DELETE ON SUPPLIERS TO smithj;
+
+-- Droits sur une clé étrangère (REFERENCES sur la colonne)
+GRANT REFERENCES (cli_id) ON TABLE T_CLIENT TO dumont;
+
+-- Droit d'exécution d'une procédure
+GRANT EXECUTE ON proc_maj_prix TO pierrot;
+
+-- Droit d'utilisation d'une séquence
+GRANT ALTER ON seq_id_client TO responsable_client;
+
+-- Sélection sur une vue matérialisée
+GRANT SELECT ON vm_produits TO responsable_client;
+```
+
+## Bonnes pratiques
+
+- **Donner le minimum** : principe du moindre privilège. Préférer `GRANT SELECT ON ma_table TO user` à `GRANT SELECT ANY TABLE TO user`.
+- **Encapsuler dans des rôles** : créer un rôle métier (ex. `R_LECTEUR`, `R_REDACTEUR`) puis attribuer aux utilisateurs.
+- **Utiliser les vues** pour filtrer les colonnes sensibles plutôt que de donner SELECT sur la table entière.
+
+> **À retenir**
+> - **Privilège système** = créer/modifier/supprimer un *type* d'objet (CREATE TABLE...).
+> - **Privilège objet** = action sur un objet *existant* (SELECT ON Client, EXECUTE ON proc...).
+> - `ANY` étend le privilège à tous les schémas — à utiliser avec parcimonie.
+> - `REFERENCES` est le privilège *objet* nécessaire pour créer une clé étrangère qui pointe vers une table d'un autre utilisateur.

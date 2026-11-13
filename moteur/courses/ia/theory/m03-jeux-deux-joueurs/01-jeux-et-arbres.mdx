@@ -1,0 +1,219 @@
+---
+title: "Jeux à somme nulle et arbres de jeu"
+slug: jeux-et-arbres
+order: 1
+estimatedReadMin: 13
+concepts: [jeu-a-deux-joueurs, jeu-a-somme-nulle, information-complete, modelisation-d-un-jeu, fonction-d-utilite, facteur-de-branchement, arbre-de-jeu]
+source: "Jeux_IA_slides.pdf"
+---
+
+## Les jeux, un terrain d'étude historique de l'IA
+
+Les **jeux ont été étudiés en intelligence artificielle depuis ses débuts** et lui
+ont donné une partie de ses **grands succès**. Faire jouer une machine — et la faire
+bien jouer — a longtemps servi de banc d'essai aux idées de l'IA : c'est une tâche
+au but clair, aux règles précises, et pourtant suffisamment difficile pour exiger un
+véritable *raisonnement*.
+
+Ces travaux, et ces succès, concernent **toutes sortes de jeux** : des jeux à **un
+joueur** ou à **plusieurs joueurs**, des jeux à **information complète** ou à
+**information incomplète**, et bien d'autres variantes encore. Le champ est vaste.
+
+Dans ce module, nous nous limiterons cependant à une catégorie bien précise. **Nous
+considérons exclusivement des jeux** qui sont à la fois :
+
+1. **à deux joueurs** ;
+2. **à somme nulle** ;
+3. **à information complète**.
+
+Les **échecs** et les **dames** sont des exemples typiques de tels jeux. Précisons
+maintenant le sens de ces trois propriétés, car c'est tout le cadre de ce module qui
+s'y joue.
+
+> **À retenir** : ce module ne traite que des jeux **à deux joueurs**, **à somme
+> nulle** et **à information complète** — les échecs et les dames en sont les
+> exemples de référence.
+
+## Les trois propriétés du cadre étudié
+
+**À deux joueurs.** Le jeu oppose **exactement deux joueurs**, qui jouent **à tour de
+rôle** : chacun attend que l'autre ait joué pour jouer à son tour.
+
+**À somme nulle.** L'expression « somme nulle » signifie que **ce que l'un des
+joueurs gagne, l'autre le perd**. Il n'y a pas d'issue où les deux joueurs gagnent
+ensemble, ni d'issue où ils perdent ensemble : les intérêts des deux joueurs sont
+**strictement opposés**. Aux échecs, par exemple, la victoire de l'un est la défaite
+de l'autre.
+
+**À information complète.** Chaque joueur **connaît à tout instant l'état exact de la
+partie**. Rien n'est caché, et **aucun hasard** n'intervient : aux échecs, les deux
+joueurs voient l'échiquier entier, et il n'y a ni dé ni carte tirée au sort. Cette
+propriété s'oppose aux jeux à **information incomplète**, où une part de la situation
+échappe aux joueurs.
+
+> ⚠️ Ces trois propriétés sont **cumulatives** : tout le module suppose qu'elles sont
+> vérifiées **simultanément**. Les méthodes présentées — arbre de jeu, minimax,
+> élagage — reposent entièrement sur ce cadre.
+
+## Modéliser un jeu : les éléments nécessaires
+
+Pour **modéliser un jeu**, nous avons besoin des éléments suivants. On retrouvera ici
+la même démarche que pour la formulation d'un problème de recherche : décrire
+rigoureusement la situation avant de chercher à la résoudre.
+
+**Un ensemble d'états `S`.** C'est l'ensemble de toutes les configurations que le jeu
+peut prendre. *Exemple* : dans le cas des **échecs**, un état est déterminé par une
+**configuration de l'échiquier** — c'est-à-dire le contenu de chacune des `8 × 8`
+cases — **ainsi que le joueur dont c'est le tour**. L'identité du joueur qui doit
+jouer fait donc partie intégrante de l'état.
+
+**Un état initial `s₀ ∈ S`.** C'est la configuration de départ de la partie.
+
+**Un ensemble d'états finals `F ⊂ S`.** Les états finals sont les configurations qui
+**terminent la partie**. Ils sont **soit énumérés**, **soit définis par une ou
+plusieurs propriétés**. *Exemple* : aux échecs, les états finals qui ne correspondent
+pas à une partie nulle sont **ceux où un roi sera capturé au coup suivant**.
+
+**Un ensemble d'actions.** Une **action fait passer d'un état à un autre**. Les
+actions décrivent les coups que les règles du jeu autorisent.
+
+**Une fonction d'utilité (ou de gain).** Cette fonction **associe une valeur
+numérique à chaque état final**. *Exemple* : aux échecs, les états finals
+correspondent à un **gain**, une **perte** ou une **partie nulle** ; on leur associe
+respectivement les valeurs **`1`**, **`−1`** et **`0`**. Dans **d'autres jeux**, un
+**nombre de points** est associé à chaque état final.
+
+| Élément | Rôle | Exemple aux échecs |
+| --- | --- | --- |
+| Ensemble d'états `S` | Toutes les configurations possibles | Échiquier `8 × 8` + joueur au trait |
+| État initial `s₀` | Configuration de départ | Position initiale des pièces |
+| États finals `F ⊂ S` | Configurations terminant la partie | Un roi capturé au coup suivant |
+| Actions | Transitions d'un état à un autre | Les coups légaux |
+| Fonction d'utilité | Valeur numérique des états finals | `1` (gain), `−1` (perte), `0` (nul) |
+
+Une **partie** est donc définie par une **suite d'actions conduisant de l'état
+initial à un état final**.
+
+> **À retenir** : un jeu se modélise par un **ensemble d'états `S`**, un **état
+> initial `s₀`**, des **états finals `F ⊂ S`**, un **ensemble d'actions**, et une
+> **fonction d'utilité** qui chiffre chaque état final ; une **partie** est une suite
+> d'actions de `s₀` à un état final.
+
+## La difficulté du problème
+
+Cette modélisation pose un cadre clair, mais elle révèle aussi la **difficulté
+profonde** des jeux.
+
+**À chaque fois qu'il a la main, un joueur doit choisir une action** parmi celles qui
+sont valides compte tenu de l'état courant. Le nombre de ces actions n'est pas
+anodin. Aux **échecs**, on évalue à **35 le nombre moyen de coups valides à chaque
+étape**. Cette valeur porte un nom : on l'appelle le **facteur de branchement**.
+
+**En fonction de quoi un joueur choisit-il le coup qu'il joue ?** En fonction d'un
+**critère à long terme** : le résultat de la partie. Un bon coup n'est pas un coup
+qui « rapporte tout de suite », c'est un coup qui **mène à une issue favorable**.
+
+Mais cela a une conséquence redoutable. Pour choisir un coup au mieux :
+
+- il faudrait **envisager toutes les suites de coups** possibles commençant par
+  l'état en cours et se terminant par une fin de partie ;
+- autrement dit, il faudrait **énumérer toutes les parties possibles** du jeu.
+
+Or, dans le cas des échecs, **ce nombre est évalué à `10⁵⁰`**. Pour donner la mesure
+de ce chiffre : il est **supérieur au nombre de molécules dans l'univers**.
+
+> ⚠️ Le **facteur de branchement** (environ `35` aux échecs) est ce qui fait
+> « exploser » le nombre de parties : à chaque niveau supplémentaire, le nombre de
+> suites de coups est multiplié par ce facteur.
+
+## La force brute est impossible
+
+La difficulté du problème vient de là : **il s'agit d'un problème de recherche dans
+un espace dont la taille est, au moins dans le cas des jeux « intéressants »,
+suffisamment grande pour rendre impossible l'énumération explicite**.
+
+Cela rend la méthode dite **« force brute » impossible à utiliser** — et ce,
+**quelle que soit la puissance de nos machines**. Aucun ordinateur, présent ou
+futur, ne peut parcourir `10⁵⁰` parties.
+
+Il y a donc **besoin d'intelligence, naturelle ou artificielle**. C'est précisément
+ce que ce module va construire : non pas tout énumérer, mais raisonner
+*intelligemment* sur une partie seulement de l'espace de jeu. La suite du module
+présentera l'**algorithme minimax**, puis son optimisation par l'**élagage
+alpha-bêta**, et enfin les **fonctions d'évaluation** qui permettent de limiter
+l'effort de recherche.
+
+> **À retenir** : l'espace de jeu est trop grand pour une **énumération explicite** ;
+> la **force brute est impossible**, indépendamment de la machine. Jouer
+> *intelligemment* — et non tout calculer — est une nécessité.
+
+## L'arbre de jeu
+
+Comment représenter, de manière exploitable, les suites de coups possibles d'une
+partie ? La réponse est l'**arbre de jeu** (encore appelé **arbre de recherche** dans
+le contexte des jeux).
+
+L'arbre de jeu se construit ainsi :
+
+- la **racine** de l'arbre est l'**état de départ**, c'est-à-dire l'**état courant**
+  à partir duquel on cherche à décider du prochain coup ;
+- **chaque nœud a pour fils les nœuds résultant de tous les coups possibles** à
+  partir de l'état que ce nœud représente ;
+- on descend ainsi de niveau en niveau : un niveau correspond à un **tour de jeu**.
+
+Autrement dit, **partir d'un état et appliquer toutes les actions valides** engendre
+les **fils** de ce nœud ; recommencer sur chaque fils engendre le niveau suivant ;
+et ainsi de suite.
+
+L'arbre de jeu rend visible une **alternance fondamentale** : comme les deux joueurs
+jouent à tour de rôle, les **niveaux de l'arbre alternent** entre les coups de l'un
+et les coups de l'autre. Si la racine correspond à un état où c'est à un joueur de
+jouer, ses fils correspondent à des états où c'est à l'**autre** joueur de jouer, les
+petits-fils reviennent au **premier**, et ainsi de suite. Cette alternance est le
+ressort de l'algorithme minimax, étudié à la section suivante.
+
+Le **jeu du Morpion** (Tic-Tac-Toe) fournit un exemple parlant. La racine est la
+grille **vide** ; ses fils sont toutes les grilles obtenues en plaçant le premier
+symbole ; les fils de ces fils sont les grilles obtenues en plaçant le second
+symbole ; et ainsi de suite jusqu'aux grilles **terminées**, où l'un des joueurs a
+aligné ses symboles ou bien la grille est pleine. Chaque grille terminée reçoit une
+valeur d'utilité — par exemple **`−1`**, **`0`** ou **`+1`** selon l'issue.
+
+> ⚠️ Ne confondez pas l'**arbre de jeu** et la **partie réelle**. L'arbre contient
+> *toutes* les continuations possibles ; une partie effectivement jouée n'est qu'**un
+> seul chemin** de la racine à une feuille.
+
+## Une feuille, deux significations possibles
+
+Une **feuille** de l'arbre de jeu est un nœud sans fils. Il faut bien voir qu'une
+feuille peut correspondre à **deux situations distinctes** :
+
+- soit la feuille est un **état final** : la partie est *réellement* terminée à ce
+  nœud (un joueur a gagné, perdu, ou la partie est nulle). Sa valeur est alors donnée
+  par la **fonction d'utilité** ;
+- soit la feuille est un **état non terminal** auquel on s'**arrête volontairement**,
+  parce que l'arbre n'a pas été construit jusqu'au bout. Sa valeur devra alors être
+  fournie autrement — par une **fonction d'évaluation**, notion que la quatrième
+  section du module développera.
+
+Cette distinction sera cruciale : construire l'arbre **jusqu'aux états finals** n'est
+possible que pour de très petits jeux ; pour les jeux réalistes, on devra **arrêter
+la construction à une profondeur limitée** et donc traiter des feuilles non
+terminales.
+
+## Synthèse de la section
+
+Ce module étudie les jeux **à deux joueurs**, **à somme nulle** (ce que l'un gagne,
+l'autre le perd) et **à information complète** (aucune part cachée ni de hasard),
+dont les échecs et les dames sont les exemples types. Un jeu se **modélise** par un
+ensemble d'états `S`, un état initial `s₀`, des états finals `F ⊂ S`, un ensemble
+d'actions, et une **fonction d'utilité** chiffrant les états finals. La difficulté
+vient du **facteur de branchement** (environ `35` aux échecs) qui rend le nombre de
+parties gigantesque (`10⁵⁰` aux échecs) : la **force brute est impossible**. On
+représente les continuations d'une partie par un **arbre de jeu**, dont la racine est
+l'état courant et dont les fils d'un nœud résultent de tous les coups possibles.
+
+> **À retenir** : un jeu se modélise par `S`, `s₀`, `F`, des actions et une **fonction
+> d'utilité** ; le **facteur de branchement** interdit la **force brute** ; l'**arbre
+> de jeu** (racine = état courant, fils = coups possibles) est l'outil sur lequel
+> reposeront minimax et l'élagage alpha-bêta.

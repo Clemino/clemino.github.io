@@ -1,0 +1,39 @@
+---
+title: "Prioriser les risques"
+slug: prioriser-risques
+order: 1
+estimatedReadMin: 7
+concepts: [matrice-risques, incidents-audit]
+source: "Diapositives 5 et 6"
+---
+## Idée centrale
+
+Tous les risques ne se traitent pas en même temps. Une **matrice** aide à les classer, et des **incidents réels** montrent quoi auditer.
+
+## La matrice de priorisation
+
+On cote la **gravité** et la **probabilité** sur des échelles ordinales de 1 à 5. Le score est leur produit : **score = gravité × probabilité**, de 1 à 25.
+
+- Convention du TD : un score **≥ 12** entraîne la **suspension** avant traitement du risque.
+- Une gravité de **5** impose une **revue obligatoire**, même avec une probabilité faible.
+
+> **À retenir**
+> Le seuil de 12 est pédagogique. Un produit de scores ordinaux **ne mesure pas une perte attendue** : il sert seulement à prioriser.
+
+## Six incidents, six questions d'audit
+
+| Cas documenté | Point à examiner | Test proposé |
+|---|---|---|
+| Amazon, recrutement | Historique et signaux liés au genre | Sélection par groupe et audit des variables |
+| COMPAS | Choix du critère d'équité | FPR, FNR et précision par groupe |
+| Uber, Tempe | Organisation de la supervision | Réaction et reprise en situation dégradée |
+| Tay | Interactions adversariales | Tests d'abus avant ouverture |
+| Air Canada | Fiabilité de l'information fournie | Réponse cohérente avec la règle en vigueur |
+| Santé, Obermeyer et al. | Le coût utilisé comme proxy du besoin | Validation clinique de la cible |
+
+Ces tests sont des exercices d'audit : **aucun test isolé ne garantit l'absence d'incident**.
+
+## Pièges classiques
+
+- Croire qu'un risque de gravité 5 et de probabilité 1 (score 5) peut être ignoré : la gravité 5 impose une revue.
+- Traiter le score comme une espérance de perte.

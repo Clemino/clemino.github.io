@@ -1,0 +1,155 @@
+---
+title: Polymorphisme et collections
+slug: polymorphisme-collections
+order: 4
+estimatedReadMin: 12
+concepts: [polymorphisme, liaison-dynamique, collection-polymorphe, methode-virtuelle]
+source: "Cours 4 — Héritage & Polymorphisme"
+---
+
+## Qu'est-ce que le polymorphisme ?
+
+Les chapitres précédents ont posé les briques — héritage, méthodes `virtual`, classes abstraites. Le **polymorphisme** est ce qu'elles permettent de construire.
+
+> Un objet **polymorphe** est un objet susceptible de prendre **plusieurs formes** pendant l'exécution. Le **polymorphisme** est la capacité du système à choisir **dynamiquement** la méthode correspondant au **type réel** de l'objet manipulé.
+
+Concrètement : on appelle une méthode sur un objet **sans connaître son type exact**, et c'est la version correcte — celle de la classe réelle de l'objet — qui s'exécute. En C++, le polymorphisme repose sur **deux** ingrédients :
+
+- l'**héritage**, qui range les classes dans une hiérarchie partageant une interface commune ;
+- les **fonctions `virtual`**, qui activent la **liaison dynamique**.
+
+Sans `virtual`, pas de polymorphisme : le choix de la méthode resterait figé à la compilation.
+
+## Manipuler un objet via un pointeur ou une référence de base
+
+Le polymorphisme s'exprime dès qu'un objet dérivé est manipulé **à travers un pointeur ou une référence du type de base**. C'est légal parce que la relation est « est-un » : un `Cercle` **est une** `Forme`, donc un `Forme*` peut pointer un `Cercle`, et une `Forme&` peut désigner un `Cercle`.
+
+```cpp
+Forme* p = new Cercle(5.0);    // un Forme* qui pointe un Cercle
+Cercle c(7.0);
+Forme& r = c;                  // une Forme& qui désigne un Cercle
+```
+
+Si la méthode appelée est `virtual`, l'appel est résolu d'après le type **réel** :
+
+```cpp
+p->description();   // exécute Cercle::description() — type réel = Cercle
+r.aire();           // exécute Cercle::aire()        — type réel = Cercle
+```
+
+Le même code source — `p->description()` — exécutera `Cercle::description()` ou `Triangle::description()` selon ce que `p` pointe **à l'exécution**. C'est ce qu'illustre une fonction qui reçoit une `Forme` par **référence** :
+
+```cpp
+void affichageDesc(const Forme& f) {
+    f.description();                              // version du type réel de f
+    std::cout << " son aire est " << f.aire() << std::endl;
+}
+
+int main() {
+    Cercle c(5.0);
+    Triangle t(10.0, 2.0);
+    affichageDesc(c);    // description() et aire() de Cercle
+    affichageDesc(t);    // description() et aire() de Triangle
+}
+```
+
+`affichageDesc` est écrite **une seule fois**, contre le type abstrait `Forme`, et fonctionne pour **toute** forme présente et future. Ajouter une classe `Rectangle` ne demandera **aucune** modification de cette fonction.
+
+> ⚠️ Le polymorphisme exige un **pointeur** ou une **référence**. Passer la `Forme` par **valeur** (`void affichageDesc(Forme f)`) provoquerait la **découpe d'objet** vue au chapitre 2 : la partie `Cercle` serait tranchée et la liaison dynamique perdue.
+
+## La liaison dynamique, ou répartition dynamique
+
+Le mécanisme qui choisit la bonne méthode à l'exécution s'appelle la **liaison dynamique** (ou **répartition dynamique**, *dynamic dispatch*).
+
+> Avec une méthode `virtual`, le choix du code exécuté est fait **à l'exécution**, d'après le **type réel** de l'objet — et non d'après le type **déclaré** du pointeur ou de la référence.
+
+Cela autorise un code **générique** : on programme contre le type de base, et le bon comportement « descend » automatiquement vers la classe concrète. Le code appelant n'a **pas besoin de connaître** la liste des classes dérivées — il manipule des `Forme`, le système se charge du reste.
+
+## La table des fonctions virtuelles (vtable)
+
+Comment le programme sait-il, à l'exécution, **quelle** version de `description()` appeler ? Par un mécanisme interne : la **table des fonctions virtuelles**, ou **vtable**.
+
+En pratique, le compilateur génère, **pour chaque classe** comportant des méthodes virtuelles, une table — la **vtable** — qui contient l'**adresse** de chaque méthode virtuelle, dans sa version propre à la classe. Chaque objet polymorphe contient alors un **pointeur caché** vers la vtable de sa classe réelle.
+
+Un appel `p->description()` se déroule en trois temps :
+
+1. suivre le pointeur caché de l'objet jusqu'à la **vtable** de sa classe réelle ;
+2. y lire l'**adresse** de la version de `description()` ;
+3. **exécuter** la méthode trouvée.
+
+C'est cette indirection qui fait que `p->description()` exécute `Cercle::description()` quand `p` pointe un `Cercle`. La liaison dynamique a donc un coût — minime : une lecture de table et un appel indirect.
+
+> Comprendre la **vtable** dans le détail n'est pas indispensable pour utiliser le polymorphisme. Ce qu'il faut retenir : `virtual` n'est pas magique — c'est une **indirection par table**, mise en place par le compilateur, qui rend la liaison dynamique possible.
+
+## Les collections hétérogènes
+
+Le polymorphisme prend toute sa puissance avec les **collections hétérogènes** : un conteneur unique qui rassemble des objets de **types différents** d'une même hiérarchie.
+
+On ne peut pas stocker directement des objets de classes différentes dans un même `std::vector` (ils n'ont pas la même taille, et la copie par valeur découperait les objets). La solution : un **vecteur de pointeurs de base**.
+
+> Une **collection polymorphe** se déclare comme un conteneur de **pointeurs vers la classe de base** : `std::vector<Forme*>`. Chaque élément peut alors pointer un objet de n'importe quelle classe dérivée.
+
+```cpp
+#include <vector>
+
+std::vector<Forme*> formes;        // collection hétérogène de formes
+
+formes.push_back(new Cercle(5.0));
+formes.push_back(new Triangle(10.0, 2.0));
+formes.push_back(new Cercle(7.0));
+formes.push_back(new Triangle(15.0, 4.0));
+```
+
+Le vecteur contient des `Forme*`, mais chaque pointeur désigne en réalité un `Cercle` ou un `Triangle`. Les objets concrets cohabitent dans une **structure unique**.
+
+## Parcourir une collection polymorphe
+
+Le bénéfice apparaît au **parcours** : une **seule** boucle traite tous les éléments, et la liaison dynamique appelle pour chacun la **bonne** version :
+
+```cpp
+for (Forme* f : formes) {
+    f->description();                              // version du type réel
+    std::cout << f->aire() << std::endl;           // version du type réel
+}
+```
+
+À chaque tour, `f` pointe un objet différent ; `f->description()` exécute `Cercle::description()` ou `Triangle::description()` selon le type **réel**. La boucle ne contient **aucun `if`**, **aucun test de type** : c'est le polymorphisme qui aiguille l'appel. Ajouter une nouvelle forme ne change **rien** à cette boucle.
+
+C'est le cœur du **traitement polymorphe** : un code uniforme s'applique à une collection d'objets hétérogènes, chacun réagissant selon sa nature.
+
+> ⚠️ Le type de base doit ici être **polymorphe** : `description()` et `aire()` **doivent** être `virtual`. Sans `virtual`, `f->description()` appellerait toujours `Forme::description()` (liaison statique sur le type `Forme*`), et la collection perdrait tout intérêt.
+
+## Détruire les objets d'une collection polymorphe
+
+Les objets ont été créés avec `new` : ils vivent sur le **tas** et doivent être **libérés** avec `delete`, sous peine de **fuite mémoire**. Le conteneur, lui, ne détruit **que les pointeurs** — jamais les objets pointés.
+
+```cpp
+for (Forme* f : formes) {
+    delete f;            // libère chaque objet pointé
+}
+formes.clear();          // vide le vecteur de ses pointeurs (désormais pendants)
+```
+
+Et c'est ici que la **dernière pièce** se met en place. Ce `delete f` s'applique à un `Forme*` qui pointe un `Cercle` ou un `Triangle`. Pour qu'il détruise **réellement** l'objet dérivé — et pas seulement sa sous-partie `Forme` — le destructeur de `Forme` **doit** être `virtual` :
+
+```cpp
+class Forme {
+    public:
+        virtual void description() const = 0;
+        virtual double aire() const = 0;
+        virtual ~Forme() = default;          // INDISPENSABLE pour delete via Forme*
+};
+```
+
+Avec un destructeur `virtual`, `delete f` passe en liaison dynamique : il appelle d'abord `~Cercle()` (ou `~Triangle()`), **puis** `~Forme()`. Sans lui, seul `~Forme()` s'exécuterait — les ressources propres à la classe dérivée fuiraient.
+
+> Toute la chaîne du polymorphisme tient ensemble : **pointeur de base** + méthodes **`virtual`** + **destructeur `virtual`**. Manipuler une collection polymorphe sans destructeur virtuel, c'est programmer une fuite mémoire.
+
+> **À retenir**
+> - Le **polymorphisme** : appeler une méthode sur un objet sans connaître son type exact, et voir s'exécuter la version de son type **réel** ; il repose sur **héritage** + **`virtual`**.
+> - Le polymorphisme s'exprime via un **pointeur** (`Forme*`) ou une **référence** (`Forme&`) de la classe de base désignant un objet dérivé — jamais par valeur.
+> - La **liaison dynamique** choisit le code à l'**exécution** d'après le type réel : elle autorise un code générique, écrit contre le type de base.
+> - Techniquement, chaque classe polymorphe a une **vtable** (table d'adresses des méthodes virtuelles) ; chaque objet pointe vers la vtable de sa classe — `virtual` est une **indirection par table**.
+> - Une **collection hétérogène** se déclare `std::vector<Forme*>` : un conteneur de **pointeurs de base** où cohabitent des objets de classes dérivées différentes.
+> - On la **parcourt** par une seule boucle, sans test de type : la liaison dynamique appelle pour chaque élément la bonne méthode.
+> - Les objets créés par `new` doivent être libérés par `delete` ; détruire via un pointeur de base **exige** un **destructeur `virtual`**, sinon la partie dérivée fuit.

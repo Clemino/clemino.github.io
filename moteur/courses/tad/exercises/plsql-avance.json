@@ -1,0 +1,309 @@
+[
+  {
+    "chapterSlug": "procedures-fonctions",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la différence principale entre une procédure et une fonction PL/SQL ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Aucune, ce sont des synonymes" },
+      { "id": "b", "label": "Une fonction retourne une valeur via RETURN ; une procédure n'en retourne pas" },
+      { "id": "c", "label": "Une procédure est plus rapide qu'une fonction" },
+      { "id": "d", "label": "Les fonctions n'ont pas de paramètres" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Fonction = RETURN obligatoire. Procédure = action sans valeur de retour (peut utiliser OUT pour multiple sortie).",
+    "concepts": ["procedure", "fonction"]
+  },
+  {
+    "chapterSlug": "procedures-fonctions",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quel est le mode par défaut d'un paramètre PL/SQL ?",
+    "payload": { "options": [
+      { "id": "a", "label": "OUT" },
+      { "id": "b", "label": "IN" },
+      { "id": "c", "label": "IN OUT" },
+      { "id": "d", "label": "REF" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "IN est le mode par défaut (lecture seule dans le corps).",
+    "concepts": ["parametre-in-out"]
+  },
+  {
+    "chapterSlug": "procedures-fonctions",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Dans la signature d'une procédure, on doit préciser la taille des types (par exemple `IN VARCHAR2(50)`).",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. Les types des paramètres sont spécifiés SANS leur taille. On écrit `IN VARCHAR2`, jamais `IN VARCHAR2(50)`.",
+    "concepts": ["parametre-in-out"]
+  },
+  {
+    "chapterSlug": "procedures-fonctions",
+    "type": "PLSQL_PROCEDURE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écrivez une fonction `NbProjets` qui prend en paramètre le `matricule` d'un salarié (NUMBER) et retourne le nombre de projets sur lesquels il travaille (table `travailler(matricule, code_proj, date_debut)`).",
+    "payload": {
+      "required": {
+        "kind": "FUNCTION",
+        "name": "NbProjets",
+        "params": [{ "name": "matricule", "mode": "IN", "type": "NUMBER" }],
+        "returnType": "NUMBER",
+        "requiredKeywords": ["COUNT", "travailler", "RETURN"]
+      }
+    },
+    "solution": { "code": "CREATE OR REPLACE FUNCTION NbProjets(p_matricule IN NUMBER) RETURN NUMBER\nIS\n  v_nb NUMBER;\nBEGIN\n  SELECT COUNT(*) INTO v_nb FROM travailler WHERE matricule = p_matricule;\n  RETURN v_nb;\nEND;" },
+    "explanation": "Fonction prenant un matricule, comptant les lignes de `travailler` correspondantes, et retournant ce nombre.",
+    "concepts": ["fonction", "curseur-implicite"]
+  },
+  {
+    "chapterSlug": "procedures-fonctions",
+    "type": "PLSQL_PROCEDURE",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Écrivez une procédure `infoDivision` qui prend en entrée un `code_division` et liste (via DBMS_OUTPUT) les projets qui lui sont rattachés et, pour chaque projet, les salariés qui y travaillent. Tables: `projet(code_proj, nom_proj, code_div, budget)`, `travailler(matricule, code_proj, date_debut)`, `salarie(matricule, nom, prenom, code_div, salaire)`.",
+    "payload": {
+      "required": {
+        "kind": "PROCEDURE",
+        "name": "infoDivision",
+        "params": [{ "mode": "IN" }],
+        "requiredKeywords": ["LOOP", "projet", "travailler", "salarie", "DBMS_OUTPUT"]
+      }
+    },
+    "solution": { "code": "CREATE OR REPLACE PROCEDURE infoDivision(p_code_div IN NUMBER)\nIS\nBEGIN\n  FOR p IN (SELECT code_proj, nom_proj FROM projet WHERE code_div = p_code_div) LOOP\n    DBMS_OUTPUT.PUT_LINE('Projet ' || p.code_proj || ' - ' || p.nom_proj);\n    FOR s IN (SELECT s.nom, s.prenom\n              FROM salarie s, travailler t\n              WHERE t.matricule = s.matricule AND t.code_proj = p.code_proj) LOOP\n      DBMS_OUTPUT.PUT_LINE('  - ' || s.nom || ' ' || s.prenom);\n    END LOOP;\n  END LOOP;\nEND;" },
+    "explanation": "Boucle imbriquée FOR sur curseur : externe sur les projets de la division, interne sur les salariés affectés à chaque projet.",
+    "concepts": ["procedure", "curseur-for", "dbms-output"]
+  },
+  {
+    "chapterSlug": "curseurs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce qu'un curseur implicite ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Un CURSOR déclaré sans nom" },
+      { "id": "b", "label": "Un SELECT ... INTO ... FROM ... renvoyant exactement une ligne" },
+      { "id": "c", "label": "Un curseur partagé entre plusieurs sessions" },
+      { "id": "d", "label": "Un curseur en lecture seule" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Curseur implicite = SELECT INTO ; doit ramener exactement 1 ligne (sinon NO_DATA_FOUND ou TOO_MANY_ROWS).",
+    "concepts": ["curseur-implicite"]
+  },
+  {
+    "chapterSlug": "curseurs",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Mettez dans le bon ordre l'utilisation manuelle d'un curseur explicite :",
+    "payload": {
+      "items": [
+        { "id": "decl", "label": "CURSOR c IS SELECT ... FROM ...;" },
+        { "id": "open", "label": "OPEN c;" },
+        { "id": "fetch", "label": "FETCH c INTO v;" },
+        { "id": "exit", "label": "EXIT WHEN c%NOTFOUND;" },
+        { "id": "close", "label": "CLOSE c;" }
+      ]
+    },
+    "solution": { "order": ["decl", "open", "fetch", "exit", "close"] },
+    "explanation": "Déclaration → OPEN → FETCH → tester %NOTFOUND → CLOSE.",
+    "concepts": ["curseur-explicite", "curseur-attributs"]
+  },
+  {
+    "chapterSlug": "curseurs",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque attribut de curseur à son sens.",
+    "payload": {
+      "left": [
+        { "id": "f", "label": "%FOUND" },
+        { "id": "nf", "label": "%NOTFOUND" },
+        { "id": "open", "label": "%ISOPEN" },
+        { "id": "rc", "label": "%ROWCOUNT" }
+      ],
+      "right": [
+        { "id": "tf", "label": "VRAI si la dernière FETCH a ramené une ligne" },
+        { "id": "tnf", "label": "VRAI si la dernière FETCH n'a pas ramené de ligne" },
+        { "id": "to", "label": "VRAI si le curseur est ouvert" },
+        { "id": "trc", "label": "Nombre de FETCH effectués jusqu'ici" }
+      ]
+    },
+    "solution": { "pairs": { "f": "tf", "nf": "tnf", "open": "to", "rc": "trc" } },
+    "explanation": "Les 4 pseudo-attributs standards de curseur PL/SQL.",
+    "concepts": ["curseur-attributs"]
+  },
+  {
+    "chapterSlug": "curseurs",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Dans une boucle FOR v IN curseur LOOP ... END LOOP, OPEN et CLOSE sont automatiques.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "C'est l'avantage principal de la boucle FOR sur curseur : pas besoin d'OPEN/FETCH/CLOSE manuels.",
+    "concepts": ["curseur-for"]
+  },
+  {
+    "chapterSlug": "exceptions",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle exception est levée par un SELECT INTO qui ne renvoie aucune ligne ?",
+    "payload": { "options": [
+      { "id": "a", "label": "TOO_MANY_ROWS" },
+      { "id": "b", "label": "NO_DATA_FOUND" },
+      { "id": "c", "label": "DUP_VAL_ON_INDEX" },
+      { "id": "d", "label": "ZERO_DIVIDE" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "NO_DATA_FOUND : 0 ligne. TOO_MANY_ROWS : > 1 ligne.",
+    "concepts": ["exception-predefinie"]
+  },
+  {
+    "chapterSlug": "exceptions",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle est la plage de codes acceptée par RAISE_APPLICATION_ERROR ?",
+    "payload": { "options": [
+      { "id": "a", "label": "[-1000, -2000]" },
+      { "id": "b", "label": "[-21000, -20000]" },
+      { "id": "c", "label": "[-99999, -10000]" },
+      { "id": "d", "label": "N'importe quel entier négatif" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "La plage réservée aux applications est [-21000, -20000].",
+    "concepts": ["raise-application-error"]
+  },
+  {
+    "chapterSlug": "exceptions",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque exception prédéfinie à sa situation.",
+    "payload": {
+      "left": [
+        { "id": "dup", "label": "DUP_VAL_ON_INDEX" },
+        { "id": "ndf", "label": "NO_DATA_FOUND" },
+        { "id": "tmr", "label": "TOO_MANY_ROWS" },
+        { "id": "zd", "label": "ZERO_DIVIDE" }
+      ],
+      "right": [
+        { "id": "d", "label": "Doublon de clé primaire ou index UNIQUE" },
+        { "id": "n", "label": "SELECT INTO sans aucune ligne" },
+        { "id": "t", "label": "SELECT INTO ramenant plus d'une ligne" },
+        { "id": "z", "label": "Division par zéro" }
+      ]
+    },
+    "solution": { "pairs": { "dup": "d", "ndf": "n", "tmr": "t", "zd": "z" } },
+    "explanation": "Quatre exceptions prédéfinies essentielles à mémoriser.",
+    "concepts": ["exception-predefinie"]
+  },
+  {
+    "chapterSlug": "exceptions",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Mettez dans l'ordre les étapes pour créer une exception personnalisée :",
+    "payload": {
+      "items": [
+        { "id": "1", "label": "Déclarer : e_age_invalide EXCEPTION;" },
+        { "id": "2", "label": "Associer code : PRAGMA EXCEPTION_INIT(e_age_invalide, -20001);" },
+        { "id": "3", "label": "Lever : RAISE e_age_invalide;" },
+        { "id": "4", "label": "Capturer : WHEN e_age_invalide THEN ..." }
+      ]
+    },
+    "solution": { "order": ["1", "2", "3", "4"] },
+    "explanation": "Déclarer → PRAGMA → RAISE → capturer dans EXCEPTION.",
+    "concepts": ["exception-personnalisee"]
+  },
+  {
+    "chapterSlug": "exceptions",
+    "type": "PLSQL_PROCEDURE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écrivez une procédure `verifier_age` qui prend `p_age IN NUMBER`. Si `p_age < 18`, lever l'exception personnalisée `e_age_invalide` avec code -20001, et la capturer dans la section EXCEPTION pour afficher 'Âge invalide'.",
+    "payload": {
+      "required": {
+        "kind": "PROCEDURE",
+        "name": "verifier_age",
+        "requiredKeywords": ["EXCEPTION", "PRAGMA", "EXCEPTION_INIT", "-20001", "RAISE", "DBMS_OUTPUT"]
+      }
+    },
+    "solution": { "code": "CREATE OR REPLACE PROCEDURE verifier_age(p_age IN NUMBER)\nIS\n  e_age_invalide EXCEPTION;\n  PRAGMA EXCEPTION_INIT(e_age_invalide, -20001);\nBEGIN\n  IF p_age < 18 THEN\n    RAISE e_age_invalide;\n  END IF;\n  DBMS_OUTPUT.PUT_LINE('Âge valide');\nEXCEPTION\n  WHEN e_age_invalide THEN\n    DBMS_OUTPUT.PUT_LINE('Âge invalide');\nEND;" },
+    "explanation": "Pattern complet d'exception personnalisée : DECLARE EXCEPTION + PRAGMA + IF/RAISE + WHEN.",
+    "concepts": ["exception-personnalisee", "raise-application-error"]
+  },
+  {
+    "chapterSlug": "exceptions",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle fonction retourne le code d'erreur courant dans un bloc EXCEPTION ?",
+    "payload": { "options": [
+      { "id": "a", "label": "ORACODE" },
+      { "id": "b", "label": "SQLCODE" },
+      { "id": "c", "label": "SQLERRM" },
+      { "id": "d", "label": "ERRNO" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "SQLCODE = code numérique (-XXXXX). SQLERRM = message explicite. Souvent combinés : SQLCODE || ' - ' || SQLERRM.",
+    "concepts": ["sqlcode-sqlerrm"]
+  },
+  {
+    "chapterSlug": "packages",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Combien de parties constituent un package PL/SQL ?",
+    "payload": { "options": [
+      { "id": "a", "label": "1 seule, monolithique" },
+      { "id": "b", "label": "2 : spécification (déclaration) et body (description)" },
+      { "id": "c", "label": "3 : header, body, footer" },
+      { "id": "d", "label": "4 : decl, vars, body, exceptions" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Un package = spec (interface publique) + body (implémentation + privé).",
+    "concepts": ["package", "package-body"]
+  },
+  {
+    "chapterSlug": "packages",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Modifier le body d'un package sans toucher au spec n'invalide pas le code appelant.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. C'est l'intérêt de l'encapsulation : tant que la spec est stable, on peut refactoriser le body librement.",
+    "concepts": ["package", "package-body"]
+  },
+  {
+    "chapterSlug": "packages",
+    "type": "SQL_DDL",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écrivez la spécification (interface) d'un package `pkg_audit` qui expose une procédure `log_event(p_msg IN VARCHAR2)` et une fonction `count_events RETURN NUMBER`.",
+    "payload": {
+      "requiredElements": [
+        { "kind": "keyword", "keyword": "CREATE", "description": "CREATE" },
+        { "kind": "keyword", "keyword": "PACKAGE", "description": "PACKAGE" },
+        { "kind": "keyword", "keyword": "pkg_audit", "description": "Nom du package" },
+        { "kind": "keyword", "keyword": "PROCEDURE", "description": "Déclaration procédure" },
+        { "kind": "keyword", "keyword": "log_event", "description": "Nom procédure" },
+        { "kind": "keyword", "keyword": "FUNCTION", "description": "Déclaration fonction" },
+        { "kind": "keyword", "keyword": "count_events", "description": "Nom fonction" },
+        { "kind": "keyword", "keyword": "RETURN", "description": "RETURN type" },
+        { "kind": "keyword", "keyword": "END", "description": "END pkg_audit" }
+      ]
+    },
+    "solution": { "ddl": "CREATE OR REPLACE PACKAGE pkg_audit IS\n  PROCEDURE log_event(p_msg IN VARCHAR2);\n  FUNCTION count_events RETURN NUMBER;\nEND pkg_audit;" },
+    "explanation": "Spec d'un package : signatures uniquement, pas de corps. Procédure + fonction déclarées sans implementation.",
+    "concepts": ["package"]
+  }
+]

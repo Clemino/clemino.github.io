@@ -1,0 +1,834 @@
+[
+ {
+  "chapterSlug": "loi-jurisprudence",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel texte interdit les arrêts de règlement ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'article 61-1 de la Constitution"
+    },
+    {
+     "id": "b",
+     "label": "La loi du 24 mai 1872"
+    },
+    {
+     "id": "c",
+     "label": "L'article 5 du code civil"
+    },
+    {
+     "id": "d",
+     "label": "L'article 34 de la Constitution"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Le juge ne peut pas statuer par voie de disposition générale.",
+  "hint": "C'est un article du code civil.",
+  "concepts": [
+   "jurisprudence"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §1 et §2"
+ },
+ {
+  "chapterSlug": "loi-jurisprudence",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Le juge peut refuser de juger si la loi est obscure.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Il est obligé d'interpréter.",
+  "hint": "Le juge a une obligation à ce sujet.",
+  "concepts": [
+   "jurisprudence"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §1 et §2"
+ },
+ {
+  "chapterSlug": "loi-jurisprudence",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Un revirement de jurisprudence est par principe…",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "rétroactif"
+    },
+    {
+     "id": "b",
+     "label": "sans effet"
+    },
+    {
+     "id": "c",
+     "label": "valable pour l'avenir seulement"
+    },
+    {
+     "id": "d",
+     "label": "soumis à l'accord du Parlement"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "La règle est censée n'avoir pas changé.",
+  "hint": "Il n'est censé être qu'une nouvelle lecture de la même règle.",
+  "concepts": [
+   "revirement"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §1 et §2"
+ },
+ {
+  "chapterSlug": "loi-jurisprudence",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quel arrêt admet de moduler dans le temps les effets d'un revirement ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Nicolo"
+    },
+    {
+     "id": "b",
+     "label": "Czabaj"
+    },
+    {
+     "id": "c",
+     "label": "Société Tropic Travaux Signalisation"
+    },
+    {
+     "id": "d",
+     "label": "Dame Peynet"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "CE, Ass., 2007.",
+  "hint": "C'est un arrêt de 2007, sur les contrats.",
+  "concepts": [
+   "revirement"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §1 et §2"
+ },
+ {
+  "chapterSlug": "loi-jurisprudence",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque activité à son contenu.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Activité juridictionnelle"
+    },
+    {
+     "id": "l1",
+     "label": "Activité jurisprudentielle"
+    }
+   ],
+   "right": [
+    {
+     "id": "r1",
+     "label": "Dégager des interprétations et des principes"
+    },
+    {
+     "id": "r0",
+     "label": "Trancher un litige"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1"
+   }
+  },
+  "explanation": "Ce sont les deux activités du juge.",
+  "hint": "L'une concerne un litige, l'autre va au-delà.",
+  "concepts": [
+   "jurisprudence"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §1 et §2"
+ },
+ {
+  "chapterSlug": "loi-jurisprudence",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "En droit administratif, c'est le Conseil d'État qui fixe la jurisprudence.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "C'est la juridiction suprême de l'ordre administratif.",
+  "hint": "Pense à la juridiction suprême de l'ordre.",
+  "concepts": [
+   "jurisprudence"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §1 et §2"
+ },
+ {
+  "chapterSlug": "loi-jurisprudence",
+  "type": "FILL_BLANK",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Complète la formule classique.",
+  "payload": {
+   "template": "Selon la séparation des pouvoirs, le juge est la {{a}} de la loi.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "md"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "bouche"
+    ]
+   }
+  },
+  "explanation": "Une formule que la réalité du droit administratif contredit.",
+  "hint": "C'est une image attribuée à Montesquieu.",
+  "concepts": [
+   "jurisprudence"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §1 et §2"
+ },
+ {
+  "chapterSlug": "principes-generaux-droit",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Qu'est-ce qu'un principe général du droit ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Une norme non écrite appliquée par le juge à l'administration"
+    },
+    {
+     "id": "b",
+     "label": "Un traité international"
+    },
+    {
+     "id": "c",
+     "label": "Une norme écrite dans la Constitution, que le juge applique à l'administration et au législateur"
+    },
+    {
+     "id": "d",
+     "label": "Une loi organique"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Il n'est écrit dans aucun texte.",
+  "hint": "Il n'est écrit nulle part.",
+  "concepts": [
+   "pgd"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "principes-generaux-droit",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Selon René Chapus, quelle est la valeur des PGD ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Infra-législative et supra-décrétale"
+    },
+    {
+     "id": "b",
+     "label": "Supra-législative et inférieure à la Constitution"
+    },
+    {
+     "id": "c",
+     "label": "Constitutionnelle"
+    },
+    {
+     "id": "d",
+     "label": "Législative"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Le PGD se place entre la loi et le décret.",
+  "hint": "Chapus le situe entre deux normes.",
+  "concepts": [
+   "valeur-pgd"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "principes-generaux-droit",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Le juge administratif fait prévaloir un PGD sur une loi.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Il refuse de le faire.",
+  "hint": "Le juge reste soumis au législateur.",
+  "concepts": [
+   "pgd"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "principes-generaux-droit",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quel arrêt étend aux agents publics la protection de la femme enceinte ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Barel"
+    },
+    {
+     "id": "b",
+     "label": "Tropic"
+    },
+    {
+     "id": "c",
+     "label": "Dame Peynet"
+    },
+    {
+     "id": "d",
+     "label": "GISTI"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "CE, Ass., 1973.",
+  "hint": "C'est un arrêt de 1973, qui s'inspire du droit du travail.",
+  "concepts": [
+   "pgd"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "principes-generaux-droit",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Que signifie la « découverte » du PGD dans la théorie classique ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le juge consulte le Parlement"
+    },
+    {
+     "id": "b",
+     "label": "Le juge crée librement un principe nouveau, en dehors de toute norme existante"
+    },
+    {
+     "id": "c",
+     "label": "Le juge révèle un principe qui existe déjà, sans le créer"
+    },
+    {
+     "id": "d",
+     "label": "Le juge copie le droit étranger"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Cette présentation s'accorde avec la séparation des pouvoirs.",
+  "hint": "Cette théorie sauve la séparation des pouvoirs.",
+  "concepts": [
+   "pgd"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "principes-generaux-droit",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Les PGD s'imposent au pouvoir réglementaire, même autonome.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "C'est l'arrêt Syndicat général des ingénieurs-conseils.",
+  "hint": "Pense à l'arrêt Syndicat général des ingénieurs-conseils.",
+  "concepts": [
+   "valeur-pgd"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "principes-generaux-droit",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque arrêt à son apport.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Société des concerts du conservatoire"
+    },
+    {
+     "id": "l1",
+     "label": "Dame Peynet"
+    },
+    {
+     "id": "l2",
+     "label": "GISTI (1978)"
+    },
+    {
+     "id": "l3",
+     "label": "Syndicat général des ingénieurs-conseils"
+    }
+   ],
+   "right": [
+    {
+     "id": "r1",
+     "label": "Protection de la femme enceinte"
+    },
+    {
+     "id": "r3",
+     "label": "PGD et pouvoir réglementaire"
+    },
+    {
+     "id": "r2",
+     "label": "Droit des étrangers"
+    },
+    {
+     "id": "r0",
+     "label": "Égalité devant le service public"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2",
+    "l3": "r3"
+   }
+  },
+  "explanation": "Des arrêts de génération différente.",
+  "hint": "Plusieurs générations de principes.",
+  "concepts": [
+   "pgd"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §2"
+ },
+ {
+  "chapterSlug": "ordonnances-article-38",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel article de la Constitution prévoit les ordonnances ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'article 34"
+    },
+    {
+     "id": "b",
+     "label": "L'article 55"
+    },
+    {
+     "id": "c",
+     "label": "L'article 38"
+    },
+    {
+     "id": "d",
+     "label": "L'article 16"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Il permet une habilitation temporaire.",
+  "hint": "Le Parlement habilite le Gouvernement.",
+  "concepts": [
+   "ordonnances"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §3"
+ },
+ {
+  "chapterSlug": "ordonnances-article-38",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Que se passe-t-il si aucun projet de ratification n'est déposé dans le délai ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Elle est prorogée"
+    },
+    {
+     "id": "b",
+     "label": "L'ordonnance devient caduque"
+    },
+    {
+     "id": "c",
+     "label": "Elle devient une loi"
+    },
+    {
+     "id": "d",
+     "label": "Le président doit la signer"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "Le dépôt est la condition de son maintien.",
+  "hint": "Le dépôt du projet est la condition de son maintien.",
+  "concepts": [
+   "ordonnances"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §3"
+ },
+ {
+  "chapterSlug": "ordonnances-article-38",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Une ordonnance ratifiée a valeur législative.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Elle ne peut plus être contestée que par la conventionnalité ou la QPC.",
+  "hint": "Que change la ratification par le Parlement ?",
+  "concepts": [
+   "ordonnances"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §3"
+ },
+ {
+  "chapterSlug": "ordonnances-article-38",
+  "type": "ORDERING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Remets la procédure dans l'ordre.",
+  "payload": {
+   "items": [
+    {
+     "id": "i0",
+     "label": "Loi d'habilitation"
+    },
+    {
+     "id": "i2",
+     "label": "Dépôt du projet de loi de ratification"
+    },
+    {
+     "id": "i1",
+     "label": "Adoption de l'ordonnance par le Gouvernement"
+    },
+    {
+     "id": "i3",
+     "label": "Ratification par le Parlement"
+    }
+   ]
+  },
+  "solution": {
+   "order": [
+    "i0",
+    "i1",
+    "i2",
+    "i3"
+   ]
+  },
+  "explanation": "Deux délais encadrent la procédure.",
+  "hint": "Tout part d'une autorisation du Parlement.",
+  "concepts": [
+   "ordonnances"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §3"
+ },
+ {
+  "chapterSlug": "ordonnances-article-38",
+  "type": "TRUE_FALSE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Une ordonnance non ratifiée reste contestable par une seule voie, le recours pour excès de pouvoir, même après le délai d'habilitation.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Après ce délai, dans le domaine de la loi, on utilise la QPC pour les droits et libertés.",
+  "hint": "Compare avant et après l'expiration du délai d'habilitation.",
+  "concepts": [
+   "ordonnances"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §3"
+ },
+ {
+  "chapterSlug": "ordonnances-article-38",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Pendant le délai d'habilitation, quelle est la valeur de l'ordonnance ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Aucune"
+    },
+    {
+     "id": "b",
+     "label": "Législative"
+    },
+    {
+     "id": "c",
+     "label": "Réglementaire"
+    },
+    {
+     "id": "d",
+     "label": "Constitutionnelle"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Le juge administratif peut donc la contrôler.",
+  "hint": "À ce stade, le Gouvernement agit encore par un acte qu'il a seul adopté.",
+  "concepts": [
+   "ordonnances"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §3"
+ },
+ {
+  "chapterSlug": "ordonnances-article-38",
+  "type": "MATCHING",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Associe chaque situation à la voie de contestation.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Ordonnance avant ratification, pendant l'habilitation"
+    },
+    {
+     "id": "l1",
+     "label": "Ordonnance ratifiée"
+    }
+   ],
+   "right": [
+    {
+     "id": "r1",
+     "label": "Conventionnalité ou QPC"
+    },
+    {
+     "id": "r0",
+     "label": "Recours devant le juge administratif"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1"
+   }
+  },
+  "explanation": "La ratification change les moyens disponibles.",
+  "hint": "La ratification change les moyens disponibles.",
+  "concepts": [
+   "ordonnances"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §3"
+ },
+ {
+  "chapterSlug": "hierarchie-reglements",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel acte prime sur l'autre ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'acte individuel prime sur le règlement"
+    },
+    {
+     "id": "b",
+     "label": "Le règlement prime sur l'acte individuel"
+    },
+    {
+     "id": "c",
+     "label": "Cela dépend du destinataire"
+    },
+    {
+     "id": "d",
+     "label": "Ils ont la même valeur"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "Les actes généraux et impersonnels sont supérieurs.",
+  "hint": "Pense à ce qui est général et à ce qui vise une personne.",
+  "concepts": [
+   "hierarchie-actes"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 3"
+ },
+ {
+  "chapterSlug": "hierarchie-reglements",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Une autorité peut prendre un acte individuel contraire au règlement qu'elle a adopté sans le modifier.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Elle doit d'abord abroger ou modifier le règlement.",
+  "hint": "L'administration est tenue par ses propres règles tant qu'elle ne les change pas.",
+  "concepts": [
+   "hierarchie-actes"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 3"
+ },
+ {
+  "chapterSlug": "hierarchie-reglements",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Entre deux règlements de la même autorité, qu'est-ce qui fixe la hiérarchie ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La longueur du texte"
+    },
+    {
+     "id": "b",
+     "label": "Le nombre de destinataires"
+    },
+    {
+     "id": "c",
+     "label": "La procédure d'édiction"
+    },
+    {
+     "id": "d",
+     "label": "La date de signature"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Un décret en Conseil d'État prime sur un décret simple.",
+  "hint": "Regarde comment le texte a été adopté.",
+  "concepts": [
+   "hierarchie-actes"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 3"
+ },
+ {
+  "chapterSlug": "hierarchie-reglements",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Un acte d'une autorité inférieure doit respecter celui de l'autorité supérieure.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "C'est la hiérarchie des autorités.",
+  "hint": "C'est la hiérarchie des autorités.",
+  "concepts": [
+   "hierarchie-actes"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 3"
+ },
+ {
+  "chapterSlug": "hierarchie-reglements",
+  "type": "FILL_BLANK",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Complète la règle.",
+  "payload": {
+   "template": "Les actes généraux et {{a}} sont supérieurs aux actes individuels.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "md"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "impersonnels"
+    ]
+   }
+  },
+  "explanation": "Peu importe leur auteur.",
+  "hint": "Pense à ce qui définit un règlement.",
+  "concepts": [
+   "hierarchie-actes"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 3"
+ }
+]

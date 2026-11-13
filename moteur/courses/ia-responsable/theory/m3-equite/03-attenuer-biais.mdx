@@ -1,0 +1,25 @@
+---
+title: "Atténuer un biais"
+slug: attenuer-biais
+order: 3
+estimatedReadMin: 5
+concepts: [attenuation-biais]
+source: "Diapositive 17"
+---
+## Idée centrale
+
+On peut agir sur un biais à trois moments. Chaque intervention a une limite qu'il faut tester.
+
+| Moment | Intervention possible | Limite à tester |
+|---|---|---|
+| **Avant l'apprentissage** | Collecte ciblée, pondération, labels | Le rééquilibrage ne corrige pas une mauvaise cible |
+| **Pendant l'apprentissage** | Contrainte ou pénalité d'équité | Le critère choisi détermine l'arbitrage |
+| **Après l'apprentissage** | Seuils, abstention, revue humaine | Coût, capacité et cadre juridique |
+
+> **À retenir**
+> Le **jeu de test reste indépendant** des choix de correction. Des **seuils par groupe** exigent une analyse juridique et une gestion adaptée des attributs protégés.
+
+## Pièges classiques
+
+- Croire qu'il suffit de rééquilibrer les données : si la cible elle-même est mauvaise (par exemple un proxy biaisé), le problème reste.
+- Évaluer la correction sur les données qui ont servi à la choisir.

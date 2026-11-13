@@ -1,0 +1,30 @@
+---
+title: "folds, requetes et parallelisme"
+slug: folds-requetes-parallelisme
+order: 3
+estimatedReadMin: 14
+concepts: [fold, reduce, groupby, lazylist, parallelism, complexity]
+source: "Collection/Scala_04.pdf; Collection/parallelC.txt"
+---
+## foldLeft et foldRight
+
+`foldLeft(z)(op)` parcourt de gauche a droite avec un accumulateur. `foldRight` part de la droite ; sur listes longues, il faut connaitre les risques de pile selon le contexte.
+
+```scala
+List(1, 2, 3).foldLeft(0)(_ + _) // 6
+```
+
+## reduce
+
+`reduce` n'a pas de valeur initiale. Il est adapte seulement si la collection est non vide et si l'operation est coherente.
+
+## groupBy, groupMapReduce
+
+Ces operations structurent des donnees en groupes, puis les transforment ou les agregent. Elles sont essentielles pour raisonner sur des traitements declaratifs.
+
+## LazyList et parallelisme
+
+`LazyList` calcule a la demande et peut representer des suites infinies. Les collections paralleles (`.par`) peuvent accelerer un traitement seulement si le cout du travail compense le cout de coordination et si l'operation est associative/independante.
+
+> **A retenir**  
+> Un fold est un schema de preuve : valeur initiale, invariant de l'accumulateur, operation de mise a jour.

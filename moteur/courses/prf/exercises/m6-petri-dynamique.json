@@ -1,0 +1,616 @@
+[
+  {
+    "chapterSlug": "definition-marquage",
+    "type": "PETRI_ENABLED_TRANSITIONS",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Avec le marquage initial, quelles transitions sont franchissables ?",
+    "payload": {
+      "places": [
+        {
+          "id": "p1",
+          "label": "p1",
+          "tokens": 1,
+          "x": 130,
+          "y": 100
+        },
+        {
+          "id": "p2",
+          "label": "p2",
+          "tokens": 0,
+          "x": 130,
+          "y": 260
+        },
+        {
+          "id": "p3",
+          "label": "p3",
+          "tokens": 2,
+          "x": 560,
+          "y": 180
+        }
+      ],
+      "transitions": [
+        {
+          "id": "t1",
+          "label": "t1",
+          "x": 340,
+          "y": 100
+        },
+        {
+          "id": "t2",
+          "label": "t2",
+          "x": 340,
+          "y": 245
+        }
+      ],
+      "arcs": [
+        {
+          "from": "p1",
+          "to": "t1"
+        },
+        {
+          "from": "p2",
+          "to": "t1"
+        },
+        {
+          "from": "p3",
+          "to": "t2",
+          "weight": 2
+        },
+        {
+          "from": "t2",
+          "to": "p2"
+        }
+      ]
+    },
+    "solution": {
+      "enabledTransitionIds": [
+        "t2"
+      ]
+    },
+    "explanation": "t1 exige un jeton en p2, absent. t2 exige deux jetons en p3, disponibles.",
+    "concepts": [
+      "petri-net",
+      "marking",
+      "firing"
+    ]
+  },
+  {
+    "chapterSlug": "definition-marquage",
+    "type": "PETRI_ENABLED_TRANSITIONS",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Sur ce cycle simple, quelles transitions sont franchissables au depart ?",
+    "payload": {
+      "places": [
+        {
+          "id": "idle",
+          "label": "idle",
+          "tokens": 1,
+          "x": 160,
+          "y": 180
+        },
+        {
+          "id": "busy",
+          "label": "busy",
+          "tokens": 0,
+          "x": 560,
+          "y": 180
+        }
+      ],
+      "transitions": [
+        {
+          "id": "start",
+          "label": "start",
+          "x": 340,
+          "y": 105
+        },
+        {
+          "id": "finish",
+          "label": "finish",
+          "x": 340,
+          "y": 255
+        }
+      ],
+      "arcs": [
+        {
+          "from": "idle",
+          "to": "start"
+        },
+        {
+          "from": "start",
+          "to": "busy"
+        },
+        {
+          "from": "busy",
+          "to": "finish"
+        },
+        {
+          "from": "finish",
+          "to": "idle"
+        }
+      ]
+    },
+    "solution": {
+      "enabledTransitionIds": [
+        "start"
+      ]
+    },
+    "explanation": "`idle` contient un jeton, donc `start` est franchissable ; `finish` attend un jeton dans `busy`.",
+    "concepts": [
+      "firing",
+      "marking"
+    ]
+  },
+  {
+    "chapterSlug": "definition-marquage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Dans un reseau de Petri, ou se trouvent les jetons ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Dans les places."
+        },
+        {
+          "id": "b",
+          "label": "Dans les transitions."
+        },
+        {
+          "id": "c",
+          "label": "Dans les arcs uniquement."
+        },
+        {
+          "id": "d",
+          "label": "Dans les etiquettes du graphe seulement."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le marquage associe un nombre de jetons a chaque place.",
+    "concepts": [
+      "place",
+      "marking"
+    ]
+  },
+  {
+    "chapterSlug": "franchissement-sequences",
+    "type": "PETRI_FIRE_SEQUENCE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Applique la sequence imposee et saisis le marquage final.",
+    "payload": {
+      "places": [
+        {
+          "id": "idle",
+          "label": "idle",
+          "tokens": 1,
+          "x": 160,
+          "y": 180
+        },
+        {
+          "id": "busy",
+          "label": "busy",
+          "tokens": 0,
+          "x": 560,
+          "y": 180
+        }
+      ],
+      "transitions": [
+        {
+          "id": "start",
+          "label": "start",
+          "x": 340,
+          "y": 105
+        },
+        {
+          "id": "finish",
+          "label": "finish",
+          "x": 340,
+          "y": 255
+        }
+      ],
+      "arcs": [
+        {
+          "from": "idle",
+          "to": "start"
+        },
+        {
+          "from": "start",
+          "to": "busy"
+        },
+        {
+          "from": "busy",
+          "to": "finish"
+        },
+        {
+          "from": "finish",
+          "to": "idle"
+        }
+      ],
+      "sequence": [
+        "start",
+        "finish",
+        "start"
+      ]
+    },
+    "solution": {
+      "finalMarking": {
+        "idle": 0,
+        "busy": 1
+      },
+      "valid": true
+    },
+    "explanation": "start met le jeton dans busy, finish le rend a idle, puis start le remet dans busy.",
+    "concepts": [
+      "firing-sequence",
+      "marking"
+    ]
+  },
+  {
+    "chapterSlug": "franchissement-sequences",
+    "type": "PETRI_FIRE_SEQUENCE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Applique `t2` sur le reseau pondere.",
+    "payload": {
+      "places": [
+        {
+          "id": "p1",
+          "label": "p1",
+          "tokens": 1,
+          "x": 130,
+          "y": 100
+        },
+        {
+          "id": "p2",
+          "label": "p2",
+          "tokens": 0,
+          "x": 130,
+          "y": 260
+        },
+        {
+          "id": "p3",
+          "label": "p3",
+          "tokens": 2,
+          "x": 560,
+          "y": 180
+        }
+      ],
+      "transitions": [
+        {
+          "id": "t1",
+          "label": "t1",
+          "x": 340,
+          "y": 100
+        },
+        {
+          "id": "t2",
+          "label": "t2",
+          "x": 340,
+          "y": 245
+        }
+      ],
+      "arcs": [
+        {
+          "from": "p1",
+          "to": "t1"
+        },
+        {
+          "from": "p2",
+          "to": "t1"
+        },
+        {
+          "from": "p3",
+          "to": "t2",
+          "weight": 2
+        },
+        {
+          "from": "t2",
+          "to": "p2"
+        }
+      ],
+      "sequence": [
+        "t2"
+      ]
+    },
+    "solution": {
+      "finalMarking": {
+        "p1": 1,
+        "p2": 1,
+        "p3": 0
+      },
+      "valid": true
+    },
+    "explanation": "t2 consomme deux jetons de p3 et produit un jeton dans p2.",
+    "concepts": [
+      "firing",
+      "arc"
+    ]
+  },
+  {
+    "chapterSlug": "franchissement-sequences",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pourquoi la sequence `finish, start` est-elle invalide sur le cycle initial ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "`finish` n'est pas franchissable car `busy` vaut 0."
+        },
+        {
+          "id": "b",
+          "label": "`start` n'existe pas."
+        },
+        {
+          "id": "c",
+          "label": "Une sequence ne peut jamais avoir deux transitions."
+        },
+        {
+          "id": "d",
+          "label": "Le marquage initial est ignore."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La validite se verifie sur le marquage courant, des la premiere transition.",
+    "concepts": [
+      "firing-sequence"
+    ]
+  },
+  {
+    "chapterSlug": "matrices-equation-etat",
+    "type": "PETRI_MATRIX",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Complete la matrice d'incidence C = Post - Pre du cycle.",
+    "payload": {
+      "places": [
+        {
+          "id": "idle",
+          "label": "idle",
+          "tokens": 1,
+          "x": 160,
+          "y": 180
+        },
+        {
+          "id": "busy",
+          "label": "busy",
+          "tokens": 0,
+          "x": 560,
+          "y": 180
+        }
+      ],
+      "transitions": [
+        {
+          "id": "start",
+          "label": "start",
+          "x": 340,
+          "y": 105
+        },
+        {
+          "id": "finish",
+          "label": "finish",
+          "x": 340,
+          "y": 255
+        }
+      ],
+      "arcs": [
+        {
+          "from": "idle",
+          "to": "start"
+        },
+        {
+          "from": "start",
+          "to": "busy"
+        },
+        {
+          "from": "busy",
+          "to": "finish"
+        },
+        {
+          "from": "finish",
+          "to": "idle"
+        }
+      ],
+      "matrix": "incidence"
+    },
+    "solution": {
+      "matrix": {
+        "idle": {
+          "start": -1,
+          "finish": 1
+        },
+        "busy": {
+          "start": 1,
+          "finish": -1
+        }
+      }
+    },
+    "explanation": "La colonne `start` deplace le jeton de idle vers busy ; `finish` fait l'inverse.",
+    "concepts": [
+      "incidence",
+      "pre-post"
+    ]
+  },
+  {
+    "chapterSlug": "matrices-equation-etat",
+    "type": "PETRI_MATRIX",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Complete la matrice Pre du producteur-consommateur.",
+    "payload": {
+      "places": [
+        {
+          "id": "prod",
+          "label": "producteur",
+          "tokens": 1,
+          "x": 110,
+          "y": 90
+        },
+        {
+          "id": "vide",
+          "label": "places libres",
+          "tokens": 2,
+          "x": 110,
+          "y": 270
+        },
+        {
+          "id": "plein",
+          "label": "items",
+          "tokens": 0,
+          "x": 610,
+          "y": 90
+        },
+        {
+          "id": "cons",
+          "label": "consommateur",
+          "tokens": 1,
+          "x": 610,
+          "y": 270
+        }
+      ],
+      "transitions": [
+        {
+          "id": "produire",
+          "label": "produire",
+          "x": 360,
+          "y": 120
+        },
+        {
+          "id": "consommer",
+          "label": "consommer",
+          "x": 360,
+          "y": 245
+        }
+      ],
+      "arcs": [
+        {
+          "from": "prod",
+          "to": "produire"
+        },
+        {
+          "from": "vide",
+          "to": "produire"
+        },
+        {
+          "from": "produire",
+          "to": "prod"
+        },
+        {
+          "from": "produire",
+          "to": "plein"
+        },
+        {
+          "from": "plein",
+          "to": "consommer"
+        },
+        {
+          "from": "cons",
+          "to": "consommer"
+        },
+        {
+          "from": "consommer",
+          "to": "cons"
+        },
+        {
+          "from": "consommer",
+          "to": "vide"
+        }
+      ],
+      "matrix": "pre"
+    },
+    "solution": {
+      "matrix": {
+        "prod": {
+          "produire": 1,
+          "consommer": 0
+        },
+        "vide": {
+          "produire": 1,
+          "consommer": 0
+        },
+        "plein": {
+          "produire": 0,
+          "consommer": 1
+        },
+        "cons": {
+          "produire": 0,
+          "consommer": 1
+        }
+      }
+    },
+    "explanation": "Pre indique les jetons requis par chaque transition.",
+    "concepts": [
+      "pre-post",
+      "modeling"
+    ]
+  },
+  {
+    "chapterSlug": "matrices-equation-etat",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Que donne l'equation d'etat `M = M0 + C.sigma` ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une condition necessaire sur le marquage atteint."
+        },
+        {
+          "id": "b",
+          "label": "Une garantie suffisante de franchissabilite de toute sequence."
+        },
+        {
+          "id": "c",
+          "label": "La preuve que le reseau est vivant."
+        },
+        {
+          "id": "d",
+          "label": "La liste des places."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "L'equation ne verifie pas l'ordre des tirs.",
+    "concepts": [
+      "state-equation"
+    ]
+  },
+  {
+    "chapterSlug": "matrices-equation-etat",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Avec `C = [[-2,0],[1,-1],[1,-1],[0,2]]`, `M0=(4,0,0,0)` et `sigma=(2,1)`, quel marquage obtient-on ?",
+    "payload": {
+      "program": "C.sigma = (-4, 1, 1, 2)\nM0 + C.sigma = ?",
+      "language": "scala"
+    },
+    "solution": {
+      "expectedOutput": "(0, 1, 1, 2)"
+    },
+    "explanation": "Deux tirs de t1 et un tir de t2 donnent la variation indiquee.",
+    "concepts": [
+      "state-equation",
+      "incidence"
+    ]
+  }
+]

@@ -1,0 +1,524 @@
+[
+  {
+    "chapterSlug": "fonctions-templates",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "À quoi sert une **fonction template** en C++ ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "À écrire une fonction valable pour plusieurs types différents sans la réécrire : le type devient un paramètre." },
+        { "id": "b", "label": "À rendre une fonction plus rapide en la marquant pour le compilateur." },
+        { "id": "c", "label": "À empêcher une fonction d'être appelée avec de mauvais arguments." },
+        { "id": "d", "label": "À exécuter une fonction automatiquement au démarrage du programme." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Une **fonction template** (patron de fonction) est écrite **une seule fois** mais fonctionne pour **plusieurs types**. Le type devient un **paramètre** : on programme une fois, le compilateur fabrique ensuite une version par type réellement utilisé. C'est le principe de la **programmation générique** — on y gagne en performance, en temps de codage et en clarté. Ce n'est pas un mot-clé d'optimisation ni un contrôle d'appel.",
+    "concepts": ["fonction-template"]
+  },
+  {
+    "chapterSlug": "fonctions-templates",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Dans la déclaration d'un template, `template <typename T>` et `template <class T>` sont strictement équivalents.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. `typename` et `class` sont **interchangeables** dans la liste des paramètres d'un template : les deux déclarent un paramètre de type. Le mot `class` n'impose **pas** que `T` soit une classe — `T` peut très bien être `int`, `double` ou `char`. Aujourd'hui `typename` est le choix le plus courant car il exprime clairement « un type ».",
+    "concepts": ["parametre-type"]
+  },
+  {
+    "chapterSlug": "fonctions-templates",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complète la ligne qui transforme cette fonction en patron générique pour un type `T` quelconque.",
+    "payload": {
+      "template": "{{decl}}\nT carre(const T& x) {\n    return x * x;\n}",
+      "slots": [{ "id": "decl", "width": "md" }]
+    },
+    "solution": { "answers": { "decl": "template <typename T>" }, "caseSensitive": false },
+    "explanation": "La ligne `template <typename T>` annonce que ce qui suit est un **patron** et déclare `T` comme **paramètre de type**. `template <class T>` est tout aussi accepté. Sans cette ligne, `T` n'est pas un type connu et le compilateur refuse la déclaration (`'T' does not name a type`).",
+    "concepts": ["fonction-template", "parametre-type"]
+  },
+  {
+    "chapterSlug": "fonctions-templates",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Soit `template <typename T> T min(const T& a, const T& b);`. Lors de l'appel `min(3, 7)`, comment le compilateur connaît-il le type `T` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Il le déduit des arguments fournis : deux int, donc T = int." },
+        { "id": "b", "label": "Il faut toujours écrire min<int>(3, 7), sinon l'appel échoue." },
+        { "id": "c", "label": "T vaut toujours int par défaut quand on ne précise rien." },
+        { "id": "d", "label": "Le type est choisi au hasard puis vérifié à l'exécution." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "C'est la **déduction d'argument template** : à l'appel, on n'écrit pas le type, le compilateur le **déduit des arguments**. `min(3, 7)` passe deux `int`, donc `T = int` et la fonction `min<int>` est fabriquée. Il n'y a pas de type « par défaut » : la déduction repose entièrement sur les arguments réels.",
+    "concepts": ["fonction-template", "instanciation-template"]
+  },
+  {
+    "chapterSlug": "fonctions-templates",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe comment un seul patron sert pour trois types.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nT maximum(const T& a, const T& b) {\n    return (a < b ? b : a);\n}\n\nint main() {\n    cout << maximum(3, 9) << \"\\n\";\n    cout << maximum(4.5, 1.2) << \"\\n\";\n    cout << maximum('a', 'z') << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "9\n4.5\nz" },
+    "explanation": "Le patron `maximum` est instancié **trois fois** par déduction. `maximum(3, 9)` → `T = int`, renvoie `9`. `maximum(4.5, 1.2)` → `T = double`, renvoie `4.5`. `maximum('a', 'z')` → `T = char` ; comme `'a' < 'z'`, il renvoie `'z'`, affiché comme le caractère `z`. Une seule définition source, trois fonctions réelles produites à la compilation.",
+    "concepts": ["fonction-template", "instanciation-template"]
+  },
+  {
+    "chapterSlug": "fonctions-templates",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Combien de fois le patron est-il instancié ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nT identite(T valeur) {\n    cout << \"instanciation pour 1 valeur\\n\";\n    return valeur;\n}\n\nint main() {\n    int a = identite(5);\n    char c = identite('A');\n    double d = identite(2.0);\n    cout << a << c << d << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "instanciation pour 1 valeur\ninstanciation pour 1 valeur\ninstanciation pour 1 valeur\n5A2" },
+    "explanation": "`identite` est appelée avec un `int`, un `char` puis un `double` : le compilateur fabrique **trois** instanciations distinctes (`identite<int>`, `identite<char>`, `identite<double>`), d'où les trois lignes identiques. Ensuite `cout << a << c << d` affiche `5`, le caractère `A`, puis `2` (la valeur `double` 2.0 s'affiche sans partie décimale) : `5A2`.",
+    "concepts": ["fonction-template", "instanciation-template"]
+  },
+  {
+    "chapterSlug": "fonctions-templates",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme doit définir une fonction générique `doubler` qui renvoie `x + x` pour n'importe quel type. Il **ne compile pas**. Corrige-le.",
+    "payload": {
+      "spec": "La fonction doubler doit etre un patron generique. Le code fourni a oublie la ligne template <typename T> juste avant la fonction : sans elle, T n'est pas un type connu. Ajouter cette ligne pour que doubler fonctionne avec int et double. Le programme affiche doubler(7) puis doubler(2.5).",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// Cette fonction doit fonctionner pour n'importe quel type T.\nT doubler(const T& x) {\n    return x + x;\n}\n\nint main() {\n    cout << doubler(7) << \"\\n\";\n    cout << doubler(2.5) << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "sortie attendue", "expectedStdout": "14\n5" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\n// Cette fonction doit fonctionner pour n'importe quel type T.\ntemplate <typename T>\nT doubler(const T& x) {\n    return x + x;\n}\n\nint main() {\n    cout << doubler(7) << \"\\n\";\n    cout << doubler(2.5) << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Il manquait la ligne `template <typename T>` **juste avant** la fonction. Sans elle, `T` n'est pas un type déclaré : g++ répond `'T' does not name a type`. La ligne `template <typename T>` introduit `T` comme paramètre de type, et `doubler` devient un vrai patron. `doubler(7)` donne `14` et `doubler(2.5)` donne `5` (2.5 + 2.5 affiché sans décimale).",
+    "concepts": ["fonction-template", "parametre-type"]
+  },
+  {
+    "chapterSlug": "fonctions-templates",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte ? Une fonction template **et** une surcharge ordinaire portent le même nom — laquelle gagne ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nvoid afficheType(const T&) {\n    cout << \"appel template generique\\n\";\n}\n\nvoid afficheType(int) {\n    cout << \"appel surcharge int\\n\";\n}\n\nint main() {\n    afficheType(42);\n    afficheType(3.14);\n    afficheType('x');\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "appel surcharge int\nappel template generique\nappel template generique" },
+    "explanation": "Quand une **fonction non-template** correspond exactement aux arguments, le compilateur la **préfère** à une instanciation de template. `afficheType(42)` : `42` est un `int`, la surcharge `afficheType(int)` correspond exactement → `appel surcharge int`. `afficheType(3.14)` (`double`) et `afficheType('x')` (`char`) ne correspondent pas à `afficheType(int)` sans conversion : le patron est instancié → `appel template generique` deux fois.",
+    "concepts": ["fonction-template", "instanciation-template"]
+  },
+  {
+    "chapterSlug": "fonctions-templates",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles affirmations sur les fonctions templates sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "On peut forcer le type explicitement entre chevrons : min<double>(a, b)." },
+        { "id": "b", "label": "Une fonction template se place entièrement dans le fichier d'en-tête (.h), corps compris." },
+        { "id": "c", "label": "Le type fourni doit supporter toutes les opérations que le corps du template emploie." },
+        { "id": "d", "label": "Le compilateur génère le code du template même si aucun type ne lui est jamais appliqué." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "**a** vrai : l'**instanciation explicite** `min<double>(a, b)` impose `T`, utile quand la déduction est impossible. **b** vrai : un template a besoin de son **corps complet** au point d'instanciation, il vit donc entièrement dans le `.h`. **c** vrai : c'est le **contrat implicite** — `min` utilise `operator<`, le type doit le fournir. **d** faux : tant qu'aucun type n'est appliqué, le compilateur ne génère **rien** ; un patron n'est pas du code, seulement un modèle.",
+    "concepts": ["fonction-template", "instanciation-template"]
+  },
+  {
+    "chapterSlug": "fonctions-templates",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte ? Observe l'effet de l'instanciation explicite `somme<double>` quand on lui passe des entiers.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nT somme(T a, T b) {\n    return a + b;\n}\n\nint main() {\n    cout << somme<int>(7, 4) << \"\\n\";\n    cout << somme<double>(7, 4) << \"\\n\";\n    cout << somme(2.5, 2.5) << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "11\n11\n5" },
+    "explanation": "`somme<int>(7, 4)` : `T = int`, calcule `7 + 4 = 11`. `somme<double>(7, 4)` : on **force** `T = double` ; les entiers `7` et `4` sont convertis en `double`, `7.0 + 4.0 = 11.0`, affiché `11` (pas de partie décimale à montrer). `somme(2.5, 2.5)` : déduction `T = double`, `2.5 + 2.5 = 5.0`, affiché `5`. L'instanciation explicite impose le type même si les arguments sont d'un autre type compatible.",
+    "concepts": ["instanciation-template", "fonction-template"]
+  },
+  {
+    "chapterSlug": "fonctions-templates",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris une fonction template `minimum` qui renvoie le plus petit de ses deux arguments, valable pour n'importe quel type. Le programme lit deux `int` puis deux `double` et affiche le minimum de chaque paire.",
+    "payload": {
+      "spec": "Definir template <typename T> T minimum(const T& a, const T& b) qui renvoie a si a < b, sinon b. Dans main : lire a et b (int) avec cin >> a >> b, puis x et y (double) avec cin >> x >> y. Afficher minimum(a, b) suivi d'un retour a la ligne, puis minimum(x, y) suivi d'un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// A completer : la fonction template minimum\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    double x, y;\n    cin >> x >> y;\n    // A completer : afficher minimum(a, b) puis minimum(x, y)\n    return 0;\n}\n",
+      "tests": [
+        { "name": "valeurs distinctes", "stdin": "8 3 2.5 9.1", "expectedStdout": "3\n2.5" },
+        { "name": "valeurs egales", "stdin": "5 5 1.0 1.0", "expectedStdout": "5\n1" },
+        { "name": "valeurs negatives", "stdin": "-4 -9 7.5 7.5", "expectedStdout": "-9\n7.5", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nT minimum(const T& a, const T& b) {\n    return (a < b ? a : b);\n}\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    double x, y;\n    cin >> x >> y;\n    cout << minimum(a, b) << \"\\n\";\n    cout << minimum(x, y) << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "`minimum` est un patron : `template <typename T>` déclare `T`, et le corps `return (a < b ? a : b);` utilise `operator<` — toujours disponible pour `int` et `double`. À l'appel `minimum(a, b)`, le compilateur déduit `T = int` ; à `minimum(x, y)`, `T = double`. Une seule fonction écrite, deux instanciations. Les paramètres en `const T&` évitent une copie inutile.",
+    "concepts": ["fonction-template", "parametre-type"]
+  },
+  {
+    "chapterSlug": "fonctions-templates",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris une fonction template `echanger` qui échange les valeurs de ses deux arguments. Le programme lit deux `int` et affiche le couple après échange.",
+    "payload": {
+      "spec": "Definir template <typename T> void echanger(T& a, T& b) qui echange les valeurs de a et b (passees par reference non const, via une variable temporaire). Dans main : lire x et y (int) avec cin >> x >> y, appeler echanger(x, y), puis afficher x suivi d'une espace, y, et un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// A completer : la fonction template echanger\n\nint main() {\n    int x, y;\n    cin >> x >> y;\n    // A completer : appeler echanger puis afficher x et y\n    return 0;\n}\n",
+      "tests": [
+        { "name": "echange simple", "stdin": "10 20", "expectedStdout": "20 10" },
+        { "name": "valeurs egales", "stdin": "7 7", "expectedStdout": "7 7" },
+        { "name": "valeurs negatives", "stdin": "-3 99", "expectedStdout": "99 -3", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nvoid echanger(T& a, T& b) {\n    T tmp = a;\n    a = b;\n    b = tmp;\n}\n\nint main() {\n    int x, y;\n    cin >> x >> y;\n    echanger(x, y);\n    cout << x << \" \" << y << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "`echanger` prend ses arguments par **référence non constante** (`T&`) pour pouvoir les modifier chez l'appelant. Le corps utilise une variable temporaire de type `T` : `tmp = a; a = b; b = tmp;`. Le type local `T tmp` montre que `T` s'emploie comme n'importe quel type. À l'appel `echanger(x, y)` avec deux `int`, `T = int` est déduit.",
+    "concepts": ["fonction-template", "parametre-type"]
+  },
+  {
+    "chapterSlug": "fonctions-templates",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remets dans l'ordre les étapes, depuis l'écriture d'un template jusqu'à l'exécution d'un appel `min(3, 7)`.",
+    "payload": {
+      "items": [
+        { "id": "i1", "label": "Le programmeur écrit une seule fois `template <typename T> T min(const T&, const T&)`." },
+        { "id": "i2", "label": "Le compilateur rencontre l'appel `min(3, 7)` dans le code." },
+        { "id": "i3", "label": "Il déduit `T = int` à partir des deux arguments entiers." },
+        { "id": "i4", "label": "Il instancie le patron : il fabrique la fonction concrète `min<int>`." },
+        { "id": "i5", "label": "À l'exécution, `min<int>` est appelée et renvoie 3." }
+      ]
+    },
+    "solution": { "order": ["i1", "i2", "i3", "i4", "i5"] },
+    "explanation": "On écrit le **patron une fois** (i1). Plus tard, le compilateur **voit un appel** (i2) ; il **déduit le type** des arguments (i3) ; il **instancie** — fabrique `min<int>` — uniquement à ce moment (i4) ; enfin à l'**exécution** la fonction concrète tourne (i5). Le code n'existe qu'à partir de l'étape d'instanciation : un patron seul ne produit aucun code.",
+    "concepts": ["fonction-template", "instanciation-template"]
+  },
+  {
+    "chapterSlug": "fonctions-templates",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme veut le minimum entre un `int` et un `double`. Il **ne compile pas** (échec de déduction). Corrige l'appel sans modifier la fonction `minimum`.",
+    "payload": {
+      "spec": "La fonction template minimum est correcte et ne doit pas etre modifiee. L'appel minimum(3, 2.5) echoue : le compilateur ne peut pas deduire T car il recoit un int et un double (types en conflit). Corriger en forcant le type explicitement avec minimum<double>(3, 2.5) : l'entier 3 sera converti en double. Le programme doit afficher le minimum.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nT minimum(const T& a, const T& b) {\n    return (a < b ? a : b);\n}\n\nint main() {\n    // On veut le minimum entre un entier et un reel.\n    cout << minimum(3, 2.5) << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "minimum int/double", "expectedStdout": "2.5" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nT minimum(const T& a, const T& b) {\n    return (a < b ? a : b);\n}\n\nint main() {\n    // On veut le minimum entre un entier et un reel.\n    cout << minimum<double>(3, 2.5) << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "`minimum(3, 2.5)` mélange un `int` (`3`) et un `double` (`2.5`) : le compilateur ne peut pas décider si `T` vaut `int` ou `double` — il signale `deduced conflicting types for parameter 'const T'`. La solution est l'**instanciation explicite** : `minimum<double>(3, 2.5)` impose `T = double`, et `3` est converti en `3.0`. Le résultat est `2.5`. On pouvait aussi écrire `minimum(3.0, 2.5)`.",
+    "concepts": ["instanciation-template", "fonction-template"]
+  },
+  {
+    "chapterSlug": "fonctions-templates",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris une fonction template `calculerMoyenne` à **deux paramètres de type** : `T1` est le type des éléments du tableau, `T2` le type du résultat. Le programme lit une taille `n` puis `n` entiers, et affiche leur moyenne en `double`.",
+    "payload": {
+      "spec": "Definir template <typename T1, typename T2> T2 calculerMoyenne(T1 tableau[], int taille) : declarer T2 somme = 0, accumuler tous les elements du tableau dans somme, puis retourner somme / taille. Dans main : lire n (int), lire n entiers dans un tableau d'int, puis afficher calculerMoyenne<int, double>(tab, n) suivi d'un retour a la ligne. Le type T2 (double) n'apparait pas dans les parametres : il doit etre fourni explicitement entre chevrons.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// A completer : la fonction template calculerMoyenne (deux parametres de type)\n\nint main() {\n    int n;\n    cin >> n;\n    int tab[100];\n    for (int i = 0; i < n; ++i)\n        cin >> tab[i];\n    // A completer : afficher la moyenne en double\n    return 0;\n}\n",
+      "tests": [
+        { "name": "moyenne entiere exacte", "stdin": "5 10 20 30 40 50", "expectedStdout": "30" },
+        { "name": "moyenne avec decimales", "stdin": "4 2 3 4 6", "expectedStdout": "3.75" },
+        { "name": "tous identiques", "stdin": "3 1 1 1", "expectedStdout": "1", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T1, typename T2>\nT2 calculerMoyenne(T1 tableau[], int taille) {\n    T2 somme = 0;\n    for (int i = 0; i < taille; ++i)\n        somme += tableau[i];\n    return somme / taille;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    int tab[100];\n    for (int i = 0; i < n; ++i)\n        cin >> tab[i];\n    cout << calculerMoyenne<int, double>(tab, n) << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Le patron a **deux paramètres de type** : `T1` (cases du tableau) et `T2` (accumulateur et résultat). `T1` se déduit du tableau, mais `T2` **n'apparaît dans aucun paramètre** : il ne peut pas être déduit, il faut le **préciser explicitement** — `calculerMoyenne<int, double>`. Comme `somme` est un `double`, `somme / taille` garde les décimales : `2+3+4+6 = 15`, `15 / 4 = 3.75`.",
+    "concepts": ["parametre-type", "instanciation-template"]
+  },
+  {
+    "chapterSlug": "classes-templates",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce qu'une **classe template** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Un patron de classe dont le type des données est un paramètre, instancié avec le type entre chevrons." },
+        { "id": "b", "label": "Une classe qui ne peut contenir que des objets de la bibliothèque standard." },
+        { "id": "c", "label": "Une classe abstraite qu'on ne peut jamais instancier directement." },
+        { "id": "d", "label": "Une classe dont toutes les méthodes sont obligatoirement définies dans un .cpp séparé." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Une **classe template** est un **patron de classe** : le type des données qu'elle manipule devient un **paramètre**, déclaré par `template <typename T>`. On écrit la classe une fois ; le compilateur en fabrique une version par type utilisé, instanciée en fournissant le type entre chevrons (`Vector<int>`). Ce n'est ni une classe abstraite, ni une restriction sur le contenu.",
+    "concepts": ["classe-template"]
+  },
+  {
+    "chapterSlug": "classes-templates",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "On peut écrire `Vector v;` (sans chevrons) si `Vector` est une classe template.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. `Vector` tout seul **n'est pas un type** : c'est un **patron**. Pour déclarer une variable, il faut toujours fournir le type entre chevrons — `Vector<int> v;`, `Vector<char> v;`… Contrairement aux fonctions templates, il n'y a **aucune déduction** pour les classes : le type est obligatoire. C'est seulement à la rencontre d'une instanciation précise (`Vector<int>`) que le compilateur génère le code de cette classe.",
+    "concepts": ["classe-template", "instanciation-template"]
+  },
+  {
+    "chapterSlug": "classes-templates",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complète la déclaration pour créer une **pile de chaînes de caractères** à partir de la classe template `Pile`.",
+    "payload": {
+      "template": "Pile<{{type}}> p;   // une pile de string",
+      "slots": [{ "id": "type", "width": "sm" }]
+    },
+    "solution": { "answers": { "type": "string" }, "caseSensitive": false },
+    "explanation": "Pour instancier une classe template, on fournit le type **entre chevrons** : `Pile<string>` est la classe `Pile` instanciée avec `string`. Le type fait partie du nom du type instancié. `Pile<string>` et `Pile<int>` sont deux types distincts produits du même patron.",
+    "concepts": ["classe-template", "instanciation-template"]
+  },
+  {
+    "chapterSlug": "classes-templates",
+    "type": "MATCHING",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Associe chaque morceau de l'en-tête d'une méthode définie **hors** de la classe `Vector` à son rôle.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "template <typename T>" },
+        { "id": "l2", "label": "Vector<T>::" },
+        { "id": "l3", "label": "operator[]" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Redéclare le paramètre de type, à répéter pour chaque définition liée au template." },
+        { "id": "r2", "label": "Indique que la méthode appartient à la classe instanciée Vector<T>." },
+        { "id": "r3", "label": "Le nom de la méthode elle-même." }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3" } },
+    "explanation": "Pour définir une méthode **hors** de la classe : `template <typename T>` **redéclare** le paramètre de type — chaque définition liée à un template doit le réintroduire. `Vector<T>::` dit que la méthode appartient à la **classe instanciée** `Vector<T>` (le `<T>` est obligatoire — `Vector::` seul ne compile pas). `operator[]` est le **nom** de la méthode.",
+    "concepts": ["classe-template", "parametre-type"]
+  },
+  {
+    "chapterSlug": "classes-templates",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ? La classe `Boite` est instanciée pour trois types.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nclass Boite {\n    T contenu;\npublic:\n    Boite(T valeur) : contenu(valeur) {}\n    T get() const { return contenu; }\n    void set(T valeur) { contenu = valeur; }\n};\n\nint main() {\n    Boite<int> bi(10);\n    Boite<double> bd(3.5);\n    Boite<char> bc('Q');\n\n    bi.set(99);\n    cout << bi.get() << \"\\n\";\n    cout << bd.get() << \"\\n\";\n    cout << bc.get() << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "99\n3.5\nQ" },
+    "explanation": "`Boite<int>`, `Boite<double>` et `Boite<char>` sont **trois types distincts** issus du même patron. `bi` stocke d'abord `10`, puis `bi.set(99)` remplace son contenu → `get()` renvoie `99`. `bd` garde `3.5`, `bc` garde le caractère `'Q'`. Chaque instanciation gère son propre `T` indépendamment des autres.",
+    "concepts": ["classe-template", "instanciation-template"]
+  },
+  {
+    "chapterSlug": "classes-templates",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte ? Une méthode (`echanger`) modifie l'état interne d'une `Paire<int>`.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nclass Paire {\n    T premier;\n    T second;\npublic:\n    Paire(T a, T b) : premier(a), second(b) {}\n    T getPremier() const { return premier; }\n    T getSecond() const { return second; }\n    void echanger() {\n        T tmp = premier;\n        premier = second;\n        second = tmp;\n    }\n};\n\nint main() {\n    Paire<int> p(4, 7);\n    cout << p.getPremier() << \" \" << p.getSecond() << \"\\n\";\n    p.echanger();\n    cout << p.getPremier() << \" \" << p.getSecond() << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "4 7\n7 4" },
+    "explanation": "`Paire<int>` est instanciée avec `premier = 4` et `second = 7` → première ligne `4 7`. La méthode `echanger()` permute les deux attributs via une temporaire de type `T` (ici `int`) : `premier` devient `7`, `second` devient `4` → deuxième ligne `7 4`. La classe template fonctionne exactement comme une classe ordinaire, le type des attributs étant simplement paramétré.",
+    "concepts": ["classe-template", "instanciation-template"]
+  },
+  {
+    "chapterSlug": "classes-templates",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme définit la méthode `get()` **hors** de la classe template `Boite`. Il **ne compile pas**. Corrige l'en-tête de la définition.",
+    "payload": {
+      "spec": "La methode get() est declaree dans la classe et definie en dehors. La definition hors classe a oublie la ligne template <typename T> juste avant : sans elle, T n'est pas connu dans l'en-tete T Boite<T>::get(). Ajouter la ligne template <typename T> avant la definition de get(). Le programme affiche b.get().",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nclass Boite {\n    T contenu;\npublic:\n    Boite(const T& valeur) : contenu(valeur) {}\n    T get() const;\n};\n\n// La methode get() est definie en dehors de la classe.\nT Boite<T>::get() const {\n    return contenu;\n}\n\nint main() {\n    Boite<int> b(7);\n    cout << b.get() << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "lecture du contenu", "expectedStdout": "7" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nclass Boite {\n    T contenu;\npublic:\n    Boite(const T& valeur) : contenu(valeur) {}\n    T get() const;\n};\n\n// La methode get() est definie en dehors de la classe.\ntemplate <typename T>\nT Boite<T>::get() const {\n    return contenu;\n}\n\nint main() {\n    Boite<int> b(7);\n    cout << b.get() << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Toute définition liée à un template doit **redéclarer** le paramètre de type. La définition hors classe `T Boite<T>::get() const` avait oublié la ligne `template <typename T>` juste avant : sans elle, `T` n'existe pas et g++ répond `'T' does not name a type`. On ajoute `template <typename T>` au-dessus. Le `Boite<T>::` lui-même était correct : il indique bien la classe instanciée.",
+    "concepts": ["classe-template", "parametre-type"]
+  },
+  {
+    "chapterSlug": "classes-templates",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi une classe template doit-elle être placée **intégralement dans le fichier d'en-tête `.h`** (classe + corps des méthodes) ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Parce que le compilateur a besoin du corps des méthodes au point d'instanciation pour générer le code de la classe instanciée ; séparer dans un .cpp provoque une erreur d'édition de liens." },
+        { "id": "b", "label": "Parce que les fichiers .cpp ne peuvent pas contenir le mot-clé template." },
+        { "id": "c", "label": "Parce qu'un .h se compile plus vite qu'un .cpp." },
+        { "id": "d", "label": "Parce qu'une classe template ne peut avoir aucune méthode définie hors de la classe." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Tant qu'aucun type n'est appliqué, une classe template n'est **pas du code** : le compilateur ne génère le code de `Vector<char>` que lorsqu'il **voit** cette instanciation — et il lui faut alors la **définition complète** : la classe **et** le corps de toutes ses méthodes. Si l'implémentation était dans un `.cpp` compilé à part, le fichier qui instancie ne verrait pas les corps : erreur d'**édition de liens** (`undefined reference`). C'est pourquoi les conteneurs STL sont livrés entièrement en en-têtes.",
+    "concepts": ["classe-template"]
+  },
+  {
+    "chapterSlug": "classes-templates",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte ? Le constructeur de `Cellule` est défini **hors** de la classe et affiche un message.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nclass Cellule {\n    T valeur;\npublic:\n    Cellule(T v);\n    T lire() const;\n};\n\ntemplate <typename T>\nCellule<T>::Cellule(T v) : valeur(v) {\n    cout << \"construction\\n\";\n}\n\ntemplate <typename T>\nT Cellule<T>::lire() const {\n    return valeur;\n}\n\nint main() {\n    Cellule<int> c(42);\n    cout << c.lire() << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "construction\n42" },
+    "explanation": "Le constructeur et `lire()` sont définis **hors** de la classe, chacun précédé de `template <typename T>` et préfixé par `Cellule<T>::`. À la ligne `Cellule<int> c(42)`, le constructeur s'exécute et affiche `construction`, puis stocke `42`. `c.lire()` renvoie `42`. La syntaxe `Cellule<T>::Cellule` est l'en-tête correct d'un constructeur de classe template défini à l'extérieur.",
+    "concepts": ["classe-template", "instanciation-template"]
+  },
+  {
+    "chapterSlug": "classes-templates",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris une classe template `Boite<T>` qui mémorise une valeur de type `T`, avec un constructeur, `get()` (lecture) et `set()` (modification). Le programme lit deux entiers : il en stocke un, l'affiche, le remplace par l'autre, puis l'affiche.",
+    "payload": {
+      "spec": "Definir template <typename T> class Boite avec un attribut prive de type T. Constructeur Boite(const T& valeur) qui initialise l'attribut. Methode T get() const qui renvoie l'attribut. Methode void set(const T& valeur) qui remplace l'attribut. Dans main : lire v1 et v2 (int), creer Boite<int> b(v1), afficher b.get() puis un retour a la ligne, appeler b.set(v2), afficher b.get() puis un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// A completer : la classe template Boite\n\nint main() {\n    int v1, v2;\n    cin >> v1 >> v2;\n    // A completer : creer une Boite<int>, l'afficher, la modifier, l'afficher\n    return 0;\n}\n",
+      "tests": [
+        { "name": "stockage puis remplacement", "stdin": "5 100", "expectedStdout": "5\n100" },
+        { "name": "autres valeurs", "stdin": "42 7", "expectedStdout": "42\n7" },
+        { "name": "meme valeur", "stdin": "-3 -3", "expectedStdout": "-3\n-3", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nclass Boite {\n    T contenu;\npublic:\n    Boite(const T& valeur) : contenu(valeur) {}\n    T get() const { return contenu; }\n    void set(const T& valeur) { contenu = valeur; }\n};\n\nint main() {\n    int v1, v2;\n    cin >> v1 >> v2;\n    Boite<int> b(v1);\n    cout << b.get() << \"\\n\";\n    b.set(v2);\n    cout << b.get() << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "`Boite` est un **patron de classe** : `template <typename T>` rend le type de l'attribut `contenu` paramétrable. Toutes les méthodes sont courtes, donc définies **dans** la classe — aucune syntaxe spéciale. À l'instanciation `Boite<int> b(v1)`, le compilateur fabrique la classe `Boite<int>`. `set()` remplace le contenu, `get()` le lit.",
+    "concepts": ["classe-template", "parametre-type"]
+  },
+  {
+    "chapterSlug": "classes-templates",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remets dans l'ordre les lignes pour former l'en-tête correct d'une méthode `getSize` définie **hors** de la classe template `Vector`, suivi de son corps.",
+    "payload": {
+      "items": [
+        { "id": "i1", "label": "template <typename T>" },
+        { "id": "i2", "label": "unsigned int Vector<T>::getSize() const {" },
+        { "id": "i3", "label": "    return size;" },
+        { "id": "i4", "label": "}" }
+      ]
+    },
+    "solution": { "order": ["i1", "i2", "i3", "i4"] },
+    "explanation": "Une méthode définie hors classe commence par `template <typename T>` (redéclaration du paramètre), puis l'en-tête `type_de_retour Vector<T>::nom(...)` — ici `unsigned int Vector<T>::getSize() const`. Vient ensuite le corps entre accolades : `return size;` puis `}`. L'oubli du `template <typename T>` ou du `<T>` après `Vector` provoque une erreur de compilation.",
+    "concepts": ["classe-template", "parametre-type"]
+  },
+  {
+    "chapterSlug": "classes-templates",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris une classe template `Accumulateur<T>` qui cumule des valeurs : un constructeur l'initialise à 0, `ajouter()` additionne une valeur, `resultat()` renvoie le total. Le programme lit `n` puis `n` entiers et affiche leur somme.",
+    "payload": {
+      "spec": "Definir template <typename T> class Accumulateur avec un attribut prive total de type T. Constructeur par defaut qui initialise total a 0 (liste d'initialisation : total(0)). Methode void ajouter(const T& x) qui fait total += x. Methode T resultat() const qui renvoie total. Dans main : lire n (int), creer un Accumulateur<int>, lire n entiers et appeler ajouter pour chacun, puis afficher resultat() suivi d'un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// A completer : la classe template Accumulateur\n\nint main() {\n    int n;\n    cin >> n;\n    // A completer : creer un Accumulateur<int>, cumuler n entiers, afficher le total\n    return 0;\n}\n",
+      "tests": [
+        { "name": "somme de trois", "stdin": "3 10 25 5", "expectedStdout": "40" },
+        { "name": "somme de quatre", "stdin": "4 1 2 3 4", "expectedStdout": "10" },
+        { "name": "un seul element", "stdin": "1 99", "expectedStdout": "99", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nclass Accumulateur {\n    T total;\npublic:\n    Accumulateur() : total(0) {}\n    void ajouter(const T& x) { total += x; }\n    T resultat() const { return total; }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    Accumulateur<int> acc;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        acc.ajouter(x);\n    }\n    cout << acc.resultat() << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "`Accumulateur` est une classe template : son attribut `total` est de type `T`. Le constructeur par défaut l'initialise à `0` via la **liste d'initialisation** `total(0)`. `ajouter()` utilise `operator+=` (contrat implicite : le type doit le supporter — `int` le supporte). `Accumulateur<int>` est l'instanciation utilisée. Une classe template s'utilise comme une classe ordinaire, le type étant simplement paramétré.",
+    "concepts": ["classe-template", "parametre-type"]
+  },
+  {
+    "chapterSlug": "classes-templates",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles affirmations sur les classes templates sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Vector<char> et Vector<string> sont deux types distincts produits du même patron." },
+        { "id": "b", "label": "Une méthode courte peut être définie directement dans le corps de la classe, sans syntaxe particulière." },
+        { "id": "c", "label": "Pour instancier une classe template, on doit fournir le type entre chevrons : il n'y a pas de déduction." },
+        { "id": "d", "label": "Une classe ordinaire ne peut pas utiliser une classe template comme attribut." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "**a** vrai : chaque instanciation est un **type à part entière**. **b** vrai : une méthode courte se définit **dans** la classe comme d'habitude ; seule une méthode définie **hors** classe demande `template <typename T>` et `Vector<T>::`. **c** vrai : pas de déduction pour les classes, le type entre chevrons est **obligatoire**. **d** faux : une classe ordinaire comme `Polynome` peut très bien **utiliser** une classe template — par exemple un attribut `vector<double>`, c'est même le cas le plus fréquent.",
+    "concepts": ["classe-template", "instanciation-template"]
+  },
+  {
+    "chapterSlug": "classes-templates",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte ? Cette classe template a un **paramètre de type** `T` et un **paramètre non-type** `N` (un entier).",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T, int N>\nclass Tampon {\n    T donnees[N];\npublic:\n    int capacite() const { return N; }\n    void remplir(const T& x) {\n        for (int i = 0; i < N; ++i)\n            donnees[i] = x;\n    }\n    T get(int i) const { return donnees[i]; }\n};\n\nint main() {\n    Tampon<int, 4> t;\n    t.remplir(7);\n    cout << t.capacite() << \"\\n\";\n    cout << t.get(0) << \" \" << t.get(3) << \"\\n\";\n\n    Tampon<char, 2> u;\n    u.remplir('z');\n    cout << u.capacite() << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "4\n7 7\n2" },
+    "explanation": "`Tampon` reçoit **deux** paramètres entre chevrons : `T` (un type) et `N` (un **entier**, constante de compilation). `Tampon<int, 4>` fixe `T = int` et `N = 4` : le tableau interne a 4 cases, `capacite()` renvoie `4`, `remplir(7)` les met toutes à `7`, d'où `7 7`. `Tampon<char, 2>` est une **instanciation différente** (`N = 2`) : `capacite()` renvoie `2`. Chaque couple `<type, valeur>` produit un type distinct.",
+    "concepts": ["classe-template", "instanciation-template"]
+  },
+  {
+    "chapterSlug": "classes-templates",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris une classe template `Pile<T>` (pile LIFO) avec `empiler`, `depiler`, `haut` (sommet) et `vide`. Le programme lit `n` puis `n` entiers qu'il empile, affiche le sommet, dépile une fois, réaffiche le sommet, puis indique si la pile est vide.",
+    "payload": {
+      "spec": "Definir template <typename T> class Pile representant une pile LIFO : un tableau interne T elements[100] et un entier sommet initialise a 0 par le constructeur. void empiler(const T& x) ajoute x au sommet (elements[sommet++] = x). void depiler() retire le sommet (--sommet). T haut() const renvoie l'element au sommet (elements[sommet - 1]). bool vide() const renvoie true si sommet vaut 0. Dans main : lire n, creer Pile<int>, lire n entiers et tous les empiler, afficher haut() + retour a la ligne, appeler depiler(), afficher haut() + retour a la ligne, puis afficher 'vide' si la pile est vide sinon 'non vide' + retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// A completer : la classe template Pile (pile LIFO)\n\nint main() {\n    int n;\n    cin >> n;\n    // A completer : empiler n entiers, afficher le sommet, depiler, reafficher, tester vide\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois elements", "stdin": "3 10 20 30", "expectedStdout": "30\n20\nnon vide" },
+        { "name": "cinq elements", "stdin": "5 1 2 3 4 5", "expectedStdout": "5\n4\nnon vide" },
+        { "name": "deux elements", "stdin": "2 7 9", "expectedStdout": "9\n7\nnon vide", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nclass Pile {\n    T elements[100];\n    int sommet;\npublic:\n    Pile() : sommet(0) {}\n    void empiler(const T& x) { elements[sommet++] = x; }\n    void depiler() { --sommet; }\n    T haut() const { return elements[sommet - 1]; }\n    bool vide() const { return sommet == 0; }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    Pile<int> p;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        p.empiler(x);\n    }\n    cout << p.haut() << \"\\n\";\n    p.depiler();\n    cout << p.haut() << \"\\n\";\n    cout << (p.vide() ? \"vide\" : \"non vide\") << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "`Pile` est un patron de classe : le tableau `elements` est de type `T`, `sommet` repère la première case libre. `empiler` écrit puis incrémente (`sommet++`), `depiler` décrémente, `haut` lit `elements[sommet - 1]`. Principe **LIFO** : le dernier empilé est le premier accessible. Avec `10 20 30`, le sommet est `30` ; après un `depiler`, c'est `20`. Toutes les méthodes étant courtes, elles sont définies dans la classe. `Pile<int>` est l'instanciation employée.",
+    "concepts": ["classe-template", "instanciation-template"]
+  }
+]

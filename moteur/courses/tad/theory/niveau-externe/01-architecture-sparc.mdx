@@ -1,0 +1,45 @@
+---
+title: Architecture SPARC
+slug: architecture-sparc
+order: 1
+estimatedReadMin: 6
+concepts: [architecture-sparc, schema-externe, schema-conceptuel, schema-physique]
+source: "CM1, slides 3-4"
+---
+
+## Trois niveaux d'abstraction
+
+L'**architecture ANSI/SPARC** est la norme qui définit trois niveaux de description d'une base de données. Toute base Oracle s'appuie sur cette séparation. Comprendre ces niveaux est fondamental : tout le cours TAD est structuré autour d'eux (niveau externe en CM1, niveau physique en CM2, niveau conceptuel et logique implicitement partout).
+
+### Niveau externe
+
+Le **niveau externe** est ce que voit l'utilisateur final. Il peut exister plusieurs **schémas externes**, chacun adapté à un type d'utilisateur ou à une application. Un schéma externe est constitué :
+
+- **d'utilisateurs** (qui se connecte à la base),
+- **de rôles** (qui regroupent les droits accordés),
+- **de vues logiques et matérialisées** (qui filtrent les données accessibles).
+
+Chaque schéma externe filtre une partie du schéma conceptuel et masque le reste : on ne donne accès qu'aux données nécessaires à un usage donné.
+
+### Niveau conceptuel
+
+Le **niveau conceptuel** décrit toutes les données de manière logique, sans se préoccuper de comment elles sont stockées physiquement. C'est le **MLD** (modèle logique de données) : tables, colonnes, contraintes d'intégrité, clés primaires et étrangères.
+
+C'est un niveau **unique** par base, contrairement au niveau externe qui peut être multiple.
+
+### Niveau physique
+
+Le **niveau physique** décrit l'organisation des données sur disque : tablespaces, fichiers `.dbf`, segments, blocs, index, clusters. Ce niveau sera l'objet du CM2.
+
+## Pourquoi cette séparation ?
+
+L'architecture trois niveaux assure deux **indépendances** essentielles :
+
+1. **Indépendance logique** : on peut modifier le schéma conceptuel (ajouter une colonne, déplacer une donnée) sans casser les applications, à condition d'adapter les schémas externes.
+2. **Indépendance physique** : on peut changer le stockage physique (réindexer, déplacer un fichier, partitionner) sans toucher au schéma conceptuel ni aux applications.
+
+> **À retenir**
+> - 3 niveaux : externe (vues utilisateur), conceptuel (MLD logique), physique (stockage disque).
+> - Un schéma conceptuel unique, plusieurs schémas externes.
+> - Le niveau externe = utilisateurs + rôles + vues.
+> - L'indépendance logique/physique justifie toute l'architecture.

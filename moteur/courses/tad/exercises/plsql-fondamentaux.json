@@ -1,0 +1,302 @@
+[
+  {
+    "chapterSlug": "generalites-plsql",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quels sont les trois blocs principaux d'un programme PL/SQL ?",
+    "payload": { "options": [
+      { "id": "a", "label": "DECLARE, BEGIN, END" },
+      { "id": "b", "label": "DECLARE, BEGIN/END (avec EXCEPTION optionnel)" },
+      { "id": "c", "label": "INIT, RUN, CLOSE" },
+      { "id": "d", "label": "START, BODY, FINISH" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "DECLARE (variables), BEGIN ... END (exécution), avec un éventuel bloc EXCEPTION pour la gestion d'erreurs.",
+    "concepts": ["plsql-bloc"]
+  },
+  {
+    "chapterSlug": "generalites-plsql",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Pour afficher des messages PL/SQL avec DBMS_OUTPUT, il faut au préalable activer la sortie :",
+    "payload": {
+      "template": "SET {{kw}} ON;",
+      "slots": [{ "id": "kw" }]
+    },
+    "solution": { "answers": { "kw": "SERVEROUTPUT" }, "caseSensitive": false },
+    "explanation": "SET SERVEROUTPUT ON ; sinon les messages DBMS_OUTPUT.PUT_LINE ne s'affichent pas.",
+    "concepts": ["dbms-output"]
+  },
+  {
+    "chapterSlug": "variables-types",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Que signifie `v_eleve eleve%ROWTYPE;` ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Une variable scalaire de type texte" },
+      { "id": "b", "label": "Une variable contenant une ligne entière de la table eleve" },
+      { "id": "c", "label": "Le nombre de lignes de la table eleve" },
+      { "id": "d", "label": "Un curseur sur la table eleve" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "%ROWTYPE dérive un type d'enregistrement à partir des colonnes de la table.",
+    "concepts": ["plsql-rowtype"]
+  },
+  {
+    "chapterSlug": "variables-types",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles formes d'affectation existent en PL/SQL ?",
+    "payload": { "options": [
+      { "id": "a", "label": "v := 12;" },
+      { "id": "b", "label": "SELECT col INTO v FROM table WHERE ...;" },
+      { "id": "c", "label": "FETCH curseur INTO v;" },
+      { "id": "d", "label": "SET v = 12;" }
+    ]},
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "Trois formes : `:=` (classique), `SELECT INTO` (unique ligne), `FETCH INTO` (depuis un curseur). SET est SQL, pas PL/SQL.",
+    "concepts": ["plsql-variable-scalaire"]
+  },
+  {
+    "chapterSlug": "variables-types",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque type composé à sa description.",
+    "payload": {
+      "left": [
+        { "id": "rec", "label": "RECORD" },
+        { "id": "tbl", "label": "TABLE (associative)" },
+        { "id": "var", "label": "VARRAY" }
+      ],
+      "right": [
+        { "id": "struct", "label": "Structure de champs nommés et typés" },
+        { "id": "assoc", "label": "Tableau associatif indexé par entier ou chaîne, taille dynamique" },
+        { "id": "fixed", "label": "Tableau à taille maximale fixée, indexé à partir de 1" }
+      ]
+    },
+    "solution": { "pairs": { "rec": "struct", "tbl": "assoc", "var": "fixed" } },
+    "explanation": "RECORD = struct. TABLE = tableau associatif. VARRAY = tableau borné.",
+    "concepts": ["plsql-record", "plsql-table", "plsql-varray"]
+  },
+  {
+    "chapterSlug": "variables-types",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Le premier élément d'un VARRAY est à l'indice :",
+    "payload": { "options": [
+      { "id": "a", "label": "0" },
+      { "id": "b", "label": "1" },
+      { "id": "c", "label": "Au choix du développeur" },
+      { "id": "d", "label": "Cela dépend du type de l'index" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Les VARRAY (et tableaux PL/SQL classiques) sont indexés à partir de 1 (comme en Lua ou Pascal), pas 0.",
+    "concepts": ["plsql-varray"]
+  },
+  {
+    "chapterSlug": "structures-controle",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quel mot-clé conditionne le \"sinon si\" en PL/SQL ?",
+    "payload": { "options": [
+      { "id": "a", "label": "ELSEIF" },
+      { "id": "b", "label": "ELSIF" },
+      { "id": "c", "label": "ELSE IF" },
+      { "id": "d", "label": "ELIF" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "PL/SQL utilise ELSIF (sans 'E'). C'est une source classique d'erreurs.",
+    "concepts": ["plsql-if"]
+  },
+  {
+    "chapterSlug": "structures-controle",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles formes de boucle existent en PL/SQL ?",
+    "payload": { "options": [
+      { "id": "a", "label": "LOOP ... EXIT WHEN ... END LOOP" },
+      { "id": "b", "label": "FOR v IN 1..10 LOOP ... END LOOP" },
+      { "id": "c", "label": "WHILE cond LOOP ... END LOOP" },
+      { "id": "d", "label": "DO ... WHILE" },
+      { "id": "e", "label": "FOR v IN curseur LOOP ... END LOOP" }
+    ]},
+    "solution": { "correct": ["a", "b", "c", "e"] },
+    "explanation": "Quatre formes : LOOP avec EXIT, FOR borné, WHILE, FOR sur curseur. PL/SQL n'a pas DO ... WHILE.",
+    "concepts": ["plsql-loop"]
+  },
+  {
+    "chapterSlug": "triggers",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un trigger Oracle peut être déclenché par :",
+    "payload": { "options": [
+      { "id": "a", "label": "Uniquement INSERT" },
+      { "id": "b", "label": "INSERT, UPDATE, DELETE (LMD) ; CREATE, ALTER, DROP (LDD) ; et événements DATABASE (STARTUP, SHUTDOWN, LOGON)" },
+      { "id": "c", "label": "Seulement les événements DATABASE" },
+      { "id": "d", "label": "Uniquement SELECT" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Les triggers couvrent LMD (INSERT/UPDATE/DELETE), LDD (CREATE/ALTER/DROP) et événements DATABASE.",
+    "concepts": ["trigger"]
+  },
+  {
+    "chapterSlug": "triggers",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Que désigne `:new` dans un trigger FOR EACH ROW ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Le nouveau trigger" },
+      { "id": "b", "label": "La ligne après modification (pour INSERT et UPDATE)" },
+      { "id": "c", "label": "La table en mutation" },
+      { "id": "d", "label": "L'utilisateur connecté" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": ":new = ligne après modification. :old = ligne avant modification (UPDATE / DELETE).",
+    "concepts": ["trigger-row"]
+  },
+  {
+    "chapterSlug": "triggers",
+    "type": "PLSQL_TRIGGER",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écrivez un trigger `trig_check_stock` qui, AVANT mise à jour de la colonne `nb_stock` de la table `produit`, vérifie que le nouveau stock n'est pas négatif. Si c'est le cas, lever une erreur avec `RAISE_APPLICATION_ERROR(-20012, 'Stock négatif interdit')`.",
+    "payload": {
+      "required": {
+        "triggerName": "trig_check_stock",
+        "timing": "BEFORE",
+        "events": ["UPDATE"],
+        "table": "produit",
+        "forEachRow": true,
+        "requiredKeywords": [":new", "RAISE_APPLICATION_ERROR", "-20012"]
+      }
+    },
+    "solution": { "code": "CREATE OR REPLACE TRIGGER trig_check_stock\nBEFORE UPDATE OF nb_stock ON produit\nFOR EACH ROW\nBEGIN\n  IF :new.nb_stock < 0 THEN\n    RAISE_APPLICATION_ERROR(-20012, 'Stock négatif interdit');\n  END IF;\nEND;" },
+    "explanation": "Trigger BEFORE UPDATE FOR EACH ROW. Test sur :new.nb_stock. RAISE_APPLICATION_ERROR fait échouer l'UPDATE.",
+    "concepts": ["trigger", "trigger-timing", "trigger-row", "raise-application-error"]
+  },
+  {
+    "chapterSlug": "triggers",
+    "type": "PLSQL_TRIGGER",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écrivez un trigger `trig_maj_stock` qui, APRÈS chaque INSERT dans `ligne_commande`, met à jour la table `produit` en décrémentant `nb_stock` de la quantité commandée.",
+    "payload": {
+      "required": {
+        "triggerName": "trig_maj_stock",
+        "timing": "AFTER",
+        "events": ["INSERT"],
+        "table": "ligne_commande",
+        "forEachRow": true,
+        "requiredKeywords": [":new", "UPDATE", "produit", "nb_stock"]
+      }
+    },
+    "solution": { "code": "CREATE OR REPLACE TRIGGER trig_maj_stock\nAFTER INSERT ON ligne_commande\nFOR EACH ROW\nBEGIN\n  UPDATE produit\n  SET nb_stock = nb_stock - :new.quantite\n  WHERE id_produit = :new.id_produit;\nEND;" },
+    "explanation": "Trigger AFTER INSERT FOR EACH ROW. :new.quantite et :new.id_produit servent à mettre à jour le bon produit.",
+    "concepts": ["trigger", "trigger-timing", "trigger-row"]
+  },
+  {
+    "chapterSlug": "triggers",
+    "type": "TRUE_FALSE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Dans le corps d'un trigger sur la table T, il est interdit de requêter T (règle de non-mutation).",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Exact. La table en cours de mutation ne peut être ni lue ni écrite par le trigger. Sinon, ORA-04091.",
+    "concepts": ["trigger"]
+  },
+  {
+    "chapterSlug": "triggers",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pourquoi utilise-t-on un trigger INSTEAD OF ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Pour remplacer un autre trigger" },
+      { "id": "b", "label": "Pour rendre modifiable une vue qui ne l'est pas (jointure, agrégat...)" },
+      { "id": "c", "label": "Pour annuler une transaction" },
+      { "id": "d", "label": "Pour replacer une exception" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "INSTEAD OF s'applique aux vues : il remplace l'opération impossible (INSERT/UPDATE/DELETE direct) par un traitement alternatif sur les tables sources.",
+    "concepts": ["trigger-instead-of"]
+  },
+  {
+    "chapterSlug": "sequences",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle pseudo-colonne donne la prochaine valeur d'une séquence ?",
+    "payload": { "options": [
+      { "id": "a", "label": "seq.NEXT" },
+      { "id": "b", "label": "seq.NEXTVAL" },
+      { "id": "c", "label": "seq.CURRVAL" },
+      { "id": "d", "label": "seq.VAL" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "NEXTVAL génère et retourne la prochaine valeur. CURRVAL retourne la dernière valeur générée.",
+    "concepts": ["sequence"]
+  },
+  {
+    "chapterSlug": "sequences",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Un ROLLBACK annule les NEXTVAL d'une séquence consommés pendant la transaction.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. Les séquences ne sont PAS sensibles au ROLLBACK : les numéros consommés et non utilisés laissent des trous.",
+    "concepts": ["sequence"]
+  },
+  {
+    "chapterSlug": "sequences",
+    "type": "SQL_DDL",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Créez une séquence `seq_id_client` qui démarre à 1000, s'incrémente de 1 et ne recycle pas.",
+    "payload": {
+      "requiredElements": [
+        { "kind": "keyword", "keyword": "CREATE", "description": "CREATE" },
+        { "kind": "keyword", "keyword": "SEQUENCE", "description": "SEQUENCE" },
+        { "kind": "keyword", "keyword": "seq_id_client", "description": "Nom de la séquence" },
+        { "kind": "keyword", "keyword": "START", "description": "START WITH" },
+        { "kind": "keyword", "keyword": "1000", "description": "Valeur de départ" },
+        { "kind": "keyword", "keyword": "INCREMENT", "description": "INCREMENT BY" },
+        { "kind": "keyword", "keyword": "NOCYCLE", "description": "NOCYCLE" }
+      ]
+    },
+    "solution": { "ddl": "CREATE SEQUENCE seq_id_client START WITH 1000 INCREMENT BY 1 NOCYCLE;" },
+    "explanation": "Syntaxe : CREATE SEQUENCE nom START WITH n INCREMENT BY m [CYCLE|NOCYCLE] [CACHE l|NOCACHE];",
+    "concepts": ["sequence"]
+  },
+  {
+    "chapterSlug": "sequences",
+    "type": "PLSQL_TRIGGER",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écrivez un trigger `trig_id_eleve` qui, AVANT INSERT dans la table `eleve` (FOR EACH ROW), assigne `:new.id_eleve := seq_id_eleve.NEXTVAL;` puis `:new.date_ajout := SYSDATE;`.",
+    "payload": {
+      "required": {
+        "triggerName": "trig_id_eleve",
+        "timing": "BEFORE",
+        "events": ["INSERT"],
+        "table": "eleve",
+        "forEachRow": true,
+        "requiredKeywords": [":new", "NEXTVAL", "seq_id_eleve", "SYSDATE"]
+      }
+    },
+    "solution": { "code": "CREATE OR REPLACE TRIGGER trig_id_eleve\nBEFORE INSERT ON eleve\nFOR EACH ROW\nBEGIN\n  :new.id_eleve := seq_id_eleve.NEXTVAL;\n  :new.date_ajout := SYSDATE;\nEND;" },
+    "explanation": "Pattern standard d'auto-incrémentation : trigger BEFORE INSERT FOR EACH ROW + séquence.NEXTVAL sur :new.id.",
+    "concepts": ["sequence", "trigger-row"]
+  }
+]

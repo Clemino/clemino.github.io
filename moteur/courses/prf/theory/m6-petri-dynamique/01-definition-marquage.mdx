@@ -1,0 +1,26 @@
+---
+title: "Definition et marquage"
+slug: definition-marquage
+order: 1
+estimatedReadMin: 13
+concepts: [petri-net, place, transition, arc, marking]
+source: "Petri net/UP2-2-RdP-slides.pdf; Petri net/mcar_cours2_ReseauxDePetri.2x1.pdf"
+---
+## Structure d'un reseau
+
+Un reseau de Petri ordinaire ou pondere est biparti : les arcs relient seulement une place a une transition ou une transition a une place. On note souvent `R = (P, T, Pre, Post)`.
+
+## Marquage
+
+Un marquage `M` associe a chaque place un nombre de jetons. Si les places sont ordonnees `(p1, p2, p3)`, le marquage peut se noter comme un vecteur, par exemple `(1, 0, 2)`.
+
+## Arcs ponderes
+
+Un arc de poids 2 demande ou produit deux jetons. L'absence d'arc equivaut a un poids nul dans les matrices `Pre` ou `Post`.
+
+## Interpretation
+
+Les places representent des ressources, etats ou conditions. Les transitions representent des evenements. Les jetons representent la disponibilite.
+
+> **A retenir**  
+> Ne melange jamais place et transition : un reseau de Petri est biparti, et le marquage ne porte que sur les places.

@@ -1,0 +1,151 @@
+---
+title: Destructeur et cycle de vie
+slug: destructeur
+order: 2
+estimatedReadMin: 9
+concepts: [destructeur, cycle-de-vie-objet]
+source: "Cours 2 — Constructeurs & Destructeurs"
+---
+
+## Le cycle de vie d'un objet
+
+Un objet n'existe pas éternellement. Sa vie suit **trois étapes** bien définies :
+
+1. **Construction** — l'objet est créé, son **constructeur** est appelé, ses attributs sont initialisés.
+2. **Utilisation** — l'objet est manipulé : on appelle ses méthodes, on lit et modifie son état.
+3. **Destruction** — l'objet disparaît, son **destructeur** est appelé, ses ressources sont libérées.
+
+Le constructeur ouvre la vie de l'objet ; le **destructeur** la referme. Ce chapitre s'intéresse à cette dernière étape.
+
+## Qu'est-ce qu'un destructeur ?
+
+> Le **destructeur** est une **fonction membre particulière**, appelée **automatiquement en fin de vie de l'objet**. Son rôle principal est d'**assurer la libération des ressources** que l'objet a éventuellement mobilisées.
+
+Comme le constructeur, le destructeur n'est jamais appelé « à la main » : il se déclenche tout seul, au bon moment.
+
+## Syntaxe du destructeur
+
+Le destructeur d'une classe `NomClasse` se déclare ainsi :
+
+```cpp
+~NomClasse()
+{
+    // opérations de libération
+}
+```
+
+Ses règles syntaxiques :
+
+- son nom est **celui de la classe, précédé du signe `~`** (tilde) ;
+- il **ne prend aucun argument** ;
+- il **n'a aucun type de retour**.
+
+Comme il n'admet pas d'argument, le destructeur **ne peut pas être surchargé** : une classe possède donc **exactement un seul** destructeur. S'il n'est pas défini explicitement par le programmeur, **le compilateur en génère une version minimaliste**.
+
+Sur la classe `Fraction` du chapitre précédent :
+
+```cpp
+// fraction.h
+class Fraction {
+    private:
+        int numerateur;
+        int denominateur;
+    public:
+        Fraction(int n = 0, int d = 1);
+        ~Fraction();                      // le destructeur
+};
+```
+
+```cpp
+// fraction.cpp
+Fraction::~Fraction() {}    // rien à libérer ici : corps vide
+```
+
+Pour `Fraction`, le corps du destructeur est **vide** : la classe ne gère que deux `int`, qui ne réclament aucune libération particulière. Le destructeur devient indispensable dès qu'une classe détient des **ressources** — c'est l'objet du chapitre suivant.
+
+## Quand le destructeur s'exécute-t-il ?
+
+Le destructeur se déclenche **automatiquement** dans deux situations :
+
+- **fin de portée** — un objet local (créé sur la pile) est détruit lorsque l'on **sort du bloc `{ }`** où il a été déclaré ;
+- **`delete`** — un objet créé dynamiquement avec `new` est détruit au moment où l'on appelle **`delete`** dessus.
+
+L'exemple suivant illustre la fin de portée :
+
+```cpp
+void test() {
+    Fraction f3(5, 6);
+    // 1) allouer la mémoire d'un objet Fraction (2 entiers) sur la pile
+    // 2) affecter 5 au numérateur et 6 au dénominateur (constructeur)
+}
+// 3) détruire f3 (destructeur)
+// 4) libérer l'espace mémoire de f3 sur la pile
+```
+
+L'objet `f3` vit le temps de la fonction `test`. À l'accolade fermante, son destructeur est appelé, puis l'emplacement mémoire est rendu.
+
+## L'ordre de destruction
+
+Quand plusieurs objets locaux coexistent dans un même bloc, ils sont détruits dans l'**ordre inverse** de leur construction : **le dernier construit est le premier détruit**. La pile fonctionne en « dernier entré, premier sorti ».
+
+```cpp
+void f() {
+    Fraction a(1, 2);   // construit en 1er
+    Fraction b(3, 4);   // construit en 2nd
+    Fraction c(5, 6);   // construit en 3e
+}   // destructions : ~c, puis ~b, puis ~a
+```
+
+Cet ordre garantit qu'un objet n'est jamais détruit avant ceux qui ont pu être construits en s'appuyant sur lui.
+
+## Libérer des ressources
+
+Le mot **ressource** désigne tout ce qu'un objet doit **rendre** au système avant de disparaître : mémoire allouée dynamiquement, fichier ouvert, connexion réseau... Si un objet ne libère pas ce qu'il a pris, cette ressource est **perdue** jusqu'à la fin du programme.
+
+Pour les classes simples comme `Fraction` (uniquement des `int`), le destructeur synthétisé par le compilateur suffit. Mais pour une classe qui **alloue de la mémoire dynamiquement**, ce destructeur implicite est **insuffisant** : le programmeur doit écrire le code de libération lui-même. Ce sera le sujet central des deux prochains chapitres.
+
+> ⚠️ Une règle d'or : **tout ce que le constructeur acquiert, le destructeur doit le libérer**. C'est le fondement d'une gestion mémoire saine en C++.
+
+## Un exemple d'utilisation : le compteur d'instances
+
+Le **comptage des instances** actives d'une classe est un exemple — académique mais éclairant — où le destructeur synthétisé par le compilateur ne convient **pas** : il faut un destructeur écrit à la main.
+
+L'idée : pour connaître à tout instant le nombre d'objets `Rectangle` en vie, on utilise une **variable globale** servant de compteur. Le **constructeur l'incrémente**, le **destructeur la décrémente**.
+
+```cpp
+long counter = 0;        // variable globale : compteur d'instances
+
+class Rectangle {
+    private:
+        int hauteur;
+        int largeur;
+    public:
+        Rectangle() : hauteur(0), largeur(0) { ++counter; }   // constructeur
+        ~Rectangle() { --counter; }                            // destructeur
+        // ...
+};
+```
+
+On suit la valeur de `counter` au fil de l'exécution :
+
+```cpp
+int main() {                          // counter
+                                       //   0
+    Rectangle r1;                      //   1   <- construction de r1
+    {
+        Rectangle r2;                  //   2   <- construction de r2
+    }                                  //   1   <- destruction de r2 (fin de bloc)
+}                                      //   0   <- destruction de r1 (fin de main)
+```
+
+À chaque création, le compteur monte ; à chaque destruction, il redescend. La construction et la destruction se répondent exactement.
+
+> ⚠️ Ce comptage **n'est pas encore complet**. La **copie** d'un `Rectangle` en un autre **échappe au compteur** : copier un objet crée bien une nouvelle instance, mais sans passer par les constructeurs ci-dessus. Tant qu'on n'a pas défini le **constructeur de copie** (dernier chapitre du module), le compteur sera faussé.
+
+> **À retenir**
+> - Le **cycle de vie** d'un objet comporte trois étapes : **construction** → **utilisation** → **destruction**.
+> - Le **destructeur** `~NomClasse()` est appelé **automatiquement** en fin de vie ; son rôle est de **libérer les ressources** acquises par l'objet.
+> - Il **ne prend aucun argument**, **n'a pas de type de retour**, et **ne peut pas être surchargé** : une classe a **exactement un** destructeur.
+> - Il s'exécute en **fin de portée** (sortie du bloc `{ }`) ou lors d'un **`delete`**. Les objets locaux sont détruits dans l'**ordre inverse** de leur construction.
+> - À défaut de destructeur écrit, le compilateur en **synthétise** un ; il suffit pour les classes simples, mais **pas** pour celles qui allouent de la mémoire.
+> - Le **compteur d'instances** (constructeur `++`, destructeur `--`) illustre un destructeur utile — incomplet tant que le constructeur de copie n'est pas géré.

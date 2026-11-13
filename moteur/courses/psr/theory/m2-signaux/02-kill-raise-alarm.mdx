@@ -1,0 +1,238 @@
+---
+title: "Émettre un signal : kill, raise, alarm"
+slug: kill-raise-alarm
+order: 2
+estimatedReadMin: 14
+concepts: [kill-fonction, raise, alarm, pause, signal-asynchrone, sigalrm, sigusr]
+source: "Cours 2 — Les signaux"
+---
+
+Le chapitre précédent a présenté ce qu'est un signal et d'où il vient. Ce chapitre traite de la **première moitié** du mécanisme : **comment un processus envoie un signal**. Trois primitives suffisent — `kill`, `raise` et `alarm` — auxquelles s'ajoute `pause`, qui sert à **attendre** un signal.
+
+## Envoyer un signal à un autre processus : `kill`
+
+Malgré son nom, la primitive **`kill`** ne « tue » pas : elle **envoie un signal quelconque** à un processus. Le nom vient simplement de son usage le plus courant (envoyer `SIGKILL` ou `SIGTERM`), mais on peut tout aussi bien envoyer `SIGUSR1` ou `SIGCONT`.
+
+```c
+#include <sys/types.h>
+#include <signal.h>
+
+int kill(pid_t pid, int sig);
+```
+
+`kill` émet le signal `sig` — désigné par son **nom symbolique** ou son numéro — vers un ou plusieurs processus, **selon la valeur de `pid`** :
+
+| Valeur de `pid` | Destinataire(s) |
+|---|---|
+| `pid > 0` | le processus **de PID exactement `pid`** |
+| `pid == 0` | **tous les processus du même groupe** que l'appelant |
+| `pid == -1` | tous les processus que l'appelant a le droit de signaler |
+| `pid < -1` | tous les processus du **groupe** dont l'identifiant est la **valeur absolue** de `pid` |
+
+Le cas de loin le plus utilisé est **`pid > 0`** : on vise **un** processus précis, dont on connaît le PID.
+
+### Droits et valeur de retour
+
+On ne peut pas envoyer un signal à n'importe qui. Les processus **émetteur** et **destinataire** doivent appartenir au **même propriétaire** — ou bien l'émetteur doit être le **super-utilisateur** (`root`), qui peut signaler tout le monde.
+
+`kill` renvoie **`0` en cas de succès** et **`-1` en cas d'échec** (par exemple si le processus visé n'existe pas, ou si l'appelant n'a pas les droits). Comme tout appel système, **il faut tester sa valeur de retour**.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <sys/types.h>
+
+int main(void) {
+    pid_t cible = 2400;            /* PID du processus à signaler */
+
+    if (kill(cible, SIGTERM) == -1) {
+        perror("kill");            /* échec : droits ? PID inexistant ? */
+        exit(EXIT_FAILURE);
+    }
+    printf("SIGTERM envoye au processus %d\n", (int) cible);
+    return 0;
+}
+```
+
+### Communiquer père et fils par signaux
+
+`kill` est l'outil de base de la synchronisation entre processus apparentés. Après un `fork`, le père connaît le PID de son fils (c'est la valeur renvoyée par `fork`), et le fils connaît celui de son père (`getppid()`) : chacun peut donc **signaler l'autre**.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
+
+int main(void) {
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        /* le fils travaille un peu, puis previent son pere */
+        printf("Fils : je travaille...\n");
+        sleep(2);
+        printf("Fils : j'ai fini, je previens mon pere.\n");
+        kill(getppid(), SIGUSR1);          /* signal vers le pere */
+        exit(0);
+    } else {
+        /* le pere attend le signal du fils (voir 'pause' plus bas) */
+        pause();                            /* dort jusqu'a SIGUSR1 */
+        printf("Pere : j'ai recu le signal de mon fils.\n");
+        wait(NULL);                         /* recupere le fils */
+    }
+    return 0;
+}
+```
+
+> ⚠️ Cet exemple comporte une **course (*race condition*)** dont on doit avoir conscience : si le fils est très rapide et envoie son `SIGUSR1` **avant** que le père n'atteigne `pause()`, le père s'endort **après** la délivrance du signal — et reste bloqué pour toujours, puisque le signal est déjà passé. La séquence « envoyer puis attendre » n'est **jamais atomique** avec `kill` + `pause`. Le chapitre 4 montre la solution propre (`sigsuspend`). Pour l'instant, retenez que ce schéma **fonctionne souvent mais pas toujours** — et qu'« souvent » ne suffit pas.
+
+## S'envoyer un signal à soi-même : `raise`
+
+La primitive **`raise`** envoie un signal **au processus appelant lui-même** :
+
+```c
+#include <signal.h>
+
+int raise(int sig);
+```
+
+`raise(sig)` est, pour un processus mono-thread, l'**équivalent exact** de :
+
+```c
+kill(getpid(), sig);
+```
+
+Elle renvoie **`0` en cas de succès**, une valeur **non nulle** en cas d'échec. On l'utilise quand un processus veut **déclencher son propre traitement** d'un signal — par exemple pour tester un gestionnaire, ou pour se terminer d'une manière particulière.
+
+```c
+#include <stdio.h>
+#include <signal.h>
+
+int main(void) {
+    printf("Avant raise\n");
+    raise(SIGUSR1);            /* le processus se signale lui-meme */
+    printf("Apres raise\n");   /* atteint seulement si SIGUSR1 ne tue pas */
+    return 0;
+}
+```
+
+> ⚠️ Sans gestionnaire installé, `raise(SIGUSR1)` applique l'**action par défaut** de `SIGUSR1`, qui est **`exit`** : le programme se **termine** sur le `raise`, et la ligne « Apres raise » ne s'affiche **jamais**. Pour que l'exécution se poursuive, il faut d'abord **intercepter** le signal (chapitre 3) ou l'**ignorer**.
+
+## Programmer une temporisation : `alarm`
+
+La primitive **`alarm`** demande au noyau d'envoyer au processus appelant le signal **`SIGALRM`** au bout d'un **délai** donné, exprimé en **secondes** :
+
+```c
+#include <unistd.h>
+
+unsigned int alarm(unsigned int seconds);
+```
+
+C'est une sorte de **réveil** (un *minuteur*) : `alarm(5)` signifie « envoie-moi `SIGALRM` dans 5 secondes ». Le processus continue son exécution normalement entre-temps ; le `SIGALRM` arrivera de façon **asynchrone** à l'échéance.
+
+Quelques propriétés essentielles :
+
+- **Une seule alarme à la fois.** Chaque processus n'a **qu'un seul** minuteur `alarm`. Un nouvel appel à `alarm` **remplace** le précédent.
+- **Annuler l'alarme.** `alarm(0)` **annule** toute alarme en cours, sans en armer de nouvelle.
+- **Valeur de retour.** `alarm` renvoie le **nombre de secondes qui restaient** sur l'alarme précédente (`0` s'il n'y en avait pas). Cela permet, par exemple, de savoir combien de temps il restait avant de réarmer.
+
+> ⚠️ L'action par défaut de `SIGALRM` est **`exit`** : un `alarm(5)` **sans gestionnaire** de `SIGALRM` provoque la **terminaison du processus** au bout de 5 secondes. Si l'on veut juste « être prévenu » à l'échéance sans mourir, il faut **installer un gestionnaire** pour `SIGALRM` (chapitre 3).
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+
+int main(void) {
+    /* SANS gestionnaire de SIGALRM : ce programme se termine
+       au bout de 3 secondes, tue par l'action par defaut de SIGALRM. */
+    alarm(3);
+    printf("Alarme armee pour 3 secondes.\n");
+
+    for (;;) {
+        printf("je travaille...\n");
+        sleep(1);
+    }
+    /* jamais atteint : SIGALRM termine le processus a la 3e seconde */
+    return 0;
+}
+```
+
+`alarm` sert typiquement à poser un **délai de garde** (*timeout*) : on arme une alarme avant une opération potentiellement longue ; si l'opération aboutit à temps, on fait `alarm(0)` pour annuler ; sinon, le `SIGALRM` arrive et un gestionnaire prend la main pour traiter le dépassement.
+
+## Attendre un signal : `pause`
+
+La primitive **`pause`** suspend le processus appelant **jusqu'à l'arrivée d'un signal** :
+
+```c
+#include <unistd.h>
+
+int pause(void);
+```
+
+Son comportement est simple à énoncer :
+
+- `pause` **endort** le processus ; il ne consomme **aucun temps processeur** pendant ce sommeil ;
+- le processus est **réveillé par le premier signal** qui lui parvient ;
+- `pause` ne revient **que** si le signal reçu n'a **pas terminé** le processus : il faut donc que ce signal soit **ignoré** ou **intercepté par un gestionnaire**. Si le signal applique son action par défaut `exit`, le processus meurt et `pause` ne revient évidemment jamais ;
+- au retour, `pause` renvoie toujours **`-1`** (avec `errno` positionné à `EINTR`).
+
+`pause` est l'outil naturel du schéma **« je n'ai rien à faire tant que tel événement n'arrive pas »**. C'est exactement ce que demandent les TP : un processus place un gestionnaire, puis se met en `pause()` en attendant le signal.
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+
+int main(void) {
+    printf("J'attends un signal (essayez Ctrl-C)...\n");
+    pause();                       /* dort jusqu'a reception d'un signal */
+    printf("Reveille !\n");        /* atteint si le signal etait gere */
+    return 0;
+}
+```
+
+### `alarm` + `pause` : attendre un délai précis
+
+En combinant `alarm` et `pause`, on obtient une **temporisation interruptible** : on arme l'alarme, puis on s'endort. Le `SIGALRM` réveillera le `pause` à l'échéance (à condition d'avoir un gestionnaire pour ne pas mourir).
+
+```c
+#include <stdio.h>
+#include <signal.h>
+#include <unistd.h>
+
+void reveil(int sig) {
+    (void) sig;                         /* gestionnaire vide : juste reveiller */
+}
+
+int main(void) {
+    signal(SIGALRM, reveil);            /* installe le gestionnaire (signal() est detaille au chapitre 3 « Capturer un signal ») ; sinon SIGALRM tuerait le processus */
+    alarm(4);                           /* SIGALRM dans 4 secondes */
+    printf("Je dors au maximum 4 secondes...\n");
+    pause();                            /* reveille par SIGALRM (ou autre signal) */
+    printf("Reveille.\n");
+    return 0;
+}
+```
+
+> ⚠️ Le couple `alarm` + `pause` souffre **du même problème de course** que `kill` + `pause` : si le délai est si court que le `SIGALRM` arrive **avant** d'atteindre `pause()`, le processus s'endort **après** le signal et **ne se réveille pas** par celui-ci. Tant qu'on travaille avec `pause`, ce risque existe. La parade rigoureuse, vue au chapitre 4, est `sigsuspend`, qui **débloque et endort de façon atomique**.
+
+## Synthèse des primitives d'émission
+
+| Primitive | En-tête | Rôle |
+|---|---|---|
+| `kill(pid, sig)` | `<signal.h>` | envoyer le signal `sig` au(x) processus désigné(s) par `pid` |
+| `raise(sig)` | `<signal.h>` | envoyer le signal `sig` à soi-même |
+| `alarm(sec)` | `<unistd.h>` | demander un `SIGALRM` dans `sec` secondes |
+| `pause()` | `<unistd.h>` | s'endormir jusqu'à la réception d'un signal |
+
+> **À retenir**
+> - **`kill(pid, sig)`** envoie le signal `sig` à un processus (malgré son nom, il n'envoie pas que `SIGKILL`) ; `pid > 0` vise un processus précis. Émetteur et destinataire doivent avoir le **même propriétaire** (ou l'émetteur être `root`). Renvoie **0**/**-1**.
+> - **`raise(sig)`** envoie un signal **à soi-même** ; c'est l'équivalent de `kill(getpid(), sig)`.
+> - **`alarm(sec)`** programme l'envoi d'un **`SIGALRM`** dans `sec` secondes ; un seul minuteur par processus, `alarm(0)` l'annule, et l'appel renvoie le **temps restant** de l'alarme précédente.
+> - Sans gestionnaire, **`SIGALRM` et `SIGUSR1` terminent le processus** (action par défaut `exit`).
+> - **`pause()`** endort le processus jusqu'à un signal ; il ne revient (`-1`) que si ce signal est **ignoré** ou **intercepté**.
+> - Le schéma « envoyer puis attendre » via `kill`/`alarm` + `pause` comporte une **course** : si le signal arrive avant le `pause`, le processus reste bloqué. La solution atomique (`sigsuspend`) est au chapitre 4.

@@ -1,0 +1,367 @@
+{
+  "slug": "partiel-2024-25",
+  "title": "Examen TAD — ING2 GIA — Année 2024-2025",
+  "durationMinutes": 120,
+  "totalPoints": 20,
+  "description": "Examen de session normale, durée 2h, problème étudié : gestion des locations de véhicules.",
+  "exercises": [
+    {
+      "chapterSlug": "indexs-bitmap",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "**QCM 1.** Les index Bitmap sont particulièrement adaptés pour :",
+      "payload": { "options": [
+        { "id": "a", "label": "Des colonnes avec peu de valeurs distinctes" },
+        { "id": "b", "label": "Des colonnes fortement mises à jour" },
+        { "id": "c", "label": "Des requêtes OLTP avec un grand nombre d'inserts" },
+        { "id": "d", "label": "Des tables stockant des images et documents volumineux" }
+      ]},
+      "solution": { "correct": ["a"] },
+      "explanation": "Bitmap = faible sélectivité. Inadapté aux MAJ fréquentes (reconstruction totale) et aux OLTP.",
+      "concepts": ["index-bitmap"]
+    },
+    {
+      "chapterSlug": "creation-indexs",
+      "type": "MCQ_MULTI",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "**QCM 2.** Quel facteur impacte directement la performance d'une requête SQL ? *(plusieurs réponses possibles)*",
+      "payload": { "options": [
+        { "id": "a", "label": "L'utilisation d'index appropriés" },
+        { "id": "b", "label": "La structure du plan d'exécution" },
+        { "id": "c", "label": "Le nombre d'arguments dans une fonction PL/SQL" },
+        { "id": "d", "label": "La fragmentation de la table" }
+      ]},
+      "solution": { "correct": ["a", "b", "d"] },
+      "explanation": "Les arguments d'une fonction PL/SQL n'impactent pas directement la performance d'une requête SQL. Les 3 autres facteurs sont des leviers majeurs.",
+      "concepts": ["index-btree", "index-bitmap", "selectivite-index"]
+    },
+    {
+      "chapterSlug": "utilisateurs-roles",
+      "type": "MCQ_MULTI",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "**QCM 3.** Quels sont les rôles prédéfinis en Oracle ? *(plusieurs réponses possibles)*",
+      "payload": { "options": [
+        { "id": "a", "label": "DBA" },
+        { "id": "b", "label": "CONNECT" },
+        { "id": "c", "label": "SYSTEM" },
+        { "id": "d", "label": "RESOURCE" }
+      ]},
+      "solution": { "correct": ["a", "b", "d"] },
+      "explanation": "DBA, CONNECT, RESOURCE sont des rôles prédéfinis. SYSTEM est un utilisateur (compte d'administration), pas un rôle prédéfini.",
+      "concepts": ["role-predefini-connect", "role-predefini-resource", "role-predefini-dba"]
+    },
+    {
+      "chapterSlug": "notion-transaction",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "**QCM 4.** Quelle affirmation est vraie concernant les transactions ?",
+      "payload": { "options": [
+        { "id": "a", "label": "Une transaction commence automatiquement après un COMMIT" },
+        { "id": "b", "label": "Une transaction est un ensemble d'opérations traitées comme une seule unité" },
+        { "id": "c", "label": "ROLLBACK valide les modifications" },
+        { "id": "d", "label": "SAVEPOINT termine la transaction" }
+      ]},
+      "solution": { "correct": ["b"] },
+      "explanation": "Définition standard. ROLLBACK annule, SAVEPOINT pose un jalon (ne termine pas), une transaction commence implicitement (la formulation 'automatiquement après un COMMIT' est trompeuse — la nouvelle transaction démarre à la première instruction LMD suivante).",
+      "concepts": ["transaction"]
+    },
+    {
+      "chapterSlug": "vues",
+      "type": "MCQ_MULTI",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "**QCM 5.** Quelle est la principale différence entre une vue matérialisée avec REFRESH ON COMMIT et REFRESH ON DEMAND ?",
+      "payload": { "options": [
+        { "id": "a", "label": "REFRESH ON COMMIT met à jour la vue manuellement" },
+        { "id": "b", "label": "REFRESH ON COMMIT met automatiquement à jour la vue lorsqu'une modification est effectuée sur les tables sous-jacentes" },
+        { "id": "c", "label": "REFRESH ON DEMAND nécessite une mise à jour manuelle avec DBMS_MVIEW.REFRESH" },
+        { "id": "d", "label": "REFRESH ON DEMAND est uniquement utilisable avec les tables temporaires" }
+      ]},
+      "solution": { "correct": ["b", "c"] },
+      "explanation": "ON COMMIT = automatique au commit source. ON DEMAND = manuel via DBMS_MVIEW.REFRESH. Pas de lien avec les tables temporaires.",
+      "concepts": ["vue-rafraichissement"]
+    },
+    {
+      "chapterSlug": "creation-indexs",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "**QCM 6.** À quoi sert la commande EXPLAIN PLAN en SQL ?",
+      "payload": { "options": [
+        { "id": "a", "label": "Insérer un plan d'exécution dans la base de données" },
+        { "id": "b", "label": "Afficher le résultat d'une requête SQL" },
+        { "id": "c", "label": "Analyser et afficher le plan d'exécution d'une requête SQL" },
+        { "id": "d", "label": "Exécuter une requête plus rapidement" }
+      ]},
+      "solution": { "correct": ["c"] },
+      "explanation": "EXPLAIN PLAN sert à analyser le plan d'exécution (utilisation des indexes, ordre des jointures, etc.) — outil clé pour le tuning.",
+      "concepts": ["selectivite-index"]
+    },
+    {
+      "chapterSlug": "creation-indexs",
+      "type": "MCQ_MULTI",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "**QCM 7.** Une table contenant des factures subit 20 000 modifications et plusieurs milliers d'interrogations par minute. Sans plus d'informations détaillées sur les requêtes, quels types d'index pourraient être les plus adaptés ? *(plusieurs réponses possibles)*",
+      "payload": { "options": [
+        { "id": "a", "label": "Un index B-tree sur la colonne num_facture" },
+        { "id": "b", "label": "Un index bitmap sur la colonne total" },
+        { "id": "c", "label": "Un index B-tree sur la colonne tva" },
+        { "id": "d", "label": "Un index bitmap sur la colonne num_facture" },
+        { "id": "e", "label": "Un index bitmap sur la colonne tva" },
+        { "id": "f", "label": "Un index B-tree sur la colonne total" },
+        { "id": "g", "label": "Aucune de ces réponses n'est correcte" }
+      ]},
+      "solution": { "correct": ["a"] },
+      "explanation": "20 000 MAJ/min = forte activité OLTP : le Bitmap est éliminé (reconstruction totale à chaque MAJ). num_facture = clé primaire = forte sélectivité → B-tree. La colonne 'total' a une cardinalité variable, on n'a pas assez d'info. La colonne 'tva' a généralement peu de valeurs (faible sélectivité) → B-tree peu rentable. Réponse sûre : a) B-tree sur num_facture.",
+      "concepts": ["index-btree", "index-bitmap", "selectivite-index"]
+    },
+    {
+      "chapterSlug": "generalites-plsql",
+      "type": "MCQ_MULTI",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "**QCM 8.** À propos du langage PL/SQL, quelles affirmations sont correctes ?",
+      "payload": { "options": [
+        { "id": "a", "label": "Un bloc PL/SQL se compose des sections DECLARE, BEGIN, EXCEPTION et END" },
+        { "id": "b", "label": "Les exceptions personnalisées ne peuvent pas être définies dans PL/SQL" },
+        { "id": "c", "label": "Les curseurs explicites doivent être ouverts, traités, puis fermés manuellement" },
+        { "id": "d", "label": "Une procédure stockée peut retourner une valeur comme une fonction" },
+        { "id": "e", "label": "Le mot-clé RAISE permet de déclencher une exception" }
+      ]},
+      "solution": { "correct": ["a", "c", "e"] },
+      "explanation": "(a) ✓ DECLARE-BEGIN-EXCEPTION-END. (b) ✗ on peut, via PRAGMA EXCEPTION_INIT. (c) ✓ OPEN/FETCH/CLOSE manuels (sauf boucle FOR). (d) ✗ une procédure ne retourne pas de valeur (utiliser des paramètres OUT ou une fonction). (e) ✓ RAISE lève une exception.",
+      "concepts": ["plsql-bloc", "exception-personnalisee", "curseur-explicite", "procedure", "raise-application-error"]
+    },
+    {
+      "chapterSlug": "utilisateurs-roles",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "**Question de réflexion 1.** Pourquoi est-il recommandé d'utiliser des rôles plutôt que d'attribuer directement des droits aux utilisateurs ?",
+      "payload": {
+        "rubric": [
+          { "id": "factorisation", "description": "Argument de factorisation / mutualisation", "keywords": ["factorisation", "factoriser", "mutualisé", "mutualiser", "regrouper", "centraliser", "réutiliser"], "weight": 2 },
+          { "id": "maintenance", "description": "Argument de maintenabilité (ajout/retrait utilisateur)", "keywords": ["maintenance", "maintenable", "ajouter", "retirer", "modifier", "centralisé"], "weight": 2 },
+          { "id": "consistance", "description": "Cohérence des droits par profil métier", "keywords": ["cohérence", "profil", "métier", "homogène", "uniforme"], "weight": 1 },
+          { "id": "exemple", "description": "Donne un exemple concret", "keywords": ["exemple", "par exemple", "DBA", "CONNECT", "lecteur", "rédacteur"], "weight": 1 }
+        ],
+        "minWords": 50
+      },
+      "solution": { "modelAnswer": "Utiliser des rôles factorise les droits : on définit une fois un rôle métier (par exemple R_LECTEUR avec SELECT sur certaines tables), puis on l'attribue à autant d'utilisateurs que nécessaire. Quand un nouvel utilisateur arrive, on lui donne simplement le rôle ; quand on modifie les droits du profil, on modifie le rôle et tous les utilisateurs concernés en bénéficient automatiquement. Sans rôle, il faudrait répéter chaque GRANT et REVOKE pour chaque utilisateur — source d'incohérences et de fuites de droits. Les rôles assurent aussi la cohérence des permissions par profil métier." },
+      "explanation": "Factorisation + maintenabilité + cohérence métier.",
+      "concepts": ["role-oracle", "grant-revoke"]
+    },
+    {
+      "chapterSlug": "stockage-physique",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "**Question de réflexion 2.** Quelle est la différence entre un tablespace et une table en base de données ?",
+      "payload": {
+        "rubric": [
+          { "id": "table", "description": "Définit ce qu'est une table", "keywords": ["table", "lignes", "colonnes", "données utilisateur", "objet logique"], "weight": 2 },
+          { "id": "tblspace", "description": "Définit ce qu'est un tablespace", "keywords": ["tablespace", "conteneur", "stockage", "fichiers", "physique"], "weight": 2 },
+          { "id": "level", "description": "Niveau SPARC ou hiérarchie", "keywords": ["physique", "logique", "stockage", "contient"], "weight": 1 }
+        ],
+        "minWords": 40
+      },
+      "solution": { "modelAnswer": "Une table est un objet logique du niveau conceptuel : elle stocke des lignes et des colonnes selon un schéma défini. Un tablespace est un conteneur du niveau physique : il regroupe un ou plusieurs fichiers .dbf sur disque et héberge les segments dans lesquels les données des tables sont effectivement écrites. Une table est associée à un tablespace (celui par défaut de son propriétaire ou un tablespace explicitement choisi). Plusieurs tables peuvent partager un même tablespace." },
+      "explanation": "Table = objet logique conceptuel. Tablespace = conteneur physique de stockage.",
+      "concepts": ["tablespace", "segment-donnees", "architecture-sparc"]
+    },
+    {
+      "chapterSlug": "vues",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "**Question de réflexion 3.** Expliquez dans quel cas une vue matérialisée est plus performante qu'une vue simple et comment gérer son rafraîchissement de manière efficace dans un environnement transactionnel.",
+      "payload": {
+        "rubric": [
+          { "id": "perf", "description": "Cas où la VM est plus rapide (calculs lourds)", "keywords": ["jointure", "agrégat", "agrégation", "lourde", "complexe", "pré-calcul", "précalcul"], "weight": 2 },
+          { "id": "stockage", "description": "Mentionne le stockage physique", "keywords": ["stockage", "stockée", "physique", "matérialiser"], "weight": 1 },
+          { "id": "refresh", "description": "Méthode de rafraîchissement choisie", "keywords": ["FAST", "COMMIT", "DEMAND", "incrément", "log"], "weight": 2 },
+          { "id": "trade", "description": "Mentionne le trade-off de fraîcheur", "keywords": ["fraîcheur", "trade-off", "compromis", "obsolète", "à jour"], "weight": 1 }
+        ],
+        "minWords": 80
+      },
+      "solution": { "modelAnswer": "Une vue matérialisée est plus performante qu'une vue simple lorsque la requête sous-jacente est coûteuse — typiquement plusieurs jointures et/ou des agrégations. La vue simple ré-exécute le SELECT à chaque appel ; la vue matérialisée stocke physiquement le résultat et le retrouve instantanément. Dans un environnement transactionnel, le choix du rafraîchissement est crucial : pour des données qui doivent rester cohérentes, on utilise REFRESH ON COMMIT FAST avec un MATERIALIZED VIEW LOG sur la table source, ce qui propage uniquement les changements à chaque COMMIT. Si la fraîcheur immédiate n'est pas requise, REFRESH START WITH ... NEXT ... permet un rafraîchissement périodique (par exemple nocturne) moins coûteux. ON DEMAND convient quand le rafraîchissement est piloté par un batch métier. Le compromis : plus la VM est fraîche, plus le coût d'écriture est élevé." },
+      "explanation": "VM rentable sur requêtes coûteuses ; choix de refresh selon trade-off fraîcheur/performance.",
+      "concepts": ["vue-materialisee", "vue-rafraichissement"]
+    },
+    {
+      "chapterSlug": "fragmentation",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "**Question de réflexion 4.** Quelles sont les principales stratégies pour la fragmentation des données dans une base distribuée ?",
+      "payload": {
+        "rubric": [
+          { "id": "horiz", "description": "Fragmentation horizontale (sélection)", "keywords": ["horizontale", "sélection", "selection", "lignes"], "weight": 2 },
+          { "id": "vert", "description": "Fragmentation verticale (projection)", "keywords": ["verticale", "projection", "colonnes", "attributs"], "weight": 2 },
+          { "id": "mixte", "description": "Fragmentation mixte / hybride", "keywords": ["mixte", "hybride", "combinée"], "weight": 1 },
+          { "id": "reconst", "description": "Mention de la reconstruction (UNION / jointure)", "keywords": ["UNION", "jointure", "reconstruction", "recomposer"], "weight": 1 }
+        ],
+        "minWords": 60
+      },
+      "solution": { "modelAnswer": "Trois stratégies principales. (1) Fragmentation horizontale : on répartit les lignes via une sélection σ — par exemple, chaque agence stocke ses propres clients. Reconstruction par UNION des fragments. (2) Fragmentation verticale : on répartit les attributs (colonnes) via une projection π — chaque fragment doit contenir une clé de la relation pour permettre la reconstruction. Reconstruction par jointure naturelle sur la clé. (3) Fragmentation mixte : combinaison des deux — typiquement on fragmente d'abord verticalement, puis chaque fragment vertical est lui-même fragmenté horizontalement. Le choix dépend du pattern d'accès : on découpe selon la localité des requêtes." },
+      "explanation": "Horizontale (σ→UNION), verticale (π→jointure), mixte.",
+      "concepts": ["fragmentation-horizontale", "fragmentation-verticale", "fragmentation-mixte"]
+    },
+    {
+      "chapterSlug": "clusters",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "**Question de réflexion 5.** Quand peut-on décider de la mise en place d'un cluster ?",
+      "payload": {
+        "rubric": [
+          { "id": "maitre-detail", "description": "Mentionne la relation maître-détail", "keywords": ["maître-détail", "maître-details", "maître-detail", "1-n", "1,n", "(1,1)", "maître"], "weight": 2 },
+          { "id": "jointure", "description": "Mentionne les jointures fréquentes", "keywords": ["jointure", "souvent", "fréquente", "conjointement"], "weight": 2 },
+          { "id": "non-update", "description": "Mention que les inserts sont plus lents / précautions", "keywords": ["insertion", "lent", "coût", "performance"], "weight": 1 },
+          { "id": "exemple", "description": "Donne un exemple concret", "keywords": ["facture", "client", "commande", "ligne"], "weight": 1 }
+        ],
+        "minWords": 60
+      },
+      "solution": { "modelAnswer": "On décide de mettre en place un cluster lorsque deux tables sont en relation maître-détails (par exemple Commande → LigneCommande, ou Client → Facture) et que les requêtes joignent systématiquement ces tables. Le cluster rapproche physiquement les lignes ayant les mêmes valeurs sur les colonnes communes, ce qui réduit les E/S disque lors des jointures. À l'inverse, le cluster est contre-productif si on accède souvent à la table maître seule, et il ralentit légèrement les insertions car Oracle doit choisir un emplacement précis pour chaque ligne. En résumé : cluster recommandé sur relations 1-n fortement jointes en lecture, peu modifiées." },
+      "explanation": "Cluster utile sur relations maître-détails fortement jointes, à éviter si lectures séparées fréquentes ou inserts intensifs.",
+      "concepts": ["cluster", "maitre-detail"]
+    },
+    {
+      "chapterSlug": "sequences",
+      "type": "PLSQL_TRIGGER",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "**Partie A – PL/SQL · 1.** Écrire un trigger qui gère la clé de la location lors de sa création. On suppose qu'une séquence `LocID` existe.\n\nTable cible : `Location(no_location, date_debut, date_fin, montant_total, statut, no_client, no_agence)`.",
+      "payload": {
+        "required": {
+          "timing": "BEFORE",
+          "events": ["INSERT"],
+          "table": "Location",
+          "forEachRow": true,
+          "requiredKeywords": [":new", "LocID", "NEXTVAL"]
+        }
+      },
+      "solution": { "code": "CREATE OR REPLACE TRIGGER trig_location_pk\nBEFORE INSERT ON Location\nFOR EACH ROW\nBEGIN\n  :new.no_location := LocID.NEXTVAL;\nEND;" },
+      "explanation": "Pattern auto-incrémentation : trigger BEFORE INSERT FOR EACH ROW affectant la PK avec sequence.NEXTVAL.",
+      "concepts": ["sequence", "trigger-row"]
+    },
+    {
+      "chapterSlug": "triggers",
+      "type": "PLSQL_TRIGGER",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "**Partie A – PL/SQL · 2.** Écrire un trigger qui vérifie qu'un client possède un permis de conduire valide avant de lui attribuer une location.\n\nTables : `Client(no_client, nom, prenom, date_naissance, permis_conduire)`, `Location(no_location, ..., no_client, no_agence)`. On suppose qu'un permis 'valide' est une valeur non nulle de la colonne `permis_conduire`.",
+      "payload": {
+        "required": {
+          "timing": "BEFORE",
+          "events": ["INSERT"],
+          "table": "Location",
+          "forEachRow": true,
+          "requiredKeywords": [":new", "SELECT", "Client", "permis", "RAISE_APPLICATION_ERROR"]
+        }
+      },
+      "solution": { "code": "CREATE OR REPLACE TRIGGER trig_check_permis\nBEFORE INSERT ON Location\nFOR EACH ROW\nDECLARE\n  v_permis Client.permis_conduire%TYPE;\nBEGIN\n  SELECT permis_conduire INTO v_permis\n  FROM Client\n  WHERE no_client = :new.no_client;\n\n  IF v_permis IS NULL THEN\n    RAISE_APPLICATION_ERROR(-20001, 'Le client n''a pas de permis de conduire valide');\n  END IF;\nEND;" },
+      "explanation": "Trigger BEFORE INSERT lookup du permis du client cible. Si NULL, lève une exception applicative.",
+      "concepts": ["trigger", "raise-application-error"]
+    },
+    {
+      "chapterSlug": "procedures-fonctions",
+      "type": "PLSQL_PROCEDURE",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "**Partie A – PL/SQL · 3.** Écrire une procédure `ajouter_vehicule_location` qui permet d'ajouter un véhicule à une location existante. Cette procédure reçoit le numéro de location et le numéro du véhicule.\n\nTable concernée : `Vehicule_Location(no_location, no_vehicule)`.",
+      "payload": {
+        "required": {
+          "kind": "PROCEDURE",
+          "name": "ajouter_vehicule_location",
+          "params": [
+            { "mode": "IN" },
+            { "mode": "IN" }
+          ],
+          "requiredKeywords": ["INSERT", "Vehicule_Location"]
+        }
+      },
+      "solution": { "code": "CREATE OR REPLACE PROCEDURE ajouter_vehicule_location(\n  p_no_location IN NUMBER,\n  p_no_vehicule IN NUMBER\n)\nIS\nBEGIN\n  INSERT INTO Vehicule_Location(no_location, no_vehicule)\n  VALUES (p_no_location, p_no_vehicule);\nEND;" },
+      "explanation": "Procédure simple avec 2 paramètres IN et un INSERT dans la table d'association.",
+      "concepts": ["procedure", "parametre-in-out"]
+    },
+    {
+      "chapterSlug": "procedures-fonctions",
+      "type": "PLSQL_PROCEDURE",
+      "difficulty": 4,
+      "points": 2,
+      "prompt": "**Partie A – PL/SQL · 4.** Écrire une procédure `afficher_top_clients` qui reçoit un entier `n` et affiche le n-ième et le (n+1)-ième client ayant loué le plus de véhicules dans l'année en cours.\n\nUtiliser la table `Location(..., no_client, ...)` jointe à `Vehicule_Location` pour compter le nombre de véhicules par client.",
+      "payload": {
+        "required": {
+          "kind": "PROCEDURE",
+          "name": "afficher_top_clients",
+          "requiredKeywords": ["DBMS_OUTPUT", "COUNT", "GROUP BY", "ORDER BY"]
+        }
+      },
+      "solution": { "code": "CREATE OR REPLACE PROCEDURE afficher_top_clients(p_n IN NUMBER)\nIS\n  CURSOR c_top IS\n    SELECT l.no_client, COUNT(vl.no_vehicule) AS nb_vehic\n    FROM Location l\n    JOIN Vehicule_Location vl ON l.no_location = vl.no_location\n    WHERE EXTRACT(YEAR FROM l.date_debut) = EXTRACT(YEAR FROM SYSDATE)\n    GROUP BY l.no_client\n    ORDER BY nb_vehic DESC;\n\n  v_rank NUMBER := 0;\nBEGIN\n  FOR r IN c_top LOOP\n    v_rank := v_rank + 1;\n    IF v_rank = p_n OR v_rank = p_n + 1 THEN\n      DBMS_OUTPUT.PUT_LINE('Rang ' || v_rank || ' : Client ' || r.no_client || ' = ' || r.nb_vehic || ' véhicules');\n    END IF;\n    EXIT WHEN v_rank > p_n + 1;\n  END LOOP;\nEND;" },
+      "explanation": "Curseur trié par nb de véhicules ; parcours avec compteur, affichage uniquement pour le n-ième et (n+1)-ième.",
+      "concepts": ["procedure", "curseur-for", "dbms-output"]
+    },
+    {
+      "chapterSlug": "triggers",
+      "type": "PLSQL_TRIGGER",
+      "difficulty": 4,
+      "points": 2,
+      "prompt": "**Partie A – PL/SQL · 5.** Pourquoi doit-on associer un trigger à la gestion de la table `Cumul_Depenses_Client(no_client, annee, montant_total)` ? Écrivez ce trigger.\n\n*La table doit être maintenue à jour automatiquement à chaque insertion de Location validée.*",
+      "payload": {
+        "required": {
+          "timing": "AFTER",
+          "events": ["INSERT"],
+          "table": "Location",
+          "forEachRow": true,
+          "requiredKeywords": [":new", "Cumul_Depenses_Client", "MERGE", "UPDATE"]
+        }
+      },
+      "solution": { "code": "-- Pourquoi : Cumul_Depenses_Client est une donnée dérivée (somme par client/année).\n-- Sans trigger, elle se désynchronise des Locations. Le trigger garantit la cohérence automatique.\n\nCREATE OR REPLACE TRIGGER trig_maj_cumul\nAFTER INSERT ON Location\nFOR EACH ROW\nDECLARE\n  v_annee NUMBER;\nBEGIN\n  v_annee := EXTRACT(YEAR FROM :new.date_debut);\n\n  MERGE INTO Cumul_Depenses_Client c\n  USING (SELECT :new.no_client AS no_client, v_annee AS annee FROM DUAL) src\n  ON (c.no_client = src.no_client AND c.annee = src.annee)\n  WHEN MATCHED THEN\n    UPDATE SET montant_total = montant_total + :new.montant_total\n  WHEN NOT MATCHED THEN\n    INSERT (no_client, annee, montant_total)\n    VALUES (:new.no_client, v_annee, :new.montant_total);\nEND;" },
+      "explanation": "Cumul_Depenses_Client est une donnée dérivée (somme par client/année) ; un trigger AFTER INSERT sur Location la maintient cohérente automatiquement, sinon elle se désynchroniserait.",
+      "concepts": ["trigger", "trigger-row"]
+    },
+    {
+      "chapterSlug": "fragmentation",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 4,
+      "points": 2,
+      "prompt": "**Partie B – BDD répartie · 1.** Proposer un modèle de bases de données réparties sur différentes agences de location (Paris, Marseille, Lyon) en prenant en compte la répartition verticale et horizontale. Justifier vos choix.\n\n**Règles :**\n- Données clients et factures gérées par le siège centralisé (les agences ne stockent pas ces données).\n- Chaque agence gère uniquement les véhicules et locations effectuées chez elle.\n- Les responsables d'agence consultent toutes les informations du réseau.",
+      "payload": {
+        "rubric": [
+          { "id": "vert", "description": "Identifie la fragmentation verticale (Client/Facture au siège, Vehicule/Location aux agences)", "keywords": ["verticale", "verticalement", "projection", "siège", "centralisé"], "weight": 3 },
+          { "id": "horiz", "description": "Identifie la fragmentation horizontale de Location par agence", "keywords": ["horizontale", "horizontalement", "sélection", "agence", "filtré"], "weight": 3 },
+          { "id": "links", "description": "Mentionne database links / accès distant", "keywords": ["database link", "lien", "@", "distant", "remote"], "weight": 2 },
+          { "id": "vue-globale", "description": "Vue globale pour les responsables (UNION)", "keywords": ["UNION", "vue globale", "globale", "consolidé"], "weight": 1 }
+        ],
+        "minWords": 120
+      },
+      "solution": { "modelAnswer": "Architecture proposée : un site Siège + 3 sites Agences (Paris, Marseille, Lyon).\n\n**Au siège :** tables Client, Facture, Cumul_Depenses_Client (fragmentation verticale = projection des attributs sensibles centralisés).\n\n**Sur chaque agence :** Vehicule (filtré par agence), Location filtrée WHERE no_agence = code_agence_locale (fragmentation horizontale), Vehicule_Location associé.\n\n**Database links** : chaque agence ouvre un link db_siege pour requêter Client/Facture ; le siège ouvre des links db_paris, db_marseille, db_lyon vers chaque agence.\n\n**Pour la consultation par les responsables**, créer une vue globale au siège :\n\n```sql\nCREATE VIEW V_All_Locations AS\n  SELECT * FROM Location@db_paris\n  UNION ALL SELECT * FROM Location@db_marseille\n  UNION ALL SELECT * FROM Location@db_lyon;\n```\n\nJustification : les requêtes locales (80% du trafic) restent locales, le trafic réseau est minimisé, les données personnelles restent isolées au siège pour conformité." },
+      "explanation": "Combinaison de fragmentation verticale (privé/public au siège) et horizontale (Location par agence) avec database links et vue globale.",
+      "concepts": ["fragmentation-horizontale", "fragmentation-verticale", "fragmentation-mixte", "database-link"]
+    },
+    {
+      "chapterSlug": "replication",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "**Partie B – BDD répartie · 2.** On suppose que dans la base de données de l'agence de Paris, il existe une table contenant la relation Agence. Que faut-il faire dans les bases de données des autres agences pour optimiser l'accès aux informations de cette table ?",
+      "payload": {
+        "rubric": [
+          { "id": "replic", "description": "Propose la réplication via vue matérialisée", "keywords": ["matérialisée", "materialisée", "MATERIALIZED", "réplique", "réplication", "réplica", "copie"], "weight": 3 },
+          { "id": "refresh", "description": "Mentionne le rafraîchissement", "keywords": ["REFRESH", "rafraîchir", "rafraichir", "à jour", "actualiser"], "weight": 1 },
+          { "id": "perf", "description": "Argument de performance / pas de trafic réseau", "keywords": ["local", "performance", "trafic", "rapide", "économise"], "weight": 1 }
+        ],
+        "minWords": 30
+      },
+      "solution": { "modelAnswer": "Créer une vue matérialisée sur chaque autre agence qui réplique la table Agence depuis db_paris :\n\n```sql\nCREATE MATERIALIZED VIEW MV_Agence\n  REFRESH FAST ON COMMIT\n  AS SELECT * FROM Agence@db_paris;\n```\n\nCela évite des requêtes réseau systématiques : la donnée est lue localement. Le REFRESH FAST nécessite un log côté Paris ; on peut aussi opter pour un rafraîchissement périodique (REFRESH START WITH ... NEXT ...) si la fraîcheur instantanée n'est pas requise (la table Agence change rarement)." },
+      "explanation": "Réplication par vue matérialisée locale → accès local rapide sans trafic réseau.",
+      "concepts": ["replication", "vue-materialisee"]
+    }
+  ]
+}

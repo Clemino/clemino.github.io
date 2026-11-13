@@ -1,0 +1,334 @@
+---
+title: "Arbres de décision et critères de découpage"
+slug: criteres-decoupage
+order: 1
+estimatedReadMin: 20
+concepts: [arbre-de-decision, noeud-de-decision, feuille, classification, regression, critere-de-decoupage, entropie, indice-de-gini, gain-d-information]
+source: "DM_Slides_DT.pdf, ING2_GI_ML_Tree_SLIDES.pdf"
+---
+
+## Le contexte : répartir l'espace des instances
+
+L'**arbre de décision** est une **méthode d'apprentissage supervisé** — et,
+le cours le souligne, **très intuitive**. Reprenons le cadre de l'apprentissage
+supervisé.
+
+On considère un **ensemble d'apprentissage `D`** dont les éléments — les
+**exemples** — sont décrits par des **attributs indépendants** `A₁, A₂, …, Aₚ`
+et par l'**attribut cible `C`**.
+
+- Chaque attribut `Aₚ` prend ses valeurs dans un ensemble `Eₚ`, fini ou infini.
+  `Eₚ` peut être égal à `ℝ` — **variable numérique** — ou à un ensemble de `nₚ`
+  valeurs `{v₁, …, vₙₚ}` — **variable qualitative**.
+- L'attribut cible `C` prend ses valeurs dans un ensemble `E_C`. Dans les
+  problèmes de **régression**, `E_C` est égal à `ℝ`. Dans les problèmes de
+  **classification**, il est égal à un ensemble de `m` classes `{c₁, …, cₘ}`.
+
+Notons `E` l'**ensemble de toutes les instances possibles**, c'est-à-dire
+`E₁ × … × Eₚ`. **L'objectif est de répartir `E` en régions** (sous-ensembles)
+`R₁, R₂, …`, chacune définie par des **conditions** sur les valeurs des
+attributs `Aᵢ`, telles que, **sur chaque région, `C` est égale à — ou peut être
+estimée par — la même valeur**. Une fois réalisée, cette répartition permet de
+**prédire la valeur de `C` pour toute nouvelle instance**.
+
+> **À retenir** : un **arbre de décision** part d'un ensemble d'apprentissage
+> `D` d'exemples décrits par des attributs `A₁, …, Aₚ` et par une cible `C`. Il
+> **répartit l'espace des instances `E` en régions** sur lesquelles `C` prend
+> (ou peut être estimée par) une **même valeur**, ce qui permet de **prédire `C`
+> pour toute nouvelle instance**.
+
+## La structure d'un arbre de décision
+
+Un arbre de décision est une **structure qui définit une décomposition
+hiérarchique** de l'ensemble `E`. Le cours en décrit précisément les éléments.
+
+- **La racine** de l'arbre correspond à l'ensemble `E` tout entier.
+- **Chaque nœud `N`** de l'arbre — nœud interne ou feuille — correspond à un
+  **sous-ensemble `Eᴺ`** de `E`.
+- **À chaque nœud interne `N`**, un **test** est utilisé pour diviser le
+  sous-ensemble `Eᴺ` en fonction des propriétés des instances :
+  - le nœud `N` est **étiqueté par le test** ;
+  - **chaque arête (branche)** issue de `N` correspond à une **valeur du test**.
+- **Chaque feuille** indique une **valeur de `C`** : une **valeur réelle** dans
+  les problèmes de régression — on parle alors d'**arbre de régression** — ou
+  une **classe** dans les problèmes de classification — on parle alors d'**arbre
+  de classification**.
+
+Une feuille correspond donc à une **région / sous-ensemble `R` de `E`** ; son
+étiquette est la valeur de `C` affectée à toute instance appartenant à `R`.
+
+On parle d'**arbre binaire** lorsque chaque nœud se divise en exactement deux
+branches.
+
+| Élément de l'arbre | Correspondance |
+| --- | --- |
+| **Racine** | L'ensemble `E` de toutes les instances |
+| **Nœud interne** | Un sous-ensemble `Eᴺ`, étiqueté par un **test** |
+| **Branche (arête)** | Une **valeur du test** du nœud parent |
+| **Feuille** | Une **région `R`** de `E`, étiquetée par une valeur de `C` |
+
+> **À retenir** : un arbre de décision est une **décomposition hiérarchique**
+> de `E` ; la **racine** est `E`, chaque **nœud interne** porte un **test** et
+> chaque **branche** une **valeur du test**, chaque **feuille** porte une valeur
+> de `C` (une **classe** ou une **valeur réelle**).
+
+## Prédire avec un arbre : descendre jusqu'à une feuille
+
+La prédiction est simple. Pour prédire la valeur de `C` correspondant à une
+instance `(v₁, …, vₚ)`, on **parcourt l'arbre, de haut en bas**, en partant de
+la racine, et **en appliquant les tests successifs à l'instance**, jusqu'à
+atteindre une feuille. **La valeur de `C` est l'étiquette de cette feuille.**
+Autrement dit, on fait « descendre » la nouvelle observation dans l'arbre
+jusqu'à une feuille.
+
+Une remarque importante du cours : dans une feuille, **plusieurs classes** de la
+variable cible **peuvent être présentes** — la feuille n'est pas toujours
+parfaitement pure. Pour connaître la **classe prédite**, on calcule alors la
+**probabilité de chacune des classes dans la feuille** (la proportion de chaque
+classe parmi les exemples de la feuille) et **on choisit la plus probable**.
+
+Cette probabilité est précieuse : elle renseigne sur la **fiabilité de la
+prévision**. Une décision est **plus confortable** si une nouvelle observation a
+**95 %** de chance d'appartenir à `c₁` et 5 % à `c₂`, que si les pourcentages
+sont de **51 %** pour `c₁` et 49 % pour `c₂`.
+
+> **À retenir** : pour **prédire**, on fait **descendre l'instance** de la
+> racine à une **feuille** en appliquant les tests rencontrés ; la classe
+> prédite est la **classe majoritaire de la feuille**, et la **proportion** de
+> cette classe mesure la **fiabilité** de la prévision.
+
+## Deux exemples d'arbres
+
+Le cours illustre la structure par deux exemples.
+
+**Premier exemple — deux attributs numériques.** On dispose de deux attributs
+numériques `X1` et `X2` ; la racine correspond à l'ensemble `0 ≤ X1 ≤ a1`,
+`0 ≤ X2 ≤ a2`. Les tests appliqués sont de la forme `Xᵢ < cᵢ`. Par convention,
+la **branche gauche** correspond à la valeur **Vrai** du test, la **branche
+droite** à la valeur **Faux**. L'arbre découpe ainsi le rectangle des instances
+en régions rectangulaires `R1`, `R2`, `R3`.
+
+**Second exemple — l'ensemble *PlayTennis* de Tom Mitchell.** Ce jeu de données
+décrit `14` jours par quatre attributs qualitatifs et une classe `PlayTennis` à
+deux valeurs `Yes` / `No`.
+
+| Id | Outlook | Temperature | Humidity | Windy | PlayTennis |
+| --- | --- | --- | --- | --- | --- |
+| 1 | sunny | hot | high | false | No |
+| 2 | sunny | hot | high | true | No |
+| 3 | overcast | hot | high | false | Yes |
+| 4 | rainy | mild | high | false | Yes |
+| 5 | rainy | cool | normal | false | Yes |
+| 6 | rainy | cool | normal | true | No |
+| 7 | overcast | cool | normal | true | Yes |
+| 8 | sunny | mild | high | false | No |
+| 9 | sunny | cool | normal | false | Yes |
+| 10 | rainy | mild | normal | false | Yes |
+| 11 | sunny | mild | normal | true | Yes |
+| 12 | overcast | mild | high | true | Yes |
+| 13 | overcast | hot | normal | false | Yes |
+| 14 | rainy | mild | high | true | No |
+
+Les attributs y sont : **Outlook** (sunny, overcast, rainy), **Temperature**
+(hot, mild, cool), **Humidity** (high, normal) et **Windy** (true, false). Pour
+des attributs qualitatifs, les tests sont de la forme `Attribut = ?` et les
+branches sont étiquetées par les valeurs de l'attribut. Un arbre de décision
+possible pour ces données est, en notation indentée :
+
+```
+Outlook = sunny    --> Humidity = high   --> No
+                       Humidity = normal --> Yes
+Outlook = overcast --> Yes
+Outlook = rainy    --> Windy = false     --> Yes
+                       Windy = true      --> No
+```
+
+> **À retenir** : avec des attributs **numériques**, les tests sont des **seuils**
+> `Xᵢ < cᵢ` ; avec des attributs **qualitatifs**, ils sont de la forme `Attribut
+> = ?` et chaque branche porte une **valeur de l'attribut**. L'arbre découpe
+> l'espace des instances en **régions**.
+
+## Choisir le test d'un nœud : la pureté
+
+La question centrale de la construction est : **étant donné un nœud (et
+l'ensemble d'exemples qui lui correspond), quel attribut placer à ce nœud** —
+c'est-à-dire quel attribut utiliser pour partitionner l'ensemble des exemples ?
+
+Reprenons l'exemple *PlayTennis* à la racine : il y a **4 possibilités** —
+partitionner `D` selon `Outlook`, `Temperature`, `Humidity` ou `Windy`. Quel est
+le meilleur choix ?
+
+Le **critère de choix** s'appuie sur une idée simple : **puisque l'on recherche
+de petits arbres, on aimerait atteindre les feuilles le plus tôt possible**. Par
+conséquent, parmi les possibilités, on choisit celle qui produit les
+sous-ensembles **les plus purs**. L'idée, dit le cours, est de **faire converger
+l'arbre le plus rapidement possible vers des feuilles qui caractérisent une
+classe** — des feuilles contenant majoritairement une seule classe de la
+variable cible. *On préfère une feuille avec 15 satisfaits et 2 non satisfaits
+qu'une feuille avec 9 satisfaits et 8 non satisfaits.*
+
+La **pureté** d'un sous-ensemble dépend de la **répartition de ses éléments
+parmi les classes** :
+
+- la **pureté maximale** est atteinte par un ensemble dont **tous les éléments
+  appartiennent à la même classe** ;
+- l'**impureté maximale** est atteinte par un ensemble contenant le **même
+  nombre d'occurrences pour chaque classe** (répartition uniforme).
+
+Il existe **deux critères usuels** pour mesurer l'homogénéité de la répartition :
+l'**entropie** et l'**indice de Gini**. Soit `E` un ensemble et `E₁, …, E_k` une
+partition de `E` ; la **fréquence d'une classe `Eᵢ`** est donnée par
+`pᵢ = card(Eᵢ) / card(E)`.
+
+> **À retenir** : à chaque nœud, on choisit le test qui rend les sous-ensembles
+> **les plus purs** — un sous-ensemble est **pur** si ses éléments sont d'une
+> **même classe**, **impur** si les classes y sont **équiréparties**. Deux
+> critères mesurent cette (im)pureté : l'**entropie** et l'**indice de Gini**.
+
+## L'entropie
+
+Le cours définit l'**entropie** ainsi.
+
+> **Définition.** Étant donné un ensemble d'exemples `D`, dont chaque exemple
+> appartient à l'une des classes `(C₁, …, Cₙ)`, l'**entropie de `D`** est
+> définie par :
+>
+> `Ent(D) = − Σᵢ₌₁ⁿ (pᵢ · log pᵢ)`
+>
+> où `pᵢ = (nombre d'exemples de D dont la classe est Cᵢ) / (nombre total
+> d'exemples de D)`.
+
+Examinons les **cas particuliers**.
+
+- Si l'on a `n` classes et que **chaque classe vérifie `pᵢ = 1/n`** (toutes les
+  classes ont le même nombre d'éléments), alors `Ent(D) = −n · (1/n) ·
+  log(1/n) = log n`. En particulier, `Ent(D) = 1` dans le cas où `n = 2` (deux
+  classes `{Vrai, Faux}`, `{Oui, Non}`, …) avec le logarithme en base 2.
+- Si l'on a `p_k = 1` pour une valeur `k` (**tous les éléments appartiennent à
+  la même classe**), alors `Ent(D) = 0`.
+
+L'entropie est donc **maximale pour la répartition uniforme** (impureté
+maximale) et **nulle pour un ensemble pur**.
+
+**Exemple — l'entropie de *PlayTennis*.** Dans cet exemple, on a deux classes
+`Yes` et `No`. Le nombre d'exemples de classe `Yes` est `9`, donc `p_yes = 9/14`.
+Le nombre d'exemples de classe `No` est `5`, donc `p_no = 5/14`. L'entropie est :
+
+`Ent(D) = − (9/14) log(9/14) − (5/14) log(5/14) = 0,940`
+
+> **À retenir** : l'**entropie** `Ent(D) = − Σ pᵢ log pᵢ` mesure l'impureté ;
+> elle vaut **`0`** pour un ensemble **pur**, **`log n`** pour `n` classes
+> **équiréparties** (donc **`1`** pour deux classes équiréparties). Pour
+> *PlayTennis*, `Ent(D) = 0,940`.
+
+## L'indice de Gini
+
+Les proportions `pⱼ` servent aussi à définir l'**indice de Gini**.
+
+> **Définition.** Étant donné un ensemble d'exemples `D`, dont chaque exemple
+> appartient à l'une des classes `(C₁, …, Cₙ)`, l'**indice de Gini de `D`** est
+> défini par :
+>
+> `Gini(D) = Σᵢ₌₁ⁿ pᵢ · (1 − pᵢ)`
+>
+> ou encore, de façon équivalente :
+>
+> `Gini(D) = 1 − Σᵢ₌₁ⁿ pᵢ²`
+
+Comme l'entropie, l'indice de Gini est une **fonction positive**, **maximale
+lorsqu'il y a uniformité** `pᵢ = card(E)/k`, et **nulle pour un ensemble pur**.
+C'est le **critère d'impureté de l'algorithme CART** (étudié à la section
+suivante).
+
+Le cours compare les deux feuilles évoquées plus haut, en classification binaire
+avec le logarithme népérien pour l'entropie :
+
+| Feuille | Répartition | `p₁` | `p₂` | `Gini` | `Ent` |
+| --- | --- | --- | --- | --- | --- |
+| Feuille 1 | 15 satisfaits, 2 non satisfaits | `15/17` | `2/17` | `0,21` | `−0,36` |
+| Feuille 2 | 9 satisfaits, 8 non satisfaits | `9/17` | `8/17` | `0,50` | `−0,69` |
+
+La feuille la plus **pure** (Feuille 1) a les valeurs d'impureté **les plus
+faibles** : ces critères distinguent bien une bonne feuille d'une mauvaise.
+
+> **À retenir** : l'**indice de Gini** `Gini(D) = Σ pᵢ(1 − pᵢ) = 1 − Σ pᵢ²` est
+> un second critère d'impureté — celui de **CART** — **nul** pour un ensemble
+> **pur**, **maximal** pour des classes **équiréparties**.
+
+## Le gain d'information
+
+Choisir un attribut, c'est **comparer l'impureté avant et après partitionnement**.
+Le cours définit le **gain d'information** :
+
+> `IG = Entropie avant partitionnement − Entropie après partitionnement`
+
+Cette grandeur est appelée **gain d'information**. **Puisque l'objectif est
+d'améliorer la pureté, on choisit l'attribut pour lequel ce gain est le plus
+élevé.** Le même raisonnement vaut pour l'indice de Gini :
+
+`Gain = Gini(E) − Σᵢ₌₁ᵏ pᵢ · Gini(Eᵢ)` &nbsp;&nbsp;ou&nbsp;&nbsp;
+`Gain = Ent(E) − Σᵢ₌₁ᵏ pᵢ · Ent(Eᵢ)`
+
+L'**entropie après partitionnement** (la « nouvelle entropie ») est la **moyenne
+des entropies des sous-ensembles, pondérée par leur taille**. Si l'on utilise un
+attribut `A` qui divise `D` en `p` sous-ensembles `D₁, …, Dₚ`, cette quantité
+vaut `Σⱼ (|Dⱼ| / |D|) · Ent(Dⱼ)`. Le gain est **maximal lorsque le choix d'un
+attribut permet de classer correctement toutes les instances**.
+
+**Exemple — gain de chaque attribut de *PlayTennis*.** L'entropie de `D` à la
+racine vaut `E = 0,940`. Le cours calcule, attribut par attribut :
+
+- **Outlook** divise `D` en trois sous-ensembles : `D₁` (taille 5, entropie
+  `0,97`), `D₂` (taille 4, entropie `0`), `D₃` (taille 5, entropie `0,97`). La
+  nouvelle entropie est `E_outlook = (5/14)·0,97 + (4/14)·0 + (5/14)·0,97 =
+  0,69`, d'où `IG_outlook = 0,94 − 0,69 = 0,25`.
+- **Temperature** divise `D` en trois sous-ensembles : `D₁` (taille 4, entropie
+  `1`), `D₂` (taille 6, entropie `0,92`), `D₃` (taille 4, entropie `0,81`). La
+  nouvelle entropie est `E_temperature = (4/14)·1 + (6/14)·0,92 + (4/14)·0,81 =
+  0,91`, d'où `IG_temperature = 0,94 − 0,91 = 0,03`.
+- **Humidity** : `E_humidity = 0,79`, d'où `IG_humidity = 0,94 − 0,79 = 0,15`.
+- **Windy** : `E_Windy = 0,89`, d'où `IG_Windy = 0,94 − 0,89 = 0,05`.
+
+| Attribut | Entropie après partitionnement | Gain d'information |
+| --- | --- | --- |
+| **Outlook** | `0,69` | **`0,25`** |
+| Temperature | `0,91` | `0,03` |
+| Humidity | `0,79` | `0,15` |
+| Windy | `0,89` | `0,05` |
+
+L'attribut de **plus haut gain est `Outlook`** (`0,25`) : c'est lui qui sera
+placé à la racine de l'arbre.
+
+> ⚠️ Le **gain ne permet pas de comparer des attributs n'ayant pas le même
+> nombre de modalités**. Deux solutions, souvent adoptées par les logiciels :
+> **binariser les variables** ou **pondérer le gain**. Le cours met aussi en
+> garde : il faut **construire des arbres équilibrés** — un arbre à 4 feuilles
+> dont une contiendrait 99 % des observations ne serait pas prédictif.
+
+> **À retenir** : le **gain d'information** est l'impureté **avant**
+> partitionnement moins l'impureté **moyenne pondérée après** ; à chaque nœud,
+> on retient l'attribut qui le **maximise**. Pour *PlayTennis*, c'est **Outlook**
+> (`IG = 0,25`). Attention : le gain favorise les attributs à **nombreuses
+> modalités** et les **arbres déséquilibrés** sont peu prédictifs.
+
+## Synthèse de la section
+
+Un **arbre de décision** est une **méthode d'apprentissage supervisé** qui
+réalise une **décomposition hiérarchique** de l'espace des instances `E` : la
+**racine** est `E`, chaque **nœud interne** porte un **test** sur les attributs,
+chaque **branche** une **valeur du test**, chaque **feuille** une valeur de la
+cible `C` — une **classe** (arbre de classification) ou une **valeur réelle**
+(arbre de régression). On **prédit** en faisant **descendre** une instance de la
+racine à une feuille ; la classe prédite est la **classe majoritaire** de la
+feuille, dont la proportion mesure la **fiabilité**. La construction repose sur
+le **choix du test** de chaque nœud : on retient l'attribut qui rend les
+sous-ensembles **les plus purs**, mesurée par l'**entropie**
+`Ent(D) = − Σ pᵢ log pᵢ` ou l'**indice de Gini** `Gini(D) = 1 − Σ pᵢ²` — toutes
+deux **nulles** sur un ensemble pur et **maximales** sur des classes
+équiréparties. L'attribut choisi est celui de **gain d'information** maximal :
+impureté avant moins impureté **moyenne pondérée** après.
+
+> **À retenir** : un arbre de décision **découpe `E` en régions** via des tests ;
+> on **prédit** par descente jusqu'à une **feuille** (classe majoritaire). À
+> chaque nœud, on choisit l'attribut de **gain** maximal — gain mesuré par
+> l'**entropie** ou l'**indice de Gini**, deux critères de **pureté**.

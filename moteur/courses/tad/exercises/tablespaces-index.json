@@ -1,0 +1,388 @@
+[
+  {
+    "chapterSlug": "stockage-physique",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce qu'un tablespace ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Un fichier physique de données" },
+      { "id": "b", "label": "Un conteneur logique Oracle regroupant des fichiers physiques" },
+      { "id": "c", "label": "Une table système" },
+      { "id": "d", "label": "Une transaction" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Un tablespace est un conteneur logique qui regroupe un ou plusieurs fichiers .dbf et héberge les segments (tables, index, etc.).",
+    "concepts": ["tablespace"]
+  },
+  {
+    "chapterSlug": "stockage-physique",
+    "type": "MCQ_MULTI",
+    "difficulty": 1,
+    "points": 2,
+    "prompt": "Quels tablespaces existent toujours à la création d'une base Oracle ?",
+    "payload": { "options": [
+      { "id": "a", "label": "SYSTEM" },
+      { "id": "b", "label": "USERS" },
+      { "id": "c", "label": "REDO" },
+      { "id": "d", "label": "ADMIN" }
+    ]},
+    "solution": { "correct": ["a", "b"] },
+    "explanation": "SYSTEM (segments système, dictionnaire) et USERS (objets utilisateur par défaut) existent toujours.",
+    "concepts": ["tablespace"]
+  },
+  {
+    "chapterSlug": "stockage-physique",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque famille de segment à son rôle.",
+    "payload": {
+      "left": [
+        { "id": "don", "label": "Segment de données" },
+        { "id": "idx", "label": "Segment d'index" },
+        { "id": "tmp", "label": "Segment temporaire" },
+        { "id": "rb", "label": "Segment d'annulation (rollback)" }
+      ],
+      "right": [
+        { "id": "tbl", "label": "Stocke les lignes des tables et clusters" },
+        { "id": "i", "label": "Stocke les structures d'index" },
+        { "id": "t", "label": "Espace disque temporaire pour les opérations SQL" },
+        { "id": "r", "label": "Image avant modification, permettant l'annulation" }
+      ]
+    },
+    "solution": { "pairs": { "don": "tbl", "idx": "i", "tmp": "t", "rb": "r" } },
+    "explanation": "Données → tables/clusters, index → structures de recherche, temporaires → tris en mémoire débordée, rollback → image avant pour ROLLBACK.",
+    "concepts": ["segment-donnees", "segment-index", "segment-temporaire", "segment-rollback"]
+  },
+  {
+    "chapterSlug": "stockage-physique",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle est l'extension typique d'un fichier de données Oracle ?",
+    "payload": { "options": [
+      { "id": "a", "label": ".sql" },
+      { "id": "b", "label": ".log" },
+      { "id": "c", "label": ".dbf" },
+      { "id": "d", "label": ".ctl" }
+    ]},
+    "solution": { "correct": ["c"] },
+    "explanation": ".dbf = fichiers de données. .ctl = fichiers de contrôle. .rdo/.log = redo log.",
+    "concepts": ["fichier-donnees", "redo-log", "fichier-controle"]
+  },
+  {
+    "chapterSlug": "stockage-physique",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Une base Oracle nécessite au minimum un fichier de données, deux fichiers Redo Log et un fichier de contrôle.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Exact. C'est le minimum vital Oracle.",
+    "concepts": ["fichier-donnees", "redo-log", "fichier-controle"]
+  },
+  {
+    "chapterSlug": "stockage-physique",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez : créer un utilisateur `bob` dont l'espace de travail par défaut est `users` et le tablespace temporaire est `temp`.",
+    "payload": {
+      "template": "CREATE USER bob IDENTIFIED BY pwd\n  DEFAULT {{kw1}} users\n  {{kw2}} TABLESPACE temp;",
+      "slots": [{ "id": "kw1" }, { "id": "kw2" }]
+    },
+    "solution": { "answers": { "kw1": "TABLESPACE", "kw2": "TEMPORARY" }, "caseSensitive": false },
+    "explanation": "DEFAULT TABLESPACE users TEMPORARY TABLESPACE temp.",
+    "concepts": ["create-user", "tablespace", "segment-temporaire"]
+  },
+  {
+    "chapterSlug": "indexs-btree",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Comment calcule-t-on la sélectivité d'un index ?",
+    "payload": { "options": [
+      { "id": "a", "label": "(nb de lignes de la table) / (nb de valeurs différentes de l'index)" },
+      { "id": "b", "label": "(nb de valeurs différentes de l'index) / (nb de lignes de la table)" },
+      { "id": "c", "label": "nb de blocs disque utilisés par l'index" },
+      { "id": "d", "label": "Pourcentage de lignes NULL" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Sélectivité = valeurs distinctes / lignes. Proche de 1 = forte sélectivité.",
+    "concepts": ["selectivite-index"]
+  },
+  {
+    "chapterSlug": "indexs-btree",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Un index B-tree gère les valeurs NULL.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Le B-tree NE gère PAS les NULL. Une recherche WHERE col IS NULL ne peut donc pas utiliser un index B-tree.",
+    "concepts": ["index-btree"]
+  },
+  {
+    "chapterSlug": "indexs-btree",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "La sélectivité d'un index sur une clé primaire est de 1.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Une clé primaire a toutes valeurs distinctes : la sélectivité est maximale = 1.",
+    "concepts": ["selectivite-index"]
+  },
+  {
+    "chapterSlug": "indexs-btree",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Le B-tree est rentable quand :",
+    "payload": { "options": [
+      { "id": "a", "label": "Beaucoup de NULL dans la colonne" },
+      { "id": "b", "label": "Sélectivité élevée (proche de 1)" },
+      { "id": "c", "label": "Sélectivité faible (peu de valeurs)" },
+      { "id": "d", "label": "Table très petite (<100 lignes)" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "B-tree = forte sélectivité. Pour faible sélectivité, préférer Bitmap.",
+    "concepts": ["index-btree", "selectivite-index"]
+  },
+  {
+    "chapterSlug": "indexs-bitmap",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Conditions favorables à l'utilisation d'un index Bitmap :",
+    "payload": { "options": [
+      { "id": "a", "label": "Faible sélectivité de la colonne" },
+      { "id": "b", "label": "Beaucoup de lignes dans la table" },
+      { "id": "c", "label": "Très peu d'activités de mise à jour" },
+      { "id": "d", "label": "Forte sélectivité (clé primaire)" },
+      { "id": "e", "label": "OLTP intensif avec beaucoup d'INSERT" }
+    ]},
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "Bitmap : faible sélectivité, beaucoup de lignes, peu de MAJ. C'est typique du décisionnel.",
+    "concepts": ["index-bitmap"]
+  },
+  {
+    "chapterSlug": "indexs-bitmap",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "L'index Bitmap traite la valeur NULL comme une valeur ordinaire et peut donc être utilisé dans une recherche `WHERE col IS NULL`.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Contrairement au B-tree, le Bitmap considère NULL comme une valeur indexable.",
+    "concepts": ["index-bitmap"]
+  },
+  {
+    "chapterSlug": "indexs-bitmap",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pour quel exemple un index Bitmap est-il le plus adapté ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Colonne 'matricule_employe' unique" },
+      { "id": "b", "label": "Colonne 'sexe' (M/F) sur 10 millions de lignes peu modifiées" },
+      { "id": "c", "label": "Colonne 'date_creation' sur des inserts continus" },
+      { "id": "d", "label": "Colonne 'email' dans une table de 100 lignes" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Sexe = 2 valeurs sur 10M lignes (faible sélectivité), peu modifiées : cas d'école du Bitmap.",
+    "concepts": ["index-bitmap", "selectivite-index"]
+  },
+  {
+    "chapterSlug": "indexs-bitmap",
+    "type": "TRUE_FALSE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "L'index Bitmap est disponible dans toutes les éditions d'Oracle, y compris Express Edition (XE).",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. L'index Bitmap n'est disponible qu'en édition Entreprise.",
+    "concepts": ["index-bitmap"]
+  },
+  {
+    "chapterSlug": "creation-indexs",
+    "type": "SQL_DDL",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Créez un index B-tree unique sur la colonne `email` de la table `Client`.",
+    "payload": {
+      "requiredElements": [
+        { "kind": "keyword", "keyword": "CREATE", "description": "CREATE" },
+        { "kind": "keyword", "keyword": "UNIQUE", "description": "UNIQUE" },
+        { "kind": "keyword", "keyword": "INDEX", "description": "INDEX" },
+        { "kind": "keyword", "keyword": "Client", "description": "Table Client" },
+        { "kind": "keyword", "keyword": "email", "description": "Colonne email" }
+      ]
+    },
+    "solution": { "ddl": "CREATE UNIQUE INDEX idx_client_email ON Client(email);" },
+    "explanation": "CREATE UNIQUE INDEX nom ON table(colonne);",
+    "concepts": ["index-btree"]
+  },
+  {
+    "chapterSlug": "creation-indexs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Lequel des indexs ci-dessous accélèrera la requête `SELECT * FROM Client WHERE UPPER(nom) = 'DUPONT'` ?",
+    "payload": { "options": [
+      { "id": "a", "label": "CREATE INDEX i ON Client(nom);" },
+      { "id": "b", "label": "CREATE BITMAP INDEX i ON Client(nom);" },
+      { "id": "c", "label": "CREATE INDEX i ON Client(UPPER(nom));" },
+      { "id": "d", "label": "CREATE INDEX i ON Client(nom DESC);" }
+    ]},
+    "solution": { "correct": ["c"] },
+    "explanation": "Un index par fonction sur UPPER(nom) sert exactement cette requête. Un index sur nom seul ne suffit pas car la fonction UPPER masque la valeur.",
+    "concepts": ["index-fonction"]
+  },
+  {
+    "chapterSlug": "creation-indexs",
+    "type": "TRUE_FALSE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "On peut créer un index par fonction utilisant `SYSDATE`.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "SYSDATE n'est pas déterministe (sa valeur change). Un index par fonction exige une fonction déterministe.",
+    "concepts": ["index-fonction"]
+  },
+  {
+    "chapterSlug": "creation-indexs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Un index composite `(nom, prenom)` peut accélérer :",
+    "payload": { "options": [
+      { "id": "a", "label": "WHERE prenom = 'Marie' (seule)" },
+      { "id": "b", "label": "WHERE nom = 'Dupont' AND prenom = 'Marie'" },
+      { "id": "c", "label": "WHERE prenom LIKE 'M%' AND nom = 'Dupont'" },
+      { "id": "d", "label": "WHERE LOWER(prenom) = 'marie'" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Un index composite suit l'ordre déclaré. Il sert WHERE nom = ? AND prenom = ? mais pas WHERE prenom = ? seul.",
+    "concepts": ["index-btree"]
+  },
+  {
+    "chapterSlug": "creation-indexs",
+    "type": "SQL_DDL",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Créez un index Bitmap nommé `idx_etat` sur la colonne `etat` de la table `Commande`.",
+    "payload": {
+      "requiredElements": [
+        { "kind": "keyword", "keyword": "CREATE", "description": "CREATE" },
+        { "kind": "keyword", "keyword": "BITMAP", "description": "Mot-clé BITMAP" },
+        { "kind": "keyword", "keyword": "INDEX", "description": "INDEX" },
+        { "kind": "keyword", "keyword": "idx_etat", "description": "Nom de l'index" },
+        { "kind": "keyword", "keyword": "Commande", "description": "Table Commande" },
+        { "kind": "keyword", "keyword": "etat", "description": "Colonne etat" }
+      ]
+    },
+    "solution": { "ddl": "CREATE BITMAP INDEX idx_etat ON Commande(etat);" },
+    "explanation": "Syntaxe : CREATE BITMAP INDEX nom ON table(col);",
+    "concepts": ["index-bitmap"]
+  },
+  {
+    "chapterSlug": "clusters",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce qu'un cluster Oracle ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Un groupe de serveurs Oracle interconnectés" },
+      { "id": "b", "label": "Un objet de stockage qui regroupe des tables ayant des colonnes communes pour optimiser les jointures" },
+      { "id": "c", "label": "Un type d'index spécial pour les très grosses tables" },
+      { "id": "d", "label": "Une vue matérialisée multi-tables" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Un cluster Oracle stocke ensemble les lignes de tables différentes ayant des colonnes communes, pour optimiser les jointures maître-détail.",
+    "concepts": ["cluster"]
+  },
+  {
+    "chapterSlug": "clusters",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Dans un cluster, les colonnes communes sont physiquement dupliquées dans chaque table.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. Les colonnes communes sont stockées une seule fois, pas dupliquées. Un index de cluster est créé sur ces colonnes.",
+    "concepts": ["cluster"]
+  },
+  {
+    "chapterSlug": "clusters",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Mettez dans le bon ordre les étapes pour créer deux tables en cluster :",
+    "payload": {
+      "items": [
+        { "id": "1", "label": "CREATE CLUSTER cl_fact (cli_id NUMBER) ...;" },
+        { "id": "2", "label": "CREATE INDEX idx_cl ON CLUSTER cl_fact;" },
+        { "id": "3", "label": "CREATE TABLE Client (cli_id NUMBER PK, ...) CLUSTER cl_fact (cli_id);" },
+        { "id": "4", "label": "CREATE TABLE Facture (...) CLUSTER cl_fact (cli_id);" }
+      ]
+    },
+    "solution": { "order": ["1", "2", "3", "4"] },
+    "explanation": "Cluster d'abord, puis son index, puis les tables qui le réfèrent.",
+    "concepts": ["cluster"]
+  },
+  {
+    "chapterSlug": "clusters",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Dans quel cas un cluster Oracle est-il PEU intéressant ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Quand on accède toujours conjointement aux tables maître et détail" },
+      { "id": "b", "label": "Quand la table maître est très souvent interrogée seule sans la table détail" },
+      { "id": "c", "label": "Quand les deux tables ont des colonnes communes typiques (FK→PK)" },
+      { "id": "d", "label": "Quand on enchaîne des jointures naturelles fréquentes" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Un cluster n'a d'intérêt que si on accède toujours conjointement aux tables. Si la table maître est souvent lue seule, le regroupement physique est contre-productif.",
+    "concepts": ["cluster", "maitre-detail"]
+  },
+  {
+    "chapterSlug": "clusters",
+    "type": "ORDERING",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Pour mettre une table existante dans un cluster, dans quel ordre procéder ?",
+    "payload": {
+      "items": [
+        { "id": "1", "label": "Créer une nouvelle table avec l'option CLUSTER" },
+        { "id": "2", "label": "Copier le contenu de la table initiale" },
+        { "id": "3", "label": "Supprimer l'ancienne table" },
+        { "id": "4", "label": "Renommer éventuellement la nouvelle" }
+      ]
+    },
+    "solution": { "order": ["1", "2", "3", "4"] },
+    "explanation": "Créer-copier-supprimer-renommer : c'est la séquence imposée par Oracle pour migrer vers un cluster.",
+    "concepts": ["cluster"]
+  },
+  {
+    "chapterSlug": "clusters",
+    "type": "RUBRIC_OPEN",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Vous avez une table `Commande` et une table `LigneCommande` avec une relation 1-n. Les requêtes principales joignent toujours les deux tables. Faut-il créer un cluster ? Justifiez en mentionnant les avantages et inconvénients.",
+    "payload": {
+      "rubric": [
+        { "id": "yes", "description": "Recommande le cluster", "keywords": ["oui", "favorable", "intéressant", "pertinent"], "weight": 2 },
+        { "id": "perf", "description": "Argument performance / jointure", "keywords": ["jointure", "performance", "rapprochés", "disque", "E/S", "ES"], "weight": 2 },
+        { "id": "dup", "description": "Mentionne la non-duplication", "keywords": ["non duplique", "non-duplique", "non duplication", "une seule"], "weight": 1 },
+        { "id": "cost", "description": "Mentionne un inconvénient (insert plus lent ou contre-indication)", "keywords": ["insertion", "plus lent", "lent", "coût", "couteux"], "weight": 1 }
+      ],
+      "minWords": 60
+    },
+    "solution": { "modelAnswer": "Oui, le cluster est pertinent. Les deux tables sont en relation maître-détails (Commande → LigneCommande) et les jointures sont fréquentes. Un cluster sur la colonne commune (num_commande) rapprochera physiquement les lignes correspondantes, réduisant les E/S disque lors des jointures. De plus, les colonnes communes ne seront pas physiquement dupliquées, économisant l'espace. Inconvénient : les insertions seront un peu plus lentes car Oracle doit placer chaque ligne près de son maître. À éviter si on devait souvent lire les commandes sans les lignes associées." },
+    "explanation": "Bonne réponse : oui car jointures fréquentes maître-détails ; avantages (E/S réduites, pas de duplication) ; nuancer (inserts plus lents).",
+    "concepts": ["cluster", "maitre-detail"]
+  }
+]

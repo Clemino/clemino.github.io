@@ -1,0 +1,140 @@
+---
+title: Packages PL/SQL
+slug: packages
+order: 4
+estimatedReadMin: 8
+concepts: [package, package-body]
+source: "CM6, slides 30-35"
+---
+
+## Qu'est-ce qu'un package ?
+
+Un **package** regroupe sous une **même entité** plusieurs éléments PL/SQL apparentés :
+
+- procédures et fonctions,
+- exceptions,
+- curseurs,
+- variables et constantes.
+
+C'est l'unité de modularité du code PL/SQL. On y rassemble toute la logique d'un domaine métier (facturation, RH, gestion de stocks…).
+
+### Bénéfices
+
+- **Encapsulation** : on cache l'implémentation derrière une interface publique.
+- **Visibilité contrôlée** : on choisit ce qui est exposé (déclaration) et ce qui est privé (corps seul).
+- **État de session** : les variables globales déclarées dans un package persistent durant toute la session.
+- **Rôles d'application** : un package peut être associé à un rôle automatiquement activé à son exécution (cf. CM1).
+
+## Deux parties
+
+Un package se compose de **deux parties** indépendantes :
+
+1. **Déclaration (spécification)** : expose les éléments **publics** (signature des procédures/fonctions, types, variables globales, exceptions).
+2. **Description (body)** : contient les **définitions** complètes — code des procédures/fonctions publiques et **éventuellement** des éléments privés non exposés.
+
+### Déclaration (spec)
+
+```sql
+CREATE [OR REPLACE] PACKAGE <nom_pkg> [IS|AS]
+   [<déclaration des variables/constantes>;]
+   [<déclaration des exceptions>;]
+   [<déclaration de procédure>;]
+   [<déclaration de fonction>;]
+   ...
+END <nom_pkg>;
+```
+
+Note : les déclarations de procédures/fonctions ne contiennent que la **signature** (nom, paramètres, type de retour pour les fonctions), **sans le corps** (`BEGIN ... END`).
+
+### Description (body)
+
+```sql
+CREATE [OR REPLACE] PACKAGE BODY <nom_pkg> [IS|AS]
+   [<déclaration de variable privée>;]
+   [<déclaration et corps de procédure>;]
+   [<déclaration et corps de fonction>;]
+   ...
+END <nom_pkg>;
+```
+
+Le body implémente les éléments déclarés dans le spec et peut **en plus** déclarer des éléments privés invisibles à l'extérieur.
+
+## Exemple complet
+
+```sql
+CREATE OR REPLACE PACKAGE pkg_utilisateur IS
+   -- Constante publique
+   c_PI CONSTANT NUMBER := 3.14159;
+
+   -- Variable globale publique
+   vg_user VARCHAR2(10);
+
+   -- Signature de procédure
+   PROCEDURE logue(p_str IN VARCHAR2);
+   PROCEDURE init;
+
+   -- Signature de fonction
+   FUNCTION rech(p_id IN user.id%TYPE) RETURN user.usr_no%TYPE;
+END pkg_utilisateur;
+/
+
+CREATE OR REPLACE PACKAGE BODY pkg_utilisateur IS
+
+   -- Implémentation de logue
+   PROCEDURE logue(p_str IN VARCHAR2) IS
+      <variables>
+   BEGIN
+      ...
+   END logue;
+
+   -- Implémentation de init
+   PROCEDURE init IS
+   BEGIN
+      ...
+   END init;
+
+   -- (variable privée non exposée)
+   v_count_local NUMBER := 0;
+
+   FUNCTION rech(p_id IN user.id%TYPE) RETURN user.usr_no%TYPE IS
+      v_res user.usr_no%TYPE;
+   BEGIN
+      ...
+      RETURN v_res;
+   END rech;
+
+END pkg_utilisateur;
+/
+```
+
+## Utilisation
+
+On appelle un élément du package par notation pointée :
+
+```sql
+BEGIN
+   pkg_utilisateur.init();
+   pkg_utilisateur.logue('Bonjour');
+   v := pkg_utilisateur.rech(42);
+END;
+```
+
+On peut aussi octroyer le droit d'exécution sur le package entier :
+
+```sql
+GRANT EXECUTE ON pkg_utilisateur TO autre_user;
+```
+
+## Bonnes pratiques
+
+- **Concevoir l'interface (spec) d'abord** : c'est elle que les autres modules utiliseront.
+- **Cacher l'état interne** : déclarer les variables globales nécessaires uniquement dans le body si elles n'ont pas à être manipulées de l'extérieur.
+- **Versionner** : modifier le body sans toucher au spec n'invalide pas les procédures appelantes. Modifier le spec invalide tout.
+- **Découper par domaine** : un package par sujet métier, plutôt qu'un giga-package fourre-tout.
+
+> **À retenir**
+> - Package = unité de modularité : procédures, fonctions, exceptions, curseurs, variables.
+> - **2 parties** : `PACKAGE` (spec) déclare le public, `PACKAGE BODY` (body) implémente + privé.
+> - Notation `package.element(...)` pour appeler.
+> - `GRANT EXECUTE ON pkg TO user;` accorde l'usage du package.
+> - Modifier le body sans toucher au spec n'invalide pas le code appelant.

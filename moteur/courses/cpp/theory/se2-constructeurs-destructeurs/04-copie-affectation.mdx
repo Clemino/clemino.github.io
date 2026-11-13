@@ -1,0 +1,268 @@
+---
+title: "Constructeur de copie et operator="
+slug: copie-affectation
+order: 4
+estimatedReadMin: 12
+concepts: [constructeur-copie, copie-superficielle, copie-profonde, operateur-affectation, regle-des-trois, fonction-amie]
+source: "Cours 2 — Constructeurs & Destructeurs"
+---
+
+## Copier un objet
+
+Que se passe-t-il quand on **copie** un objet dans un autre ? Deux opérations distinctes peuvent le faire :
+
+```cpp
+Fraction f1(5, 6);
+Fraction f2(f1);     // constructeur de copie
+Fraction f3;
+f3 = f1;             // opérateur d'affectation
+```
+
+- `Fraction f2(f1);` **crée** un nouvel objet `f2` à partir de `f1` : c'est le **constructeur de copie**.
+- `f3 = f1;` modifie un objet `f3` **déjà existant** pour qu'il prenne la valeur de `f1` : c'est l'**opérateur d'affectation** `operator=`.
+
+Pour les classes simples, ces deux opérations ne posent **aucun problème**. Le danger apparaît avec les classes qui gèrent de l'**allocation dynamique** — c'est tout l'enjeu de ce chapitre.
+
+## Le comportement par défaut
+
+Si le programmeur ne définit rien, le compilateur fournit une **version par défaut** des deux opérations.
+
+> Par défaut, la copie et l'affectation effectuent une **copie membre à membre** (*membre par membre*) de la source vers la destination.
+
+```cpp
+class Compte {
+        double actif;
+    public:
+        Compte(double a);
+};
+
+Compte C(2855.20);
+Compte B(450.30);
+B = C;        // affectation membre à membre : B.actif reçoit 2855.20
+```
+
+Chaque attribut de `C` est copié dans l'attribut correspondant de `B`. Pour une classe dont tous les attributs sont des types simples (`int`, `double`...), c'est exactement ce qu'on veut.
+
+## Recopie ou affectation : ne pas confondre
+
+Une même syntaxe `=` peut déclencher **l'une ou l'autre** opération. Le critère est : **l'objet de gauche existe-t-il déjà ?**
+
+```cpp
+Compte C(280.98);
+
+Compte B(C);        // constructeur de copie : B est CRÉÉ à partir de C
+Compte D = C;       // constructeur de copie aussi : D est CRÉÉ ici même
+```
+
+Le `=` dans `Compte D = C;` **n'est pas** une affectation : c'est une **initialisation**, qui appelle le **constructeur de copie**. La règle :
+
+```cpp
+Compte B;           // création de l'objet B (constructeur par défaut)
+B = C;              // ici, pas de recopie : uniquement l'AFFECTATION,
+                    // car l'objet B est déjà créé
+```
+
+- `=` **à la création** d'un objet → **constructeur de copie** ;
+- `=` sur un objet **déjà construit** → **opérateur d'affectation**.
+
+## Quand le constructeur de copie est-il appelé ?
+
+Le constructeur de copie est invoqué dans **trois situations** :
+
+1. lors de l'**initialisation** d'un objet à partir d'un autre — `Fraction f2(f1);` ou `Fraction f2 = f1;` ;
+2. lors du **passage d'un objet par valeur** en argument d'une fonction — l'argument est une copie du paramètre effectif ;
+3. lors du **retour d'un objet par valeur** par une fonction — la valeur de retour est une copie.
+
+Les situations 2 et 3 sont silencieuses : on ne « voit » aucun `=`, et pourtant une copie a lieu. C'est pour cela que le constructeur de copie prend son argument **par référence** (voir plus bas) : le passer par valeur exigerait... une copie, donc un appel au constructeur de copie — récursion infinie.
+
+## Une classe qui alloue : `Vector`
+
+Considérons une classe `Vector` qui détient un **tableau alloué dynamiquement**. C'est le cas critique.
+
+```cpp
+// vector.h
+class Vector {
+    private:
+        double* elem;        // pointeur vers un tableau sur le tas
+        unsigned int sz;
+    public:
+        Vector(unsigned int s);
+        ~Vector();
+};
+```
+
+```cpp
+// vector.cpp
+Vector::Vector(unsigned int s) : elem{new double[s]}, sz{s} {}
+
+Vector::~Vector() { delete[] elem; }
+```
+
+Le constructeur **alloue** un tableau de `s` doubles ; le destructeur le **libère**. Tout semble correct... jusqu'à ce qu'on copie un `Vector`.
+
+## Copie superficielle : le piège du pointeur
+
+Avec la copie **par défaut** (membre à membre), copier un `Vector` copie le pointeur `elem` **tel quel** — c'est-à-dire l'**adresse**, pas le tableau pointé. C'est une **copie superficielle** (*shallow copy*).
+
+```cpp
+void bad_copy(Vector v1) {
+    Vector v2 = v1;     // constructeur de copie par DÉFAUT
+                        // copie de v1 dans v2
+    v1[0] = 2;          // v2[0] vaut aussi 2 !
+    v2[1] = 3;          // v1[1] vaut aussi 3 !
+}
+```
+
+Résultat catastrophique : `v1.elem` et `v2.elem` contiennent la **même adresse**, et désignent donc le **même tableau** sur le tas.
+
+```text
+   v1:                       v2:
+ +-------+---+             +-------+---+
+ | adr1  | 4 |             | adr1  | 4 |     les deux pointent adr1
+ +---|---+---+             +---|---+---+
+     |                         |
+     +-----------+-------------+
+                 v
+            +---+---+---+---+
+            | 2 | 3 |   |   |     un SEUL tableau, partagé
+            +---+---+---+---+
+```
+
+Deux conséquences, toutes deux graves :
+
+- **partage non voulu** — modifier `v1` modifie `v2`, et réciproquement : les objets ne sont pas indépendants ;
+- **double libération** — à la fin, le destructeur de `v1` **et** celui de `v2` font chacun `delete[] elem` sur la **même adresse**. La seconde libération est un **comportement indéfini** (crash probable).
+
+## Copie profonde : le constructeur de copie
+
+La solution est d'écrire un **constructeur de copie** qui réalise une **copie profonde** (*deep copy*) : il **alloue son propre tableau** et **recopie les valeurs**, élément par élément.
+
+```cpp
+// vector.h
+class Vector {
+    private:
+        double* elem;
+        unsigned int sz;
+    public:
+        Vector(unsigned int s);
+        Vector(const Vector& a);                 // constructeur de copie
+        Vector& operator=(const Vector& a);      // opérateur d'affectation
+        ~Vector() { delete[] elem; }
+};
+```
+
+Le constructeur de copie a une signature précise : il prend **une référence constante** vers un objet de sa propre classe — **`const Vector&`**.
+
+```cpp
+// vector.cpp
+Vector::Vector(const Vector& a) : elem{new double[a.sz]}, sz{a.sz}
+{
+    // copie terme à terme
+    for (unsigned int i = 0; i < sz; ++i)
+        elem[i] = a.elem[i];
+}
+```
+
+`const` car on ne modifie pas la source ; `&` (référence) pour **éviter une copie** lors du passage — un constructeur de copie qui prendrait son argument par valeur s'appellerait lui-même indéfiniment.
+
+Désormais chaque `Vector` possède **son propre tableau** :
+
+```text
+   v1:                       v2:
+ +-------+---+             +-------+---+
+ | adr1  | 4 |             | adr2  | 4 |     adresses DIFFÉRENTES
+ +---|---+---+             +---|---+---+
+     v                         v
+ +---+---+---+---+         +---+---+---+---+
+ | 2 |   |   |   |         |   | 3 |   |   |     deux tableaux distincts
+ +---+---+---+---+         +---+---+---+---+
+```
+
+Les deux objets sont **indépendants** ; chaque destructeur libère **son** tableau, sans conflit.
+
+## L'opérateur d'affectation `operator=`
+
+Le constructeur de copie gère la **création**. Pour l'affectation sur un objet **déjà existant**, il faut surcharger l'**opérateur `=`** : c'est `operator=`.
+
+```cpp
+// vector.cpp
+Vector& Vector::operator=(const Vector& a)
+{
+    sz = a.sz;
+    delete[] elem;               // supprimer les anciens éléments
+    elem = new double[sz];       // allouer le nouveau tableau
+    for (unsigned int i = 0; i < sz; ++i)   // copie terme à terme
+        elem[i] = a.elem[i];
+    return *this;                // renvoyer l'objet courant
+}
+```
+
+`operator=` fait **un pas de plus** que le constructeur de copie : l'objet de gauche **existait déjà** et détenait un tableau. Il faut donc :
+
+1. **libérer l'ancien tableau** — `delete[] elem` — sans quoi on fuit la mémoire ;
+2. **allouer un nouveau tableau** à la bonne taille ;
+3. **recopier** les valeurs terme à terme ;
+4. **renvoyer `*this`**.
+
+Le `return *this;` permet le **chaînage** des affectations, comme `a = b = c;`. Le mot-clé **`this`** est le pointeur vers l'objet courant ; `*this` est donc l'objet lui-même. Rappel : **seules les fonctions membres** disposent du pointeur `this`.
+
+> ⚠️ Le constructeur de copie part de **rien** : il se contente d'**allouer puis copier**. `operator=` part d'un objet **déjà construit** : il doit d'abord **libérer** l'existant. Oublier ce `delete[]` initial dans `operator=` provoque une **fuite de mémoire** à chaque affectation.
+
+## La règle des trois
+
+Le piège de la copie superficielle révèle une règle générale.
+
+> **Règle des trois** : si une classe a besoin de définir explicitement **l'un** de ces trois membres — le **destructeur**, le **constructeur de copie**, l'**opérateur d'affectation** — alors elle a presque toujours besoin de définir **les trois**.
+
+La logique est simple : une classe qui a besoin d'un **destructeur non trivial** gère une **ressource** (typiquement de la mémoire allouée). Or cette même ressource rend la **copie membre à membre dangereuse** — d'où la nécessité d'un constructeur de copie *et* d'un `operator=` corrects.
+
+`Vector` illustre parfaitement la règle : dès qu'on lui a donné un destructeur (`delete[] elem`), il fallait aussi lui fournir le constructeur de copie et `operator=`.
+
+> ⚠️ Si vous écrivez un destructeur qui fait `delete` ou `delete[]` mais que vous **oubliez** le constructeur de copie et `operator=`, votre classe **compile** sans erreur — mais elle plantera dès la première copie ou affectation. La règle des trois est un réflexe à acquérir.
+
+## Les fonctions et classes amies
+
+Une méthode **non-membre** d'une classe n'a, en théorie, **pas accès** à ses attributs `private`. Le mot-clé **`friend`** lève cette restriction : une fonction (ou une classe) déclarée **amie** accède aux membres privés comme si elle était membre.
+
+L'usage typique : une fonction d'affichage non-membre qui a besoin de lire les attributs privés.
+
+```cpp
+// fraction.h
+class Fraction {
+    private:
+        int numerateur;
+        int denominateur;
+    public:
+        // ...
+        friend ostream& operator<<(ostream& out, const Fraction& f);
+};
+```
+
+```cpp
+// fraction.cpp
+// fonction AMIE, pas une méthode membre :
+// elle accède à tous les attributs privés de la classe
+ostream& operator<<(ostream& out, const Fraction& f) {
+    out << "Fraction : " << f.numerateur << "/" << f.denominateur << endl;
+    return out;
+}
+```
+
+```cpp
+// main.cpp
+Fraction f(5, 6);
+cout << f << endl;        // affiche  "Fraction : 5/6"
+```
+
+On peut aussi déclarer une **classe amie** entière (`friend class F;`), qui donne alors à *toutes* les méthodes de `F` l'accès aux membres privés.
+
+> ⚠️ L'amitié obéit à trois limites strictes. Elle n'est **pas héritée** (les classes dérivées d'une classe amie ne sont pas amies), **pas transitive** (l'ami d'un ami n'est pas un ami), et **pas réciproque** (si `A` déclare `B` amie, `B` n'est pas pour autant amie de `A`). À utiliser avec parcimonie : `friend` perce l'encapsulation.
+
+> **À retenir**
+> - **Constructeur de copie** = créer un objet à partir d'un autre ; **`operator=`** = affecter un objet **déjà existant**. Le `=` *à la création* appelle le constructeur de copie.
+> - Le constructeur de copie est appelé à l'**initialisation**, au **passage par valeur** et au **retour par valeur** ; sa signature est `Classe(const Classe&)`.
+> - Par défaut, copie et affectation sont **membre à membre** ; sur un attribut **pointeur**, cela donne une **copie superficielle** (adresse partagée → partage non voulu + **double libération**).
+> - La **copie profonde** alloue **son propre** tableau et recopie les valeurs : chaque objet devient indépendant.
+> - `operator=` doit **libérer l'ancien tableau**, en allouer un nouveau, recopier, puis `return *this;` (chaînage).
+> - **Règle des trois** : qui définit l'un parmi `{destructeur, constructeur de copie, operator=}` doit définir **les trois**.
+> - **`friend`** donne à une fonction/classe non-membre l'accès aux membres `private` ; l'amitié n'est ni héritée, ni transitive, ni réciproque.

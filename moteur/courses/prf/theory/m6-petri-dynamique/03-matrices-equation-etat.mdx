@@ -1,0 +1,32 @@
+---
+title: "Matrices et equation d'etat"
+slug: matrices-equation-etat
+order: 3
+estimatedReadMin: 15
+concepts: [pre-post, incidence, state-equation, firing-sequence]
+source: "Petri net/UP2-2-RdP-slides.pdf; Petri net/mcar_cours2_ReseauxDePetri.2x1.pdf"
+---
+## Matrices Pre et Post
+
+`Pre(p,t)` compte les jetons consommes par `t` dans `p`. `Post(p,t)` compte les jetons produits par `t` dans `p`.
+
+## Matrice d'incidence
+
+La matrice d'incidence est `C = Post - Pre`. La colonne de `t` donne la variation de marquage quand `t` franchit.
+
+## Equation d'etat
+
+Pour un vecteur de tirs `sigma`, l'equation necessaire est :
+
+```text
+M = M0 + C.sigma
+```
+
+Elle est necessaire mais pas toujours suffisante : elle ignore l'ordre exact des tirs et donc la franchissabilite intermediaire.
+
+## Exemple-type
+
+Si une sequence tire `t1` deux fois et `t2` une fois, son vecteur de Parikh est `(2,1)`. On multiplie alors `C` par `(2,1)` pour obtenir la variation totale.
+
+> **A retenir**  
+> L'equation d'etat calcule une variation ; la sequence de tir verifie la faisabilite.

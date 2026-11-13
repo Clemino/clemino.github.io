@@ -1,0 +1,1529 @@
+[
+  {
+    "chapterSlug": "traitement-langage-naturel",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "D'après le cours, comment se caractérise simplement le traitement automatique du langage naturel (NLP) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une branche de l'IA dont le but est de communiquer avec les machines en utilisant une langue naturelle"
+        },
+        {
+          "id": "b",
+          "label": "Une technique de compression des fichiers textuels"
+        },
+        {
+          "id": "c",
+          "label": "L'étude des langues formelles et de leurs grammaires uniquement"
+        },
+        {
+          "id": "d",
+          "label": "Un protocole réseau de transmission de documents écrits"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours donne d'abord une caractérisation simple : le NLP est une branche de l'intelligence artificielle ; il s'agit de communiquer avec les machines en utilisant une langue naturelle (humaine). Il ne porte pas sur les langues formelles mais bien sur les langues naturelles.",
+    "concepts": [
+      "traitement-du-langage-naturel"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "traitement-langage-naturel",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Selon la définition de E. D. Liddy citée dans le cours, le NLP est un ensemble de techniques computationnelles. Quels éléments figurent dans cette définition ? Sélectionnez toutes les bonnes réponses.",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Des techniques théoriquement motivées"
+        },
+        {
+          "id": "b",
+          "label": "Analyser et représenter des textes se présentant naturellement"
+        },
+        {
+          "id": "c",
+          "label": "Plusieurs niveaux d'analyse linguistique"
+        },
+        {
+          "id": "d",
+          "label": "Un traitement du langage proche de celui des humains"
+        },
+        {
+          "id": "e",
+          "label": "Une garantie d'absence totale d'ambiguïté dans les textes traités"
+        },
+        {
+          "id": "f",
+          "label": "L'interdiction d'utiliser des statistiques"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "La définition de Liddy concentre quatre idées : des techniques computationnelles théoriquement motivées, pour analyser et représenter des textes se présentant naturellement, à un ou plusieurs niveaux d'analyse linguistique, dans le but d'un traitement du langage proche de celui des humains. Le NLP ne supprime pas l'ambiguïté (il doit la résoudre) et mobilise au contraire les statistiques.",
+    "concepts": [
+      "traitement-du-langage-naturel"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "traitement-langage-naturel",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours identifie trois grandes approches du NLP. Associez chaque approche à son principe.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Approche symbolique"
+        },
+        {
+          "id": "l2",
+          "label": "Approche statistique"
+        },
+        {
+          "id": "l3",
+          "label": "Approche connexionniste"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "La connaissance est représentée par des faits et des règles"
+        },
+        {
+          "id": "r2",
+          "label": "Des modèles statistiques sont appris sur de grands corpus"
+        },
+        {
+          "id": "r3",
+          "label": "Des réseaux de neurones (LSTM, ConvNet) sont utilisés"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "Le cours distingue trois approches : symbolique — la connaissance est représentée sous forme de faits ou de règles ; statistique — on utilise de grands corpus pour développer des modèles statistiques généralisés et approximés ; connexionniste — on utilise des réseaux de neurones, principalement des LSTM et des ConvNet.",
+    "concepts": [
+      "traitement-du-langage-naturel"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "traitement-langage-naturel",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le cours énumère sept niveaux d'analyse du langage. Associez chaque niveau à sa définition.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Phonologie"
+        },
+        {
+          "id": "l2",
+          "label": "Morphologie"
+        },
+        {
+          "id": "l3",
+          "label": "Syntaxe"
+        },
+        {
+          "id": "l4",
+          "label": "Sémantique"
+        },
+        {
+          "id": "l5",
+          "label": "Discours"
+        },
+        {
+          "id": "l6",
+          "label": "Pragmatique"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "L'étude des sons dont les séquences définissent les mots"
+        },
+        {
+          "id": "r2",
+          "label": "L'étude de la forme des mots"
+        },
+        {
+          "id": "r3",
+          "label": "L'analyse des mots dans une phrase"
+        },
+        {
+          "id": "r4",
+          "label": "La compréhension du sens du document"
+        },
+        {
+          "id": "r5",
+          "label": "L'analyse des propriétés du texte pris comme un tout"
+        },
+        {
+          "id": "r6",
+          "label": "La manière dont les connaissances sur le monde interagissent avec le sens littéral"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4",
+        "l5": "r5",
+        "l6": "r6"
+      }
+    },
+    "explanation": "Le cours définit les niveaux ainsi : phonologie — l'étude des sons ; morphologie — l'étude de la forme des mots ; syntaxe — l'analyse des mots dans une phrase ; sémantique — la compréhension du sens du document ; discours — l'analyse du texte pris comme un tout ; pragmatique — l'interaction des connaissances sur le monde avec le sens littéral.",
+    "concepts": [
+      "niveaux-d-analyse-linguistique"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "traitement-langage-naturel",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours représente le traitement du langage comme une chaîne par couches partant du document brut. Remettez les étapes dans l'ordre où elles s'enchaînent, du bas vers le haut.",
+    "payload": {
+      "items": [
+        {
+          "id": "a",
+          "label": "Le document brut entre dans la chaîne"
+        },
+        {
+          "id": "b",
+          "label": "Analyse lexicale / morphologique"
+        },
+        {
+          "id": "c",
+          "label": "Analyse syntaxique"
+        },
+        {
+          "id": "d",
+          "label": "Analyse sémantique"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Le cours décrit une chaîne par couches : un document brut entre par le bas, est d'abord traité au niveau lexical / morphologique, puis le résultat alimente l'analyse syntaxique, et enfin l'analyse sémantique vise le sens. Chaque couche s'appuie sur le résultat de la précédente.",
+    "concepts": [
+      "niveaux-d-analyse-linguistique"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "traitement-langage-naturel",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans la phrase « The priest married my sister. », le verbe married peut signifier « a épousé » ou « a marié ». De quel type d'ambiguïté s'agit-il, d'après le cours ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Ambiguïté lexicale : un mot qui a plus d'un sens"
+        },
+        {
+          "id": "b",
+          "label": "Ambiguïté syntaxique : la phrase a deux analyses différentes"
+        },
+        {
+          "id": "c",
+          "label": "Ambiguïté référentielle : un pronom à référent incertain"
+        },
+        {
+          "id": "d",
+          "label": "Aucune ambiguïté : la phrase n'a qu'un seul sens"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours définit l'ambiguïté lexicale comme celle qui apparaît lorsqu'on utilise un mot qui a plus d'un sens. Le verbe married est polysémique ; c'est l'exemple même donné par le cours pour l'ambiguïté lexicale.",
+    "concepts": [
+      "ambiguite-linguistique"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "traitement-langage-naturel",
+    "type": "MCQ_MULTI",
+    "difficulty": 1,
+    "points": 2,
+    "prompt": "Parmi les tâches suivantes, lesquelles le cours cite-t-il comme applications du NLP ? Sélectionnez toutes les bonnes réponses.",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La traduction automatique"
+        },
+        {
+          "id": "b",
+          "label": "Le question-réponse (question answering)"
+        },
+        {
+          "id": "c",
+          "label": "Le résumé de texte (text summarization)"
+        },
+        {
+          "id": "d",
+          "label": "Le tri d'images par couleur dominante"
+        },
+        {
+          "id": "e",
+          "label": "Le calcul du plus court chemin dans un graphe routier"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Le cours cite, parmi les applications du NLP, la traduction automatique, le question-réponse, le résumé de texte et beaucoup d'autres applications. Le tri d'images et le calcul d'itinéraires ne relèvent pas du traitement du langage.",
+    "concepts": [
+      "application-nlp"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "traitement-langage-naturel",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "D'après le cours, l'analyse sémantique est toujours réalisée avant l'analyse lexicale dans la chaîne de traitement.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. La chaîne de traitement va du document brut vers le haut : analyse lexicale / morphologique, puis syntaxique, puis sémantique. L'analyse sémantique vient en dernier ; chaque couche s'appuie sur le résultat de la précédente.",
+    "concepts": [
+      "niveaux-d-analyse-linguistique"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "pretraitement-representation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "D'après le cours, quelle est la toute première opération à appliquer à un texte à traiter ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La tokenisation"
+        },
+        {
+          "id": "b",
+          "label": "La lemmatisation"
+        },
+        {
+          "id": "c",
+          "label": "Le calcul du TF-IDF"
+        },
+        {
+          "id": "d",
+          "label": "L'analyse syntaxique"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours énonce que la tokenisation est la première opération qui doit être appliquée au texte à traiter : elle découpe le document en tokens. Les autres opérations (lemmatisation, TF-IDF, analyse syntaxique) viennent ensuite.",
+    "concepts": [
+      "tokenisation"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "pretraitement-representation",
+    "type": "NUMERIC",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Le cours donne l'exemple de la tokenisation de la chaîne « Ernest Hemingway (July 21, 1899 - July 2, 1961) was an American novelist. » Combien de tokens cette tokenisation produit-elle, d'après le cours ?",
+    "payload": {
+      "placeholder": "ex. 18"
+    },
+    "solution": {
+      "value": 18,
+      "absTol": 0
+    },
+    "explanation": "Le cours liste les tokens produits : 'Ernest', 'Hemingway', '(', 'July', '21', ',', '1899', '-', 'July', '2', ',', '1961', ')', 'was', 'an', 'American', 'novelist', '.' — soit 18 tokens. Chaque mot, chaque nombre et chaque signe de ponctuation devient un token distinct.",
+    "concepts": [
+      "tokenisation"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "pretraitement-representation",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans la tokenisation de « Ernest Hemingway (July 21, 1899 - July 2, 1961) was an American novelist. » donnée par le cours, combien de tokens sont des signes de ponctuation ? On compte les caractères ( , - ) . comme ponctuation.",
+    "payload": {
+      "placeholder": "ex. 6"
+    },
+    "solution": {
+      "value": 6,
+      "absTol": 0
+    },
+    "explanation": "Les tokens de ponctuation de cet exemple sont : '(', ',' (après 21), '-', ',' (après 2), ')' et '.' — soit 6 tokens. Le cours rappelle qu'un token n'est pas seulement un mot : la ponctuation forme aussi des tokens distincts.",
+    "concepts": [
+      "tokenisation"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "pretraitement-representation",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le cours présente une liste de neuf catégories grammaticales (POS) avec des exemples. Associez chaque catégorie à un exemple donné par le cours.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Déterminant (Determiner)"
+        },
+        {
+          "id": "l2",
+          "label": "Nom (Noun)"
+        },
+        {
+          "id": "l3",
+          "label": "Verbe (Verb)"
+        },
+        {
+          "id": "l4",
+          "label": "Adjectif (Adjective)"
+        },
+        {
+          "id": "l5",
+          "label": "Préposition (Preposition)"
+        },
+        {
+          "id": "l6",
+          "label": "Pronom (Pronoun)"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "The"
+        },
+        {
+          "id": "r2",
+          "label": "Dog"
+        },
+        {
+          "id": "r3",
+          "label": "Read"
+        },
+        {
+          "id": "r4",
+          "label": "Wide"
+        },
+        {
+          "id": "r5",
+          "label": "On"
+        },
+        {
+          "id": "r6",
+          "label": "He"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4",
+        "l5": "r5",
+        "l6": "r6"
+      }
+    },
+    "explanation": "Le cours donne ces exemples : Déterminant — A, An, That, The ; Nom — Bike, Car, Cat, Dog ; Verbe — Does, Open, Read, Went ; Adjectif — High, Nice, Ugly, Wide ; Préposition — At, In, From, On ; Pronom — I, He, It, Us.",
+    "concepts": [
+      "etiquetage-morphosyntaxique"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "pretraitement-representation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours illustre la racinisation par l'exemple « studies = studi + es → studi ». Quelle limite de la racinisation cet exemple met-il en évidence ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Les racines obtenues ne sont pas toujours des mots valides"
+        },
+        {
+          "id": "b",
+          "label": "La racinisation est plus lente que la lemmatisation"
+        },
+        {
+          "id": "c",
+          "label": "La racinisation supprime tous les verbes du texte"
+        },
+        {
+          "id": "d",
+          "label": "La racinisation ne fonctionne que sur les noms propres"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours attire l'attention sur cette limite : comme le montre l'exemple du mot studies, les racines ne sont pas toujours des mots valides. studi n'est pas un mot de l'anglais. La racinisation coupe les affixes sans garantir que le reste soit un mot réel.",
+    "concepts": [
+      "racinisation"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "pretraitement-representation",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On utilise le modèle du sac de mots avec le vocabulaire ordonné { chat, chien, dort, mange }. Le document est « le chat dort et le chat mange ». Le vecteur sac de mots est (n_chat, n_chien, n_dort, n_mange), où chaque composante compte les occurrences du mot dans le document. Donnez la première composante n_chat.",
+    "payload": {
+      "placeholder": "ex. 2"
+    },
+    "solution": {
+      "value": 2,
+      "absTol": 0
+    },
+    "explanation": "Dans « le chat dort et le chat mange », le mot chat apparaît 2 fois. Le vecteur sac de mots complet est donc (2, 0, 1, 1) : chat = 2, chien = 0, dort = 1, mange = 1. Le sac de mots ne retient que le nombre d'occurrences de chaque mot du vocabulaire.",
+    "concepts": [
+      "sac-de-mots"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "pretraitement-representation",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "La table ci-dessous est une matrice terme-document obtenue par le modèle du sac de mots. Chaque ligne est un mot du vocabulaire ; chaque colonne (D1, D2, D3) donne le nombre d'occurrences du mot dans le document. Les documents sont : D1 = « le chat noir dort sur le tapis », D2 = « le chien noir mange la viande », D3 = « le chat mange la souris ». Lisez la table et répondez.",
+    "payload": {
+      "figure": {
+        "kind": "data-table",
+        "columns": [
+          "Mot",
+          "D1",
+          "D2",
+          "D3"
+        ],
+        "rows": [
+          [
+            "le",
+            2,
+            1,
+            1
+          ],
+          [
+            "chat",
+            1,
+            0,
+            1
+          ],
+          [
+            "noir",
+            1,
+            1,
+            0
+          ],
+          [
+            "mange",
+            0,
+            1,
+            1
+          ],
+          [
+            "chien",
+            0,
+            1,
+            0
+          ]
+        ],
+        "caption": "Matrice terme-document (comptes d'occurrences)"
+      },
+      "caption": "Sac de mots de trois documents",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Combien de fois le mot « le » apparaît-il dans le document D1 ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 2"
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quel mot, parmi ceux de la table, n'apparaît dans aucun autre document que D2 ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "chien"
+              },
+              {
+                "id": "b",
+                "label": "chat"
+              },
+              {
+                "id": "c",
+                "label": "le"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "Le mot « noir » est présent dans D1 et dans D2 mais absent de D3.",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 2,
+            "absTol": 0
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": true
+          }
+        }
+      ]
+    },
+    "explanation": "La table donne directement les comptes : « le » apparaît 2 fois dans D1 (ligne « le », colonne D1). Le mot « chien » a 0 dans D1 et D3, et 1 dans D2 : il n'apparaît que dans D2. La ligne « noir » montre 1, 1, 0 : présent dans D1 et D2, absent de D3.",
+    "concepts": [
+      "sac-de-mots"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "pretraitement-representation",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours définit la fréquence inverse de document par IDF(t) = log( N / (nombre de documents contenant t) ), où N est le nombre total de documents. On utilise ici le logarithme en base 10. Un corpus contient N = 4 documents ; le terme « chat » apparaît dans 2 d'entre eux. Calculez IDF(chat).",
+    "payload": {
+      "placeholder": "ex. 0,30",
+      "hint": "IDF = log10(4 / 2) = log10(2)."
+    },
+    "solution": {
+      "value": 0.301,
+      "absTol": 0.005
+    },
+    "explanation": "On applique la formule du cours avec le logarithme en base 10 : IDF(chat) = log10(N / df) = log10(4 / 2) = log10(2) ≈ 0,301. Un terme présent dans peu de documents a un IDF plus élevé.",
+    "concepts": [
+      "tf-idf"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "pretraitement-representation",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On utilise la formule du cours IDF(t) = log10( N / df(t) ), avec le logarithme en base 10. Un corpus contient N = 4 documents et le terme « le » apparaît dans les 4 documents (df = 4). Calculez IDF(le).",
+    "payload": {
+      "placeholder": "ex. 0",
+      "hint": "log10(4 / 4) = log10(1)."
+    },
+    "solution": {
+      "value": 0,
+      "absTol": 0.005
+    },
+    "explanation": "Le terme « le » apparaît dans tous les documents : df = N = 4. Donc IDF(le) = log10(4 / 4) = log10(1) = 0. Le cours souligne qu'un terme qui apparaît partout dans le corpus a un IDF proche de 0 : il n'est pas discriminant.",
+    "concepts": [
+      "tf-idf"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "pretraitement-representation",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On reprend la formule du cours TF-IDF(t, d) = TF(t, d) × IDF(t), avec TF(t, d) = (occurrences de t dans d) / (nombre total de termes de d) et IDF(t) = log10( N / df(t) ) en base 10. Le corpus a N = 4 documents. Le document d = « le chat mange la souris » compte 5 termes ; le terme « souris » y apparaît 1 fois et n'apparaît que dans ce seul document (df = 1). Calculez TF-IDF(souris, d).",
+    "payload": {
+      "placeholder": "ex. 0,12",
+      "hint": "TF = 1/5 ; IDF = log10(4/1) ; faites le produit."
+    },
+    "solution": {
+      "value": 0.1204,
+      "absTol": 0.005
+    },
+    "explanation": "TF(souris, d) = 1 / 5 = 0,2. IDF(souris) = log10(4 / 1) = log10(4) ≈ 0,6021. TF-IDF = 0,2 × 0,6021 ≈ 0,1204. Le score est élevé car « souris » est rare dans le corpus (df = 1) tout en étant présent dans le document.",
+    "concepts": [
+      "tf-idf"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "pretraitement-representation",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On calcule le TF-IDF du terme « mange » dans le document d = « le chien noir mange la viande ». Le corpus contient N = 4 documents et le terme « mange » apparaît dans 2 d'entre eux (df = 2). On applique les formules du cours : TF(t, d) = (occurrences de t) / (nombre total de termes de d), IDF(t) = log10(N / df(t)) en base 10, et TF-IDF = TF × IDF. Le document d compte 6 termes et « mange » y apparaît 1 fois. Remplissez les trois étapes du calcul.",
+    "payload": {
+      "description": "Étape 1 : TF = (occurrences de « mange ») / (nombre de termes de d). Étape 2 : IDF = log10(N / df). Étape 3 : TF-IDF = TF × IDF. Donnez chaque valeur avec au moins 3 décimales.",
+      "cells": [
+        {
+          "id": "tf",
+          "label": "TF(mange, d)",
+          "kind": "number",
+          "placeholder": "0,000"
+        },
+        {
+          "id": "idf",
+          "label": "IDF(mange) (base 10)",
+          "kind": "number",
+          "placeholder": "0,000"
+        },
+        {
+          "id": "tfidf",
+          "label": "TF-IDF(mange, d)",
+          "kind": "number",
+          "placeholder": "0,000"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "tf",
+          "expected": 0.1667,
+          "absTol": 0.005
+        },
+        {
+          "id": "idf",
+          "expected": 0.301,
+          "absTol": 0.005
+        },
+        {
+          "id": "tfidf",
+          "expected": 0.0502,
+          "absTol": 0.005
+        }
+      ]
+    },
+    "explanation": "Étape 1 : TF = 1 / 6 ≈ 0,1667 (« mange » apparaît 1 fois sur 6 termes). Étape 2 : IDF = log10(4 / 2) = log10(2) ≈ 0,301. Étape 3 : TF-IDF = 0,1667 × 0,301 ≈ 0,0502. Le score reste modéré car « mange » est présent dans la moitié du corpus.",
+    "concepts": [
+      "tf-idf"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "pretraitement-representation",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours définit un n-gramme comme une séquence de n mots consécutifs. Combien de bigrammes (n = 2) de mots peut-on extraire de la phrase « le petit chat noir dort » (5 mots) ?",
+    "payload": {
+      "placeholder": "ex. 4",
+      "hint": "Pour T mots, le nombre de n-grammes vaut T − n + 1."
+    },
+    "solution": {
+      "value": 4,
+      "absTol": 0
+    },
+    "explanation": "La phrase a 5 mots. Le nombre de bigrammes est 5 − 2 + 1 = 4. Ce sont : « le petit », « petit chat », « chat noir », « noir dort ». Chaque bigramme est un couple de mots consécutifs.",
+    "concepts": [
+      "n-gramme"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "pretraitement-representation",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le code Python ci-dessous, dans l'esprit du TD de NLP, tokenise un texte puis associe à chaque mot son tag POS avec NLTK. Le texte traité est exactement la chaîne « Le chat dort. ». Lisez le code et répondez.",
+    "payload": {
+      "code": "import nltk\nfrom nltk.tokenize import word_tokenize\n\ntexte = \"Le chat dort.\"\ntokens = word_tokenize(texte)\nprint(tokens)\n\n# Etiquetage POS de chaque token\ntags = nltk.pos_tag(tokens)\nprint(tags)\n\n# Liste des tokens qui ne sont pas de la ponctuation\nmots = [t for t in tokens if t.isalpha()]\nprint(len(mots))",
+      "language": "python",
+      "caption": "Tokenisation et étiquetage POS avec NLTK",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "La fonction word_tokenize découpe le texte en mots et signes de ponctuation. Combien de tokens la liste « tokens » contient-elle pour le texte « Le chat dort. » ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 4"
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "La liste « mots » garde uniquement les tokens pour lesquels t.isalpha() est vrai (composés uniquement de lettres). Que vaut len(mots), c'est-à-dire le nombre affiché par la dernière instruction ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 3"
+          }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "Le point « . » fait partie de la liste « tokens » mais pas de la liste « mots ».",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 4,
+            "absTol": 0
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 3,
+            "absTol": 0
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": true
+          }
+        }
+      ]
+    },
+    "explanation": "word_tokenize(« Le chat dort. ») produit les tokens 'Le', 'chat', 'dort', '.' — soit 4 tokens, le point étant un token distinct. La liste « mots » ne garde que les tokens entièrement alphabétiques : 'Le', 'chat', 'dort' — soit 3. Le point n'est pas alphabétique : il est dans « tokens » mais exclu de « mots ».",
+    "concepts": [
+      "tokenisation",
+      "etiquetage-morphosyntaxique"
+    ],
+    "source": "TD_NLP.pdf"
+  },
+  {
+    "chapterSlug": "pretraitement-representation",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le code Python ci-dessous extrait les bigrammes d'une liste de mots et en affiche le nombre. Donnez ce qu'affiche le programme.",
+    "payload": {
+      "program": "mots = ['un', 'deux', 'trois', 'quatre']\n\n# Bigrammes : couples de mots consecutifs\nbigrammes = [(mots[i], mots[i+1]) for i in range(len(mots) - 1)]\nprint(len(bigrammes))"
+    },
+    "solution": {
+      "expectedOutput": "3"
+    },
+    "explanation": "La liste « mots » contient 4 éléments. La compréhension parcourt i de 0 à len(mots) − 2, soit i = 0, 1, 2 : elle produit 3 bigrammes — ('un','deux'), ('deux','trois'), ('trois','quatre'). Le programme affiche donc 3, conformément à la règle T − n + 1 = 4 − 2 + 1.",
+    "concepts": [
+      "n-gramme"
+    ],
+    "source": "TD_NLP.pdf"
+  },
+  {
+    "chapterSlug": "modeles-langage-embeddings",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "D'après le cours, qu'est-ce qui constitue l'unité de sens de base d'un texte ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La phrase"
+        },
+        {
+          "id": "b",
+          "label": "Le caractère"
+        },
+        {
+          "id": "c",
+          "label": "Le paragraphe entier"
+        },
+        {
+          "id": "d",
+          "label": "Le signe de ponctuation"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours pose la motivation de l'analyse syntaxique : la phrase est l'unité de sens de base d'un texte. Par conséquent, pour extraire le sens d'un texte, il faut identifier et analyser les phrases.",
+    "concepts": [
+      "analyse-syntaxique"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "modeles-langage-embeddings",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "D'après le cours, les phrases sont de simples séquences linéaires de mots, sans structure particulière.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Le cours est explicite : les phrases ne sont pas des séquences linéaires de mots. Elles sont construites selon des règles de production qui définissent la structure des phrases.",
+    "concepts": [
+      "analyse-syntaxique"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "modeles-langage-embeddings",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "D'après le cours, qu'est-ce qui caractérise une grammaire hors-contexte (CFG) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Chaque règle a un unique symbole non terminal en partie gauche"
+        },
+        {
+          "id": "b",
+          "label": "Chaque règle a au moins trois symboles en partie gauche"
+        },
+        {
+          "id": "c",
+          "label": "Les règles n'ont aucun symbole terminal"
+        },
+        {
+          "id": "d",
+          "label": "Les règles sont écrites uniquement en logique du premier ordre"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours définit les grammaires hors-contexte (CFG) par des règles ayant un unique symbole (non terminal) en partie gauche. C'est le critère décisif : dans une CFG, chaque règle réécrit un seul symbole non terminal.",
+    "concepts": [
+      "grammaire-hors-contexte"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "modeles-langage-embeddings",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On considère la grammaire hors-contexte du TD de NLP, écrite ci-dessous sous forme de règles de production. Σ désigne l'ensemble des symboles terminaux et N l'ensemble des symboles non terminaux. Lisez la grammaire et répondez.",
+    "payload": {
+      "code": "S    -> si S alors S\nS    -> soit S soit S\nS    -> NP VP\nNP   -> Det N\nNP   -> PN\nNP   -> NP Conj NP\nDet  -> un | une | le | la\nVP   -> V NP\nVP   -> V PP\nPP   -> Prep NP\nN    -> garcon | fille | chien | chat | nourriture | restaurant | maison | glace | cantine\nV    -> mange | aime | monte | va\nPN   -> il | elle\nConj -> et | ou\nPrep -> a | au",
+      "language": "pseudocode",
+      "caption": "Grammaire hors-contexte du TD de NLP",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "TRUE_FALSE",
+          "prompt": "Cette grammaire est hors-contexte : chacune de ses règles a bien un unique symbole non terminal en partie gauche (S, NP, VP, Det, …).",
+          "weight": 1,
+          "payload": {}
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Combien de noms différents le symbole non terminal N peut-il produire (règle N -> garcon | fille | …) ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 9"
+          }
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Le symbole de départ de cette grammaire, qui désigne les phrases entières, est :",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "S"
+              },
+              {
+                "id": "b",
+                "label": "NP"
+              },
+              {
+                "id": "c",
+                "label": "Det"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": true
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 9,
+            "absTol": 0
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "Toutes les règles ont un seul symbole non terminal à gauche de la flèche : la grammaire est bien hors-contexte. La règle N -> garcon | fille | chien | chat | nourriture | restaurant | maison | glace | cantine produit 9 noms. Le symbole de départ, qui désigne les phrases entières, est S (le non terminal en tête des règles S -> …).",
+    "concepts": [
+      "grammaire-hors-contexte",
+      "analyse-syntaxique"
+    ],
+    "source": "TD_NLP.pdf"
+  },
+  {
+    "chapterSlug": "modeles-langage-embeddings",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la description de l'arbre syntaxique (parse tree) d'après le cours.",
+    "payload": {
+      "template": "Dans un arbre syntaxique, la {{s1}} est la phrase analysée, les nœuds {{s2}} sont des syntagmes, et les {{s3}} sont des symboles terminaux, c'est-à-dire les mots.",
+      "slots": [
+        {
+          "id": "s1",
+          "width": "sm",
+          "placeholder": "nom"
+        },
+        {
+          "id": "s2",
+          "width": "sm",
+          "placeholder": "adjectif"
+        },
+        {
+          "id": "s3",
+          "width": "sm",
+          "placeholder": "nom"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": [
+          "racine"
+        ],
+        "s2": [
+          "internes",
+          "interne"
+        ],
+        "s3": [
+          "feuilles",
+          "feuille"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Le cours décrit l'arbre syntaxique : la racine est la phrase analysée, les nœuds internes sont des syntagmes (les parties gauches des règles), les liens représentent l'application des règles, et les feuilles sont des symboles terminaux — les mots.",
+    "concepts": [
+      "arbre-syntaxique"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "modeles-langage-embeddings",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "D'après le cours, qu'est-ce qu'un modèle de langage ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un modèle statistique de la distribution des mots d'une langue, capable de prédire le mot suivant d'une séquence"
+        },
+        {
+          "id": "b",
+          "label": "Un dictionnaire bilingue figé"
+        },
+        {
+          "id": "c",
+          "label": "Un algorithme de tri des phrases par longueur"
+        },
+        {
+          "id": "d",
+          "label": "Une grammaire écrite entièrement à la main"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours définit un modèle de langage comme un modèle statistique de la distribution des mots d'une langue, capable de prédire le mot suivant d'une séquence et donc de générer du texte. Il attribue une probabilité aux séquences de mots.",
+    "concepts": [
+      "modele-de-langage"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "modeles-langage-embeddings",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours présente l'hypothèse simplificatrice des modèles de langage à n-grammes. Associez chaque modèle à la probabilité du mot wₖ qu'il calcule.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Modèle complet (aucune simplification)"
+        },
+        {
+          "id": "l2",
+          "label": "Modèle bigramme"
+        },
+        {
+          "id": "l3",
+          "label": "Modèle trigramme"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "P(wₖ | w₁, w₂, …, wₖ₋₁)"
+        },
+        {
+          "id": "r2",
+          "label": "P(wₖ | wₖ₋₁)"
+        },
+        {
+          "id": "r3",
+          "label": "P(wₖ | wₖ₋₂, wₖ₋₁)"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "Le cours présente : le modèle complet utilise tout l'historique P(wₖ | w₁, …, wₖ₋₁) ; le modèle bigramme suppose que le mot ne dépend que du précédent P(wₖ | wₖ₋₁) ; le modèle trigramme, des deux précédents P(wₖ | wₖ₋₂, wₖ₋₁).",
+    "concepts": [
+      "modele-de-langage",
+      "n-gramme"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "modeles-langage-embeddings",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On estime un modèle de langage bigramme par comptage sur le corpus suivant (11 mots, lus de gauche à droite) : « le chat mange la souris le chat dort le chien dort ». La probabilité bigramme est P(w₂ | w₁) = count(w₁ w₂) / count(w₁), où count(w₁) est le nombre de fois où w₁ apparaît comme premier mot d'un bigramme. Le mot « le » apparaît 3 fois et est toujours suivi d'un mot. Calculez P(chat | le).",
+    "payload": {
+      "placeholder": "ex. 0,67",
+      "hint": "Comptez les bigrammes « le chat » et divisez par le nombre d'occurrences de « le »."
+    },
+    "solution": {
+      "value": 0.6667,
+      "absTol": 0.01
+    },
+    "explanation": "Dans le corpus, le bigramme « le chat » apparaît 2 fois ; le mot « le » apparaît 3 fois (toujours suivi d'un mot). Donc P(chat | le) = count(le chat) / count(le) = 2 / 3 ≈ 0,667. Le modèle bigramme estime cette probabilité par simple comptage.",
+    "concepts": [
+      "modele-de-langage",
+      "n-gramme"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "modeles-langage-embeddings",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "D'après le cours, dans un bon plongement lexical, les mots de sens ou d'usage proches ont des vecteurs géométriquement proches.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Le cours présente la propriété décisive des plongements lexicaux : l'espace est structuré par le sens. Dans un bon plongement, les mots de sens ou d'usage proches ont des vecteurs proches géométriquement — les vecteurs de chat et chien y sont voisins, ceux de chat et avion éloignés.",
+    "concepts": [
+      "plongement-lexical"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "applications-nlp-llm",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours distingue la sémantique lexicale de la sémantique supralexicale. Sur quoi porte la sémantique lexicale ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le sens des mots individuels"
+        },
+        {
+          "id": "b",
+          "label": "Le sens des combinaisons de mots (syntagmes, phrases)"
+        },
+        {
+          "id": "c",
+          "label": "La forme sonore des mots"
+        },
+        {
+          "id": "d",
+          "label": "L'ordre des paragraphes dans un document"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours distingue la sémantique lexicale — le sens des mots individuels — et la sémantique supralexicale — le sens des combinaisons de mots, comme les syntagmes et les phrases. La réponse (b) décrit la sémantique supralexicale.",
+    "concepts": [
+      "semantique-lexicale"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "applications-nlp-llm",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "D'après le cours, quelles relations lexicales sont des relations horizontales entre unités lexicales ? Sélectionnez toutes les bonnes réponses.",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Synonymie"
+        },
+        {
+          "id": "b",
+          "label": "Opposition (antonymie, conversité)"
+        },
+        {
+          "id": "c",
+          "label": "Homonymie"
+        },
+        {
+          "id": "d",
+          "label": "Polysémie"
+        },
+        {
+          "id": "e",
+          "label": "Méronymie"
+        },
+        {
+          "id": "f",
+          "label": "Hyponymie / hyperonymie"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Le cours range parmi les relations horizontales : la synonymie, l'opposition (antonymie, conversité), l'homonymie et la polysémie. La méronymie et l'hyponymie / hyperonymie sont, elles, des relations verticales.",
+    "concepts": [
+      "semantique-lexicale"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "applications-nlp-llm",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la description du principe de compositionnalité et de l'approche logique, d'après le cours.",
+    "payload": {
+      "template": "Le principe de {{s1}} énonce que le sens d'une combinaison de mots est déterminé par le sens de ses parties et par la manière dont elles sont combinées. L'approche {{s2}} en relève : elle représente le sens d'une phrase par une formule de logique du premier ordre, dont les conditions de {{s3}} définissent ce sens.",
+      "slots": [
+        {
+          "id": "s1",
+          "width": "md",
+          "placeholder": "nom"
+        },
+        {
+          "id": "s2",
+          "width": "sm",
+          "placeholder": "adjectif"
+        },
+        {
+          "id": "s3",
+          "width": "sm",
+          "placeholder": "nom"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": [
+          "compositionnalité",
+          "compositionnalite"
+        ],
+        "s2": [
+          "logique"
+        ],
+        "s3": [
+          "vérité",
+          "verite"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Le cours énonce le principe de compositionnalité : le sens d'une combinaison de mots vient du sens de ses parties et de leur mode de combinaison. L'approche logique en relève : elle représente le sens d'une phrase par une formule de logique du premier ordre, dont les conditions de vérité définissent le sens.",
+    "concepts": [
+      "semantique-lexicale"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "applications-nlp-llm",
+    "type": "MCQ_MULTI",
+    "difficulty": 1,
+    "points": 2,
+    "prompt": "D'après le cours, parmi les tâches suivantes, lesquelles sont des applications du NLP ? Sélectionnez toutes les bonnes réponses.",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La traduction automatique"
+        },
+        {
+          "id": "b",
+          "label": "Le question-réponse"
+        },
+        {
+          "id": "c",
+          "label": "Le résumé de texte"
+        },
+        {
+          "id": "d",
+          "label": "L'extraction d'information"
+        },
+        {
+          "id": "e",
+          "label": "Les agents conversationnels"
+        },
+        {
+          "id": "f",
+          "label": "La compression d'images JPEG"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e"
+      ]
+    },
+    "explanation": "Le cours énumère parmi les applications du NLP : la traduction automatique, le question-réponse, le résumé de texte, l'extraction d'information et les agents conversationnels. La compression d'images n'est pas une tâche de traitement du langage.",
+    "concepts": [
+      "application-nlp"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "applications-nlp-llm",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez la définition d'un grand modèle de langage (LLM), telle que le module la relit avec le vocabulaire du cours.",
+    "payload": {
+      "template": "Un grand modèle de langage (LLM) est un modèle de langage {{s1}} de très grande {{s2}}, généralement fondé sur l'architecture {{s3}}, principale réalisation de l'IA générative.",
+      "slots": [
+        {
+          "id": "s1",
+          "width": "sm",
+          "placeholder": "adjectif"
+        },
+        {
+          "id": "s2",
+          "width": "sm",
+          "placeholder": "nom"
+        },
+        {
+          "id": "s3",
+          "width": "md",
+          "placeholder": "nom"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": [
+          "neuronal"
+        ],
+        "s2": [
+          "taille"
+        ],
+        "s3": [
+          "transformeur",
+          "transformer"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Le cours (module 1, relu au module 13) définit un grand modèle de langage (LLM) comme un modèle de langage neuronal de très grande taille, généralement fondé sur l'architecture transformeur, principale réalisation de l'IA générative.",
+    "concepts": [
+      "grand-modele-de-langage",
+      "transformeur"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "applications-nlp-llm",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le module relie le NLP classique aux LLM en trois idées qui ont changé l'échelle du domaine. Remettez-les dans l'ordre où le module les présente.",
+    "payload": {
+      "items": [
+        {
+          "id": "a",
+          "label": "Les plongements lexicaux : représenter les mots par des vecteurs denses porteurs de sens"
+        },
+        {
+          "id": "b",
+          "label": "Les réseaux récurrents et les LSTM : traiter le texte comme une séquence, avec une mémoire"
+        },
+        {
+          "id": "c",
+          "label": "Le transformeur : une architecture fondée sur l'attention, sans récurrence, parallèle"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Le module présente trois idées, dans cet ordre : (1) les plongements lexicaux — vecteurs denses porteurs de sens ; (2) les réseaux récurrents et les LSTM — traiter le texte comme une séquence avec une mémoire ; (3) le transformeur — une architecture fondée sur l'attention, sans récurrence, parallèle et conçue pour le passage à l'échelle. C'est cette dernière brique qui mène aux LLM.",
+    "concepts": [
+      "grand-modele-de-langage",
+      "transformeur"
+    ],
+    "source": "Intro_NLP.pdf"
+  },
+  {
+    "chapterSlug": "applications-nlp-llm",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "D'après le module, l'architecture transformeur est fondée sur l'attention, sans récurrence, et conçue pour le passage à l'échelle.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Le module décrit le transformeur comme une architecture fondée sur l'attention, sans récurrence, parallèle et conçue pour le passage à l'échelle. C'est cette brique qui mène aux grands modèles de langage.",
+    "concepts": [
+      "transformeur",
+      "grand-modele-de-langage"
+    ],
+    "source": "Intro_NLP.pdf"
+  }
+]

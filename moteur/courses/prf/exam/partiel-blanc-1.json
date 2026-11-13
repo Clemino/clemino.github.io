@@ -1,0 +1,654 @@
+{
+  "slug": "partiel-blanc-1",
+  "title": "Partiel blanc 1 - Scala, complexite et Petri dynamique",
+  "description": "Simulation notee /20 avec environ 40% de reseaux de Petri. Niveau progressif, sans question ouverte.",
+  "durationMinutes": 120,
+  "totalPoints": 20,
+  "exercises": [
+    {
+      "chapterSlug": "paradigme-expressions",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 2,
+      "prompt": "Une expression Scala est avant tout :",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Une construction qui produit une valeur."
+          },
+          {
+            "id": "b",
+            "label": "Une ligne qui modifie forcement la memoire."
+          },
+          {
+            "id": "c",
+            "label": "Un commentaire."
+          },
+          {
+            "id": "d",
+            "label": "Un type sans valeur."
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "Une expression produit une valeur et possede un type.",
+      "concepts": [
+        "expression"
+      ]
+    },
+    {
+      "chapterSlug": "types-valeurs-blocs",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Valeur de l'expression ?",
+      "payload": {
+        "program": "val x = { val a = 2; a * 5 }\nx + 1",
+        "language": "scala"
+      },
+      "solution": {
+        "expectedOutput": "11"
+      },
+      "explanation": "Le bloc vaut 10, donc x+1 vaut 11.",
+      "concepts": [
+        "bloc"
+      ]
+    },
+    {
+      "chapterSlug": "fonctions-ordre-superieur",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 2,
+      "prompt": "Quelle expression applique une transformation a chaque element ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "map"
+          },
+          {
+            "id": "b",
+            "label": "filter"
+          },
+          {
+            "id": "c",
+            "label": "foldLeft"
+          },
+          {
+            "id": "d",
+            "label": "require"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "`map` transforme element par element.",
+      "concepts": [
+        "map-filter-flatmap"
+      ]
+    },
+    {
+      "chapterSlug": "transformations",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Resultat ?",
+      "payload": {
+        "program": "List(1,2,3).map(_ + 1).filter(_ % 2 == 0)",
+        "language": "scala"
+      },
+      "solution": {
+        "expectedOutput": "List(2, 4)"
+      },
+      "explanation": "map donne 2,3,4 ; filter garde 2 et 4.",
+      "concepts": [
+        "map-filter-flatmap"
+      ]
+    },
+    {
+      "chapterSlug": "analyse-asymptotique",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "`n log n` compare a `n^2` :",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "`n log n` est asymptotiquement plus petit."
+          },
+          {
+            "id": "b",
+            "label": "Ils sont Theta l'un de l'autre."
+          },
+          {
+            "id": "c",
+            "label": "`n log n` est plus grand."
+          },
+          {
+            "id": "d",
+            "label": "Aucun ordre n'est possible."
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "log n croit moins vite que n.",
+      "concepts": [
+        "complexity"
+      ]
+    },
+    {
+      "chapterSlug": "recursivite-diviser-regner",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "`T(n)=T(n-1)+O(1)` donne :",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Theta(n)"
+          },
+          {
+            "id": "b",
+            "label": "Theta(log n)"
+          },
+          {
+            "id": "c",
+            "label": "Theta(n log n)"
+          },
+          {
+            "id": "d",
+            "label": "Theta(2^n)"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "On retire 1 a chaque etape, cout constant par niveau.",
+      "concepts": [
+        "recurrence"
+      ]
+    },
+    {
+      "chapterSlug": "definition-marquage",
+      "type": "PETRI_ENABLED_TRANSITIONS",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Petri : transitions franchissables ?",
+      "payload": {
+        "places": [
+          {
+            "id": "p1",
+            "label": "p1",
+            "tokens": 1,
+            "x": 130,
+            "y": 100
+          },
+          {
+            "id": "p2",
+            "label": "p2",
+            "tokens": 0,
+            "x": 130,
+            "y": 260
+          },
+          {
+            "id": "p3",
+            "label": "p3",
+            "tokens": 2,
+            "x": 560,
+            "y": 180
+          }
+        ],
+        "transitions": [
+          {
+            "id": "t1",
+            "label": "t1",
+            "x": 340,
+            "y": 100
+          },
+          {
+            "id": "t2",
+            "label": "t2",
+            "x": 340,
+            "y": 245
+          }
+        ],
+        "arcs": [
+          {
+            "from": "p1",
+            "to": "t1"
+          },
+          {
+            "from": "p2",
+            "to": "t1"
+          },
+          {
+            "from": "p3",
+            "to": "t2",
+            "weight": 2
+          },
+          {
+            "from": "t2",
+            "to": "p2"
+          }
+        ]
+      },
+      "solution": {
+        "enabledTransitionIds": [
+          "t2"
+        ]
+      },
+      "explanation": "t1 manque p2 ; t2 a deux jetons en p3.",
+      "concepts": [
+        "firing"
+      ]
+    },
+    {
+      "chapterSlug": "franchissement-sequences",
+      "type": "PETRI_FIRE_SEQUENCE",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Petri : marquage final apres `start, finish`.",
+      "payload": {
+        "places": [
+          {
+            "id": "idle",
+            "label": "idle",
+            "tokens": 1,
+            "x": 160,
+            "y": 180
+          },
+          {
+            "id": "busy",
+            "label": "busy",
+            "tokens": 0,
+            "x": 560,
+            "y": 180
+          }
+        ],
+        "transitions": [
+          {
+            "id": "start",
+            "label": "start",
+            "x": 340,
+            "y": 105
+          },
+          {
+            "id": "finish",
+            "label": "finish",
+            "x": 340,
+            "y": 255
+          }
+        ],
+        "arcs": [
+          {
+            "from": "idle",
+            "to": "start"
+          },
+          {
+            "from": "start",
+            "to": "busy"
+          },
+          {
+            "from": "busy",
+            "to": "finish"
+          },
+          {
+            "from": "finish",
+            "to": "idle"
+          }
+        ],
+        "sequence": [
+          "start",
+          "finish"
+        ]
+      },
+      "solution": {
+        "finalMarking": {
+          "idle": 1,
+          "busy": 0
+        },
+        "valid": true
+      },
+      "explanation": "Le cycle revient au marquage initial.",
+      "concepts": [
+        "firing-sequence"
+      ]
+    },
+    {
+      "chapterSlug": "matrices-equation-etat",
+      "type": "PETRI_MATRIX",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Petri : incidence du cycle.",
+      "payload": {
+        "places": [
+          {
+            "id": "idle",
+            "label": "idle",
+            "tokens": 1,
+            "x": 160,
+            "y": 180
+          },
+          {
+            "id": "busy",
+            "label": "busy",
+            "tokens": 0,
+            "x": 560,
+            "y": 180
+          }
+        ],
+        "transitions": [
+          {
+            "id": "start",
+            "label": "start",
+            "x": 340,
+            "y": 105
+          },
+          {
+            "id": "finish",
+            "label": "finish",
+            "x": 340,
+            "y": 255
+          }
+        ],
+        "arcs": [
+          {
+            "from": "idle",
+            "to": "start"
+          },
+          {
+            "from": "start",
+            "to": "busy"
+          },
+          {
+            "from": "busy",
+            "to": "finish"
+          },
+          {
+            "from": "finish",
+            "to": "idle"
+          }
+        ],
+        "matrix": "incidence"
+      },
+      "solution": {
+        "matrix": {
+          "idle": {
+            "start": -1,
+            "finish": 1
+          },
+          "busy": {
+            "start": 1,
+            "finish": -1
+          }
+        }
+      },
+      "explanation": "Chaque transition deplace le jeton.",
+      "concepts": [
+        "incidence"
+      ]
+    },
+    {
+      "chapterSlug": "proprietes",
+      "type": "PETRI_PROPERTY",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Petri : proprietes du cycle.",
+      "payload": {
+        "places": [
+          {
+            "id": "idle",
+            "label": "idle",
+            "tokens": 1,
+            "x": 160,
+            "y": 180
+          },
+          {
+            "id": "busy",
+            "label": "busy",
+            "tokens": 0,
+            "x": 560,
+            "y": 180
+          }
+        ],
+        "transitions": [
+          {
+            "id": "start",
+            "label": "start",
+            "x": 340,
+            "y": 105
+          },
+          {
+            "id": "finish",
+            "label": "finish",
+            "x": 340,
+            "y": 255
+          }
+        ],
+        "arcs": [
+          {
+            "from": "idle",
+            "to": "start"
+          },
+          {
+            "from": "start",
+            "to": "busy"
+          },
+          {
+            "from": "busy",
+            "to": "finish"
+          },
+          {
+            "from": "finish",
+            "to": "idle"
+          }
+        ],
+        "properties": [
+          {
+            "id": "safe",
+            "label": "sauf"
+          },
+          {
+            "id": "dead",
+            "label": "deadlock"
+          },
+          {
+            "id": "live",
+            "label": "vivant"
+          },
+          {
+            "id": "bounded",
+            "label": "borne"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "safe",
+          "live",
+          "bounded"
+        ]
+      },
+      "explanation": "Le cycle est 1-borne, borne et vivant.",
+      "concepts": [
+        "safety",
+        "liveness"
+      ]
+    },
+    {
+      "chapterSlug": "traits-generiques",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "La covariance de `List[+A]` autorise :",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "`List[Chien]` comme `List[Animal]` si Chien <: Animal."
+          },
+          {
+            "id": "b",
+            "label": "`Animal` comme `Chien`."
+          },
+          {
+            "id": "c",
+            "label": "Toute mutation."
+          },
+          {
+            "id": "d",
+            "label": "La suppression du typage."
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "Covariance = propagation du sous-typage.",
+      "concepts": [
+        "variance"
+      ]
+    },
+    {
+      "chapterSlug": "invariants-correction",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Correction totale =",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Correction partielle + terminaison"
+          },
+          {
+            "id": "b",
+            "label": "Complexite + style"
+          },
+          {
+            "id": "c",
+            "label": "Typage + affichage"
+          },
+          {
+            "id": "d",
+            "label": "Recursion + mutation"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "C'est la definition de preuve complete.",
+      "concepts": [
+        "correction",
+        "termination"
+      ]
+    },
+    {
+      "chapterSlug": "invariants-modelisation",
+      "type": "PETRI_INVARIANT",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Petri : T-invariants du cycle.",
+      "payload": {
+        "places": [
+          {
+            "id": "idle",
+            "label": "idle",
+            "tokens": 1,
+            "x": 160,
+            "y": 180
+          },
+          {
+            "id": "busy",
+            "label": "busy",
+            "tokens": 0,
+            "x": 560,
+            "y": 180
+          }
+        ],
+        "transitions": [
+          {
+            "id": "start",
+            "label": "start",
+            "x": 340,
+            "y": 105
+          },
+          {
+            "id": "finish",
+            "label": "finish",
+            "x": 340,
+            "y": 255
+          }
+        ],
+        "arcs": [
+          {
+            "from": "idle",
+            "to": "start"
+          },
+          {
+            "from": "start",
+            "to": "busy"
+          },
+          {
+            "from": "busy",
+            "to": "finish"
+          },
+          {
+            "from": "finish",
+            "to": "idle"
+          }
+        ],
+        "invariantType": "transition",
+        "vectors": [
+          {
+            "id": "a",
+            "label": "start=1, finish=1",
+            "values": {
+              "start": 1,
+              "finish": 1
+            }
+          },
+          {
+            "id": "b",
+            "label": "start=1, finish=0",
+            "values": {
+              "start": 1,
+              "finish": 0
+            }
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "Un start doit etre compense par un finish.",
+      "concepts": [
+        "t-invariant"
+      ]
+    }
+  ]
+}

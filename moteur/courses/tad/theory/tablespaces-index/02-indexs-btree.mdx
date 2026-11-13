@@ -1,0 +1,71 @@
+---
+title: Indexs B-tree et sélectivité
+slug: indexs-btree
+order: 2
+estimatedReadMin: 8
+concepts: [selectivite-index, index-btree]
+source: "CM2, slides 13-15"
+---
+
+## Pourquoi indexer ?
+
+Une sélection (`SELECT ... WHERE ...`) sur une grande table peut être très lente si elle nécessite un **parcours complet de la table** (*full table scan*). Un **index** est une structure auxiliaire triée sur une ou plusieurs colonnes qui permet une recherche **dichotomique** (logarithmique au lieu de linéaire).
+
+> ⚠️ Toute optimisation a un coût : une table indexée occupe plus d'espace et **les insertions / mises à jour sont plus lentes** car l'index doit aussi être mis à jour.
+
+## La sélectivité
+
+La **sélectivité** d'un index mesure son utilité :
+
+```text
+                nombre de valeurs différentes
+sélectivité  =  ─────────────────────────────
+                  nombre de lignes de la table
+```
+
+- **Sélectivité forte** (proche de 1) : beaucoup de valeurs distinctes. Cas extrême : un index sur une **clé primaire** a une sélectivité de **1**.
+- **Sélectivité faible** : peu de valeurs distinctes (typiquement un sexe, un état, une catégorie).
+
+La sélectivité **dicte le choix de l'index** :
+
+- **B-tree** → sélectivité forte
+- **Bitmap** → sélectivité faible
+
+## L'index B-Tree
+
+Le **B-tree (arbre balancé)** est l'index **par défaut** d'Oracle. Les valeurs indexées sont rangées dans un **arbre trié et équilibré**.
+
+```
+                    [41 | 66 | 87]
+                   /     |    |    \
+              [8|18|26|35] [48|51|54] [72|78|83] [92|97]
+              ...                                 ...
+```
+
+À chaque nœud, on choisit la branche selon la position de la valeur recherchée. Le nombre de comparaisons est **logarithmique** en profondeur.
+
+### Caractéristiques importantes
+
+- **Plus la sélectivité est forte, plus le B-tree est rentable.**
+- **Cet index ne gère pas les valeurs NULL.** Conséquence : un B-tree ne permet pas de retrouver des lignes non renseignées sur les colonnes indexées.
+- À chaque INSERT/UPDATE/DELETE de la table, l'arbre est **maintenu équilibré**, ce qui coûte du temps mais préserve la rapidité des lectures.
+
+## Quand l'utiliser ?
+
+Le B-tree est efficace pour :
+
+- les **clés primaires** (`UNIQUE INDEX` automatique sur la PK),
+- les colonnes utilisées en `WHERE` avec **beaucoup de valeurs distinctes** (numéros, dates, noms…),
+- les recherches par **plage** (`BETWEEN`, `<`, `>`) car les valeurs sont triées.
+
+Il est **contre-indiqué** pour :
+
+- des colonnes avec peu de valeurs distinctes (sexe, statut…),
+- des tables très souvent mises à jour si les lectures sont rares.
+
+> **À retenir**
+> - Sélectivité = valeurs distinctes / lignes. Forte = proche de 1.
+> - **B-tree = défaut Oracle**, arbre trié équilibré, recherche logarithmique.
+> - B-tree adapté **à forte sélectivité** (clés primaires, dates, identifiants).
+> - **B-tree ne gère pas NULL** : ne sert jamais pour `WHERE colonne IS NULL`.
+> - Maintenance à chaque INSERT/UPDATE → ralentit l'écriture.

@@ -1,0 +1,415 @@
+{
+  "slug": "examen-blanc-2",
+  "title": "Examen blanc 2 — Machine learning & data mining",
+  "description": "Partiel blanc chronométré couvrant le machine learning classique (modules 5 à 8) : fouille de données et processus KDD, métriques d'évaluation (matrice de confusion, accuracy, rappel, précision), arbres de décision et forêts aléatoires (entropie, gain d'information, indice de Gini, erreur OOB), classifieur bayésien naïf (théorème de Bayes, hypothèse d'indépendance, lissage de Laplace) et régression logistique (sigmoïde, odds, log-odds, entropie croisée). Inspiré des examens « Data Mining 2 » : un mélange de questions de cours et de calculs appliqués.",
+  "durationMinutes": 90,
+  "totalPoints": 20,
+  "exercises": [
+    {
+      "chapterSlug": "fouille-de-donnees-kdd",
+      "type": "ORDERING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Remettez dans l'ordre les quatre étapes du processus KDD (Knowledge Discovery in Databases), telles que le cours les enchaîne.",
+      "payload": {
+        "items": [
+          { "id": "e3", "label": "Extraction des régularités" },
+          { "id": "e1", "label": "Prétraitement des données" },
+          { "id": "e4", "label": "Interprétation des régularités" },
+          { "id": "e2", "label": "Transformation des données (si besoin)" }
+        ]
+      },
+      "solution": { "order": ["e1", "e2", "e3", "e4"] },
+      "explanation": "Le processus KDD enchaîne : prétraitement des données → transformation des données (si besoin) → extraction des régularités → interprétation des régularités. L'extraction proprement dite n'en est que la troisième étape.",
+      "concepts": ["processus-kdd"],
+      "source": "Slides_Intro_DM_2425.pdf"
+    },
+    {
+      "chapterSlug": "types-apprentissage",
+      "type": "MATCHING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Associez chaque tâche de fouille de données à l'approche de Machine Learning à laquelle le cours la rattache.",
+      "payload": {
+        "left": [
+          { "id": "l1", "label": "Classification" },
+          { "id": "l2", "label": "Régression" },
+          { "id": "l3", "label": "Clustering" }
+        ],
+        "right": [
+          { "id": "r1", "label": "Apprentissage supervisé" },
+          { "id": "r2", "label": "Apprentissage non supervisé" }
+        ]
+      },
+      "solution": { "pairs": { "l1": "r1", "l2": "r1", "l3": "r2" } },
+      "explanation": "L'apprentissage supervisé regroupe la classification et la régression (classes pré-définies). Le clustering, qui construit des groupes d'objets similaires sans classes prédéfinies, relève de l'apprentissage non supervisé.",
+      "concepts": ["classification", "regression", "clustering", "apprentissage-supervise", "apprentissage-non-supervise"],
+      "source": "Slides_Intro_DM_2425.pdf"
+    },
+    {
+      "chapterSlug": "apprentissage-test-surapprentissage",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Un classifieur classe parfaitement les exemples de son jeu d'apprentissage, mais se trompe lourdement sur des données nouvelles. Comment nomme-t-on ce défaut ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Le sur-apprentissage" },
+          { "id": "b", "label": "La généralisation" },
+          { "id": "c", "label": "La normalisation" },
+          { "id": "d", "label": "Le clustering" }
+        ],
+        "shuffle": true
+      },
+      "solution": { "correct": ["a"] },
+      "explanation": "C'est le sur-apprentissage : le modèle a trop collé aux exemples d'apprentissage, en a appris jusqu'aux détails et particularités, et n'a pas dégagé les régularités générales. Il a mémorisé plutôt que généralisé. Seule une bonne performance sur un jeu de test (exemples non vus) témoigne d'une véritable capacité de généralisation.",
+      "concepts": ["sur-apprentissage", "generalisation"],
+      "source": "Slides_Intro_DM_2425.pdf"
+    },
+    {
+      "chapterSlug": "evaluation-metriques",
+      "type": "FIGURE_INTERPRET",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "La matrice de confusion ci-dessous évalue un classifieur du dataset Iris (3 classes) sur 60 exemples de test (lignes : classe réelle ; colonnes : classe prédite). Lisez-la et répondez aux sous-questions.",
+      "payload": {
+        "figure": {
+          "kind": "confusion-matrix",
+          "classes": ["setosa", "versicolor", "virginica"],
+          "matrix": [
+            [18, 2, 0],
+            [1, 16, 3],
+            [1, 2, 17]
+          ],
+          "caption": "Matrice de confusion 3 × 3 d'un classifieur Iris (60 exemples de test)"
+        },
+        "caption": "Classifieur Iris à 3 classes, jeu de test de 60 exemples",
+        "subQuestions": [
+          {
+            "id": "q1",
+            "type": "NUMERIC",
+            "prompt": "Quelle est l'accuracy globale du classifieur ? Donnez un nombre entre 0 et 1, arrondi au centième.",
+            "weight": 1,
+            "payload": { "hint": "Accuracy = somme de la diagonale / somme totale." }
+          },
+          {
+            "id": "q2",
+            "type": "NUMERIC",
+            "prompt": "Quel est le rappel (recall) pour la classe versicolor ? Arrondissez au centième.",
+            "weight": 1,
+            "payload": { "hint": "Recall(versicolor) = exemples versicolor bien classés / total des exemples réellement versicolor (ligne versicolor)." }
+          },
+          {
+            "id": "q3",
+            "type": "MCQ_SINGLE",
+            "prompt": "Combien d'exemples du jeu de test sont mal classés au total ?",
+            "weight": 1,
+            "payload": {
+              "options": [
+                { "id": "a", "label": "9 (toutes les cases hors diagonale)" },
+                { "id": "b", "label": "51 (la somme de la diagonale)" },
+                { "id": "c", "label": "0 : aucun exemple n'est mal classé" }
+              ]
+            }
+          }
+        ]
+      },
+      "solution": {
+        "subSolutions": [
+          { "id": "q1", "solution": { "value": 0.85, "absTol": 0.01 } },
+          { "id": "q2", "solution": { "value": 0.8, "absTol": 0.01 } },
+          { "id": "q3", "solution": { "correct": ["a"] } }
+        ]
+      },
+      "explanation": "La diagonale vaut 18 + 16 + 17 = 51 ; le total est 60. Accuracy = 51 / 60 = 0,85. Recall(versicolor) = 16 / (1 + 16 + 3) = 16 / 20 = 0,80 : sur les 20 exemples réellement versicolor, 16 sont bien classés. Les exemples mal classés sont les cases hors diagonale : 2 + 0 + 1 + 3 + 1 + 2 = 9 (soit aussi 60 − 51).",
+      "concepts": ["matrice-de-confusion", "taux-de-bonne-classification", "rappel"],
+      "source": "Slides_Intro_DM_2425.pdf"
+    },
+    {
+      "chapterSlug": "criteres-decoupage",
+      "type": "ALGO_TRACE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "On veut choisir la variable à placer à la racine d'un arbre de décision construit sur ce jeu de données « football » (10 matchs). La cible Y = « Match gagné » compte 5 valeurs V et 5 valeurs F. On utilise le gain d'entropie (logarithme base 2). Calculez les entropies et le gain demandés pour la variable X1.",
+      "payload": {
+        "description": "Variable X1 = Match à domicile ? Répartition : 6 matchs ont X1=V, dont 4 gagnés et 2 perdus ; 4 matchs ont X1=F, dont 1 gagné et 3 perdus.",
+        "figure": {
+          "kind": "data-table",
+          "columns": ["X1 (domicile)", "X2 (balance +)", "Y (gagné)"],
+          "rows": [
+            ["V", "V", "V"],
+            ["V", "V", "V"],
+            ["V", "F", "V"],
+            ["V", "V", "V"],
+            ["V", "F", "F"],
+            ["V", "F", "F"],
+            ["F", "V", "V"],
+            ["F", "F", "F"],
+            ["F", "F", "F"],
+            ["F", "V", "F"]
+          ],
+          "caption": "Jeu de données football : 10 matchs"
+        },
+        "cells": [
+          { "id": "entE", "label": "Entropie de la racine Ent(E)", "kind": "number", "placeholder": "0.000" },
+          { "id": "entX1v", "label": "Ent(X1=V), nœud à 4 gagnés / 2 perdus", "kind": "number", "placeholder": "0.000" },
+          { "id": "entX1f", "label": "Ent(X1=F), nœud à 1 gagné / 3 perdus", "kind": "number", "placeholder": "0.000" },
+          { "id": "entAfter", "label": "Entropie après partitionnement par X1", "kind": "number", "placeholder": "0.000" },
+          { "id": "gainX1", "label": "Gain d'information G(X1)", "kind": "number", "placeholder": "0.000" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "entE", "expected": 1, "absTol": 0.01 },
+          { "id": "entX1v", "expected": 0.918, "absTol": 0.01 },
+          { "id": "entX1f", "expected": 0.811, "absTol": 0.01 },
+          { "id": "entAfter", "expected": 0.875, "absTol": 0.02 },
+          { "id": "gainX1", "expected": 0.125, "absTol": 0.02 }
+        ]
+      },
+      "explanation": "Ent(E) = −(5/10)·log₂(5/10) − (5/10)·log₂(5/10) = 1 (distribution uniforme). Ent(X1=V) = −(4/6)·log₂(4/6) − (2/6)·log₂(2/6) ≈ 0,918. Ent(X1=F) = −(1/4)·log₂(1/4) − (3/4)·log₂(3/4) ≈ 0,811. Entropie après partitionnement = (6/10)·0,918 + (4/10)·0,811 ≈ 0,875. Gain d'information G(X1) = Ent(E) − entropie après partitionnement = 1 − 0,875 = 0,125.",
+      "concepts": ["entropie", "gain-d-information", "critere-de-decoupage"],
+      "source": "ING2_GI_ML_Tree_TD_Corr.pdf"
+    },
+    {
+      "chapterSlug": "construction-elagage",
+      "type": "ALGO_TRACE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "On construit un arbre CART sur un jeu de 8 objets répartis en classes C1 (4 objets) et C2 (4 objets). On choisit la variable de la racine en maximisant le gain de l'indice de Gini. Pour l'attribut binaire A : 3 objets ont A=1 (tous de classe C1) et 5 objets ont A=0 (1 de classe C1, 4 de classe C2). Calculez les valeurs demandées.",
+      "payload": {
+        "description": "Gini(E) avec 4 C1 et 4 C2. Nœud A=1 : 3 C1 / 0 C2. Nœud A=0 : 1 C1 / 4 C2. Gain de Gini = Gini(E) − somme pondérée des Gini des deux nœuds fils.",
+        "cells": [
+          { "id": "giniE", "label": "Indice de Gini de la racine Gini(E)", "kind": "number", "placeholder": "0.000" },
+          { "id": "giniA1", "label": "Gini du nœud A=1 (3 C1 / 0 C2)", "kind": "number", "placeholder": "0.000" },
+          { "id": "giniA0", "label": "Gini du nœud A=0 (1 C1 / 4 C2)", "kind": "number", "placeholder": "0.000" },
+          { "id": "giniAfter", "label": "Gini pondéré après le partage selon A", "kind": "number", "placeholder": "0.000" },
+          { "id": "gainA", "label": "Gain de Gini G(A)", "kind": "number", "placeholder": "0.000" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "giniE", "expected": 0.5, "absTol": 0.01 },
+          { "id": "giniA1", "expected": 0, "absTol": 0.01 },
+          { "id": "giniA0", "expected": 0.32, "absTol": 0.01 },
+          { "id": "giniAfter", "expected": 0.2, "absTol": 0.01 },
+          { "id": "gainA", "expected": 0.3, "absTol": 0.01 }
+        ]
+      },
+      "explanation": "Gini(E) = 1 − (4/8)² − (4/8)² = 1 − 0,25 − 0,25 = 0,5. Nœud A=1 (3 C1, 0 C2) : Gini = 1 − 1² − 0² = 0 (pur). Nœud A=0 (1 C1, 4 C2) : Gini = 1 − (1/5)² − (4/5)² = 1 − 0,04 − 0,64 = 0,32. Gini pondéré après partage = (3/8)·0 + (5/8)·0,32 = 0,20. Gain de Gini G(A) = 0,5 − 0,20 = 0,30.",
+      "concepts": ["indice-de-gini", "gain-d-information", "algorithme-cart"],
+      "source": "ING2_GI_ML_Tree_TD_Corr.pdf"
+    },
+    {
+      "chapterSlug": "bagging-forets",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Un problème de classification comporte p = 25 variables explicatives. Le cours recommande d'essayer d'abord mtry = √p (nombre d'attributs tirés au hasard à chaque nœud d'une forêt aléatoire). Quelle valeur de mtry cela donne-t-il ?",
+      "payload": { "placeholder": "ex. 5", "hint": "mtry = √p." },
+      "solution": { "value": 5, "absTol": 0.001 },
+      "explanation": "En classification, le cours recommande d'essayer d'abord mtry = √p. Avec p = 25, mtry = √25 = 5. C'est ce second mécanisme aléatoire — au-delà du bootstrap — qui décorrèle les arbres de la forêt.",
+      "concepts": ["selection-aleatoire-de-variables", "foret-aleatoire"],
+      "source": "ING2_GI_ML_Tree_SLIDES.pdf"
+    },
+    {
+      "chapterSlug": "oob-importance",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Quel fait, propre au bagging, rend possible la procédure Out-Of-Bag — c'est-à-dire l'estimation de l'erreur d'une forêt sans jeu de test séparé ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Les échantillons bootstrap n'utilisent pas toutes les observations : certaines ne sont pas tirées pour un arbre donné" },
+          { "id": "b", "label": "Tous les arbres sont entraînés sur exactement les mêmes données" },
+          { "id": "c", "label": "Chaque arbre est élagué jusqu'à une seule feuille" },
+          { "id": "d", "label": "La forêt ne contient qu'un seul arbre" }
+        ],
+        "shuffle": true
+      },
+      "solution": { "correct": ["a"] },
+      "explanation": "Comme chaque arbre est construit sur un échantillon bootstrap (tirage avec remise), certaines observations ne sont pas tirées pour cet arbre. Les échantillons bootstrap n'utilisent donc pas toutes les observations, ce qui ouvre la possibilité d'une évaluation interne : la procédure Out-Of-Bag.",
+      "concepts": ["echantillon-out-of-bag", "echantillon-bootstrap", "erreur-oob"],
+      "source": "Slides_RF_DM.pdf"
+    },
+    {
+      "chapterSlug": "probabilites-bayes",
+      "type": "NUMERIC",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Une maladie touche 2 % de la population : Pr(M) = 0,02. Un test la détecte avec Pr(T+/M) = 0,95 chez les malades et donne un faux positif avec Pr(T+/non M) = 0,06 chez les non-malades. Calculez la probabilité qu'une personne au test positif soit réellement malade, Pr(M/T+). Donnez le résultat arrondi au millième.",
+      "payload": { "placeholder": "ex. 0.244", "hint": "Pr(T+) = Pr(T+/M)·Pr(M) + Pr(T+/non M)·Pr(non M) (probabilités totales), puis Pr(M/T+) = Pr(T+/M)·Pr(M) / Pr(T+)." },
+      "solution": { "value": 0.244, "absTol": 0.005 },
+      "explanation": "Probabilités totales : Pr(T+) = 0,95·0,02 + 0,06·0,98 = 0,019 + 0,0588 = 0,0778. Théorème de Bayes : Pr(M/T+) = Pr(T+/M)·Pr(M) / Pr(T+) = 0,019 / 0,0778 ≈ 0,244. Malgré un test sensible, une personne positive n'a qu'environ 24 % de chances d'être malade, car la maladie est rare.",
+      "concepts": ["theoreme-de-bayes", "theoreme-des-probabilites-totales"],
+      "source": "Slides_Bayes.pdf"
+    },
+    {
+      "chapterSlug": "classifieur-bayesien-naif",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Que dit exactement l'hypothèse d'indépendance — l'hypothèse « naïve » — sur la vraisemblance Pr(A₁=a₁, …, Aₚ=aₚ / Cⱼ) ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Elle est égale au produit Πᵢ Pr(Aᵢ=aᵢ / Cⱼ) des probabilités conditionnelles attribut par attribut" },
+          { "id": "b", "label": "Elle est égale à la somme Σᵢ Pr(Aᵢ=aᵢ / Cⱼ) des probabilités conditionnelles" },
+          { "id": "c", "label": "Elle est égale à la probabilité a priori Pr(Cⱼ)" },
+          { "id": "d", "label": "Elle est toujours nulle" }
+        ],
+        "shuffle": true
+      },
+      "solution": { "correct": ["a"] },
+      "explanation": "Si l'on suppose les attributs indépendants, Pr(A₁=a₁, …, Aₚ=aₚ / Cⱼ) = Πᵢ Pr(Aᵢ=aᵢ / Cⱼ) : la probabilité de la combinaison complète est le produit des probabilités conditionnelles attribut par attribut. C'est un produit, pas une somme — et c'est cette hypothèse, rarement vérifiée exactement, qui rend le classifieur calculable.",
+      "concepts": ["hypothese-d-independance", "vraisemblance"],
+      "source": "Slides_Bayes.pdf"
+    },
+    {
+      "chapterSlug": "prediction-instance",
+      "type": "ALGO_TRACE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Sur un jeu de 10 courriels (5 spam, 5 légitimes ; Pr(spam) = Pr(legitime) = 0,5), on classe un courriel d décrit par « Mot promo = oui » et « Lien externe = non ». On donne les probabilités conditionnelles : Pr(Mot=oui/spam) = 4/5, Pr(Lien=non/spam) = 2/5, Pr(Mot=oui/legitime) = 1/5, Pr(Lien=non/legitime) = 4/5. Calculez les produits par classe, la probabilité Pr(d), la probabilité a posteriori Pr(spam/d), et indiquez la classe prédite.",
+      "payload": {
+        "description": "Hypothèse d'indépendance : Pr(d/C) = Pr(Mot=oui/C)·Pr(Lien=non/C). Produit par classe = Pr(C)·Pr(d/C). Pr(d) = somme des produits (probabilités totales). Pr(spam/d) = produit(spam) / Pr(d). Règle de décision : C = arg Max (Pr(Cⱼ)·Pr(d/Cⱼ)).",
+        "cells": [
+          { "id": "prodS", "label": "Produit pour spam : Pr(spam)·Pr(Mot=oui/spam)·Pr(Lien=non/spam)", "kind": "number", "placeholder": "0.000" },
+          { "id": "prodL", "label": "Produit pour legitime : Pr(legitime)·Pr(Mot=oui/leg.)·Pr(Lien=non/leg.)", "kind": "number", "placeholder": "0.000" },
+          { "id": "prD", "label": "Pr(d) = produit(spam) + produit(legitime)", "kind": "number", "placeholder": "0.000" },
+          { "id": "post", "label": "Probabilité a posteriori Pr(spam/d), arrondie au millième", "kind": "number", "placeholder": "0.000" },
+          { "id": "classe", "label": "Classe prédite pour d (spam ou legitime)", "kind": "text", "placeholder": "?" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "prodS", "expected": 0.16, "absTol": 0.005 },
+          { "id": "prodL", "expected": 0.08, "absTol": 0.005 },
+          { "id": "prD", "expected": 0.24, "absTol": 0.005 },
+          { "id": "post", "expected": 0.667, "absTol": 0.005 },
+          { "id": "classe", "expected": "spam", "accepted": ["spam", "Spam", "classe spam"] }
+        ],
+        "caseSensitive": false,
+        "stripAccents": true
+      },
+      "explanation": "Produit spam = Pr(spam)·Pr(Mot=oui/spam)·Pr(Lien=non/spam) = 0,5 · 0,8 · 0,4 = 0,16. Produit legitime = 0,5 · 0,2 · 0,8 = 0,08. Par le théorème des probabilités totales, Pr(d) = 0,16 + 0,08 = 0,24. La probabilité a posteriori Pr(spam/d) = produit(spam)/Pr(d) = 0,16/0,24 ≈ 0,667. Comme le produit est plus grand pour spam (0,16 > 0,08), le classifieur prédit la classe spam.",
+      "concepts": ["prediction-bayesienne", "hypothese-d-independance", "theoreme-des-probabilites-totales"],
+      "source": "Slides_Bayes.pdf"
+    },
+    {
+      "chapterSlug": "estimation-lissage",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Un attribut Aᵢ possède mᵢ = 3 valeurs possibles. Dans une classe Cⱼ de 6 exemples, la valeur a n'apparaît jamais (comptage = 0). Calculez la probabilité conditionnelle Pr(Aᵢ=a/Cⱼ) avec le lissage de Laplace et λ = 1. Arrondissez au millième.",
+      "payload": { "placeholder": "ex. 0.111", "hint": "Pr(Aᵢ=a/Cⱼ) = (λ + comptage) / (mᵢ·λ + nb exemples de Cⱼ) = (1 + 0) / (3·1 + 6)." },
+      "solution": { "value": 0.111, "absTol": 0.003 },
+      "explanation": "Lissage de Laplace : Pr(Aᵢ=a/Cⱼ) = (λ + comptage) / (mᵢ·λ + nb exemples de Cⱼ) = (1 + 0) / (3·1 + 6) = 1/9 ≈ 0,111. Même avec un comptage nul, l'estimation reste strictement positive : le problème de la probabilité nulle est évité.",
+      "concepts": ["lissage-de-laplace", "probleme-de-probabilite-nulle"],
+      "source": "Slides_Bayes.pdf"
+    },
+    {
+      "chapterSlug": "sigmoide-frontiere",
+      "type": "ALGO_TRACE",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Un modèle de régression logistique s'écrit logit(p(x)) = −5 + 0,08·x. On veut prédire la classe Ŷ pour une instance d'abscisse x = 50. Calculez le logit, la probabilité p(x), puis donnez la classe prédite (0 ou 1).",
+      "payload": {
+        "description": "Étapes : (1) logit = −5 + 0,08·x ; (2) p(x) = 1 / (1 + e^(−logit)) ; (3) classe prédite Ŷ = 1 si p(x) ≥ 0,5, sinon Ŷ = 0.",
+        "cells": [
+          { "id": "logit", "label": "logit(p(x)) = −5 + 0,08·50", "kind": "number", "placeholder": "0.0" },
+          { "id": "prob", "label": "p(x) = 1 / (1 + e^(−logit)), arrondie au millième", "kind": "number", "placeholder": "0.000" },
+          { "id": "classe", "label": "Classe prédite Ŷ (0 ou 1)", "kind": "text", "placeholder": "?" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "logit", "expected": -1, "absTol": 0.01 },
+          { "id": "prob", "expected": 0.269, "absTol": 0.003 },
+          { "id": "classe", "expected": "0", "accepted": ["0", "Y=0", "Ŷ=0", "classe 0"] }
+        ],
+        "caseSensitive": false,
+        "stripAccents": true
+      },
+      "explanation": "logit = −5 + 0,08·50 = −5 + 4 = −1. Puis p(x) = 1 / (1 + e^(−(−1))) = 1 / (1 + e¹) = 1 / 3,718 ≈ 0,269. Comme p(x) = 0,269 < 0,5, la frontière de décision donne la classe prédite Ŷ = 0.",
+      "concepts": ["frontiere-de-decision", "fonction-sigmoide", "prediction"],
+      "source": "ING2_GI_IA_RegLog_Slides.pdf"
+    },
+    {
+      "chapterSlug": "odds-coefficients",
+      "type": "CODE_ANALYSIS",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Voici la sortie R de l'ajustement d'une régression logistique entre le ronflement (RONFLE) et l'âge sur le jeu de données Ronfle, via la fonction glm. Lisez le code et la sortie, puis répondez aux sous-questions.",
+      "payload": {
+        "code": "Mydata <- read.table(\"Ronfle.txt\", header = TRUE)\nMydata$ronfle <- as.factor(Mydata$ronfle)\nmodele <- glm(ronfle ~ age, data = Mydata, family = \"binomial\")\nsummary(modele)\n\n# Sortie :\n# Coefficients:\n#             Estimate Std. Error z value Pr(>|z|)\n# (Intercept) -3.11570    1.18280  -2.634  0.00843 **\n# age          0.04700    0.02230   2.108  0.03503 *\n#\n# logit(p(x)) = -3.1157 + 0.0470 * age",
+        "language": "r",
+        "caption": "Régression logistique RONFLE ~ AGE sur le jeu Ronfle",
+        "subQuestions": [
+          {
+            "id": "q1",
+            "type": "MCQ_SINGLE",
+            "prompt": "Que fait l'appel glm(ronfle ~ age, data = Mydata, family = \"binomial\") ?",
+            "weight": 1,
+            "payload": {
+              "options": [
+                { "id": "a", "label": "Il ajuste une régression logistique expliquant ronfle à partir de l'âge" },
+                { "id": "b", "label": "Il ajuste une régression linéaire ordinaire de l'âge sur le ronflement" },
+                { "id": "c", "label": "Il construit un arbre de décision" }
+              ]
+            }
+          },
+          {
+            "id": "q2",
+            "type": "MCQ_SINGLE",
+            "prompt": "D'après le signe du coefficient de age, quel est l'effet de l'âge sur le risque de ronfler ?",
+            "weight": 1,
+            "payload": {
+              "options": [
+                { "id": "a", "label": "Le coefficient est positif (0,0470), donc le risque de ronfler augmente avec l'âge" },
+                { "id": "b", "label": "Le coefficient est négatif, donc le risque de ronfler diminue avec l'âge" },
+                { "id": "c", "label": "Le coefficient est nul, donc l'âge n'a aucun effet" }
+              ]
+            }
+          },
+          {
+            "id": "q3",
+            "type": "NUMERIC",
+            "prompt": "Calculez l'odds-ratio associé à une année d'âge supplémentaire, exp(0,0470). Arrondissez au millième.",
+            "weight": 1,
+            "payload": { "hint": "OR = exp(coefficient de age) = exp(0,0470)." }
+          }
+        ]
+      },
+      "solution": {
+        "subSolutions": [
+          { "id": "q1", "solution": { "correct": ["a"] } },
+          { "id": "q2", "solution": { "correct": ["a"] } },
+          { "id": "q3", "solution": { "value": 1.048, "absTol": 0.003 } }
+        ]
+      },
+      "explanation": "glm(ronfle ~ age, ..., family = \"binomial\") ajuste une régression logistique expliquant ronfle par l'âge — c'est l'option family = \"binomial\" qui rend la régression logistique. Le coefficient de age vaut 0,0470 : positif, donc le risque de ronfler augmente avec l'âge. L'odds-ratio est exp(0,0470) ≈ 1,048 : chaque année supplémentaire multiplie l'odds de ronfler par 1,048 environ.",
+      "concepts": ["regression-logistique", "interpretation-des-coefficients", "rapport-de-cotes"],
+      "source": "Ronfle.txt"
+    },
+    {
+      "chapterSlug": "vraisemblance-selection",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Le cours emploie deux noms pour la fonction E(a) à optimiser lors de l'estimation des coefficients de la régression logistique. Lesquels, et quel est le lien entre les objectifs ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Le « − log de la vraisemblance » et « l'entropie croisée » : maximiser la vraisemblance revient à minimiser l'entropie croisée" },
+          { "id": "b", "label": "« L'erreur quadratique » et « l'écart-type » : ce sont deux fonctions différentes" },
+          { "id": "c", "label": "« L'AIC » et « le BIC » : deux critères de sélection de variables" },
+          { "id": "d", "label": "« La précision » et « le rappel » : deux métriques d'évaluation" }
+        ],
+        "shuffle": true
+      },
+      "solution": { "correct": ["a"] },
+      "explanation": "Le cours nomme E(a) le « − log de la vraisemblance », ou « entropie croisée ». Les deux désignent la même fonction : la vraisemblance est à maximiser (point de vue statistique), l'entropie croisée à minimiser (point de vue apprentissage). D'où le signe « − » : minimiser E(a) revient à maximiser la log-vraisemblance.",
+      "concepts": ["maximum-de-vraisemblance", "entropie-croisee"],
+      "source": "ING2_GI_IA_RegLog_Slides.pdf"
+    }
+  ]
+}

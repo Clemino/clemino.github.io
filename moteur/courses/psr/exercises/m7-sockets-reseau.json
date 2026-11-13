@@ -1,0 +1,2037 @@
+[
+  {
+    "chapterSlug": "reseau-adressage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Dans le modèle client/serveur, quelle affirmation décrit correctement les deux rôles ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le serveur rend un service et est mis en attente sur une machine identifiée ; le client est lancé à la demande et appelle le serveur pour obtenir ce service."
+        },
+        {
+          "id": "b",
+          "label": "Le client et le serveur sont deux processus strictement symétriques : chacun attend l'autre, et le premier qui se connecte devient le serveur."
+        },
+        {
+          "id": "c",
+          "label": "Le serveur et le client doivent obligatoirement s'exécuter sur la même machine, le réseau ne servant qu'à relier des processus locaux."
+        },
+        {
+          "id": "d",
+          "label": "Le client attend les connexions sur un port connu, et le serveur le contacte à la demande depuis n'importe quelle machine."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le **modèle client/serveur** n'est pas symétrique. Le **serveur** est un processus qui rend un **service** précis : il est installé puis **mis en attente** sur une **machine bien identifiée** du réseau, prêt à être sollicité. Le **client** est lancé **à la demande**, depuis **n'importe quelle** machine, et c'est lui qui **appelle** le serveur pour obtenir le service. La réponse (b) est fausse : les rôles sont fixés à l'avance, pas décidés par l'ordre des connexions. (c) est fausse : tout l'intérêt des sockets est de faire dialoguer des processus sur des **machines différentes**. (d) inverse les deux rôles — c'est le **serveur** qui attend, le **client** qui contacte.",
+    "concepts": [
+      "modele-client-serveur",
+      "socket"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "reseau-adressage",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une socket est un point de communication local : elle vit dans un seul processus, sur une seule machine, et une communication réseau met en jeu deux sockets — une chez le client, une chez le serveur.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Une **socket** est une **extrémité** de communication, **locale** par nature : elle existe **dans un seul processus, sur une seule machine**. Une communication réseau relie donc **deux** sockets distinctes — une dans le processus client, une dans le processus serveur —, le réseau assurant la liaison entre ces deux extrémités. C'est exactement comme un tube, qui a deux extrémités, à ceci près que les deux sockets peuvent se trouver sur des ordinateurs différents. Une socket est par ailleurs désignée par un **descripteur** (un `int`), comme un fichier ou un tube : l'A.P.I. socket prolonge le modèle « fichier » d'UNIX.",
+    "concepts": [
+      "socket",
+      "descripteur-socket"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "reseau-adressage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "On exécute `int sk = socket(AF_INET, SOCK_DGRAM, 0);`. Quelle socket est créée, et que désigne précisément la valeur 0 du troisième argument ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une socket Internet en mode non connecté : le 0 demande au système le protocole le mieux adapté au type — ici UDP."
+        },
+        {
+          "id": "b",
+          "label": "Une socket Internet en mode connecté : le 0 demande au système le protocole le mieux adapté au type — ici TCP."
+        },
+        {
+          "id": "c",
+          "label": "Une socket dans le domaine local : le 0 signifie qu'aucun protocole réseau n'est utilisé."
+        },
+        {
+          "id": "d",
+          "label": "Une socket invalide : le troisième argument de socket() ne peut jamais valoir 0."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "`socket(AF_INET, SOCK_DGRAM, 0)` crée une socket dans le domaine **`AF_INET`** (Internet, IPv4) et de type **`SOCK_DGRAM`** : le mode **non connecté**, par **datagrammes**. Le troisième argument, le `protocol`, vaut **`0`** : cette valeur — l'usage **quasi systématique** — demande au système de choisir le protocole **le mieux adapté au type** indiqué. Pour `SOCK_DGRAM`, ce protocole est **UDP**. (b) confond avec `SOCK_STREAM`, qui donnerait TCP. (c) est faux : le domaine est bien `AF_INET`, donc Internet. (d) est faux : `0` est précisément la valeur recommandée pour ce paramètre.",
+    "concepts": [
+      "socket-primitive",
+      "sock-dgram",
+      "af-inet"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "reseau-adressage",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Sur une machine x86 (petit-boutiste), on peut écrire `adresse.sin_port = 8080;` directement, sans appeler `htons`, car la conversion d'ordre des octets ne concerne que les adresses IP.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Le champ **`sin_port`** doit **toujours** recevoir une valeur passée par **`htons`** : `adresse.sin_port = htons(8080);`. Le réseau impose l'ordre **gros-boutiste** (*network byte order*) ; une machine x86 est **petit-boutiste**. Écrire `sin_port = 8080;` directement sur une telle machine y range les octets dans le **mauvais ordre** : le serveur écoutera en réalité sur un **autre port** que celui prévu, et le client ne le trouvera pas. La conversion d'ordre concerne **tout** nombre destiné à circuler sur le réseau — le **port** (`htons`, 16 bits) **comme** l'**adresse IP** (`htonl`, 32 bits). Oublier `htons` sur le port est l'erreur de débutant numéro un.",
+    "concepts": [
+      "boutisme",
+      "htons-htonl",
+      "boutisme-reseau"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "reseau-adressage",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur l'adressage Internet et les conversions d'ordre des octets.",
+    "payload": {
+      "template": "Pour désigner une extrémité de communication sur Internet, il faut un couple (adresse IP, port) : l'adresse IP, sur {{c1}} bits, identifie la machine, et le port, sur {{c2}} bits, identifie le service. La structure {{c3}} porte ce couple dans le domaine AF_INET. Avant l'envoi, un numéro de port se convertit en ordre réseau avec la fonction {{c4}}, et une adresse IP donnée sous forme de chaîne pointée se convertit en struct in_addr avec la fonction {{c5}}.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm",
+          "hint": "taille d'une adresse IPv4"
+        },
+        {
+          "id": "c2",
+          "width": "sm",
+          "hint": "taille d'un numéro de port"
+        },
+        {
+          "id": "c3",
+          "width": "md"
+        },
+        {
+          "id": "c4",
+          "width": "sm",
+          "hint": "host to network short"
+        },
+        {
+          "id": "c5",
+          "width": "sm",
+          "hint": "ASCII to network"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "32"
+        ],
+        "c2": [
+          "16"
+        ],
+        "c3": [
+          "struct sockaddr_in",
+          "sockaddr_in"
+        ],
+        "c4": [
+          "htons",
+          "htons()"
+        ],
+        "c5": [
+          "inet_aton",
+          "inet_aton()"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Une **adresse IP** (IPv4) est codée sur **32** bits ; on l'écrit pour les humains en notation pointée (`132.227.104.15`). Un **numéro de port** est codé sur **16** bits, soit une valeur de 0 à 65535. Le couple (IP, port) est transmis aux primitives via la structure **`struct sockaddr_in`** (en-tête `<netinet/in.h>`), dont les champs sont `sin_family`, `sin_port` et `sin_addr`. Un port se place en ordre réseau avec **`htons`** (*host to network short*, 16 bits). Une adresse IP fournie sous forme de chaîne pointée se convertit en `struct in_addr` avec **`inet_aton`** (*ASCII to network*), qui renvoie une valeur non nulle en cas de succès et `0` si la chaîne est invalide.",
+    "concepts": [
+      "adresse-ip",
+      "port",
+      "sockaddr-in",
+      "htons-htonl",
+      "inet-aton"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "reseau-adressage",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque élément de l'A.P.I. socket à sa description exacte.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "AF_INET"
+        },
+        {
+          "id": "l2",
+          "label": "SOCK_STREAM"
+        },
+        {
+          "id": "l3",
+          "label": "INADDR_ANY"
+        },
+        {
+          "id": "l4",
+          "label": "127.0.0.1"
+        },
+        {
+          "id": "l5",
+          "label": "htonl"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Domaine de communication Internet (IPv4)"
+        },
+        {
+          "id": "r2",
+          "label": "Type de socket en mode connecté et fiable — TCP"
+        },
+        {
+          "id": "r3",
+          "label": "« Toute interface locale » : adresse employée côté serveur"
+        },
+        {
+          "id": "r4",
+          "label": "Adresse de bouclage : désigne la machine locale elle-même"
+        },
+        {
+          "id": "r5",
+          "label": "Convertit un entier 32 bits du format machine vers le format réseau"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4",
+        "l5": "r5"
+      }
+    },
+    "explanation": "**`AF_INET`** est le **domaine** de communication **Internet** en version IPv4 — celui de tout le module. **`SOCK_STREAM`** est le **type** de socket en mode **connecté** et **fiable** : dans `AF_INET`, c'est le protocole **TCP**. **`INADDR_ANY`** (l'adresse `0.0.0.0`) signifie « **n'importe quelle interface locale** » : un serveur l'emploie pour `sin_addr` afin d'accepter les connexions sur toutes ses interfaces. **`127.0.0.1`** est l'adresse de **bouclage** (*loopback*) : elle désigne **la machine locale elle-même**, idéale pour tester client et serveur ensemble. **`htonl`** (*host to network long*) convertit un entier **32 bits** — typiquement une adresse IP — du format machine vers le format réseau.",
+    "concepts": [
+      "af-inet",
+      "sock-stream",
+      "inaddr-any",
+      "bouclage-loopback",
+      "htons-htonl"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "reseau-adressage",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Remettez dans l'ordre les étapes qui préparent une `struct sockaddr_in` puis appellent une primitive socket générique.",
+    "payload": {
+      "items": [
+        {
+          "id": "i1",
+          "label": "Déclarer la variable : struct sockaddr_in adresse;"
+        },
+        {
+          "id": "i2",
+          "label": "Effacer toute la structure : memset(&adresse, 0, sizeof(adresse));"
+        },
+        {
+          "id": "i3",
+          "label": "Renseigner sin_family = AF_INET;"
+        },
+        {
+          "id": "i4",
+          "label": "Renseigner sin_port (via htons) et sin_addr"
+        },
+        {
+          "id": "i5",
+          "label": "Appeler la primitive en transtypant : (struct sockaddr *) &adresse"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ]
+    },
+    "explanation": "L'ordre logique est : **(1)** déclarer la variable `struct sockaddr_in adresse;` ; **(2)** l'**effacer entièrement** avec `memset` — ce qui met notamment le remplissage `sin_zero[8]` à zéro ; **(3)** renseigner `sin_family = AF_INET;` ; **(4)** renseigner `sin_port` (toujours via `htons`) et `sin_addr` ; **(5)** appeler la primitive (`bind`, `connect`…) en **transtypant** l'adresse de la structure en `(struct sockaddr *)`. Le `memset` doit venir **avant** de remplir les champs, sinon il effacerait les valeurs déjà posées. Le **cast** vers la structure **générique** `struct sockaddr *` n'intervient qu'au moment de l'**appel** : on remplit une `sockaddr_in`, mais on passe un `(struct sockaddr *)`.",
+    "concepts": [
+      "sockaddr-in",
+      "sockaddr-generique",
+      "htons-htonl"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "reseau-adressage",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Ce programme illustre les conversions d'ordre des octets et d'adresse. Donnez la sortie exacte affichée sur la sortie standard.",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <arpa/inet.h>\n\nint main(void) {\n    /* conversion machine -> reseau et retour, sur un port (16 bits) */\n    unsigned short port = 7000;\n    unsigned short reseau = htons(port);\n    unsigned short retour = ntohs(reseau);\n\n    printf(\"port   = %u\\n\", port);\n    printf(\"retour = %u\\n\", retour);\n    printf(\"egaux  = %s\\n\", (port == retour) ? \"oui\" : \"non\");\n\n    /* une adresse IP, de la chaine pointee vers la struct in_addr et retour */\n    struct in_addr adr;\n    if (inet_aton(\"193.49.30.38\", &adr) == 0) {\n        printf(\"adresse invalide\\n\");\n        return 1;\n    }\n    printf(\"adresse = %s\\n\", inet_ntoa(adr));\n\n    /* inet_aton renvoie 0 sur une chaine invalide */\n    struct in_addr autre;\n    printf(\"chaine bidon : %d\\n\", inet_aton(\"999.0.0.1\", &autre));\n    return 0;\n}\n"
+    },
+    "solution": {
+      "expectedOutput": "port   = 7000\nretour = 7000\negaux  = oui\nadresse = 193.49.30.38\nchaine bidon : 0"
+    },
+    "explanation": "**`htons`** convertit le port `7000` du format machine vers le format réseau ; **`ntohs`** fait la conversion **inverse**. Appliquer l'une puis l'autre **restitue exactement** la valeur de départ : `retour` vaut donc `7000`, et le test `port == retour` affiche `oui`. C'est la propriété essentielle de ces fonctions : un aller-retour est neutre. Ensuite, **`inet_aton(\"193.49.30.38\", &adr)`** convertit la chaîne pointée en `struct in_addr`, et **`inet_ntoa`** fait l'inverse — d'où l'affichage `193.49.30.38`. Enfin, `\"999.0.0.1\"` n'est **pas** une adresse valide (999 dépasse 255) : `inet_aton` échoue et renvoie **`0`**.",
+    "concepts": [
+      "htons-htonl",
+      "ntohs-ntohl",
+      "inet-aton",
+      "inet-ntoa"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "reseau-adressage",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le programme reçoit une adresse IP et un numéro de port sur la ligne de commande, et doit remplir une `struct sockaddr_in` du domaine Internet. Complétez le bloc marqué : renseignez `sin_family`, `sin_port` (converti en ordre réseau) et `sin_addr` (à partir de la chaîne pointée). En cas d'adresse IP invalide, écrire un message sur la sortie d'erreur et renvoyer 1.",
+    "payload": {
+      "spec": "Le programme inclut <stdio.h>, <stdlib.h>, <string.h>, <netinet/in.h>, <arpa/inet.h>. Il vérifie argc >= 2 et reçoit l'IP en argv[1] et le port en argv[2]. La structure adr est déjà déclarée et effacée par memset. À COMPLÉTER : adr.sin_family = AF_INET ; adr.sin_port = htons((unsigned short) atoi(argv[2])) ; et un appel inet_aton(argv[1], &adr.sin_addr) dont l'échec (retour 0) provoque fprintf(stderr, ...) puis return 1. Les trois printf finaux affichent 'famille AF_INET : oui/non', 'port relu : <port>' (via ntohs) et 'adresse : <ip>' (via inet_ntoa).",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "tests": [
+        {
+          "name": "127.0.0.1 / 8080",
+          "stdin": "",
+          "args": [
+            "127.0.0.1",
+            "8080"
+          ],
+          "expectedStdout": "famille AF_INET : oui\nport relu : 8080\nadresse : 127.0.0.1",
+          "compare": "trimmed"
+        },
+        {
+          "name": "193.49.30.38 / 22",
+          "stdin": "",
+          "args": [
+            "193.49.30.38",
+            "22"
+          ],
+          "expectedStdout": "famille AF_INET : oui\nport relu : 22\nadresse : 193.49.30.38",
+          "compare": "trimmed"
+        },
+        {
+          "name": "10.0.0.5 / 7000",
+          "stdin": "",
+          "args": [
+            "10.0.0.5",
+            "7000"
+          ],
+          "expectedStdout": "famille AF_INET : oui\nport relu : 7000\nadresse : 10.0.0.5",
+          "compare": "trimmed"
+        }
+      ],
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(int argc, char *argv[]) {\n    if (argc < 3) { fprintf(stderr, \"usage: %s ip port\\n\", argv[0]); return 1; }\n\n    struct sockaddr_in adr;\n    memset(&adr, 0, sizeof adr);\n\n    /* === A COMPLETER ===\n       1. sin_family : la famille AF_INET\n       2. sin_port   : le port argv[2] (atoi), converti en ordre reseau avec htons\n       3. sin_addr   : l'adresse argv[1], via inet_aton ; sortir en erreur si invalide */\n\n    printf(\"famille AF_INET : %s\\n\", (adr.sin_family == AF_INET) ? \"oui\" : \"non\");\n    /* ntohs : reconvertit le port de l'ordre reseau vers l'ordre machine */\n    printf(\"port relu : %u\\n\", ntohs(adr.sin_port));\n    printf(\"adresse : %s\\n\", inet_ntoa(adr.sin_addr));\n    return 0;\n}\n"
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(int argc, char *argv[]) {\n    if (argc < 3) { fprintf(stderr, \"usage: %s ip port\\n\", argv[0]); return 1; }\n\n    struct sockaddr_in adr;\n    memset(&adr, 0, sizeof adr);\n\n    adr.sin_family = AF_INET;\n    adr.sin_port   = htons((unsigned short) atoi(argv[2]));\n    if (inet_aton(argv[1], &adr.sin_addr) == 0) {\n        fprintf(stderr, \"adresse IP invalide\\n\");\n        return 1;\n    }\n\n    printf(\"famille AF_INET : %s\\n\", (adr.sin_family == AF_INET) ? \"oui\" : \"non\");\n    /* ntohs : reconvertit le port de l'ordre reseau vers l'ordre machine */\n    printf(\"port relu : %u\\n\", ntohs(adr.sin_port));\n    printf(\"adresse : %s\\n\", inet_ntoa(adr.sin_addr));\n    return 0;\n}\n"
+    },
+    "explanation": "Remplir une `struct sockaddr_in` du domaine Internet suit toujours trois étapes : **`sin_family = AF_INET;`** (le domaine), **`sin_port = htons(...)`** (le port, **converti en ordre réseau** — c'est obligatoire), et **`sin_addr`** via **`inet_aton`**, qui transforme la chaîne pointée en `struct in_addr` directement en ordre réseau. `inet_aton` renvoie une valeur **non nulle** en cas de succès et **`0`** si la chaîne est invalide : tester ce `0` est la bonne façon de détecter une adresse mal formée. Le programme se relit ensuite grâce à **`ntohs`** (le port) et **`inet_ntoa`** (l'adresse), preuve que les conversions ont bien été faites.",
+    "concepts": [
+      "sockaddr-in",
+      "htons-htonl",
+      "inet-aton",
+      "af-inet"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-serveur",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la séquence d'appels correcte d'un serveur TCP, depuis la création de la socket jusqu'à l'établissement de la connexion avec un client ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "socket → bind → listen → accept"
+        },
+        {
+          "id": "b",
+          "label": "socket → listen → bind → accept"
+        },
+        {
+          "id": "c",
+          "label": "socket → bind → accept → listen"
+        },
+        {
+          "id": "d",
+          "label": "socket → connect → listen → accept"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La séquence d'un serveur TCP est, dans l'ordre : **`socket`** (créer la socket d'écoute) → **`bind`** (lui attacher une adresse locale : IP + port) → **`listen`** (la passer en mode écoute et ouvrir la file d'attente) → **`accept`** (attendre et accepter un client). Cet ordre est **logique** : on ne peut pas écouter sur une socket avant de lui avoir donné une adresse (`bind` avant `listen`), et on ne peut pas accepter de connexion avant d'avoir ouvert le mode écoute (`listen` avant `accept`). (b) inverse `bind` et `listen`. (c) place `accept` avant `listen`. (d) emploie `connect`, qui est un appel **client**, jamais serveur.",
+    "concepts": [
+      "sequence-serveur-tcp",
+      "bind",
+      "listen",
+      "accept"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-serveur",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "L'appel `accept` renvoie une nouvelle socket, distincte de la socket d'écoute : c'est sur cette nouvelle socket — la socket de service — que le serveur dialogue avec le client, tandis que la socket d'écoute reste ouverte pour les clients suivants.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai — c'est le point capital du chapitre. **`accept` ne renvoie PAS la socket d'écoute** : il **crée** et renvoie une **nouvelle socket**, déjà **connectée** au client qui vient de se présenter. C'est la **socket de service**. La socket d'**écoute** (celle renvoyée par `socket`, passée à `bind`/`listen`/`accept`) **reste ouverte** et continue de recevoir les demandes de connexion des **autres** clients. Après `accept`, le serveur possède donc **deux** sockets : il **dialogue** (`recv`/`send`) sur la socket de **service**, et **`accept`e de nouveau** sur la socket d'**écoute**. Cette distinction est ce qui permet de servir des clients les uns après les autres dans une boucle.",
+    "concepts": [
+      "accept",
+      "socket-ecoute",
+      "socket-service"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-serveur",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Que fait exactement l'appel `listen(server_fd, 5)`, et que représente le 5 ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il passe la socket en mode écoute et fixe à 5 la taille de la file d'attente des connexions en cours d'établissement ; il ne bloque pas et n'accepte aucune connexion."
+        },
+        {
+          "id": "b",
+          "label": "Il bloque le serveur jusqu'à ce que 5 clients se soient connectés, puis renvoie la main."
+        },
+        {
+          "id": "c",
+          "label": "Il limite à 5 le nombre total de clients que le serveur pourra servir durant toute son existence."
+        },
+        {
+          "id": "d",
+          "label": "Il accepte immédiatement les 5 premières connexions en attente et renvoie 5 sockets de service."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "**`listen`** fait passer la socket en **mode écoute** : à partir de cet appel, elle est prête à **recevoir des demandes de connexion**. Le second argument, le **`backlog`** (ici `5`), fixe la **longueur maximale de la file d'attente** des connexions **en cours d'établissement** — le nombre de clients pouvant **patienter simultanément** avant d'être acceptés. `listen` **ne bloque pas** et n'**accepte** aucune connexion : il ne fait que **préparer** la socket et **dimensionner la file**. (b) décrit un blocage qui n'existe pas. (c) est faux : un serveur peut servir une **infinité** de clients au fil du temps ; le `backlog` ne limite que l'attente **simultanée**. (d) confond `listen` avec `accept`.",
+    "concepts": [
+      "listen",
+      "file-attente-backlog"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-serveur",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez l'appel `bind` d'un serveur TCP et le résumé qui l'accompagne.",
+    "payload": {
+      "template": "L'appel s'écrit : bind(server_fd, ({{c1}} *) &adresse, {{c2}}(adresse)). Le premier argument est le descripteur de la socket d'écoute ; le deuxième est l'adresse de la struct sockaddr_in, transtypée vers la structure générique ; le troisième est la taille de la structure. Côté serveur, le champ sin_addr reçoit la valeur {{c3}} pour accepter les connexions sur toute interface locale, et le champ sin_port reçoit le port d'écoute converti par {{c4}}. En cas d'échec, bind renvoie la valeur {{c5}}.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "md",
+          "hint": "la structure générique"
+        },
+        {
+          "id": "c2",
+          "width": "sm",
+          "hint": "opérateur donnant une taille"
+        },
+        {
+          "id": "c3",
+          "width": "md",
+          "hint": "« toute interface locale »"
+        },
+        {
+          "id": "c4",
+          "width": "sm"
+        },
+        {
+          "id": "c5",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "struct sockaddr",
+          "sockaddr"
+        ],
+        "c2": [
+          "sizeof"
+        ],
+        "c3": [
+          "INADDR_ANY",
+          "htonl(INADDR_ANY)"
+        ],
+        "c4": [
+          "htons",
+          "htons()"
+        ],
+        "c5": [
+          "-1"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "**`bind`** attache une **adresse locale** à la socket. Ses primitives étant **génériques**, le deuxième argument doit être transtypé vers la structure générique **`struct sockaddr *`** — on remplit une `sockaddr_in`, mais on passe un `(struct sockaddr *)`. Le troisième argument est la **taille** de la structure réellement utilisée, obtenue par **`sizeof`** (`sizeof(adresse)`, donc la taille de la `sockaddr_in`). Côté serveur, `sin_addr` reçoit **`INADDR_ANY`** (proprement `htonl(INADDR_ANY)`) : « **toute interface locale** ». Le port `sin_port` est, lui, converti par **`htons`**. En cas d'échec, `bind` renvoie **`-1`** (par exemple l'erreur `EADDRINUSE` si le port est déjà occupé).",
+    "concepts": [
+      "bind",
+      "sockaddr-generique",
+      "inaddr-any",
+      "htons-htonl"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-serveur",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Remettez dans l'ordre d'exécution les étapes d'un serveur TCP qui sert un seul client puis s'arrête.",
+    "payload": {
+      "items": [
+        {
+          "id": "i1",
+          "label": "server_fd = socket(AF_INET, SOCK_STREAM, 0)"
+        },
+        {
+          "id": "i2",
+          "label": "bind(server_fd, ...) — attacher l'adresse locale"
+        },
+        {
+          "id": "i3",
+          "label": "listen(server_fd, 5) — passer en mode écoute"
+        },
+        {
+          "id": "i4",
+          "label": "sk = accept(server_fd, ...) — obtenir la socket de service"
+        },
+        {
+          "id": "i5",
+          "label": "recv / send sur sk — dialoguer avec le client"
+        },
+        {
+          "id": "i6",
+          "label": "close(sk) puis close(server_fd)"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5",
+        "i6"
+      ]
+    },
+    "explanation": "Le déroulement d'un serveur TCP est immuable : **(1)** `socket` crée la socket d'**écoute** ; **(2)** `bind` lui attache une **adresse locale** (IP + port) ; **(3)** `listen` la passe en **mode écoute** et ouvre la file d'attente ; **(4)** `accept` **bloque** jusqu'à l'arrivée d'un client et renvoie la **socket de service** `sk` ; **(5)** le serveur **dialogue** avec ce client par `recv`/`send` **sur `sk`** (jamais sur la socket d'écoute) ; **(6)** il **ferme** d'abord la socket de service `sk` (le client est fini), puis la socket d'écoute `server_fd` (le serveur s'arrête). Pour servir **plusieurs** clients à la suite, on entoure les étapes 4-5 d'une boucle `while(1)`, le `close(sk)` se faisant à chaque tour.",
+    "concepts": [
+      "sequence-serveur-tcp",
+      "accept",
+      "send-recv",
+      "close-socket"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-serveur",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque primitive ou option du serveur TCP à son rôle exact.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "bind"
+        },
+        {
+          "id": "l2",
+          "label": "listen"
+        },
+        {
+          "id": "l3",
+          "label": "accept"
+        },
+        {
+          "id": "l4",
+          "label": "recv"
+        },
+        {
+          "id": "l5",
+          "label": "SO_REUSEADDR"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Attache une adresse locale (IP + port) à la socket d'écoute"
+        },
+        {
+          "id": "r2",
+          "label": "Passe la socket en mode écoute et dimensionne la file d'attente"
+        },
+        {
+          "id": "r3",
+          "label": "Bloque jusqu'à l'arrivée d'un client et renvoie la socket de service"
+        },
+        {
+          "id": "r4",
+          "label": "Reçoit des données du client ; renvoie 0 si la connexion est fermée"
+        },
+        {
+          "id": "r5",
+          "label": "Option de socket évitant l'échec « Address already in use » au redémarrage"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4",
+        "l5": "r5"
+      }
+    },
+    "explanation": "**`bind`** **attache une adresse locale** (IP + port) à la socket d'écoute, sans quoi le système ne saurait pas sur quel port le serveur attend. **`listen`** passe la socket en **mode écoute** et **dimensionne la file d'attente** (le `backlog`). **`accept`** **bloque** jusqu'à l'arrivée d'un client et renvoie la **socket de service**, connectée à ce client. **`recv`** **reçoit** des données sur la socket de service ; sa valeur de retour mérite attention : un nombre > 0 d'octets reçus, **`0`** si le correspondant a **fermé** la connexion, `-1` en cas d'erreur. **`SO_REUSEADDR`** est une **option de socket** (posée via `setsockopt`, entre `socket` et `bind`) qui autorise la réutilisation immédiate de l'adresse, évitant l'échec **`EADDRINUSE`** (« Address already in use ») au redémarrage rapide d'un serveur.",
+    "concepts": [
+      "bind",
+      "listen",
+      "accept",
+      "send-recv",
+      "so-reuseaddr"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-serveur",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Ce programme unique crée un serveur (processus fils) et un client (processus père) qui dialoguent en TCP sur l'adresse de bouclage. Le fils suit la séquence socket → bind → listen → accept. Donnez la sortie exacte affichée sur la sortie standard.",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(void) {\n    int tube[2];\n    pipe(tube);\n\n    if (fork() == 0) {\n        /* ENFANT = SERVEUR */\n        close(tube[0]);\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        struct sockaddr_in a;\n        memset(&a, 0, sizeof a);\n        a.sin_family = AF_INET;\n        a.sin_addr.s_addr = htonl(INADDR_ANY);\n        a.sin_port = htons(0);\n        bind(ec, (struct sockaddr *) &a, sizeof a);\n        socklen_t lg = sizeof a;\n        getsockname(ec, (struct sockaddr *) &a, &lg);\n        unsigned short port = ntohs(a.sin_port);\n        listen(ec, 5);\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n        printf(\"serveur : socle pret\\n\");\n        int sv = accept(ec, NULL, NULL);\n        char buf[64] = {0};\n        recv(sv, buf, sizeof buf - 1, 0);\n        printf(\"serveur recoit : %s\\n\", buf);\n        send(sv, \"ok\", 2, 0);\n        close(sv);\n        close(ec);\n        exit(0);\n    }\n\n    /* PARENT = CLIENT */\n    close(tube[1]);\n    unsigned short port;\n    read(tube[0], &port, sizeof port);\n    close(tube[0]);\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    struct sockaddr_in s;\n    memset(&s, 0, sizeof s);\n    s.sin_family = AF_INET;\n    s.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &s.sin_addr);\n    connect(sk, (struct sockaddr *) &s, sizeof s);\n    send(sk, \"salut\", 5, 0);\n    char buf[64] = {0};\n    recv(sk, buf, sizeof buf - 1, 0);\n    printf(\"client recoit : %s\\n\", buf);\n    close(sk);\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "expectedOutput": "serveur : socle pret\nserveur recoit : salut\nclient recoit : ok"
+    },
+    "explanation": "Le programme est **déterministe** parce que le client est **synchronisé** sur le serveur par le tube. Le fils (serveur) fait `socket` → `bind` (port 0 : le système choisit un port libre) → `getsockname` (récupère le port effectif) → `listen` ; il écrit ce port dans le tube **puis** affiche `serveur : socle pret`. Le père (client) **bloque** sur la lecture du tube : il ne peut donc pas démarrer avant que le serveur soit prêt. Il `connect`e (ce qui débloque l'`accept` du serveur), envoie `salut`. Le serveur reçoit et affiche `serveur recoit : salut`, puis répond `ok`. Le client reçoit et affiche `client recoit : ok`. L'ordre des trois lignes est garanti par cet enchaînement de blocages successifs.",
+    "concepts": [
+      "sequence-serveur-tcp",
+      "accept",
+      "getsockname"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-serveur",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 4,
+    "prompt": "Ce programme fait dialoguer un serveur TCP (fils) et un client (père) sur 127.0.0.1 : le client envoie un mot, le serveur le renvoie en écho. En l'état, le programme échoue. Trouvez et corrigez le bug. (Indice : examinez la séquence d'appels du serveur entre `bind` et `accept`.)",
+    "payload": {
+      "spec": "Le bug est une étape MANQUANTE de la séquence serveur. Le fils appelle socket, bind, getsockname, puis directement accept — sans jamais appeler listen. Or accept ne peut fonctionner que sur une socket passée en mode écoute par listen. Sans listen, accept échoue (EINVAL), le serveur quitte, et le connect du client échoue à son tour (ECONNREFUSED). La correction consiste à insérer listen(ec, 5) après le bind/getsockname et avant le accept. Le reste du programme (client, tube, échange) est correct.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "tests": [
+        {
+          "name": "echo court",
+          "stdin": "",
+          "args": [
+            "ping"
+          ],
+          "expectedStdout": "serveur recoit : ping\nclient recoit : ping",
+          "compare": "trimmed"
+        },
+        {
+          "name": "echo identifiant",
+          "stdin": "",
+          "args": [
+            "psr-2026"
+          ],
+          "expectedStdout": "serveur recoit : psr-2026\nclient recoit : psr-2026",
+          "compare": "trimmed"
+        }
+      ],
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n/* Serveur (enfant) et client (parent) communiquent sur 127.0.0.1.\n   BUG : le serveur ne passe jamais sa socket en mode ecoute. */\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s mot\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        close(tube[0]);\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &adr, sizeof adr) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof adr;\n        getsockname(ec, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n        int sv = accept(ec, NULL, NULL);\n        if (sv == -1) { perror(\"accept\"); exit(EXIT_FAILURE); }\n        char buf[128] = {0};\n        ssize_t n = recv(sv, buf, sizeof buf - 1, 0);\n        if (n > 0) { buf[n] = '\\0'; printf(\"serveur recoit : %s\\n\", buf); send(sv, buf, strlen(buf), 0); }\n        close(sv);\n        close(ec);\n        exit(EXIT_SUCCESS);\n    }\n\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n    if (connect(sk, (struct sockaddr *) &srv, sizeof srv) == -1) { perror(\"connect\"); exit(EXIT_FAILURE); }\n    send(sk, argv[1], strlen(argv[1]), 0);\n    char buf[128] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) { buf[n] = '\\0'; printf(\"client recoit : %s\\n\", buf); }\n    close(sk);\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s mot\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        close(tube[0]);\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &adr, sizeof adr) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof adr;\n        getsockname(ec, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        if (listen(ec, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n        int sv = accept(ec, NULL, NULL);\n        if (sv == -1) { perror(\"accept\"); exit(EXIT_FAILURE); }\n        char buf[128] = {0};\n        ssize_t n = recv(sv, buf, sizeof buf - 1, 0);\n        if (n > 0) { buf[n] = '\\0'; printf(\"serveur recoit : %s\\n\", buf); send(sv, buf, strlen(buf), 0); }\n        close(sv);\n        close(ec);\n        exit(EXIT_SUCCESS);\n    }\n\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n    if (connect(sk, (struct sockaddr *) &srv, sizeof srv) == -1) { perror(\"connect\"); exit(EXIT_FAILURE); }\n    send(sk, argv[1], strlen(argv[1]), 0);\n    char buf[128] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) { buf[n] = '\\0'; printf(\"client recoit : %s\\n\", buf); }\n    close(sk);\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "explanation": "Le bug est une **étape manquante** de la séquence serveur : entre `bind` et `accept`, le serveur a **oublié `listen`**. La séquence d'un serveur TCP est `socket → bind → listen → accept`, et `accept` ne fonctionne **que** sur une socket préalablement passée en **mode écoute** par `listen`. Sur une socket simplement `bind`ée mais jamais mise en écoute, `accept` **échoue** (erreur `EINVAL`) : le serveur quitte aussitôt, le port n'est jamais ouvert au service, et le `connect` du client échoue à son tour avec **`ECONNREFUSED`**. La correction consiste à insérer **`listen(ec, 5);`** après le bloc `bind`/`getsockname` et avant `accept`. C'est l'une des erreurs les plus fréquentes dans les exercices de complétion de serveur.",
+    "concepts": [
+      "listen",
+      "sequence-serveur-tcp",
+      "accept"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-serveur",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme fait dialoguer un serveur TCP (fils) et un client (père) sur 127.0.0.1. La séquence socket → bind → listen → accept est complète, mais le serveur ne reçoit jamais le message du client. Trouvez et corrigez le bug. (Indice : sur quelle socket le serveur appelle-t-il `recv` et `send` ?)",
+    "payload": {
+      "spec": "Le bug : le serveur dialogue sur la MAUVAISE socket. accept renvoie une nouvelle socket de service sv, mais le serveur appelle recv(ec, ...) et send(ec, ...) sur la socket d'ÉCOUTE ec au lieu de la socket de service sv. Une socket d'écoute n'est jamais connectée à un client : recv y échoue (ENOTCONN). La correction consiste à remplacer recv(ec, ...) par recv(sv, ...) et send(ec, ...) par send(sv, ...). Le reste du programme est correct.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "tests": [
+        {
+          "name": "echo court",
+          "stdin": "",
+          "args": [
+            "abc"
+          ],
+          "expectedStdout": "serveur recoit : abc\nclient recoit : abc",
+          "compare": "trimmed"
+        },
+        {
+          "name": "echo mot",
+          "stdin": "",
+          "args": [
+            "socket"
+          ],
+          "expectedStdout": "serveur recoit : socket\nclient recoit : socket",
+          "compare": "trimmed"
+        }
+      ],
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n/* Serveur (enfant) et client (parent) sur 127.0.0.1.\n   BUG : le serveur dialogue sur la mauvaise socket. */\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s mot\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        close(tube[0]);\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &adr, sizeof adr) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof adr;\n        getsockname(ec, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        if (listen(ec, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n        int sv = accept(ec, NULL, NULL);\n        if (sv == -1) { perror(\"accept\"); exit(EXIT_FAILURE); }\n        char buf[128] = {0};\n        ssize_t n = recv(ec, buf, sizeof buf - 1, 0);\n        if (n > 0) { buf[n] = '\\0'; printf(\"serveur recoit : %s\\n\", buf); send(ec, buf, strlen(buf), 0); }\n        close(sv);\n        close(ec);\n        exit(EXIT_SUCCESS);\n    }\n\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n    if (connect(sk, (struct sockaddr *) &srv, sizeof srv) == -1) { perror(\"connect\"); exit(EXIT_FAILURE); }\n    send(sk, argv[1], strlen(argv[1]), 0);\n    char buf[128] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) { buf[n] = '\\0'; printf(\"client recoit : %s\\n\", buf); }\n    close(sk);\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s mot\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        close(tube[0]);\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &adr, sizeof adr) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof adr;\n        getsockname(ec, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        if (listen(ec, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n        int sv = accept(ec, NULL, NULL);\n        if (sv == -1) { perror(\"accept\"); exit(EXIT_FAILURE); }\n        char buf[128] = {0};\n        ssize_t n = recv(sv, buf, sizeof buf - 1, 0);\n        if (n > 0) { buf[n] = '\\0'; printf(\"serveur recoit : %s\\n\", buf); send(sv, buf, strlen(buf), 0); }\n        close(sv);\n        close(ec);\n        exit(EXIT_SUCCESS);\n    }\n\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n    if (connect(sk, (struct sockaddr *) &srv, sizeof srv) == -1) { perror(\"connect\"); exit(EXIT_FAILURE); }\n    send(sk, argv[1], strlen(argv[1]), 0);\n    char buf[128] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) { buf[n] = '\\0'; printf(\"client recoit : %s\\n\", buf); }\n    close(sk);\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "explanation": "Le bug est la confusion entre la **socket d'écoute** et la **socket de service**. `accept` renvoie une **nouvelle** socket, `sv`, qui est la seule **connectée** au client. Or le serveur appelle `recv(ec, ...)` et `send(ec, ...)` sur **`ec`**, la socket d'**écoute**. Une socket d'écoute ne sert **qu'à recevoir des demandes de connexion** : elle n'est **jamais connectée** à un client, donc `recv` y échoue (erreur `ENOTCONN`) et le serveur n'affiche rien. La correction : dialoguer sur la **socket de service**, donc remplacer `recv(ec, ...)` par **`recv(sv, ...)`** et `send(ec, ...)` par **`send(sv, ...)`**. Règle à retenir : on **`accept`e** sur la socket d'écoute, mais on **dialogue** (`recv`/`send`) sur la socket de service.",
+    "concepts": [
+      "socket-ecoute",
+      "socket-service",
+      "accept"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-serveur",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Programme unique : le processus fils est un serveur TCP COMPLET (déjà écrit) qui reçoit un mot et le renvoie en MAJUSCULES ; le processus père est le client, à compléter. Le port du serveur arrive par le tube. Complétez le client : créez la socket, remplissez la `sockaddr_in` visant 127.0.0.1 sur ce port, connectez-vous, envoyez `argv[1]`, recevez la réponse et affichez-la sous la forme `client : recu = <reponse>`.",
+    "payload": {
+      "spec": "Le squelette fournit toute la plomberie (pipe, fork) et le SERVEUR complet : il fait socket/bind/listen/accept sur 127.0.0.1 port 0, transmet le port effectif par le tube, reçoit un mot, affiche 'serveur : recu = <mot>', le met en majuscules et le renvoie. À COMPLÉTER, dans la branche père (client) : sk = socket(AF_INET, SOCK_STREAM, 0) ; remplir struct sockaddr_in srv avec sin_family = AF_INET, sin_port = htons(port), inet_aton(\"127.0.0.1\", &srv.sin_addr) ; connect(sk, (struct sockaddr *) &srv, sizeof srv) ; send(sk, argv[1], strlen(argv[1]), 0) ; recv dans un buffer ; printf 'client : recu = %s'. Fermer la socket. La sortie attendue est deux lignes : 'serveur : recu = <mot>' puis 'client : recu = <MOT en majuscules>'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "tests": [
+        {
+          "name": "mot simple",
+          "stdin": "",
+          "args": [
+            "bonjour"
+          ],
+          "expectedStdout": "serveur : recu = bonjour\nclient : recu = BONJOUR",
+          "compare": "trimmed"
+        },
+        {
+          "name": "identifiant",
+          "stdin": "",
+          "args": [
+            "psr2026"
+          ],
+          "expectedStdout": "serveur : recu = psr2026\nclient : recu = PSR2026",
+          "compare": "trimmed"
+        },
+        {
+          "name": "mot mixte",
+          "stdin": "",
+          "args": [
+            "Reseau"
+          ],
+          "expectedStdout": "serveur : recu = Reseau\nclient : recu = RESEAU",
+          "compare": "trimmed"
+        }
+      ],
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <ctype.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s mot\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* ENFANT = SERVEUR : sequence socket -> bind -> listen -> accept.\n           Le squelette du serveur est COMPLET, ne pas le modifier. */\n        close(tube[0]);\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &adr, sizeof adr) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof adr;\n        getsockname(ec, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        if (listen(ec, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n        int sv = accept(ec, NULL, NULL);\n        if (sv == -1) { perror(\"accept\"); exit(EXIT_FAILURE); }\n        char buf[128] = {0};\n        ssize_t n = recv(sv, buf, sizeof buf - 1, 0);\n        if (n > 0) {\n            buf[n] = '\\0';\n            printf(\"serveur : recu = %s\\n\", buf);\n            for (int i = 0; buf[i]; i++) buf[i] = (char) toupper((unsigned char) buf[i]);\n            send(sv, buf, strlen(buf), 0);\n        }\n        close(sv);\n        close(ec);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* PARENT = CLIENT : a completer.\n       Le port du serveur arrive par le tube. */\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    /* === A COMPLETER : le CLIENT ===\n       1. creer une socket TCP\n       2. remplir une struct sockaddr_in visant 127.0.0.1 sur 'port'\n       3. connect au serveur\n       4. envoyer argv[1] avec send\n       5. recevoir la reponse et l'afficher : \"client : recu = <reponse>\" */\n\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <ctype.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s mot\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        close(tube[0]);\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &adr, sizeof adr) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof adr;\n        getsockname(ec, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        if (listen(ec, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n        int sv = accept(ec, NULL, NULL);\n        if (sv == -1) { perror(\"accept\"); exit(EXIT_FAILURE); }\n        char buf[128] = {0};\n        ssize_t n = recv(sv, buf, sizeof buf - 1, 0);\n        if (n > 0) {\n            buf[n] = '\\0';\n            printf(\"serveur : recu = %s\\n\", buf);\n            for (int i = 0; buf[i]; i++) buf[i] = (char) toupper((unsigned char) buf[i]);\n            send(sv, buf, strlen(buf), 0);\n        }\n        close(sv);\n        close(ec);\n        exit(EXIT_SUCCESS);\n    }\n\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n    if (connect(sk, (struct sockaddr *) &srv, sizeof srv) == -1) { perror(\"connect\"); exit(EXIT_FAILURE); }\n    send(sk, argv[1], strlen(argv[1]), 0);\n    char buf[128] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) {\n        buf[n] = '\\0';\n        printf(\"client : recu = %s\\n\", buf);\n    }\n    close(sk);\n\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "explanation": "Le client TCP suit la séquence **`socket → connect → send/recv → close`**, plus courte que celle du serveur — **pas** de `bind`, `listen` ni `accept`. On crée la socket avec `socket(AF_INET, SOCK_STREAM, 0)`, puis on remplit une `struct sockaddr_in` décrivant **le serveur à joindre** : `sin_family = AF_INET`, `sin_port = htons(port)` (le port reçu par le tube, **converti**), `sin_addr` via `inet_aton(\"127.0.0.1\", ...)` (le bouclage). L'appel **`connect(sk, (struct sockaddr *) &srv, sizeof srv)`** établit la connexion — et débloque l'`accept` du serveur. On envoie ensuite le mot avec `send`, on reçoit la réponse avec `recv`, on l'affiche, et on ferme la socket. Le cast `(struct sockaddr *)` est obligatoire dans `connect`, comme dans tous les appels socket génériques.",
+    "concepts": [
+      "sequence-client-tcp",
+      "connect",
+      "send-recv"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-client",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "En quoi la séquence d'appels d'un client TCP diffère-t-elle de celle d'un serveur TCP ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le client fait socket → connect → send/recv → close : il ne fait ni bind, ni listen, ni accept."
+        },
+        {
+          "id": "b",
+          "label": "Le client fait socket → bind → connect → accept : il doit lui aussi accepter la connexion."
+        },
+        {
+          "id": "c",
+          "label": "Le client fait socket → listen → connect : il écoute d'abord puis se connecte."
+        },
+        {
+          "id": "d",
+          "label": "Le client et le serveur ont exactement la même séquence d'appels."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La séquence du client TCP est **`socket → connect → send/recv → close`** : nettement **plus courte** que celle du serveur. Le client **ne fait pas `bind`** (le système lui attribue automatiquement une adresse IP locale et un port éphémère lors du `connect`), **ne fait pas `listen`** ni **`accept`** (il ne **reçoit** pas de connexions, il en **établit** une). Toute la spécificité du client tient dans **`connect`**. (b) est faux : `bind` est inutile et `accept` est un appel serveur. (c) est faux : `listen` est un appel serveur. (d) est faux : les deux séquences sont délibérément asymétriques, le serveur attend, le client appelle.",
+    "concepts": [
+      "sequence-client-tcp",
+      "connect"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-client",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Un client TCP doit appeler `bind` sur sa socket avant `connect`, faute de quoi il n'aurait pas d'adresse IP locale ni de port et le `connect` échouerait.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Le client **ne `bind`e pas** sa socket dans l'usage courant. Lors du **`connect`**, le système lui attribue **automatiquement** une adresse IP locale et un **port libre** — un *port éphémère*. C'est même un avantage : le client n'a pas à se soucier de quel port utiliser. Un `bind` explicite côté client est techniquement **possible** mais **inutile** dans la quasi-totalité des cas. C'est une différence nette avec le **serveur**, qui doit **impérativement** `bind`er sa socket sur un port **connu** des clients. Si l'on veut connaître le port éphémère choisi pour le client, on l'interroge **après** le `connect` avec `getsockname`.",
+    "concepts": [
+      "sequence-client-tcp",
+      "connect",
+      "getsockname"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-client",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "TCP est un flot d'octets. Parmi les affirmations suivantes, lesquelles sont VRAIES ? (Plusieurs réponses possibles.)",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un send de 1000 octets peut être lu en plusieurs recv (par exemple 600 puis 400) côté récepteur."
+        },
+        {
+          "id": "b",
+          "label": "Deux send successifs peuvent être fusionnés et lus en un seul recv."
+        },
+        {
+          "id": "c",
+          "label": "Quand on attend une quantité précise d'octets, il faut boucler sur recv jusqu'à tout avoir reçu."
+        },
+        {
+          "id": "d",
+          "label": "recv renvoie toujours exactement le nombre d'octets passés au send correspondant : les messages sont indivisibles."
+        },
+        {
+          "id": "e",
+          "label": "Un recv qui renvoie 0 signale que le correspondant a fermé la connexion."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "e"
+      ]
+    },
+    "explanation": "TCP est un **flot d'octets sans frontières de messages**. (a) **Vrai** : le réseau peut **découper** les données — un `send` de 1000 octets peut arriver en plusieurs `recv`. (b) **Vrai** : réciproquement, deux `send` peuvent être **fusionnés** et lus en un seul `recv`. (c) **Vrai** : c'est la conséquence pratique — quand on attend une quantité **connue** d'octets, un seul `recv` ne suffit pas, il faut **boucler** (`while (recus < attendu)`). (d) **Faux** : c'est le comportement des **files de messages** (Module 6), où `msgrcv` extrait exactement un `msgsnd` ; en TCP, **rien de tel**. (e) **Vrai** : un `recv` renvoyant **`0`** signale toujours la **fermeture** de la connexion par le correspondant — à distinguer d'une erreur (`-1`).",
+    "concepts": [
+      "flot-octets-tcp",
+      "lecture-partielle",
+      "boucle-reception",
+      "send-recv"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-client",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez l'appel `connect` d'un client TCP et le résumé qui l'accompagne.",
+    "payload": {
+      "template": "Le client se connecte par : connect(sk, (struct sockaddr *) &adr_serveur, {{c1}}(adr_serveur)). La structure adr_serveur décrit le {{c2}} à joindre, pas le client. connect est un appel {{c3}} : il suspend le client le temps d'établir la connexion, et débloque l'appel {{c4}} en attente côté serveur. Si aucun serveur n'écoute sur l'adresse et le port visés, connect renvoie -1 avec errno positionné à {{c5}}.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm"
+        },
+        {
+          "id": "c2",
+          "width": "sm",
+          "hint": "l'autre extrémité"
+        },
+        {
+          "id": "c3",
+          "width": "md",
+          "hint": "il suspend le processus"
+        },
+        {
+          "id": "c4",
+          "width": "sm",
+          "hint": "appel serveur débloqué par connect"
+        },
+        {
+          "id": "c5",
+          "width": "md",
+          "hint": "« Connection refused »"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "sizeof"
+        ],
+        "c2": [
+          "serveur",
+          "server"
+        ],
+        "c3": [
+          "bloquant",
+          "bloquante"
+        ],
+        "c4": [
+          "accept",
+          "accept()"
+        ],
+        "c5": [
+          "ECONNREFUSED"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "**`connect`** établit la connexion. Son troisième argument est la **taille** de la structure, obtenue par **`sizeof`**. La `struct sockaddr_in` passée décrit le **serveur** à joindre (son IP, son port) — **pas** le client : côté client, la `sockaddr_in` du `connect` décrit la machine **distante**. `connect` est un appel **bloquant** : il **suspend** le client le temps d'établir la connexion, et c'est lui qui **débloque** l'**`accept`** en attente côté serveur — les deux primitives se **rejoignent** pour former la connexion. Si aucun serveur n'écoute sur l'adresse et le port visés, `connect` renvoie `-1` avec `errno` = **`ECONNREFUSED`** (« Connection refused ») : le serveur doit être **lancé en premier**.",
+    "concepts": [
+      "connect",
+      "adresse-serveur",
+      "sequence-client-tcp"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-client",
+    "type": "ORDERING",
+    "difficulty": 1,
+    "points": 3,
+    "prompt": "Remettez dans l'ordre d'exécution les étapes d'un client TCP qui envoie une requête et lit la réponse.",
+    "payload": {
+      "items": [
+        {
+          "id": "i1",
+          "label": "sk = socket(AF_INET, SOCK_STREAM, 0)"
+        },
+        {
+          "id": "i2",
+          "label": "Remplir la struct sockaddr_in décrivant le serveur (IP + port)"
+        },
+        {
+          "id": "i3",
+          "label": "connect(sk, ...) — établir la connexion au serveur"
+        },
+        {
+          "id": "i4",
+          "label": "send(sk, ...) — envoyer la requête"
+        },
+        {
+          "id": "i5",
+          "label": "recv(sk, ...) — lire la réponse du serveur"
+        },
+        {
+          "id": "i6",
+          "label": "close(sk) — fermer la socket"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5",
+        "i6"
+      ]
+    },
+    "explanation": "Le déroulement d'un client TCP est : **(1)** `socket` crée la socket ; **(2)** on **remplit** la `struct sockaddr_in` décrivant le **serveur** à joindre (famille, port via `htons`, adresse via `inet_aton`) ; **(3)** `connect` **établit la connexion** à ce serveur ; **(4)** le client **envoie** sa requête avec `send` ; **(5)** il **lit** la réponse avec `recv` ; **(6)** il **ferme** la socket avec `close`. L'ordre `send` puis `recv` suppose ici un protocole applicatif où le client parle en premier — il doit être **cohérent** avec ce qu'attend le serveur. Le client n'a **qu'une seule** socket à fermer, sans la distinction écoute/service du serveur. Remplir l'adresse **avant** `connect` est indispensable : `connect` a besoin de savoir **où** se connecter.",
+    "concepts": [
+      "sequence-client-tcp",
+      "connect",
+      "send-recv",
+      "close-socket"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-client",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Programme unique : un serveur (fils) fait DEUX `send` séparés de 5 octets chacun ; le client (père) lit en BOUCLE jusqu'à avoir reçu 10 octets. Donnez la sortie exacte affichée sur la sortie standard.",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n/* Le serveur envoie 10 octets en deux fois. Le client lit en BOUCLE. */\nint main(void) {\n    int tube[2];\n    pipe(tube);\n\n    if (fork() == 0) {\n        close(tube[0]);\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        struct sockaddr_in a;\n        memset(&a, 0, sizeof a);\n        a.sin_family = AF_INET;\n        a.sin_addr.s_addr = htonl(INADDR_ANY);\n        a.sin_port = htons(0);\n        bind(ec, (struct sockaddr *) &a, sizeof a);\n        socklen_t lg = sizeof a;\n        getsockname(ec, (struct sockaddr *) &a, &lg);\n        unsigned short port = ntohs(a.sin_port);\n        listen(ec, 5);\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n        int sv = accept(ec, NULL, NULL);\n        /* deux envois separes : TCP n'a pas de frontiere de message */\n        send(sv, \"ABCDE\", 5, 0);\n        send(sv, \"12345\", 5, 0);\n        close(sv);\n        close(ec);\n        exit(0);\n    }\n\n    close(tube[1]);\n    unsigned short port;\n    read(tube[0], &port, sizeof port);\n    close(tube[0]);\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    struct sockaddr_in s;\n    memset(&s, 0, sizeof s);\n    s.sin_family = AF_INET;\n    s.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &s.sin_addr);\n    connect(sk, (struct sockaddr *) &s, sizeof s);\n\n    char buf[32] = {0};\n    size_t recus = 0;\n    while (recus < 10) {\n        ssize_t n = recv(sk, buf + recus, 10 - recus, 0);\n        if (n <= 0) break;\n        recus += (size_t) n;\n    }\n    buf[recus] = '\\0';\n    printf(\"octets recus : %zu\\n\", recus);\n    printf(\"contenu : %s\\n\", buf);\n    close(sk);\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "expectedOutput": "octets recus : 10\ncontenu : ABCDE12345"
+    },
+    "explanation": "Le serveur envoie au total **10 octets**, en **deux `send`** distincts (`ABCDE` puis `12345`). Côté client, la **boucle de réception** est le motif standard : `while (recus < 10)` appelle `recv` dans `buf + recus` (la suite du tampon) en demandant `10 - recus` octets (ce qu'il reste), et cumule. Quel que soit le **découpage** réel choisi par TCP — un seul `recv` de 10, ou deux de 5, ou 600/400… —, la boucle continue jusqu'à avoir **exactement 10 octets**. La sortie est donc **toujours** `octets recus : 10` et `contenu : ABCDE12345`. C'est précisément pour cela qu'on **boucle** : un seul `recv` aurait pu ne renvoyer que les 5 premiers octets. Le résultat est déterministe **parce que** la boucle est correcte.",
+    "concepts": [
+      "flot-octets-tcp",
+      "boucle-reception",
+      "lecture-partielle"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-client",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 4,
+    "prompt": "Ce programme fait dialoguer un serveur TCP (fils) et un client (père) sur 127.0.0.1. Le serveur est complet et correct ; le client, lui, échoue. Trouvez et corrigez le bug. (Indice : que manque-t-il au client entre le remplissage de l'adresse du serveur et le premier `send` ?)",
+    "payload": {
+      "spec": "Le bug : le client ne fait jamais connect. Il crée sa socket, remplit la struct sockaddr_in du serveur, puis appelle directement send et recv sur une socket NON connectée. send sur une socket TCP non connectée échoue (ENOTCONN), le client n'affiche rien, et le serveur reste bloqué sur accept. La correction consiste à insérer connect(sk, (struct sockaddr *) &srv, sizeof srv) après le remplissage de srv et avant le send. Le reste du programme est correct.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "tests": [
+        {
+          "name": "echo court",
+          "stdin": "",
+          "args": [
+            "hello"
+          ],
+          "expectedStdout": "serveur recoit : hello\nclient recoit : hello",
+          "compare": "trimmed"
+        },
+        {
+          "name": "echo mot",
+          "stdin": "",
+          "args": [
+            "client"
+          ],
+          "expectedStdout": "serveur recoit : client\nclient recoit : client",
+          "compare": "trimmed"
+        }
+      ],
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n/* BUG : le client n'etablit jamais la connexion avec le serveur. */\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s mot\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        close(tube[0]);\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &adr, sizeof adr) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof adr;\n        getsockname(ec, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        if (listen(ec, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n        int sv = accept(ec, NULL, NULL);\n        if (sv == -1) { perror(\"accept\"); exit(EXIT_FAILURE); }\n        char buf[128] = {0};\n        ssize_t n = recv(sv, buf, sizeof buf - 1, 0);\n        if (n > 0) { buf[n] = '\\0'; printf(\"serveur recoit : %s\\n\", buf); send(sv, buf, strlen(buf), 0); }\n        close(sv);\n        close(ec);\n        exit(EXIT_SUCCESS);\n    }\n\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n    send(sk, argv[1], strlen(argv[1]), 0);\n    char buf[128] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) { buf[n] = '\\0'; printf(\"client recoit : %s\\n\", buf); }\n    close(sk);\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s mot\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        close(tube[0]);\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &adr, sizeof adr) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof adr;\n        getsockname(ec, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        if (listen(ec, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n        int sv = accept(ec, NULL, NULL);\n        if (sv == -1) { perror(\"accept\"); exit(EXIT_FAILURE); }\n        char buf[128] = {0};\n        ssize_t n = recv(sv, buf, sizeof buf - 1, 0);\n        if (n > 0) { buf[n] = '\\0'; printf(\"serveur recoit : %s\\n\", buf); send(sv, buf, strlen(buf), 0); }\n        close(sv);\n        close(ec);\n        exit(EXIT_SUCCESS);\n    }\n\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n    if (connect(sk, (struct sockaddr *) &srv, sizeof srv) == -1) { perror(\"connect\"); exit(EXIT_FAILURE); }\n    send(sk, argv[1], strlen(argv[1]), 0);\n    char buf[128] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) { buf[n] = '\\0'; printf(\"client recoit : %s\\n\", buf); }\n    close(sk);\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "explanation": "Le bug est l'absence de **`connect`**. Le client crée bien sa socket et remplit correctement la `struct sockaddr_in` du serveur, mais il passe **directement** à `send` — sans jamais **établir la connexion**. Or une socket TCP fraîchement créée n'est connectée à **rien** : `send` sur une telle socket échoue (erreur `ENOTCONN`), le client n'affiche rien d'utile, et le serveur reste bloqué sur `accept`, faute de demande de connexion. La correction consiste à insérer **`connect(sk, (struct sockaddr *) &srv, sizeof srv)`** après le remplissage de `srv` et **avant** le `send`. Remplir la `sockaddr_in` ne fait que **décrire** la cible ; c'est **`connect`** qui **utilise** cette description pour réellement joindre le serveur. La séquence du client est `socket → connect → send/recv → close`.",
+    "concepts": [
+      "connect",
+      "sequence-client-tcp",
+      "adresse-serveur"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-client",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Programme unique : le processus fils est un serveur TCP COMPLET (déjà écrit) qui reçoit un entier en texte et renvoie son DOUBLE en texte ; le processus père est le client, à compléter. Le port du serveur arrive par le tube. Complétez le client : créez la socket, remplissez la `sockaddr_in` visant 127.0.0.1 sur ce port, connectez-vous, envoyez `argv[1]`, recevez la réponse et affichez-la sous la forme `client : double = <reponse>`.",
+    "payload": {
+      "spec": "Le squelette fournit toute la plomberie (pipe, fork) et le SERVEUR complet : socket/bind/listen/accept sur 127.0.0.1 port 0, transmission du port par le tube, réception d'un entier en texte, affichage 'serveur recoit : <n>', renvoi de atoi(n)*2 en texte. À COMPLÉTER, branche père (client) : sk = socket(AF_INET, SOCK_STREAM, 0) ; remplir struct sockaddr_in srv avec sin_family = AF_INET, sin_port = htons(port), inet_aton(\"127.0.0.1\", &srv.sin_addr) ; connect(sk, (struct sockaddr *) &srv, sizeof srv) ; send(sk, argv[1], strlen(argv[1]), 0) ; recv dans un buffer ; printf 'client : double = %s'. Fermer la socket. La sortie attendue est deux lignes : 'serveur recoit : <n>' puis 'client : double = <2n>'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "tests": [
+        {
+          "name": "nombre 4",
+          "stdin": "",
+          "args": [
+            "4"
+          ],
+          "expectedStdout": "serveur recoit : 4\nclient : double = 8",
+          "compare": "trimmed"
+        },
+        {
+          "name": "nombre 21",
+          "stdin": "",
+          "args": [
+            "21"
+          ],
+          "expectedStdout": "serveur recoit : 21\nclient : double = 42",
+          "compare": "trimmed"
+        },
+        {
+          "name": "nombre 100",
+          "stdin": "",
+          "args": [
+            "100"
+          ],
+          "expectedStdout": "serveur recoit : 100\nclient : double = 200",
+          "compare": "trimmed"
+        }
+      ],
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s entier\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* ENFANT = SERVEUR : COMPLET, ne pas modifier.\n           Recoit un entier en texte, renvoie son double en texte. */\n        close(tube[0]);\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &adr, sizeof adr) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof adr;\n        getsockname(ec, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        if (listen(ec, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n        int sv = accept(ec, NULL, NULL);\n        if (sv == -1) { perror(\"accept\"); exit(EXIT_FAILURE); }\n        char buf[64] = {0};\n        ssize_t n = recv(sv, buf, sizeof buf - 1, 0);\n        if (n > 0) {\n            buf[n] = '\\0';\n            printf(\"serveur recoit : %s\\n\", buf);\n            char rep[64];\n            snprintf(rep, sizeof rep, \"%d\", atoi(buf) * 2);\n            send(sv, rep, strlen(rep), 0);\n        }\n        close(sv);\n        close(ec);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* PARENT = CLIENT : le port du serveur arrive par le tube. */\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    /* === A COMPLETER : le CLIENT ===\n       1. socket TCP\n       2. struct sockaddr_in visant 127.0.0.1 sur 'port'\n       3. connect\n       4. envoyer argv[1] (le nombre en texte)\n       5. recevoir la reponse et afficher : \"client : double = <reponse>\" */\n\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s entier\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        close(tube[0]);\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &adr, sizeof adr) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof adr;\n        getsockname(ec, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        if (listen(ec, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n        int sv = accept(ec, NULL, NULL);\n        if (sv == -1) { perror(\"accept\"); exit(EXIT_FAILURE); }\n        char buf[64] = {0};\n        ssize_t n = recv(sv, buf, sizeof buf - 1, 0);\n        if (n > 0) {\n            buf[n] = '\\0';\n            printf(\"serveur recoit : %s\\n\", buf);\n            char rep[64];\n            snprintf(rep, sizeof rep, \"%d\", atoi(buf) * 2);\n            send(sv, rep, strlen(rep), 0);\n        }\n        close(sv);\n        close(ec);\n        exit(EXIT_SUCCESS);\n    }\n\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n    if (connect(sk, (struct sockaddr *) &srv, sizeof srv) == -1) { perror(\"connect\"); exit(EXIT_FAILURE); }\n    send(sk, argv[1], strlen(argv[1]), 0);\n    char buf[64] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) {\n        buf[n] = '\\0';\n        printf(\"client : double = %s\\n\", buf);\n    }\n    close(sk);\n\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "explanation": "Le client TCP suit la séquence **`socket → connect → send/recv → close`**. On crée la socket avec `socket(AF_INET, SOCK_STREAM, 0)`, puis on remplit une `struct sockaddr_in` décrivant **le serveur** : `sin_family = AF_INET`, `sin_port = htons(port)` (le port reçu par le tube, **converti en ordre réseau**), `sin_addr` via `inet_aton(\"127.0.0.1\", ...)`. L'appel **`connect`** établit la connexion. On envoie l'entier (en texte) avec `send`, on reçoit la réponse avec `recv` — en pensant à terminer le tampon par `'\\0'` avant de l'afficher avec `%s` —, puis on ferme la socket. Le client ne fait **ni `bind`, ni `listen`, ni `accept`** : ces appels sont l'apanage du serveur. Le cast `(struct sockaddr *)` et l'argument `sizeof srv` sont obligatoires dans `connect`.",
+    "concepts": [
+      "sequence-client-tcp",
+      "connect",
+      "send-recv"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "udp",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle affirmation décrit correctement le protocole UDP ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "UDP est non connecté et non fiable : aucune connexion préalable, et les datagrammes peuvent être perdus, dupliqués ou désordonnés ; en contrepartie, il est simple et léger."
+        },
+        {
+          "id": "b",
+          "label": "UDP est connecté et fiable : il établit une connexion, garantit l'ordre et retransmet les données perdues, exactement comme TCP."
+        },
+        {
+          "id": "c",
+          "label": "UDP est non connecté mais fiable : il n'établit pas de connexion, mais garantit qu'aucun datagramme ne se perd."
+        },
+        {
+          "id": "d",
+          "label": "UDP est connecté mais non fiable : il établit une connexion, mais ne garantit ni l'ordre ni l'absence de pertes."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "**UDP** (*User Datagram Protocol*) est le protocole de transport du type `SOCK_DGRAM`. Ses propriétés sont **à l'opposé** de celles de TCP : il est **non connecté** (aucune connexion n'est établie au préalable, on envoie « à l'aveugle ») et **non fiable** (un datagramme peut être **perdu**, **dupliqué** ou **arriver dans le désordre**, sans que UDP le détecte ou le corrige). En échange, son en-tête est **minimal** : le transport est **rapide** et **léger**. (b) décrit TCP, pas UDP. (c) et (d) sont contradictoires : sans connexion **ni** retransmissions, UDP **ne peut pas** être fiable. La fiabilité, si l'application en a besoin, est **à sa charge**.",
+    "concepts": [
+      "udp",
+      "mode-non-connecte"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "udp",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "En UDP, un appel à `recvfrom` extrait exactement un datagramme — le produit d'un seul `sendto` : si l'émetteur envoie un datagramme de 200 octets, le récepteur le reçoit en un bloc de 200 octets, jamais besoin de lire en boucle.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Un **datagramme** est un message **délimité** : il a une **frontière**. Un `recvfrom` extrait **exactement un** datagramme — celui produit par **un seul** `sendto`. C'est la règle **un `sendto` ↔ un `recvfrom`**, la même propriété d'**indivisibilité** que les messages des files System V (Module 6). C'est une différence **capitale** avec TCP, où le **flot d'octets** sans frontières peut découper ou fusionner les envois et oblige à **lire en boucle**. En UDP, un datagramme arrive **entier** ou **pas du tout**. Attention toutefois : si le tampon fourni à `recvfrom` est **plus petit** que le datagramme, l'excédent est **tronqué et jeté** — pas conservé pour la lecture suivante.",
+    "concepts": [
+      "datagramme",
+      "frontiere-datagramme",
+      "recvfrom"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "udp",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Parmi les affirmations suivantes sur UDP, lesquelles sont VRAIES ? (Plusieurs réponses possibles.)",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un serveur UDP n'appelle ni listen ni accept : il se contente de socket puis bind."
+        },
+        {
+          "id": "b",
+          "label": "Un client UDP n'appelle pas connect : il indique l'adresse du destinataire à chaque sendto."
+        },
+        {
+          "id": "c",
+          "label": "Un sendto qui renvoie un nombre positif garantit que le datagramme a été reçu par le destinataire."
+        },
+        {
+          "id": "d",
+          "label": "Le serveur UDP garde une seule socket pour tous les clients : il n'y a pas de socket de service."
+        },
+        {
+          "id": "e",
+          "label": "recvfrom remplit une structure d'adresse avec l'identité de l'émetteur du datagramme reçu."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "d",
+        "e"
+      ]
+    },
+    "explanation": "(a) **Vrai** : sans connexion, il n'y a **pas de file de connexions** — donc **ni `listen` ni `accept`** ; le serveur UDP fait seulement **`socket` + `bind`**. (b) **Vrai** : le client ne fait **pas `connect`** ; il précise l'adresse du destinataire **à chaque `sendto`**. (c) **Faux** : en UDP, `sendto` **réussit même si personne n'écoute** — un retour positif signifie « datagramme **émis** », **pas** « datagramme **reçu** ». (d) **Vrai** : faute d'`accept`, il n'y a **aucune socket de service** ; le serveur garde **une seule** socket pour **tous** les clients. (e) **Vrai** : `recvfrom` **remplit** le paramètre `from` avec l'adresse de l'**émetteur** — c'est la seule façon, pour un serveur, de savoir à qui répondre.",
+    "concepts": [
+      "sequence-udp",
+      "mode-non-connecte",
+      "adresse-emetteur"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "udp",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé de l'A.P.I. UDP : les primitives d'échange et leurs paramètres d'adresse.",
+    "payload": {
+      "template": "Le type de socket employé pour UDP est {{c1}}. Pour émettre un datagramme, on appelle {{c2}}, qui prend en plus de send l'adresse du destinataire et sa taille. Pour recevoir un datagramme, on appelle {{c3}}, qui remplit une structure avec l'adresse de l'{{c4}}. Son dernier argument, la taille de cette structure, est un paramètre entrée/sortie qu'il faut initialiser avec l'opérateur {{c5}} avant l'appel — exactement comme pour accept.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "md",
+          "hint": "le type de socket en mode datagramme"
+        },
+        {
+          "id": "c2",
+          "width": "sm"
+        },
+        {
+          "id": "c3",
+          "width": "sm"
+        },
+        {
+          "id": "c4",
+          "width": "sm",
+          "hint": "celui qui a envoyé le datagramme"
+        },
+        {
+          "id": "c5",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "SOCK_DGRAM"
+        ],
+        "c2": [
+          "sendto",
+          "sendto()"
+        ],
+        "c3": [
+          "recvfrom",
+          "recvfrom()"
+        ],
+        "c4": [
+          "emetteur",
+          "expediteur"
+        ],
+        "c5": [
+          "sizeof"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Le type de socket d'UDP est **`SOCK_DGRAM`** : les données voyagent en **datagrammes** indépendants. La primitive d'émission est **`sendto`** : comme `send`, plus **deux paramètres** — l'adresse du **destinataire** (`struct sockaddr_in` transtypée) et sa **taille**. La primitive de réception est **`recvfrom`** : comme `recv`, plus une structure qu'elle **remplit** avec l'adresse de l'**émetteur** du datagramme. Son dernier argument est un **pointeur** vers la taille : un paramètre **entrée/sortie** — en entrée la taille du tampon, en sortie la taille écrite — qu'il faut **initialiser** avec **`sizeof`** avant l'appel, **comme pour `accept`**. Oublier cette initialisation est une erreur classique.",
+    "concepts": [
+      "sock-dgram",
+      "sendto",
+      "recvfrom",
+      "adresse-emetteur"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "udp",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque élément lié à UDP à sa description exacte.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "SOCK_DGRAM"
+        },
+        {
+          "id": "l2",
+          "label": "sendto"
+        },
+        {
+          "id": "l3",
+          "label": "recvfrom"
+        },
+        {
+          "id": "l4",
+          "label": "le paramètre from de recvfrom"
+        },
+        {
+          "id": "l5",
+          "label": "datagramme"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Type de socket en mode non connecté ; emploie le protocole UDP dans AF_INET"
+        },
+        {
+          "id": "r2",
+          "label": "Émet un datagramme ; reçoit l'adresse du destinataire à chaque appel"
+        },
+        {
+          "id": "r3",
+          "label": "Reçoit un datagramme entier et renseigne l'adresse de l'émetteur"
+        },
+        {
+          "id": "r4",
+          "label": "Structure remplie par l'appel : indique qui a envoyé le datagramme reçu"
+        },
+        {
+          "id": "r5",
+          "label": "Paquet de données autonome et délimité : un recvfrom en extrait exactement un"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4",
+        "l5": "r5"
+      }
+    },
+    "explanation": "**`SOCK_DGRAM`** est le **type** de socket en mode **non connecté** : dans le domaine `AF_INET`, il emploie le protocole **UDP**. **`sendto`** **émet** un datagramme et reçoit, **à chaque appel**, l'adresse du **destinataire** (ce qui remplace le `connect` de TCP). **`recvfrom`** **reçoit** un datagramme **entier** et **renseigne** l'adresse de l'**émetteur**. Le **paramètre `from`** de `recvfrom` est la **structure remplie** par l'appel : elle indique **qui** a envoyé le datagramme reçu — le serveur la **réutilise** comme destinataire pour répondre. Un **datagramme** est un **paquet autonome et délimité** : un `recvfrom` en extrait **exactement un**, le produit d'**un seul** `sendto`.",
+    "concepts": [
+      "sock-dgram",
+      "sendto",
+      "recvfrom",
+      "adresse-emetteur",
+      "datagramme"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "udp",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Remettez dans l'ordre d'exécution les étapes d'un échange UDP complet. Le serveur doit être opérationnel (socket + bind) avant que le client ne crée sa socket, puis avant que le client n'envoie quoi que ce soit.",
+    "payload": {
+      "items": [
+        {
+          "id": "i1",
+          "label": "SERVEUR : socket(AF_INET, SOCK_DGRAM, 0) puis bind sur un port connu — le serveur est prêt"
+        },
+        {
+          "id": "i2",
+          "label": "CLIENT : socket(AF_INET, SOCK_DGRAM, 0) — pas de bind (le serveur étant déjà en écoute)"
+        },
+        {
+          "id": "i3",
+          "label": "CLIENT : sendto — envoie un datagramme à l'adresse du serveur"
+        },
+        {
+          "id": "i4",
+          "label": "SERVEUR : recvfrom — reçoit le datagramme et apprend l'adresse du client"
+        },
+        {
+          "id": "i5",
+          "label": "SERVEUR : sendto — répond en réutilisant l'adresse récupérée par recvfrom"
+        },
+        {
+          "id": "i6",
+          "label": "CLIENT : recvfrom — reçoit la réponse du serveur"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5",
+        "i6"
+      ]
+    },
+    "explanation": "La séquence UDP est **courte** — ni `listen`, ni `accept`, ni `connect`. **(1)** Le **serveur** crée sa socket `SOCK_DGRAM` et l'attache à un **port connu** par `bind`. **(2)** Le **client** crée sa socket — **sans `bind`** : le système lui attribuera un port automatiquement au premier envoi. **(3)** Le client **émet** un datagramme avec `sendto`, en fournissant l'**adresse du serveur**. **(4)** Le serveur **reçoit** ce datagramme avec `recvfrom`, qui lui **apprend l'adresse du client**. **(5)** Le serveur **répond** avec `sendto`, en **réutilisant** l'adresse `from` que `recvfrom` vient de renseigner. **(6)** Le client **reçoit** la réponse avec `recvfrom`. Le `bind` du serveur doit précéder son `recvfrom`, et le `sendto` du client doit précéder le `recvfrom` du serveur.",
+    "concepts": [
+      "sequence-udp",
+      "sendto",
+      "recvfrom"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "udp",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Programme unique : le client (père) envoie DEUX datagrammes de tailles différentes ; le serveur (fils) fait DEUX recvfrom puis répond. Donnez la sortie exacte affichée sur la sortie standard.",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n/* Le client envoie DEUX datagrammes ; le serveur en lit DEUX. */\nint main(void) {\n    int tube[2];\n    pipe(tube);\n\n    if (fork() == 0) {\n        /* ENFANT = SERVEUR UDP */\n        close(tube[0]);\n        int sk = socket(AF_INET, SOCK_DGRAM, 0);\n        struct sockaddr_in a;\n        memset(&a, 0, sizeof a);\n        a.sin_family = AF_INET;\n        a.sin_addr.s_addr = htonl(INADDR_ANY);\n        a.sin_port = htons(0);\n        bind(sk, (struct sockaddr *) &a, sizeof a);\n        socklen_t lg = sizeof a;\n        getsockname(sk, (struct sockaddr *) &a, &lg);\n        unsigned short port = ntohs(a.sin_port);\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n\n        struct sockaddr_in cli;\n        socklen_t lc = sizeof cli;\n        char buf[64];\n\n        /* premier datagramme */\n        ssize_t n1 = recvfrom(sk, buf, sizeof buf, 0,\n                              (struct sockaddr *) &cli, &lc);\n        printf(\"recu 1 : %zd octets\\n\", n1);\n\n        /* second datagramme : un recvfrom = un sendto */\n        ssize_t n2 = recvfrom(sk, buf, sizeof buf, 0,\n                              (struct sockaddr *) &cli, &lc);\n        printf(\"recu 2 : %zd octets\\n\", n2);\n\n        /* on repond a l'emetteur du dernier datagramme */\n        sendto(sk, \"ok\", 2, 0, (struct sockaddr *) &cli, lc);\n        close(sk);\n        exit(0);\n    }\n\n    /* PARENT = CLIENT UDP */\n    close(tube[1]);\n    unsigned short port;\n    read(tube[0], &port, sizeof port);\n    close(tube[0]);\n    int sk = socket(AF_INET, SOCK_DGRAM, 0);\n    struct sockaddr_in s;\n    memset(&s, 0, sizeof s);\n    s.sin_family = AF_INET;\n    s.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &s.sin_addr);\n\n    /* deux envois de tailles differentes */\n    sendto(sk, \"abcde\", 5, 0, (struct sockaddr *) &s, sizeof s);\n    sendto(sk, \"XYZ\", 3, 0, (struct sockaddr *) &s, sizeof s);\n\n    char rep[64] = {0};\n    struct sockaddr_in src;\n    socklen_t ls = sizeof src;\n    ssize_t r = recvfrom(sk, rep, sizeof rep - 1, 0,\n                         (struct sockaddr *) &src, &ls);\n    rep[r] = '\\0';\n    printf(\"reponse : %s\\n\", rep);\n    close(sk);\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "expectedOutput": "recu 1 : 5 octets\nrecu 2 : 3 octets\nreponse : ok"
+    },
+    "explanation": "Le point clé est la **frontière de datagramme** : **un `recvfrom` ↔ un `sendto`**. Le client émet **deux** datagrammes distincts — `\"abcde\"` (**5** octets) puis `\"XYZ\"` (**3** octets). Le serveur fait **deux** `recvfrom` : le **premier** extrait le datagramme entier `abcde` et renvoie **5** ; le **second** extrait `XYZ` et renvoie **3**. Les datagrammes ne sont **ni fusionnés ni découpés** — contrairement au flot d'octets de TCP. Le serveur répond ensuite `\"ok\"` à l'émetteur du dernier datagramme (l'adresse `cli` renseignée par `recvfrom`), et le client l'affiche. Le programme est **déterministe** : le client envoie ses deux datagrammes **avant** que le serveur ne réponde, et l'ordre de livraison sur le bouclage est respecté.",
+    "concepts": [
+      "frontiere-datagramme",
+      "datagramme",
+      "recvfrom",
+      "sendto"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "udp",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 4,
+    "prompt": "Ce programme fait dialoguer un serveur UDP (fils) et un client (père) sur 127.0.0.1 : le client envoie un mot, le serveur le renvoie en écho. En l'état, le programme se bloque et ne produit aucune sortie. Trouvez et corrigez le bug. (Indice : examinez la séquence d'appels du serveur — que fait-il de sa socket avant de l'utiliser ?)",
+    "payload": {
+      "spec": "Le bug est une etape MANQUANTE de la sequence serveur UDP. Le fils appelle socket puis directement getsockname et recvfrom, sans jamais appeler bind. Un serveur UDP doit attacher sa socket a un port connu par bind : sans bind, la socket n'a pas de port fixe (getsockname renvoie le port 0), le datagramme du client part vers le port 0 et n'arrive jamais. Le recvfrom du serveur bloque alors indefiniment, et le programme depasse le delai d'execution. La correction consiste a inserer bind(sk, (struct sockaddr *) &adr, sizeof adr) avant getsockname. Le reste du programme est correct.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "tests": [
+        {
+          "name": "echo court",
+          "stdin": "",
+          "args": [
+            "ping"
+          ],
+          "expectedStdout": "serveur recoit : ping\nclient recoit : ping",
+          "compare": "trimmed"
+        },
+        {
+          "name": "echo identifiant",
+          "stdin": "",
+          "args": [
+            "psr-2026"
+          ],
+          "expectedStdout": "serveur recoit : psr-2026\nclient recoit : psr-2026",
+          "compare": "trimmed"
+        }
+      ],
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n/* Serveur UDP (enfant) et client (parent) sur 127.0.0.1.\n   BUG : le serveur n'attache jamais sa socket a un port. */\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s mot\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* ENFANT = SERVEUR UDP */\n        close(tube[0]);\n        int sk = socket(AF_INET, SOCK_DGRAM, 0);\n        if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        socklen_t lg = sizeof adr;\n        getsockname(sk, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n\n        struct sockaddr_in adr_client;\n        socklen_t lgc = sizeof adr_client;\n        char buf[128] = {0};\n        ssize_t n = recvfrom(sk, buf, sizeof buf - 1, 0,\n                             (struct sockaddr *) &adr_client, &lgc);\n        if (n > 0) {\n            buf[n] = '\\0';\n            printf(\"serveur recoit : %s\\n\", buf);\n            sendto(sk, buf, strlen(buf), 0,\n                   (struct sockaddr *) &adr_client, lgc);\n        }\n        close(sk);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* PARENT = CLIENT UDP */\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    int sk = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n\n    sendto(sk, argv[1], strlen(argv[1]), 0,\n           (struct sockaddr *) &srv, sizeof srv);\n\n    struct sockaddr_in adr_recue;\n    socklen_t lgr = sizeof adr_recue;\n    char buf[128] = {0};\n    ssize_t n = recvfrom(sk, buf, sizeof buf - 1, 0,\n                         (struct sockaddr *) &adr_recue, &lgr);\n    if (n > 0) {\n        buf[n] = '\\0';\n        printf(\"client recoit : %s\\n\", buf);\n    }\n    close(sk);\n\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s mot\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        close(tube[0]);\n        int sk = socket(AF_INET, SOCK_DGRAM, 0);\n        if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(sk, (struct sockaddr *) &adr, sizeof adr) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof adr;\n        getsockname(sk, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n\n        struct sockaddr_in adr_client;\n        socklen_t lgc = sizeof adr_client;\n        char buf[128] = {0};\n        ssize_t n = recvfrom(sk, buf, sizeof buf - 1, 0,\n                             (struct sockaddr *) &adr_client, &lgc);\n        if (n > 0) {\n            buf[n] = '\\0';\n            printf(\"serveur recoit : %s\\n\", buf);\n            sendto(sk, buf, strlen(buf), 0,\n                   (struct sockaddr *) &adr_client, lgc);\n        }\n        close(sk);\n        exit(EXIT_SUCCESS);\n    }\n\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    int sk = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n\n    sendto(sk, argv[1], strlen(argv[1]), 0,\n           (struct sockaddr *) &srv, sizeof srv);\n\n    struct sockaddr_in adr_recue;\n    socklen_t lgr = sizeof adr_recue;\n    char buf[128] = {0};\n    ssize_t n = recvfrom(sk, buf, sizeof buf - 1, 0,\n                         (struct sockaddr *) &adr_recue, &lgr);\n    if (n > 0) {\n        buf[n] = '\\0';\n        printf(\"client recoit : %s\\n\", buf);\n    }\n    close(sk);\n\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "explanation": "Le bug est une **étape manquante** de la séquence serveur UDP. Le serveur UDP se résume à **`socket` + `bind`** : le `bind` est ce qui **attache la socket à un port connu**. Ici le serveur appelle `socket`, puis directement `getsockname` et `recvfrom` — **sans jamais `bind`er**. Sur une socket non attachée, `getsockname` renvoie le **port 0** ; le client envoie alors son datagramme vers le port 0 de `127.0.0.1`, où **personne n'écoute**, et le datagramme se **perd** silencieusement (`sendto` réussit quand même — il signifie « émis », pas « reçu »). Le `recvfrom` du serveur **bloque indéfiniment** en attendant un datagramme qui n'arrivera jamais, et le programme **dépasse le délai d'exécution**. La correction : insérer **`bind(sk, (struct sockaddr *) &adr, sizeof adr)`** avant `getsockname`. Contrairement à TCP, il n'y a **ni `listen` ni `accept`** — mais le `bind` reste **indispensable**.",
+    "concepts": [
+      "sequence-udp",
+      "mode-non-connecte"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "udp",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme fait dialoguer un serveur UDP (fils) et un client (père) sur 127.0.0.1. Le serveur est complet et correct ; le client, lui, ne parvient pas à émettre son datagramme. Trouvez et corrigez le bug. (Indice : avec quelle primitive le client envoie-t-il son datagramme, et cette primitive connaît-elle le destinataire ?)",
+    "payload": {
+      "spec": "Le bug : le client emet son datagramme avec send au lieu de sendto. La socket du client est non connectee (UDP, pas de connect). Or send n'indique aucun destinataire : sur une socket datagramme non connectee, send echoue avec errno EDESTADDRREQ (Destination address required), car le systeme ne sait pas ou envoyer le datagramme. Le datagramme n'est jamais emis, le recvfrom du serveur bloque, et le programme depasse le delai. La correction consiste a remplacer send(sk, argv[1], strlen(argv[1]), 0) par sendto(sk, argv[1], strlen(argv[1]), 0, (struct sockaddr *) &srv, sizeof srv) : sendto fournit l'adresse du destinataire, ce qui est obligatoire en mode non connecte. La struct sockaddr_in srv decrivant le serveur est deja remplie.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "tests": [
+        {
+          "name": "echo court",
+          "stdin": "",
+          "args": [
+            "ping"
+          ],
+          "expectedStdout": "serveur recoit : ping\nclient recoit : ping",
+          "compare": "trimmed"
+        },
+        {
+          "name": "echo mot",
+          "stdin": "",
+          "args": [
+            "datagramme"
+          ],
+          "expectedStdout": "serveur recoit : datagramme\nclient recoit : datagramme",
+          "compare": "trimmed"
+        }
+      ],
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n/* Serveur UDP (enfant) et client (parent) sur 127.0.0.1.\n   BUG : le client envoie son datagramme sans preciser le destinataire. */\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s mot\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        close(tube[0]);\n        int sk = socket(AF_INET, SOCK_DGRAM, 0);\n        if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(sk, (struct sockaddr *) &adr, sizeof adr) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof adr;\n        getsockname(sk, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n\n        struct sockaddr_in adr_client;\n        socklen_t lgc = sizeof adr_client;\n        char buf[128] = {0};\n        ssize_t n = recvfrom(sk, buf, sizeof buf - 1, 0,\n                             (struct sockaddr *) &adr_client, &lgc);\n        if (n > 0) {\n            buf[n] = '\\0';\n            printf(\"serveur recoit : %s\\n\", buf);\n            sendto(sk, buf, strlen(buf), 0,\n                   (struct sockaddr *) &adr_client, lgc);\n        }\n        close(sk);\n        exit(EXIT_SUCCESS);\n    }\n\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    int sk = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n\n    /* le client emet son datagramme */\n    send(sk, argv[1], strlen(argv[1]), 0);\n\n    struct sockaddr_in adr_recue;\n    socklen_t lgr = sizeof adr_recue;\n    char buf[128] = {0};\n    ssize_t n = recvfrom(sk, buf, sizeof buf - 1, 0,\n                         (struct sockaddr *) &adr_recue, &lgr);\n    if (n > 0) {\n        buf[n] = '\\0';\n        printf(\"client recoit : %s\\n\", buf);\n    }\n    close(sk);\n\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s mot\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        close(tube[0]);\n        int sk = socket(AF_INET, SOCK_DGRAM, 0);\n        if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(sk, (struct sockaddr *) &adr, sizeof adr) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof adr;\n        getsockname(sk, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n\n        struct sockaddr_in adr_client;\n        socklen_t lgc = sizeof adr_client;\n        char buf[128] = {0};\n        ssize_t n = recvfrom(sk, buf, sizeof buf - 1, 0,\n                             (struct sockaddr *) &adr_client, &lgc);\n        if (n > 0) {\n            buf[n] = '\\0';\n            printf(\"serveur recoit : %s\\n\", buf);\n            sendto(sk, buf, strlen(buf), 0,\n                   (struct sockaddr *) &adr_client, lgc);\n        }\n        close(sk);\n        exit(EXIT_SUCCESS);\n    }\n\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    int sk = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n\n    sendto(sk, argv[1], strlen(argv[1]), 0,\n           (struct sockaddr *) &srv, sizeof srv);\n\n    struct sockaddr_in adr_recue;\n    socklen_t lgr = sizeof adr_recue;\n    char buf[128] = {0};\n    ssize_t n = recvfrom(sk, buf, sizeof buf - 1, 0,\n                         (struct sockaddr *) &adr_recue, &lgr);\n    if (n > 0) {\n        buf[n] = '\\0';\n        printf(\"client recoit : %s\\n\", buf);\n    }\n    close(sk);\n\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "explanation": "Le bug est l'emploi de **`send`** là où il faut **`sendto`**. En UDP, la socket du client est **non connectée** — il n'y a **pas de `connect`**. Or **`send` n'indique aucun destinataire** : il suppose une socket **déjà connectée**. Sur une socket `SOCK_DGRAM` non connectée, `send` **échoue** avec `errno` = **`EDESTADDRREQ`** (« Destination address required ») : le système ne sait **pas où** envoyer le datagramme. Résultat : le datagramme n'est **jamais émis**, le `recvfrom` du serveur **bloque**, et le programme dépasse le délai. La correction consiste à utiliser **`sendto`**, qui prend l'adresse du destinataire **en paramètre** : `sendto(sk, argv[1], strlen(argv[1]), 0, (struct sockaddr *) &srv, sizeof srv)`. C'est toute la spécificité de l'A.P.I. UDP : sans connexion, l'adresse du correspondant doit être **fournie à chaque envoi**.",
+    "concepts": [
+      "sendto",
+      "mode-non-connecte"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "udp",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 4,
+    "prompt": "Programme unique : le processus fils est un serveur UDP COMPLET (déjà écrit) qui reçoit un mot et le renvoie en MAJUSCULES ; le processus père est le client UDP, à compléter. Le port du serveur arrive par le tube. Complétez le client : créez la socket UDP, remplissez la `sockaddr_in` visant 127.0.0.1 sur ce port, envoyez `argv[1]` avec `sendto`, recevez la réponse avec `recvfrom` et affichez-la sous la forme `client recoit : <reponse>`.",
+    "payload": {
+      "spec": "Le squelette fournit toute la plomberie (pipe, fork) et le SERVEUR UDP complet : socket SOCK_DGRAM / bind sur 127.0.0.1 port 0, transmission du port effectif par le tube, recvfrom d'un mot, affichage 'serveur recoit : <mot>', conversion en majuscules et sendto de la reponse a l'emetteur. A COMPLETER, branche pere (client) : sk = socket(AF_INET, SOCK_DGRAM, 0) ; remplir struct sockaddr_in srv avec sin_family = AF_INET, sin_port = htons(port), inet_aton(\"127.0.0.1\", &srv.sin_addr) ; sendto(sk, argv[1], strlen(argv[1]), 0, (struct sockaddr *) &srv, sizeof srv) ; recvfrom dans un buffer ; printf 'client recoit : %s'. Fermer la socket. La sortie attendue est deux lignes : 'serveur recoit : <mot>' puis 'client recoit : <MOT en majuscules>'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "tests": [
+        {
+          "name": "mot simple",
+          "stdin": "",
+          "args": [
+            "bonjour"
+          ],
+          "expectedStdout": "serveur recoit : bonjour\nclient recoit : BONJOUR",
+          "compare": "trimmed"
+        },
+        {
+          "name": "identifiant",
+          "stdin": "",
+          "args": [
+            "psr2026"
+          ],
+          "expectedStdout": "serveur recoit : psr2026\nclient recoit : PSR2026",
+          "compare": "trimmed"
+        },
+        {
+          "name": "mot mixte",
+          "stdin": "",
+          "args": [
+            "Reseau"
+          ],
+          "expectedStdout": "serveur recoit : Reseau\nclient recoit : RESEAU",
+          "compare": "trimmed"
+        }
+      ],
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <ctype.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s mot\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* ENFANT = SERVEUR UDP : COMPLET, ne pas modifier.\n           Recoit un datagramme, renvoie le mot en MAJUSCULES. */\n        close(tube[0]);\n        int sk = socket(AF_INET, SOCK_DGRAM, 0);\n        if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(sk, (struct sockaddr *) &adr, sizeof adr) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof adr;\n        getsockname(sk, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n\n        struct sockaddr_in adr_client;\n        socklen_t lgc = sizeof adr_client;\n        char buf[128] = {0};\n        ssize_t n = recvfrom(sk, buf, sizeof buf - 1, 0,\n                             (struct sockaddr *) &adr_client, &lgc);\n        if (n > 0) {\n            buf[n] = '\\0';\n            printf(\"serveur recoit : %s\\n\", buf);\n            for (int i = 0; buf[i]; i++) buf[i] = (char) toupper((unsigned char) buf[i]);\n            sendto(sk, buf, strlen(buf), 0,\n                   (struct sockaddr *) &adr_client, lgc);\n        }\n        close(sk);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* PARENT = CLIENT UDP : a completer.\n       Le port du serveur arrive par le tube. */\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    /* === A COMPLETER : le CLIENT UDP ===\n       1. creer une socket UDP : socket(AF_INET, SOCK_DGRAM, 0)\n       2. remplir une struct sockaddr_in visant 127.0.0.1 sur 'port'\n       3. envoyer argv[1] avec sendto (adresse du serveur en parametre)\n       4. recevoir la reponse avec recvfrom\n       5. l'afficher : \"client recoit : <reponse>\" */\n\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <ctype.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s mot\\n\", argv[0]); return 1; }\n\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* ENFANT = SERVEUR UDP : socket -> bind -> recvfrom -> sendto */\n        close(tube[0]);\n        int sk = socket(AF_INET, SOCK_DGRAM, 0);\n        if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof adr);\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(sk, (struct sockaddr *) &adr, sizeof adr) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof adr;\n        getsockname(sk, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n\n        struct sockaddr_in adr_client;\n        socklen_t lgc = sizeof adr_client;\n        char buf[128] = {0};\n        ssize_t n = recvfrom(sk, buf, sizeof buf - 1, 0,\n                             (struct sockaddr *) &adr_client, &lgc);\n        if (n > 0) {\n            buf[n] = '\\0';\n            printf(\"serveur recoit : %s\\n\", buf);\n            for (int i = 0; buf[i]; i++) buf[i] = (char) toupper((unsigned char) buf[i]);\n            sendto(sk, buf, strlen(buf), 0,\n                   (struct sockaddr *) &adr_client, lgc);\n        }\n        close(sk);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* PARENT = CLIENT UDP : socket -> sendto -> recvfrom */\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    int sk = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n\n    sendto(sk, argv[1], strlen(argv[1]), 0,\n           (struct sockaddr *) &srv, sizeof srv);\n\n    struct sockaddr_in adr_recue;\n    socklen_t lgr = sizeof adr_recue;\n    char buf[128] = {0};\n    ssize_t n = recvfrom(sk, buf, sizeof buf - 1, 0,\n                         (struct sockaddr *) &adr_recue, &lgr);\n    if (n > 0) {\n        buf[n] = '\\0';\n        printf(\"client recoit : %s\\n\", buf);\n    }\n    close(sk);\n\n    wait(NULL);\n    return 0;\n}\n"
+    },
+    "explanation": "Le client UDP suit une séquence **très courte** : **`socket` → `sendto` → `recvfrom` → `close`** — **ni `bind`, ni `connect`**. On crée la socket avec `socket(AF_INET, SOCK_DGRAM, 0)`, puis on remplit une `struct sockaddr_in` décrivant **le serveur à joindre** : `sin_family = AF_INET`, `sin_port = htons(port)` (le port reçu par le tube, **converti**), `sin_addr` via `inet_aton(\"127.0.0.1\", ...)`. L'envoi se fait avec **`sendto`**, dont les deux derniers paramètres — `(struct sockaddr *) &srv` et `sizeof srv` — donnent l'**adresse du destinataire** : c'est ce qui remplace le `connect` de TCP. La réponse se reçoit avec **`recvfrom`**, dont le dernier argument (la taille de la structure `from`) doit être **initialisé** avec `sizeof` avant l'appel. On termine le tampon par `'\\0'` avant de l'afficher. Le client n'attribue **pas** lui-même de port : le système le fait automatiquement au premier `sendto`.",
+    "concepts": [
+      "sequence-udp",
+      "sendto",
+      "recvfrom",
+      "sock-dgram"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "serveur-multi-clients",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la différence entre un serveur itératif et un serveur concurrent ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le serveur itératif traite les clients un par un — pendant le traitement de l'un, les autres attendent ; le serveur concurrent traite plusieurs clients simultanément."
+        },
+        {
+          "id": "b",
+          "label": "Le serveur itératif traite plusieurs clients simultanément ; le serveur concurrent les traite un par un, dans une boucle."
+        },
+        {
+          "id": "c",
+          "label": "Le serveur itératif n'utilise pas de socket d'écoute ; le serveur concurrent en utilise une."
+        },
+        {
+          "id": "d",
+          "label": "Le serveur itératif fonctionne en UDP ; le serveur concurrent fonctionne en TCP."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Un serveur **itératif** (ou **séquentiel**) traite les clients **les uns après les autres** : tant qu'il dialogue avec un client, il **ne peut pas** appeler `accept` à nouveau — **tous les autres clients attendent** dans la file, voire sont **refusés** si elle déborde. Un seul client lent **gèle** le service entier. Un serveur **concurrent** lève cette limite : il traite **plusieurs clients simultanément**. Le modèle du cours crée, à chaque connexion acceptée, un **processus enfant** par `fork` qui prend ce client en charge, pendant que le parent **retourne aussitôt** au `accept`. (b) inverse les deux notions. (c) et (d) sont sans rapport : les deux types de serveurs utilisent une socket d'écoute, et la distinction n'a rien à voir avec TCP/UDP.",
+    "concepts": [
+      "serveur-iteratif",
+      "serveur-concurrent"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "serveur-multi-clients",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Dans un serveur concurrent, juste après le `fork`, le parent doit fermer la socket de service (`close(sk)`) : s'il l'oublie, il fuit un descripteur à chaque client et la connexion ne se ferme jamais proprement.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai — c'est le **point capital** du chapitre. Après le `fork`, **chaque processus hérite d'une copie de tous les descripteurs** : le serveur a alors **quatre** descripteurs (socket d'écoute et socket de service, en double). Le **parent** n'a **aucun usage** de la socket de service — c'est l'**enfant** qui dialogue avec ce client : le parent doit donc **`close(sk)`** immédiatement après le `fork`. S'il l'oublie : **(1)** il **accumule** un descripteur à chaque client → **fuite de descripteurs**, la table se remplit ; **(2)** plus grave, la **connexion ne se ferme jamais proprement** — une connexion ne se ferme **réellement** que lorsque **tous** les descripteurs qui la désignent sont fermés ; tant que le descripteur oublié du parent reste ouvert, la fin de connexion n'est pas signalée au client. Symétriquement, l'**enfant** doit fermer la **socket d'écoute** (`close(server_fd)`). C'est la **règle d'or des tubes** appliquée aux sockets.",
+    "concepts": [
+      "fermeture-descripteurs-serveur",
+      "socket-service",
+      "fork-par-client"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "serveur-multi-clients",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Dans un serveur concurrent, juste après `accept` puis `fork`, combien de sockets le serveur a-t-il, et quelles fermetures sont obligatoires ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Père et fils héritent chacun de la socket d'écoute ET de la socket de service : le père ferme la socket de service, le fils ferme la socket d'écoute."
+        },
+        {
+          "id": "b",
+          "label": "Seul le fils hérite des sockets ; le père les a déjà perdues, il n'a donc rien à fermer."
+        },
+        {
+          "id": "c",
+          "label": "Le fork ferme automatiquement la socket d'écoute chez le fils et la socket de service chez le père : aucune fermeture explicite n'est nécessaire."
+        },
+        {
+          "id": "d",
+          "label": "Le père ferme la socket d'écoute (il n'accepte plus) et le fils ferme la socket de service (il a fini de dialoguer)."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "`accept` renvoie une **nouvelle** socket de service ; le `fork` qui suit en fait hériter une **copie** à l'enfant. **Père et fils possèdent donc chacun les deux sockets** : la socket d'**écoute** et la socket de **service**. Les fermetures **obligatoires**, immédiatement après le `fork` : le **parent ferme la socket de service** (`close(sk)`) — c'est l'enfant qui sert ce client, le parent n'en a aucun usage ; l'**enfant ferme la socket d'écoute** (`close(server_fd)`) — il ne `accept`e jamais, cette socket ne lui sert à rien. (b) est faux : le `fork` **duplique** les descripteurs, le père les garde tous. (c) est faux : le `fork` ne ferme **rien** automatiquement — les fermetures sont **à la charge du programmeur**. (d) **inverse** les deux fermetures : c'est l'erreur classique à éviter.",
+    "concepts": [
+      "fermeture-descripteurs-serveur",
+      "socket-ecoute",
+      "socket-service"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "serveur-multi-clients",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Remettez dans l'ordre d'exécution les étapes d'un serveur TCP concurrent, pour le traitement d'UN client par un processus enfant.",
+    "payload": {
+      "items": [
+        {
+          "id": "i1",
+          "label": "socket / bind / listen — préparer la socket d'écoute"
+        },
+        {
+          "id": "i2",
+          "label": "sk = accept(server_fd, ...) — accepter une connexion, obtenir la socket de service"
+        },
+        {
+          "id": "i3",
+          "label": "fork() — créer un processus enfant pour ce client"
+        },
+        {
+          "id": "i4",
+          "label": "ENFANT : close(server_fd) — fermer la socket d'écoute, inutile à l'enfant"
+        },
+        {
+          "id": "i5",
+          "label": "ENFANT : dialoguer avec le client sur sk, puis close(sk) et exit()"
+        },
+        {
+          "id": "i6",
+          "label": "PARENT : close(sk) puis revenir au accept() pour le client suivant"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5",
+        "i6"
+      ]
+    },
+    "explanation": "Le serveur concurrent reprend la séquence du serveur TCP en **insérant un `fork` juste après `accept`** : **(1)** `socket` / `bind` / `listen` préparent la socket d'**écoute** (une seule fois, avant la boucle) ; **(2)** `accept` **accepte** une connexion et renvoie la **socket de service** `sk` ; **(3)** `fork` crée un **processus enfant** pour ce client ; **(4)** l'**enfant** ferme la **socket d'écoute** (`close(server_fd)`) — il ne `accept`e jamais ; **(5)** l'enfant **dialogue** avec le client sur `sk`, puis `close(sk)` et `exit()` — il se termine ici ; **(6)** le **parent** ferme la **socket de service** (`close(sk)`) et **revient aussitôt** au `accept`, **sans attendre** l'enfant. Les étapes (2) à (6) forment la **boucle infinie** du serveur ; (4)-(5) et (6) s'exécutent en **parallèle** dans deux processus distincts.",
+    "concepts": [
+      "fork-par-client",
+      "serveur-concurrent",
+      "fermeture-descripteurs-serveur"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "serveur-multi-clients",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque notion du serveur concurrent à sa description exacte.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Serveur itératif"
+        },
+        {
+          "id": "l2",
+          "label": "fork après accept"
+        },
+        {
+          "id": "l3",
+          "label": "signal(SIGCHLD, SIG_IGN)"
+        },
+        {
+          "id": "l4",
+          "label": "waitpid(-1, NULL, WNOHANG)"
+        },
+        {
+          "id": "l5",
+          "label": "Multiplexage par select"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Sert les clients un par un : un client lent bloque tous les autres"
+        },
+        {
+          "id": "r2",
+          "label": "Crée un processus enfant par connexion, le parent revenant aussitôt accepter"
+        },
+        {
+          "id": "r3",
+          "label": "Fait nettoyer automatiquement les enfants par le noyau : aucun zombie"
+        },
+        {
+          "id": "r4",
+          "label": "Récupère un enfant terminé sans bloquer ; appelé en boucle dans un gestionnaire"
+        },
+        {
+          "id": "r5",
+          "label": "Surveille plusieurs sockets dans un seul processus, sans fork ni thread"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4",
+        "l5": "r5"
+      }
+    },
+    "explanation": "Le **serveur itératif** sert les clients **un par un** : pendant un traitement long, **tous les autres attendent** — un client lent **gèle** le service. Le **`fork` après `accept`** est le modèle du cours : à chaque connexion, un **processus enfant** prend le client en charge, et le **parent revient aussitôt** au `accept`. **`signal(SIGCHLD, SIG_IGN)`** est la parade la plus simple aux **zombies** : elle indique au système que les enfants terminés doivent être **nettoyés automatiquement** par le noyau. **`waitpid(-1, NULL, WNOHANG)`** récupère un enfant terminé **sans bloquer** (`WNOHANG`) ; on l'appelle **en boucle** dans un gestionnaire de `SIGCHLD`, car les signaux **ne se cumulent pas**. Le **multiplexage par `select`** est l'autre modèle de serveur concurrent : un **seul processus**, sans `fork` ni thread, **surveille plusieurs sockets** à la fois.",
+    "concepts": [
+      "serveur-iteratif",
+      "fork-par-client",
+      "sigchld-serveur",
+      "reaping-fils-serveur",
+      "alternatives-concurrence"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "serveur-multi-clients",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Pourquoi le parent d'un serveur concurrent ne doit-il PAS appeler `wait` directement dans sa boucle d'acceptation, et comment évite-t-il alors les processus zombies ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "wait est bloquant : il figerait le parent jusqu'à la fin d'un enfant, ramenant le serveur à un client à la fois. On évite les zombies avec signal(SIGCHLD, SIG_IGN) ou un gestionnaire de SIGCHLD appelant waitpid(..., WNOHANG)."
+        },
+        {
+          "id": "b",
+          "label": "wait est interdit après un fork ; il faut obligatoirement utiliser exit dans le parent pour récupérer les enfants."
+        },
+        {
+          "id": "c",
+          "label": "wait dans la boucle est correct et recommandé : il n'y a aucun problème à l'appeler à chaque tour."
+        },
+        {
+          "id": "d",
+          "label": "Le parent ne peut pas avoir de zombies : seuls les enfants peuvent en créer, donc la question ne se pose pas."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "**`wait` est bloquant** : appelé dans la boucle, il **figerait le parent** jusqu'à ce qu'un enfant se termine — le parent ne pourrait plus appeler `accept`, et le serveur retomberait à **un client à la fois**, perdant toute la concurrence. Mais le parent ne peut pas non plus **ignorer** ses enfants : un enfant terminé devient un **zombie** tant que son statut n'est pas récupéré, et les zombies finissent par **saturer** la table des processus. Les **deux** solutions propres : **`signal(SIGCHLD, SIG_IGN)`** — le noyau nettoie **automatiquement** les enfants —, ou un **gestionnaire de `SIGCHLD`** appelant **`waitpid(-1, NULL, WNOHANG)`** en boucle (`WNOHANG` = **non bloquant**). (b) est faux : `wait` n'est pas interdit, juste inadapté **ici**. (c) ignore le blocage. (d) est faux : les zombies sont les **enfants** du serveur, et c'est bien **lui** qui doit les récupérer.",
+    "concepts": [
+      "reaping-fils-serveur",
+      "sigchld-serveur"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "serveur-multi-clients",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Programme unique : un serveur TCP concurrent (un `fork` par client) sert TROIS clients que le programme principal lance l'un après l'autre. Chaque client envoie un entier et reçoit son double. Donnez la sortie exacte affichée sur la sortie standard.",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <signal.h>\n#include <sys/types.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n#define NB_CLIENTS 3\n\n/* execute par chaque ENFANT du serveur : double la valeur recue */\nstatic void traiter_client(int sk) {\n    char buf[64] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) {\n        buf[n] = '\\0';\n        char rep[64];\n        snprintf(rep, sizeof rep, \"%d\", atoi(buf) * 2);\n        send(sk, rep, strlen(rep), 0);\n    }\n}\n\n/* un client : envoie 'valeur', recoit le double, le renvoie par 'sortie' */\nstatic void client(unsigned short port, int valeur, int sortie) {\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n    connect(sk, (struct sockaddr *) &srv, sizeof srv);\n    char msg[64];\n    snprintf(msg, sizeof msg, \"%d\", valeur);\n    send(sk, msg, strlen(msg), 0);\n    char buf[64] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    int recu = (n > 0) ? atoi(buf) : -1;\n    write(sortie, &recu, sizeof recu);\n    close(sk);\n    exit(EXIT_SUCCESS);\n}\n\nint main(void) {\n    int tube[2];\n    pipe(tube);\n\n    pid_t serveur = fork();\n    if (serveur == 0) {\n        /* SERVEUR CONCURRENT : un fork par client */\n        close(tube[0]);\n        signal(SIGCHLD, SIG_IGN);\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        struct sockaddr_in a;\n        memset(&a, 0, sizeof a);\n        a.sin_family = AF_INET;\n        a.sin_addr.s_addr = htonl(INADDR_ANY);\n        a.sin_port = htons(0);\n        bind(ec, (struct sockaddr *) &a, sizeof a);\n        socklen_t lg = sizeof a;\n        getsockname(ec, (struct sockaddr *) &a, &lg);\n        unsigned short port = ntohs(a.sin_port);\n        listen(ec, 5);\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n        for (int i = 0; i < NB_CLIENTS; i++) {\n            int sk = accept(ec, NULL, NULL);\n            if (fork() == 0) {\n                close(ec);\n                traiter_client(sk);\n                close(sk);\n                exit(EXIT_SUCCESS);\n            }\n            close(sk);\n        }\n        close(ec);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* PROGRAMME PRINCIPAL */\n    close(tube[1]);\n    unsigned short port;\n    read(tube[0], &port, sizeof port);\n    close(tube[0]);\n\n    int valeurs[NB_CLIENTS] = {10, 20, 30};\n    for (int i = 0; i < NB_CLIENTS; i++) {\n        int recu = 0;\n        int rr[2];\n        pipe(rr);                 /* tube pour recuperer le resultat du client */\n        pid_t cl = fork();\n        if (cl == 0) {\n            close(rr[0]);\n            client(port, valeurs[i], rr[1]);\n        }\n        close(rr[1]);\n        read(rr[0], &recu, sizeof recu);\n        close(rr[0]);\n        waitpid(cl, NULL, 0);     /* attendre CE client avant de lancer le suivant */\n        printf(\"client %d : envoie %d, recoit %d\\n\", i + 1, valeurs[i], recu);\n        fflush(stdout);           /* vider le tampon AVANT le prochain fork */\n    }\n\n    waitpid(serveur, NULL, 0);\n    printf(\"serveur : %d clients servis\\n\", NB_CLIENTS);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "expectedOutput": "client 1 : envoie 10, recoit 20\nclient 2 : envoie 20, recoit 40\nclient 3 : envoie 30, recoit 60\nserveur : 3 clients servis"
+    },
+    "explanation": "Le serveur est **concurrent** : à chaque `accept`, il `fork` un **enfant** qui double la valeur reçue (`atoi(buf) * 2`) puis se termine. Le programme principal lance les **trois** clients **strictement l'un après l'autre** — il `fork` un client, **lit son résultat** par un tube, puis `waitpid` **ce** client avant de passer au suivant. L'ordre des trois lignes `client i : ...` est donc **déterministe** : `10→20`, `20→40`, `30→60`. Le `fflush(stdout)` après chaque `printf` est **essentiel** : sans lui, le tampon de sortie **non vidé** serait **dupliqué** dans chaque processus enfant créé ensuite (héritage de `fork`), produisant des lignes en double. Enfin, le principal attend le serveur (`waitpid(serveur, ...)`) et affiche `serveur : 3 clients servis`. Le serveur lui-même est resté **silencieux** : tout l'affichage vient du processus principal, dans un ordre fixe.",
+    "concepts": [
+      "serveur-concurrent",
+      "fork-par-client",
+      "reaping-fils-serveur"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "serveur-multi-clients",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 5,
+    "prompt": "Ce programme unique lance un serveur TCP (fils) censé être concurrent et TROIS clients (sur 127.0.0.1) qui envoient chacun un entier et attendent son double. En l'état, un seul client est servi, les deux autres échouent. Trouvez et corrigez le bug. (Indice : le serveur traite-t-il vraiment chaque client dans un processus distinct ?)",
+    "payload": {
+      "spec": "Le bug : le serveur n'est PAS concurrent — il lui manque le fork. Dans sa boucle d'acceptation, apres accept il appelle directement close(ec), traiter_client(sk), close(sk) puis exit(EXIT_SUCCESS), le tout dans le SEUL processus serveur. Ce exit, qui devrait etre celui d'un enfant, termine donc le processus serveur des le premier client : les clients 2 et 3 ne sont jamais servis (leur connexion est refusee ou reinitialisee). La correction consiste a entourer le traitement d'un client d'un fork : la branche enfant (fork() == 0) fait close(ec), traiter_client(sk), close(sk), exit(EXIT_SUCCESS) ; la branche parent fait close(sk) et continue la boucle. Le serveur affiche alors '3 clients servis' apres la boucle. La sortie attendue comporte les trois lignes 'client N : 2N' et la ligne '3 clients servis', dans un ordre quelconque.",
+      "std": "gnu11",
+      "compare": "sorted-lines",
+      "tests": [
+        {
+          "name": "trois clients concurrents",
+          "stdin": "",
+          "expectedStdout": "client 10 : 20\nclient 20 : 40\nclient 30 : 60\n3 clients servis",
+          "compare": "sorted-lines"
+        }
+      ],
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <signal.h>\n#include <sys/types.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n#define NB_CLIENTS 3\n\nstatic void traiter_client(int sk) {\n    char buf[64] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) {\n        buf[n] = '\\0';\n        char rep[64];\n        snprintf(rep, sizeof rep, \"%d\", atoi(buf) * 2);\n        send(sk, rep, strlen(rep), 0);\n    }\n}\n\nstatic void lancer_client(unsigned short port, int valeur) {\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n    if (connect(sk, (struct sockaddr *) &srv, sizeof srv) == -1) {\n        perror(\"connect\"); close(sk); exit(EXIT_FAILURE);\n    }\n    char msg[64];\n    snprintf(msg, sizeof msg, \"%d\", valeur);\n    send(sk, msg, strlen(msg), 0);\n    char buf[64] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) {\n        buf[n] = '\\0';\n        printf(\"client %d : %s\\n\", valeur, buf);\n    }\n    close(sk);\n    exit(EXIT_SUCCESS);\n}\n\nint main(void) {\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t serveur = fork();\n    if (serveur == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (serveur == 0) {\n        /* ===== SERVEUR : cense etre concurrent =====\n           BUG : le serveur traite les clients lui-meme, sans creer\n           de processus pour chacun. */\n        close(tube[0]);\n        signal(SIGCHLD, SIG_IGN);\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in a;\n        memset(&a, 0, sizeof a);\n        a.sin_family = AF_INET;\n        a.sin_addr.s_addr = htonl(INADDR_ANY);\n        a.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &a, sizeof a) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof a;\n        getsockname(ec, (struct sockaddr *) &a, &lg);\n        unsigned short port = ntohs(a.sin_port);\n        if (listen(ec, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n\n        for (int i = 0; i < NB_CLIENTS; i++) {\n            int sk = accept(ec, NULL, NULL);\n            if (sk == -1) { perror(\"accept\"); continue; }\n            close(ec);\n            traiter_client(sk);\n            close(sk);\n            exit(EXIT_SUCCESS);\n        }\n        close(ec);\n        printf(\"%d clients servis\\n\", NB_CLIENTS);\n        exit(EXIT_SUCCESS);\n    }\n\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    int valeurs[NB_CLIENTS] = {10, 20, 30};\n    for (int i = 0; i < NB_CLIENTS; i++) {\n        if (fork() == 0) lancer_client(port, valeurs[i]);\n    }\n    for (int i = 0; i < NB_CLIENTS; i++) wait(NULL);\n    waitpid(serveur, NULL, 0);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <signal.h>\n#include <sys/types.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n#define NB_CLIENTS 3\n\n/* dialogue avec un client : execute par chaque ENFANT du serveur */\nstatic void traiter_client(int sk) {\n    char buf[64] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) {\n        buf[n] = '\\0';\n        char rep[64];\n        snprintf(rep, sizeof rep, \"%d\", atoi(buf) * 2);\n        send(sk, rep, strlen(rep), 0);\n    }\n}\n\n/* un client : se connecte, envoie un entier, lit le double, l'affiche */\nstatic void lancer_client(unsigned short port, int valeur) {\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n    if (connect(sk, (struct sockaddr *) &srv, sizeof srv) == -1) {\n        perror(\"connect\");\n        close(sk);\n        exit(EXIT_FAILURE);\n    }\n    char msg[64];\n    snprintf(msg, sizeof msg, \"%d\", valeur);\n    send(sk, msg, strlen(msg), 0);\n    char buf[64] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) {\n        buf[n] = '\\0';\n        printf(\"client %d : %s\\n\", valeur, buf);\n    }\n    close(sk);\n    exit(EXIT_SUCCESS);\n}\n\nint main(void) {\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t serveur = fork();\n    if (serveur == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (serveur == 0) {\n        /* ===== PROCESSUS SERVEUR CONCURRENT ===== */\n        close(tube[0]);\n        signal(SIGCHLD, SIG_IGN);          /* pas de zombies */\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in a;\n        memset(&a, 0, sizeof a);\n        a.sin_family = AF_INET;\n        a.sin_addr.s_addr = htonl(INADDR_ANY);\n        a.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &a, sizeof a) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof a;\n        getsockname(ec, (struct sockaddr *) &a, &lg);\n        unsigned short port = ntohs(a.sin_port);\n        if (listen(ec, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n\n        /* boucle d'acceptation : un fork par client */\n        for (int i = 0; i < NB_CLIENTS; i++) {\n            int sk = accept(ec, NULL, NULL);\n            if (sk == -1) { perror(\"accept\"); continue; }\n            pid_t pid = fork();\n            if (pid == 0) {\n                close(ec);             /* l'enfant n'ecoute pas */\n                traiter_client(sk);\n                close(sk);\n                exit(EXIT_SUCCESS);\n            }\n            close(sk);                 /* le parent ne sert pas ce client */\n        }\n        close(ec);\n        printf(\"%d clients servis\\n\", NB_CLIENTS);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* ===== PROGRAMME PRINCIPAL : lance les clients ===== */\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    int valeurs[NB_CLIENTS] = {10, 20, 30};\n    for (int i = 0; i < NB_CLIENTS; i++) {\n        if (fork() == 0) lancer_client(port, valeurs[i]);\n    }\n\n    /* attendre les clients puis le serveur */\n    for (int i = 0; i < NB_CLIENTS; i++) wait(NULL);\n    waitpid(serveur, NULL, 0);\n    return 0;\n}\n"
+    },
+    "explanation": "Le bug est l'**absence de `fork`** : le serveur n'est **pas concurrent**, il est **itératif** — et même pire. Dans sa boucle, après `accept`, il exécute directement `close(ec)`, `traiter_client(sk)`, `close(sk)` puis **`exit(EXIT_SUCCESS)`**. Ce `exit` est celui qui devrait terminer un **processus enfant** ; ici, faute de `fork`, il **termine le processus serveur lui-même** dès le **premier** client. Les clients 2 et 3 — déjà connectés dans la file d'attente — voient leur connexion **réinitialisée** quand le serveur meurt, et leur `connect`/`recv` **échoue**. La correction consiste à **entourer le traitement d'un client d'un `fork`** : la branche **enfant** (`fork() == 0`) fait `close(ec)`, `traiter_client(sk)`, `close(sk)`, `exit(EXIT_SUCCESS)` ; la branche **parent** fait `close(sk)` et **revient** au `accept`. Le parent reste alors vivant pour servir **tous** les clients, chacun dans son **propre processus**.",
+    "concepts": [
+      "fork-par-client",
+      "serveur-concurrent",
+      "serveur-iteratif"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "serveur-multi-clients",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 5,
+    "prompt": "Ce programme unique lance un serveur TCP concurrent (fils) et TROIS clients (sur 127.0.0.1). Le serveur `fork` bien un enfant par client, mais un seul client est servi : les suivants échouent. Trouvez et corrigez le bug. (Indice : après le `fork`, quelle socket le parent ferme-t-il ?)",
+    "payload": {
+      "spec": "Le bug : apres le fork, le parent ferme la MAUVAISE socket. Il appelle close(ec) — la socket d'ECOUTE — au lieu de close(sk) — la socket de SERVICE. Des le premier client, le parent ferme donc sa propre socket d'ecoute : au tour de boucle suivant, accept(ec, ...) echoue avec EBADF (Bad file descriptor), et les clients 2 et 3 ne sont jamais acceptes. La correction consiste a remplacer, dans la branche parent, close(ec) par close(sk) : le parent doit fermer la socket de SERVICE (dont s'occupe l'enfant) et CONSERVER la socket d'ecoute pour accepter les clients suivants. C'est l'enfant, lui, qui ferme la socket d'ecoute. La sortie attendue comporte les trois lignes 'client N : 2N' et la ligne '3 clients servis', dans un ordre quelconque.",
+      "std": "gnu11",
+      "compare": "sorted-lines",
+      "tests": [
+        {
+          "name": "trois clients concurrents",
+          "stdin": "",
+          "expectedStdout": "client 10 : 20\nclient 20 : 40\nclient 30 : 60\n3 clients servis",
+          "compare": "sorted-lines"
+        }
+      ],
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <signal.h>\n#include <sys/types.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n#define NB_CLIENTS 3\n\n/* dialogue avec un client : execute par chaque ENFANT du serveur */\nstatic void traiter_client(int sk) {\n    char buf[64] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) {\n        buf[n] = '\\0';\n        char rep[64];\n        snprintf(rep, sizeof rep, \"%d\", atoi(buf) * 2);\n        send(sk, rep, strlen(rep), 0);\n    }\n}\n\n/* un client : se connecte, envoie un entier, lit le double, l'affiche */\nstatic void lancer_client(unsigned short port, int valeur) {\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n    if (connect(sk, (struct sockaddr *) &srv, sizeof srv) == -1) {\n        perror(\"connect\");\n        close(sk);\n        exit(EXIT_FAILURE);\n    }\n    char msg[64];\n    snprintf(msg, sizeof msg, \"%d\", valeur);\n    send(sk, msg, strlen(msg), 0);\n    char buf[64] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) {\n        buf[n] = '\\0';\n        printf(\"client %d : %s\\n\", valeur, buf);\n    }\n    close(sk);\n    exit(EXIT_SUCCESS);\n}\n\nint main(void) {\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t serveur = fork();\n    if (serveur == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (serveur == 0) {\n        /* ===== PROCESSUS SERVEUR CONCURRENT ===== */\n        close(tube[0]);\n        signal(SIGCHLD, SIG_IGN);          /* pas de zombies */\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in a;\n        memset(&a, 0, sizeof a);\n        a.sin_family = AF_INET;\n        a.sin_addr.s_addr = htonl(INADDR_ANY);\n        a.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &a, sizeof a) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof a;\n        getsockname(ec, (struct sockaddr *) &a, &lg);\n        unsigned short port = ntohs(a.sin_port);\n        if (listen(ec, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n\n        /* boucle d'acceptation : un fork par client */\n        for (int i = 0; i < NB_CLIENTS; i++) {\n            int sk = accept(ec, NULL, NULL);\n            if (sk == -1) { perror(\"accept\"); continue; }\n            pid_t pid = fork();\n            if (pid == 0) {\n                close(ec);             /* l'enfant n'ecoute pas */\n                traiter_client(sk);\n                close(sk);\n                exit(EXIT_SUCCESS);\n            }\n            close(ec);                 /* le parent libere une socket */\n        }\n        close(ec);\n        printf(\"%d clients servis\\n\", NB_CLIENTS);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* ===== PROGRAMME PRINCIPAL : lance les clients ===== */\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    int valeurs[NB_CLIENTS] = {10, 20, 30};\n    for (int i = 0; i < NB_CLIENTS; i++) {\n        if (fork() == 0) lancer_client(port, valeurs[i]);\n    }\n\n    /* attendre les clients puis le serveur */\n    for (int i = 0; i < NB_CLIENTS; i++) wait(NULL);\n    waitpid(serveur, NULL, 0);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <signal.h>\n#include <sys/types.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n#define NB_CLIENTS 3\n\n/* dialogue avec un client : execute par chaque ENFANT du serveur */\nstatic void traiter_client(int sk) {\n    char buf[64] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) {\n        buf[n] = '\\0';\n        char rep[64];\n        snprintf(rep, sizeof rep, \"%d\", atoi(buf) * 2);\n        send(sk, rep, strlen(rep), 0);\n    }\n}\n\n/* un client : se connecte, envoie un entier, lit le double, l'affiche */\nstatic void lancer_client(unsigned short port, int valeur) {\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n    if (connect(sk, (struct sockaddr *) &srv, sizeof srv) == -1) {\n        perror(\"connect\");\n        close(sk);\n        exit(EXIT_FAILURE);\n    }\n    char msg[64];\n    snprintf(msg, sizeof msg, \"%d\", valeur);\n    send(sk, msg, strlen(msg), 0);\n    char buf[64] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) {\n        buf[n] = '\\0';\n        printf(\"client %d : %s\\n\", valeur, buf);\n    }\n    close(sk);\n    exit(EXIT_SUCCESS);\n}\n\nint main(void) {\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t serveur = fork();\n    if (serveur == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (serveur == 0) {\n        /* ===== PROCESSUS SERVEUR CONCURRENT ===== */\n        close(tube[0]);\n        signal(SIGCHLD, SIG_IGN);          /* pas de zombies */\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in a;\n        memset(&a, 0, sizeof a);\n        a.sin_family = AF_INET;\n        a.sin_addr.s_addr = htonl(INADDR_ANY);\n        a.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &a, sizeof a) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof a;\n        getsockname(ec, (struct sockaddr *) &a, &lg);\n        unsigned short port = ntohs(a.sin_port);\n        if (listen(ec, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n\n        /* boucle d'acceptation : un fork par client */\n        for (int i = 0; i < NB_CLIENTS; i++) {\n            int sk = accept(ec, NULL, NULL);\n            if (sk == -1) { perror(\"accept\"); continue; }\n            pid_t pid = fork();\n            if (pid == 0) {\n                close(ec);             /* l'enfant n'ecoute pas */\n                traiter_client(sk);\n                close(sk);\n                exit(EXIT_SUCCESS);\n            }\n            close(sk);                 /* le parent ne sert pas ce client */\n        }\n        close(ec);\n        printf(\"%d clients servis\\n\", NB_CLIENTS);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* ===== PROGRAMME PRINCIPAL : lance les clients ===== */\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    int valeurs[NB_CLIENTS] = {10, 20, 30};\n    for (int i = 0; i < NB_CLIENTS; i++) {\n        if (fork() == 0) lancer_client(port, valeurs[i]);\n    }\n\n    /* attendre les clients puis le serveur */\n    for (int i = 0; i < NB_CLIENTS; i++) wait(NULL);\n    waitpid(serveur, NULL, 0);\n    return 0;\n}\n"
+    },
+    "explanation": "Le bug est une **fermeture de la mauvaise socket**. Après le `fork`, la branche **parent** appelle `close(ec)` — la socket d'**écoute** — au lieu de `close(sk)` — la socket de **service**. Le parent **détruit donc sa propre socket d'écoute** dès le premier client. Au tour de boucle suivant, **`accept(ec, ...)` échoue** avec `errno` = **`EBADF`** (« Bad file descriptor ») : les clients 2 et 3 ne sont **jamais acceptés**. La correction : dans la branche parent, remplacer `close(ec)` par **`close(sk)`**. La règle est nette — le **parent** ferme la **socket de service** (dont l'**enfant** s'occupe) et **conserve** la socket d'**écoute** pour les clients suivants ; c'est l'**enfant**, à l'inverse, qui ferme la socket d'écoute (qu'il n'utilise pas). Confondre `ec` et `sk` au moment du `close` est l'erreur la plus subtile — et la plus fréquente — de ce chapitre.",
+    "concepts": [
+      "fermeture-descripteurs-serveur",
+      "socket-ecoute",
+      "socket-service"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "serveur-multi-clients",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 5,
+    "prompt": "Programme unique : le processus principal lance un serveur TCP concurrent (fils) et TROIS clients COMPLETS (déjà écrits) qui envoient chacun un entier et attendent son double. Dans le serveur, `socket`/`bind`/`listen` sont déjà faits. Complétez la boucle d'acceptation concurrente : pour chaque client, acceptez la connexion, `fork` un enfant qui ferme la socket d'écoute, traite le client puis se termine, et faites fermer par le parent la socket de service avant de reboucler.",
+    "payload": {
+      "spec": "Le squelette fournit toute la plomberie : le tube, le fork du serveur, la fonction traiter_client (qui double la valeur recue) et la fonction lancer_client COMPLETE (le client se connecte, envoie sa valeur, lit le double, affiche 'client <v> : <2v>'). Cote serveur, socket / bind sur 127.0.0.1 port 0 / getsockname / listen sont deja ecrits, et le port est transmis par le tube ; signal(SIGCHLD, SIG_IGN) est deja pose. A COMPLETER : le corps de la boucle 'for (int i = 0; i < NB_CLIENTS; i++)'. Pour chaque tour : sk = accept(ec, NULL, NULL) ; si sk == -1 continuer ; pid_t pid = fork() ; si pid == 0 (enfant) : close(ec), traiter_client(sk), close(sk), exit(EXIT_SUCCESS) ; sinon (parent) : close(sk). Apres la boucle le serveur affiche deja '3 clients servis'. La sortie attendue comporte les trois lignes 'client N : 2N' et la ligne '3 clients servis', dans un ordre quelconque.",
+      "std": "gnu11",
+      "compare": "sorted-lines",
+      "tests": [
+        {
+          "name": "trois clients concurrents",
+          "stdin": "",
+          "expectedStdout": "client 10 : 20\nclient 20 : 40\nclient 30 : 60\n3 clients servis",
+          "compare": "sorted-lines"
+        }
+      ],
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <signal.h>\n#include <sys/types.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n#define NB_CLIENTS 3\n\n/* dialogue avec un client : execute par chaque ENFANT du serveur */\nstatic void traiter_client(int sk) {\n    char buf[64] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) {\n        buf[n] = '\\0';\n        char rep[64];\n        snprintf(rep, sizeof rep, \"%d\", atoi(buf) * 2);\n        send(sk, rep, strlen(rep), 0);\n    }\n}\n\n/* un client COMPLET : se connecte, envoie un entier, lit le double, l'affiche */\nstatic void lancer_client(unsigned short port, int valeur) {\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n    if (connect(sk, (struct sockaddr *) &srv, sizeof srv) == -1) {\n        perror(\"connect\");\n        close(sk);\n        exit(EXIT_FAILURE);\n    }\n    char msg[64];\n    snprintf(msg, sizeof msg, \"%d\", valeur);\n    send(sk, msg, strlen(msg), 0);\n    char buf[64] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) {\n        buf[n] = '\\0';\n        printf(\"client %d : %s\\n\", valeur, buf);\n    }\n    close(sk);\n    exit(EXIT_SUCCESS);\n}\n\nint main(void) {\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t serveur = fork();\n    if (serveur == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (serveur == 0) {\n        /* ===== PROCESSUS SERVEUR CONCURRENT =====\n           socket / bind / listen sont deja faits ci-dessous. */\n        close(tube[0]);\n        signal(SIGCHLD, SIG_IGN);          /* pas de zombies */\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in a;\n        memset(&a, 0, sizeof a);\n        a.sin_family = AF_INET;\n        a.sin_addr.s_addr = htonl(INADDR_ANY);\n        a.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &a, sizeof a) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof a;\n        getsockname(ec, (struct sockaddr *) &a, &lg);\n        unsigned short port = ntohs(a.sin_port);\n        if (listen(ec, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n\n        /* === A COMPLETER : la boucle d'acceptation concurrente ===\n           Pour chacun des NB_CLIENTS clients :\n             1. accepter une connexion : sk = accept(ec, NULL, NULL)\n             2. fork() un processus enfant\n             3. dans l'ENFANT  : close(ec), traiter_client(sk), close(sk), exit\n             4. dans le PARENT : close(sk), puis continuer la boucle */\n        for (int i = 0; i < NB_CLIENTS; i++) {\n            /* a completer */\n        }\n\n        close(ec);\n        printf(\"%d clients servis\\n\", NB_CLIENTS);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* ===== PROGRAMME PRINCIPAL : lance les clients (COMPLET) ===== */\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    int valeurs[NB_CLIENTS] = {10, 20, 30};\n    for (int i = 0; i < NB_CLIENTS; i++) {\n        if (fork() == 0) lancer_client(port, valeurs[i]);\n    }\n\n    for (int i = 0; i < NB_CLIENTS; i++) wait(NULL);\n    waitpid(serveur, NULL, 0);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <signal.h>\n#include <sys/types.h>\n#include <sys/wait.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n#define NB_CLIENTS 3\n\n/* dialogue avec un client : execute par chaque ENFANT du serveur */\nstatic void traiter_client(int sk) {\n    char buf[64] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) {\n        buf[n] = '\\0';\n        char rep[64];\n        snprintf(rep, sizeof rep, \"%d\", atoi(buf) * 2);\n        send(sk, rep, strlen(rep), 0);\n    }\n}\n\n/* un client : se connecte, envoie un entier, lit le double, l'affiche */\nstatic void lancer_client(unsigned short port, int valeur) {\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    struct sockaddr_in srv;\n    memset(&srv, 0, sizeof srv);\n    srv.sin_family = AF_INET;\n    srv.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &srv.sin_addr);\n    if (connect(sk, (struct sockaddr *) &srv, sizeof srv) == -1) {\n        perror(\"connect\");\n        close(sk);\n        exit(EXIT_FAILURE);\n    }\n    char msg[64];\n    snprintf(msg, sizeof msg, \"%d\", valeur);\n    send(sk, msg, strlen(msg), 0);\n    char buf[64] = {0};\n    ssize_t n = recv(sk, buf, sizeof buf - 1, 0);\n    if (n > 0) {\n        buf[n] = '\\0';\n        printf(\"client %d : %s\\n\", valeur, buf);\n    }\n    close(sk);\n    exit(EXIT_SUCCESS);\n}\n\nint main(void) {\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t serveur = fork();\n    if (serveur == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (serveur == 0) {\n        /* ===== PROCESSUS SERVEUR CONCURRENT ===== */\n        close(tube[0]);\n        signal(SIGCHLD, SIG_IGN);          /* pas de zombies */\n        int ec = socket(AF_INET, SOCK_STREAM, 0);\n        if (ec == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n        struct sockaddr_in a;\n        memset(&a, 0, sizeof a);\n        a.sin_family = AF_INET;\n        a.sin_addr.s_addr = htonl(INADDR_ANY);\n        a.sin_port = htons(0);\n        if (bind(ec, (struct sockaddr *) &a, sizeof a) == -1) { perror(\"bind\"); exit(EXIT_FAILURE); }\n        socklen_t lg = sizeof a;\n        getsockname(ec, (struct sockaddr *) &a, &lg);\n        unsigned short port = ntohs(a.sin_port);\n        if (listen(ec, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n        write(tube[1], &port, sizeof port);\n        close(tube[1]);\n\n        /* boucle d'acceptation : un fork par client */\n        for (int i = 0; i < NB_CLIENTS; i++) {\n            int sk = accept(ec, NULL, NULL);\n            if (sk == -1) { perror(\"accept\"); continue; }\n            pid_t pid = fork();\n            if (pid == 0) {\n                close(ec);             /* l'enfant n'ecoute pas */\n                traiter_client(sk);\n                close(sk);\n                exit(EXIT_SUCCESS);\n            }\n            close(sk);                 /* le parent ne sert pas ce client */\n        }\n        close(ec);\n        printf(\"%d clients servis\\n\", NB_CLIENTS);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* ===== PROGRAMME PRINCIPAL : lance les clients ===== */\n    close(tube[1]);\n    unsigned short port;\n    if (read(tube[0], &port, sizeof port) != (ssize_t) sizeof port) { perror(\"read\"); exit(EXIT_FAILURE); }\n    close(tube[0]);\n\n    int valeurs[NB_CLIENTS] = {10, 20, 30};\n    for (int i = 0; i < NB_CLIENTS; i++) {\n        if (fork() == 0) lancer_client(port, valeurs[i]);\n    }\n\n    /* attendre les clients puis le serveur */\n    for (int i = 0; i < NB_CLIENTS; i++) wait(NULL);\n    waitpid(serveur, NULL, 0);\n    return 0;\n}\n"
+    },
+    "explanation": "La boucle d'acceptation concurrente condense tout le chapitre. À chaque tour : **`accept`** bloque jusqu'à une connexion et renvoie la **socket de service** `sk` ; un **`fork`** crée un **processus enfant** pour ce client. Dans l'**enfant** (`pid == 0`) : `close(ec)` — il n'a pas besoin de la socket d'**écoute** —, `traiter_client(sk)` — le dialogue —, `close(sk)`, puis `exit(EXIT_SUCCESS)` — l'enfant **se termine ici**, il ne reboucle jamais. Dans le **parent** : `close(sk)` — il n'a pas besoin de la socket de **service**, c'est l'enfant qui s'en occupe — puis il **reboucle** vers `accept` **sans attendre** l'enfant. Les **deux fermetures** sont obligatoires : sans `close(ec)` chez l'enfant et `close(sk)` chez le parent, on fuit des descripteurs et les connexions ne se ferment pas proprement. Comme `SIGCHLD` est **ignoré**, les enfants terminés ne deviennent **pas zombies**. C'est le schéma `socket` → `bind` → `listen` → boucle{ `accept` → `fork` } du serveur concurrent.",
+    "concepts": [
+      "fork-par-client",
+      "serveur-concurrent",
+      "fermeture-descripteurs-serveur"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-client",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque appel (ou concept) de la séquence client TCP à son rôle précis.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "socket()" },
+        { "id": "l2", "label": "connect()" },
+        { "id": "l3", "label": "send() / recv()" },
+        { "id": "l4", "label": "close()" },
+        { "id": "l5", "label": "port éphémère" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Création du point de communication côté client (descripteur TCP)" },
+        { "id": "r2", "label": "Établissement de la connexion avec le serveur désigné ; bloque jusqu'au rendez-vous avec accept" },
+        { "id": "r3", "label": "Échange de données sur la connexion établie (émission et réception)" },
+        { "id": "r4", "label": "Libération du descripteur et fermeture de la connexion TCP" },
+        { "id": "r5", "label": "Port libre attribué automatiquement par le système lors du connect, sans bind explicite" }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4",
+        "l5": "r5"
+      }
+    },
+    "explanation": "La séquence du client TCP est **`socket → connect → send/recv → close`**. **`socket()`** crée le **point de communication** — un descripteur de socket TCP encore non connecté. **`connect()`** **établit la connexion** avec le serveur décrit dans la `struct sockaddr_in` : il **bloque** et se synchronise avec l'**`accept`** du serveur (rendez-vous). **`send()`/`recv()`** permettent l'**échange de données** sur la connexion ainsi établie. **`close()`** **libère le descripteur** et **ferme la connexion** TCP — le client n'a qu'**une seule** socket à fermer. Le **port éphémère** est le port source attribué **automatiquement** par le système lors du `connect` : le client **ne `bind`e pas**, il n'a pas besoin de choisir son propre port.",
+    "concepts": [
+      "sequence-client-tcp",
+      "connect",
+      "send-recv",
+      "close-socket"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  },
+  {
+    "chapterSlug": "tcp-client",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "TCP est un flot d'octets : un seul appel `recv` peut renvoyer moins d'octets que le `send` correspondant n'en a émis. Il est donc incorrect de supposer qu'un `recv(sk, buf, 1000, 0)` retourne toujours exactement 1000 octets.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. C'est le point fondamental du chapitre. TCP transporte les données comme un **flot d'octets continu, sans frontières de messages** : le réseau peut **découper** un envoi en plusieurs morceaux, ou au contraire **fusionner** deux `send` successifs en un seul `recv`. Un `recv` renvoie **ce qui est disponible à l'instant t** — pas nécessairement tout ce qui a été envoyé. Un code qui suppose qu'un `recv(sk, buf, 1000, 0)` retourne toujours 1000 octets est **faux** dès que le réseau est chargé ou que les données dépassent quelques centaines d'octets. Lorsqu'une quantité précise d'octets est attendue, il faut **lire en boucle** (`while (recus < attendu)`) et cumuler les octets reçus à chaque appel. C'est ce qui distingue TCP des **files de messages** (Module 6) où `msgrcv` extrait exactement un `msgsnd`.",
+    "concepts": [
+      "flot-octets-tcp",
+      "lecture-partielle",
+      "boucle-reception"
+    ],
+    "source": "Cours 5 — Sockets et programmation réseau"
+  }
+]

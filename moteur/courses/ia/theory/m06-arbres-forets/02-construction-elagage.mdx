@@ -1,0 +1,314 @@
+---
+title: "Construction et élagage d'un arbre"
+slug: construction-elagage
+order: 2
+estimatedReadMin: 21
+concepts: [construction-d-arbre, critere-de-decoupage, gain-d-information, indice-de-gini, algorithme-cart, attribut-continu, critere-d-arret, elagage, variable-de-substitution]
+source: "DM_Slides_DT.pdf, ING2_GI_ML_Tree_SLIDES.pdf"
+---
+
+## Le principe : un partitionnement récursif
+
+La section précédente a montré **comment choisir le test d'un nœud**. La
+**construction** d'un arbre enchaîne ces choix de façon **récursive**.
+
+La démarche, dit le cours, est la suivante : **diviser le plus efficacement
+possible l'ensemble d'apprentissage par des tests sur les observations, jusqu'à
+obtenir des sous-ensembles ne contenant que — ou presque que — des observations
+d'une même classe**. Le schéma général d'un algorithme de construction est donc :
+
+```
+Algorithme générique
+Etape 0. Initialiser l'arbre à l'arbre vide et le nœud à la racine
+Etape 1.
+si nœud est terminal
+    lui affecter une classe
+sinon
+    choisir une variable et un test
+    pour chaque valeur du test
+        > créer un sous-ensemble d'apprentissage avec les
+          observations correspondantes à la valeur du test
+        > répéter l'étape 1 avec le sous-ensemble
+    finpour
+finsi
+```
+
+Tout algorithme de construction se ramène donc à **deux questions** :
+
+1. **Décider si un nœud est terminal** — quand faut-il arrêter de décomposer un
+   sous-ensemble ?
+2. **Choisir un attribut pour le partage du nœud** — quel test associer au nœud ?
+
+Il existe **plusieurs algorithmes** de construction, qui se distinguent
+précisément par leur **façon de répondre à ces deux questions** : les **arbres
+CART**, les **arbres de Quinlan** (famille **ID3 / C4.5 / C5.0**), etc.
+
+> **À retenir** : construire un arbre, c'est **partitionner récursivement**
+> l'ensemble d'apprentissage par des tests jusqu'à des sous-ensembles
+> (quasi) **purs**. Tout algorithme se résume à **deux décisions** : un nœud
+> est-il **terminal** ? quel **attribut** choisir pour le partager ?
+
+## Les familles d'algorithmes
+
+Le cours cite deux grandes familles d'algorithmes de construction d'arbres.
+
+- **La famille ID3, C4.5, C5.0.** Ces algorithmes ont été **conçus à l'origine
+  pour des attributs exclusivement qualitatifs**. L'arbre de *PlayTennis* de la
+  section 1 est le résultat de l'application de ce type d'algorithmes.
+- **L'algorithme CART** (*Classification And Regression Trees*). Il **accepte
+  tous les types d'attributs** et produit **exclusivement des arbres binaires**.
+
+Ces algorithmes diffèrent notamment dans les aspects suivants :
+
+- les **types d'attributs** qu'ils considèrent ;
+- le **type de test** utilisé dans les nœuds ;
+- la **manière d'arbitrer**, à chaque nœud, entre plusieurs instances d'un test ;
+- **le(s) test(s) d'arrêt** : quand faut-il arrêter de décomposer ?
+
+> **À retenir** : deux familles principales — **ID3 / C4.5 / C5.0** (à l'origine
+> pour attributs **qualitatifs**) et **CART** (tous types d'attributs, arbres
+> **binaires**). Elles diffèrent par les types d'attributs, les tests, l'arbitrage
+> aux nœuds et le critère d'arrêt.
+
+## Le partage d'un nœud : attributs catégoriels et continus
+
+Le **type de test** d'un nœud dépend de la **nature de l'attribut** choisi.
+
+- **Si l'attribut `X` est catégoriel**, on partage l'ensemble d'apprentissage
+  **suivant les modalités — ou un regroupement de modalités — de l'attribut**.
+  Dans la famille ID3 / C4.5, on crée une **branche pour chaque valeur possible**
+  de l'attribut.
+- **Si l'attribut `X` est quantitatif**, on partage l'ensemble d'apprentissage
+  suivant un **test de seuil `X < a` ou `X ≥ a`** (la *fonction split*). On teste
+  **« toutes » les valeurs intermédiaires entre `xᵢ` et `xᵢ₊₁`** — c'est-à-dire
+  entre deux valeurs observées consécutives — pour retenir le meilleur seuil.
+
+Cette mécanique de découpe **ne permet pas de modéliser des classes du type
+« patatoïdes »** : un arbre découpe l'espace par des frontières
+**perpendiculaires aux axes**, donc en régions rectangulaires. Pour suivre une
+frontière oblique, il lui faut empiler de nombreux nœuds.
+
+> **À retenir** : pour un attribut **catégoriel**, on partage selon ses
+> **modalités** (une branche par valeur, dans ID3 / C4.5) ; pour un attribut
+> **quantitatif**, par un **seuil `X < a`** choisi parmi les valeurs
+> intermédiaires entre observations consécutives. Les frontières d'un arbre sont
+> **perpendiculaires aux axes**.
+
+## L'algorithme C4.5 (attributs qualitatifs)
+
+Le cours détaille d'abord **C4.5**, pour des attributs **qualitatifs**.
+
+> Étant donné un ensemble `D` d'exemples décrits par les attributs qualitatifs
+> `A₁, …, Aₚ` et appartenant aux classes `C₁, …, Cₘ` :
+>
+> - tout d'abord, **sélectionner un attribut à placer au nœud racine** ;
+> - **créer une branche pour chaque valeur possible** de cet attribut ;
+> - chaque branche se termine par un **nœud correspondant à un sous-ensemble de
+>   `D`** ;
+> - pour chaque nœud : **si tous les éléments de l'ensemble qui lui correspond
+>   appartiennent à la même classe `Cᵢ`, alors c'est une feuille étiquetée avec
+>   `Cᵢ`** ; sinon, **répéter récursivement** les étapes ci-dessus.
+
+Le cours en donne une **formulation algorithmique** complète. La procédure
+principale traite les deux cas de base, puis délègue le cas récursif :
+
+```
+Decision-Tree(Input : D, A ; Output T)
+  if D ne contient que des exemples de la classe cᵢ
+      then T = {une feuille étiquetée avec cᵢ}
+  elseif A = ∅
+      then T = {une feuille étiquetée avec la classe la plus fréquente c_M}
+  else
+      Decision-Tree-2(D, A, T)
+  endif
+```
+
+```
+Decision-Tree-2(Input : D, A ; Output T)
+  Calculer p₀ = Entropie(D).
+  foreach attribut Aᵢ
+      calculer pᵢ = Entropie-après-partition(D, Aᵢ).
+  endforeach
+  Sélectionner l'attribut A_g qui maximise pᵢ − p₀.
+  Ajouter le sous-arbre enraciné en A_g.
+  Partitionner D en m sous-ensembles D₁, …, Dₘ selon les m valeurs de A_g.
+  foreach Dⱼ ∈ {D₁, …, Dₘ} do
+      if Dⱼ ≠ ∅ then
+          Créer un nœud de branche Tⱼ comme nœud enfant de T.
+          Appeler Decision-Tree(Dⱼ, A − {A_g}, Tⱼ).
+      endif
+  endforeach
+```
+
+La fonction `Entropie-après-partition(D, Aᵢ)` calcule l'**entropie pondérée**
+introduite à la section 1 : soient `v₁, …, vₚ` les valeurs possibles de `Aᵢ` ;
+si l'on utilise `Aᵢ` pour partitionner `D`, on divise `D` en `p` sous-ensembles
+`D₁, …, Dₚ`, et l'on retourne `pᵢ = Σⱼ₌₁ᵖ (|Dⱼ| / |D|) · entropy(Dⱼ)`.
+
+Trois observations sur cet algorithme :
+
+- l'attribut choisi à un nœud est **retiré** de l'ensemble des attributs
+  disponibles dans les sous-arbres (`A − {A_g}`) ;
+- un nœud devient une **feuille** dès que son ensemble est **pur** ;
+- si **aucun attribut ne reste** (`A = ∅`) sans que l'ensemble soit pur, le nœud
+  devient une feuille étiquetée par la **classe la plus fréquente**.
+
+> **À retenir** : **C4.5** sélectionne récursivement, à chaque nœud, l'attribut
+> de **gain d'entropie** maximal et crée **une branche par valeur** ; un nœud
+> devient une **feuille** si son ensemble est **pur**, ou — si plus aucun
+> attribut n'est disponible — est étiqueté par la **classe la plus fréquente**.
+
+## L'algorithme CART (arbres binaires)
+
+L'algorithme **CART** se distingue de C4.5 sur plusieurs points. Le cours en
+liste les caractéristiques.
+
+- **CART construit des arbres de décision binaires** : chaque nœud interne se
+  divise en exactement **deux branches**.
+- Les **tests** utilisés prennent l'une des deux formes suivantes :
+  - `Aᵢ < val` pour les **variables numériques et ordinales** (qualitatives
+    **ordonnées**) ;
+  - `Aᵢ ∈ {val1, …}` pour les **variables nominales** (qualitatives **non
+    ordonnées**).
+- Les **deux branches** d'un nœud interne sont étiquetées respectivement par les
+  valeurs **Vrai** (branche gauche) et **Faux** (branche droite).
+- Le **critère de pureté** utilisé est l'**indice de Gini**.
+
+Le gain d'information est ensuite calculé de la même manière qu'avec l'entropie.
+Comme un nœud `N` correspond à un sous-ensemble `Dᴺ`, le diviser signifie
+partitionner `Dᴺ` en **deux sous-ensembles `Dᴺᴸ` et `Dᴺᴿ`**. Le gain s'écrit
+alors :
+
+`IG(N, A) = Gini(Dᴺ) − [ (n_NL / n_N)·Gini(Dᴺᴸ) + (n_NR / n_N)·Gini(Dᴺᴿ) ]`
+
+où `n_N`, `n_NL`, `n_NR` sont les cardinalités de `Dᴺ`, `Dᴺᴸ` et `Dᴺᴿ`. La
+proportion d'une classe `cⱼ` dans le nœud est `p_Nj = (1/n_N) Σ_Dᴺ I(C = cⱼ)`,
+où `I()` est la **fonction indicatrice**, et `Gini(Dᴺ) = 1 − Σⱼ₌₁ᵐ p_Nj²`.
+
+> **À retenir** : **CART** produit des arbres **binaires** ; ses tests sont
+> `Aᵢ < val` (numériques / ordinales) ou `Aᵢ ∈ {val1, …}` (nominales), avec
+> branche **Vrai** à gauche et **Faux** à droite. Son critère de pureté est
+> l'**indice de Gini**, et le **gain** compare `Gini(Dᴺ)` à la moyenne pondérée
+> des Gini des deux sous-ensembles.
+
+## Le critère d'arrêt
+
+Décomposer un nœud jusqu'à la pureté parfaite n'est pas toujours souhaitable. Le
+**critère d'arrêt** décide quand un nœud devient **terminal** (une feuille).
+
+Plusieurs tests peuvent être utilisés pour arrêter les partitions, par exemple :
+
+- l'**homogénéité totale** du sous-ensemble `Dᴺ` (le nœud est pur) ;
+- la **profondeur maximale** de l'arbre ;
+- un **nombre minimal d'exemples** dans `Dᴺ` — la **taille minimale d'un nœud**.
+
+Le cours résume : le critère d'arrêt est défini par **l'un et/ou l'autre** de
+**deux hyperparamètres** — la **taille minimale d'un nœud** et la **profondeur
+de l'arbre**. Ce sont des **hyperparamètres** : des réglages que l'algorithme ne
+détermine pas seul (la notion d'hyperparamètre a été vue avec le `k` de kNN au
+module précédent).
+
+> **À retenir** : le **critère d'arrêt** rend un nœud **terminal** ; il s'appuie
+> sur des **hyperparamètres** — principalement la **profondeur maximale** de
+> l'arbre et la **taille minimale d'un nœud** — ou sur l'**homogénéité totale**
+> du nœud.
+
+## L'élagage (pruning)
+
+Un arbre construit jusqu'au bout — jusqu'à ce que toutes les feuilles soient
+pures — est souvent **trop grand** : il colle aux particularités de l'ensemble
+d'apprentissage. La section suivante détaille ce défaut (le **sur-apprentissage**) ;
+on introduit ici la principale **réponse** : l'**élagage**.
+
+**Élaguer** (en anglais *pruning*) un arbre, c'est **réduire sa taille en
+supprimant des sous-arbres trop spécifiques** — typiquement des branches qui ne
+servent qu'à isoler quelques exemples particuliers — pour les **remplacer par
+une feuille**. On obtient ainsi un arbre **plus petit**, dont les feuilles ont
+un **effectif plus important** et qui **généralise mieux**.
+
+Le cours présente l'élagage parmi les **solutions** aux limites des arbres de
+décision (qui sont « très sensibles au bruit, instables et ont tendance à
+sur-apprendre les données ») : les deux solutions citées sont **l'élagage** et
+**les forêts aléatoires** (étudiées aux sections 4 et 5).
+
+> **À retenir** : l'**élagage** (pruning) **réduit la taille** d'un arbre en
+> supprimant les **sous-arbres trop spécifiques** ; les feuilles obtenues ont un
+> **effectif plus grand** et l'arbre **généralise mieux**. C'est l'une des deux
+> réponses au sur-apprentissage des arbres, avec les **forêts aléatoires**.
+
+## Les données manquantes : les variables de substitution
+
+Un dernier point pratique de la construction et de la prévision : les **données
+manquantes**.
+
+Supposons que, pour une **nouvelle instance**, une variable explicative **ne
+soit pas renseignée**. Si cette variable **intervient dans l'arbre** (à un
+nœud), il n'est en principe **pas possible de prédire** la classe de cette
+instance : on ne sait pas quelle branche emprunter au nœud concerné.
+
+La solution consiste à utiliser des **variables de substitution** (*surrogate
+splits*) : une **variable de substitution** est une variable qui **aboutit aux
+mêmes sous-ensembles** lors du partage. La variable de substitution **vient
+remplacer la variable explicative non renseignée** pour la prévision. C'est l'un
+des mécanismes de l'algorithme **CART**.
+
+> **À retenir** : une **valeur manquante** sur une variable utilisée dans
+> l'arbre empêche, en principe, de prédire ; **CART** y répond par des
+> **variables de substitution** (*surrogate splits*) — un attribut produisant le
+> **même partage** prend le relais de la variable manquante.
+
+## Bilan : forces et limites des arbres de décision
+
+Le cours dresse un **bilan**. Les arbres de décision sont l'une des **méthodes
+prédictives les plus utilisées**, car ils donnent des résultats remarquables en
+pratique et présentent beaucoup d'**avantages** :
+
+- **prise en compte de variables mixtes** (même si, pour les quantitatives, le
+  choix du seuil reste problématique) ;
+- **aucune hypothèse** sur la distribution des variables ;
+- **pas affecté** par les problèmes d'échelle de mesure ni par les données
+  atypiques ;
+- une **structure arborescente facilement compréhensible**, contrairement aux
+  méthodes du type « boîte noire » (réseaux de neurones, SVM…).
+
+Ils présentent aussi des **limites** :
+
+- le **problème d'optimisation est NP-complet**, d'où l'usage d'**heuristiques**
+  (le choix glouton d'attribut) au résultat **sous-optimal** ;
+- ils sont **très sensibles au bruit, instables**, et ont tendance à
+  **sur-apprendre** les données.
+
+L'arbre le plus utilisé est l'**arbre CART** : il utilise l'**indice de Gini**,
+les **variables de substitution**, etc.
+
+> **À retenir** : les arbres acceptent des **variables mixtes**, ne supposent
+> rien sur leur distribution, résistent aux échelles et aux valeurs atypiques,
+> et sont **lisibles**. Mais leur optimisation est **NP-complète** (d'où des
+> heuristiques **sous-optimales**) et ils sont **instables**, **sensibles au
+> bruit** et sujets au **sur-apprentissage**.
+
+## Synthèse de la section
+
+Construire un arbre de décision, c'est **partitionner récursivement** l'ensemble
+d'apprentissage : tout algorithme se ramène à décider si un nœud est **terminal**
+et, sinon, à **choisir l'attribut** du test. Deux familles dominent : **C4.5**
+(famille ID3, attributs **qualitatifs**, une branche par valeur, sélection par
+**gain d'entropie**, feuille dès qu'un nœud est **pur** ou — `A = ∅` — étiquetée
+par la **classe majoritaire**) et **CART** (arbres **binaires**, tests `A < val`
+ou `A ∈ {…}`, critère de **Gini**, accepte tous les types d'attributs). Le
+**partage** se fait selon les **modalités** d'un attribut catégoriel ou un
+**seuil** pour un attribut quantitatif. Le **critère d'arrêt** repose sur des
+**hyperparamètres** — profondeur maximale, taille minimale d'un nœud — ou
+l'homogénéité totale. Un arbre développé jusqu'au bout est souvent trop grand :
+l'**élagage** supprime les sous-arbres **trop spécifiques** pour mieux
+généraliser. Les **données manquantes** sont gérées par des **variables de
+substitution**. Au bilan, les arbres sont **lisibles** et acceptent des
+**variables mixtes**, mais restent **instables**, **sensibles au bruit** et
+sujets au **sur-apprentissage**.
+
+> **À retenir** : un arbre se construit par **partitionnement récursif** ;
+> **C4.5** (gain d'entropie, attributs qualitatifs) et **CART** (Gini, arbres
+> binaires) sont les deux algorithmes de référence. Le **critère d'arrêt**
+> (profondeur, taille minimale) limite la croissance, l'**élagage** la corrige
+> *a posteriori*, et les **variables de substitution** traitent les valeurs
+> manquantes.

@@ -1,0 +1,98 @@
+---
+title: Utilisateurs et rôles
+slug: utilisateurs-roles
+order: 2
+estimatedReadMin: 8
+concepts: [create-user, role-oracle, role-application, role-utilisateur, grant-revoke]
+source: "CM1, slides 5-11"
+---
+
+## Les utilisateurs Oracle
+
+Un **utilisateur Oracle** se crée avec un nom, un mot de passe et un tablespace de travail par défaut :
+
+```sql
+CREATE USER nomUser IDENTIFIED BY motDePasse
+DEFAULT TABLESPACE users;
+```
+
+> À sa création, un utilisateur **ne peut rien faire** : pas de connexion possible, aucun objet créable. Il faut lui attribuer au moins un rôle ou un privilège.
+
+À la création d'une base Oracle, **deux utilisateurs/rôles spéciaux** existent déjà :
+
+- **SYS** : super-utilisateur, propriétaire du dictionnaire de données.
+- **SYSTEM** : compte d'administration courant.
+
+## La notion de rôle
+
+Un **rôle** est un **ensemble nommé de privilèges**. Un privilège est la possibilité d'exécuter une action sur la base.
+
+Un rôle peut être attribué à des utilisateurs **ou à d'autres rôles** (hiérarchie de rôles possible).
+
+À sa création, un rôle est **vide** :
+
+```sql
+CREATE ROLE nomRole;
+```
+
+On y ajoute privilèges et rôles avec `GRANT`, on les retire avec `REVOKE` :
+
+```sql
+GRANT CREATE TABLE TO nomRole;
+GRANT SELECT ON Client TO nomRole;
+REVOKE CREATE TABLE FROM nomRole;
+```
+
+## Trois familles de rôles
+
+### 1. Rôles prédéfinis
+
+Oracle fournit plusieurs rôles couramment utilisés :
+
+| Rôle | Privilèges principaux |
+|---|---|
+| `CONNECT` | ALTER SESSION, CREATE CLUSTER, CREATE DATABASE LINK, CREATE SEQUENCE, CREATE SESSION, CREATE SYNONYM, CREATE TABLE, CREATE VIEW |
+| `RESOURCE` | CREATE CLUSTER, CREATE PROCEDURE, CREATE SEQUENCE, CREATE TABLE, CREATE TRIGGER, UNLIMITED TABLESPACE |
+| `DBA` | **Tous les privilèges** (administrateur complet) |
+| `EXP_FULL_DATABASE` | SELECT ANY TABLE, BACKUP ANY TABLE |
+| `IMP_FULL_DATABASE` | BECOME USER |
+
+### 2. Rôles d'application
+
+Un rôle peut être **associé à un package** : on l'appelle alors un **rôle d'application**.
+
+Particularité : un tel rôle est **automatiquement activé** lors de l'exécution d'un élément du package, et **uniquement** dans ce contexte. C'est l'unique façon de l'activer.
+
+Cette mécanique permet de donner temporairement des droits étendus à des utilisateurs qui exécutent une procédure de confiance, sans leur laisser ces droits hors contexte.
+
+### 3. Rôles utilisateurs
+
+Tous les autres rôles sont dits **rôles utilisateurs**. Ils peuvent être protégés par un mot de passe :
+
+```sql
+CREATE ROLE rdev NOT IDENTIFIED;
+CREATE ROLE rsecure IDENTIFIED BY motSecret;
+```
+
+Un rôle protégé doit être **activé explicitement** par `SET ROLE` :
+
+```sql
+SET ROLE rsecure IDENTIFIED BY motSecret;
+```
+
+## Exemple complet
+
+```sql
+CREATE USER Udev IDENTIFIED BY motdepasse;
+CREATE ROLE Rdev;
+GRANT CONNECT, RESOURCE TO Rdev;
+GRANT Rdev TO Udev;
+```
+
+Avec ces 4 instructions, Udev peut désormais se connecter et créer des tables/procédures/triggers, parce qu'il hérite de `CONNECT` + `RESOURCE` via `Rdev`.
+
+> **À retenir**
+> - Un utilisateur vide ne peut rien faire.
+> - Un rôle = ensemble nommé de privilèges, attribuable à utilisateurs ou rôles.
+> - 3 familles : prédéfinis (CONNECT, RESOURCE, DBA), d'application (auto-activé via package), utilisateurs (activable par SET ROLE).
+> - `GRANT priv|role TO user|role` et `REVOKE ... FROM ...`.

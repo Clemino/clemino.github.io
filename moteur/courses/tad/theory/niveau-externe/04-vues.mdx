@@ -1,0 +1,130 @@
+---
+title: Vues logiques et matérialisées
+slug: vues
+order: 4
+estimatedReadMin: 9
+concepts: [vue-logique, vue-materialisee, vue-rafraichissement]
+source: "CM1, slides 16-20"
+---
+
+## Pourquoi les vues ?
+
+Au niveau externe, les **vues** remplissent deux rôles essentiels :
+
+1. **Filtrer l'accès aux données** : masquer des colonnes ou des lignes que certains utilisateurs ne doivent pas voir.
+2. **Améliorer les performances** (dans le cas des vues matérialisées) en pré-calculant des requêtes lourdes.
+
+Une base de données bien conçue est **normalisée**. Créer des vues matérialisées revient souvent à **dénormaliser** pour des raisons de performance.
+
+## Vues logiques
+
+Une **vue logique** est une **requête SQL stockée** sous un nom. À chaque accès, la requête est **ré-exécutée** sur les tables sous-jacentes : il n'y a **aucun stockage physique** des résultats.
+
+### Syntaxe
+
+```sql
+CREATE [OR REPLACE] VIEW nom_vue AS
+  SELECT col1, col2, ... FROM table WHERE ...;
+```
+
+### Exemple : masquer une colonne sensible
+
+```sql
+CREATE TABLE Client (nom VARCHAR2(50), prenom VARCHAR2(50), age NUMBER(3));
+
+CREATE VIEW Vue_Client AS
+  SELECT nom, prenom FROM Client;
+```
+
+Un utilisateur ayant `SELECT` sur `Vue_Client` mais pas sur `Client` ne pourra jamais lire l'`age`.
+
+### Vue modifiable ?
+
+Une vue accepte les `INSERT`/`UPDATE`/`DELETE` **uniquement** si :
+
+- elle contient toutes les colonnes obligatoires (NOT NULL),
+- elle n'a **pas** de regroupement (`GROUP BY`),
+- elle n'a **pas** de sous-requête,
+- elle ne contient pas d'expressions ou de fonctions d'agrégat.
+
+Sinon, il faut un **trigger `INSTEAD OF`** (voir CM5).
+
+## Vues matérialisées (VM)
+
+Une **vue matérialisée** est une requête SQL dont le **contenu est dupliqué physiquement** à la création, puis **rafraîchi périodiquement**. Il y a donc un **stockage physique** dans un segment.
+
+### Création
+
+```sql
+CREATE MATERIALIZED VIEW MV_Client AS
+  SELECT * FROM Client;
+```
+
+Pour créer une VM, il faut :
+
+- le **privilège système** `CREATE MATERIALIZED VIEW`,
+- le **privilège objet** `SELECT` sur chacune des tables de la requête.
+
+### Build deferred
+
+Par défaut la VM est remplie immédiatement. Pour remplir plus tard :
+
+```sql
+CREATE MATERIALIZED VIEW MV_Client BUILD DEFERRED
+  AS SELECT * FROM Client;
+```
+
+> 💡 Conseil : pour la plupart des usages avancés (rafraîchissement FAST notamment), inclure **la clé primaire** dans la projection de la VM.
+
+## Types de rafraîchissement
+
+Il existe **trois moments** de rafraîchissement :
+
+### À la demande (par défaut)
+
+```sql
+CREATE MATERIALIZED VIEW MV_Client REFRESH ON DEMAND
+  AS SELECT * FROM Client;
+-- puis manuellement :
+EXECUTE DBMS_MVIEW.REFRESH('MV_Client');
+```
+
+### Sur commit
+
+```sql
+CREATE MATERIALIZED VIEW MV_Client REFRESH ON COMMIT
+  AS SELECT * FROM Client;
+```
+La VM est rafraîchie à chaque `COMMIT` d'une transaction qui a modifié une des tables sources.
+
+### À intervalle régulier
+
+```sql
+CREATE MATERIALIZED VIEW MV_Client
+  REFRESH START WITH SYSDATE
+  NEXT SYSDATE + 1/24    -- toutes les heures
+  AS SELECT * FROM Client;
+```
+
+## Méthodes de rafraîchissement
+
+Trois méthodes au choix :
+
+- **FAST** : ne rafraîchit que les **changements** depuis le dernier rafraîchissement. C'est la plus rapide mais elle nécessite une **table de journalisation** sur chaque table source : `CREATE MATERIALIZED VIEW LOG ON ma_table;`.
+- **COMPLETE** : ré-exécute la requête complète. Plus lent mais sans pré-requis.
+- **FORCE** (par défaut) : essaie FAST, sinon bascule sur COMPLETE.
+
+```sql
+CREATE MATERIALIZED VIEW LOG ON Client;
+
+CREATE MATERIALIZED VIEW MV_Client
+  REFRESH ON COMMIT FAST
+  AS SELECT * FROM Client;
+```
+
+> **À retenir**
+> - **Vue logique** = SQL ré-exécutée, pas de stockage physique. Sert à filtrer/sécuriser.
+> - **Vue matérialisée** = SQL pré-calculée stockée. Sert à la performance (jointures lourdes, agrégations).
+> - 3 moments : `ON DEMAND`, `ON COMMIT`, `START WITH ... NEXT ...`.
+> - 3 méthodes : `FAST` (incremental, requiert un LOG), `COMPLETE` (intégral), `FORCE` (FAST si possible, sinon COMPLETE — c'est le défaut).
+> - Pour une VM modifiable ou un rafraîchissement FAST, **inclure la clé primaire**.

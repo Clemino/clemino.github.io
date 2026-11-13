@@ -1,0 +1,1305 @@
+[
+  {
+    "chapterSlug": "probabilites-bayes",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Selon le cours, quels sont les trois traits caractéristiques du classifieur bayésien ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Apprentissage supervisé, point de vue probabiliste, et hypothèse d'indépendance des attributs"
+        },
+        {
+          "id": "b",
+          "label": "Apprentissage non supervisé, découpage hiérarchique de l'espace, et élagage"
+        },
+        {
+          "id": "c",
+          "label": "Apprentissage par renforcement, fonction de récompense, et politique optimale"
+        },
+        {
+          "id": "d",
+          "label": "Apprentissage supervisé, frontière linéaire, et descente de gradient"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours donne d'emblée les trois traits du classifieur bayésien : c'est une méthode d'apprentissage supervisé ; elle adopte un point de vue probabiliste (elle estime la probabilité qu'une instance appartienne à une classe) ; elle est dite naïve car elle suppose les attributs indépendants.",
+    "concepts": [
+      "classifieur-bayesien",
+      "apprentissage-supervise"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "probabilites-bayes",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complétez la lecture de la notation du cours pour la probabilité conditionnelle.",
+    "payload": {
+      "template": "La notation Pr(X/Y) se lit « probabilité de X {{t1}} Y ». L'événement écrit à droite du trait est la {{t2}} (l'information connue).",
+      "slots": [
+        {
+          "id": "t1",
+          "width": "sm",
+          "placeholder": "lecture du trait /"
+        },
+        {
+          "id": "t2",
+          "width": "md",
+          "placeholder": "rôle de l'événement de droite"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "t1": [
+          "sachant"
+        ],
+        "t2": [
+          "condition",
+          "la condition"
+        ]
+      },
+      "stripAccents": true
+    },
+    "explanation": "Le trait « / » se lit « sachant ». Pr(X/Y) est la probabilité de X sachant Y. L'événement à droite du trait est la condition — l'information que l'on suppose connue ; celui à gauche est l'inconnu cherché.",
+    "concepts": [
+      "probabilite-conditionnelle"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "probabilites-bayes",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est l'écriture correcte de la première formule de Bayes, telle qu'énoncée par le cours ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Pr(A/B) = Pr(B/A) · Pr(A) / Pr(B)"
+        },
+        {
+          "id": "b",
+          "label": "Pr(A/B) = Pr(A/B) · Pr(B) / Pr(A)"
+        },
+        {
+          "id": "c",
+          "label": "Pr(A/B) = Pr(A) · Pr(B)"
+        },
+        {
+          "id": "d",
+          "label": "Pr(A/B) = Pr(A) + Pr(B) − Pr(A) · Pr(B)"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le théorème de Bayes — la première formule de Bayes — s'écrit Pr(A/B) = Pr(B/A) · Pr(A) / Pr(B). Il exprime Pr(A/B) à l'aide de la conditionnelle renversée Pr(B/A) et des deux probabilités simples Pr(A) et Pr(B).",
+    "concepts": [
+      "theoreme-de-bayes"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "probabilites-bayes",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On donne Pr(A) = 0,2, Pr(B) = 0,4 et Pr(B/A) = 0,8. Calculez Pr(A/B) à l'aide du théorème de Bayes.",
+    "payload": {
+      "placeholder": "ex. 0.40",
+      "hint": "Pr(A/B) = Pr(B/A) · Pr(A) / Pr(B)."
+    },
+    "solution": {
+      "value": 0.4,
+      "absTol": 0.005
+    },
+    "explanation": "Théorème de Bayes : Pr(A/B) = Pr(B/A) · Pr(A) / Pr(B) = (0,8 · 0,2) / 0,4 = 0,16 / 0,4 = 0,40.",
+    "concepts": [
+      "theoreme-de-bayes",
+      "probabilite-conditionnelle"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "probabilites-bayes",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Une maladie touche 1 % de la population : Pr(M) = 0,01. Un test la détecte avec Pr(T+/M) = 0,9 chez les malades et donne un faux positif avec Pr(T+/non M) = 0,05 chez les non-malades. Calculez d'abord Pr(T+), puis la probabilité qu'une personne au test positif soit réellement malade, Pr(M/T+). Donnez Pr(M/T+) arrondie au millième.",
+    "payload": {
+      "placeholder": "ex. 0.154",
+      "hint": "Pr(T+) = Pr(T+/M)·Pr(M) + Pr(T+/non M)·Pr(non M) (probabilités totales), puis Pr(M/T+) = Pr(T+/M)·Pr(M) / Pr(T+)."
+    },
+    "solution": {
+      "value": 0.154,
+      "absTol": 0.003
+    },
+    "explanation": "Probabilités totales : Pr(T+) = 0,9·0,01 + 0,05·0,99 = 0,009 + 0,0495 = 0,0585. Théorème de Bayes : Pr(M/T+) = Pr(T+/M)·Pr(M) / Pr(T+) = 0,009 / 0,0585 ≈ 0,154. Malgré un test sensible, une personne positive n'a qu'environ 15 % de chances d'être malade, car la maladie est rare.",
+    "concepts": [
+      "theoreme-de-bayes",
+      "theoreme-des-probabilites-totales"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "probabilites-bayes",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans la formule Pr(A/B) = Pr(B/A) · Pr(A) / Pr(B), associez chaque terme à sa description, selon le cours.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Pr(A/B)"
+        },
+        {
+          "id": "l2",
+          "label": "Pr(B/A)"
+        },
+        {
+          "id": "l3",
+          "label": "Pr(A)"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Ce que l'on cherche : A sachant B"
+        },
+        {
+          "id": "r2",
+          "label": "La probabilité conditionnelle inverse : B sachant A"
+        },
+        {
+          "id": "r3",
+          "label": "La probabilité de A sans aucune condition"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "Pr(A/B) est la quantité cherchée — A sachant B. Pr(B/A) est la conditionnelle dans l'autre sens — B sachant A. Pr(A) est la probabilité de A seul, sans condition. Le théorème de Bayes inverse le conditionnement à partir de ces termes.",
+    "concepts": [
+      "theoreme-de-bayes",
+      "probabilite-conditionnelle"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "probabilites-bayes",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez l'application du théorème de Bayes à la classification, telle que le cours l'écrit.",
+    "payload": {
+      "template": "Classer l'instance d, c'est évaluer Pr(Cⱼ/d). Le théorème de Bayes la réécrit Pr(Cⱼ/d) = Pr({{t1}}/{{t2}}) · Pr(Cⱼ) / Pr(d).",
+      "slots": [
+        {
+          "id": "t1",
+          "width": "sm",
+          "placeholder": "?"
+        },
+        {
+          "id": "t2",
+          "width": "sm",
+          "placeholder": "?"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "t1": [
+          "d"
+        ],
+        "t2": [
+          "Cj",
+          "Cⱼ"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Avec A = Cⱼ et B = d, le théorème de Bayes donne Pr(Cⱼ/d) = Pr(d/Cⱼ) · Pr(Cⱼ) / Pr(d). La quantité recherchée se ramène à trois quantités estimables : Pr(d/Cⱼ), Pr(Cⱼ) et Pr(d).",
+    "concepts": [
+      "theoreme-de-bayes",
+      "classification"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "probabilites-bayes",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un filtre anti-spam : Pr(spam) = 0,3. Le mot « gratuit » apparaît avec Pr(« gratuit »/spam) = 0,6 et Pr(« gratuit »/non spam) = 0,05. Calculez Pr(« gratuit ») par le théorème des probabilités totales. Arrondissez au millième.",
+    "payload": {
+      "placeholder": "ex. 0.215",
+      "hint": "Pr(« gratuit ») = Pr(« gratuit »/spam)·Pr(spam) + Pr(« gratuit »/non spam)·Pr(non spam)."
+    },
+    "solution": {
+      "value": 0.215,
+      "absTol": 0.002
+    },
+    "explanation": "Probabilités totales : Pr(« gratuit ») = 0,6·0,3 + 0,05·0,7 = 0,18 + 0,035 = 0,215.",
+    "concepts": [
+      "theoreme-des-probabilites-totales",
+      "probabilite-conditionnelle"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "classifieur-bayesien-naif",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Selon le cours, comment une instance d est-elle définie dans le problème posé au classifieur ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Par les valeurs a₁, …, aₚ de ses attributs A₁, …, Aₚ"
+        },
+        {
+          "id": "b",
+          "label": "Par sa seule classe Cⱼ"
+        },
+        {
+          "id": "c",
+          "label": "Par un vecteur de poids et un biais"
+        },
+        {
+          "id": "d",
+          "label": "Par une suite d'états reliés par des transitions"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours définit une instance d comme un p-uplet de valeurs d'attributs (a₁, …, aₚ) : d est décrite par les valeurs a₁, …, aₚ de ses attributs A₁, …, Aₚ. Le classifieur dispose par ailleurs de m classes C₁, …, Cₘ.",
+    "concepts": [
+      "attribut",
+      "classifieur-bayesien-naif"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "classifieur-bayesien-naif",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Que dit exactement l'hypothèse d'indépendance — l'hypothèse « naïve » — sur la vraisemblance Pr(A₁=a₁, …, Aₚ=aₚ / Cⱼ) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Elle est égale au produit Πᵢ Pr(Aᵢ=aᵢ / Cⱼ) des probabilités conditionnelles attribut par attribut"
+        },
+        {
+          "id": "b",
+          "label": "Elle est égale à la somme Σᵢ Pr(Aᵢ=aᵢ / Cⱼ) des probabilités conditionnelles"
+        },
+        {
+          "id": "c",
+          "label": "Elle est égale à la probabilité a priori Pr(Cⱼ)"
+        },
+        {
+          "id": "d",
+          "label": "Elle est toujours nulle"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Si l'on suppose les attributs indépendants, Pr(A₁=a₁, …, Aₚ=aₚ / Cⱼ) = Πᵢ Pr(Aᵢ=aᵢ / Cⱼ) : la probabilité de la combinaison complète est le produit des probabilités conditionnelles attribut par attribut. C'est un produit, pas une somme.",
+    "concepts": [
+      "hypothese-d-independance",
+      "vraisemblance"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "classifieur-bayesien-naif",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "L'hypothèse d'indépendance des attributs est rarement vérifiée exactement sur des données réelles.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Le cours souligne que l'hypothèse d'indépendance est une approximation assumée — des attributs réels sont souvent corrélés. C'est ce qui rend le classifieur calculable et justifie le qualificatif « naïf », même si elle reste rarement exacte.",
+    "concepts": [
+      "hypothese-d-independance",
+      "classifieur-bayesien-naif"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "classifieur-bayesien-naif",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours obtient Pr(d) par le théorème des probabilités totales : Pr(d) = Σⱼ Pr(d/Cⱼ)·Pr(Cⱼ). Que faut-il estimer en plus pour calculer Pr(d) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Rien : chaque terme est un produit Pr(d/Cⱼ)·Pr(Cⱼ) déjà calculé ; il suffit de sommer"
+        },
+        {
+          "id": "b",
+          "label": "Il faut estimer une nouvelle probabilité conditionnelle pour chaque attribut"
+        },
+        {
+          "id": "c",
+          "label": "Il faut estimer la probabilité a priori d'une classe supplémentaire"
+        },
+        {
+          "id": "d",
+          "label": "Il faut recompter tous les exemples de l'ensemble d'apprentissage"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Chaque terme de la somme Σⱼ Pr(d/Cⱼ)·Pr(Cⱼ) est un produit déjà calculé pour les classes. Il n'y a donc rien de nouveau à estimer pour obtenir Pr(d) : il suffit de sommer, sur toutes les classes, les produits déjà obtenus.",
+    "concepts": [
+      "theoreme-des-probabilites-totales",
+      "probabilite-a-posteriori"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "classifieur-bayesien-naif",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Remettez dans l'ordre les quatre étapes de l'algorithme bayésien naïf, telles que le cours les présente.",
+    "payload": {
+      "items": [
+        {
+          "id": "e3",
+          "label": "Calculer Pr(d) par le théorème des probabilités totales, en sommant les produits Pr(d/Cⱼ)·Pr(Cⱼ)"
+        },
+        {
+          "id": "e1",
+          "label": "Estimer les probabilités a priori Pr(Cⱼ) de chaque classe par leur fréquence dans D"
+        },
+        {
+          "id": "e4",
+          "label": "Calculer Pr(Cⱼ/d) pour chaque classe par la formule de Bayes"
+        },
+        {
+          "id": "e2",
+          "label": "Estimer les Pr(Aᵢ=aᵢ/Cⱼ), puis en former le produit Pr(d/Cⱼ) grâce à l'hypothèse d'indépendance"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "e1",
+        "e2",
+        "e3",
+        "e4"
+      ]
+    },
+    "explanation": "L'algorithme : (1) estimer les Pr(Cⱼ) par fréquence ; (2) estimer les Pr(Aᵢ=aᵢ/Cⱼ) et former le produit Pr(d/Cⱼ) ; (3) calculer Pr(d) par les probabilités totales ; (4) calculer chaque Pr(Cⱼ/d) par la formule de Bayes.",
+    "concepts": [
+      "classifieur-bayesien-naif",
+      "probabilite-a-posteriori"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "classifieur-bayesien-naif",
+    "type": "NUMERIC",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un ensemble d'apprentissage contient 200 exemples, dont 50 portent la classe Cⱼ. Estimez la probabilité a priori Pr(Cⱼ) par sa fréquence.",
+    "payload": {
+      "placeholder": "ex. 0.25",
+      "hint": "Pr(Cⱼ) ≃ (nombre d'exemples de classe Cⱼ) / (nombre total d'exemples)."
+    },
+    "solution": {
+      "value": 0.25,
+      "absTol": 0.001
+    },
+    "explanation": "La probabilité a priori s'estime par la proportion d'exemples de la classe : Pr(Cⱼ) ≃ 50/200 = 0,25.",
+    "concepts": [
+      "probabilite-a-priori",
+      "estimation-de-probabilite"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "classifieur-bayesien-naif",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi les 80 exemples de la classe Cⱼ d'un ensemble d'apprentissage, 24 présentent la valeur a sur l'attribut Aᵢ. Estimez la probabilité conditionnelle Pr(Aᵢ=a / Cⱼ).",
+    "payload": {
+      "placeholder": "ex. 0.3",
+      "hint": "Pr(Aᵢ=a/Cⱼ) ≃ (exemples avec Aᵢ=a et C=Cⱼ) / (exemples de la classe Cⱼ). L'ensemble de référence est la classe Cⱼ, pas tout D."
+    },
+    "solution": {
+      "value": 0.3,
+      "absTol": 0.001
+    },
+    "explanation": "La probabilité conditionnelle s'estime parmi les seuls exemples de la classe Cⱼ : Pr(Aᵢ=a/Cⱼ) ≃ 24/80 = 0,30. Le dénominateur est le nombre d'exemples de Cⱼ (80), pas la taille totale de D.",
+    "concepts": [
+      "probabilite-conditionnelle",
+      "estimation-de-probabilite"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "classifieur-bayesien-naif",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Voici un ensemble d'apprentissage de 10 courriels, décrits par deux attributs — « Mot promotionnel » et « Lien externe » — et une classe (spam ou légitime). Lisez le tableau et estimez les probabilités demandées par comptage.",
+    "payload": {
+      "figure": {
+        "kind": "data-table",
+        "columns": [
+          "Mot promo",
+          "Lien externe",
+          "Classe"
+        ],
+        "rows": [
+          ["oui", "oui", "spam"],
+          ["oui", "oui", "spam"],
+          ["oui", "non", "spam"],
+          ["non", "oui", "spam"],
+          ["oui", "oui", "spam"],
+          ["non", "non", "legitime"],
+          ["oui", "non", "legitime"],
+          ["non", "non", "legitime"],
+          ["non", "oui", "legitime"],
+          ["non", "non", "legitime"]
+        ],
+        "caption": "Ensemble d'apprentissage : 10 courriels"
+      },
+      "caption": "Estimation des probabilités sur le jeu courriels",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la probabilité a priori Pr(spam) estimée par fréquence ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Comptez les courriels de classe spam sur 10."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la probabilité conditionnelle Pr(Mot promo = oui / spam) ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Parmi les 5 courriels spam, combien ont « Mot promo = oui » ?"
+          }
+        },
+        {
+          "id": "q3",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la probabilité conditionnelle Pr(Lien externe = non / legitime) ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Parmi les 5 courriels légitimes, combien ont « Lien externe = non » ?"
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 0.5,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 0.8,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": 0.8,
+            "absTol": 0.001
+          }
+        }
+      ]
+    },
+    "explanation": "Il y a 5 courriels spam et 5 légitimes sur 10 : Pr(spam) = 5/10 = 0,5. Parmi les 5 spams, 4 ont « Mot promo = oui » : Pr(Mot promo=oui/spam) = 4/5 = 0,8. Parmi les 5 légitimes, 4 ont « Lien externe = non » : Pr(Lien externe=non/legitime) = 4/5 = 0,8.",
+    "concepts": [
+      "estimation-de-probabilite",
+      "probabilite-a-priori",
+      "probabilite-conditionnelle"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Selon le cours, sur quel principe général repose l'estimation des probabilités du classifieur bayésien naïf ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "L'estimation par les fréquences : une probabilité inconnue est approchée par la proportion observée dans les données"
+        },
+        {
+          "id": "b",
+          "label": "La connaissance exacte et a priori de toutes les probabilités du phénomène"
+        },
+        {
+          "id": "c",
+          "label": "La minimisation d'une fonction de coût par descente de gradient"
+        },
+        {
+          "id": "d",
+          "label": "Le tirage aléatoire uniforme d'une valeur entre 0 et 1"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le classifieur ne connaît pas les vraies probabilités du phénomène : il les estime en comptant dans l'ensemble d'apprentissage D. Toute estimation est un rapport d'effectifs — une fréquence observée.",
+    "concepts": [
+      "estimation-de-probabilite",
+      "jeu-d-apprentissage"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque probabilité estimée à son numérateur et son dénominateur, selon le cours.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Pr(Cⱼ) : numérateur / dénominateur"
+        },
+        {
+          "id": "l2",
+          "label": "Pr(Aᵢ=aᵢ/Cⱼ) : numérateur / dénominateur"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Exemples de classe Cⱼ / tous les exemples de D"
+        },
+        {
+          "id": "r2",
+          "label": "Exemples avec Aᵢ=aᵢ ET C=Cⱼ / exemples de la classe Cⱼ"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2"
+      }
+    },
+    "explanation": "Pr(Cⱼ) = (exemples de classe Cⱼ) / (tous les exemples de D). Pr(Aᵢ=aᵢ/Cⱼ) = (exemples avec Aᵢ=aᵢ et C=Cⱼ) / (exemples de la classe Cⱼ) : ici le dénominateur est restreint à la classe Cⱼ.",
+    "concepts": [
+      "estimation-de-probabilite",
+      "probabilite-a-priori",
+      "probabilite-conditionnelle"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une valeur a d'un attribut Aᵢ n'apparaît jamais avec la classe Cⱼ dans l'ensemble d'apprentissage. Quelle est la conséquence sur la prédiction, sans lissage ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Pr(Aᵢ=a/Cⱼ) = 0, donc pour toute instance d telle que Aᵢ=a on a Pr(d/Cⱼ) = 0 et Pr(Cⱼ/d) = 0"
+        },
+        {
+          "id": "b",
+          "label": "Pr(Aᵢ=a/Cⱼ) = 1, ce qui force la prédiction vers Cⱼ"
+        },
+        {
+          "id": "c",
+          "label": "Pr(Cⱼ) devient négative"
+        },
+        {
+          "id": "d",
+          "label": "Aucune conséquence : la valeur absente est simplement ignorée"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le numérateur de Pr(Aᵢ=a/Cⱼ) vaut 0, donc Pr(Aᵢ=a/Cⱼ) = 0. Comme la vraisemblance est un produit Πᵢ Pr(Aᵢ=aᵢ/Cⱼ), un seul facteur nul annule tout : Pr(d/Cⱼ) = 0 et donc Pr(Cⱼ/d) = 0, pour une, plusieurs, voire toutes les classes.",
+    "concepts": [
+      "probleme-de-probabilite-nulle",
+      "vraisemblance"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Une valeur d'attribut absente de l'ensemble d'apprentissage signifie nécessairement que sa probabilité réelle est nulle.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Le cours insiste : une valeur absente des données ne signifie nullement une probabilité réellement nulle — c'est seulement que l'ensemble d'apprentissage, fini, ne l'a pas rencontrée. L'estimation par simple fréquence est ici trop brutale, d'où le recours au lissage.",
+    "concepts": [
+      "probleme-de-probabilite-nulle",
+      "estimation-de-probabilite"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la formule du lissage de Laplace donnée par le cours.",
+    "payload": {
+      "template": "Pr(Aᵢ=a/Cⱼ) = (λ + nb exemples avec Aᵢ=a et C=Cⱼ) / ({{t1}}·λ + nb exemples de classe Cⱼ), où {{t2}} est le nombre de valeurs possibles de l'attribut Aᵢ.",
+      "slots": [
+        {
+          "id": "t1",
+          "width": "sm",
+          "placeholder": "facteur au dénom."
+        },
+        {
+          "id": "t2",
+          "width": "sm",
+          "placeholder": "même symbole"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "t1": [
+          "mi",
+          "mᵢ",
+          "m_i"
+        ],
+        "t2": [
+          "mi",
+          "mᵢ",
+          "m_i"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Le lissage de Laplace : Pr(Aᵢ=a/Cⱼ) = (λ + nb exemples avec Aᵢ=a et C=Cⱼ) / (mᵢ·λ + nb exemples de classe Cⱼ), où mᵢ est le nombre de valeurs possibles de l'attribut Aᵢ. On ajoute λ pour chacune des mᵢ valeurs, d'où mᵢ·λ au dénominateur.",
+    "concepts": [
+      "lissage-de-laplace",
+      "estimation-de-probabilite"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un attribut Aᵢ possède mᵢ = 3 valeurs possibles. Dans une classe Cⱼ de 5 exemples, la valeur a n'apparaît jamais (comptage = 0). Calculez la probabilité conditionnelle Pr(Aᵢ=a/Cⱼ) avec le lissage de Laplace et λ = 1.",
+    "payload": {
+      "placeholder": "ex. 0.125",
+      "hint": "Pr(Aᵢ=a/Cⱼ) = (λ + comptage) / (mᵢ·λ + nb exemples de Cⱼ) = (1 + 0) / (3·1 + 5)."
+    },
+    "solution": {
+      "value": 0.125,
+      "absTol": 0.002
+    },
+    "explanation": "Lissage de Laplace : Pr(Aᵢ=a/Cⱼ) = (1 + 0) / (3·1 + 5) = 1/8 = 0,125. Même avec un comptage nul, l'estimation est strictement positive — le problème de la probabilité nulle est évité.",
+    "concepts": [
+      "lissage-de-laplace",
+      "probleme-de-probabilite-nulle"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un attribut binaire Aᵢ possède mᵢ = 2 valeurs. Dans une classe Cⱼ de 5 exemples, la valeur a apparaît 3 fois. Calculez Pr(Aᵢ=a/Cⱼ) avec le lissage de Laplace et λ = 1.",
+    "payload": {
+      "placeholder": "ex. 0.571",
+      "hint": "Pr(Aᵢ=a/Cⱼ) = (1 + 3) / (2·1 + 5)."
+    },
+    "solution": {
+      "value": 0.571,
+      "absTol": 0.003
+    },
+    "explanation": "Lissage de Laplace : Pr(Aᵢ=a/Cⱼ) = (1 + 3) / (2·1 + 5) = 4/7 ≈ 0,571. Sans lissage, l'estimation brute aurait été 3/5 = 0,6 : le lissage rapproche légèrement la valeur de l'uniforme.",
+    "concepts": [
+      "lissage-de-laplace",
+      "estimation-de-probabilite"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelles affirmations sur le lissage de Laplace sont correctes selon le cours ? (cochez toutes les bonnes réponses)",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le λ ajouté au numérateur rend l'estimation strictement positive : plus aucune probabilité nulle"
+        },
+        {
+          "id": "b",
+          "label": "Le terme mᵢ·λ au dénominateur préserve une distribution de probabilité valide (somme égale à 1 sur les valeurs de l'attribut)"
+        },
+        {
+          "id": "c",
+          "label": "Lorsque les effectifs sont grands, l'ajout de λ devient négligeable et l'estimation lissée tend vers la fréquence ordinaire"
+        },
+        {
+          "id": "d",
+          "label": "Le lissage de Laplace rend inutile l'ensemble d'apprentissage"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Le λ au numérateur garantit une estimation strictement positive (plus de zéros). Le mᵢ·λ au dénominateur absorbe les mᵢ ajouts de λ pour que la somme sur les valeurs de l'attribut reste 1. Quand les comptages sont grands, l'effet de λ s'efface et l'estimation rejoint la fréquence brute. Le lissage ne dispense évidemment pas de l'ensemble d'apprentissage.",
+    "concepts": [
+      "lissage-de-laplace",
+      "estimation-de-probabilite"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Voici un extrait du script R du TD : il construit un classifieur bayésien naïf sur le jeu de données vote.csv avec le package e1071. Lisez le code et répondez aux sous-questions.",
+    "payload": {
+      "code": "library(e1071)\n\nmyData <- read.csv(\"vote.csv\", sep=\",\", stringsAsFactor=TRUE)\n\n# Partage apprentissage / test\nind <- sample(2, nrow(myData), replace=T, prob=c(0.7, 0.3))\ndata_train <- myData[ind==1, ]\ndata_test  <- myData[ind==2, ]\n\n# Construction du classifieur bayesien naif\ncl <- naiveBayes(Vote ~ ., data = data_train)\n\ncl$apriori   # effectifs par classe\ncl$tables    # probabilites conditionnelles\n\n# Prediction et evaluation\npred <- predict(cl, newdata = data_test)\nconf <- table(pred, data_test$Vote)\nacc  <- sum(diag(conf)) / sum(conf)",
+      "language": "r",
+      "caption": "Classifieur bayésien naïf sur vote.csv (forBayes_HSe.r)",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Que fait l'appel naiveBayes(Vote ~ ., data = data_train) ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Il construit un classifieur bayésien naïf prédisant Vote à partir de toutes les autres variables de data_train"
+              },
+              {
+                "id": "b",
+                "label": "Il prédit la classe des exemples de data_test"
+              },
+              {
+                "id": "c",
+                "label": "Il calcule la matrice de confusion"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Que contient cl$apriori ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Les effectifs par classe, qui servent à estimer les probabilités a priori"
+              },
+              {
+                "id": "b",
+                "label": "Les probabilités conditionnelles attribut par attribut"
+              },
+              {
+                "id": "c",
+                "label": "Le taux de bonne classification"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "Le classifieur est construit sur data_train, et data_test ne sert qu'à l'évaluation via predict.",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": true
+          }
+        }
+      ]
+    },
+    "explanation": "naiveBayes(Vote ~ ., data = data_train) construit un classifieur bayésien naïf prédisant Vote à partir de toutes les autres variables (le « . » de la formule) sur l'ensemble d'apprentissage data_train. cl$apriori donne les effectifs par classe (base de la probabilité a priori) et cl$tables les probabilités conditionnelles. data_test n'intervient ensuite que dans predict pour l'évaluation.",
+    "concepts": [
+      "classifieur-bayesien-naif",
+      "jeu-d-apprentissage"
+    ],
+    "source": "forBayes_HSe.r"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Selon le cours, quelle est la règle de décision pour prédire la classe d'une instance d ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "C = arg Max (Pr(Cⱼ/d)) : on retient la classe qui maximise la probabilité a posteriori"
+        },
+        {
+          "id": "b",
+          "label": "C = arg Min (Pr(Cⱼ/d)) : on retient la classe la moins probable"
+        },
+        {
+          "id": "c",
+          "label": "On retient la classe dont la probabilité a priori est la plus faible"
+        },
+        {
+          "id": "d",
+          "label": "On retient une classe au hasard parmi les m classes"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La règle de décision est C = arg Max (Pr(Cⱼ/d)) : on calcule Pr(Cⱼ/d) pour les m classes et l'on conserve celle dont la probabilité a posteriori est la plus grande — c'est la classe prédite.",
+    "concepts": [
+      "prediction-bayesienne",
+      "probabilite-a-posteriori"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pour prédire la classe, le cours utilise C = arg Max (Pr(Cⱼ)·Pr(d/Cⱼ)) sans le dénominateur Pr(d). Pourquoi peut-on ignorer Pr(d) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Parce que Pr(d) ne dépend pas de la classe : c'est un diviseur commun à toutes les classes, sans effet sur le arg Max"
+        },
+        {
+          "id": "b",
+          "label": "Parce que Pr(d) est toujours égal à 1"
+        },
+        {
+          "id": "c",
+          "label": "Parce que Pr(d) est toujours égal à 0"
+        },
+        {
+          "id": "d",
+          "label": "Parce que Pr(d) est plus grand pour la classe correcte"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Dans Pr(Cⱼ/d) = Pr(d/Cⱼ)·Pr(Cⱼ)/Pr(d), le terme Pr(d) est la même valeur pour toutes les classes. Diviser toutes les quantités à comparer par un même nombre positif ne change pas laquelle est la plus grande : pour prédire, on peut omettre ce diviseur commun.",
+    "concepts": [
+      "prediction-bayesienne",
+      "theoreme-des-probabilites-totales"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pour obtenir la valeur exacte de la probabilité a posteriori Pr(Cⱼ/d), il faut diviser par Pr(d).",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Pr(d) est inutile pour la seule prédiction (le arg Max), mais si l'on veut la valeur exacte de Pr(Cⱼ/d) — par exemple pour mesurer la fiabilité de la prédiction —, il faut bien diviser par Pr(d) pour obtenir une probabilité comprise entre 0 et 1.",
+    "concepts": [
+      "probabilite-a-posteriori",
+      "prediction-bayesienne"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Voici l'ensemble d'apprentissage de l'exemple du cours : 10 exemples, deux attributs A et B, deux classes t et f. Lisez le tableau et estimez les probabilités demandées.",
+    "payload": {
+      "figure": {
+        "kind": "data-table",
+        "columns": [
+          "A",
+          "B",
+          "C"
+        ],
+        "rows": [
+          ["m", "b", "t"],
+          ["m", "s", "t"],
+          ["g", "q", "t"],
+          ["h", "s", "t"],
+          ["g", "q", "t"],
+          ["g", "q", "f"],
+          ["g", "s", "f"],
+          ["h", "b", "f"],
+          ["h", "q", "f"],
+          ["m", "b", "f"]
+        ],
+        "caption": "Ensemble d'apprentissage du cours (10 exemples)"
+      },
+      "caption": "Estimation des probabilités sur l'exemple du cours",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la probabilité a priori Pr(t) ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Comptez les exemples de classe t sur 10."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la probabilité conditionnelle Pr(A=m / t) ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Parmi les 5 exemples de classe t, combien ont A=m ?"
+          }
+        },
+        {
+          "id": "q3",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la probabilité conditionnelle Pr(B=q / f) ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Parmi les 5 exemples de classe f, combien ont B=q ?"
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 0.5,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 0.4,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": 0.4,
+            "absTol": 0.001
+          }
+        }
+      ]
+    },
+    "explanation": "5 exemples de classe t et 5 de classe f : Pr(t) = 5/10 = 0,5. Parmi les 5 exemples t, 2 ont A=m : Pr(A=m/t) = 2/5 = 0,4. Parmi les 5 exemples f, 2 ont B=q : Pr(B=q/f) = 2/5 = 0,4. Ce sont exactement les valeurs des tableaux du cours.",
+    "concepts": [
+      "estimation-de-probabilite",
+      "probabilite-a-priori",
+      "probabilite-conditionnelle"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On reprend l'exemple du cours (10 exemples, classes t et f, Pr(t)=Pr(f)=0,5). On classe l'instance d = (A=m, B=q). On donne les probabilités conditionnelles : Pr(A=m/t)=2/5, Pr(B=q/t)=2/5, Pr(A=m/f)=1/5, Pr(B=q/f)=2/5. Calculez le produit Pr(C)·Pr(A=m/C)·Pr(B=q/C) pour chaque classe, puis indiquez la classe prédite.",
+    "payload": {
+      "description": "Règle de prédiction : C = arg Max (Pr(Cⱼ)·Pr(d/Cⱼ)) avec Pr(d/C) = Pr(A=m/C)·Pr(B=q/C) (hypothèse d'indépendance). On compare les produits ; le dénominateur Pr(d) est commun.",
+      "cells": [
+        {
+          "id": "prodT",
+          "label": "Produit pour la classe t : Pr(t)·Pr(A=m/t)·Pr(B=q/t)",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "prodF",
+          "label": "Produit pour la classe f : Pr(f)·Pr(A=m/f)·Pr(B=q/f)",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "classe",
+          "label": "Classe prédite pour d (t ou f)",
+          "kind": "text",
+          "placeholder": "?"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "prodT",
+          "expected": 0.08,
+          "absTol": 0.005
+        },
+        {
+          "id": "prodF",
+          "expected": 0.04,
+          "absTol": 0.005
+        },
+        {
+          "id": "classe",
+          "expected": "t",
+          "accepted": [
+            "t",
+            "T",
+            "classe t"
+          ]
+        }
+      ]
+    },
+    "explanation": "Classe t : Pr(t)·Pr(A=m/t)·Pr(B=q/t) = 0,5 · 0,4 · 0,4 = 0,08. Classe f : Pr(f)·Pr(A=m/f)·Pr(B=q/f) = 0,5 · 0,2 · 0,4 = 0,04. Le produit est plus grand pour t (0,08 > 0,04), donc par C = arg Max (Pr(Cⱼ)·Pr(d/Cⱼ)) le classifieur prédit la classe t.",
+    "concepts": [
+      "prediction-bayesienne",
+      "hypothese-d-independance",
+      "classifieur-bayesien-naif"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Sur le jeu de 10 courriels (5 spam, 5 légitimes ; Pr(spam)=Pr(legitime)=0,5), on classe un courriel d avec « Mot promo = oui » et « Lien externe = oui ». On donne : Pr(Mot promo=oui/spam)=4/5, Pr(Lien=oui/spam)=4/5, Pr(Mot promo=oui/legitime)=1/5, Pr(Lien=oui/legitime)=1/5. Calculez les produits par classe, la probabilité Pr(d) (probabilités totales) et la probabilité a posteriori Pr(spam/d).",
+    "payload": {
+      "description": "Pr(d/C) = Pr(Mot promo=oui/C)·Pr(Lien=oui/C). Produit par classe = Pr(C)·Pr(d/C). Pr(d) = somme des produits. Pr(spam/d) = produit(spam) / Pr(d).",
+      "cells": [
+        {
+          "id": "prodS",
+          "label": "Produit pour spam : Pr(spam)·Pr(Mot=oui/spam)·Pr(Lien=oui/spam)",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "prodL",
+          "label": "Produit pour legitime : Pr(legitime)·Pr(Mot=oui/leg.)·Pr(Lien=oui/leg.)",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "prD",
+          "label": "Pr(d) = produit(spam) + produit(legitime)",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "post",
+          "label": "Probabilité a posteriori Pr(spam/d), arrondie au millième",
+          "kind": "number",
+          "placeholder": "0.000"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "prodS",
+          "expected": 0.32,
+          "absTol": 0.005
+        },
+        {
+          "id": "prodL",
+          "expected": 0.02,
+          "absTol": 0.005
+        },
+        {
+          "id": "prD",
+          "expected": 0.34,
+          "absTol": 0.005
+        },
+        {
+          "id": "post",
+          "expected": 0.941,
+          "absTol": 0.005
+        }
+      ]
+    },
+    "explanation": "Produit spam = 0,5 · 0,8 · 0,8 = 0,32. Produit legitime = 0,5 · 0,2 · 0,2 = 0,02. Par le théorème des probabilités totales, Pr(d) = 0,32 + 0,02 = 0,34. La probabilité a posteriori Pr(spam/d) = produit(spam)/Pr(d) = 0,32/0,34 ≈ 0,941. Le courriel est classé spam.",
+    "concepts": [
+      "prediction-bayesienne",
+      "probabilite-a-posteriori",
+      "theoreme-des-probabilites-totales"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours traite le cas des variables numériques (continues). Comment la probabilité Pr(Aᵢ=aᵢ/C) est-elle adaptée dans ce cas ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Elle est remplacée par la valeur f_{Aᵢ|C}(x) d'une densité conditionnelle, généralement normale"
+        },
+        {
+          "id": "b",
+          "label": "Elle est remplacée par la fréquence exacte de la valeur aᵢ comptée dans D"
+        },
+        {
+          "id": "c",
+          "label": "Elle est toujours fixée à 0,5"
+        },
+        {
+          "id": "d",
+          "label": "Le classifieur ne peut pas traiter d'attribut numérique"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Pour une variable numérique, compter les exemples valant exactement aᵢ n'a plus de sens (infinité de valeurs). Le cours remplace Pr(Aᵢ=aᵢ/C) par la valeur f_{Aᵢ|C}(x) d'une densité conditionnelle, supposée généralement normale, dont la moyenne et l'écart type sont estimés sur les exemples de la classe C.",
+    "concepts": [
+      "variable-numerique-bayes",
+      "prediction-bayesienne"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On classe une instance d et l'on a obtenu les produits non normalisés Pr(C)·Pr(d/C) suivants : 0,08 pour la classe t et 0,04 pour la classe f. Calculez la probabilité a posteriori Pr(t/d), normalisée. Arrondissez au millième.",
+    "payload": {
+      "placeholder": "ex. 0.667",
+      "hint": "Pr(d) = 0,08 + 0,04 (probabilités totales). Pr(t/d) = 0,08 / Pr(d)."
+    },
+    "solution": {
+      "value": 0.667,
+      "absTol": 0.003
+    },
+    "explanation": "Par le théorème des probabilités totales, Pr(d) = 0,08 + 0,04 = 0,12. La probabilité a posteriori normalisée vaut Pr(t/d) = 0,08 / 0,12 ≈ 0,667. La classe t reste la plus probable, ce qui confirme la prédiction.",
+    "concepts": [
+      "probabilite-a-posteriori",
+      "theoreme-des-probabilites-totales"
+    ],
+    "source": "Slides_Bayes.pdf"
+  }
+]

@@ -1,0 +1,236 @@
+---
+title: "La propagation avant"
+slug: propagation-avant
+order: 3
+estimatedReadMin: 18
+concepts: [propagation-avant, reseau-feedforward, neurone-formel, somme-ponderee, fonction-d-activation, couche-cachee, fonction-tangente-hyperbolique, softmax, parametre-reseau, hyperparametre-reseau]
+source: "RNA_HSe_Fr_2324.pdf"
+---
+
+## Calculer les sorties d'un réseau
+
+Les chapitres précédents ont décrit la **structure** d'un réseau : des couches
+de neurones, chacun calculant une somme pondérée puis une activation. Reste à
+décrire **comment le réseau, une fois ses poids et biais fixés, calcule sa
+sortie** à partir d'une entrée. Ce calcul porte un nom : c'est la **propagation
+avant**, en anglais **feedforward**.
+
+Le terme rappelle une propriété déjà rencontrée. **Compte tenu du sens unique de
+la circulation des données** dans le réseau — de la couche d'entrée vers la
+couche de sortie —, le réseau est qualifié de **feedforward**. La propagation
+avant est exactement le **parcours de ce sens unique** : on part des entrées, on
+traverse les couches **l'une après l'autre**, et l'on aboutit aux sorties.
+
+> **À retenir** : la **propagation avant** (**feedforward**) est le calcul des
+> **sorties** d'un réseau à partir d'une entrée. Elle suit le **sens unique** de
+> circulation des données : de la couche d'**entrée** vers la couche de
+> **sortie**.
+
+## Le calcul couche par couche
+
+La propagation avant procède **couche par couche**. Le cours rappelle le
+fonctionnement de chaque couche : **une couche cachée reçoit ses entrées de la
+couche précédente, fait des calculs, et transmet les résultats à la couche
+suivante** ; la **couche de sortie** fait de même et transmet ses résultats à
+l'extérieur. Le calcul se **propage** donc de proche en proche.
+
+À l'échelle d'**un neurone** `(l, j)`, le calcul est celui défini au chapitre 1
+: le neurone reçoit les sorties de la couche `l − 1`, calcule sa **somme
+pondérée** `zⱼ⁽ˡ⁾`, puis sa **sortie** `xⱼ⁽ˡ⁾`. Avec les notations du cours :
+
+```text
+zⱼ⁽ˡ⁾ = Σₖ₌₁ⁿˡ⁻¹ wⱼₖˡ · xₖ⁽ˡ⁻¹⁾
+xⱼ⁽ˡ⁾ = gₗ( zⱼ⁽ˡ⁾ )
+```
+
+où la somme porte sur les `nl-1` neurones de la couche précédente, `wⱼₖˡ` est le
+poids de la connexion `(l−1,k) → (l,j)`, et `gₗ` la fonction d'activation
+**commune** à la couche `l`. (Le biais `bⱼˡ` est inclus dans cette écriture
+condensée de la somme pondérée — il s'ajoute, comme au chapitre 1, sous la forme
+`zⱼ⁽ˡ⁾ = Σₖ wⱼₖˡ·xₖ⁽ˡ⁻¹⁾ + bⱼˡ`.)
+
+L'algorithme de la propagation avant **enchaîne** ces calculs, couche après
+couche. Le pseudocode suivant — à **lire**, pour fixer les idées — décrit le
+parcours.
+
+```text
+Entrée : un exemple X = (x₁, …, xₙ)
+1. Couche d'entrée (l = 1) : poser x⁽¹⁾ = X
+2. Pour l = 2, …, L :          # des couches cachées vers la sortie
+     Pour chaque neurone j de la couche l :
+       zⱼ⁽ˡ⁾ = Σₖ wⱼₖˡ · xₖ⁽ˡ⁻¹⁾ + bⱼˡ
+       xⱼ⁽ˡ⁾ = gₗ( zⱼ⁽ˡ⁾ )
+3. Sortie du réseau : Ŷ = x⁽ᴸ⁾   # car xⱼ⁽ᴸ⁾ se confond avec ŷⱼ
+```
+
+On retrouve le fait que **la couche d'entrée sert juste à introduire les
+données** : aucun calcul ne s'y fait, on y pose simplement `x⁽¹⁾ = X`. Les
+calculs commencent à la **première couche cachée** et se propagent jusqu'à la
+**couche de sortie**, dont les sorties `xⱼ⁽ᴸ⁾` **se confondent avec `ŷⱼ`**.
+
+> **À retenir** : la propagation avant **enchaîne**, **couche par couche**, le
+> calcul de chaque neurone : **somme pondérée** `zⱼ⁽ˡ⁾ = Σₖ wⱼₖˡ·xₖ⁽ˡ⁻¹⁾ + bⱼˡ`
+> puis **activation** `xⱼ⁽ˡ⁾ = gₗ(zⱼ⁽ˡ⁾)`. On part de `x⁽¹⁾ = X` et l'on aboutit
+> à la sortie `Ŷ = x⁽ᴸ⁾`.
+
+## Le réseau comme composée de fonctions
+
+Ce parcours couche par couche éclaire une affirmation du chapitre 1 : **le
+réseau de neurones est la composée** des fonctions portées par ses couches.
+Chaque couche cachée et la couche de sortie sont des **fonctions de `ℝⁿ¹` dans
+`ℝⁿ²`** ; la propagation avant **applique ces fonctions les unes après les
+autres**.
+
+Si l'on note `f₂, f₃, …, f_L` les fonctions des couches `2` à `L` (la couche `1`
+ne faisant qu'introduire les données), la sortie du réseau s'écrit comme une
+**composition** :
+
+```text
+Ŷ = f_L( … f₃( f₂( X ) ) … )
+```
+
+La propagation avant est donc **le calcul effectif de cette composée** : on
+évalue `f₂` sur `X`, puis `f₃` sur le résultat, et ainsi de suite jusqu'à `f_L`.
+C'est ce qui fait d'un réseau de neurones une **fonction de `ℝⁿ` dans `ℝᵐ`** au
+sens du chapitre 1.
+
+> **À retenir** : la propagation avant **calcule la composée** des fonctions des
+> couches : `Ŷ = f_L(…f₃(f₂(X))…)`. Évaluer le réseau, c'est appliquer ces
+> fonctions **dans l'ordre**, de la première couche cachée à la couche de sortie.
+
+## Un exemple détaillé de propagation avant
+
+Pour rendre le calcul concret, déroulons la propagation avant sur un **petit
+réseau**, du type de ceux manipulés en travaux dirigés. Le réseau a **deux
+entrées** `x₁, x₂`, une **couche cachée de `2` neurones** à activation
+**tangente hyperbolique**, et une **couche de sortie de `3` neurones** à
+activation **softmax** (un problème de multi-classification à trois classes).
+
+**Étape 1 — couche cachée.** Chaque neurone caché calcule sa somme pondérée
+`z`, puis sa sortie par la **tangente hyperbolique** `th(z) = (eᶻ−e⁻ᶻ)/(eᶻ+e⁻ᶻ)`
+:
+
+```text
+z₁ = 0,7·x₁ − 0,2·x₂ + 0,4
+z₂ = −0,4·x₁ + 0,3·x₂
+
+y₁ = th(z₁) = (e^z₁ − e^−z₁) / (e^z₁ + e^−z₁)
+y₂ = th(z₂) = (e^z₂ − e^−z₂) / (e^z₂ + e^−z₂)
+```
+
+`(y₁, y₂)` est la **nouvelle représentation** de l'entrée produite par la couche
+cachée — exactement le rôle décrit au chapitre 2.
+
+**Étape 2 — couche de sortie.** Chaque neurone de sortie calcule à son tour sa
+somme pondérée `t`, à partir cette fois de `(y₁, y₂)` :
+
+```text
+t₁ = −0,3·y₁ − 0,3·y₂
+t₂ =  0,6·y₁ + 0,1·y₂
+t₃ = −0,3·y₁ + 0,5·y₂
+```
+
+**Étape 3 — couche softmax.** La couche de sortie applique la **softmax** : la
+sortie de chaque neurone est l'exponentielle de sa somme pondérée, divisée par
+la somme des exponentielles de **toutes** les sommes pondérées de la couche :
+
+```text
+p₁ = exp(t₁) / ( exp(t₁) + exp(t₂) + exp(t₃) )
+p₂ = exp(t₂) / ( exp(t₁) + exp(t₂) + exp(t₃) )
+p₃ = exp(t₃) / ( exp(t₁) + exp(t₂) + exp(t₃) )
+```
+
+On retrouve les deux propriétés de la softmax : chaque `pᵢ` est **dans `[0,1]`**
+et `p₁ + p₂ + p₃ = 1` — les trois sorties s'interprètent comme les
+**probabilités** des trois classes. Le même calcul, transcrit en Python (code à
+**lire**), donne :
+
+```python
+from math import exp
+
+# Couche cachée (activation : tangente hyperbolique)
+z1 = 0.7 * x1 - 0.2 * x2 + 0.4
+z2 = -0.4 * x1 + 0.3 * x2
+y1 = (exp(z1) - exp(-z1)) / (exp(z1) + exp(-z1))
+y2 = (exp(z2) - exp(-z2)) / (exp(z2) + exp(-z2))
+
+# Couche de sortie (sommes pondérées)
+t1 = -0.3 * y1 - 0.3 * y2
+t2 = 0.6 * y1 + 0.1 * y2
+t3 = -0.3 * y1 + 0.5 * y2
+
+# Couche softmax
+p1 = exp(t1) / (exp(t1) + exp(t2) + exp(t3))
+p2 = exp(t2) / (exp(t1) + exp(t2) + exp(t3))
+p3 = exp(t3) / (exp(t1) + exp(t2) + exp(t3))
+```
+
+On y voit nettement la **propagation** : les sorties `y₁, y₂` de la couche
+cachée **deviennent les entrées** de la couche de sortie, dont les sommes
+pondérées `t₁, t₂, t₃` **alimentent** la softmax. Les calculs s'enchaînent
+strictement dans le **sens entrée → sortie**.
+
+> **À retenir** : sur un réseau concret, la propagation avant calcule d'abord les
+> sorties de la **couche cachée** (somme pondérée puis activation), qui
+> **deviennent les entrées** de la couche suivante, et ainsi de suite jusqu'à la
+> **couche de sortie**. Avec une couche **softmax**, les sorties finales sont des
+> **probabilités** de somme `1`.
+
+## Ce que la propagation avant suppose connu
+
+La propagation avant **ne calcule pas** les poids et les biais : elle les
+**utilise**. Pour qu'elle puisse s'exécuter, il faut donc que **tout** soit déjà
+fixé. Le cours énumère ce dont on a besoin **pour définir et faire fonctionner
+un réseau de neurones** :
+
+- le **nombre de couches `L`** (c'est-à-dire, en réalité, le nombre de couches
+  **cachées** `L − 2`) ;
+- le **nombre de neurones dans chaque couche** ;
+- la **fonction d'activation de chaque couche** ;
+- les **poids et les biais** des connexions entre les neurones, c'est-à-dire la
+  définition de chaque neurone caché ou de sortie.
+
+Le cours distingue alors deux natures de paramètres — distinction reprise en
+détail au chapitre 5.
+
+| | **Paramètres** | **Hyperparamètres** |
+| --- | --- | --- |
+| De quoi s'agit-il | Les **poids** et les **biais** | Le **nombre de couches cachées**, le **nombre de neurones** par couche, la **fonction d'activation** de chaque couche |
+| Qui les fixe | L'**algorithme d'apprentissage** (chapitre 4) | Le **concepteur** du réseau |
+| Comment | Calculés à partir du **jeu d'apprentissage** | **Essais successifs**, ajustés selon les résultats |
+
+La propagation avant suppose donc **les hyperparamètres choisis** et **les
+paramètres déjà déterminés**. Tant que les poids et les biais ne sont pas
+appris, la propagation avant produit des sorties — mais ce sont les sorties d'un
+réseau **non encore entraîné**. La détermination des poids et des biais est
+l'objet du chapitre suivant ; et l'algorithme d'apprentissage **utilise
+lui-même la propagation avant** comme première étape (pour calculer la sortie
+`Ŷ` d'un exemple avant de mesurer l'erreur).
+
+> **À retenir** : la propagation avant **utilise** les poids et les biais, elle
+> ne les calcule pas. Elle suppose fixés les **hyperparamètres** (nombre de
+> couches cachées, neurones par couche, activations — choisis par le
+> concepteur) et déterminés les **paramètres** (poids et biais — appris sur le
+> jeu d'apprentissage).
+
+## Synthèse de la section
+
+La **propagation avant** (**feedforward**) est le calcul des **sorties** d'un
+réseau à partir d'une entrée, en suivant le **sens unique** entrée → sortie qui
+vaut au réseau son qualificatif de feedforward. Elle procède **couche par
+couche** : pour chaque neurone `(l, j)`, **somme pondérée**
+`zⱼ⁽ˡ⁾ = Σₖ wⱼₖˡ·xₖ⁽ˡ⁻¹⁾ + bⱼˡ` puis **activation** `xⱼ⁽ˡ⁾ = gₗ(zⱼ⁽ˡ⁾)` ; on
+part de `x⁽¹⁾ = X` (la couche d'entrée ne fait qu'introduire les données) et
+l'on aboutit à `Ŷ = x⁽ᴸ⁾`. Le réseau étant la **composée** des fonctions de ses
+couches, la propagation avant **évalue cette composée** `Ŷ = f_L(…f₂(X)…)` en
+appliquant les fonctions dans l'ordre. Sur un réseau concret — couche cachée à
+activation **tanh**, couche de sortie **softmax** —, les sorties d'une couche
+**deviennent les entrées** de la suivante, et la softmax produit en fin de
+parcours des **probabilités** de somme `1`. La propagation avant **utilise** les
+poids et les biais sans les calculer : elle suppose les **hyperparamètres**
+choisis par le concepteur et les **paramètres** (poids et biais) déjà appris.
+
+> **À retenir** : la propagation avant calcule les sorties **couche par couche**
+> — somme pondérée puis activation —, en propageant les valeurs de l'entrée vers
+> la sortie. C'est l'**évaluation de la composée** des couches. Elle suppose les
+> poids et biais **connus** ; les apprendre est l'objet de la **rétropropagation**.

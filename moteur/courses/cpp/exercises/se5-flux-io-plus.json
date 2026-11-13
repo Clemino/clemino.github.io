@@ -1,0 +1,571 @@
+[
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "MATCHING",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Associe chaque indicateur d'état d'un flux à sa signification.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "good()" },
+        { "id": "l2", "label": "eof()" },
+        { "id": "l3", "label": "fail()" },
+        { "id": "l4", "label": "bad()" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Tout va bien : aucune des autres méthodes ne renverrait true" },
+        { "id": "r2", "label": "La fin du fichier a été atteinte" },
+        { "id": "r3", "label": "La dernière opération a échoué : erreur d'E/S ou de format" },
+        { "id": "r4", "label": "Une erreur grave d'E/S s'est produite, le flux est corrompu" }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3", "l4": "r4" } },
+    "explanation": "Un flux mémorise un **état**. **`good()`** est l'indicateur le plus général : il est `false` dès qu'un autre devient `true`. **`eof()`** signale la fin de fichier. **`fail()`** couvre les erreurs d'E/S **et de format** (lire un entier là où il y a des lettres) — c'est le plus utile au quotidien. **`bad()`** signale une erreur grave et irrécupérable.",
+    "concepts": ["eof-fail-bad"]
+  },
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un flux peut être testé directement dans une condition : `if (fichier)` est vrai tant que les opérations réussissent, et devient faux dès qu'une opération échoue.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "C'est l'idiome central du chapitre. Un flux se **convertit en `bool`** : `if (fichier)` équivaut à `if (!fichier.fail())`. Combiné au fait que `>>` **renvoie le flux**, cela donne la boucle `while (fichier >> x)`, qui teste la lecture elle-même.",
+    "concepts": ["etat-flux"]
+  },
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi préfère-t-on `while (fichier >> x)` à `while (!fichier.eof())` pour parcourir un fichier ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Parce que eof() n'existe pas pour les flux de fichier." },
+        { "id": "b", "label": "Parce que eof() n'est vrai qu'APRÈS une lecture infructueuse : avec while(!eof()), le corps de boucle s'exécute une fois de trop avec une valeur invalide." },
+        { "id": "c", "label": "Parce que >> est plus rapide que eof()." },
+        { "id": "d", "label": "Parce que while(!eof()) ne compile pas." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "`eof()` ne devient `true` qu'**après** qu'une lecture a tenté de dépasser la fin. Avec `while (!fichier.eof())`, on entre dans le corps de boucle, on lit, la lecture échoue, mais le corps **continue** quand même avec la donnée invalide (souvent l'ancienne valeur conservée). `while (fichier >> x)` teste la **lecture elle-même** et s'arrête au bon moment.",
+    "concepts": ["etat-flux", "eof-fail-bad"]
+  },
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe l'état du flux après une lecture mal formée.",
+    "payload": {
+      "program": "#include <iostream>\n#include <sstream>\nusing namespace std;\n\nint main() {\n    istringstream flux(\"42 abc\");\n    int n;\n    flux >> n;\n    cout << \"n=\" << n << \"\\n\";\n    cout << \"good=\" << flux.good() << \" fail=\" << flux.fail() << \" eof=\" << flux.eof() << \"\\n\";\n    int m;\n    flux >> m;\n    cout << \"apres lecture invalide:\\n\";\n    cout << \"good=\" << flux.good() << \" fail=\" << flux.fail() << \" eof=\" << flux.eof() << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "n=42\ngood=1 fail=0 eof=0\napres lecture invalide:\ngood=0 fail=1 eof=0" },
+    "explanation": "`flux >> n` lit `42` : le flux est intact (`good=1`). `flux >> m` tente de lire un entier mais trouve `abc` : c'est une **erreur de format**, `fail()` passe à `1` et `good()` à `0`. `eof()` reste `0` : on n'a pas atteint la fin, on a buté sur des caractères invalides. Les `bool` s'affichent `1`/`0`.",
+    "concepts": ["eof-fail-bad"]
+  },
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Il lit un entier de trop, manuellement, pour révéler le piège de `while(!eof())`.",
+    "payload": {
+      "program": "#include <iostream>\n#include <sstream>\nusing namespace std;\n\nint main() {\n    istringstream entree(\"5 10 15\");\n    int x = -1;\n    entree >> x;\n    cout << \"lecture 1 : x=\" << x << \" eof=\" << entree.eof() << \"\\n\";\n    entree >> x;\n    cout << \"lecture 2 : x=\" << x << \" eof=\" << entree.eof() << \"\\n\";\n    entree >> x;\n    cout << \"lecture 3 : x=\" << x << \" eof=\" << entree.eof() << \"\\n\";\n    entree >> x;\n    cout << \"lecture 4 : x=\" << x << \" eof=\" << entree.eof() << \" fail=\" << entree.fail() << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "lecture 1 : x=5 eof=0\nlecture 2 : x=10 eof=0\nlecture 3 : x=15 eof=1\nlecture 4 : x=15 eof=1 fail=1" },
+    "explanation": "La lecture de `15` consomme le dernier caractère : `eof()` devient `1` **dès la 3e lecture**. La 4e lecture échoue donc (`fail=1`) et **ne modifie pas `x`**, qui garde `15`. C'est exactement le piège de `while (!eof())` : on entrerait une 4e fois dans le corps de boucle pour y traiter un `15` fantôme, déjà compté.",
+    "concepts": ["eof-fail-bad", "etat-flux"]
+  },
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Il écrit trois entiers dans un fichier, puis les relit avec l'idiome `while (entree >> x)`.",
+    "payload": {
+      "program": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"nb.txt\");\n    sortie << \"5 10 15\";\n    sortie.close();\n\n    ifstream entree(\"nb.txt\");\n    int x;\n    while (entree >> x) {\n        cout << x << \"\\n\";\n    }\n    entree.close();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "5\n10\n15" },
+    "explanation": "`entree >> x` lit un entier et **renvoie le flux**, que le `while` convertit en `bool`. Tant que la lecture réussit, la boucle continue : elle affiche `5`, `10`, `15`. À la fin du fichier, la lecture échoue, le flux devient « faux », la boucle **s'arrête** — sans afficher de valeur fantôme.",
+    "concepts": ["etat-flux"]
+  },
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Il calcule la taille d'un fichier avec `seekg` et `tellg`.",
+    "payload": {
+      "program": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"data.txt\");\n    sortie << \"Bonjour\";\n    sortie.close();\n\n    ifstream entree(\"data.txt\");\n    entree.seekg(0, ios::end);\n    cout << \"taille = \" << entree.tellg() << \"\\n\";\n    entree.seekg(0, ios::beg);\n    cout << \"debut = \" << entree.tellg() << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "taille = 7\ndebut = 0" },
+    "explanation": "Application classique : `seekg(0, ios::end)` place le curseur **juste après le dernier octet** ; `tellg()` renvoie alors le **nombre total d'octets** du fichier. `Bonjour` fait 7 caractères → `taille = 7`. `seekg(0, ios::beg)` ramène le curseur au tout début → `tellg()` vaut `0`.",
+    "concepts": ["tellg-seekg"]
+  },
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe l'effet de `clear()` sur un flux passé en échec.",
+    "payload": {
+      "program": "#include <iostream>\n#include <sstream>\nusing namespace std;\n\nint main() {\n    istringstream flux(\"12 trois 45\");\n    int a;\n    flux >> a;\n    cout << \"a = \" << a << \"\\n\";\n\n    int b;\n    flux >> b;\n    cout << \"lecture de b : fail = \" << flux.fail() << \"\\n\";\n\n    int c = -1;\n    flux >> c;\n    cout << \"c sans clear = \" << c << \"\\n\";\n\n    flux.clear();\n    string mot;\n    flux >> mot;\n    cout << \"mot apres clear = \" << mot << \"\\n\";\n\n    int d;\n    flux >> d;\n    cout << \"d = \" << d << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "a = 12\nlecture de b : fail = 1\nc sans clear = -1\nmot apres clear = trois\nd = 45" },
+    "explanation": "`flux >> b` bute sur `trois` : `fail()` passe à `1`. Tant que le flux est en échec, **toute** lecture est ignorée — `flux >> c` ne fait rien, `c` garde `-1`. `clear()` **réarme** le flux : la lecture redevient possible. `flux >> mot` lit alors `trois` (qui était toujours là, comme une `string` cette fois), puis `flux >> d` lit `45`.",
+    "concepts": ["eof-fail-bad", "etat-flux"]
+  },
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète : après avoir parcouru un fichier jusqu'à la fin, on veut le relire depuis le début. Il faut d'abord **réarmer** le flux, puis **repositionner** le curseur.",
+    "payload": {
+      "template": "ifstream entree(\"data.txt\");\nint x;\nwhile (entree >> x) { /* ... */ }\n// le flux a atteint la fin : on veut tout relire\nentree.{{methode}}();              // rearmer le flux\nentree.seekg(0, std::ios::{{mode}}); // revenir au debut",
+      "slots": [
+        { "id": "methode", "width": "sm" },
+        { "id": "mode", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "methode": "clear", "mode": "beg" },
+      "caseSensitive": false
+    },
+    "explanation": "Atteindre la fin du fichier positionne l'indicateur `eof()`. Tant qu'il est posé, `seekg` peut être ignoré : il faut **d'abord** `clear()` pour réarmer le flux. Ensuite `seekg(0, std::ios::beg)` ramène le curseur de lecture au **début** (`beg` = *begin*). Sans `clear()`, le `seekg` ne suffit pas.",
+    "concepts": ["eof-fail-bad", "tellg-seekg"]
+  },
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles affirmations sur `clear()`, `tellg`/`tellp` et `seekg`/`seekp` sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "clear() remet l'état du flux à good, autorisant de nouveau les opérations." },
+        { "id": "b", "label": "clear() corrige aussi la cause de l'erreur : il vide la donnée fautive du flux." },
+        { "id": "c", "label": "tellg() renvoie la position du curseur de lecture, en octets depuis le début." },
+        { "id": "d", "label": "seekg(pos, mode) déplace le curseur ; mode vaut ios::beg, ios::cur ou ios::end." },
+        { "id": "e", "label": "tellp() concerne le curseur d'écriture (le p est pour put)." }
+      ]
+    },
+    "solution": { "correct": ["a", "c", "d", "e"] },
+    "explanation": "`clear()` efface l'**indicateur** d'erreur — mais il **ne corrige pas la cause** : si du texte fautif reste dans le flux, la lecture suivante échouera encore, d'où le besoin de `ignore()` après (b est faux). `tellg()`/`tellp()` donnent la position courante en octets ; `seekg`/`seekp` la modifient avec `mode` valant `ios::beg`, `ios::cur` ou `ios::end`. Le `g` vise *get* (lecture), le `p` vise *put* (écriture).",
+    "concepts": ["eof-fail-bad", "tellg-seekg"]
+  },
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Il observe `tellp`, la position du curseur d'écriture.",
+    "payload": {
+      "program": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"out.txt\");\n    cout << \"tellp depart = \" << sortie.tellp() << \"\\n\";\n    sortie << \"abc\";\n    cout << \"tellp apres abc = \" << sortie.tellp() << \"\\n\";\n    sortie << \"de\";\n    cout << \"tellp apres de = \" << sortie.tellp() << \"\\n\";\n    sortie.close();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "tellp depart = 0\ntellp apres abc = 3\ntellp apres de = 5" },
+    "explanation": "`tellp()` donne la position du curseur d'**écriture** (le `p` est pour *put*). À l'ouverture, le fichier est vide → position `0`. Après avoir écrit `abc` (3 caractères), le curseur est à `3`. Après `de` (2 de plus), il est à `5`. Chaque insertion fait avancer le curseur du nombre d'octets écrits.",
+    "concepts": ["tellg-seekg"]
+  },
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit un mot au clavier, l'écrit dans un fichier `mot.txt`, puis utilise `seekg`/`tellg` pour afficher la **position de départ** du curseur et la **taille** du fichier en octets.",
+    "payload": {
+      "spec": "Lire une std::string mot avec cin >> mot. Ouvrir un ofstream sur 'mot.txt' en mode std::ios::binary, y ecrire le mot (sans saut de ligne), puis fermer. Rouvrir 'mot.txt' avec un ifstream en mode std::ios::binary. Placer le curseur a la fin avec seekg(0, std::ios::end) et memoriser tellg() dans une variable taille. Placer le curseur au debut avec seekg(0, std::ios::beg) et memoriser tellg() dans une variable debut. Fermer le fichier. Afficher 'debut = ' suivi de debut puis un retour a la ligne, puis 'taille = ' suivi de taille puis un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string mot;\n    cin >> mot;\n    // a completer : ecrire mot dans mot.txt, mesurer sa taille avec seekg/tellg\n    return 0;\n}\n",
+      "tests": [
+        { "name": "mot de 7 lettres", "stdin": "bonjour", "expectedStdout": "debut = 0\ntaille = 7" },
+        { "name": "une lettre", "stdin": "a", "expectedStdout": "debut = 0\ntaille = 1" },
+        { "name": "cache", "stdin": "programmation", "expectedStdout": "debut = 0\ntaille = 13", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string mot;\n    cin >> mot;\n\n    ofstream sortie(\"mot.txt\", ios::binary);\n    sortie << mot;\n    sortie.close();\n\n    ifstream entree(\"mot.txt\", ios::binary);\n    entree.seekg(0, ios::end);\n    long taille = entree.tellg();\n    entree.seekg(0, ios::beg);\n    long debut = entree.tellg();\n    entree.close();\n\n    cout << \"debut = \" << debut << \"\\n\";\n    cout << \"taille = \" << taille << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Pour mesurer un fichier, on place le curseur **à la fin** avec `seekg(0, ios::end)` : `tellg()` renvoie alors le nombre total d'octets. `seekg(0, ios::beg)` ramène le curseur au début, où `tellg()` vaut `0`. Le mode `ios::binary` évite toute conversion des fins de ligne, garantissant que la taille mesurée correspond exactement au nombre de caractères écrits.",
+    "concepts": ["tellg-seekg"]
+  },
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit un entier `n` puis `n` mots au clavier, les écrit un par ligne dans `mots.txt`, puis relit le fichier avec `while (entree >> m)` et affiche le nombre de mots et le total de lettres.",
+    "payload": {
+      "spec": "Lire un int n. Ouvrir un ofstream sur 'mots.txt'. n fois : lire une std::string mot avec cin >> mot et l'ecrire dans le fichier suivie d'un retour a la ligne. Fermer. Rouvrir 'mots.txt' avec un ifstream et le parcourir avec while (entree >> m) : compter le nombre de mots lus et accumuler le total des longueurs (m.size()). Fermer. Afficher 'mots = ' suivi du nombre de mots puis un retour a la ligne, puis 'lettres = ' suivi du total de lettres puis un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    // a completer : ecrire n mots, les relire avec while (entree >> m)\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois mots", "stdin": "3\nchat chien oiseau", "expectedStdout": "mots = 3\nlettres = 15" },
+        { "name": "un mot", "stdin": "1\nbonjour", "expectedStdout": "mots = 1\nlettres = 7" },
+        { "name": "cache", "stdin": "4\na bb ccc dddd", "expectedStdout": "mots = 4\nlettres = 10", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n\n    ofstream sortie(\"mots.txt\");\n    for (int i = 0; i < n; i++) {\n        string mot;\n        cin >> mot;\n        sortie << mot << \"\\n\";\n    }\n    sortie.close();\n\n    ifstream entree(\"mots.txt\");\n    string m;\n    int compteur = 0;\n    int totalLettres = 0;\n    while (entree >> m) {\n        compteur++;\n        totalLettres += m.size();\n    }\n    entree.close();\n\n    cout << \"mots = \" << compteur << \"\\n\";\n    cout << \"lettres = \" << totalLettres << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "`while (entree >> m)` est l'idiome de parcours : `>>` lit un mot, renvoie le flux, et le `while` s'arrête de lui-même à la fin du fichier — sans qu'on ait à connaître le nombre de mots à l'avance, et sans risque de compter un mot fantôme comme le ferait `while (!entree.eof())`.",
+    "concepts": ["etat-flux"]
+  },
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas : il appelle `seekp` sur un flux de lecture. Corrige le nom de la méthode.",
+    "payload": {
+      "spec": "Le programme ecrit dix lettres dans t.txt, puis veut lire le 6e caractere (indice 5). Il ouvre un ifstream (flux de LECTURE) et appelle entree.seekp(5, ios::beg). Or seekp deplace le curseur d'ECRITURE (put) : un ifstream ne le possede pas. Pour deplacer le curseur de LECTURE, il faut seekg (get). La correction : remplacer seekp par seekg. Le programme doit afficher la lettre 'f'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"t.txt\");\n    sortie << \"abcdefghij\";\n    sortie.close();\n\n    ifstream entree(\"t.txt\");\n    entree.seekp(5, ios::beg);\n    char c;\n    entree.get(c);\n    cout << c << \"\\n\";\n    entree.close();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "lecture du 6e caractere", "stdin": "", "expectedStdout": "f" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"t.txt\");\n    sortie << \"abcdefghij\";\n    sortie.close();\n\n    ifstream entree(\"t.txt\");\n    entree.seekg(5, ios::beg);\n    char c;\n    entree.get(c);\n    cout << c << \"\\n\";\n    entree.close();\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `seekp` sur un `ifstream`. Le `p` de `seekp` vise *put* (écriture) — un flux de lecture n'en dispose pas, g++ refuse (`ifstream has no member seekp`). Pour déplacer le curseur de **lecture**, on utilise **`seekg`** (le `g` vise *get*). `seekg(5, ios::beg)` place le curseur sur l'indice 5 ; `get` y lit la lettre `f`.",
+    "concepts": ["tellg-seekg"]
+  },
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme doit lire le 7e caractère d'un fichier mais affiche autre chose. Le mode de `seekg` est faux. Corrige-le.",
+    "payload": {
+      "spec": "Le fichier alpha.txt contient 'ABCDEFGHIJ'. On veut lire le 7e caractere, c'est-a-dire celui d'indice 6 : la lettre 'G'. Le programme ecrit seekg(6, ios::end), ce qui compte 6 octets APRES la fin du fichier : le curseur sort du fichier, get echoue et c garde sa valeur initiale '?'. Pour viser l'indice 6 depuis le DEBUT, il faut le mode ios::beg. La correction : remplacer ios::end par ios::beg. Le programme doit afficher 'caractere : G'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"alpha.txt\");\n    sortie << \"ABCDEFGHIJ\";\n    sortie.close();\n\n    ifstream entree(\"alpha.txt\");\n    char c = '?';\n    entree.seekg(6, ios::end);\n    entree.get(c);\n    entree.close();\n\n    cout << \"caractere : \" << c << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "7e caractere", "stdin": "", "expectedStdout": "caractere : G" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"alpha.txt\");\n    sortie << \"ABCDEFGHIJ\";\n    sortie.close();\n\n    ifstream entree(\"alpha.txt\");\n    char c = '?';\n    entree.seekg(6, ios::beg);\n    entree.get(c);\n    entree.close();\n\n    cout << \"caractere : \" << c << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Le bug est le **mode** de positionnement. `seekg(6, ios::end)` compte 6 octets **après la fin** du fichier : le curseur sort du fichier, `get` échoue et `c` garde `'?'`. Pour atteindre l'indice 6 **depuis le début**, il faut `ios::beg`. `seekg(6, ios::beg)` place le curseur sur le 7e caractère, `G`.",
+    "concepts": ["tellg-seekg"]
+  },
+  {
+    "chapterSlug": "etats-positionnement",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme calcule une somme fausse : `60` au lieu de `45`. La boucle de lecture compte une valeur de trop. Corrige-la.",
+    "payload": {
+      "spec": "Le fichier notes.txt contient d'abord le nombre de notes (4) puis les quatre notes : 10, 12, 8, 15. Le programme lit n, puis boucle pour lire et additionner les notes. Mais la boucle s'ecrit 'for (int i = 0; i <= n; i++)' : avec i <= n elle execute n+1 = 5 tours. Au 5e tour, entree >> x echoue (plus rien a lire) et x garde sa derniere valeur 15, qui est donc ajoutee une 2e fois. La correction : la condition doit etre 'i < n' pour faire exactement n tours. La somme correcte est 10+12+8+15 = 45.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"notes.txt\");\n    sortie << 4 << \"\\n\";\n    sortie << 10 << \"\\n\" << 12 << \"\\n\" << 8 << \"\\n\" << 15 << \"\\n\";\n    sortie.close();\n\n    ifstream entree(\"notes.txt\");\n    int n;\n    entree >> n;\n    int somme = 0;\n    int x = 0;\n    for (int i = 0; i <= n; i++) {\n        entree >> x;\n        somme += x;\n    }\n    entree.close();\n\n    cout << \"somme = \" << somme << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "somme des quatre notes", "stdin": "", "expectedStdout": "somme = 45" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"notes.txt\");\n    sortie << 4 << \"\\n\";\n    sortie << 10 << \"\\n\" << 12 << \"\\n\" << 8 << \"\\n\" << 15 << \"\\n\";\n    sortie.close();\n\n    ifstream entree(\"notes.txt\");\n    int n;\n    entree >> n;\n    int somme = 0;\n    int x = 0;\n    for (int i = 0; i < n; i++) {\n        entree >> x;\n        somme += x;\n    }\n    entree.close();\n\n    cout << \"somme = \" << somme << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Le bug est l'**erreur d'un cran** : `i <= n` fait `n+1` tours. Au tour de trop, `entree >> x` échoue (il ne reste rien) et **`x` n'est pas modifié** : il conserve la dernière valeur lue, `15`, qui est ajoutée une seconde fois → `45 + 15 = 60`. La condition correcte est `i < n`, qui fait exactement `n` tours. C'est la même cause que le piège `while (!eof())` : une lecture infructueuse laisse la variable inchangée.",
+    "concepts": ["etat-flux", "eof-fail-bad"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce que la **sérialisation** d'un objet ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Transformer un objet en une suite d'octets que l'on peut écrire dans un fichier, pour le faire survivre à l'arrêt du programme." },
+        { "id": "b", "label": "Ranger les attributs d'un objet par ordre alphabétique." },
+        { "id": "c", "label": "Convertir un objet en un autre type de classe." },
+        { "id": "d", "label": "Compiler le code d'une classe en code machine." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "La **sérialisation** transforme un objet — qui vit en mémoire vive et disparaît à la fin du programme — en une **suite d'octets** stockable dans un fichier. La **désérialisation** est l'opération inverse, qui reconstruit l'objet. C'est ce qui donne aux objets une vie au-delà de l'exécution.",
+    "concepts": ["serialisation-objet"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque caractéristique à la forme de sérialisation qui la possède : **texte** ou **binaire**.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "Lisible et modifiable dans un éditeur de texte" },
+        { "id": "l2", "label": "Fichier plus compact à valeurs égales" },
+        { "id": "l3", "label": "Portable entre machines et compilateurs" },
+        { "id": "l4", "label": "Copie les octets bruts de l'objet via write/read" },
+        { "id": "l5", "label": "Lecture/écriture plus rapide, sans conversion" },
+        { "id": "l6", "label": "Écrit les attributs en clair avec << et un séparateur" }
+      ],
+      "right": [
+        { "id": "txt", "label": "Sérialisation texte" },
+        { "id": "bin", "label": "Sérialisation binaire" }
+      ]
+    },
+    "solution": { "pairs": { "l1": "txt", "l2": "bin", "l3": "txt", "l4": "bin", "l5": "bin", "l6": "txt" } },
+    "explanation": "La sérialisation **texte** écrit les attributs **en clair** avec `<<` et des séparateurs : elle est **lisible**, **modifiable dans un éditeur** et **portable** entre machines, mais plus volumineuse. La sérialisation **binaire** copie les **octets bruts** de l'objet via `write`/`read` : le fichier est plus **compact** et la lecture/écriture plus **rapide** (aucune conversion), mais illisible et **non portable** — il dépend de la représentation mémoire de la machine.",
+    "concepts": ["serialisation-texte", "serialisation-binaire"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On peut sérialiser n'importe quel objet en bloc avec `write(reinterpret_cast<const char*>(&obj), sizeof(obj))`, même s'il contient une `std::string` ou un `std::vector`.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "**Faux.** La sérialisation binaire en bloc ne vaut que pour les objets **« plats »** : ceux dont tous les attributs sont des types simples. Un attribut `std::string`, `std::vector` ou un **pointeur** contient en réalité une **adresse** vers des données situées ailleurs en mémoire ; `write` n'enregistrerait que cette adresse, pas les données — et l'adresse n'aura aucun sens à la relecture. De tels objets doivent être sérialisés **champ par champ**.",
+    "concepts": ["serialisation-binaire"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Il sérialise un objet en texte, champ par champ, puis le relit.",
+    "payload": {
+      "program": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Contact {\npublic:\n    string nom;\n    string tel;\n    Contact() = default;\n    Contact(string n, string t) : nom(n), tel(t) {}\n};\n\nint main() {\n    Contact c(\"Dupont\", \"0612\");\n\n    ofstream sortie(\"c.txt\");\n    sortie << c.nom << \" \" << c.tel << \"\\n\";\n    sortie.close();\n\n    ifstream entree(\"c.txt\");\n    Contact d;\n    entree >> d.nom >> d.tel;\n    entree.close();\n\n    cout << \"nom=\" << d.nom << \"\\n\";\n    cout << \"tel=\" << d.tel << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "nom=Dupont\ntel=0612" },
+    "explanation": "La sérialisation **texte** écrit les attributs en clair, séparés par un espace : le fichier contient `Dupont 0612`. La désérialisation relit avec `>>`, qui découpe sur l'espace : `d.nom` reçoit `Dupont`, `d.tel` reçoit `0612`. L'objet `d` est ainsi reconstruit à l'identique de `c`.",
+    "concepts": ["serialisation-objet", "serialisation-texte"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? La classe `Equipe` définit son `operator<<` et son `operator>>`.",
+    "payload": {
+      "program": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Equipe {\n    string nom;\n    int points;\npublic:\n    Equipe() = default;\n    Equipe(string n, int p) : nom(n), points(p) {}\n    friend ostream& operator<<(ostream& os, const Equipe& e);\n    friend istream& operator>>(istream& is, Equipe& e);\n};\n\nostream& operator<<(ostream& os, const Equipe& e) {\n    os << e.nom << \" \" << e.points;\n    return os;\n}\n\nistream& operator>>(istream& is, Equipe& e) {\n    is >> e.nom >> e.points;\n    return is;\n}\n\nint main() {\n    Equipe a(\"France\", 9);\n\n    ofstream sortie(\"e.txt\");\n    sortie << a << \"\\n\";\n    sortie.close();\n\n    ifstream entree(\"e.txt\");\n    Equipe b;\n    entree >> b;\n    entree.close();\n\n    cout << \"relu : \" << b << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "relu : France 9" },
+    "explanation": "L'`operator<<` de `Equipe` prend un `ostream&` : le **même** opérateur sert pour `cout` et pour un `ofstream`. `sortie << a` écrit `France 9` dans le fichier. `entree >> b` applique l'`operator>>` symétrique et reconstruit `b`. Enfin `cout << \"relu : \" << b` réutilise le même `operator<<` pour l'affichage : `relu : France 9`.",
+    "concepts": ["serialisation-objet", "serialisation-texte"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Il sérialise une structure plate en binaire, puis la relit.",
+    "payload": {
+      "program": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nstruct Date {\n    int jour;\n    int mois;\n    int annee;\n};\n\nint main() {\n    Date d = {16, 5, 2026};\n\n    ofstream sortie(\"date.bin\", ios::binary);\n    sortie.write(reinterpret_cast<const char*>(&d), sizeof(d));\n    sortie.close();\n\n    Date e = {0, 0, 0};\n    ifstream entree(\"date.bin\", ios::binary);\n    entree.read(reinterpret_cast<char*>(&e), sizeof(e));\n    entree.close();\n\n    cout << e.jour << \"/\" << e.mois << \"/\" << e.annee << \"\\n\";\n    cout << \"octets ecrits = \" << sizeof(Date) << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "16/5/2026\noctets ecrits = 12" },
+    "explanation": "`Date` est un objet **plat** (trois `int`) : il se sérialise en bloc. `write` copie `sizeof(Date)` octets bruts dans le fichier ; `read` relit exactement le même nombre d'octets dans `e`. La structure est reconstruite à l'identique → `16/5/2026`. `sizeof(Date)` vaut **12** : trois `int` de 4 octets chacun.",
+    "concepts": ["serialisation-binaire"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Il compare la taille du même entier sérialisé en texte et en binaire.",
+    "payload": {
+      "program": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    int valeur = 123456;\n\n    ofstream t(\"v.txt\");\n    t << valeur;\n    t.close();\n\n    ofstream b(\"v.bin\", ios::binary);\n    b.write(reinterpret_cast<const char*>(&valeur), sizeof(valeur));\n    b.close();\n\n    ifstream ft(\"v.txt\", ios::binary);\n    ft.seekg(0, ios::end);\n    cout << \"fichier texte : \" << ft.tellg() << \" octets\\n\";\n    ft.close();\n\n    ifstream fb(\"v.bin\", ios::binary);\n    fb.seekg(0, ios::end);\n    cout << \"fichier binaire : \" << fb.tellg() << \" octets\\n\";\n    fb.close();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "fichier texte : 6 octets\nfichier binaire : 4 octets" },
+    "explanation": "En **texte**, `123456` s'écrit comme **6 caractères** (`'1'`, `'2'`, `'3'`, `'4'`, `'5'`, `'6'`) → 6 octets. En **binaire**, `write` copie la représentation mémoire de l'`int` : `sizeof(int)` vaut **4** octets, quelle que soit la valeur. La sérialisation binaire est ici plus **compacte** — et pour un grand nombre l'écart se creuse encore.",
+    "concepts": ["serialisation-binaire", "serialisation-texte"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Le `nom` sérialisé en texte contient un espace.",
+    "payload": {
+      "program": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string nom = \"Jean Dupont\";\n    int age = 40;\n\n    ofstream sortie(\"p.txt\");\n    sortie << nom << \" \" << age << \"\\n\";\n    sortie.close();\n\n    ifstream entree(\"p.txt\");\n    string a, b;\n    int c;\n    entree >> a >> b >> c;\n    entree.close();\n\n    cout << \"a=[\" << a << \"]\\n\";\n    cout << \"b=[\" << b << \"]\\n\";\n    cout << \"c=[\" << c << \"]\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "a=[Jean]\nb=[Dupont]\nc=[40]" },
+    "explanation": "Le fichier contient `Jean Dupont 40`. À la relecture, `>>` s'arrête à **chaque espace** : `a` reçoit `Jean`, `b` reçoit `Dupont`, `c` reçoit `40`. Le `nom` qui contenait un espace a été **coupé en deux** — le format texte est cassé. C'est le piège du **contrat de format** : un attribut qui peut contenir des espaces exige un séparateur dédié et `std::getline`.",
+    "concepts": ["serialisation-texte", "serialisation-objet"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète l'écriture binaire d'une structure plate `Equipe` dans un fichier.",
+    "payload": {
+      "template": "Equipe e;\nofstream f(\"eq.bin\", std::ios::out | std::ios::{{mode}});\nf.write({{cast}}<const char*>(&e), {{taille}}(e));\nf.close();",
+      "slots": [
+        { "id": "mode", "width": "sm" },
+        { "id": "cast", "width": "md" },
+        { "id": "taille", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "mode": "binary", "cast": "reinterpret_cast", "taille": "sizeof" },
+      "caseSensitive": false
+    },
+    "explanation": "L'écriture binaire exige le mode **`std::ios::binary`** (sinon des conversions de caractères corrompent les octets). `write` attend un `const char*` : on convertit l'adresse de l'objet avec **`reinterpret_cast`**, qui dit « traite cette adresse comme une suite d'octets ». La taille à écrire est donnée par **`sizeof`** : `sizeof(e)` renvoie le nombre d'octets de l'objet.",
+    "concepts": ["serialisation-binaire"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles affirmations sur `write`, `read` et la persistance d'une collection sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "write(adresse, taille) écrit 'taille' octets pris à 'adresse' dans le fichier." },
+        { "id": "b", "label": "read et write attendent un pointeur de type char*." },
+        { "id": "c", "label": "Pour sauvegarder une collection, il est pratique d'écrire d'abord le nombre d'éléments." },
+        { "id": "d", "label": "La lecture binaire doit utiliser une taille différente de l'écriture." },
+        { "id": "e", "label": "Le même operator<< sert pour l'écran et pour un fichier, car tous les flux de sortie dérivent d'ostream." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c", "e"] },
+    "explanation": "`write(adresse, taille)` écrit `taille` octets ; `read` les relit — les deux veulent un `char*`. La lecture binaire est l'**exacte symétrie** de l'écriture : **même taille**, même mode `binary` (d est faux). Écrire d'abord le **nombre d'éléments** permet, à la relecture, de savoir combien d'objets attendre. Et comme tous les flux de sortie dérivent d'`ostream`, un même `operator<<` sert pour l'écran et le fichier.",
+    "concepts": ["serialisation-binaire", "serialisation-objet"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On donne la classe `Livre` et ses opérateurs. Écris un programme qui lit un titre et un nombre de pages, crée un `Livre`, le sérialise dans `livre.txt` via `operator<<`, le relit via `operator>>`, et affiche le livre relu.",
+    "payload": {
+      "spec": "La classe Livre et ses operateurs operator<< et operator>> sont DEJA fournis dans le starter. Dans main : lire une std::string t et un int p avec cin >> t >> p, construire Livre original(t, p). Ouvrir un ofstream sur 'livre.txt', y ecrire 'sortie << original' suivi d'un retour a la ligne, fermer. Rouvrir 'livre.txt' avec un ifstream, declarer Livre relu, faire 'entree >> relu', fermer. Afficher 'relu' sur cout suivi d'un retour a la ligne (donc cout << relu).",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Livre {\n    string titre;\n    int pages;\npublic:\n    Livre() = default;\n    Livre(string t, int p) : titre(t), pages(p) {}\n    friend ostream& operator<<(ostream& os, const Livre& l);\n    friend istream& operator>>(istream& is, Livre& l);\n};\n\nostream& operator<<(ostream& os, const Livre& l) {\n    os << l.titre << \" \" << l.pages;\n    return os;\n}\n\nistream& operator>>(istream& is, Livre& l) {\n    is >> l.titre >> l.pages;\n    return is;\n}\n\nint main() {\n    // a completer : lire un livre, le serialiser dans livre.txt, le relire\n    return 0;\n}\n",
+      "tests": [
+        { "name": "livre standard", "stdin": "Cpp 412", "expectedStdout": "Cpp 412" },
+        { "name": "autre livre", "stdin": "Algo 99", "expectedStdout": "Algo 99" },
+        { "name": "cache", "stdin": "Reseaux 250", "expectedStdout": "Reseaux 250", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Livre {\n    string titre;\n    int pages;\npublic:\n    Livre() = default;\n    Livre(string t, int p) : titre(t), pages(p) {}\n    friend ostream& operator<<(ostream& os, const Livre& l);\n    friend istream& operator>>(istream& is, Livre& l);\n};\n\nostream& operator<<(ostream& os, const Livre& l) {\n    os << l.titre << \" \" << l.pages;\n    return os;\n}\n\nistream& operator>>(istream& is, Livre& l) {\n    is >> l.titre >> l.pages;\n    return is;\n}\n\nint main() {\n    string t;\n    int p;\n    cin >> t >> p;\n    Livre original(t, p);\n\n    ofstream sortie(\"livre.txt\");\n    sortie << original << \"\\n\";\n    sortie.close();\n\n    ifstream entree(\"livre.txt\");\n    Livre relu;\n    entree >> relu;\n    entree.close();\n\n    cout << relu << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Centraliser le format dans **`operator<<` / `operator>>`** rend la persistance limpide : `sortie << original` enregistre le livre, `entree >> relu` le reconstruit, `cout << relu` l'affiche — **le même opérateur** sert dans les trois cas, car `ofstream` et `cout` dérivent tous deux d'`ostream`. Le format n'est défini qu'à **un seul endroit**.",
+    "concepts": ["serialisation-objet", "serialisation-texte"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit un entier `n` puis `n` scores au clavier, les persiste en **texte** dans `scores.txt` (en écrivant d'abord le nombre d'éléments), puis relit le fichier et affiche le nombre de scores et le score maximum.",
+    "payload": {
+      "spec": "Lire un int n, puis n scores (int) avec cin et les ranger dans un vector<int>. Ouvrir un ofstream sur 'scores.txt' : ecrire d'abord scores.size() suivi d'un retour a la ligne, puis chaque score suivi d'un retour a la ligne. Fermer. Rouvrir 'scores.txt' avec un ifstream : relire le nombre annonce dans un int combien, puis lire ce nombre de scores avec >> en cherchant le maximum (les scores sont positifs ou nuls, on peut partir d'un maximum a 0). Fermer. Afficher 'nombre = ' suivi de combien puis un retour a la ligne, puis 'maximum = ' suivi du score maximum puis un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    // a completer : persister n scores avec compteur en tete, puis relire\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois scores", "stdin": "3\n50 80 65", "expectedStdout": "nombre = 3\nmaximum = 80" },
+        { "name": "un score", "stdin": "1\n42", "expectedStdout": "nombre = 1\nmaximum = 42" },
+        { "name": "cache", "stdin": "5\n10 90 20 90 30", "expectedStdout": "nombre = 5\nmaximum = 90", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> scores;\n    for (int i = 0; i < n; i++) {\n        int s;\n        cin >> s;\n        scores.push_back(s);\n    }\n\n    ofstream sortie(\"scores.txt\");\n    sortie << scores.size() << \"\\n\";\n    for (int s : scores) {\n        sortie << s << \"\\n\";\n    }\n    sortie.close();\n\n    ifstream entree(\"scores.txt\");\n    int combien;\n    entree >> combien;\n    int maximum = 0;\n    for (int i = 0; i < combien; i++) {\n        int s;\n        entree >> s;\n        if (s > maximum) maximum = s;\n    }\n    entree.close();\n\n    cout << \"nombre = \" << combien << \"\\n\";\n    cout << \"maximum = \" << maximum << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Pour persister une **collection**, on écrit d'abord le **nombre d'éléments**, puis les éléments. À la relecture, ce nombre indique exactement combien d'objets lire : une simple boucle `for (i = 0; i < combien; i++)` suffit, sans avoir à tester la fin de fichier. C'est le schéma standard de persistance d'une collection.",
+    "concepts": ["serialisation-objet", "serialisation-texte"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris un programme qui lit un entier `n` puis `n` équipes (chacune : points et buts), les sérialise en **binaire** dans `tournoi.bin` (nombre d'éléments en tête), puis relit le fichier et affiche le nombre d'équipes, le total des points et le total des buts.",
+    "payload": {
+      "spec": "Definir une struct Equipe { int points; int buts; }. Lire un int n, puis n equipes : pour chacune lire e.points puis e.buts avec cin >>, ranger dans un vector<Equipe>. Ouvrir un ofstream sur 'tournoi.bin' en mode std::ios::out | std::ios::binary. Ecrire d'abord le nombre d'elements : declarer size_t combien = vecteur.size() et faire write(reinterpret_cast<const char*>(&combien), sizeof(combien)). Puis, pour chaque Equipe e, faire write(reinterpret_cast<const char*>(&e), sizeof(e)). Fermer. Rouvrir 'tournoi.bin' avec un ifstream en mode std::ios::in | std::ios::binary. Lire le nombre d'elements dans un size_t m avec read(reinterpret_cast<char*>(&m), sizeof(m)). Puis lire m equipes avec read, en accumulant le total des points et le total des buts. Fermer. Afficher 'equipes = ' suivi de m, retour a la ligne, 'total points = ' suivi du total des points, retour a la ligne, 'total buts = ' suivi du total des buts, retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\n#include <vector>\nusing namespace std;\n\nstruct Equipe {\n    int points;\n    int buts;\n};\n\nint main() {\n    int n;\n    cin >> n;\n    // a completer : serialiser n equipes en binaire, puis tout relire\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois equipes", "stdin": "3\n9 6\n4 4\n1 2", "expectedStdout": "equipes = 3\ntotal points = 14\ntotal buts = 12" },
+        { "name": "une equipe", "stdin": "1\n5 3", "expectedStdout": "equipes = 1\ntotal points = 5\ntotal buts = 3" },
+        { "name": "cache", "stdin": "2\n7 10\n2 1", "expectedStdout": "equipes = 2\ntotal points = 9\ntotal buts = 11", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\n#include <vector>\nusing namespace std;\n\nstruct Equipe {\n    int points;\n    int buts;\n};\n\nint main() {\n    int n;\n    cin >> n;\n    vector<Equipe> equipes;\n    for (int i = 0; i < n; i++) {\n        Equipe e;\n        cin >> e.points >> e.buts;\n        equipes.push_back(e);\n    }\n\n    ofstream sortie(\"tournoi.bin\", ios::out | ios::binary);\n    size_t combien = equipes.size();\n    sortie.write(reinterpret_cast<const char*>(&combien), sizeof(combien));\n    for (const Equipe& e : equipes) {\n        sortie.write(reinterpret_cast<const char*>(&e), sizeof(e));\n    }\n    sortie.close();\n\n    ifstream entree(\"tournoi.bin\", ios::in | ios::binary);\n    size_t m;\n    entree.read(reinterpret_cast<char*>(&m), sizeof(m));\n    int totalPoints = 0;\n    int totalButs = 0;\n    for (size_t i = 0; i < m; i++) {\n        Equipe e;\n        entree.read(reinterpret_cast<char*>(&e), sizeof(e));\n        totalPoints += e.points;\n        totalButs += e.buts;\n    }\n    entree.close();\n\n    cout << \"equipes = \" << m << \"\\n\";\n    cout << \"total points = \" << totalPoints << \"\\n\";\n    cout << \"total buts = \" << totalButs << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "`Equipe` est une structure **plate** (deux `int`) : elle se sérialise en bloc avec `write`/`read`, en mode **`ios::binary`**. On écrit d'abord le **nombre d'équipes** (un `size_t`), puis chaque équipe ; la relecture est l'exacte symétrie — on relit le compteur, puis on boucle ce nombre de fois. Chaque `read` reçoit `sizeof(Equipe)` octets et reconstruit une équipe à l'identique.",
+    "concepts": ["serialisation-binaire", "serialisation-objet"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas : `write` reçoit le mauvais type de pointeur. Corrige l'appel.",
+    "payload": {
+      "spec": "Le programme veut sauvegarder en binaire une structure Point. Il ecrit 'sortie.write(&p, sizeof(p))'. Mais write attend un pointeur de type const char*, alors que &p est de type Point* : g++ refuse la conversion. Il faut convertir l'adresse avec reinterpret_cast<const char*>(&p). De meme, read attend un char* : la relecture doit utiliser reinterpret_cast<char*>(&q). Le programme sauvegarde p={3,7}, le relit dans q, et affiche 'x=3 y=7'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nstruct Point { int x; int y; };\n\nint main() {\n    Point p = {3, 7};\n    ofstream sortie(\"p.bin\", ios::binary);\n    sortie.write(&p, sizeof(p));\n    sortie.close();\n\n    Point q = {0, 0};\n    ifstream entree(\"p.bin\", ios::binary);\n    entree.read(&q, sizeof(q));\n    entree.close();\n\n    cout << \"x=\" << q.x << \" y=\" << q.y << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "aller-retour binaire", "stdin": "", "expectedStdout": "x=3 y=7" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nstruct Point { int x; int y; };\n\nint main() {\n    Point p = {3, 7};\n    ofstream sortie(\"p.bin\", ios::binary);\n    sortie.write(reinterpret_cast<const char*>(&p), sizeof(p));\n    sortie.close();\n\n    Point q = {0, 0};\n    ifstream entree(\"p.bin\", ios::binary);\n    entree.read(reinterpret_cast<char*>(&q), sizeof(q));\n    entree.close();\n\n    cout << \"x=\" << q.x << \" y=\" << q.y << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `write` (et `read`) raisonnent en **octets bruts** et attendent un pointeur `char*`. `&p` est un `Point*` ; g++ refuse la conversion implicite (`cannot convert Point* to const char*`). On l'effectue explicitement avec **`reinterpret_cast`** : `reinterpret_cast<const char*>(&p)` pour `write`, `reinterpret_cast<char*>(&q)` pour `read`. Ce cast dit « traite cette adresse comme une suite d'octets ».",
+    "concepts": ["serialisation-binaire"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme de sérialisation texte affiche `x=1234 y=0` au lieu de `x=12 y=34`. Le format d'écriture est cassé. Corrige-le.",
+    "payload": {
+      "spec": "Le programme veut sauvegarder deux entiers a=12 et b=34 en texte puis les relire. A l'ecriture il fait 'sortie << a << b', SANS separateur : le fichier contient '1234', un seul bloc de chiffres. A la relecture, 'entree >> x' avale tout '1234' et 'entree >> y' ne trouve plus rien (y reste a 0). Il faut ecrire un separateur entre a et b : 'sortie << a << \" \" << b'. Avec l'espace, le fichier contient '12 34' et la relecture rend x=12 et y=34.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    int a = 12, b = 34;\n\n    ofstream sortie(\"d.txt\");\n    sortie << a << b << \"\\n\";\n    sortie.close();\n\n    ifstream entree(\"d.txt\");\n    int x = 0, y = 0;\n    entree >> x >> y;\n    entree.close();\n\n    cout << \"x=\" << x << \" y=\" << y << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "deux entiers separes", "stdin": "", "expectedStdout": "x=12 y=34" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    int a = 12, b = 34;\n\n    ofstream sortie(\"d.txt\");\n    sortie << a << \" \" << b << \"\\n\";\n    sortie.close();\n\n    ifstream entree(\"d.txt\");\n    int x = 0, y = 0;\n    entree >> x >> y;\n    entree.close();\n\n    cout << \"x=\" << x << \" y=\" << y << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Le bug est l'absence de **séparateur**. `sortie << a << b` écrit `12` puis `34` collés : le fichier contient `1234`. À la relecture, `entree >> x` lit le bloc entier `1234`, et `entree >> y` ne trouve plus rien (`y` garde `0`). La sérialisation texte impose un **contrat de format** : il faut écrire soi-même les séparateurs. `sortie << a << \" \" << b` produit `12 34`, que `>>` redécoupe correctement.",
+    "concepts": ["serialisation-texte", "serialisation-objet"]
+  },
+  {
+    "chapterSlug": "serialisation",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme de désérialisation binaire affiche `numero=7 score=0` au lieu de `numero=7 score=250`. La taille lue est fausse. Corrige-le.",
+    "payload": {
+      "spec": "Le programme sauvegarde en binaire une structure Joueur { int numero; int score; } valant {7, 250}, puis la relit. L'ecriture est correcte : write(..., sizeof(j)) ecrit toute la structure. Mais la relecture fait 'entree.read(reinterpret_cast<char*>(&lu), sizeof(int))' : elle ne lit que sizeof(int) = 4 octets, donc seulement le champ numero. Le champ score n'est jamais lu et garde sa valeur initiale 0. La lecture doit etre l'exacte symetrie de l'ecriture : il faut lire sizeof(Joueur) octets. La correction : remplacer sizeof(int) par sizeof(Joueur). Le programme doit alors afficher 'numero=7 score=250'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nstruct Joueur {\n    int numero;\n    int score;\n};\n\nint main() {\n    Joueur j = {7, 250};\n    ofstream sortie(\"j.bin\", ios::binary);\n    sortie.write(reinterpret_cast<const char*>(&j), sizeof(j));\n    sortie.close();\n\n    Joueur lu = {0, 0};\n    ifstream entree(\"j.bin\", ios::binary);\n    entree.read(reinterpret_cast<char*>(&lu), sizeof(int));\n    entree.close();\n\n    cout << \"numero=\" << lu.numero << \" score=\" << lu.score << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "relecture complete du joueur", "stdin": "", "expectedStdout": "numero=7 score=250" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nstruct Joueur {\n    int numero;\n    int score;\n};\n\nint main() {\n    Joueur j = {7, 250};\n    ofstream sortie(\"j.bin\", ios::binary);\n    sortie.write(reinterpret_cast<const char*>(&j), sizeof(j));\n    sortie.close();\n\n    Joueur lu = {0, 0};\n    ifstream entree(\"j.bin\", ios::binary);\n    entree.read(reinterpret_cast<char*>(&lu), sizeof(Joueur));\n    entree.close();\n\n    cout << \"numero=\" << lu.numero << \" score=\" << lu.score << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "La lecture binaire doit être l'**exacte symétrie** de l'écriture : même taille. L'écriture a copié `sizeof(Joueur)` octets (deux `int` = 8 octets). La relecture ne demande que `sizeof(int)` = 4 octets : elle ne récupère que le premier champ `numero`. Le champ `score` n'est jamais lu et garde son `0` initial. La correction : lire **`sizeof(Joueur)`** octets, exactement ce qui a été écrit.",
+    "concepts": ["serialisation-binaire", "serialisation-objet"]
+  }
+]

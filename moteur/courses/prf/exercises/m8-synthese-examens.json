@@ -1,0 +1,290 @@
+[
+  {
+    "chapterSlug": "strategie-partiel",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle sequence de verification est la plus fiable pour une question Scala courte ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Valeur, type, effets eventuels."
+        },
+        {
+          "id": "b",
+          "label": "Nom du fichier, taille de police, couleur."
+        },
+        {
+          "id": "c",
+          "label": "Nombre de lignes uniquement."
+        },
+        {
+          "id": "d",
+          "label": "Chercher une compilation dans l'application."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Les questions PRF demandent du raisonnement ferme : valeur, type, effet.",
+    "concepts": [
+      "expression",
+      "type-inference",
+      "side-effect"
+    ]
+  },
+  {
+    "chapterSlug": "strategie-partiel",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pour un exercice Petri, quelle premiere action evite le plus d'erreurs ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Fixer l'ordre des places et le marquage courant."
+        },
+        {
+          "id": "b",
+          "label": "Additionner toutes les transitions sans regarder Pre."
+        },
+        {
+          "id": "c",
+          "label": "Supposer que tout est vivant."
+        },
+        {
+          "id": "d",
+          "label": "Ignorer les poids d'arcs."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "L'ordre des places stabilise tous les calculs de marquage et matrices.",
+    "concepts": [
+      "marking",
+      "pre-post"
+    ]
+  },
+  {
+    "chapterSlug": "synthese-transversale",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe le domaine a son outil de raisonnement.",
+    "payload": {
+      "left": [
+        {
+          "id": "scala",
+          "label": "Scala fonctionnel"
+        },
+        {
+          "id": "coll",
+          "label": "Collections"
+        },
+        {
+          "id": "comp",
+          "label": "Complexite"
+        },
+        {
+          "id": "petri",
+          "label": "Reseaux de Petri"
+        }
+      ],
+      "right": [
+        {
+          "id": "valtype",
+          "label": "Valeur, type, effet"
+        },
+        {
+          "id": "pipe",
+          "label": "Trace des transformations"
+        },
+        {
+          "id": "cost",
+          "label": "Terme dominant ou recurrence"
+        },
+        {
+          "id": "mark",
+          "label": "Marquage et transitions franchissables"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "scala": "valtype",
+        "coll": "pipe",
+        "comp": "cost",
+        "petri": "mark"
+      }
+    },
+    "explanation": "Chaque partie a une grille de verification propre.",
+    "concepts": [
+      "expression",
+      "collection",
+      "complexity",
+      "petri-net"
+    ]
+  },
+  {
+    "chapterSlug": "synthese-transversale",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Trace cette transformation finale.",
+    "payload": {
+      "program": "List(1,2,3,4,5).filter(_ > 2).foldLeft(0)(_ + _)",
+      "language": "scala"
+    },
+    "solution": {
+      "expectedOutput": "12"
+    },
+    "explanation": "filter donne List(3,4,5), puis le fold somme a partir de 0.",
+    "concepts": [
+      "map-filter-flatmap",
+      "fold"
+    ]
+  },
+  {
+    "chapterSlug": "synthese-transversale",
+    "type": "PETRI_ENABLED_TRANSITIONS",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Synthese Petri : quelles transitions sont franchissables ?",
+    "payload": {
+      "places": [
+        {
+          "id": "prod",
+          "label": "producteur",
+          "tokens": 1,
+          "x": 110,
+          "y": 90
+        },
+        {
+          "id": "vide",
+          "label": "places libres",
+          "tokens": 2,
+          "x": 110,
+          "y": 270
+        },
+        {
+          "id": "plein",
+          "label": "items",
+          "tokens": 0,
+          "x": 610,
+          "y": 90
+        },
+        {
+          "id": "cons",
+          "label": "consommateur",
+          "tokens": 1,
+          "x": 610,
+          "y": 270
+        }
+      ],
+      "transitions": [
+        {
+          "id": "produire",
+          "label": "produire",
+          "x": 360,
+          "y": 120
+        },
+        {
+          "id": "consommer",
+          "label": "consommer",
+          "x": 360,
+          "y": 245
+        }
+      ],
+      "arcs": [
+        {
+          "from": "prod",
+          "to": "produire"
+        },
+        {
+          "from": "vide",
+          "to": "produire"
+        },
+        {
+          "from": "produire",
+          "to": "prod"
+        },
+        {
+          "from": "produire",
+          "to": "plein"
+        },
+        {
+          "from": "plein",
+          "to": "consommer"
+        },
+        {
+          "from": "cons",
+          "to": "consommer"
+        },
+        {
+          "from": "consommer",
+          "to": "cons"
+        },
+        {
+          "from": "consommer",
+          "to": "vide"
+        }
+      ]
+    },
+    "solution": {
+      "enabledTransitionIds": [
+        "produire"
+      ]
+    },
+    "explanation": "Au depart le tampon a des places libres et aucun item plein ; produire est possible, consommer ne l'est pas.",
+    "concepts": [
+      "firing",
+      "modeling"
+    ]
+  },
+  {
+    "chapterSlug": "synthese-transversale",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle affirmation transversale est correcte ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un invariant Petri et un invariant de boucle expriment tous deux une propriete conservee, mais dans des modeles differents."
+        },
+        {
+          "id": "b",
+          "label": "Un invariant Petri est une fonction Scala."
+        },
+        {
+          "id": "c",
+          "label": "Un fold et un deadlock sont la meme notion."
+        },
+        {
+          "id": "d",
+          "label": "La complexite remplace le typage."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Les invariants servent a prouver des proprietes conservees, mais les objets mathematiques different.",
+    "concepts": [
+      "invariant-loop",
+      "p-invariant"
+    ]
+  }
+]

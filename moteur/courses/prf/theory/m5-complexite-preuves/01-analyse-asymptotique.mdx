@@ -1,0 +1,32 @@
+---
+title: "Analyse asymptotique"
+slug: analyse-asymptotique
+order: 1
+estimatedReadMin: 13
+concepts: [complexity, big-o, omega, theta, worst-case, average-case]
+source: "Complexite/cours_theorique-2-15.pdf"
+---
+## Mesurer ce qui grandit
+
+La complexite decrit l'evolution du cout quand la taille `n` augmente. On ignore les constantes pour comparer les ordres de grandeur.
+
+## O, Omega, Theta
+
+- `O(f(n))` : borne superieure asymptotique.
+- `Omega(f(n))` : borne inferieure asymptotique.
+- `Theta(f(n))` : encadrement serre.
+
+```text
+3n^2 + 10n + 7 est Theta(n^2)
+```
+
+## Cas d'analyse
+
+Le pire cas donne une garantie. Le meilleur cas est souvent peu informatif. Le cas moyen exige une hypothese probabiliste.
+
+## Exemples du cours
+
+Recherche sequentielle : pire cas lineaire. Recherche dichotomique sur structure triee a acces indexe : logarithmique. Produit matriciel classique : cubique.
+
+> **A retenir**  
+> Classe toujours les termes par domination asymptotique avant de repondre.

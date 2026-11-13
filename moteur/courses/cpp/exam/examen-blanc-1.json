@@ -1,0 +1,263 @@
+{
+  "slug": "examen-blanc-1",
+  "title": "Examen blanc 1 — Fondamentaux du paradigme objet",
+  "description": "Partiel couvrant les modules SE1 à SE3 : introduction au C++, constructeurs et destructeurs, surcharge d'opérateurs. Quatorze questions de types variés, à difficulté croissante, à traiter en 90 minutes.",
+  "durationMinutes": 90,
+  "totalPoints": 20,
+  "exercises": [
+    {
+      "chapterSlug": "du-c-au-cpp",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Parmi ces affirmations comparant le C++ à Java, laquelle est **exacte** ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "C++ est compilé en bytecode interprété par une machine virtuelle." },
+          { "id": "b", "label": "C++ confie la gestion de la mémoire à un ramasse-miettes." },
+          { "id": "c", "label": "C++ est compilé en code machine natif exécuté directement par le système." },
+          { "id": "d", "label": "C++ n'autorise que le paradigme orienté objet." }
+        ]
+      },
+      "solution": { "correct": ["c"] },
+      "explanation": "C++ est compilé en **code machine natif** exécuté directement par le système d'exploitation, là où Java est compilé en bytecode interprété par la JVM. C++ impose une gestion mémoire **manuelle** (pas de ramasse-miettes) et reste **multi-paradigme** : procédural, objet et générique.",
+      "concepts": ["cpp-vs-c", "compilation-gpp"]
+    },
+    {
+      "chapterSlug": "types-references",
+      "type": "MCQ_MULTI",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Une fonction doit consulter un gros objet `string` **sans le copier** et **sans pouvoir le modifier**. Quelles affirmations sur le paramètre `const string& s` sont correctes ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Le `&` évite la copie de l'objet à l'appel." },
+          { "id": "b", "label": "Le `const` interdit à la fonction de modifier l'objet de l'appelant." },
+          { "id": "c", "label": "C'est la forme idéale pour transmettre un gros objet en lecture seule." },
+          { "id": "d", "label": "La fonction reçoit une copie indépendante de l'objet." },
+          { "id": "e", "label": "Le paramètre peut être réattaché à un autre objet dans le corps." }
+        ]
+      },
+      "solution": { "correct": ["a", "b", "c"] },
+      "explanation": "Le passage par **référence constante** `const string&` combine deux avantages : le `&` évite la copie (la fonction travaille sur l'objet d'origine), le `const` interdit toute modification. C'est la forme canonique pour consulter un gros objet. Une référence n'est **jamais** une copie et ne peut **jamais** être réattachée.",
+      "concepts": ["passage-par-reference", "reference", "const"]
+    },
+    {
+      "chapterSlug": "fonctions",
+      "type": "TRUE_FALSE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Les deux prototypes `int aire(int cote);` et `double aire(double cote);` constituent une surcharge de fonction valide.",
+      "payload": {},
+      "solution": { "value": true },
+      "explanation": "Vrai : la **surcharge de fonction** autorise plusieurs fonctions de même nom à condition que leurs **listes de paramètres** (signatures) diffèrent. Ici les types de paramètres diffèrent (`int` vs `double`), le compilateur choisira la bonne version selon l'argument fourni. Note : le seul type de retour ne suffirait pas à distinguer deux surcharges.",
+      "concepts": ["surcharge-fonction"]
+    },
+    {
+      "chapterSlug": "classes-objets",
+      "type": "FILL_BLANK",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Complète la définition d'une méthode `surface` de la classe `Cercle`, écrite **à l'extérieur** de la classe grâce à l'opérateur de résolution de portée.",
+      "payload": {
+        "template": "double Cercle{{res}}surface() const {\n    return 3.14159 * rayon * rayon;\n}",
+        "slots": [
+          { "id": "res", "width": "sm" }
+        ]
+      },
+      "solution": {
+        "answers": { "res": "::" },
+        "caseSensitive": false
+      },
+      "explanation": "L'opérateur de **résolution de portée** `::` relie la définition d'une méthode à sa classe : `Cercle::surface` indique que cette fonction `surface` est la méthode de la classe `Cercle`. Cela permet d'écrire les définitions hors de la déclaration de la classe, en ne gardant dans le `.h` que les prototypes.",
+      "concepts": ["classe", "header-impl"]
+    },
+    {
+      "chapterSlug": "constructeurs",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Une classe `Livre` déclare uniquement le constructeur `Livre(string titre)`. Que se passe-t-il pour la ligne `Livre l;` ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Elle compile : le compilateur synthétise un constructeur par défaut." },
+          { "id": "b", "label": "Elle ne compile pas : déclarer un constructeur supprime le constructeur par défaut synthétisé." },
+          { "id": "c", "label": "Elle compile mais l'attribut titre reste non initialisé." },
+          { "id": "d", "label": "Elle appelle le constructeur Livre(string) avec une chaîne vide." }
+        ]
+      },
+      "solution": { "correct": ["b"] },
+      "explanation": "Dès qu'une classe déclare **au moins un** constructeur, le compilateur **cesse** de synthétiser le constructeur par défaut. Comme `Livre(string)` exige un argument, la ligne `Livre l;` ne compile plus. Pour la rendre valide il faudrait déclarer explicitement `Livre();` ou donner un argument par défaut.",
+      "concepts": ["constructeur-defaut", "constructeur-parametre"]
+    },
+    {
+      "chapterSlug": "constructeurs",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Quelle est la sortie exacte de ce programme utilisant un constructeur à argument par défaut ?",
+      "payload": {
+        "program": "#include <iostream>\nusing namespace std;\n\nclass Compteur {\n    private:\n        int valeur;\n    public:\n        Compteur(int depart = 0) : valeur(depart) {}\n        void incrementer() { valeur++; }\n        int lire() const { return valeur; }\n};\n\nint main() {\n    Compteur a;\n    Compteur b(10);\n    a.incrementer();\n    a.incrementer();\n    b.incrementer();\n    cout << a.lire() << \" \" << b.lire() << endl;\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "2 11" },
+      "explanation": "`Compteur a;` appelle le constructeur avec l'argument par défaut : `valeur` vaut 0, puis deux `incrementer()` la portent à 2. `Compteur b(10);` initialise `valeur` à 10, un `incrementer()` la porte à 11. La sortie est donc `2 11`.",
+      "concepts": ["constructeur-defaut", "argument-defaut", "liste-initialisation"]
+    },
+    {
+      "chapterSlug": "destructeur",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Quelle est la sortie exacte de ce programme ? Observe attentivement le bloc interne et l'ordre des destructions.",
+      "payload": {
+        "program": "#include <iostream>\nusing namespace std;\n\nclass Trace {\n    private:\n        int id;\n    public:\n        Trace(int id) : id(id) { cout << \"C\" << id << \" \"; }\n        ~Trace() { cout << \"D\" << id << \" \"; }\n};\n\nint main() {\n    Trace a(1);\n    {\n        Trace b(2);\n        Trace c(3);\n    }\n    Trace d(4);\n    cout << \"| \";\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "C1 C2 C3 D3 D2 C4 | D4 D1" },
+      "explanation": "`a` est construit (`C1`). Dans le bloc interne, `b` et `c` sont construits (`C2 C3`) puis détruits **en sortie de bloc**, dans l'ordre inverse (`D3 D2`). `d` est ensuite construit (`C4`), on affiche `|`. À la fin du `main`, `d` puis `a` sont détruits dans l'ordre inverse de leur construction (`D4 D1`).",
+      "concepts": ["destructeur", "cycle-de-vie-objet"]
+    },
+    {
+      "chapterSlug": "copie-affectation",
+      "type": "ORDERING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "L'opérateur d'affectation `operator=` d'une classe gérant un tableau dynamique doit exécuter ses étapes dans le bon ordre. Remets-les en ordre.",
+      "payload": {
+        "items": [
+          { "id": "ret", "label": "Renvoyer *this pour autoriser le chaînage" },
+          { "id": "lib", "label": "Libérer l'ancienne zone mémoire avec delete[]" },
+          { "id": "alloc", "label": "Allouer une nouvelle zone mémoire de la bonne taille" },
+          { "id": "copie", "label": "Recopier les valeurs élément par élément" }
+        ]
+      },
+      "solution": { "order": ["lib", "alloc", "copie", "ret"] },
+      "explanation": "L'`operator=` d'une classe à ressource suit un ordre précis : (1) **libérer** l'ancienne zone (`delete[]`) pour éviter une fuite mémoire, (2) **allouer** une nouvelle zone à la bonne taille, (3) **recopier** les valeurs une à une (copie profonde), (4) **renvoyer `*this`** pour permettre le chaînage `a = b = c`.",
+      "concepts": ["operateur-affectation", "copie-profonde", "regle-des-trois"]
+    },
+    {
+      "chapterSlug": "allocation-dynamique",
+      "type": "CODE_WRITE",
+      "difficulty": 3,
+      "points": 3,
+      "prompt": "Écris la classe `Pile` : elle gère un tableau d'entiers **alloué dynamiquement** dans le constructeur (`new int[capacite]`) et libéré dans le destructeur (`delete[]`). Le `main` est fourni.",
+      "payload": {
+        "spec": "Definir la classe Pile. Attributs prives : int* donnees, int sommet, int capacite. Constructeur Pile(int cap) : sommet a 0, capacite a cap, donnees alloue avec new int[capacite]. Destructeur : delete[] donnees. Methode void empiler(int v) : range v et avance sommet. Methode int depiler() : recule sommet et renvoie la valeur. Methode int taille() const : renvoie sommet. Ne pas modifier le main.",
+        "std": "c++17",
+        "compare": "trimmed",
+        "starterCode": "#include <iostream>\nusing namespace std;\n\n// definis la classe Pile ici\n\nint main() {\n    int n;\n    cin >> n;\n    Pile p(n);\n    for (int i = 0; i < n; i++) {\n        int v;\n        cin >> v;\n        p.empiler(v);\n    }\n    cout << \"taille = \" << p.taille() << endl;\n    while (p.taille() > 0) {\n        cout << p.depiler() << \" \";\n    }\n    cout << endl;\n    return 0;\n}\n",
+        "tests": [
+          { "name": "trois elements", "stdin": "3\n10 20 30", "expectedStdout": "taille = 3\n30 20 10" },
+          { "name": "cinq elements", "stdin": "5\n1 2 3 4 5", "expectedStdout": "taille = 5\n5 4 3 2 1" },
+          { "name": "cache", "stdin": "4\n7 8 9 6", "expectedStdout": "taille = 4\n6 9 8 7", "hidden": true }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Pile {\n    private:\n        int* donnees;\n        int sommet;\n        int capacite;\n    public:\n        Pile(int cap) : sommet(0), capacite(cap) {\n            donnees = new int[capacite];\n        }\n        ~Pile() {\n            delete[] donnees;\n        }\n        void empiler(int v) { donnees[sommet++] = v; }\n        int depiler() { return donnees[--sommet]; }\n        int taille() const { return sommet; }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    Pile p(n);\n    for (int i = 0; i < n; i++) {\n        int v;\n        cin >> v;\n        p.empiler(v);\n    }\n    cout << \"taille = \" << p.taille() << endl;\n    while (p.taille() > 0) {\n        cout << p.depiler() << \" \";\n    }\n    cout << endl;\n    return 0;\n}"
+      },
+      "explanation": "Le constructeur alloue le tableau sur le **tas** avec `new int[capacite]` ; le destructeur le libère avec `delete[]` — c'est l'idiome de la gestion de ressource. `empiler` utilise `donnees[sommet++]` (range puis avance), `depiler` utilise `donnees[--sommet]` (recule puis lit), si bien que la pile rend les éléments dans l'ordre inverse de leur insertion (LIFO).",
+      "concepts": ["new-delete", "destructeur", "tas-vs-pile", "constructeur-parametre"]
+    },
+    {
+      "chapterSlug": "principe-surcharge",
+      "type": "MATCHING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Associe chaque expression écrite par l'utilisateur à l'appel de fonction équivalent généré par le compilateur (la classe `Complexe` surcharge ses opérateurs).",
+      "payload": {
+        "left": [
+          { "id": "plus", "label": "z1 + z2" },
+          { "id": "eq", "label": "z1 == z2" },
+          { "id": "sortie", "label": "cout << z1" }
+        ],
+        "right": [
+          { "id": "r1", "label": "operator+(z1, z2)" },
+          { "id": "r2", "label": "operator==(z1, z2)" },
+          { "id": "r3", "label": "operator<<(cout, z1)" }
+        ]
+      },
+      "solution": { "pairs": { "plus": "r1", "eq": "r2", "sortie": "r3" } },
+      "explanation": "Un opérateur n'est qu'une **fonction au nom spécial** `operatorX`. Le compilateur traduit chaque expression d'opérateur en appel de cette fonction : `z1 + z2` devient `operator+(z1, z2)`, `z1 == z2` devient `operator==(z1, z2)`, `cout << z1` devient `operator<<(cout, z1)`.",
+      "concepts": ["surcharge-operateur", "operateur-non-membre"]
+    },
+    {
+      "chapterSlug": "operateurs-arithmetiques",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Quelle est la sortie exacte de ce programme ? La classe surcharge `operator+` et `operator<<`.",
+      "payload": {
+        "program": "#include <iostream>\nusing namespace std;\n\nclass Vecteur2D {\n    private:\n        int x, y;\n    public:\n        Vecteur2D(int x = 0, int y = 0) : x(x), y(y) {}\n        Vecteur2D operator+(const Vecteur2D& autre) const {\n            return Vecteur2D(x + autre.x, y + autre.y);\n        }\n        friend ostream& operator<<(ostream& os, const Vecteur2D& v) {\n            os << \"(\" << v.x << \", \" << v.y << \")\";\n            return os;\n        }\n};\n\nint main() {\n    Vecteur2D a(2, 3);\n    Vecteur2D b(5, 1);\n    Vecteur2D c = a + b;\n    cout << a << \" + \" << b << \" = \" << c << endl;\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "(2, 3) + (5, 1) = (7, 4)" },
+      "explanation": "`operator+` additionne composante par composante : `a + b` donne `(2+5, 3+1)` soit `(7, 4)`. `operator<<` renvoie `ostream&`, ce qui autorise le chaînage de tous les `<<` sur une seule ligne, d'où la sortie `(2, 3) + (5, 1) = (7, 4)`.",
+      "concepts": ["operateur-arithmetique", "surcharge-flux-sortie", "operateur-membre"]
+    },
+    {
+      "chapterSlug": "comparaison-membre-amie",
+      "type": "CODE_WRITE",
+      "difficulty": 3,
+      "points": 3,
+      "prompt": "Écris la classe `Argent` (un montant en centimes) avec `operator+` (somme de deux montants), `operator==` (égalité) et `operator<<` (affiche le nombre de centimes). Le `main` est fourni.",
+      "payload": {
+        "spec": "Definir la classe Argent avec un attribut prive int centimes. Constructeur Argent(int c = 0). operator+ : fonction membre const renvoyant un Argent dont les centimes sont la somme. operator== : fonction membre const renvoyant un bool. operator<< : fonction amie (friend) qui ecrit uniquement le nombre de centimes. Ne pas modifier le main.",
+        "std": "c++17",
+        "compare": "trimmed",
+        "starterCode": "#include <iostream>\nusing namespace std;\n\n// definis la classe Argent ici\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Argent m1(a);\n    Argent m2(b);\n    Argent total = m1 + m2;\n    cout << total << endl;\n    if (m1 == m2)\n        cout << \"egaux\" << endl;\n    else\n        cout << \"differents\" << endl;\n    return 0;\n}\n",
+        "tests": [
+          { "name": "differents", "stdin": "150 75", "expectedStdout": "225\ndifferents" },
+          { "name": "egaux", "stdin": "200 200", "expectedStdout": "400\negaux" },
+          { "name": "zero", "stdin": "0 0", "expectedStdout": "0\negaux", "hidden": true }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Argent {\n    private:\n        int centimes;\n    public:\n        Argent(int c = 0) : centimes(c) {}\n        Argent operator+(const Argent& autre) const {\n            return Argent(centimes + autre.centimes);\n        }\n        bool operator==(const Argent& autre) const {\n            return centimes == autre.centimes;\n        }\n        friend ostream& operator<<(ostream& os, const Argent& a) {\n            os << a.centimes;\n            return os;\n        }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Argent m1(a);\n    Argent m2(b);\n    Argent total = m1 + m2;\n    cout << total << endl;\n    if (m1 == m2)\n        cout << \"egaux\" << endl;\n    else\n        cout << \"differents\" << endl;\n    return 0;\n}"
+      },
+      "explanation": "`operator+` est une fonction membre `const` qui renvoie un **nouvel** objet par valeur sans modifier les opérandes. `operator==` est membre `const` et renvoie un `bool`. `operator<<` doit être une fonction **non-membre** (ici `friend` pour accéder à `centimes`) prenant `ostream&` et renvoyant `ostream&`, car son opérande de gauche est un flux, pas un `Argent`.",
+      "concepts": ["operateur-arithmetique", "operateur-comparaison", "surcharge-flux-sortie", "fonction-amie"]
+    },
+    {
+      "chapterSlug": "constructeurs",
+      "type": "CODE_FIX",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Ce programme ne compile pas. La classe `Temperature` doit lire une température en degrés Celsius et afficher sa conversion en Fahrenheit. Corrige l'erreur.",
+      "payload": {
+        "spec": "La classe Temperature a un attribut prive double celsius. Son constructeur Temperature(double c) initialise l'attribut. La methode enFahrenheit() const renvoie celsius * 9 / 5 + 32. Le main lit un double et affiche sa conversion.",
+        "std": "c++17",
+        "compare": "trimmed",
+        "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Temperature {\n    private:\n        double celsius;\n    public:\n        Temperature(double c) : celsius(c) {}\n        double enFahrenheit() const {\n            return celsius * 9 / 5 + 32;\n        }\n};\n\nint main() {\n    double t;\n    cin >> t;\n    Temperature temp;\n    cout << temp.enFahrenheit() << endl;\n    return 0;\n}\n",
+        "tests": [
+          { "name": "ebullition", "stdin": "100", "expectedStdout": "212" },
+          { "name": "glace", "stdin": "0", "expectedStdout": "32" },
+          { "name": "corps", "stdin": "37", "expectedStdout": "98.6" }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Temperature {\n    private:\n        double celsius;\n    public:\n        Temperature(double c) : celsius(c) {}\n        double enFahrenheit() const {\n            return celsius * 9 / 5 + 32;\n        }\n};\n\nint main() {\n    double t;\n    cin >> t;\n    Temperature temp(t);\n    cout << temp.enFahrenheit() << endl;\n    return 0;\n}"
+      },
+      "explanation": "Le bug : `Temperature temp;` tente d'appeler un constructeur par défaut **inexistant** — la classe ne déclare que `Temperature(double)`, donc le compilateur a cessé de synthétiser le constructeur par défaut. Il fallait fournir l'argument lu : `Temperature temp(t);`.",
+      "concepts": ["constructeur-defaut", "constructeur-parametre"]
+    },
+    {
+      "chapterSlug": "surcharge-flux",
+      "type": "CODE_FIX",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Ce programme doit afficher `(3, 7)`. Il compile (avec un avertissement) mais plante à l'exécution. Corrige l'`operator<<`.",
+      "payload": {
+        "spec": "La classe Point a deux attributs prives int x et y. operator<< est une fonction amie qui ecrit le point au format (x, y) sur le flux et doit pouvoir etre chainee. Le main affiche un Point(3, 7).",
+        "std": "c++17",
+        "compare": "trimmed",
+        "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Point {\n    private:\n        int x, y;\n    public:\n        Point(int x, int y) : x(x), y(y) {}\n        friend ostream& operator<<(ostream& os, const Point& p) {\n            os << \"(\" << p.x << \", \" << p.y << \")\";\n        }\n};\n\nint main() {\n    Point p(3, 7);\n    cout << p << endl;\n    return 0;\n}\n",
+        "tests": [
+          { "name": "affichage", "stdin": "", "expectedStdout": "(3, 7)" }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Point {\n    private:\n        int x, y;\n    public:\n        Point(int x, int y) : x(x), y(y) {}\n        friend ostream& operator<<(ostream& os, const Point& p) {\n            os << \"(\" << p.x << \", \" << p.y << \")\";\n            return os;\n        }\n};\n\nint main() {\n    Point p(3, 7);\n    cout << p << endl;\n    return 0;\n}"
+      },
+      "explanation": "Le bug : l'`operator<<` est déclaré renvoyer `ostream&` mais **ne contient aucun `return`**. La fonction renvoie alors une référence invalide, ce qui provoque un comportement indéfini (ici un plantage). Il faut terminer la fonction par `return os;` — c'est aussi ce qui rend le chaînage `cout << a << b` possible.",
+      "concepts": ["surcharge-flux-sortie", "operateur-non-membre", "fonction-amie"]
+    }
+  ]
+}

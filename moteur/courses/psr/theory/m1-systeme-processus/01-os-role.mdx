@@ -1,0 +1,155 @@
+---
+title: "Rôle d'un système d'exploitation"
+slug: os-role
+order: 1
+estimatedReadMin: 11
+concepts: [systeme-exploitation, noyau, appel-systeme, mode-noyau-utilisateur]
+source: "Cours 1 — Systèmes d'exploitation et processus"
+---
+
+## Objectifs du cours
+
+Ce cours décrit le **rôle** et le **fonctionnement** d'un système d'exploitation **monoprocesseur** et **multi-tâches**, puis apprend à manipuler ses concepts de base directement en C. Ces concepts sont illustrés à travers le système **UNIX/Linux**, choisi parce qu'il est :
+
+- **très homogène** — tout, y compris les périphériques, est manipulé de façon uniforme ;
+- **très riche** — il offre une grande variété d'appels système ;
+- **très souple** — il se prête bien à la programmation système.
+
+Tout ce module utilise donc la norme **POSIX** (*Portable Operating System Interface* — le « X » final est un clin d'œil à UNIX), l'ensemble de règles qui garantit qu'un programme système écrit pour un UNIX se recompile sur un autre.
+
+## Qu'est-ce qu'un système d'exploitation ?
+
+Le **système d'exploitation** (SE, en anglais *Operating System* ou OS) est un **ensemble de programmes** responsables de la **liaison entre les ressources matérielles** d'un ordinateur et les **applications de l'utilisateur** (traitement de texte, jeu vidéo, navigateur, etc.). Il fournit aux programmes applicatifs des **points d'entrée génériques** pour accéder aux périphériques : un programme n'a pas à connaître le modèle exact du disque dur qu'il utilise.
+
+Un ordinateur s'organise en **trois couches** superposées :
+
+```text
+┌───────────────────────────────────────────────┐
+│  Applications  (compilateur, éditeur, BDD…)    │  ← programmes
+├───────────────────────────────────────────────┤
+│           Système d'exploitation               │  ← l'interface
+├───────────────────────────────────────────────┤
+│  Matériel  (processeur, mémoire, disques, E/S)  │  ← dispositifs physiques
+└───────────────────────────────────────────────┘
+```
+
+- **Le matériel** (*hardware*) constitue la couche la plus basse : le processeur, la mémoire principale, les disques, les imprimantes, les interfaces réseau. Il ne comprend que le **langage machine**.
+- **Le système d'exploitation** s'intercale entre le matériel et les applications. C'est le **plus important des programmes système**.
+- **Les programmes** (*software*, applications) sont écrits par les utilisateurs ou les éditeurs de logiciels pour résoudre des problèmes spécifiques (calculs scientifiques, gestion commerciale, etc.).
+
+### Composition du système d'exploitation
+
+Le système d'exploitation se compose de deux parties :
+
+- **Le noyau** (*kernel*) — la partie **la plus critique**. Il permet aux éléments matériels et logiciels de communiquer, de fonctionner ensemble et de former un tout cohérent. Pour cette raison, c'est le **premier logiciel chargé en mémoire** au démarrage de la machine. Le noyau **contrôle les ressources de l'ordinateur** et **libère le programmeur de la complexité du matériel**.
+- **Les outils système** — la partie qui permet à l'utilisateur de tirer profit du système : gérer les périphériques, les configurer, etc. En bref, ils fournissent une **interface d'accès au système**.
+
+Exemples de systèmes d'exploitation : Linux, macOS, les différentes versions de Windows, MINIX, et autrefois MS-DOS.
+
+## La double fonction du système d'exploitation
+
+Un système d'exploitation répond à **deux besoins qui ne sont pas forcément liés**. C'est un point central de ce chapitre : il faut savoir distinguer ces deux rôles.
+
+### Le SE en tant que machine étendue
+
+De ce premier point de vue, le système d'exploitation **est l'interface** entre les applications et le matériel. Il peut alors être assimilé à une **machine étendue** (ou *machine virtuelle*), **plus facile à programmer et à utiliser que le matériel brut**.
+
+Concrètement, programmer une lecture sur disque sans système d'exploitation imposerait de piloter directement le contrôleur de disque — positionner les têtes de lecture, choisir un secteur, gérer les interruptions matérielles. La machine étendue masque toute cette complexité : le programmeur dispose d'une opération abstraite et simple, « lire un bloc du fichier ».
+
+L'accès à cette machine étendue se fait de deux manières :
+
+- **un programmeur** l'utilise par l'intermédiaire d'**appels système** ;
+- **un utilisateur** peut, dans une certaine mesure, la manipuler sans écrire de programme, grâce aux **commandes shell**.
+
+### Le SE en tant que gestionnaire de ressources
+
+De ce second point de vue, les différents composants d'un ordinateur **doivent coopérer et partager des ressources**. Le travail du système d'exploitation consiste alors à **ordonnancer** et à **contrôler l'allocation des ressources** — processeurs, mémoires, périphériques d'entrée/sortie — entre les différents programmes qui y font appel.
+
+Pour **chacune** des ressources de l'ordinateur, le système d'exploitation doit :
+
+- **connaître à tout moment l'utilisateur** de la ressource ;
+- en **accorder l'usage de manière équitable** ;
+- **éviter les conflits** d'accès entre les différents programmes ou utilisateurs.
+
+Les **deux tâches essentielles** du gestionnaire de ressources sont donc le **partage des ressources** et la **protection de l'accès aux ressources**.
+
+> ℹ️ Exemple classique de gestion de ressource : l'**impression**. Si deux processus veulent imprimer en même temps, leurs lignes se mélangeraient sur le papier. Le système utilise un **spool** (file d'attente d'impression) : chaque fichier à imprimer est d'abord déposé dans la file, puis l'imprimante les traite **un par un**. La ressource « imprimante » est ainsi partagée sans conflit.
+
+## Les fonctions de base : à quoi sert un SE ?
+
+Un système d'exploitation moderne assure six grandes fonctions :
+
+1. **La gestion des processus** — l'exécution des programmes. C'est le cœur de ce module.
+2. **La gestion de la mémoire** — les transferts entre la mémoire principale (RAM) et la mémoire secondaire (disque).
+3. **Le système de fichiers** — une vision homogène et structurée des données et des ressources : disques, périphériques.
+4. **Les entrées/sorties** — les mécanismes qu'utilisent les processus pour communiquer avec l'extérieur.
+5. **Les réseaux d'ordinateurs** — les protocoles de communication, d'interconnexion et d'application.
+6. **Les systèmes répartis** — les appels de procédures à distance (RPC) ou les objets distribués.
+
+## Les appels système
+
+Un programme utilisateur **ne peut pas accéder directement au matériel** : ce serait à la fois dangereux (un programme bogué planterait toute la machine) et non portable. Pour accéder aux services du système d'exploitation, un programme effectue donc un **appel système**.
+
+### Le mécanisme : modes utilisateur et noyau
+
+Le processeur fonctionne dans **deux modes** distincts :
+
+- le **mode utilisateur**, à droits restreints, dans lequel s'exécute le code applicatif ;
+- le **mode noyau** (ou mode superviseur, mode privilégié), à droits étendus, dans lequel s'exécute le code du système.
+
+Un appel système consiste précisément à franchir cette frontière. Il se déroule en quatre temps :
+
+1. **basculer en mode noyau** ;
+2. **invoquer le système d'exploitation** (le service demandé) ;
+3. **revenir en mode utilisateur** ;
+4. **rendre le contrôle** au programme utilisateur.
+
+Exemple typique : une **lecture ou une écriture sur le disque dur**.
+
+### Le détail d'un appel : `read` depuis un programme C
+
+Suivons l'instruction C `cpt = read(df, tampon, nboctets);`. Le compilateur et la bibliothèque C orchestrent une dizaine d'étapes :
+
+1. à 3. **empiler les arguments** `nboctets`, `&tampon`, `df` ;
+4. **appeler la fonction `read`** de la bibliothèque ;
+5. **placer le numéro d'appel système** de `read` dans un registre ;
+6. **dérouter vers le noyau** — c'est le basculement en mode noyau ;
+7. le code du noyau **examine le numéro d'appel système** et consulte une **table de pointeurs** indexée par ces numéros ;
+8. **exécuter l'appel système** proprement dit ;
+9. **rendre le contrôle** à la fonction `read` de la bibliothèque ;
+10. **rendre le contrôle** au programme utilisateur.
+
+> ⚠️ Ne confondez pas la **fonction de bibliothèque** `read` (du code en mode utilisateur, fourni par la *libc*) et l'**appel système** `read` (le service exécuté par le noyau). La fonction de bibliothèque n'est qu'une fine enveloppe qui prépare les arguments et déclenche le basculement vers le noyau.
+
+### Les appels système POSIX
+
+La norme POSIX classe les appels système selon le service rendu. On retrouve trois grandes familles, qui structurent d'ailleurs ce cours :
+
+- **Gestion des fichiers** — `open`, `close`, `read`, `write`, `dup`, `dup2`, `lseek`, `stat`…
+- **Gestion des processus** — `fork`, `pipe`, `exec` et ses variantes (`execv`, `execlp`…), `wait`, `exit`… Ce sont les appels au cœur du **Module 1**.
+- **Communications inter-machines** — `socket`, `bind`, `listen`, `connect`, `accept`, `send`, `recv`, `sendto`, `recvfrom`, `gethostbyname`…
+
+> ⚠️ La quasi-totalité des appels système renvoient **-1 en cas d'échec** et positionnent la variable globale `errno`. Cette convention sera systématique dans tout le module : **ne jamais supposer qu'un appel système a réussi**. On teste sa valeur de retour, et l'on diagnostique l'erreur avec `perror()`.
+
+```c
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+    int fd = open("donnees.txt", O_RDONLY);
+    if (fd == -1) {                 /* l'appel système a-t-il réussi ? */
+        perror("open");             /* affiche un message d'erreur clair */
+        exit(EXIT_FAILURE);
+    }
+    /* ... le fichier est ouvert, on peut s'en servir ... */
+    return 0;
+}
+```
+
+> **À retenir**
+> - Le **système d'exploitation** est l'ensemble de programmes qui relie le **matériel** aux **applications** ; il se compose d'un **noyau** (la partie critique, premier logiciel chargé) et d'**outils système**.
+> - Il remplit une **double fonction** : **machine étendue** (interface simple masquant la complexité du matériel) et **gestionnaire de ressources** (partage équitable et protection des accès).
+> - Ses fonctions de base couvrent la gestion des **processus**, de la **mémoire**, des **fichiers**, des **entrées/sorties**, des **réseaux** et des **systèmes répartis**.
+> - Un programme accède aux services du noyau par un **appel système** : basculement en **mode noyau**, exécution du service, retour en **mode utilisateur**, puis rendu du contrôle.
+> - POSIX classe les appels système en trois familles : **fichiers**, **processus**, **communications**. Un appel système échoué renvoie en général **-1** : il faut **toujours tester** sa valeur de retour.

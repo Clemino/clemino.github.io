@@ -1,0 +1,403 @@
+{
+  "slug": "examen-blanc-1",
+  "title": "Examen blanc 1 — IA classique",
+  "description": "Partiel blanc chronométré couvrant l'IA classique (modules 1 à 4) : panorama et vocabulaire de l'IA, résolution de problèmes et recherche dans les espaces d'états (A*, g/h/f), jeux à deux joueurs (minimax, élagage alpha-bêta) et optimisation stochastique (recuit simulé, critère de Metropolis, voyageur de commerce). Inspiré des examens « IA Sem 1 » : un mélange de questions de cours, de traces d'algorithmes et de calculs numériques.",
+  "durationMinutes": 90,
+  "totalPoints": 20,
+  "exercises": [
+    {
+      "chapterSlug": "qu-est-ce-que-l-ia",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Parmi les programmes suivants, lequel relève du groupe 2 (« ceci est de l'IA ») au sens du cours ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Un programme qui calcule le nombre Π avec un million de décimales" },
+          { "id": "b", "label": "Un programme qui trie un très grand tableau de nombres" },
+          { "id": "c", "label": "Un programme qui choisit de manière autonome son coup à une partie d'échecs" },
+          { "id": "d", "label": "Un programme qui résout un système de milliers d'équations linéaires" }
+        ],
+        "shuffle": true
+      },
+      "solution": { "correct": ["c"] },
+      "explanation": "Choisir un coup aux échecs relève du groupe 2 : la machine fait preuve d'autonomie, exécutant une tâche pour laquelle elle n'a pas été explicitement programmée. Le calcul de Π, le tri d'un grand tableau et la résolution d'un grand système relèvent du groupe 1 : pure exécution d'ordres explicites, indépendamment de la puissance mobilisée.",
+      "concepts": ["programme-intelligent", "intelligence-artificielle"],
+      "source": "Intro_IA_Slides1.pdf"
+    },
+    {
+      "chapterSlug": "paysage-de-l-ia",
+      "type": "ORDERING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Ordonnez les notions de la chaîne de concepts emboîtés de l'IA, du concept le plus général au plus spécifique.",
+      "payload": {
+        "items": [
+          { "id": "ml", "label": "Machine learning" },
+          { "id": "ia", "label": "Intelligence artificielle" },
+          { "id": "dl", "label": "Deep learning" },
+          { "id": "rn", "label": "Réseaux de neurones" },
+          { "id": "llm", "label": "LLM" },
+          { "id": "gen", "label": "IA générative" }
+        ]
+      },
+      "solution": { "order": ["ia", "ml", "rn", "dl", "gen", "llm"] },
+      "explanation": "Le cours présente la chaîne emboîtée : Intelligence artificielle → Machine learning → Réseaux de neurones → Deep learning → IA générative → LLM. Chaque notion est incluse dans la précédente.",
+      "concepts": ["intelligence-artificielle", "apprentissage-automatique", "reseau-de-neurones", "apprentissage-profond", "ia-generative", "grand-modele-de-langage"],
+      "source": "Intro_IA_Slides1.pdf"
+    },
+    {
+      "chapterSlug": "formuler-un-probleme",
+      "type": "MCQ_MULTI",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Quels éléments font partie de la définition formelle d'un problème de planification ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Un ensemble d'états S" },
+          { "id": "b", "label": "Un état initial e₀ ∈ S" },
+          { "id": "c", "label": "Un ensemble d'états finals F ⊂ S" },
+          { "id": "d", "label": "Une fonction de transition T donnée par les actions {Aᵢⱼ}" },
+          { "id": "e", "label": "Les coûts des actions" },
+          { "id": "f", "label": "Le langage de programmation utilisé pour le résoudre" }
+        ],
+        "shuffle": true
+      },
+      "solution": { "correct": ["a", "b", "c", "d", "e"] },
+      "explanation": "Pour définir un problème, on a besoin de cinq éléments : l'ensemble d'états S, l'état initial e₀, l'ensemble d'états finals F, la fonction de transition T (les actions Aᵢⱼ) et les coûts des actions. Le langage de programmation n'intervient pas dans la formulation du problème.",
+      "concepts": ["espace-d-etats", "etat-initial", "etats-finaux", "action", "cout-d-action"],
+      "source": "Intro_IA_slides2.pdf"
+    },
+    {
+      "chapterSlug": "heuristiques",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Une heuristique est dite MINORANTE (ou admissible) si :",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "h(e) ≤ h*(e) : elle ne surestime jamais le coût restant" },
+          { "id": "b", "label": "h(e) ≥ h*(e) : elle ne sous-estime jamais le coût restant" },
+          { "id": "c", "label": "h(e_f) = 0 pour tout état final" },
+          { "id": "d", "label": "h(e) est toujours un nombre entier" }
+        ],
+        "shuffle": true
+      },
+      "solution": { "correct": ["a"] },
+      "explanation": "Une heuristique minorante (admissible) sous-estime systématiquement le coût restant : h(e) ≤ h*(e). C'est cette propriété qui permet à A* de garantir une solution de coût minimal. La distance euclidienne, par exemple, est une heuristique minorante de la distance de Manhattan.",
+      "concepts": ["heuristique-minorante", "fonction-h-etoile"],
+      "source": "Intro_IA_slides2.pdf"
+    },
+    {
+      "chapterSlug": "algorithme-a-star",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Dans A*, l'état courant e a g(e) = 6. Son successeur e' est atteint par une action de coût k(e, e') = 4, et l'heuristique vaut h(e') = 5. Quelle valeur de f(e') l'algorithme calcule-t-il pour e' ?",
+      "payload": { "hint": "Calculez d'abord g(e') = g(e) + k(e, e'), puis f(e') = g(e') + h(e')." },
+      "solution": { "value": 15 },
+      "explanation": "g(e') = g(e) + k(e, e') = 6 + 4 = 10, puis f(e') = g(e') + h(e') = 10 + 5 = 15.",
+      "concepts": ["fonction-f", "fonction-g", "cout-d-action"],
+      "source": "Intro_IA_slides2.pdf"
+    },
+    {
+      "chapterSlug": "algorithme-a-star",
+      "type": "ALGO_TRACE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "On applique A* au graphe ci-dessous. Les arêtes portent leur coût, chaque nœud porte sa valeur heuristique h. Départ : S. But : G. Donnez les valeurs de g calculées par A* pour les nœuds du chemin solution, l'ordre dans lequel A* développe les états (les retire de la file Actif) avant d'atteindre G, et le coût total de la solution.",
+      "payload": {
+        "description": "Coûts des arêtes : S→A = 4, S→B = 2, A→C = 3, B→C = 1, B→D = 5, C→G = 2, D→G = 2. Heuristiques : h(S) = 7, h(A) = 4, h(B) = 5, h(C) = 2, h(D) = 3, h(G) = 0.",
+        "figure": {
+          "kind": "search-tree",
+          "nodes": [
+            { "id": "S", "label": "S", "h": 7 },
+            { "id": "A", "label": "A", "h": 4 },
+            { "id": "B", "label": "B", "h": 5 },
+            { "id": "C", "label": "C", "h": 2 },
+            { "id": "D", "label": "D", "h": 3 },
+            { "id": "G", "label": "G", "h": 0 }
+          ],
+          "edges": [
+            { "from": "S", "to": "A", "cost": 4 },
+            { "from": "S", "to": "B", "cost": 2 },
+            { "from": "A", "to": "C", "cost": 3 },
+            { "from": "B", "to": "C", "cost": 1 },
+            { "from": "B", "to": "D", "cost": 5 },
+            { "from": "C", "to": "G", "cost": 2 },
+            { "from": "D", "to": "G", "cost": 2 }
+          ],
+          "startId": "S",
+          "goalIds": ["G"],
+          "caption": "Graphe d'états pour A*"
+        },
+        "cells": [
+          { "id": "gB", "label": "g(B)", "kind": "number" },
+          { "id": "gC", "label": "g(C) (coût minimal pour atteindre C)", "kind": "number" },
+          { "id": "gG", "label": "g(G) (coût total de la solution)", "kind": "number" },
+          { "id": "ordre", "label": "Ordre de développement des états avant d'atteindre G", "kind": "text" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "gB", "expected": 2 },
+          { "id": "gC", "expected": 3 },
+          { "id": "gG", "expected": 5 },
+          { "id": "ordre", "expected": "S, B, C", "accepted": ["S,B,C", "S B C"] }
+        ],
+        "caseSensitive": false,
+        "stripAccents": true
+      },
+      "explanation": "Initialisation : Actif = [S], g(S) = 0, f(S) = 7. On développe S : A (g = 4, f = 4+4 = 8) et B (g = 2, f = 2+5 = 7). Actif trié : [B(7), A(8)]. On développe B : C (g = 2+1 = 3, f = 3+2 = 5) et D (g = 2+5 = 7, f = 7+3 = 10). Actif : [C(5), A(8), D(10)]. On développe C : G (g = 3+2 = 5, f = 5+0 = 5). G est atteint. A* développe donc S, puis B, puis C ; le chemin solution S→B→C→G coûte g(G) = 5. Le détour A→C, qui donnerait g(C) = 4+3 = 7, n'est jamais retenu.",
+      "concepts": ["algorithme-a-etoile", "fonction-g", "fonction-f"],
+      "source": "Intro_IA_slides2.pdf"
+    },
+    {
+      "chapterSlug": "recherche-aveugle",
+      "type": "TRUE_FALSE",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Sur un arbre régulier à nb niveaux et nf fils par nœud, le parcours en profondeur d'abord a une complexité spatiale (pire des cas) bien plus faible que le parcours en largeur d'abord.",
+      "payload": {},
+      "solution": { "value": true },
+      "explanation": "Vrai. La pile du parcours en profondeur d'abord ne contient que les nœuds non visités dont le père a été visité, soit O(nb × nf). La file du parcours en largeur d'abord peut contenir un niveau entier, soit O(nf^nb), exponentiel. La profondeur d'abord est donc bien plus économe en mémoire.",
+      "concepts": ["parcours-en-profondeur", "parcours-en-largeur"],
+      "source": "TD_Intro_IA"
+    },
+    {
+      "chapterSlug": "minimax",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "On considère un arbre de jeu à 3 niveaux : racine = niveau 1 (joueur Max), feuilles = niveau 3, chaque nœud non terminal a 3 fils. Les feuilles valent, de gauche à droite : 6, 2, 8, 5, 9, 1, 7, 3, 4. Quelle est la valeur minimax de la racine ?",
+      "payload": { "hint": "Niveau 2 = nœuds Min (minimum des 3 feuilles), racine = nœud Max." },
+      "solution": { "value": 3 },
+      "explanation": "Niveau 2 (nœuds Min) : min(6, 2, 8) = 2 ; min(5, 9, 1) = 1 ; min(7, 3, 4) = 3. Racine (nœud Max) : max(2, 1, 3) = 3. La valeur minimax de la racine est 3.",
+      "concepts": ["algorithme-minimax", "valeur-minimax", "noeud-max", "noeud-min"],
+      "source": "TD_Jeux_2J"
+    },
+    {
+      "chapterSlug": "minimax",
+      "type": "ALGO_TRACE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "L'arbre ci-dessous a 4 niveaux : racine A (Max), niveau 2 B et C (Min), niveau 3 D, E, F, G (Max), niveau 4 des nœuds Min dont les fils sont les feuilles. Appliquez minimax et donnez la valeur de chaque nœud interne.",
+      "payload": {
+        "description": "Remontez les valeurs des feuilles vers la racine. Niveau 4 = nœuds Min, niveau 3 (D, E, F, G) = Max, niveau 2 (B, C) = Min, niveau 1 (A) = Max.",
+        "figure": {
+          "kind": "game-tree",
+          "root": {
+            "type": "max",
+            "label": "A",
+            "children": [
+              {
+                "type": "min",
+                "label": "B",
+                "children": [
+                  { "type": "max", "label": "D", "children": [
+                    { "type": "min", "children": [{ "type": "leaf", "value": 8 }, { "type": "leaf", "value": 3 }] },
+                    { "type": "min", "children": [{ "type": "leaf", "value": 5 }, { "type": "leaf", "value": 7 }] }
+                  ] },
+                  { "type": "max", "label": "E", "children": [
+                    { "type": "min", "children": [{ "type": "leaf", "value": 2 }, { "type": "leaf", "value": 9 }] },
+                    { "type": "min", "children": [{ "type": "leaf", "value": 6 }, { "type": "leaf", "value": 1 }] }
+                  ] }
+                ]
+              },
+              {
+                "type": "min",
+                "label": "C",
+                "children": [
+                  { "type": "max", "label": "F", "children": [
+                    { "type": "min", "children": [{ "type": "leaf", "value": 4 }, { "type": "leaf", "value": 4 }] },
+                    { "type": "min", "children": [{ "type": "leaf", "value": 7 }, { "type": "leaf", "value": 2 }] }
+                  ] },
+                  { "type": "max", "label": "G", "children": [
+                    { "type": "min", "children": [{ "type": "leaf", "value": 3 }, { "type": "leaf", "value": 8 }] },
+                    { "type": "min", "children": [{ "type": "leaf", "value": 1 }, { "type": "leaf", "value": 5 }] }
+                  ] }
+                ]
+              }
+            ]
+          },
+          "caption": "Arbre de jeu à 4 niveaux"
+        },
+        "cells": [
+          { "id": "D", "label": "Valeur du nœud Max D", "kind": "number" },
+          { "id": "E", "label": "Valeur du nœud Max E", "kind": "number" },
+          { "id": "F", "label": "Valeur du nœud Max F", "kind": "number" },
+          { "id": "G", "label": "Valeur du nœud Max G", "kind": "number" },
+          { "id": "B", "label": "Valeur du nœud Min B", "kind": "number" },
+          { "id": "C", "label": "Valeur du nœud Min C", "kind": "number" },
+          { "id": "A", "label": "Valeur de la racine A", "kind": "number" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "D", "expected": 5 },
+          { "id": "E", "expected": 2 },
+          { "id": "F", "expected": 4 },
+          { "id": "G", "expected": 3 },
+          { "id": "B", "expected": 2 },
+          { "id": "C", "expected": 3 },
+          { "id": "A", "expected": 3 }
+        ]
+      },
+      "explanation": "Niveau 4 (Min) : min(8,3)=3, min(5,7)=5, min(2,9)=2, min(6,1)=1, min(4,4)=4, min(7,2)=2, min(3,8)=3, min(1,5)=1. Niveau 3 (Max) : D = max(3,5) = 5, E = max(2,1) = 2, F = max(4,2) = 4, G = max(3,1) = 3. Niveau 2 (Min) : B = min(D,E) = min(5,2) = 2, C = min(F,G) = min(4,3) = 3. Racine A (Max) = max(B,C) = max(2,3) = 3.",
+      "concepts": ["algorithme-minimax", "noeud-max", "noeud-min", "valeur-minimax"],
+      "source": "TD_Jeux_2J"
+    },
+    {
+      "chapterSlug": "elagage-alpha-beta",
+      "type": "NUMERIC",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "On considère l'arbre du TD : 3 niveaux, racine = joueur Max, chaque nœud non terminal a 3 fils, feuilles de gauche à droite : 8, 7, 3, 9, 1, 6, 2, 4, 1. On applique l'élagage alpha-bêta en explorant les fils de gauche à droite. Combien de feuilles, au total, ne sont PAS explorées (sont élaguées) ?",
+      "payload": { "hint": "Le 1er nœud Min vaut min(8, 7, 3) = 3 ; cela fixe α = 3 à la racine. Examinez ensuite les 2e et 3e nœuds Min, fils par fils." },
+      "solution": { "value": 3 },
+      "explanation": "Le 1er nœud Min explore 8, 7, 3 et vaut 3 ; la racine Max obtient α = 3. Le 2e nœud Min explore sa 1re feuille 9 (> α, on continue), puis sa 2e feuille 1 : 1 ≤ α = 3, on coupe — la feuille 6 n'est pas explorée (1 feuille élaguée). Le 3e nœud Min explore sa 1re feuille 2 : 2 ≤ α = 3, on coupe — ses feuilles 4 et 1 ne sont pas explorées (2 feuilles élaguées). Au total, 1 + 2 = 3 feuilles ne sont pas explorées. La valeur de la racine reste 3, identique à minimax.",
+      "concepts": ["elagage-alpha-beta", "coupure-alpha-beta", "ordre-des-coups"],
+      "source": "TD_Jeux_2J"
+    },
+    {
+      "chapterSlug": "elagage-alpha-beta",
+      "type": "TRUE_FALSE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "L'élagage alpha-bêta peut modifier la valeur minimax calculée à la racine : c'est le prix à payer pour explorer moins de nœuds.",
+      "payload": {},
+      "solution": { "value": false },
+      "explanation": "Faux. L'élagage alpha-bêta est une optimisation de minimax : il coupe les branches inutiles sans jamais modifier la valeur calculée à la racine. Le résultat final est exactement le même que celui de minimax ; seul le nombre de nœuds visités change.",
+      "concepts": ["elagage-alpha-beta", "algorithme-minimax"],
+      "source": "Jeux_IA_slides.pdf"
+    },
+    {
+      "chapterSlug": "voyageur-de-commerce",
+      "type": "FIGURE_INTERPRET",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Voici la matrice de distances symétrique d'un problème du voyageur de commerce à 5 villes A, B, C, D, E. La case ligne i, colonne j donne la distance de i à j.",
+      "payload": {
+        "figure": {
+          "kind": "data-table",
+          "columns": ["", "A", "B", "C", "D", "E"],
+          "rows": [
+            ["A", 0, 12, 10, 8, 14],
+            ["B", 12, 0, 9, 7, 5],
+            ["C", 10, 9, 0, 11, 6],
+            ["D", 8, 7, 11, 0, 13],
+            ["E", 14, 5, 6, 13, 0]
+          ],
+          "caption": "Matrice de distances symétrique (5 villes)"
+        },
+        "caption": "Comparaison de tournées du voyageur de commerce",
+        "subQuestions": [
+          {
+            "id": "q1",
+            "type": "NUMERIC",
+            "prompt": "Calculez la longueur totale de la tournée A − B − E − C − D − A.",
+            "weight": 1,
+            "payload": { "hint": "Additionnez A-B, B-E, E-C, C-D, D-A." }
+          },
+          {
+            "id": "q2",
+            "type": "NUMERIC",
+            "prompt": "Combien de tournées distinctes l'algorithme naïf énumère-t-il pour ce problème à 5 villes ? (Calculez (n−1)!.)",
+            "weight": 1,
+            "payload": { "hint": "(5−1)! = 4! = 4 × 3 × 2 × 1." }
+          },
+          {
+            "id": "q3",
+            "type": "MCQ_SINGLE",
+            "prompt": "Le problème du voyageur de commerce est NP-complet. Qu'est-ce que cela implique ?",
+            "weight": 1,
+            "payload": {
+              "options": [
+                { "id": "a", "label": "Aucun algorithme polynomial exact connu ne le résout : l'algorithme naïf est en (n−1)!, donc exponentiel" },
+                { "id": "b", "label": "Il existe un algorithme polynomial exact bien connu" },
+                { "id": "c", "label": "Le problème n'a jamais de solution" }
+              ]
+            }
+          }
+        ]
+      },
+      "solution": {
+        "subSolutions": [
+          { "id": "q1", "solution": { "value": 42 } },
+          { "id": "q2", "solution": { "value": 24 } },
+          { "id": "q3", "solution": { "correct": ["a"] } }
+        ]
+      },
+      "explanation": "Tournée A−B−E−C−D−A : A-B = 12, B-E = 5, E-C = 6, C-D = 11, D-A = 8, soit 12 + 5 + 6 + 11 + 8 = 42. L'algorithme naïf énumère (n−1)! tournées : pour n = 5, (5−1)! = 4! = 24. Le TSP étant NP-complet, aucun algorithme polynomial exact n'est connu ; l'algorithme naïf, en (n−1)!, est exponentiel et inutilisable dès que le nombre de villes grandit.",
+      "concepts": ["probleme-du-voyageur-de-commerce", "cycle-hamiltonien"],
+      "source": "Voyageur de commerce TSP.pdf"
+    },
+    {
+      "chapterSlug": "recuit-simule",
+      "type": "MCQ_SINGLE",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Pourquoi le recuit simulé accepte-t-il parfois volontairement une solution moins bonne que la solution courante ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Pour pouvoir sortir d'un optimum local et aller chercher un creux plus profond" },
+          { "id": "b", "label": "Pour accélérer la convergence vers le premier creux rencontré" },
+          { "id": "c", "label": "Pour économiser des évaluations de la fonction objectif" },
+          { "id": "d", "label": "Parce que c'est imposé par le matériel" }
+        ],
+        "shuffle": true
+      },
+      "solution": { "correct": ["a"] },
+      "explanation": "Un algorithme qui n'accepterait jamais de dégradation descendrait au fond du premier creux et y resterait piégé (comportement de trempe). En acceptant parfois de remonter la pente — via le critère de Metropolis —, le recuit simulé peut sortir d'un optimum local et atteindre le minimum global.",
+      "concepts": ["recuit-simule", "optimum-local", "critere-de-metropolis"],
+      "source": "Optimisationstochastique-1.pdf"
+    },
+    {
+      "chapterSlug": "critere-de-metropolis",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Un voisin dégradant a une variation de coût Δf = 20 ; la température vaut T = 40. Calculez la probabilité d'acceptation par le critère de Metropolis : exp(−Δf/T). Donnez le résultat arrondi au millième.",
+      "payload": { "hint": "exp(−20/40) = exp(−0,5)." },
+      "solution": { "value": 0.607, "absTol": 0.003 },
+      "explanation": "Δf = 20 et T = 40, donc −Δf/T = −0,5. La probabilité d'acceptation vaut exp(−0,5) ≈ 0,607. À température suffisamment élevée, un voisin dégradant garde une chance notable d'être accepté.",
+      "concepts": ["critere-de-metropolis", "temperature"],
+      "source": "Optimisationstochastique-1.pdf"
+    },
+    {
+      "chapterSlug": "critere-de-metropolis",
+      "type": "ALGO_TRACE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "On suit le recuit simulé pour une minimisation, avec un refroidissement géométrique de coefficient α = 0,5 et une température initiale T = 40. À chaque pas, on perturbe la solution courante S puis on refroidit. On vous donne, pour chaque pas, l'énergie courante f(S), celle du voisin f(V), et — pour les voisins dégradants — le nombre aléatoire tiré dans [0,1[. Complétez la trace.\n\nPas 1 : f(S) = 60, f(V) = 53.\nPas 2 : f(S) = 53, f(V) = 58, tirage aléatoire = 0,60.\nPas 3 : f(S) = 58, f(V) = 50.\n\nRappel : un voisin avec Δf ≤ 0 est accepté ; un voisin dégradant est accepté si le tirage aléatoire est inférieur à exp(−Δf/T).",
+      "payload": {
+        "description": "Pour les décisions, répondez « oui » ou « non ». Pour exp(−Δf/T), arrondissez à 0,001. T est la température AU MOMENT du pas (avant refroidissement) : T = 40 au pas 1, puis on refroidit.",
+        "cells": [
+          { "id": "df1", "label": "Pas 1 — Δf = f(V) − f(S)", "kind": "number" },
+          { "id": "acc1", "label": "Pas 1 — voisin accepté ? (oui/non)", "kind": "text" },
+          { "id": "df2", "label": "Pas 2 — Δf = f(V) − f(S)", "kind": "number" },
+          { "id": "p2", "label": "Pas 2 — valeur de exp(−Δf/T) avec T = 20", "kind": "number" },
+          { "id": "acc2", "label": "Pas 2 — voisin accepté ? (oui/non)", "kind": "text" },
+          { "id": "df3", "label": "Pas 3 — Δf = f(V) − f(S)", "kind": "number" },
+          { "id": "acc3", "label": "Pas 3 — voisin accepté ? (oui/non)", "kind": "text" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "df1", "expected": -7 },
+          { "id": "acc1", "expected": "oui" },
+          { "id": "df2", "expected": 5 },
+          { "id": "p2", "expected": 0.779, "absTol": 0.003 },
+          { "id": "acc2", "expected": "oui" },
+          { "id": "df3", "expected": -8 },
+          { "id": "acc3", "expected": "oui" }
+        ],
+        "caseSensitive": false,
+        "stripAccents": true
+      },
+      "explanation": "Pas 1 : Δf = 53 − 60 = −7 ≤ 0, voisin améliorant → accepté sans condition. Puis T passe de 40 à 0,5 × 40 = 20. Pas 2 : Δf = 58 − 53 = +5 (dégradant) ; avec T = 20, exp(−5/20) = exp(−0,25) ≈ 0,779 ; le tirage 0,60 < 0,779 → voisin accepté. Pas 3 : Δf = 50 − 58 = −8 ≤ 0, voisin améliorant → accepté.",
+      "concepts": ["critere-de-metropolis", "recuit-simule", "schema-de-refroidissement"],
+      "source": "Optimisationstochastique-1.pdf"
+    }
+  ]
+}

@@ -1,0 +1,194 @@
+---
+title: try, catch, throw
+slug: try-catch-throw
+order: 1
+estimatedReadMin: 10
+concepts: [exception, try-catch, throw]
+source: "Cours 6 — Gestion des exceptions"
+---
+
+## Une erreur peut survenir en pleine exécution
+
+Un programme correct à la compilation peut quand même **échouer à l'exécution** : une division par zéro, une racine carrée d'un nombre négatif, une saisie clavier hors bornes, un fichier introuvable. Ces situations ne sont pas des fautes de syntaxe — le compilateur ne peut pas les voir. Elles n'apparaissent qu'au **moment où le programme tourne**, avec des données réelles.
+
+> Une **exception** est un événement signalant une **erreur survenue pendant l'exécution**. Lorsqu'elle est levée, l'élaboration de l'instruction en cours est **interrompue définitivement** ; à la place, un bloc spécialisé — le **gestionnaire** (ou *preneur en mains*) — est exécuté.
+
+Une exception peut surgir de deux manières : **fortuitement** (le système la déclenche, par exemple lors d'une division entière par zéro), ou **volontairement** parce que le programmeur a écrit l'ordre de la lever. Le mécanisme des exceptions a été ajouté à la norme C++ dans un seul but : **faciliter l'écriture de code robuste**.
+
+## Pourquoi pas un simple code d'erreur ?
+
+Avant les exceptions, la seule parade était de **retourner un code d'erreur**. Considérons une fonction qui calcule `a / b` :
+
+```cpp
+int division(int a, int b) {   // calcule a divisé par b
+    return a / b;
+}
+```
+
+Si l'utilisateur saisit `b = 0`, le programme **plante brutalement** (sous Linux : `Exception en point flottant (core dumped)`). On voudrait donc tester le diviseur. Mais deux approches « classiques » échouent toutes les deux :
+
+```cpp
+// Cas 1 : afficher le message et... ne rien retourner ?
+int division(int a, int b) {
+    if (b != 0)
+        return a / b;
+    else
+        std::cout << "ERREUR : division par 0 !\n";
+    // l'appelant attend pourtant un int en retour
+}
+
+// Cas 2 : retourner une valeur sentinelle ERREUR ?
+int division(int a, int b) {
+    if (b != 0)
+        return a / b;
+    else
+        return ERREUR;   // mais quelle valeur entière réserver pour ERREUR ?
+}
+```
+
+Le **Cas 1** laisse la fonction sans valeur de retour dans la branche d'erreur : l'appelant reçoit n'importe quoi. Le **Cas 2** suppose qu'une valeur entière puisse être réservée pour signaler l'échec — or **toute** valeur de `int` est un résultat de division **légitime**. Il n'existe aucun `int` qui veuille dire « erreur ».
+
+> Le défaut de fond du code d'erreur : il **mélange** la valeur de retour et le signalement d'erreur, et l'appelant n'est **pas obligé** de tester ce code. Une erreur peut alors passer inaperçue, et le programme **continue avec des données erronées**.
+
+Les exceptions résolvent ce problème : elles **séparent** le chemin normal du chemin d'erreur, et une erreur non traitée **ne passe jamais silencieusement**.
+
+## Lever une exception : `throw`
+
+L'instruction **`throw`** déclenche une exception. Elle provoque une **rupture de séquence** : l'exécution normale s'arrête sur place et part à la recherche d'un gestionnaire.
+
+```cpp
+throw valeur;   // lève une exception transportant « valeur »
+```
+
+`throw` reçoit une **valeur** — c'est l'objet de l'exception. Cette valeur peut être de **n'importe quel type** : un entier, une chaîne, un objet d'une classe. C'est elle qui sera transmise au gestionnaire et qui décrira l'erreur.
+
+```cpp
+if (b == 0)
+    throw std::string("Erreur : division par zero");   // on lève une std::string
+```
+
+```cpp
+if (delta < 0.0)
+    throw delta;        // on lève un double
+```
+
+Dès que le `throw` s'exécute, **plus aucune instruction qui le suit** dans la fonction n'est exécutée : le contrôle quitte immédiatement la fonction.
+
+## Surveiller du code : le bloc `try`
+
+Un `throw` doit pouvoir être **rattrapé**. Pour cela, on place le code susceptible d'échouer sous surveillance, dans un **bloc `try`** :
+
+```cpp
+try {
+    // bloc « sensible aux erreurs » : code qui peut lever une exception
+}
+```
+
+> Le bloc **`try`** délimite un morceau de programme **mis sous surveillance** pour détecter une exception qui pourrait s'y produire — soit directement, soit dans une fonction appelée depuis ce bloc.
+
+## Traiter l'exception : le bloc `catch`
+
+Le bloc `try` est **toujours** suivi d'un ou plusieurs blocs **`catch`** : ce sont les **gestionnaires d'exceptions**. Chaque `catch` annonce le **type** d'exception qu'il sait traiter.
+
+```cpp
+try {
+    // code surveillé
+}
+catch (Type e) {
+    // gestionnaire : on traite l'exception ici, e contient la valeur lancée
+}
+```
+
+Le paramètre du `catch` ressemble à un paramètre de fonction : un **type** et un **nom**. Quand une exception de ce type est levée dans le `try`, le programme est **dérouté** vers ce `catch`, et la variable `e` reçoit la valeur transportée par le `throw`.
+
+Voici l'exemple de la division, cette fois robuste :
+
+```cpp
+#include <iostream>
+#include <string>
+
+int division(int a, int b) {
+    if (b == 0)
+        throw std::string("Erreur : division par zero");
+    return a / b;
+}
+
+int main() {
+    int a, b;
+    std::cout << "Valeur pour a : ";
+    std::cin >> a;
+    std::cout << "Valeur pour b : ";
+    std::cin >> b;
+
+    try {
+        std::cout << a << " / " << b << " = " << division(a, b) << '\n';
+    }
+    catch (const std::string& chaine) {
+        std::cerr << chaine << '\n';   // affiche : Erreur : division par zero
+    }
+    return 0;
+}
+```
+
+Saisie `a = 5`, `b = 0` : la fonction `division` lève la chaîne, l'expression `cout << ... << division(a, b)` est **abandonnée**, et le contrôle saute directement dans le `catch`, qui affiche le message d'erreur. Le programme reste **maîtrisé** : il ne plante pas.
+
+## Le déroulement, étape par étape
+
+Reprenons précisément ce qui se passe quand `throw` s'exécute à l'intérieur d'un `try` :
+
+1. L'instruction en cours est **interrompue définitivement** — elle ne reprendra jamais.
+2. Le programme **cherche un `catch`** dont le type correspond à la valeur lancée.
+3. Si un `catch` convient, le contrôle y **saute** : le gestionnaire s'exécute.
+4. Une fois le `catch` terminé, l'exécution **reprend juste après** le dernier `catch` du groupe `try`/`catch` — et **non** là où le `throw` a eu lieu.
+
+```cpp
+try {
+    std::cout << "avant\n";
+    throw 42;                       // rupture de séquence
+    std::cout << "apres\n";          // JAMAIS exécuté
+}
+catch (int e) {
+    std::cout << "rattrape : " << e << '\n';
+}
+std::cout << "la suite\n";           // exécuté : reprise APRÈS le try/catch
+```
+
+Affichage : `avant`, puis `rattrape : 42`, puis `la suite`. La ligne `apres` est **sautée** : un `throw` ne revient jamais en arrière.
+
+> Après le traitement d'une exception, si le programme n'a pas été interrompu, il **reprend juste après la fin du bloc `try`/`catch`**. Le `catch` n'est pas une « réparation sur place » : c'est une sortie vers un point de reprise.
+
+## Lancer un objet, le rattraper par référence
+
+`throw` peut lancer une valeur d'un type fondamental, mais aussi un **objet** d'une classe — c'est le cas le plus courant et le plus expressif (voir le chapitre sur les exceptions personnalisées). La question devient alors : comment le `catch` doit-il **récupérer** cet objet ?
+
+```cpp
+catch (MaClasse e)         // capture par valeur  -> une COPIE est faite
+catch (MaClasse& e)        // capture par référence
+catch (const MaClasse& e)  // capture par référence constante  <- recommandé
+```
+
+- **Par valeur** (`catch (MaClasse e)`) : l'objet lancé est **copié** dans `e`. La copie a un coût, et surtout elle expose au problème du **slicing** : si l'on lance un objet d'une classe dérivée mais qu'on le rattrape par valeur dans le type de base, la partie dérivée est **tronquée**.
+- **Par référence** (`catch (MaClasse& e)`) : `e` est un alias de l'objet lancé, **sans copie** et **sans slicing**.
+- **Par référence constante** (`catch (const MaClasse& e)`) : comme la référence, mais on s'interdit en plus de **modifier** l'exception — ce qui est la bonne intention dans un gestionnaire.
+
+> **Règle pratique** : rattraper un objet par **`const MaClasse&`**. On évite la copie, on évite le slicing d'un type dérivé, et on signale clairement qu'on ne modifie pas l'exception. Pour un type fondamental (`catch (int e)`), la référence n'apporte rien : on capture par valeur.
+
+```cpp
+try {
+    if (b == 0)
+        throw std::string("division par zero");
+}
+catch (const std::string& message) {   // référence constante : pas de copie
+    std::cerr << "ERREUR : " << message << '\n';
+}
+```
+
+> ⚠️ Un `catch` **par valeur** sur un type de base masque un piège : si l'exception réelle est d'un type dérivé, l'objet est **découpé** (slicing) et l'on perd l'information dérivée. La capture `const&` est la parade systématique.
+
+> **À retenir**
+> - Une **exception** signale une **erreur d'exécution** ; quand elle est levée, l'instruction en cours est **interrompue définitivement** et un gestionnaire prend le relais.
+> - Les exceptions remplacent avantageusement les **codes d'erreur** : ceux-ci mélangent valeur et signalement, et peuvent être **ignorés** silencieusement.
+> - **`throw valeur;`** lève une exception transportant une valeur de **n'importe quel type** ; aucune instruction après le `throw` n'est exécutée.
+> - Le bloc **`try { ... }`** met du code **sous surveillance** ; il est suivi d'un ou plusieurs **`catch`**, les gestionnaires, chacun typé.
+> - Un `catch` est sélectionné quand son **type** correspond à la valeur lancée ; après le `catch`, l'exécution **reprend juste après** le groupe `try`/`catch`, pas au point du `throw`.
+> - Rattraper un objet par **`const MaClasse&`** : pas de copie, pas de **slicing** ; pour un type fondamental, la capture par valeur suffit.

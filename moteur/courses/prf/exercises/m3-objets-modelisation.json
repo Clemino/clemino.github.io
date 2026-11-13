@@ -1,0 +1,273 @@
+[
+  {
+    "chapterSlug": "classes-objets",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Dans `class Point(val x: Int, y: Int)`, quelle affirmation est correcte ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "`x` devient un champ accessible ; `y` est seulement un parametre de construction sauf usage interne."
+        },
+        {
+          "id": "b",
+          "label": "`x` et `y` sont automatiquement des `var` publics."
+        },
+        {
+          "id": "c",
+          "label": "`y` est toujours plus visible que `x`."
+        },
+        {
+          "id": "d",
+          "label": "Aucun des deux n'est utilisable dans la classe."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "`val x` cree un champ. `y` sans val/var reste parametre de constructeur utilisable dans le corps selon les besoins.",
+    "concepts": [
+      "class",
+      "constructeur"
+    ]
+  },
+  {
+    "chapterSlug": "classes-objets",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un `object` Scala definit un singleton.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Il existe une seule instance de cet objet.",
+    "concepts": [
+      "object"
+    ]
+  },
+  {
+    "chapterSlug": "classes-objets",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle valeur est produite ?",
+    "payload": {
+      "program": "class Compteur(val depart: Int):\n  def suivant = depart + 1\n\nval c = new Compteur(4)\nc.suivant",
+      "language": "scala"
+    },
+    "solution": {
+      "expectedOutput": "5"
+    },
+    "explanation": "`suivant` lit `depart` et ajoute 1.",
+    "concepts": [
+      "class"
+    ]
+  },
+  {
+    "chapterSlug": "compagnons-case-sealed",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quel element est fourni automatiquement par une `case class` ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une egalite structurelle."
+        },
+        {
+          "id": "b",
+          "label": "Une mutation automatique de tous les champs."
+        },
+        {
+          "id": "c",
+          "label": "Une execution parallele."
+        },
+        {
+          "id": "d",
+          "label": "Une garantie de complexite logarithmique."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Les `case class` fournissent notamment `equals`, `hashCode`, `copy`, `toString`, `apply` et `unapply`.",
+    "concepts": [
+      "case-class"
+    ]
+  },
+  {
+    "chapterSlug": "compagnons-case-sealed",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle valeur est produite ?",
+    "payload": {
+      "program": "case class Note(nom: String, valeur: Int)\nval n = Note(\"PRF\", 12).copy(valeur = 20)\nn.valeur",
+      "language": "scala"
+    },
+    "solution": {
+      "expectedOutput": "20"
+    },
+    "explanation": "`copy` cree une nouvelle valeur avec `valeur` remplacee.",
+    "concepts": [
+      "case-class"
+    ]
+  },
+  {
+    "chapterSlug": "compagnons-case-sealed",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pourquoi `sealed trait` aide-t-il le pattern matching ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Les sous-types directs connus permettent de verifier l'exhaustivite."
+        },
+        {
+          "id": "b",
+          "label": "Il rend les objets mutables."
+        },
+        {
+          "id": "c",
+          "label": "Il interdit toute classe dans le fichier."
+        },
+        {
+          "id": "d",
+          "label": "Il supprime le typage statique."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "`sealed` limite les sous-types directs au meme fichier.",
+    "concepts": [
+      "sealed",
+      "pattern-matching"
+    ]
+  },
+  {
+    "chapterSlug": "traits-generiques",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe le concept a sa description.",
+    "payload": {
+      "left": [
+        {
+          "id": "trait",
+          "label": "trait"
+        },
+        {
+          "id": "generic",
+          "label": "type generique"
+        },
+        {
+          "id": "cov",
+          "label": "covariance"
+        },
+        {
+          "id": "inv",
+          "label": "invariance"
+        }
+      ],
+      "right": [
+        {
+          "id": "beh",
+          "label": "Abstraction de comportement"
+        },
+        {
+          "id": "param",
+          "label": "Type parametre par un type"
+        },
+        {
+          "id": "sub",
+          "label": "Le sous-typage se propage dans le meme sens"
+        },
+        {
+          "id": "nosub",
+          "label": "Aucune propagation automatique du sous-typage"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "trait": "beh",
+        "generic": "param",
+        "cov": "sub",
+        "inv": "nosub"
+      }
+    },
+    "explanation": "Les quatre notions concernent la modelisation typee.",
+    "concepts": [
+      "trait",
+      "generic",
+      "variance"
+    ]
+  },
+  {
+    "chapterSlug": "traits-generiques",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une collection mutable qui accepte des ecritures ne peut pas etre covariante sans contrainte, car cela casserait la substituabilite.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Si on pouvait voir une boite de Chiens comme une boite d'Animaux mutable, on pourrait y inserer un Chat.",
+    "concepts": [
+      "variance"
+    ]
+  },
+  {
+    "chapterSlug": "traits-generiques",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Si `Chien <: Animal` et `List` est covariante, quelle conversion est acceptable ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "`List[Chien]` vers `List[Animal]`"
+        },
+        {
+          "id": "b",
+          "label": "`List[Animal]` vers `List[Chien]`"
+        },
+        {
+          "id": "c",
+          "label": "`Animal` vers `List[Chien]`"
+        },
+        {
+          "id": "d",
+          "label": "`List[Chien]` vers `Chien`"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La covariance propage le sous-typage dans le meme sens.",
+    "concepts": [
+      "variance"
+    ]
+  }
+]

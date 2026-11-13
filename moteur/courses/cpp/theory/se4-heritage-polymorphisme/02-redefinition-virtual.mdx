@@ -1,0 +1,239 @@
+---
+title: Redéfinition et virtual
+slug: redefinition-virtual
+order: 2
+estimatedReadMin: 13
+concepts: [redefinition, methode-virtuelle, override-final, polymorphisme, liaison-dynamique]
+source: "Cours 4 — Héritage & Polymorphisme"
+---
+
+## Redéfinir une méthode héritée
+
+Une classe dérivée hérite des méthodes de sa base. Mais le comportement hérité n'est pas toujours adapté : un `Cercle` ne se décrit pas comme une `Forme` quelconque. La classe dérivée peut alors **redéfinir** (en anglais *override*) une méthode héritée.
+
+> **Redéfinir** une méthode, c'est, dans la classe dérivée, fournir une **nouvelle version** d'une méthode déjà présente dans la classe de base, avec **exactement la même signature**.
+
+```cpp
+class Forme {
+    public:
+        void description() const { std::cout << "Ceci est une forme." << std::endl; }
+};
+
+class Cercle : public Forme {
+    public:
+        void description() const { std::cout << "Ceci est un cercle." << std::endl; }
+};
+```
+
+`Cercle::description()` **remplace**, pour les objets `Cercle`, la version héritée. Sur un objet du type statique de la classe, le bon code est appelé :
+
+```cpp
+Forme f;   f.description();   // "Ceci est une forme."
+Cercle c;  c.description();   // "Ceci est un cercle."
+```
+
+## Redéfinition ou surcharge ? Ne pas confondre
+
+Les deux notions se ressemblent mais sont **différentes** :
+
+| | Surcharge (*overload*) | Redéfinition (*override*) |
+|---|---|---|
+| Où ? | dans **une même** classe | entre **classe de base et dérivée** |
+| Signatures | **différentes** (paramètres) | **identiques** |
+| But | plusieurs variantes d'une opération | remplacer le comportement hérité |
+
+- La **surcharge** (vue au cours 1) : plusieurs fonctions de **même nom** mais de **signatures différentes** coexistent — le compilateur choisit selon les arguments.
+- La **redéfinition** : une méthode dérivée a la **même signature** qu'une méthode de la base et la **remplace**.
+
+> ⚠️ Attention au piège du **masquage**. Si la méthode dérivée porte le même nom mais une signature **différente** de celle de la base, il n'y a **ni surcharge ni redéfinition** : la méthode dérivée **masque** (cache) toutes les versions héritées de ce nom. Un appel avec les arguments de la version de base devient alors une **erreur de compilation**. On voudra une vraie redéfinition : même nom **et** même signature.
+
+## Le problème : redéfinition et pointeur de base
+
+La redéfinition simple ne suffit pas. Le polymorphisme exige de manipuler un objet dérivé **à travers un pointeur (ou une référence) de la classe de base** — c'est ce qui rend possibles les collections hétérogènes du chapitre 4.
+
+Or, sans précaution, **le type du pointeur l'emporte** :
+
+```cpp
+class Forme {
+    public:
+        void description() const { std::cout << "forme" << std::endl; }
+};
+class Cercle : public Forme {
+    public:
+        void description() const { std::cout << "cercle" << std::endl; }
+};
+
+Forme* p = new Cercle;   // pointeur Forme*, objet réel Cercle
+p->description();        // affiche "forme"  — PAS "cercle" !
+```
+
+L'objet pointé est bien un `Cercle`, mais l'appel exécute `Forme::description()`. Le comportement attendu — appeler la version de l'objet **réel** — n'est pas obtenu. Pour le corriger, il faut comprendre **quand** le compilateur choisit la méthode à appeler.
+
+## Liaison statique et liaison dynamique
+
+L'association entre un appel de méthode et le code réellement exécuté s'appelle la **liaison** (*binding*). Il en existe deux formes.
+
+- La **liaison statique** (dite aussi **précoce**, *early binding*) : la méthode est choisie **à la compilation**, d'après le **type déclaré** (type statique) du pointeur ou de la variable. C'est le comportement **par défaut**.
+- La **liaison dynamique** (dite aussi **tardive**, *late binding*) : la méthode est choisie **à l'exécution**, d'après le **type réel** de l'objet pointé.
+
+Dans l'exemple précédent, `p` est déclaré `Forme*` : en liaison statique, le compilateur appelle `Forme::description()` sans même regarder ce que `p` pointe vraiment. C'est pourquoi le résultat est `"forme"`.
+
+> Pour appeler la méthode de l'objet **réel**, il faut une **liaison dynamique**. En C++, on l'active avec le mot-clé **`virtual`**.
+
+## Le mot-clé `virtual`
+
+> Une méthode déclarée **`virtual`** dans la classe de base est résolue en **liaison dynamique** : un appel via pointeur ou référence exécute la version correspondant au **type réel** de l'objet.
+
+Il suffit d'ajouter `virtual` **dans la classe de base** :
+
+```cpp
+class Forme {
+    public:
+        virtual void description() const { std::cout << "forme" << std::endl; }
+};
+class Cercle : public Forme {
+    public:
+        void description() const { std::cout << "cercle" << std::endl; }
+};
+
+Forme* p = new Cercle;
+p->description();        // affiche "cercle"  — la version du type RÉEL
+```
+
+`description()` étant `virtual`, l'appel `p->description()` regarde l'objet **réel** (`Cercle`) et exécute `Cercle::description()`. C'est précisément le mécanisme du **polymorphisme**.
+
+Quelques précisions importantes :
+
+- `virtual` se place dans la classe de **base** ; une méthode redéfinie reste virtuelle dans **toutes** les classes dérivées, que l'on réécrive `virtual` ou non.
+- La liaison dynamique n'opère que via un **pointeur** ou une **référence**. Sur un objet manipulé **directement** (pas par pointeur ni référence), le type est connu et la liaison reste statique.
+- `virtual` exprime l'idée qu'« un objet héritant une méthode peut **réagir différemment** à son appel » : c'est la définition même d'un objet **polymorphe**.
+
+## `override` : sécuriser la redéfinition
+
+Redéfinir exige que la méthode dérivée ait **exactement** la même signature que celle de la base. La moindre différence — un `const` oublié, un type de paramètre divergent — produit, **sans erreur**, une **nouvelle** méthode qui **ne redéfinit rien** : le bug est silencieux.
+
+C++11 introduit le spécificateur **`override`** pour s'en prémunir :
+
+> Le spécificateur **`override`**, placé après la signature d'une méthode dérivée, demande au compilateur de **vérifier** qu'elle redéfinit bien une méthode virtuelle de la base. Sinon, il **émet une erreur**.
+
+```cpp
+class Forme {
+    public:
+        virtual double aire() const;
+};
+
+class Cercle : public Forme {
+    public:
+        double aire() const override;   // OK : redéfinit bien Forme::aire()
+};
+```
+
+Voici les erreurs qu'`override` transforme en **erreurs de compilation** au lieu de bugs silencieux :
+
+```cpp
+class Base {
+    public:
+        virtual void funcB() const;
+        virtual void funcC(int);
+        void funcD();                  // NON virtuelle
+};
+
+class Derivee : public Base {
+    public:
+        void funcB() override;            // ERREUR : Base::funcB() est const, pas funcB()
+        void funcC(double) override;      // ERREUR : Base::funcC prend un int, pas un double
+        void funcD() override;            // ERREUR : Base::funcD() n'est pas virtuelle
+};
+```
+
+Sans `override`, chacune de ces lignes créerait silencieusement une **nouvelle** méthode. Avec `override`, le compilateur **signale** la divergence. Il est donc recommandé d'écrire `override` sur **toute** méthode censée en redéfinir une.
+
+## `final` : interdire toute redéfinition
+
+Le spécificateur **`final`** est le complément d'`override` : il **interdit** d'aller plus loin.
+
+> **`final`** sur une **méthode** virtuelle interdit aux classes dérivées de la redéfinir. **`final`** sur une **classe** interdit d'en hériter.
+
+```cpp
+class Base {
+    public:
+        virtual void afficher() final;   // ne pourra plus être redéfinie
+};
+
+class Derivee : public Base {
+    public:
+        void afficher();   // ERREUR : tentative de redéfinir une méthode final
+};
+```
+
+```cpp
+class Base final { /* ... */ };           // classe non héritable
+class Derivee : public Base { /* ... */ };  // ERREUR : Base est marquée final
+```
+
+> `override` et `final` ne sont des mots-clés **que dans ce contexte précis** — après une déclaration de méthode ou un nom de classe. Ailleurs, ce sont de simples identificateurs : on peut encore (sans que ce soit conseillé) nommer une variable `final`.
+
+## La découpe d'objet (object slicing)
+
+La liaison dynamique fonctionne via **pointeur** ou **référence**. Manipuler un objet polymorphe **par valeur** provoque au contraire un défaut grave : la **découpe d'objet** (*object slicing*).
+
+> Affecter ou copier un objet dérivé dans une variable du **type de base** ne conserve que la **sous-partie de base** : tout ce qui est propre à la dérivée — attributs **et** comportement virtuel — est **perdu**, « tranché ».
+
+```cpp
+Cercle c(5.0);
+Forme f = c;        // DÉCOUPE : seule la sous-partie Forme de c est copiée
+f.description();    // "forme" — l'objet f n'est plus un Cercle
+```
+
+`f` est déclarée `Forme` (pas `Forme&`, pas `Forme*`) : elle n'a la place que d'une `Forme`. La copie ne retient que la partie `Forme` de `c` ; l'objet cesse d'être un `Cercle`. Le même piège guette le **passage par valeur** :
+
+```cpp
+void afficher(Forme f);    // paramètre par VALEUR → découpe à chaque appel
+void afficher(const Forme& f);   // paramètre par RÉFÉRENCE → polymorphisme préservé
+```
+
+> ⚠️ Pour préserver le polymorphisme, on manipule **toujours** un objet polymorphe par **référence** (`Forme&`, `const Forme&`) ou par **pointeur** (`Forme*`), **jamais par valeur**.
+
+## Pourquoi le destructeur doit être `virtual`
+
+Détruire un objet dérivé à travers un **pointeur de base** révèle un dernier piège. Si le destructeur n'est **pas** `virtual`, `delete` applique la **liaison statique** : il appelle **seulement** le destructeur de la **base**.
+
+```cpp
+class Forme {
+    public:
+        ~Forme();    // NON virtuel — danger
+};
+class Cercle : public Forme {
+    private:
+        double* donnees;   // ressource allouée
+    public:
+        ~Cercle();   // libère 'donnees'
+};
+
+Forme* p = new Cercle;
+delete p;     // appelle ~Forme() SEULEMENT — ~Cercle() est ignoré : fuite mémoire
+```
+
+Le destructeur `~Cercle()` n'est **pas** exécuté : la ressource `donnees` n'est jamais libérée — **fuite mémoire**, et comportement indéfini en toute rigueur.
+
+La règle est sans exception :
+
+> **Toute classe destinée à servir de classe de base polymorphe doit déclarer son destructeur `virtual`.**
+
+```cpp
+class Forme {
+    public:
+        virtual ~Forme() = default;   // destructeur virtuel : indispensable
+};
+```
+
+Le destructeur étant `virtual`, `delete p` passe en liaison dynamique : il appelle d'abord `~Cercle()`, **puis** `~Forme()` — l'objet entier est détruit, dans le bon ordre.
+
+> **À retenir**
+> - **Redéfinir** (*override*) une méthode héritée = en donner une **nouvelle version** dans la dérivée, avec la **même signature**.
+> - **Surcharge** (même classe, signatures **différentes**) ≠ **redéfinition** (base/dérivée, signature **identique**) ; une signature qui diffère **masque** la méthode héritée.
+> - **Liaison statique** (précoce) : méthode choisie à la compilation d'après le type **déclaré** ; **liaison dynamique** (tardive) : à l'exécution d'après le type **réel**.
+> - Le mot-clé **`virtual`** (dans la base) active la **liaison dynamique** : un appel via pointeur ou référence exécute la version du type **réel** — c'est le **polymorphisme**.
+> - **`override`** fait **vérifier** par le compilateur qu'une méthode redéfinit bien une virtuelle ; **`final`** interdit de redéfinir une méthode ou d'hériter d'une classe.
+> - La **découpe d'objet** : copier un objet dérivé **par valeur** dans une variable de type base perd la partie dérivée → manipuler par **référence** ou **pointeur**.
+> - Une classe de base polymorphe **doit** avoir un **destructeur `virtual`**, sinon `delete` via un pointeur de base ne détruit pas la partie dérivée (fuite mémoire).

@@ -1,0 +1,1402 @@
+[
+  {
+    "chapterSlug": "signaux-notion",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Comment définit-on le plus précisément un signal en programmation système UNIX ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un message texte échangé entre deux processus par un tube"
+        },
+        {
+          "id": "b",
+          "label": "Une interruption logicielle asynchrone d'un processus, émise par un processus ou par le noyau"
+        },
+        {
+          "id": "c",
+          "label": "Une zone de mémoire partagée entre plusieurs processus"
+        },
+        {
+          "id": "d",
+          "label": "Une variable globale que tous les processus peuvent lire et modifier"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Un **signal** est une **interruption logicielle asynchrone** d'un processus. Il joue, pour un processus, le rôle qu'une interruption matérielle joue pour le processeur : il **interrompt le traitement en cours** pour exécuter automatiquement une action associée. Il est émis soit **par un processus** (via `kill`, `raise`…), soit **par le noyau** (en réaction à une erreur ou à un événement), et il est toujours **véhiculé par le noyau**. Ce n'est ni un canal de données (tube, mémoire partagée), ni une variable : c'est un mécanisme de **synchronisation** très léger.",
+    "concepts": [
+      "signal",
+      "signal-asynchrone"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "signaux-notion",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans un programme portable, il faut toujours désigner un signal par son nom symbolique (SIGINT) plutôt que par son numéro (2).",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Un signal est identifié de deux manières : un **numéro entier** et un **nom symbolique**. Mais le **numéro n'est pas garanti identique d'un système à l'autre** : `SIGUSR1` vaut 10 sous Linux/x86 et 30 sous macOS, par exemple. Dans tout code portable, on utilise donc **toujours le nom symbolique** (`SIGINT`, `SIGUSR1`…), jamais le numéro nu. Tous ces noms sont définis dans l'en-tête `<signal.h>`.",
+    "concepts": [
+      "signal",
+      "signal-h"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "signaux-notion",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un processus peut installer un gestionnaire personnalisé pour intercepter le signal SIGKILL afin de faire un nettoyage avant de mourir.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. **`SIGKILL` (9) et `SIGSTOP` (19) sont les deux seuls signaux dont la réaction ne peut JAMAIS être redéfinie** : on ne peut ni leur associer un gestionnaire, ni les ignorer, ni les bloquer. Cette règle est **absolue** : elle garantit qu'un administrateur conserve toujours un moyen de **tuer** (`SIGKILL`) ou de **geler** (`SIGSTOP`) n'importe quel processus, même mal écrit. Pour un nettoyage avant de partir, il faut intercepter un signal **poli** comme `SIGTERM` ou `SIGINT`.",
+    "concepts": [
+      "sigkill",
+      "sigstop-sigcont",
+      "action-par-defaut"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "signaux-notion",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi ces affirmations sur la réception et le traitement des signaux, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "À la réception, le processus interrompt son traitement, exécute l'action associée, puis reprend où il en était."
+        },
+        {
+          "id": "b",
+          "label": "Trois attitudes sont possibles face à un signal : appliquer l'action par défaut, l'ignorer, ou redéfinir son comportement."
+        },
+        {
+          "id": "c",
+          "label": "Un processus endormi dans un sleep() peut être réveillé avant la fin de la temporisation par l'arrivée d'un signal."
+        },
+        {
+          "id": "d",
+          "label": "L'action par défaut d'un signal est toujours la terminaison du processus."
+        },
+        {
+          "id": "e",
+          "label": "SIGUSR1 et SIGUSR2 sont laissés libres pour l'usage du programmeur."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "e"
+      ]
+    },
+    "explanation": "À la réception d'un signal, le processus **interrompt** son traitement, **exécute l'action** associée, puis **reprend** où il en était ; s'il était endormi (`sleep`), il est **réveillé** — la temporisation est alors écourtée. Face à un signal, trois attitudes : **action par défaut**, **ignorer**, **redéfinir** (gestionnaire). `SIGUSR1` et `SIGUSR2` sont bien les **deux signaux libres** pour le programmeur. L'affirmation (d) est fausse : l'action par défaut est l'une de **cinq** possibilités (`exit`, `core`, `stop`, `ignore`, `continue`) — la terminaison n'est que la plus fréquente.",
+    "concepts": [
+      "signal",
+      "action-par-defaut",
+      "sigusr"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "signaux-notion",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque signal standard à son action par défaut. Plusieurs signaux peuvent partager la même action par défaut.",
+    "payload": {
+      "left": [
+        {
+          "id": "sigint",
+          "label": "SIGINT"
+        },
+        {
+          "id": "sigsegv",
+          "label": "SIGSEGV"
+        },
+        {
+          "id": "sigchld",
+          "label": "SIGCHLD"
+        },
+        {
+          "id": "sigstop",
+          "label": "SIGSTOP"
+        },
+        {
+          "id": "sigcont",
+          "label": "SIGCONT"
+        },
+        {
+          "id": "sigquit",
+          "label": "SIGQUIT"
+        }
+      ],
+      "right": [
+        {
+          "id": "exit",
+          "label": "Terminer le processus (exit)"
+        },
+        {
+          "id": "core",
+          "label": "Terminer le processus en produisant un fichier core"
+        },
+        {
+          "id": "ignore",
+          "label": "Ignorer le signal (aucun effet)"
+        },
+        {
+          "id": "stop",
+          "label": "Suspendre (geler) l'exécution du processus"
+        },
+        {
+          "id": "continue",
+          "label": "Faire reprendre un processus suspendu"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "sigint": "exit",
+        "sigsegv": "core",
+        "sigchld": "ignore",
+        "sigstop": "stop",
+        "sigcont": "continue",
+        "sigquit": "core"
+      }
+    },
+    "explanation": "L'action par défaut d'un signal est l'une de **cinq** possibilités. **`exit`** (terminer) : `SIGINT`, `SIGTERM`, `SIGKILL`, `SIGALRM`… **`core`** (terminer + image mémoire) : `SIGSEGV`, `SIGQUIT`, `SIGBUS`, `SIGFPE`. **`ignore`** (aucun effet) : `SIGCHLD`, `SIGURG`. **`stop`** (suspendre) : `SIGSTOP`, `SIGTSTP`. **`continue`** (reprendre) : `SIGCONT`. Ici `SIGINT` termine, `SIGSEGV` et `SIGQUIT` produisent un *core*, `SIGCHLD` est ignoré, `SIGSTOP` suspend et `SIGCONT` fait reprendre.",
+    "concepts": [
+      "action-par-defaut",
+      "sigint",
+      "sigsegv",
+      "sigquit",
+      "sigchld",
+      "sigstop-sigcont"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "signaux-notion",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un processus reçoit un signal pendant qu'il exécute son code. Remettez dans l'ordre les étapes de la prise en compte de ce signal.",
+    "payload": {
+      "items": [
+        {
+          "id": "reprend",
+          "label": "Le processus reprend l'exécution du traitement interrompu, là où il en était"
+        },
+        {
+          "id": "interrompt",
+          "label": "Le processus interrompt le traitement en cours"
+        },
+        {
+          "id": "action",
+          "label": "Le processus exécute l'action associée au signal"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "interrompt",
+        "action",
+        "reprend"
+      ]
+    },
+    "explanation": "La prise en compte d'un signal se fait en trois temps. (1) Le processus **interrompt** le traitement en cours — comme une interruption matérielle interrompt le processeur. (2) Il **exécute l'action** associée au signal (action par défaut, ou gestionnaire si l'on en a installé un). (3) Il **reprend** l'exécution du traitement interrompu, exactement **là où il en était**. C'est le principe de la programmation événementielle : le code ne teste pas s'il a reçu un signal, il y **réagit**.",
+    "concepts": [
+      "signal",
+      "signal-asynchrone"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "signaux-notion",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur l'origine des signaux et leurs propriétés.",
+    "payload": {
+      "template": "Le terminal transforme la frappe de Ctrl-C en signal {{c1}}, dont l'action par défaut termine le processus. Le noyau, lui, envoie {{c2}} à un processus qui commet une violation mémoire. Les deux signaux libres pour le programmeur sont SIGUSR1 et {{c3}}. Enfin, les signaux standard ne sont pas mis en {{c4}} : si le même signal arrive trois fois avant d'être traité, le processus n'en reçoit qu'un seul.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm",
+          "placeholder": "Ctrl-C"
+        },
+        {
+          "id": "c2",
+          "width": "sm",
+          "placeholder": "violation mémoire"
+        },
+        {
+          "id": "c3",
+          "width": "sm"
+        },
+        {
+          "id": "c4",
+          "width": "md",
+          "hint": "les signaux ne se cumulent pas"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": "SIGINT",
+        "c2": "SIGSEGV",
+        "c3": "SIGUSR2",
+        "c4": [
+          "file",
+          "file d'attente",
+          "file d'attente (queue)"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "La frappe `Ctrl-C` déclenche **`SIGINT`** (action par défaut : terminer). Le noyau envoie **`SIGSEGV`** lors d'une violation mémoire (action par défaut : `core`). Les deux signaux laissés libres au programmeur sont `SIGUSR1` et **`SIGUSR2`**. Enfin, les signaux standard ne sont **pas mis en file d'attente** (*not queued*) : ils ne se comptent ni ne se cumulent — si N exemplaires d'un signal arrivent avant traitement, le processus n'en reçoit qu'**un seul**. Il ne faut donc jamais se servir des signaux pour compter des événements.",
+    "concepts": [
+      "sigint",
+      "sigsegv",
+      "sigusr",
+      "signal"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "signaux-notion",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Les signaux standard ne sont pas mis en file d'attente. Dans ce programme, SIGUSR1 est bloqué, envoyé trois fois à soi-même, puis débloqué ; le gestionnaire incrémente un compteur. Quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <signal.h>\n#include <unistd.h>\n\nvolatile sig_atomic_t recus = 0;\n\nvoid compter(int sig) {\n    (void) sig;\n    recus = recus + 1;\n}\n\nint main(void) {\n    sigset_t bloc;\n    sigemptyset(&bloc);\n    sigaddset(&bloc, SIGUSR1);\n\n    signal(SIGUSR1, compter);\n    sigprocmask(SIG_BLOCK, &bloc, NULL);\n\n    raise(SIGUSR1);\n    raise(SIGUSR1);\n    raise(SIGUSR1);\n\n    sigprocmask(SIG_UNBLOCK, &bloc, NULL);\n\n    printf(\"recus = %d\\n\", (int) recus);\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "recus = 1"
+    },
+    "explanation": "`SIGUSR1` est d'abord **bloqué** par `sigprocmask`. Les trois `raise(SIGUSR1)` envoient donc le signal alors qu'il est bloqué : il devient **pendant**. Mais un signal standard n'a, pour chaque processus, qu'**un seul bit « en attente »** : les trois envois positionnent ce bit, qui ne peut valoir que… une fois. Au déblocage, le processus ne reçoit donc qu'**un seul** `SIGUSR1`, le gestionnaire ne s'exécute qu'une fois, et `recus` vaut **1**. Les deux autres exemplaires sont **perdus** : les signaux standard ne se cumulent pas.",
+    "concepts": [
+      "signal",
+      "masque-signaux",
+      "raise"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "signaux-notion",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Écrivez un programme C qui rend le signal SIGINT sans effet pour le processus, puis se l'envoie à lui-même avec raise(SIGINT). Comme le signal est ignoré, le programme survit : il affiche ensuite, sur sa propre ligne, exactement `toujours vivant`.",
+    "payload": {
+      "spec": "Le programme inclut <stdio.h> et <signal.h>. Il appelle signal(SIGINT, SIG_IGN) pour ignorer SIGINT, puis raise(SIGINT) pour se l'envoyer. Comme SIGINT est ignoré, son action par défaut (terminer) ne s'applique pas et le programme continue : il affiche la ligne 'toujours vivant' puis se termine normalement.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <signal.h>\n\nint main(void) {\n    /* ignorez SIGINT, envoyez-vous SIGINT, puis affichez 'toujours vivant' */\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le processus survit au signal ignoré",
+          "stdin": "",
+          "expectedStdout": "toujours vivant",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <signal.h>\n\nint main(void) {\n    signal(SIGINT, SIG_IGN);\n    raise(SIGINT);\n    printf(\"toujours vivant\\n\");\n    return 0;\n}"
+    },
+    "explanation": "Par défaut, `SIGINT` **termine** le processus. Pour qu'un `raise(SIGINT)` reste sans effet, on demande d'abord à **ignorer** le signal : `signal(SIGINT, SIG_IGN)` associe à `SIGINT` la pseudo-action `SIG_IGN`. Le `raise(SIGINT)` envoie alors le signal au processus, mais comme il est ignoré, **aucune action** ne s'applique : l'exécution se poursuit normalement et la ligne `toujours vivant` s'affiche. C'est l'une des trois attitudes possibles face à un signal — ignorer — appliquée à un signal qui, sinon, aurait tué le programme.",
+    "concepts": [
+      "sigint",
+      "raise",
+      "action-par-defaut",
+      "sig-dfl-ign"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "kill-raise-alarm",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Que fait réellement la primitive `kill(pid, sig)` ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Elle termine toujours le processus de PID pid, quel que soit sig."
+        },
+        {
+          "id": "b",
+          "label": "Elle envoie le signal sig au processus désigné par pid ; ce n'est pas forcément un signal de terminaison."
+        },
+        {
+          "id": "c",
+          "label": "Elle attend que le processus pid lui envoie le signal sig."
+        },
+        {
+          "id": "d",
+          "label": "Elle installe un gestionnaire pour le signal sig sur le processus pid."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Malgré son nom, **`kill` ne « tue » pas** : elle **envoie un signal quelconque** `sig` au processus désigné par `pid`. Le nom vient de son usage le plus courant (envoyer `SIGKILL` ou `SIGTERM`), mais on peut tout aussi bien envoyer `SIGUSR1`, `SIGCONT`, etc. Pour `pid > 0` — le cas de loin le plus fréquent —, le signal va au **processus de PID exactement `pid`**. `kill` renvoie `0` en cas de succès et `-1` en cas d'échec.",
+    "concepts": [
+      "kill-fonction",
+      "signal"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "kill-raise-alarm",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Parmi ces affirmations sur alarm() et pause(), lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "alarm(5) demande au noyau d'envoyer SIGALRM au processus appelant dans 5 secondes."
+        },
+        {
+          "id": "b",
+          "label": "Chaque processus n'a qu'un seul minuteur alarm ; un nouvel appel remplace le précédent."
+        },
+        {
+          "id": "c",
+          "label": "alarm() renvoie le nombre de secondes qui restaient sur l'alarme précédente."
+        },
+        {
+          "id": "d",
+          "label": "pause() revient toujours immédiatement, même si aucun signal n'est arrivé."
+        },
+        {
+          "id": "e",
+          "label": "pause() ne revient que si le signal reçu a été ignoré ou intercepté par un gestionnaire."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "e"
+      ]
+    },
+    "explanation": "`alarm(sec)` demande au noyau d'envoyer **`SIGALRM`** au processus appelant après `sec` secondes. Chaque processus n'a qu'**un seul** minuteur : un nouvel appel **remplace** le précédent, et `alarm` renvoie le **nombre de secondes restantes** de l'alarme précédente (`alarm(0)` annule sans réarmer). `pause()` **endort** le processus jusqu'à un signal : il ne revient (`-1`) **que si** ce signal a été **ignoré** ou **intercepté** — si le signal applique son action par défaut `exit`, le processus meurt et `pause` ne revient jamais. L'affirmation (d) est donc fausse : `pause()` bloque tant qu'aucun signal n'arrive.",
+    "concepts": [
+      "alarm",
+      "pause",
+      "sigalrm"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "kill-raise-alarm",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé des primitives d'émission et d'attente de signaux.",
+    "payload": {
+      "template": "Pour envoyer un signal à un autre processus, on utilise {{c1}}(pid, sig). Pour s'envoyer un signal à soi-même, raise(sig) est l'équivalent de kill({{c2}}(), sig). La primitive {{c3}}(sec) demande au noyau un SIGALRM dans sec secondes. Enfin, {{c4}}() endort le processus jusqu'à la réception d'un signal.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm"
+        },
+        {
+          "id": "c2",
+          "width": "sm",
+          "hint": "renvoie le PID du processus courant"
+        },
+        {
+          "id": "c3",
+          "width": "sm"
+        },
+        {
+          "id": "c4",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": "kill",
+        "c2": "getpid",
+        "c3": "alarm",
+        "c4": "pause"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Les quatre primitives du chapitre. **`kill(pid, sig)`** envoie le signal `sig` au processus désigné par `pid`. **`raise(sig)`** envoie un signal à soi-même : pour un processus mono-thread, c'est exactement `kill(getpid(), sig)` — `getpid()` renvoyant le PID du processus courant. **`alarm(sec)`** programme l'envoi d'un `SIGALRM` au processus appelant après `sec` secondes. **`pause()`** endort le processus jusqu'à la réception d'un signal.",
+    "concepts": [
+      "kill-fonction",
+      "raise",
+      "alarm",
+      "pause"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "kill-raise-alarm",
+    "type": "ORDERING",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On veut poser un délai de garde (timeout) avec alarm. Remettez dans l'ordre les étapes de ce schéma classique.",
+    "payload": {
+      "items": [
+        {
+          "id": "armer",
+          "label": "Armer une alarme avec alarm(delai) avant l'opération potentiellement longue"
+        },
+        {
+          "id": "handler",
+          "label": "Installer un gestionnaire pour SIGALRM (sinon le SIGALRM tuerait le processus)"
+        },
+        {
+          "id": "operation",
+          "label": "Lancer l'opération potentiellement longue"
+        },
+        {
+          "id": "annuler",
+          "label": "Si l'opération aboutit à temps, annuler l'alarme avec alarm(0)"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "handler",
+        "armer",
+        "operation",
+        "annuler"
+      ]
+    },
+    "explanation": "Un délai de garde avec `alarm` s'organise en quatre temps. (1) On **installe d'abord un gestionnaire** pour `SIGALRM` : son action par défaut est `exit`, donc sans gestionnaire l'alarme **tuerait** le processus. (2) On **arme l'alarme** avec `alarm(delai)` juste avant l'opération. (3) On **lance l'opération** potentiellement longue. (4) Si elle **aboutit à temps**, on **annule l'alarme** avec `alarm(0)` ; sinon, le `SIGALRM` arrive et le gestionnaire prend la main pour traiter le dépassement. L'ordre handler → armer est essentiel : armer avant d'avoir le gestionnaire exposerait à une mort si l'alarme sonnait trop tôt.",
+    "concepts": [
+      "alarm",
+      "sigalrm",
+      "gestionnaire-signal"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "kill-raise-alarm",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "alarm() renvoie le nombre de secondes restantes sur l'alarme précédente, et alarm(0) annule toute alarme en cours. Quelle est la sortie exacte de ce programme ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid rien(int sig) { (void) sig; }\n\nint main(void) {\n    signal(SIGALRM, rien);\n    alarm(30);\n    unsigned int restant = alarm(0);\n    printf(\"restant = %u\\n\", restant);\n    printf(\"alarme annulee\\n\");\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "restant = 30\nalarme annulee"
+    },
+    "explanation": "Le premier appel `alarm(30)` arme un minuteur pour 30 secondes. Le deuxième appel, `alarm(0)`, **annule** toute alarme en cours et **renvoie le nombre de secondes qui restaient** sur l'alarme précédente — ici, les 30 secondes pratiquement intactes (les deux appels s'enchaînent en quelques microsecondes). Donc `restant` vaut **30**. Comme `alarm(0)` a annulé l'alarme, **aucun `SIGALRM` n'arrivera** : le programme affiche ses deux lignes et se termine normalement, sans être interrompu.",
+    "concepts": [
+      "alarm",
+      "sigalrm"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "kill-raise-alarm",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un gestionnaire est installé pour SIGUSR1. Le programme affiche `debut`, se signale lui-même, puis affiche `fin`. Sachant qu'un signal interrompt le traitement, exécute l'action, puis le reprend, quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid h(int sig) {\n    (void) sig;\n    printf(\"dans le handler\\n\");\n}\n\nint main(void) {\n    signal(SIGUSR1, h);\n    printf(\"debut\\n\");\n    raise(SIGUSR1);\n    printf(\"fin\\n\");\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "debut\ndans le handler\nfin"
+    },
+    "explanation": "Le déroulement est entièrement déterministe. Le programme affiche d'abord **`debut`**. Puis `raise(SIGUSR1)` se signale lui-même : comme un gestionnaire est installé, le processus **interrompt** son traitement, **exécute le gestionnaire** — qui affiche **`dans le handler`** — puis **reprend** juste après le `raise`. Il exécute alors `printf(\"fin\")` et affiche **`fin`**. La sortie est donc, dans l'ordre, `debut`, `dans le handler`, `fin`. Avec `raise`, le signal étant émis de façon synchrone, le gestionnaire s'exécute immédiatement, avant que le `raise` ne rende la main.",
+    "concepts": [
+      "raise",
+      "gestionnaire-signal",
+      "signal"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "kill-raise-alarm",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Écrivez un programme C qui installe un gestionnaire pour SIGUSR1, puis s'envoie ce signal avec raise(SIGUSR1). Le gestionnaire doit afficher la ligne `signal recu`. Après le retour du gestionnaire, le programme affiche la ligne `fin du programme`. La sortie doit donc être `signal recu` puis `fin du programme`.",
+    "payload": {
+      "spec": "Le programme inclut <stdio.h>, <unistd.h> et <signal.h>. Il définit un gestionnaire de type void f(int) qui affiche 'signal recu' (de préférence avec write, async-signal-safe). Dans main, il installe ce gestionnaire pour SIGUSR1 avec signal(), puis appelle raise(SIGUSR1). Le gestionnaire s'exécute alors et affiche 'signal recu' ; au retour, main affiche 'fin du programme'. La sortie est donc 'signal recu' puis 'fin du programme'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\n/* gestionnaire : doit afficher 'signal recu' */\n\nint main(void) {\n    /* installez le gestionnaire pour SIGUSR1, puis raise(SIGUSR1) */\n    /* puis affichez 'fin du programme' */\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "ordre signal recu puis fin du programme",
+          "stdin": "",
+          "expectedStdout": "signal recu\nfin du programme",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid traiter(int sig) {\n    (void) sig;\n    write(1, \"signal recu\\n\", 12);\n}\n\nint main(void) {\n    signal(SIGUSR1, traiter);\n    raise(SIGUSR1);\n    printf(\"fin du programme\\n\");\n    return 0;\n}"
+    },
+    "explanation": "Sans gestionnaire, `raise(SIGUSR1)` appliquerait l'action par défaut de `SIGUSR1` (`exit`) et **tuerait** le programme. On installe donc d'abord un gestionnaire avec `signal(SIGUSR1, traiter)`. Le `raise(SIGUSR1)` se signale alors lui-même : le processus **déroute** vers `traiter`, qui affiche `signal recu`. On utilise `write(1, ...)` plutôt que `printf` dans le gestionnaire car `write` est **async-signal-safe**. Au retour du gestionnaire, l'exécution reprend après le `raise` et `main` affiche `fin du programme`.",
+    "concepts": [
+      "raise",
+      "gestionnaire-signal",
+      "async-signal-safe",
+      "sigusr"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "kill-raise-alarm",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écrivez un programme qui crée un processus fils. Le père installe un gestionnaire pour SIGUSR1 qui affiche `pere prevenu`. Le fils envoie SIGUSR1 à son père avec kill(getppid(), SIGUSR1), puis se termine. Le père attend la fin du fils, puis affiche `pere termine`. La sortie doit être `pere prevenu` puis `pere termine`.",
+    "payload": {
+      "spec": "Le programme installe AVANT le fork un gestionnaire pour SIGUSR1 affichant 'pere prevenu' (avec write). Il appelle fork() et teste les trois cas. Le fils appelle kill(getppid(), SIGUSR1) pour signaler son père, puis se termine par exit. Le père récupère son fils avec wait() (en boucle, car wait peut être interrompu par le signal) puis affiche 'pere termine'. La sortie attendue est 'pere prevenu' suivi de 'pere termine'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <signal.h>\n#include <sys/wait.h>\n\n/* gestionnaire : doit afficher 'pere prevenu' */\n\nint main(void) {\n    /* installez le gestionnaire, fork, le fils signale le pere, le pere attend puis affiche 'pere termine' */\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le fils signale le pere",
+          "stdin": "",
+          "expectedStdout": "pere prevenu\npere termine",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <signal.h>\n#include <sys/wait.h>\n\nvoid prevenu(int sig) {\n    (void) sig;\n    write(1, \"pere prevenu\\n\", 13);\n}\n\nint main(void) {\n    signal(SIGUSR1, prevenu);\n    pid_t pid = fork();\n    if (pid < 0) {\n        perror(\"fork\");\n        exit(EXIT_FAILURE);\n    }\n    if (pid == 0) {\n        kill(getppid(), SIGUSR1);\n        exit(EXIT_SUCCESS);\n    }\n    while (wait(NULL) == -1)\n        ;\n    printf(\"pere termine\\n\");\n    return 0;\n}"
+    },
+    "explanation": "Le gestionnaire est installé **avant** le `fork` : le fils en hérite (peu importe ici, c'est le père qui reçoit le signal). Le fils utilise `kill(getppid(), SIGUSR1)` : `getppid()` lui donne le PID de son père, qu'il signale. Le père reçoit `SIGUSR1` et déroute vers `prevenu`, qui affiche `pere prevenu`. Le `wait(NULL)` du père est placé dans une **boucle `while (wait(NULL) == -1)`** : c'est important, car `wait` peut être **interrompu** par l'arrivée de `SIGUSR1` (il renvoie alors `-1`) — la boucle le relance jusqu'à récupérer effectivement le fils. Le père affiche enfin `pere termine`.",
+    "concepts": [
+      "kill-fonction",
+      "ppid",
+      "gestionnaire-signal",
+      "wait"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "kill-raise-alarm",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Ce programme devrait armer une alarme d'une seconde, attendre par pause(), puis afficher `fini`. En réalité il ne l'affiche jamais : le processus meurt avant. Corrigez-le pour qu'il affiche bien `fini`.",
+    "payload": {
+      "spec": "Le programme doit armer alarm(1), s'endormir par pause(), être réveillé par le SIGALRM à la première seconde, puis afficher 'fini'. Le bug : aucun gestionnaire n'est installé pour SIGALRM, dont l'action par défaut est de terminer le processus ; le SIGALRM tue donc le programme avant l'affichage. La fonction de gestion 'sonnerie' est déjà écrite mais n'est jamais installée. Corrigez en installant ce gestionnaire pour SIGALRM avant alarm(1).",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid sonnerie(int sig) {\n    (void) sig;\n}\n\nint main(void) {\n    alarm(1);\n    pause();\n    printf(\"fini\\n\");\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le programme affiche fini",
+          "stdin": "",
+          "expectedStdout": "fini",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid sonnerie(int sig) {\n    (void) sig;\n}\n\nint main(void) {\n    signal(SIGALRM, sonnerie);\n    alarm(1);\n    pause();\n    printf(\"fini\\n\");\n    return 0;\n}"
+    },
+    "explanation": "Le bug : aucun gestionnaire n'est installé pour `SIGALRM`. Or l'action par défaut de `SIGALRM` est **`exit`** : quand l'alarme sonne au bout d'une seconde, le `SIGALRM` **termine le processus** — et `printf(\"fini\")` n'est jamais atteint. La correction consiste à **installer le gestionnaire** `sonnerie` pour `SIGALRM` avec `signal(SIGALRM, sonnerie)` **avant** l'appel `alarm(1)`. Le gestionnaire peut être vide : son seul rôle est d'**empêcher la mort** du processus et de **réveiller** le `pause()`. Le `pause` revient alors, et `fini` s'affiche.",
+    "concepts": [
+      "alarm",
+      "pause",
+      "sigalrm",
+      "gestionnaire-signal"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "kill-raise-alarm",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme installe un gestionnaire pour SIGUSR1, puis devrait se signaler pour que le gestionnaire affiche `handler` ; ensuite il affiche `apres raise`. En réalité le processus meurt sans rien afficher. Trouvez et corrigez l'erreur.",
+    "payload": {
+      "spec": "Le programme doit installer un gestionnaire pour SIGUSR1, puis se l'envoyer afin que le gestionnaire affiche 'handler', et enfin afficher 'apres raise'. Le bug : le programme installe le gestionnaire pour SIGUSR1 mais appelle raise(SIGUSR2). SIGUSR2 n'a aucun gestionnaire, donc son action par défaut (terminer) tue le processus avant tout affichage. Corrigez en envoyant le bon signal, SIGUSR1, celui pour lequel le gestionnaire a été installé.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid traiter(int sig) {\n    (void) sig;\n    write(1, \"handler\\n\", 8);\n}\n\nint main(void) {\n    signal(SIGUSR1, traiter);\n    raise(SIGUSR2);\n    printf(\"apres raise\\n\");\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "handler puis apres raise",
+          "stdin": "",
+          "expectedStdout": "handler\napres raise",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid traiter(int sig) {\n    (void) sig;\n    write(1, \"handler\\n\", 8);\n}\n\nint main(void) {\n    signal(SIGUSR1, traiter);\n    raise(SIGUSR1);\n    printf(\"apres raise\\n\");\n    return 0;\n}"
+    },
+    "explanation": "Le bug est une **confusion de signal** : le gestionnaire est installé pour `SIGUSR1`, mais le programme appelle `raise(SIGUSR2)`. Or `SIGUSR2` n'a **aucun gestionnaire** installé : il applique son action par défaut, `exit`, et **tue le processus** — ni `handler` ni `apres raise` ne s'affichent. La correction : se signaler avec le **bon signal**, `raise(SIGUSR1)`, celui pour lequel le gestionnaire `traiter` a été mis en place. Le processus déroute alors vers `traiter` (`handler`), puis reprend et affiche `apres raise`. Un gestionnaire n'est lié qu'au signal **précis** qu'on lui a associé.",
+    "concepts": [
+      "raise",
+      "sigusr",
+      "gestionnaire-signal",
+      "action-par-defaut"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "handlers-sigaction",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Pour quelle raison principale la norme POSIX recommande-t-elle d'utiliser sigaction() plutôt que signal() ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "sigaction() est beaucoup plus rapide à l'exécution que signal()."
+        },
+        {
+          "id": "b",
+          "label": "sigaction() peut intercepter SIGKILL, ce que signal() ne sait pas faire."
+        },
+        {
+          "id": "c",
+          "label": "Le comportement de signal() est ambigu (System V / BSD) alors que celui de sigaction() est défini par POSIX et identique partout."
+        },
+        {
+          "id": "d",
+          "label": "signal() ne fonctionne que sous Linux, sigaction() fonctionne aussi sous Windows."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "`signal()` traîne un **lourd passé** : selon le système, elle suit la sémantique **System V** (le gestionnaire se désinstalle après chaque déclenchement) ou **BSD** (il reste installé). Ce comportement **ambigu** rend `signal()` non fiable pour du code sérieux. `sigaction()`, elle, a un comportement **défini par POSIX, identique partout** : gestionnaire **persistant**, contrôle du masque (`sa_mask`) et des options (`sa_flags`). C'est la raison principale de la préférer. Aucune des deux ne peut intercepter `SIGKILL`, et la rapidité n'entre pas en jeu.",
+    "concepts": [
+      "sigaction",
+      "signal-fonction"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "handlers-sigaction",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Parmi ces affirmations sur la structure struct sigaction et son champ sa_handler, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "sa_handler peut valoir SIG_DFL, SIG_IGN, ou l'adresse d'une fonction de gestion."
+        },
+        {
+          "id": "b",
+          "label": "sa_mask contient l'ensemble des signaux bloqués pendant l'exécution du gestionnaire."
+        },
+        {
+          "id": "c",
+          "label": "Une struct sigaction locale doit être entièrement initialisée (au minimum sigemptyset sur sa_mask et sa_flags = 0) avant usage."
+        },
+        {
+          "id": "d",
+          "label": "Le champ sa_flags doit obligatoirement contenir SA_RESTART, sinon sigaction() échoue."
+        },
+        {
+          "id": "e",
+          "label": "Le signal qui a déclenché le gestionnaire est automatiquement bloqué pendant son propre traitement."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "e"
+      ]
+    },
+    "explanation": "Le champ **`sa_handler`** est le seul obligatoire : il vaut `SIG_DFL`, `SIG_IGN`, ou un pointeur de gestionnaire. **`sa_mask`** liste les signaux **bloqués pendant l'exécution du gestionnaire** ; le signal déclencheur y est **automatiquement ajouté** le temps de son traitement. Une `struct sigaction` locale contient des **valeurs aléatoires** : il faut **toujours l'initialiser** (`sigemptyset(&act.sa_mask)` + `act.sa_flags = 0`). L'affirmation (d) est fausse : `sa_flags` peut parfaitement valoir `0` — `SA_RESTART` est une **option**, pas une obligation.",
+    "concepts": [
+      "sigaction",
+      "async-signal-safe"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "handlers-sigaction",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce code qui installe, avec sigaction(), un gestionnaire pour SIGINT.",
+    "payload": {
+      "template": "struct sigaction act;\nact.{{c1}} = handler;       /* fonction de traitement */\n{{c2}}(&act.sa_mask);          /* aucun signal bloque en plus */\nact.{{c3}} = 0;             /* aucune option particuliere */\n{{c4}}(SIGINT, &act, NULL);    /* installation du gestionnaire */",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm",
+          "hint": "le champ pointeur sur la fonction de gestion"
+        },
+        {
+          "id": "c2",
+          "width": "md",
+          "hint": "vide l'ensemble de signaux"
+        },
+        {
+          "id": "c3",
+          "width": "sm",
+          "hint": "le champ des options"
+        },
+        {
+          "id": "c4",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": "sa_handler",
+        "c2": "sigemptyset",
+        "c3": "sa_flags",
+        "c4": "sigaction"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Le motif standard d'installation d'un gestionnaire avec `sigaction()`. On remplit d'abord la structure : **`sa_handler`** reçoit l'adresse de la fonction de traitement ; **`sigemptyset(&act.sa_mask)`** initialise le masque à l'ensemble vide (aucun signal supplémentaire bloqué pendant le gestionnaire) ; **`sa_flags`** est mis à `0` (aucune option). On appelle enfin **`sigaction(SIGINT, &act, NULL)`** : le premier argument est le signal, le deuxième la nouvelle configuration, le troisième (`NULL`) indique qu'on ne souhaite pas récupérer l'ancienne. Initialiser entièrement la structure est indispensable : sinon `sa_mask` et `sa_flags` contiendraient des valeurs aléatoires.",
+    "concepts": [
+      "sigaction",
+      "sigset-t"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "handlers-sigaction",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque élément lié à l'interception des signaux à sa description exacte.",
+    "payload": {
+      "left": [
+        {
+          "id": "sahandler",
+          "label": "sa_handler"
+        },
+        {
+          "id": "samask",
+          "label": "sa_mask"
+        },
+        {
+          "id": "sigdfl",
+          "label": "SIG_DFL"
+        },
+        {
+          "id": "sigign",
+          "label": "SIG_IGN"
+        },
+        {
+          "id": "sigerr",
+          "label": "SIG_ERR"
+        },
+        {
+          "id": "strsignal",
+          "label": "strsignal(sig)"
+        }
+      ],
+      "right": [
+        {
+          "id": "fnpointer",
+          "label": "Champ recevant SIG_DFL, SIG_IGN ou un pointeur de gestionnaire"
+        },
+        {
+          "id": "blockset",
+          "label": "Ensemble des signaux bloqués pendant l'exécution du gestionnaire"
+        },
+        {
+          "id": "restore",
+          "label": "Constante rétablissant le comportement par défaut du signal"
+        },
+        {
+          "id": "discard",
+          "label": "Constante rendant le signal sans effet (ignoré)"
+        },
+        {
+          "id": "errval",
+          "label": "Valeur de retour de signal() en cas d'échec"
+        },
+        {
+          "id": "describe",
+          "label": "Renvoie une chaîne décrivant le signal de numéro donné"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "sahandler": "fnpointer",
+        "samask": "blockset",
+        "sigdfl": "restore",
+        "sigign": "discard",
+        "sigerr": "errval",
+        "strsignal": "describe"
+      }
+    },
+    "explanation": "**`sa_handler`** est le champ de `struct sigaction` qui reçoit la réaction au signal : `SIG_DFL`, `SIG_IGN` ou un pointeur de gestionnaire. **`sa_mask`** liste les signaux bloqués pendant l'exécution du gestionnaire. **`SIG_DFL`** rétablit le **comportement par défaut** du signal ; **`SIG_IGN`** le rend **sans effet** (ignoré). **`SIG_ERR`** est la valeur que renvoie **`signal()`** en cas d'**échec** (par exemple sur `SIGKILL`). **`strsignal(sig)`** renvoie une **chaîne lisible** décrivant le signal de numéro `sig`.",
+    "concepts": [
+      "sigaction",
+      "sig-dfl-ign",
+      "strsignal",
+      "signal-fonction"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "handlers-sigaction",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un processus a installé un gestionnaire pour SIGUSR1 et reçoit ce signal pendant qu'il exécute son code principal. Remettez dans l'ordre les étapes du déroutement.",
+    "payload": {
+      "items": [
+        {
+          "id": "interrompt",
+          "label": "Le processus interrompt son code principal au point où il en est"
+        },
+        {
+          "id": "deroute",
+          "label": "Le processus déroute vers le gestionnaire et l'exécute jusqu'au bout"
+        },
+        {
+          "id": "reprend",
+          "label": "Le processus reprend son code principal exactement là où il avait été interrompu"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "interrompt",
+        "deroute",
+        "reprend"
+      ]
+    },
+    "explanation": "Quand un signal intercepté est délivré, il provoque un **déroutement** en trois temps. (1) Le processus **interrompt** son code principal à un point quelconque, choisi par personne. (2) Il **déroute vers le gestionnaire** et l'exécute jusqu'au bout. (3) Il **reprend son code principal exactement là où il avait été interrompu**. Le gestionnaire n'est donc qu'une parenthèse : le flot normal reprend ensuite. C'est précisément parce que le gestionnaire interrompt le code à un point imprévisible qu'il ne doit appeler que des fonctions *async-signal-safe*.",
+    "concepts": [
+      "gestionnaire-signal",
+      "signal-asynchrone"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "handlers-sigaction",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Ce programme installe un gestionnaire commun à SIGUSR1 et SIGUSR2 avec sigaction(), puis se signale lui-même. Le gestionnaire distingue les deux signaux. Quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid handler(int sig) {\n    if (sig == SIGUSR1)\n        write(STDOUT_FILENO, \"recu USR1\\n\", 10);\n    else if (sig == SIGUSR2)\n        write(STDOUT_FILENO, \"recu USR2\\n\", 10);\n}\n\nint main(void) {\n    struct sigaction act;\n    act.sa_handler = handler;\n    sigemptyset(&act.sa_mask);\n    act.sa_flags = 0;\n    sigaction(SIGUSR1, &act, NULL);\n    sigaction(SIGUSR2, &act, NULL);\n\n    write(STDOUT_FILENO, \"avant\\n\", 6);\n    raise(SIGUSR2);\n    raise(SIGUSR1);\n    write(STDOUT_FILENO, \"apres\\n\", 6);\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "avant\nrecu USR2\nrecu USR1\napres"
+    },
+    "explanation": "Le même gestionnaire est installé pour `SIGUSR1` **et** `SIGUSR2` : l'argument entier `sig` permet de **les distinguer à l'intérieur**. Le déroulement est entièrement déterministe : le programme affiche `avant`, puis `raise(SIGUSR2)` se signale — le gestionnaire est appelé **immédiatement** (raise est synchrone) avec `sig == SIGUSR2`, affichant `recu USR2`. Ensuite `raise(SIGUSR1)` provoque `recu USR1`. Enfin `main` reprend et affiche `apres`. La sortie est donc, dans l'ordre : `avant`, `recu USR2`, `recu USR1`, `apres`.",
+    "concepts": [
+      "sigaction",
+      "gestionnaire-signal",
+      "raise"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "handlers-sigaction",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Écrivez un programme C qui installe, avec sigaction() (et non signal()), un gestionnaire pour SIGINT. Le gestionnaire doit afficher exactement la ligne `SIGINT capture`. Le programme se signale ensuite avec raise(SIGINT) puis affiche la ligne `programme termine`. La sortie attendue est donc `SIGINT capture` puis `programme termine`.",
+    "payload": {
+      "spec": "Le programme inclut <stdio.h>, <unistd.h> et <signal.h>. Il définit un gestionnaire void f(int) qui écrit 'SIGINT capture' (de préférence avec write, async-signal-safe). Dans main, il remplit une struct sigaction : sa_handler = le gestionnaire, sigemptyset sur sa_mask, sa_flags = 0, puis appelle sigaction(SIGINT, &act, NULL). Il appelle ensuite raise(SIGINT) : le gestionnaire s'exécute et affiche 'SIGINT capture'. Au retour, main affiche 'programme termine'. La sortie est 'SIGINT capture' puis 'programme termine'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\n/* gestionnaire : doit afficher 'SIGINT capture' */\n\nint main(void) {\n    /* remplissez une struct sigaction et installez le gestionnaire pour SIGINT */\n    /* puis raise(SIGINT), puis affichez 'programme termine' */\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le gestionnaire installé par sigaction capture SIGINT",
+          "stdin": "",
+          "expectedStdout": "SIGINT capture\nprogramme termine",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid handler(int sig) {\n    (void) sig;\n    write(STDOUT_FILENO, \"SIGINT capture\\n\", 15);\n}\n\nint main(void) {\n    struct sigaction act;\n    act.sa_handler = handler;\n    sigemptyset(&act.sa_mask);\n    act.sa_flags = 0;\n    sigaction(SIGINT, &act, NULL);\n\n    raise(SIGINT);\n    printf(\"programme termine\\n\");\n    return 0;\n}"
+    },
+    "explanation": "Sans gestionnaire, `raise(SIGINT)` appliquerait l'action par défaut de `SIGINT` (`exit`) et **tuerait** le programme. On installe donc un gestionnaire avec `sigaction()`. La méthode impose de **remplir entièrement** une `struct sigaction` : `sa_handler` reçoit l'adresse du gestionnaire, `sigemptyset(&act.sa_mask)` met le masque à vide, `sa_flags` vaut `0`. L'appel `sigaction(SIGINT, &act, NULL)` installe le tout. Le `raise(SIGINT)` déroute alors vers le gestionnaire, qui écrit `SIGINT capture` avec `write` (async-signal-safe). Au retour, `main` affiche `programme termine`. Contrairement à `signal()`, le gestionnaire posé par `sigaction()` reste **persistant** et son comportement est **portable**.",
+    "concepts": [
+      "sigaction",
+      "gestionnaire-signal",
+      "sigint",
+      "async-signal-safe"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "handlers-sigaction",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme installe un gestionnaire commun à SIGUSR1 et SIGUSR2 et veut afficher `usr1`, `usr2`, puis `fin`. En réalité il meurt au moment du raise(SIGUSR2), sans afficher ni `usr2` ni `fin`. L'auteur a installé le gestionnaire pour SIGUSR1 mais a oublié de l'installer aussi pour SIGUSR2. Corrigez le programme.",
+    "payload": {
+      "spec": "Le programme définit un gestionnaire commun 'traiter' qui affiche 'usr1' pour SIGUSR1 et 'usr2' pour SIGUSR2. Le main remplit une struct sigaction (sa_handler = traiter, sigemptyset sur sa_mask, sa_flags = 0), puis se signale par raise(SIGUSR1) et raise(SIGUSR2), et affiche enfin 'fin'. Le bug : le main n'appelle sigaction() QUE pour SIGUSR1. SIGUSR2 n'a donc aucun gestionnaire installé : le raise(SIGUSR2) applique l'action par défaut de SIGUSR2 (terminer) et tue le processus avant 'usr2' et 'fin'. Correction attendue : ajouter l'appel sigaction(SIGUSR2, &act, NULL) pour installer le même gestionnaire sur SIGUSR2. Un gestionnaire est lié à un signal PRÉCIS : il faut un appel sigaction() par signal que l'on veut intercepter. La sortie devient alors 'usr1', 'usr2', 'fin'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid traiter(int sig) {\n    if (sig == SIGUSR1)\n        write(STDOUT_FILENO, \"usr1\\n\", 5);\n    else if (sig == SIGUSR2)\n        write(STDOUT_FILENO, \"usr2\\n\", 5);\n}\n\nint main(void) {\n    struct sigaction act;\n    act.sa_handler = traiter;\n    sigemptyset(&act.sa_mask);\n    act.sa_flags = 0;\n    sigaction(SIGUSR1, &act, NULL);\n\n    raise(SIGUSR1);\n    raise(SIGUSR2);\n    printf(\"fin\\n\");\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "les deux signaux sont interceptés",
+          "stdin": "",
+          "expectedStdout": "usr1\nusr2\nfin",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid traiter(int sig) {\n    if (sig == SIGUSR1)\n        write(STDOUT_FILENO, \"usr1\\n\", 5);\n    else if (sig == SIGUSR2)\n        write(STDOUT_FILENO, \"usr2\\n\", 5);\n}\n\nint main(void) {\n    struct sigaction act;\n    act.sa_handler = traiter;\n    sigemptyset(&act.sa_mask);\n    act.sa_flags = 0;\n    sigaction(SIGUSR1, &act, NULL);\n    sigaction(SIGUSR2, &act, NULL);\n\n    raise(SIGUSR1);\n    raise(SIGUSR2);\n    printf(\"fin\\n\");\n    return 0;\n}"
+    },
+    "explanation": "Le bug : un **signal non couvert** par un appel à `sigaction()`. Le gestionnaire `traiter` est bien prévu pour les **deux** signaux — il les distingue grâce à son argument `sig` —, mais `main` n'appelle `sigaction()` que pour **`SIGUSR1`**. Or **un appel à `sigaction()` ne configure qu'un seul signal** : `SIGUSR2` reste avec son action **par défaut** (`exit`). Le `raise(SIGUSR2)` **tue** donc le processus ; `usr2` et `fin` ne s'affichent jamais. La correction consiste à **ajouter l'appel manquant** : `sigaction(SIGUSR2, &act, NULL)`, qui installe le même gestionnaire pour `SIGUSR2`. Il faut **un appel `sigaction()` par signal** que l'on souhaite intercepter — un gestionnaire est toujours lié à un signal **précis**. La sortie devient alors `usr1`, `usr2`, `fin`.",
+    "concepts": [
+      "sigaction",
+      "gestionnaire-signal",
+      "sigusr",
+      "action-par-defaut"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "handlers-sigaction",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Ce programme devrait intercepter SIGINT pour afficher `interception` puis `fin du main`. En réalité il n'affiche que `fin du main` : le SIGINT n'est jamais traité par le gestionnaire. L'auteur a, par étourderie, affecté SIG_IGN au champ sa_handler au lieu de l'adresse du gestionnaire. Corrigez le programme.",
+    "payload": {
+      "spec": "Le programme doit installer, avec sigaction(), le gestionnaire 'capter' pour SIGINT, se signaler avec raise(SIGINT) afin que le gestionnaire affiche 'interception', puis afficher 'fin du main'. Le bug : la ligne d'affectation est 'act.sa_handler = SIG_IGN;'. Avec SIG_IGN, le signal SIGINT est purement et simplement IGNORÉ : le raise(SIGINT) n'a alors aucun effet, le gestionnaire 'capter' n'est jamais appelé et 'interception' ne s'affiche pas. Correction attendue : affecter à sa_handler l'adresse du gestionnaire, soit 'act.sa_handler = capter;'. Le SIGINT déroute alors vers 'capter' (affichage de 'interception'), puis le main affiche 'fin du main'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid capter(int sig) {\n    (void) sig;\n    write(STDOUT_FILENO, \"interception\\n\", 13);\n}\n\nint main(void) {\n    struct sigaction act;\n    act.sa_handler = SIG_IGN;\n    sigemptyset(&act.sa_mask);\n    act.sa_flags = 0;\n    sigaction(SIGINT, &act, NULL);\n\n    raise(SIGINT);\n    printf(\"fin du main\\n\");\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le gestionnaire intercepte bien SIGINT",
+          "stdin": "",
+          "expectedStdout": "interception\nfin du main",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid capter(int sig) {\n    (void) sig;\n    write(STDOUT_FILENO, \"interception\\n\", 13);\n}\n\nint main(void) {\n    struct sigaction act;\n    act.sa_handler = capter;\n    sigemptyset(&act.sa_mask);\n    act.sa_flags = 0;\n    sigaction(SIGINT, &act, NULL);\n\n    raise(SIGINT);\n    printf(\"fin du main\\n\");\n    return 0;\n}"
+    },
+    "explanation": "Le bug porte sur la valeur donnée au champ **`sa_handler`**. Ce champ accepte **trois sortes de valeurs** : `SIG_DFL` (action par défaut), `SIG_IGN` (**ignorer** le signal) ou l'**adresse d'un gestionnaire**. Ici l'auteur a écrit `act.sa_handler = SIG_IGN;` : il a donc demandé d'**ignorer** `SIGINT`. Le `raise(SIGINT)` n'a alors **aucun effet** — le signal est jeté — et le gestionnaire `capter` n'est **jamais** appelé : `interception` ne s'affiche pas. La correction consiste à affecter à `sa_handler` l'**adresse de la fonction de traitement** : `act.sa_handler = capter;`. Le `raise(SIGINT)` déroute alors vers `capter`, qui écrit `interception`, puis `main` reprend et affiche `fin du main`. `SIG_IGN` et un pointeur de gestionnaire sont deux choix opposés : l'un supprime la réaction, l'autre l'installe.",
+    "concepts": [
+      "sigaction",
+      "sig-dfl-ign",
+      "gestionnaire-signal"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "masquage-attente",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Bloquer un signal et ignorer un signal sont deux mécanismes équivalents : dans les deux cas, le signal n'est jamais délivré au processus.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. **Bloquer** et **ignorer** sont deux mécanismes **opposés** quant à la « mémoire » du signal. Un signal **ignoré** (`SIG_IGN`) est purement et simplement **jeté** : il ne sera **jamais** délivré, même plus tard. Un signal **bloqué** (masqué) est au contraire **conservé** : s'il est envoyé pendant le blocage, il devient **pendant** (*pending*) et **sera délivré** dès qu'on le débloquera. Le masquage ne fait que **retarder** la délivrance ; il ne **supprime** pas le signal. Confondre les deux est une erreur classique.",
+    "concepts": [
+      "masque-signaux",
+      "signaux-pendants",
+      "sig-dfl-ign"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "masquage-attente",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le masque d'un processus bloque déjà SIGQUIT. On exécute sigprocmask(SIG_BLOCK, &set, NULL) avec un ensemble set contenant uniquement SIGINT. Quel est l'état du masque après cet appel ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le masque bloque uniquement SIGINT ; SIGQUIT n'est plus bloqué."
+        },
+        {
+          "id": "b",
+          "label": "Le masque bloque à la fois SIGQUIT et SIGINT."
+        },
+        {
+          "id": "c",
+          "label": "Le masque est vidé : ni SIGQUIT ni SIGINT ne sont bloqués."
+        },
+        {
+          "id": "d",
+          "label": "L'appel échoue car SIGQUIT était déjà bloqué."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "`SIG_BLOCK` est **cumulatif** : il **ajoute** les signaux de `set` au masque, **sans rien retirer** de ce qui était déjà bloqué. Le masque bloquait `SIGQUIT` ; après `sigprocmask(SIG_BLOCK, &set, NULL)` avec `set = {SIGINT}`, il bloque **`SIGQUIT` ET `SIGINT`**. Pour **remplacer** entièrement le masque, il faudrait `SIG_SETMASK` ; pour **retirer** des signaux, `SIG_UNBLOCK`. C'est précisément parce que `SIG_BLOCK` est cumulatif qu'on **sauvegarde l'ancien masque** (`oldset`) afin de le restaurer exactement en sortie de section critique.",
+    "concepts": [
+      "sigprocmask",
+      "masque-signaux"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "masquage-attente",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Parmi ces affirmations sur sigsuspend() et l'attente fiable d'un signal, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "sigsuspend(mask) remplace le masque par mask et endort le processus en une seule opération atomique."
+        },
+        {
+          "id": "b",
+          "label": "Le schéma « sigprocmask(SIG_UNBLOCK, ...) puis pause() » comporte une fenêtre de course : un signal arrivé entre les deux appels est manqué."
+        },
+        {
+          "id": "c",
+          "label": "À son retour, sigsuspend() restaure le masque qui était en place avant l'appel."
+        },
+        {
+          "id": "d",
+          "label": "sigsuspend() renvoie 0 en cas de succès, comme la plupart des appels système."
+        },
+        {
+          "id": "e",
+          "label": "On appelle généralement sigsuspend() dans une boucle while sur un drapeau, car un autre signal peut provoquer un réveil intempestif."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "e"
+      ]
+    },
+    "explanation": "**`sigsuspend(mask)`** pose le masque `mask` **et** endort le processus en **une seule opération atomique**, indivisible : aucun signal ne peut se glisser entre les deux. Le couple `sigprocmask(SIG_UNBLOCK, ...)` + `pause()` n'est **pas** atomique — un signal arrivé dans la **fenêtre** entre les deux appels est délivré avant le `pause`, qui s'endort alors pour toujours. À son retour, `sigsuspend` **restaure** le masque d'avant l'appel. On l'enferme dans une **boucle `while (!drapeau)`** car un **autre** signal peut la réveiller. L'affirmation (d) est fausse : `sigsuspend` renvoie **toujours `-1`** (avec `errno == EINTR`), exactement comme `pause`.",
+    "concepts": [
+      "sigsuspend",
+      "condition-course-signal",
+      "pause"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "masquage-attente",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce code qui construit un ensemble contenant SIGINT, bloque ce signal, puis interroge les signaux pendants.",
+    "payload": {
+      "template": "sigset_t set, pendants;\n{{c1}}(&set);                 /* on part d'un ensemble vide */\n{{c2}}(&set, SIGINT);         /* on y ajoute SIGINT */\nsigprocmask({{c3}}, &set, NULL);   /* on bloque SIGINT */\n/* ... un SIGINT envoye ici resterait pendant ... */\n{{c4}}(&pendants);            /* on recupere les signaux pendants */\nif (sigismember(&pendants, SIGINT)) puts(\"SIGINT en attente\");",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "md",
+          "hint": "vide l'ensemble de signaux"
+        },
+        {
+          "id": "c2",
+          "width": "md",
+          "hint": "ajoute un signal à l'ensemble"
+        },
+        {
+          "id": "c3",
+          "width": "md",
+          "hint": "l'opération qui ajoute au masque"
+        },
+        {
+          "id": "c4",
+          "width": "md",
+          "hint": "donne l'ensemble des signaux pendants"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": "sigemptyset",
+        "c2": "sigaddset",
+        "c3": "SIG_BLOCK",
+        "c4": "sigpending"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "On manipule un `sigset_t` **uniquement** par les fonctions dédiées. **`sigemptyset(&set)`** initialise l'ensemble à **vide** — étape obligatoire avant tout usage. **`sigaddset(&set, SIGINT)`** y **ajoute** `SIGINT`. **`sigprocmask(SIG_BLOCK, &set, NULL)`** **ajoute** ces signaux au masque du processus : `SIGINT` est désormais **bloqué**. Enfin **`sigpending(&pendants)`** remplit `pendants` avec l'ensemble des signaux **pendants** (envoyés mais pas encore délivrés) ; on y teste la présence de `SIGINT` avec `sigismember`. C'est le motif type pour **savoir si un signal est arrivé pendant qu'il était bloqué**.",
+    "concepts": [
+      "sigset-t",
+      "sigprocmask",
+      "sigpending"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "masquage-attente",
+    "type": "ORDERING",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Voici le schéma fiable pour attendre un signal SIGUSR1 sans jamais le manquer. Remettez les cinq étapes dans le bon ordre.",
+    "payload": {
+      "items": [
+        {
+          "id": "handler",
+          "label": "Installer le gestionnaire de SIGUSR1 avec sigaction()"
+        },
+        {
+          "id": "bloquer",
+          "label": "Bloquer SIGUSR1 avec sigprocmask(SIG_BLOCK, ...) avant la zone sensible"
+        },
+        {
+          "id": "travail",
+          "label": "Effectuer le travail ; un SIGUSR1 envoyé maintenant restera pendant"
+        },
+        {
+          "id": "suspend",
+          "label": "S'endormir avec sigsuspend(&vide) dans une boucle while (!recu)"
+        },
+        {
+          "id": "restaurer",
+          "label": "Restaurer le masque d'origine avec sigprocmask(SIG_SETMASK, &ancien, NULL)"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "handler",
+        "bloquer",
+        "travail",
+        "suspend",
+        "restaurer"
+      ]
+    },
+    "explanation": "Le schéma fiable d'attente d'un signal combine `sigaction`, `sigprocmask` et `sigsuspend`, dans cet ordre. (1) On **installe le gestionnaire** de `SIGUSR1`. (2) On **bloque** `SIGUSR1` **avant la zone sensible** : ainsi un signal arrivé « trop tôt » n'est pas perdu, il devient pendant. (3) On effectue le **travail** ; un `SIGUSR1` envoyé pendant cette phase reste **pendant**. (4) On **s'endort avec `sigsuspend(&vide)`** dans une **boucle `while (!recu)`** : `sigsuspend` débloque atomiquement `SIGUSR1` et endort le processus — s'il était déjà pendant, il est délivré immédiatement ; la boucle protège des réveils intempestifs. (5) On **restaure le masque d'origine**. L'ordre bloquer → travail → sigsuspend est ce qui **élimine la course**.",
+    "concepts": [
+      "sigsuspend",
+      "sigprocmask",
+      "condition-course-signal",
+      "sigaction"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "masquage-attente",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme bloque SIGUSR1, se l'envoie, vérifie qu'il est pendant, puis le débloque ; le gestionnaire affiche un message. Quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid handler(int sig) {\n    (void) sig;\n    write(STDOUT_FILENO, \"handler USR1\\n\", 13);\n}\n\nint main(void) {\n    struct sigaction act;\n    act.sa_handler = handler;\n    sigemptyset(&act.sa_mask);\n    act.sa_flags = 0;\n    sigaction(SIGUSR1, &act, NULL);\n\n    sigset_t set, pendants;\n    sigemptyset(&set);\n    sigaddset(&set, SIGUSR1);\n    sigprocmask(SIG_BLOCK, &set, NULL);\n\n    raise(SIGUSR1);\n    write(STDOUT_FILENO, \"apres raise\\n\", 12);\n\n    sigpending(&pendants);\n    if (sigismember(&pendants, SIGUSR1))\n        write(STDOUT_FILENO, \"USR1 pendant\\n\", 13);\n\n    sigprocmask(SIG_UNBLOCK, &set, NULL);\n    write(STDOUT_FILENO, \"apres unblock\\n\", 14);\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "apres raise\nUSR1 pendant\nhandler USR1\napres unblock"
+    },
+    "explanation": "Le déroulement est entièrement déterministe. `SIGUSR1` est d'abord **bloqué** par `sigprocmask`. Le `raise(SIGUSR1)` envoie alors le signal alors qu'il est bloqué : il ne peut **pas** être délivré, il devient **pendant** — le gestionnaire ne s'exécute donc **pas encore**, et le programme affiche `apres raise`. Ensuite `sigpending` confirme que `SIGUSR1` est bien **pendant** : affichage de `USR1 pendant`. Puis `sigprocmask(SIG_UNBLOCK, ...)` **débloque** `SIGUSR1` : le signal pendant est **délivré immédiatement**, le gestionnaire s'exécute et écrit `handler USR1`. De retour dans `main`, `apres unblock` s'affiche. Ordre : `apres raise`, `USR1 pendant`, `handler USR1`, `apres unblock`.",
+    "concepts": [
+      "sigprocmask",
+      "signaux-pendants",
+      "sigpending"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "masquage-attente",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écrivez un programme qui attend SIGUSR1 SANS course, selon le schéma du cours. Installez un gestionnaire pour SIGUSR1 (il met un drapeau volatile sig_atomic_t à 1). Bloquez SIGUSR1, envoyez-vous le signal avec raise(SIGUSR1) — il devient pendant —, puis attendez-le avec sigsuspend() et un masque vide, dans une boucle while sur le drapeau. Le gestionnaire affiche `signal recu` ; après l'attente, le programme affiche `attente terminee`.",
+    "payload": {
+      "spec": "Le programme inclut <stdio.h>, <unistd.h> et <signal.h>. Il déclare un drapeau global 'volatile sig_atomic_t recu = 0'. Le gestionnaire void f(int) écrit 'signal recu' (avec write) et met recu à 1. Dans main : remplir une struct sigaction et installer le gestionnaire pour SIGUSR1 ; construire un sigset_t contenant SIGUSR1 (sigemptyset puis sigaddset) ; bloquer ce signal avec sigprocmask(SIG_BLOCK, ...) ; appeler raise(SIGUSR1) — le signal devient pendant ; construire un sigset_t VIDE (sigemptyset) ; attendre par 'while (!recu) sigsuspend(&vide);' — sigsuspend débloque atomiquement SIGUSR1, le signal pendant est délivré, le gestionnaire affiche 'signal recu' et met recu à 1, la boucle se termine ; afficher enfin 'attente terminee'. La sortie est 'signal recu' puis 'attente terminee'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\n/* drapeau partage : volatile sig_atomic_t recu = 0; */\n/* gestionnaire : ecrit 'signal recu' et met recu a 1 */\n\nint main(void) {\n    /* installez le gestionnaire de SIGUSR1 (sigaction) */\n    /* bloquez SIGUSR1, faites raise(SIGUSR1) */\n    /* attendez par while (!recu) sigsuspend(&vide); */\n    /* puis affichez 'attente terminee' */\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "attente de SIGUSR1 par sigsuspend",
+          "stdin": "",
+          "expectedStdout": "signal recu\nattente terminee",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvolatile sig_atomic_t recu = 0;\n\nvoid handler(int sig) {\n    (void) sig;\n    write(STDOUT_FILENO, \"signal recu\\n\", 12);\n    recu = 1;\n}\n\nint main(void) {\n    struct sigaction act;\n    act.sa_handler = handler;\n    sigemptyset(&act.sa_mask);\n    act.sa_flags = 0;\n    sigaction(SIGUSR1, &act, NULL);\n\n    sigset_t bloque, vide;\n    sigemptyset(&bloque);\n    sigaddset(&bloque, SIGUSR1);\n    sigprocmask(SIG_BLOCK, &bloque, NULL);\n\n    raise(SIGUSR1);\n\n    sigemptyset(&vide);\n    while (!recu)\n        sigsuspend(&vide);\n\n    printf(\"attente terminee\\n\");\n    return 0;\n}"
+    },
+    "explanation": "C'est le **schéma fiable** d'attente d'un signal. (1) On installe le gestionnaire de `SIGUSR1` avec `sigaction` ; il écrit `signal recu` et pose le drapeau `recu`. (2) On **bloque** `SIGUSR1` (`sigemptyset` + `sigaddset` + `sigprocmask(SIG_BLOCK, ...)`) **avant** de risquer de le recevoir. (3) Le `raise(SIGUSR1)` envoie le signal : comme il est bloqué, il devient **pendant** — il n'est **pas perdu**. (4) `while (!recu) sigsuspend(&vide)` : `sigsuspend` installe le masque **vide** (qui ne bloque pas `SIGUSR1`) **et** endort le processus, **atomiquement**. Le `SIGUSR1` pendant est donc délivré **immédiatement** ; le gestionnaire s'exécute, pose `recu`, et la boucle s'arrête. La **boucle `while`** protège des réveils intempestifs. C'est l'atomicité de `sigsuspend` — poser le masque et dormir en un seul geste — qui **élimine la course** du couple `sigprocmask` + `pause`.",
+    "concepts": [
+      "sigsuspend",
+      "sigprocmask",
+      "condition-course-signal",
+      "sigaction"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "masquage-attente",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme bloque SIGUSR1, se l'envoie (le signal devient pendant), puis veut l'attendre avec pause(). En réalité il se bloque pour toujours : pause() ne revient jamais. Le signal attendu est déjà pendant ET bloqué — pause() ne le verra jamais. Corrigez le programme en remplaçant pause() par la primitive correcte pour qu'il affiche `signal traite` puis `termine`.",
+    "payload": {
+      "spec": "Le programme installe un gestionnaire pour SIGUSR1 (il affiche 'signal traite'). Il bloque SIGUSR1 avec sigprocmask(SIG_BLOCK, ...), appelle raise(SIGUSR1) — le signal devient pendant car bloqué —, puis attend par pause(), et affiche enfin 'termine'. Le bug : pause() s'endort SANS débloquer SIGUSR1. Or SIGUSR1 est déjà pendant et reste bloqué : aucun nouveau signal n'arrivera, et le signal pendant ne peut pas être délivré tant qu'il est bloqué — pause() ne revient JAMAIS, le programme se bloque (timeout). Correction attendue : remplacer pause() par sigsuspend(&vide), où 'vide' est un sigset_t vide construit par sigemptyset. sigsuspend installe atomiquement le masque vide (qui ne bloque pas SIGUSR1) et endort le processus : le SIGUSR1 pendant est alors délivré immédiatement, le gestionnaire affiche 'signal traite', sigsuspend revient, et le main affiche 'termine'. Le couple bloquer-puis-sigsuspend est le schéma correct ; pause() est inadapté ici.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid handler(int sig) {\n    (void) sig;\n    write(STDOUT_FILENO, \"signal traite\\n\", 14);\n}\n\nint main(void) {\n    struct sigaction act;\n    act.sa_handler = handler;\n    sigemptyset(&act.sa_mask);\n    act.sa_flags = 0;\n    sigaction(SIGUSR1, &act, NULL);\n\n    sigset_t bloque;\n    sigemptyset(&bloque);\n    sigaddset(&bloque, SIGUSR1);\n    sigprocmask(SIG_BLOCK, &bloque, NULL);\n\n    raise(SIGUSR1);\n    pause();\n\n    printf(\"termine\\n\");\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "attente correcte du signal pendant",
+          "stdin": "",
+          "expectedStdout": "signal traite\ntermine",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <unistd.h>\n#include <signal.h>\n\nvoid handler(int sig) {\n    (void) sig;\n    write(STDOUT_FILENO, \"signal traite\\n\", 14);\n}\n\nint main(void) {\n    struct sigaction act;\n    act.sa_handler = handler;\n    sigemptyset(&act.sa_mask);\n    act.sa_flags = 0;\n    sigaction(SIGUSR1, &act, NULL);\n\n    sigset_t bloque, vide;\n    sigemptyset(&bloque);\n    sigaddset(&bloque, SIGUSR1);\n    sigprocmask(SIG_BLOCK, &bloque, NULL);\n\n    raise(SIGUSR1);\n    sigemptyset(&vide);\n    sigsuspend(&vide);\n\n    printf(\"termine\\n\");\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `pause()` est **incapable** d'attendre un signal **déjà pendant et bloqué**. Le `raise(SIGUSR1)` envoie le signal alors qu'il est **bloqué** : il devient **pendant**, mais ne sera **pas délivré** tant qu'il reste bloqué. `pause()` s'endort alors « tout court », **sans débloquer** quoi que ce soit : le `SIGUSR1` pendant ne peut pas le réveiller, et aucun **nouveau** signal n'arrivera — `pause()` ne revient **jamais**, le programme se bloque. La correction est **`sigsuspend(&vide)`**, avec `vide` un ensemble vide construit par `sigemptyset`. `sigsuspend` réalise **atomiquement** deux choses : elle **remplace** le masque par `vide` (qui ne bloque **pas** `SIGUSR1`) **et** endort le processus. Le `SIGUSR1` pendant est donc **immédiatement délivré**, le gestionnaire écrit `signal traite`, `sigsuspend` revient, et `main` affiche `termine`. C'est tout l'intérêt de `sigsuspend` face à `pause` : changer le masque et dormir **en un seul geste indivisible**.",
+    "concepts": [
+      "sigsuspend",
+      "pause",
+      "condition-course-signal",
+      "signaux-pendants"
+    ],
+    "source": "Cours 2 — Les signaux"
+  },
+  {
+    "chapterSlug": "masquage-attente",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque fonction ou constante de masquage à son rôle exact.",
+    "payload": {
+      "left": [
+        {
+          "id": "sigemptyset",
+          "label": "sigemptyset(&set)"
+        },
+        {
+          "id": "sigaddset",
+          "label": "sigaddset(&set, sig)"
+        },
+        {
+          "id": "sigblock",
+          "label": "sigprocmask(SIG_BLOCK, ...)"
+        },
+        {
+          "id": "sigsetmask",
+          "label": "sigprocmask(SIG_SETMASK, ...)"
+        },
+        {
+          "id": "sigpending",
+          "label": "sigpending(&set)"
+        },
+        {
+          "id": "sigsuspend",
+          "label": "sigsuspend(&mask)"
+        }
+      ],
+      "right": [
+        {
+          "id": "empty",
+          "label": "Initialise un sigset_t à l'ensemble vide"
+        },
+        {
+          "id": "addone",
+          "label": "Ajoute un signal précis à un sigset_t"
+        },
+        {
+          "id": "addmask",
+          "label": "Ajoute des signaux au masque, sans retirer ceux déjà bloqués"
+        },
+        {
+          "id": "replacemask",
+          "label": "Remplace entièrement le masque du processus"
+        },
+        {
+          "id": "getpending",
+          "label": "Donne l'ensemble des signaux envoyés mais pas encore délivrés"
+        },
+        {
+          "id": "atomicwait",
+          "label": "Pose un masque et endort le processus de façon atomique"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "sigemptyset": "empty",
+        "sigaddset": "addone",
+        "sigblock": "addmask",
+        "sigsetmask": "replacemask",
+        "sigpending": "getpending",
+        "sigsuspend": "atomicwait"
+      }
+    },
+    "explanation": "Les primitives de masquage et leurs rôles. **`sigemptyset(&set)`** initialise un `sigset_t` à l'ensemble **vide** (préalable obligatoire). **`sigaddset(&set, sig)`** y **ajoute un signal précis**. Sur le masque du processus, **`sigprocmask(SIG_BLOCK, ...)`** **ajoute** des signaux **sans retirer** ceux déjà bloqués (opération **cumulative**), tandis que **`sigprocmask(SIG_SETMASK, ...)`** **remplace entièrement** le masque. **`sigpending(&set)`** donne l'ensemble des signaux **pendants** — envoyés mais pas encore délivrés car bloqués. Enfin **`sigsuspend(&mask)`** **pose un masque et endort le processus de façon atomique** : c'est la primitive d'attente fiable d'un signal, sans la course du couple `pause` + `sigprocmask`.",
+    "concepts": [
+      "sigset-t",
+      "sigprocmask",
+      "sigpending",
+      "sigsuspend",
+      "masque-signaux"
+    ],
+    "source": "Cours 2 — Les signaux"
+  }
+]

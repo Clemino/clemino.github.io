@@ -1,0 +1,254 @@
+---
+title: "Serveur concurrent (un processus par client)"
+slug: serveur-multi-clients
+order: 5
+estimatedReadMin: 21
+concepts: [serveur-iteratif, serveur-concurrent, fork-par-client, socket-ecoute, socket-service, fermeture-descripteurs-serveur, reaping-fils-serveur, sigchld-serveur, alternatives-concurrence]
+source: "Cours 5 — Sockets et programmation réseau"
+---
+
+Le serveur TCP du chapitre 2 souffre d'une limite **grave** : il ne sert qu'**un client à la fois**. Tant qu'il dialogue avec l'un, tous les autres **attendent**. Ce dernier chapitre lève cette limite et construit le **serveur concurrent** : à chaque client accepté, le serveur **`fork`** un processus enfant qui le prend en charge, pendant que le parent **retourne immédiatement** accepter le suivant. C'est l'aboutissement du module : il combine les **sockets** (Module 7) et le **`fork`** (Module 1).
+
+## Le problème : le serveur itératif sert un client à la fois
+
+Reprenons le serveur TCP du chapitre 2, avec sa boucle d'acceptation :
+
+```c
+while (1) {
+    int sk = accept(server_fd, ...);   /* attendre un client            */
+    /* ... long dialogue avec ce client sur sk ... */
+    close(sk);                          /* puis seulement, client suivant */
+}
+```
+
+Ce serveur est **itératif** (ou **séquentiel**) : il traite les clients **les uns après les autres**. Le défaut saute aux yeux dès que le dialogue avec un client **dure** :
+
+> Avec un serveur **itératif**, pendant tout le **traitement** d'un client (qui peut être long — un gros transfert, des calculs, un client lent), le serveur **ne peut pas** appeler `accept` à nouveau. **Tous les autres clients sont bloqués** dans la file d'attente, voire **refusés** si la file (`backlog`) déborde. Un seul client lent **gèle** le service entier.
+
+Un vrai serveur doit traiter **plusieurs clients simultanément**. C'est ce qu'on appelle un serveur **concurrent**.
+
+## La solution : un processus par client
+
+L'idée — celle du cours — réutilise l'outil du Module 1, le **`fork`** :
+
+> Le serveur **concurrent** par processus : à chaque connexion **acceptée**, le serveur **`fork`** un processus **enfant**. L'**enfant** se charge **entièrement** du dialogue avec ce client, puis se termine. Le **parent**, lui, **n'attend pas** : il **retourne aussitôt** au `accept` pour le client suivant. Plusieurs enfants peuvent ainsi dialoguer **en parallèle**, chacun avec son client.
+
+La répartition des rôles est nette :
+
+- le **parent** ne fait **que** `accept` puis `fork`, en boucle — il **distribue** les connexions ;
+- chaque **enfant** ne fait **que** dialoguer avec **un** client, puis meurt.
+
+```text
+                  ┌─────────── PARENT ───────────┐
+                  │  accept()  -> connexion       │
+                  │  fork()                       │
+                  │     ├── enfant : sert le client puis exit()
+                  │     └── parent : revient au accept()  ──┐
+                  └────────────────────────────────────────┘
+                           (en boucle, sans fin)
+```
+
+## L'enchaînement des appels
+
+Le serveur concurrent reprend la séquence du serveur TCP, en **insérant un `fork` juste après `accept`** :
+
+```text
+   socket()    -> socket d'ECOUTE
+   bind()
+   listen()
+   ┌─────────────────────────────────────────────────────┐
+   │ accept()   -> NOUVELLE socket de service (sk)        │
+   │ fork()                                               │
+   │   ENFANT  : dialoguer sur sk, close(sk), exit()      │
+   │   PARENT  : close(sk), revenir au accept()           │  ← boucle
+   └─────────────────────────────────────────────────────┘
+```
+
+`accept` renvoie, on s'en souvient (chapitre 2), une **nouvelle socket de service**. Le `fork` qui suit en fait hériter une **copie** à l'enfant : père et fils possèdent alors **chacun** un descripteur vers **cette même** socket de service. C'est de là que vient le point le plus délicat du chapitre — la **fermeture des descripteurs**.
+
+## Le point capital : fermer les bons descripteurs
+
+Après le `fork`, **chaque processus possède une copie de tous les descripteurs ouverts** (héritage de `fork`, Module 1). Le serveur a, à cet instant, **deux** sockets ouvertes — et donc, après le `fork`, **quatre** descripteurs au total :
+
+| | socket d'**écoute** (`server_fd`) | socket de **service** (`sk`) |
+|---|---|---|
+| **Parent** | en a besoin (pour `accept` les suivants) | **n'en a pas besoin** → **`close`** |
+| **Enfant** | **n'en a pas besoin** (il ne `accept`e pas) | en a besoin (pour dialoguer) → **`close`** à la fin |
+
+Les règles de fermeture, **immédiatement après le `fork`** :
+
+- le **parent ferme la socket de service** (`close(sk)`) : c'est l'**enfant** qui s'occupe de ce client, le parent n'en a aucun usage ;
+- l'**enfant ferme la socket d'écoute** (`close(server_fd)`) : il ne `accept`e jamais de connexion, cette socket ne lui sert à rien.
+
+> ⚠️ **Le parent DOIT `close` la socket de service après le `fork`.** S'il l'oublie : (1) il **accumule** un descripteur à chaque client → **fuite de descripteurs**, la table se remplit ; (2) plus grave, la **connexion ne se fermera jamais proprement** — tant qu'un descripteur (celui, oublié, du parent) reste ouvert sur la socket de service, la fin de connexion TCP n'est pas signalée au client, même quand l'enfant a fini et fermé sa copie. La connexion ne se ferme **réellement** que lorsque **tous** les descripteurs qui la désignent sont fermés. Symétriquement, l'enfant ferme la socket d'écoute, qu'il n'utilise pas.
+
+C'est exactement la **règle d'or des tubes** du Module 3 — *« chaque processus ferme les extrémités qu'il n'utilise pas »* — appliquée aux sockets : un descripteur partagé inutilement empêche la détection de la fin.
+
+## Serveur TCP concurrent complet
+
+Voici le serveur concurrent complet, conforme au cours :
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/wait.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+#define PORT        8080
+#define BUFFER_SIZE 1024
+
+/* dialogue complet avec un client : execute par l'ENFANT */
+void traiter_client(int sk) {
+    char buffer[BUFFER_SIZE] = {0};
+    ssize_t n = recv(sk, buffer, sizeof(buffer) - 1, 0);
+    if (n > 0) {
+        buffer[n] = '\0';
+        printf("[fils %d] recu : %s\n", (int) getpid(), buffer);
+        const char *reponse = "Traite par un processus dedie";
+        send(sk, reponse, strlen(reponse), 0);
+    }
+}
+
+int main(void) {
+    int server_fd, sk;
+    struct sockaddr_in adresse, adr_client;
+
+    /* eviter les zombies : voir la section "recuperer les enfants" */
+    signal(SIGCHLD, SIG_IGN);
+
+    /* 1-2-3 : socket d'ecoute, bind, listen (comme au chapitre 2) */
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+        perror("socket"); exit(EXIT_FAILURE);
+    }
+    int oui = 1;
+    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &oui, sizeof(oui));
+
+    memset(&adresse, 0, sizeof(adresse));
+    adresse.sin_family      = AF_INET;
+    adresse.sin_addr.s_addr = htonl(INADDR_ANY);
+    adresse.sin_port        = htons(PORT);
+
+    if (bind(server_fd, (struct sockaddr *) &adresse, sizeof(adresse)) == -1) {
+        perror("bind"); exit(EXIT_FAILURE);
+    }
+    if (listen(server_fd, 5) == -1) {
+        perror("listen"); exit(EXIT_FAILURE);
+    }
+    printf("serveur concurrent en attente sur le port %d...\n", PORT);
+
+    /* 4 : boucle d'acceptation concurrente */
+    while (1) {
+        socklen_t lg = sizeof(adr_client);
+        sk = accept(server_fd, (struct sockaddr *) &adr_client, &lg);
+        if (sk == -1) { perror("accept"); continue; }
+
+        pid_t pid = fork();           /* un processus par client */
+        if (pid == -1) {
+            perror("fork");
+            close(sk);                /* echec : on lache ce client */
+            continue;
+        }
+
+        if (pid == 0) {
+            /* ===== ENFANT ===== */
+            close(server_fd);         /* l'enfant n'ecoute pas */
+            traiter_client(sk);       /* dialogue avec CE client */
+            close(sk);                /* fin du dialogue          */
+            exit(EXIT_SUCCESS);       /* l'enfant se termine ici  */
+        } else {
+            /* ===== PARENT ===== */
+            close(sk);                /* le parent ne sert pas ce client */
+            /* le parent NE attend PAS : il revient au accept() */
+        }
+    }
+
+    close(server_fd);                 /* jamais atteint ici (boucle infinie) */
+    return 0;
+}
+```
+
+Le squelette de la boucle, qui condense tout le chapitre :
+
+```c
+while (1) {
+    sk = accept(server_fd, &adr_client, &lg);   /* connexion etablie */
+
+    if (fork() == 0) {            /* ----- FILS : s'occupe du client ----- */
+        close(server_fd);         /* ferme la socket d'ecoute (inutile)    */
+        traiter_client(sk);       /* TRAITEMENT DU CLIENT                  */
+        close(sk);                /* ferme la socket de service            */
+        exit(EXIT_SUCCESS);
+    }
+    close(sk);                    /* ----- PERE : ferme la socket de       */
+                                  /*        service, puis reboucle ------- */
+}
+```
+
+Plusieurs clients sont maintenant servis **en parallèle** : chacun a **son** processus enfant, et le parent reste en permanence disponible pour `accept` de nouvelles connexions. Le client n'a **rien à changer** — c'est exactement le client TCP du chapitre 3.
+
+## Récupérer les enfants : éviter les zombies
+
+Un serveur concurrent crée potentiellement **beaucoup** de processus enfants. Or, on l'a vu au Module 1 : quand un enfant se termine, il devient un **zombie** tant que son parent n'a pas récupéré son statut par `wait`/`waitpid`. Un serveur qui **ne récupère jamais** ses enfants accumule les zombies — chacun occupe une entrée de la table des processus — jusqu'à la **saturer**.
+
+Mais le parent ne peut pas simplement appeler `wait` dans sa boucle : `wait` est **bloquant**, et le parent doit rester libre pour `accept`. Il y a **deux** solutions propres.
+
+### Solution 1 — ignorer `SIGCHLD` (la plus simple)
+
+Quand un enfant se termine, le noyau envoie le signal **`SIGCHLD`** au parent (Module 2). En demandant explicitement à **ignorer** ce signal, on indique au système que les enfants **ne deviendront pas zombies** — le noyau les nettoie automatiquement :
+
+```c
+signal(SIGCHLD, SIG_IGN);   /* place AVANT la boucle d'acceptation */
+```
+
+C'est la méthode la plus simple, et celle employée dans le serveur complet ci-dessus. Une seule ligne, placée **avant** la boucle, et le problème des zombies disparaît.
+
+### Solution 2 — un gestionnaire de `SIGCHLD` avec `waitpid`
+
+Si le serveur a besoin de **connaître** le statut de ses enfants, il installe un **gestionnaire** de `SIGCHLD` qui appelle `waitpid` avec l'option **`WNOHANG`** (attente **non bloquante**, Module 1), en **boucle** :
+
+```c
+#include <sys/wait.h>
+
+/* gestionnaire de SIGCHLD : recupere TOUS les enfants termines */
+void recuperer_fils(int sig) {
+    (void) sig;
+    /* WNOHANG : ne bloque pas ; la boucle vide la file des fils termines */
+    while (waitpid(-1, NULL, WNOHANG) > 0)
+        ;
+}
+
+/* installation, avant la boucle d'acceptation : */
+struct sigaction sa;
+sa.sa_handler = recuperer_fils;
+sigemptyset(&sa.sa_mask);
+sa.sa_flags = SA_RESTART;       /* relance accept() interrompu par le signal */
+sigaction(SIGCHLD, &sa, NULL);
+```
+
+> ⚠️ Dans le gestionnaire, `waitpid` est appelé **en boucle** `while (... > 0)`. Raison : plusieurs enfants peuvent se terminer **quasi simultanément**, mais les signaux **ne se cumulent pas** — le parent peut ne recevoir **qu'un seul** `SIGCHLD` pour **plusieurs** fils morts. La boucle récupère **tous** les enfants déjà terminés ; `WNOHANG` garantit qu'elle s'arrête (sans bloquer) dès qu'il n'y en a plus.
+
+> ⚠️ Un signal peut **interrompre** un appel système bloquant : l'arrivée de `SIGCHLD` pendant que le parent est dans `accept` fait échouer ce dernier avec `errno == EINTR`. Deux parades : l'option **`SA_RESTART`** (le système **relance** automatiquement l'appel interrompu), ou tester explicitement `EINTR` autour de l'`accept` pour le **réessayer**.
+
+## Les alternatives au `fork`
+
+Le « un processus par client » n'est pas la seule façon de bâtir un serveur concurrent. Pour culture :
+
+- **un thread par client** — au lieu de `fork`, le serveur crée un **thread** (Module 5) par connexion acceptée. Les threads sont **plus légers** que les processus (création et changement de contexte plus rapides) et partagent la mémoire — pratique pour des données communes —, mais ce partage exige une **synchronisation** soigneuse (mutex), et un thread qui plante peut faire tomber tout le serveur.
+- **le multiplexage avec `select` / `poll`** — un serveur **mono-processus, mono-thread** qui surveille **plusieurs** sockets à la fois avec l'appel **`select`** (ou `poll`, `epoll`). Il ne crée **aucun** processus ni thread : il réagit aux sockets « prêtes ». Très efficace pour de **nombreuses** connexions, mais le code, dirigé par les événements, est plus complexe.
+
+Le **`fork` par client** reste le modèle **le plus simple à comprendre** et celui du cours : chaque client a son processus **isolé**, sans aucun problème de synchronisation entre clients. C'est le schéma à maîtriser pour l'examen.
+
+> **À retenir**
+> - Un serveur **itératif** sert les clients **un par un** : pendant un traitement long, **tous les autres clients attendent** (voire sont refusés). Un serveur **concurrent** les traite **simultanément**.
+> - Le modèle du cours : à chaque `accept`, le serveur **`fork`** un enfant. L'**enfant** dialogue avec **ce** client puis `exit` ; le **parent** ne dialogue pas et **revient aussitôt** au `accept`. L'enchaînement est `socket` → `bind` → `listen` → boucle \{ `accept` → `fork` \}.
+> - Après le `fork`, **chaque processus hérite des deux sockets**. Fermetures **obligatoires** : le **parent `close` la socket de service** (`sk`), l'**enfant `close` la socket d'écoute** (`server_fd`).
+> - Si le **parent oublie de `close` la socket de service** : fuite de descripteurs **et** la **connexion ne se ferme jamais proprement** (une connexion ne se ferme que lorsque **tous** ses descripteurs le sont) — c'est la règle d'or des tubes appliquée aux sockets.
+> - Le parent **ne fait pas `wait`** (bloquant) dans sa boucle, sinon il ne sert plus qu'un client à la fois. Pour **éviter les zombies** : soit **`signal(SIGCHLD, SIG_IGN)`** (le plus simple), soit un **gestionnaire de `SIGCHLD`** appelant **`waitpid(-1, NULL, WNOHANG)`** en **boucle**.
+> - Les signaux ne se cumulant pas, le gestionnaire de `SIGCHLD` **boucle** sur `waitpid` ; `accept` interrompu par un signal échoue avec **`EINTR`** — parade : **`SA_RESTART`** ou réessai explicite.
+> - **Alternatives** au `fork` par client : **un thread par client** (plus léger, mais synchronisation à gérer) ou le **multiplexage** par **`select`/`poll`** (un seul processus surveillant plusieurs sockets).

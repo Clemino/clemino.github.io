@@ -1,0 +1,352 @@
+---
+title: "Le neurone formel et les fonctions d'activation"
+slug: neurone-formel-activations
+order: 1
+estimatedReadMin: 20
+concepts: [reseau-de-neurones, reseau-feedforward, couche-de-neurones, couche-cachee, reseau-totalement-connecte, neurone-formel, somme-ponderee, fonction-d-activation, fonction-heaviside, fonction-sigmoide, fonction-activation-lineaire, fonction-tangente-hyperbolique, softmax]
+source: "RNA_HSe_Fr_2324.pdf"
+---
+
+## De quoi s'agit-il ? Les réseaux de neurones
+
+Ce module ouvre le **premier chapitre consacré aux réseaux de neurones**. Le
+cours en annonce d'emblée l'objet : **introduire les réseaux de neurones
+artificiels, leur architecture et leur fonctionnement**. Et il en donne la
+nature :
+
+- **C'est une méthode d'apprentissage supervisé** : comme l'arbre de décision,
+  les forêts, le classifieur bayésien naïf ou la régression logistique des
+  modules précédents, un réseau de neurones **apprend à partir d'exemples**.
+- **Elle s'utilise aussi bien en classification qu'en régression** : le même
+  type de modèle traite les deux grandes familles de problèmes supervisés.
+
+Le cours précise ce module : il s'agit ici des réseaux de neurones
+**« standards »** — l'architecture la plus simple, point de départ de
+l'apprentissage profond abordé plus tard.
+
+> **À retenir** : un **réseau de neurones** est une méthode d'**apprentissage
+> supervisé**, utilisée **en classification comme en régression**. Ce module en
+> présente l'**architecture** et le **fonctionnement** des modèles
+> « standards ».
+
+## Le réseau vu comme une boîte noire
+
+Avant d'ouvrir le réseau, le cours en donne une vue **externe**, **comme une
+boîte noire**. Vue ainsi, deux propriétés le caractérisent.
+
+- Un réseau de neurones est **un système ayant des entrées numériques et des
+  sorties numériques**. Tout ce qui entre et tout ce qui sort sont des
+  **nombres**.
+- Du point de vue mathématique, **un réseau de neurones est donc une fonction de
+  `ℝⁿ` dans `ℝᵐ`** : il prend `n` nombres en entrée et en produit `m` en sortie.
+
+Le cours fixe les **notations** : on note `(x₁, …, xₙ)` les **entrées** du
+réseau et `(ŷ₁, …, ŷₘ)` ses **sorties**. Ce point de vue « fonction » s'applique
+aux deux familles de problèmes.
+
+- **Problèmes de régression** : étant donné une instance `X` décrite par un
+  `n`-uplet `(x₁, …, xₙ)`, le réseau doit calculer une valeur
+  `f(X) ∈ ℝᵐ`. Le réseau a `n` entrées et `m` sorties, **dont la signification
+  est immédiate**.
+- **Problèmes de classification** : étant donné une instance `X` décrite par un
+  `n`-uplet `(x₁, …, xₙ)`, le réseau doit permettre de **déterminer sa classe**
+  (éventuellement ses classes, dans le cas multi-labels) dans un ensemble de
+  classes `{C₁, …, Cₘ}`. Le réseau a `n` entrées, et le **nombre de sorties
+  dépend de `m`** d'une manière expliquée plus loin (chapitre 5).
+
+> **À retenir** : vu comme une **boîte noire**, un réseau de neurones est un
+> **système à entrées et sorties numériques** — donc une **fonction de `ℝⁿ` dans
+> `ℝᵐ`**. On note les entrées `(x₁, …, xₙ)` et les sorties `(ŷ₁, …, ŷₘ)`.
+
+## L'intérieur de la boîte : les couches
+
+Le cours ouvre ensuite la boîte noire. À l'intérieur, **un réseau de neurones se
+compose d'une suite de couches**. On en distingue **trois sortes**.
+
+| Couche | Rôle |
+| --- | --- |
+| **Couche d'entrée** | Sert **juste à introduire les données** dans le réseau |
+| **Couches cachées** | Reçoivent leurs entrées de la couche précédente, **font des calculs** et transmettent les résultats à la couche suivante |
+| **Couche de sortie** | Reçoit ses entrées de la couche précédente, **fait des calculs** et transmet les résultats — les **sorties du réseau** — à l'extérieur |
+
+Le cours en tire la lecture mathématique : **chaque couche cachée et la couche
+de sortie sont des fonctions de `ℝⁿ¹` dans `ℝⁿ²`**, et **le réseau de neurones
+est la composée de ces fonctions**. Un réseau est donc un **empilement de
+fonctions** appliquées les unes après les autres.
+
+Deux notations importantes accompagnent cette structure.
+
+- On note **`L` le nombre de couches** du réseau, et `l = 1, …, L` l'**indice**
+  de chaque couche.
+- **Compte tenu du sens unique de la circulation des données** — de l'entrée
+  vers la sortie —, le réseau est qualifié de **feedforward**.
+
+> **À retenir** : un réseau se compose d'une **suite de couches** : la couche
+> d'**entrée** (qui introduit les données), les couches **cachées** et la couche
+> de **sortie** (qui font les calculs). Chaque couche est une fonction ; le
+> réseau est leur **composée**. Les données circulant dans un **sens unique**,
+> le réseau est dit **feedforward**.
+
+## Zoom sur une couche : le neurone
+
+Le cours descend d'un cran : **une couche est un tableau de neurones**, et **un
+neurone est une unité de calcul**. Le neurone est donc la **brique élémentaire**
+du réseau. Son fonctionnement tient en quatre points.
+
+1. Le neurone **reçoit en entrée `n1` valeurs** `x₁, …, xₙ₁` **issues d'autres
+   neurones** (ceux de la couche précédente).
+2. **Chaque neurone a `n1` poids `wᵢ` et un biais `b` qui lui sont propres.**
+3. Le neurone calcule la valeur :
+
+```text
+z = Σᵢ wᵢ · xᵢ + b
+```
+
+   c'est-à-dire la **somme**, sur ses `n1` entrées, de chaque entrée `xᵢ`
+   multipliée par le poids `wᵢ` correspondant, à laquelle on **ajoute le biais
+   `b`**.
+4. Le neurone calcule sa **sortie** :
+
+```text
+y = g(z)
+```
+
+   où `g` est la **fonction d'activation**. Point essentiel : **tous les
+   neurones d'une même couche ont la même fonction d'activation.**
+
+Le neurone se résume donc à **deux opérations enchaînées** : une **partie
+linéaire** (la somme pondérée `z`) suivie d'une **partie non linéaire** (la
+fonction d'activation `g`). On reconnaît exactement la structure annoncée par le
+module précédent : un neurone à activation sigmoïde *est* une régression
+logistique.
+
+> **À retenir** : une couche est un **tableau de neurones** ; un **neurone** est
+> une **unité de calcul**. Il a `n1` **poids `wᵢ`** et un **biais `b`** propres,
+> calcule la **somme pondérée `z = Σᵢ wᵢ·xᵢ + b`**, puis sa **sortie
+> `y = g(z)`** via la **fonction d'activation `g`**. Tous les neurones d'une
+> couche partagent la **même** activation.
+
+## Un réseau totalement connecté
+
+Comment les neurones de deux couches voisines sont-ils reliés ? Le cours énonce
+une **double propriété** de connexion.
+
+- **Chaque neurone de la couche `l + 1` est connecté en entrée à chaque neurone
+  de la couche `l`** : il reçoit en entrée la sortie de chacun de ces neurones.
+- **Chaque neurone de la couche `l` est connecté en sortie à chaque neurone de
+  la couche `l + 1`** : il envoie sa sortie à chacun de ces neurones.
+
+Une conséquence directe en découle : **le nombre de poids d'un neurone de la
+couche `l` est donc égal au nombre de neurones de la couche `l − 1`** (puisqu'il
+reçoit une entrée — et donc affecte un poids — par neurone de la couche
+précédente). Cette double propriété conduit à **qualifier le réseau de
+totalement connecté (fully connected)**.
+
+> **À retenir** : dans un réseau **totalement connecté (fully connected)**,
+> chaque neurone d'une couche est relié à **tous** les neurones de la couche
+> voisine. Le **nombre de poids** d'un neurone de la couche `l` égale donc le
+> **nombre de neurones de la couche `l − 1`**.
+
+## Les notations du cours
+
+Le cours fixe un système de **notations** précis, qui servira dans tout le
+module — en particulier pour la propagation avant et la rétropropagation.
+
+- **Nombre de couches : `L`.** La couche `l = 1` est la couche d'**entrée** ;
+  les couches `l ∈ {2, …, L − 1}` sont les couches **cachées** ; la couche
+  `l = L` est la couche de **sortie**.
+- **Nombre de neurones de la couche `l` : `nl`.**
+- La **position de chaque neurone** dans le réseau est définie par un **couple
+  `(l, j)`**, où `l` est le numéro de la couche et `j ∈ {1, …, nl}` la position
+  du neurone dans sa couche.
+- On note **`wⱼₖˡ` le poids de la connexion** entre le neurone `(l − 1, k)` et le
+  neurone `(l, j)`, et **`bⱼˡ` le biais** du neurone `(l, j)`.
+- On note **`xⱼ⁽ˡ⁾` la sortie du neurone `(l, j)`**. Pour la couche de **sortie**,
+  `xⱼ⁽ᴸ⁾` **se confond avec `ŷⱼ`** — la `j`-ème sortie du réseau.
+
+Avec ces notations, la sortie d'un neurone s'écrit :
+
+```text
+xⱼ⁽ˡ⁾ = g( Σₖ₌₁ⁿˡ⁻¹ wⱼₖˡ · xₖ⁽ˡ⁻¹⁾ )
+```
+
+la somme portant sur les `nl-1` neurones de la couche précédente. Le cours
+nomme la quantité interne : **la somme `Σₖ₌₁ⁿˡ⁻¹ wⱼₖˡ·xₖ⁽ˡ⁻¹⁾`, appelée somme
+pondérée (weighted input) du neurone `(l, j)`, est notée `zⱼ⁽ˡ⁾`**. On a donc la
+forme compacte :
+
+```text
+xⱼ⁽ˡ⁾ = gₗ( zⱼ⁽ˡ⁾ )
+```
+
+où `gₗ` est la fonction d'activation de la couche `l`.
+
+> **À retenir** : un neurone est repéré par le couple **`(l, j)`** (couche,
+> position) ; `wⱼₖˡ` est le **poids** `(l−1,k)→(l,j)`, `bⱼˡ` le **biais**, et
+> `xⱼ⁽ˡ⁾` la **sortie**. La **somme pondérée** est `zⱼ⁽ˡ⁾`, et
+> **`xⱼ⁽ˡ⁾ = gₗ(zⱼ⁽ˡ⁾)`**.
+
+## Les fonctions d'activation
+
+La fonction d'activation `g` est ce qui donne au neurone sa puissance. Le cours
+en présente **plusieurs**, avec leurs propriétés et leurs usages.
+
+### La fonction de Heaviside
+
+**Historiquement, la première fonction d'activation à avoir été utilisée est la
+fonction de Heaviside.** Elle est définie par :
+
+```text
+h(x) = 1  si x > 0
+h(x) = 0  sinon
+```
+
+Sa **sortie binaire** correspond à la définition d'un neurone **à deux états** :
+**activé** (à la suite du calcul d'une combinaison de ses entrées) ou **non
+activé**. Le cours en signale les **limites**.
+
+- Sa sortie binaire **limite son intérêt** : elle l'empêche d'**exprimer une
+  probabilité** ou de permettre des **calculs intermédiaires dont le résultat
+  n'est pas binaire**.
+- **Mathématiquement**, elle a aussi l'inconvénient de **ne pas être continue en
+  `0`** (donc **non dérivable**) — alors que ces bonnes propriétés sont **utiles
+  dans des algorithmes essentiels** pour les réseaux de neurones (en particulier
+  la descente du gradient, voir chapitre 4).
+
+### La fonction sigmoïde
+
+La **fonction sigmoïde** peut être vue comme une **version « lissée » de la
+fonction de Heaviside**. À ce titre, elle permet de **distinguer les valeurs
+hautes (voisines de `1`) et les valeurs basses (voisines de `0`)** des sorties
+des neurones. Elle est définie par :
+
+```text
+σ(x) = 1 / (1 + e⁻ˣ)
+```
+
+Le cours en souligne les qualités et les usages.
+
+- Elle possède **les « bonnes » propriétés qu'une fonction d'activation doit
+  avoir** — par exemple la **continuité** et la **dérivabilité**.
+- Ses valeurs étant **comprises entre `0` et `1`**, elles peuvent donc être
+  **interprétées comme des probabilités** : on l'utilise dans la **couche de
+  sortie** d'une **classification binaire** (mais aussi d'une classification
+  multi-labels).
+- **On l'utilise aussi dans les couches cachées.**
+
+### La fonction d'activation linéaire
+
+Parmi les **nombreuses** autres fonctions d'activation, le cours cite d'abord la
+**fonction d'activation linéaire**, définie par :
+
+```text
+f(x) = λ · x
+```
+
+**dont la fonction identité est un cas particulier** (pour `λ = 1`). Le cours
+en donne l'avantage et la limite.
+
+- **Avantage** : la **simplicité**.
+- **Limite** : son **usage est limité à des situations particulières**,
+  notamment la **couche de sortie dans le cas d'un problème de régression**.
+
+### La fonction tangente hyperbolique
+
+Le cours cite ensuite la **fonction tangente hyperbolique**, définie par :
+
+```text
+th(x) = (eˣ − e⁻ˣ) / (eˣ + e⁻ˣ)
+```
+
+Elle a **les mêmes propriétés que la fonction sigmoïde**, mais en **diffère** par
+deux traits :
+
+- elle a **des valeurs négatives** ;
+- elle est **centrée autour de `0`**.
+
+Elle est **utilisée dans les couches cachées**.
+
+Le tableau suivant récapitule les quatre fonctions et leurs usages typiques.
+
+| Fonction | Définition | Continue / dérivable | Usage typique |
+| --- | --- | --- | --- |
+| **Heaviside** | `h(x) = 1 si x > 0, 0 sinon` | **Non** (saut en `0`) | Première activation historique ; neurone à deux états |
+| **Sigmoïde** | `σ(x) = 1/(1 + e⁻ˣ)` | Oui | Sortie d'une classification **binaire** ; couches cachées |
+| **Linéaire** | `f(x) = λ·x` (identité si `λ = 1`) | Oui | Sortie d'un problème de **régression** |
+| **Tangente hyperbolique** | `th(x) = (eˣ−e⁻ˣ)/(eˣ+e⁻ˣ)` | Oui | Couches **cachées** (valeurs négatives, centrée en `0`) |
+
+> **À retenir** : la **Heaviside** (`h(x) = 1 si x > 0, 0 sinon`) est binaire et
+> **non dérivable en `0`**. La **sigmoïde** `σ(x) = 1/(1 + e⁻ˣ)`, lissée et
+> dérivable, sert en **sortie binaire** et en couches cachées. La **linéaire**
+> `f(x) = λ·x` sert en **sortie de régression**. La **tangente hyperbolique**
+> `th(x) = (eˣ−e⁻ˣ)/(eˣ+e⁻ˣ)`, à valeurs négatives et centrée en `0`, sert en
+> **couches cachées**.
+
+## Le cas particulier de la fonction softmax
+
+Le cours réserve un traitement à part à la fonction **softmax**, employée
+**dans le cas d'un problème de multi-classification à `m` classes** : on
+**l'utilise comme fonction d'activation de la couche de sortie**.
+
+Pour alléger les notations, on note `x₁, …, xₙ` les entrées de la couche de
+sortie (c'est-à-dire les sorties de la couche `L − 1`), et `wⱼₖ`, `bⱼ` les
+poids et le biais du `j`-ème neurone de la couche de sortie. **Chaque neurone
+`j` commence par calculer la somme pondérée** :
+
+```text
+zⱼ = Σₖ₌₁ⁿ wⱼₖ · xₖ + bⱼ
+```
+
+**Ensuite il calcule sa sortie** ainsi :
+
+```text
+ŷⱼ = exp(zⱼ) / Σᵢ₌₁ᵐ exp(zᵢ)
+```
+
+Le cours donne les **deux propriétés principales** qui rendent cette fonction
+utile.
+
+- **La sortie de chaque neurone est comprise entre `0` et `1`.**
+- **La somme des sorties est égale à `1`.**
+
+Autrement dit, **les `m` valeurs de sortie peuvent être interprétées comme `m`
+probabilités** — ce qui correspond exactement au besoin d'un problème de
+multi-classification.
+
+Le cours signale enfin une **particularité** : la fonction softmax **suppose que
+chaque neurone a accès aux valeurs `zᵢ` des autres neurones** (elles
+apparaissent au dénominateur). C'est pourquoi **on parle de couche softmax
+plutôt que de fonction d'activation seulement** : la sortie d'un neurone dépend
+de **toute la couche**, et non de sa seule somme pondérée.
+
+> **À retenir** : la **softmax** est l'activation de la **couche de sortie** en
+> **multi-classification** : chaque neurone calcule `zⱼ = Σₖ wⱼₖ·xₖ + bⱼ` puis
+> `ŷⱼ = exp(zⱼ)/Σᵢ exp(zᵢ)`. Ses sorties sont **dans `[0,1]`** et de **somme
+> `1`** — donc des **probabilités**. Chaque neurone ayant besoin des `zᵢ` des
+> autres, on parle de **couche softmax**.
+
+## Synthèse de la section
+
+Un **réseau de neurones** est une méthode d'**apprentissage supervisé**
+(classification ou régression) ; vu comme une **boîte noire**, c'est une
+**fonction de `ℝⁿ` dans `ℝᵐ`** d'entrées `(x₁, …, xₙ)` et de sorties
+`(ŷ₁, …, ŷₘ)`. À l'intérieur, il est une **suite de couches** — **entrée**,
+**cachées**, **sortie** — chacune étant une fonction, le réseau étant leur
+**composée** ; le sens unique de circulation le rend **feedforward**. Une couche
+est un **tableau de neurones**, et un **neurone** est une unité de calcul à
+**poids `wᵢ`** et **biais `b`** propres, qui calcule la **somme pondérée
+`z = Σᵢ wᵢ·xᵢ + b`** puis la **sortie `y = g(z)`** ; chaque neurone d'une couche
+partage la **même** fonction d'activation. Le réseau étant **totalement
+connecté**, le nombre de poids d'un neurone égale le nombre de neurones de la
+couche précédente. Notations : neurone `(l, j)`, poids `wⱼₖˡ`, biais `bⱼˡ`,
+sortie `xⱼ⁽ˡ⁾ = gₗ(zⱼ⁽ˡ⁾)`. Les **fonctions d'activation** sont la **Heaviside**
+(binaire, non dérivable), la **sigmoïde** (lissée, sortie binaire et couches
+cachées), la **linéaire** (sortie de régression), la **tangente hyperbolique**
+(couches cachées) et la **softmax** (couche de sortie en multi-classification,
+sorties interprétables comme des probabilités).
+
+> **À retenir** : un réseau de neurones est une **composée de couches** de
+> **neurones**, chaque neurone calculant `z = Σᵢ wᵢ·xᵢ + b` puis `y = g(z)`. Le
+> choix de la **fonction d'activation `g`** dépend de la couche et du problème :
+> **sigmoïde/softmax** en sortie de **classification**, **linéaire** en sortie de
+> **régression**, **sigmoïde/tanh** dans les **couches cachées**.

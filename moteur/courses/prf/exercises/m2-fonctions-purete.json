@@ -1,0 +1,272 @@
+[
+  {
+    "chapterSlug": "def-parametres",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle fonction est pure ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "`def f(x: Int) = x + 1`"
+        },
+        {
+          "id": "b",
+          "label": "`def f(x: Int) = println(x)`"
+        },
+        {
+          "id": "c",
+          "label": "`def f() = scala.util.Random.nextInt()`"
+        },
+        {
+          "id": "d",
+          "label": "`def f(x: Int) = compteur += x`"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La fonction `x + 1` depend seulement de son argument et ne modifie rien.",
+    "concepts": [
+      "purete"
+    ]
+  },
+  {
+    "chapterSlug": "def-parametres",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "`require(n >= 0)` exprime une precondition executable.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "`require` signale un argument invalide par une exception si la condition est fausse.",
+    "concepts": [
+      "require"
+    ]
+  },
+  {
+    "chapterSlug": "def-parametres",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Si un parametre est declare `x: => Int`, que se passe-t-il ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "L'expression fournie est reevaluee a chaque utilisation de `x`."
+        },
+        {
+          "id": "b",
+          "label": "L'expression est toujours evaluee avant l'appel."
+        },
+        {
+          "id": "c",
+          "label": "Le parametre devient mutable."
+        },
+        {
+          "id": "d",
+          "label": "Le type de `x` devient `Option[Int]`."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Un parametre par nom est reevalue a chaque occurrence dans le corps.",
+    "concepts": [
+      "by-name"
+    ]
+  },
+  {
+    "chapterSlug": "def-parametres",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle valeur est retournee ?",
+    "payload": {
+      "program": "def applique(x: Int, f: Int => Int) = f(x)\napplique(4, n => n * n)",
+      "language": "scala"
+    },
+    "solution": {
+      "expectedOutput": "16"
+    },
+    "explanation": "`f` vaut la lambda carre, appliquee a 4.",
+    "concepts": [
+      "hof",
+      "lambda"
+    ]
+  },
+  {
+    "chapterSlug": "evaluation-recursion",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Remets dans l'ordre les etapes de `somme(3)` pour `somme(n)=if n==0 then 0 else n+somme(n-1)`.",
+    "payload": {
+      "items": [
+        {
+          "id": "a",
+          "label": "somme(3) = 3 + somme(2)"
+        },
+        {
+          "id": "b",
+          "label": "3 + 2 + somme(1)"
+        },
+        {
+          "id": "c",
+          "label": "3 + 2 + 1 + somme(0)"
+        },
+        {
+          "id": "d",
+          "label": "3 + 2 + 1 + 0 = 6"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Chaque appel reduit `n` jusqu'au cas de base 0.",
+    "concepts": [
+      "recursion"
+    ]
+  },
+  {
+    "chapterSlug": "evaluation-recursion",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pourquoi `@tailrec` est-il utile ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il force le compilateur a verifier que la recursion est terminale."
+        },
+        {
+          "id": "b",
+          "label": "Il rend toute fonction plus rapide meme sans recursion."
+        },
+        {
+          "id": "c",
+          "label": "Il transforme une fonction impure en pure."
+        },
+        {
+          "id": "d",
+          "label": "Il change le type de retour en `Unit`."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "`@tailrec` echoue si l'appel recursif n'est pas en position terminale.",
+    "concepts": [
+      "tailrec"
+    ]
+  },
+  {
+    "chapterSlug": "evaluation-recursion",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Dans une recursion terminale, il reste une operation arithmetique a effectuer apres le retour de l'appel recursif.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "L'appel recursif est la derniere operation ; l'accumulateur porte le travail restant.",
+    "concepts": [
+      "tailrec"
+    ]
+  },
+  {
+    "chapterSlug": "fonctions-ordre-superieur",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle valeur est produite ?",
+    "payload": {
+      "program": "val f = (x: Int) => x + 2\nval g = (x: Int) => x * 3\ng(f(4))",
+      "language": "scala"
+    },
+    "solution": {
+      "expectedOutput": "18"
+    },
+    "explanation": "`f(4)=6`, puis `g(6)=18`.",
+    "concepts": [
+      "lambda",
+      "hof"
+    ]
+  },
+  {
+    "chapterSlug": "fonctions-ordre-superieur",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Que signifie fonction d'ordre superieur ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une fonction qui recoit une fonction ou retourne une fonction."
+        },
+        {
+          "id": "b",
+          "label": "Une fonction qui a toujours une complexite plus grande."
+        },
+        {
+          "id": "c",
+          "label": "Une fonction definie uniquement dans un objet."
+        },
+        {
+          "id": "d",
+          "label": "Une fonction sans parametre."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "C'est exactement la definition d'une fonction d'ordre superieur.",
+    "concepts": [
+      "hof"
+    ]
+  },
+  {
+    "chapterSlug": "fonctions-ordre-superieur",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle valeur est produite ?",
+    "payload": {
+      "program": "def ajoute(a: Int)(b: Int) = a + b\nval plus3 = ajoute(3)\nplus3(9)",
+      "language": "scala"
+    },
+    "solution": {
+      "expectedOutput": "12"
+    },
+    "explanation": "`ajoute(3)` renvoie une fonction qui ajoute 3 a son argument.",
+    "concepts": [
+      "currying",
+      "partial-application"
+    ]
+  }
+]

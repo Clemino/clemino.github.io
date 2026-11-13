@@ -1,0 +1,281 @@
+---
+title: "Critère de Metropolis et réglages"
+slug: critere-de-metropolis
+order: 4
+estimatedReadMin: 15
+concepts: [critere-de-metropolis, temperature, schema-de-refroidissement, perturbation, equilibre-thermodynamique, optimum-local, recuit-simule]
+source: "Optimisationstochastique-1.pdf"
+---
+
+## Le rôle du critère de Metropolis
+
+La section précédente a laissé une question ouverte : **quand le recuit simulé
+accepte-t-il une solution voisine moins bonne** que la solution courante ? La réponse
+est le **critère de Metropolis**.
+
+Le critère de Metropolis **évalue la probabilité de choisir une solution voisine `V`
+moins bonne que la solution courante `S`**. Cette probabilité dépend de **deux
+grandeurs** :
+
+- la **différence de coût** entre les deux solutions — leur écart d'énergie ;
+- l'**état d'avancement de l'algorithme**, mesuré par la **température `T`**.
+
+C'est lui qui réalise, concrètement, l'idée de la section précédente : **accepter
+parfois de se dégrader** pour pouvoir **s'échapper d'un optimum local**.
+
+> **À retenir** : le **critère de Metropolis** décide, de façon **probabiliste**, si
+> une solution voisine **dégradante** est acceptée. Sa décision dépend de l'**écart
+> de coût** et de la **température `T`**.
+
+## La formule du critère de Metropolis
+
+Notons `Δf` la **variation de coût** entre la solution voisine et la solution
+courante. La probabilité d'acceptation d'une solution dégradante est :
+
+```
+exp( -Δf / T )
+```
+
+soit, dans la notation du cours sur le TSP, où l'on prend explicitement la valeur
+absolue de l'écart entre la solution courante `S` et le voisin `V` :
+
+```
+metropolis(V, S, T) = exp( -( abs( f(S) - f(V) ) ) / T )
+```
+
+L'algorithme du **critère de Metropolis** s'écrit alors ainsi :
+
+```
+critereMetropolis(Δf, T) :
+    Si Δf <= 0 alors
+        retourner VRAI
+    sinon
+        retourner aléa(0,1) < exp( -Δf / T )
+```
+
+**Lecture du critère.**
+
+- **Si `Δf ≤ 0`**, le voisin **améliore** (ou égale) la solution courante : il est
+  **accepté** sans condition — on retourne `VRAI`.
+- **Sinon** (le voisin est **dégradant**, `Δf > 0`), on tire un nombre **aléatoire
+  dans `[0, 1[`** et on l'accepte **si ce tirage est inférieur à `exp(-Δf/T)`**. Le
+  voisin dégradant n'est donc accepté qu'**avec la probabilité `exp(-Δf/T)`**.
+
+Deux propriétés essentielles découlent de cette formule :
+
+- **une petite variation a plus de chance d'être acceptée qu'une variation
+  importante** : plus `Δf` est grand, plus `exp(-Δf/T)` est petit, donc plus
+  l'acceptation est improbable ;
+- **cette fonction est stochastique** : pour un même `Δf` et un même `T`, le résultat
+  dépend du **tirage aléatoire** — l'acceptation n'est jamais certaine.
+
+On peut visualiser le comportement sur le voisinage d'une solution `X` : un voisin
+**meilleur** (creux) est **toujours accepté** ; un voisin **moins bon** (situé sur
+une remontée, à gauche ou à droite du creux) n'est accepté que **selon
+`exp(-Δf/T)`**.
+
+> ⚠️ Le critère a **deux régimes**. `Δf ≤ 0` : acceptation **certaine**. `Δf > 0` :
+> acceptation **probabiliste**, avec la probabilité `exp(-Δf/T)` — d'autant **plus
+> faible** que la dégradation `Δf` est **grande**.
+
+## L'effet de la température sur le critère
+
+La température `T` figure au **dénominateur** de l'exposant `-Δf/T`. Elle gouverne
+donc, à elle seule, la **générosité** du critère de Metropolis. Le cours décrit les
+**deux extrêmes**.
+
+**À haute température**, la valeur du critère de Metropolis `exp(-Δf/T)` est **proche
+de `1`** : **la plupart des solutions dégradantes sont acceptées**. Sur l'intervalle
+`[0, 1]`, le seuil d'acceptation `exp(-Δf/T)` est tout près de `1`, donc presque tout
+tirage aléatoire passe — la zone d'**acceptation** est très large.
+
+**À faible température**, la valeur du critère de Metropolis `exp(-Δf/T)` **tend vers
+`0`** : **la plupart des solutions dégradantes sont rejetées**. Le seuil
+`exp(-Δf/T)` est tout près de `0`, donc presque tout tirage aléatoire échoue — la
+zone de **refus** domine.
+
+Les deux **cas limites** résument l'effet de `T` :
+
+- **à `T = 0`**, **aucune solution dégradante n'est sélectionnée** ;
+- **à `T = ∞`**, **toute solution est acceptée**.
+
+| Température | Valeur de `exp(-Δf/T)` | Solutions dégradantes | Comportement |
+| --- | --- | --- | --- |
+| Très **haute** (→ `∞`) | Proche de `1` | Presque **toutes acceptées** | **Exploration** maximale |
+| Très **basse** (→ `0`) | Proche de `0` | Presque **toutes rejetées** | **Exploitation** seule |
+
+On comprend dès lors le **plan d'ensemble** du recuit simulé : **commencer chaud**
+(beaucoup d'exploration, on accepte largement pour parcourir l'espace), puis
+**refroidir progressivement** pour glisser vers l'**exploitation** (on n'accepte plus
+guère que les améliorations, on affine). C'est la traduction algorithmique du
+compromis **exploration / exploitation**.
+
+> **À retenir** : `T` règle la générosité du critère. **`T` haute** → `exp(-Δf/T) ≈
+> 1` → on accepte presque tout (**exploration**). **`T` basse** → `exp(-Δf/T) ≈ 0` →
+> on rejette presque tout (**exploitation**). `T = 0` : aucune dégradation ; `T = ∞` :
+> tout est accepté.
+
+## Le refroidissement : passer de l'exploration à l'exploitation
+
+Le **refroidissement** est la **diminution de la température** entre les paliers. Le
+cours en précise le rôle : il **diminue la probabilité d'acceptation d'une solution
+non améliorante** selon le critère de Metropolis. C'est lui qui fait **basculer**
+l'algorithme de l'exploration vers l'exploitation.
+
+La **vitesse** de cette décroissance est un réglage **délicat** :
+
+- une **forte décroissance** **empêche une exploration convenable** : l'algorithme
+  **converge rapidement vers un minimum local** — c'est l'écueil de la **trempe** ;
+- une **faible décroissance** permet une **forte exploration lors des premières
+  itérations** et **rend peu probable la sélection d'une solution dégradante** trop
+  tôt.
+
+> ⚠️ Le réglage du refroidissement est un **arbitrage**. Refroidir **trop vite**
+> piège l'algorithme dans un **minimum local** (effet trempe) ; refroidir **trop
+> lentement** allonge fortement le calcul. Il n'existe pas de réglage universel.
+
+## Les schémas de refroidissement
+
+Le cours présente **différents schémas de réduction de la température**. Il faut les
+connaître et savoir lequel est le plus courant.
+
+**Schéma géométrique.** `T_{k+1} = α · T_k`, où `α` est un coefficient. C'est, selon
+le cours, le schéma **le plus couramment utilisé**. Le coefficient `α` est inférieur
+à `1` (souvent voisin de `0,99`) ; chaque palier multiplie la température par `α`.
+Cette formulation suppose qu'on **ne considère pas les paliers** un par un.
+
+**Schéma logarithmique.** `T_k = μ / log(1 + k)`, où `k` est le **nombre de paliers**
+et `μ` une constante. Ce schéma est **très coûteux en temps de calcul** et donc **peu
+utilisé**.
+
+**Schéma exponentiel.** `T_k = T_0 · exp(-k / τ)`, où `k` est le **nombre de paliers**
+et `τ` une constante.
+
+**Schéma « ésotérique ».** Le cours signale enfin qu'**on peut remonter la
+température** selon un critère particulier — la décroissance n'est donc pas toujours
+strictement monotone.
+
+| Schéma | Formule | Remarque du cours |
+| --- | --- | --- |
+| **Géométrique** | `T_{k+1} = α · T_k` | **Le plus couramment utilisé** |
+| **Logarithmique** | `T_k = μ / log(1 + k)` | **Très coûteux**, peu utilisé |
+| **Exponentiel** | `T_k = T_0 · exp(-k / τ)` | `k` = nb de paliers, `τ` constante |
+| **« Ésotérique »** | — | On peut **remonter** la température |
+
+Le cours sur le TSP résume par ailleurs la **mise à jour** de la température sous
+deux formes :
+
+- une **diminution par palier** — la température baisse **toutes les `k`
+  itérations** ;
+- une **diminution continue** — `T = λ · T` avec `λ < 1`, **en général `0,99`**.
+
+> **À retenir** : plusieurs **schémas de refroidissement** — **géométrique**
+> (`T_{k+1} = α·T_k`, **le plus courant**), **logarithmique** (coûteux),
+> **exponentiel** (`T_k = T_0·exp(-k/τ)`). En pratique, `T = λ·T` avec `λ ≈ 0,99`.
+
+## L'initialisation de la température
+
+La **température initiale** est, elle aussi, un réglage important. Le cours sur le TSP
+en donne **deux manières**, en signalant clairement laquelle privilégier :
+
+- **empiriquement**, en fonction du problème, par **essais successifs** : c'est la
+  méthode **conseillée** ;
+- à partir d'une **solution initiale et d'un voisin**, via la **formule de
+  Metropolis** (en fixant une **faible probabilité** d'acceptation visée) : c'est une
+  méthode **risquée**.
+
+Le cours indique par ailleurs qu'on choisit en général une température initiale **de
+valeur arbitraire, assez grande** — afin de garantir une **forte exploration** au
+début, conformément au principe vu plus haut.
+
+> **À retenir** : initialiser `T` **empiriquement, par essais successifs**, est
+> **conseillé** ; la déduire d'un voisin via la formule de Metropolis est **risqué**.
+> On part en général d'une `T` initiale **assez grande**.
+
+## La perturbation et l'équilibre thermodynamique
+
+Deux autres réglages méritent d'être rappelés ici, car ils complètent le panorama.
+
+**La perturbation.** Elle **génère une nouvelle solution au voisinage** de la solution
+courante. Le cours en souligne trois traits :
+
+- elle produit un voisin **proche** de la solution en cours ;
+- la **distance** entre les deux solutions — l'*hypervolume du voisinage* — a une
+  **influence** sur le comportement de l'algorithme ;
+- elle est **spécifique au problème** à résoudre (discret ou continu). Pour le TSP,
+  c'est l'**opérateur 2-opt**.
+
+**L'équilibre thermodynamique.** C'est la **boucle interne** exécutée à `T`
+**constante** ; il permet de **« fouiller » autour d'une bonne solution en cours**.
+Il prend fin lorsque :
+
+- le **nombre d'évaluations atteint une limite** ;
+- ou qu'il **n'y a plus d'amélioration depuis un certain nombre d'itérations**.
+
+## Les critères de convergence : quand s'arrêter
+
+Le **critère de convergence** décide de l'**arrêt de l'algorithme** — la fin de la
+boucle externe. Le cours en donne **plusieurs conditions possibles** :
+
+- la **température atteint une valeur minimale** ;
+- le **nombre d'évaluations atteint une limite** ;
+- il **n'y a pas eu d'amélioration depuis un certain nombre d'itérations** ;
+- l'**optimum théorique est atteint** — condition **plus difficile à détecter**, car
+  il faut connaître cet optimum à l'avance.
+
+| Critère d'arrêt | Déclenchement |
+| --- | --- |
+| Température minimale | `T` est descendue jusqu'à `T_min` |
+| Limite d'évaluations | Le nombre d'évaluations de `f` atteint un plafond |
+| Stagnation | Aucune amélioration depuis un nombre fixé d'itérations |
+| Optimum théorique | La solution optimale est atteinte (**difficile à détecter**) |
+
+> **À retenir** : l'algorithme **s'arrête** sur l'un de ces critères — `T` minimale,
+> **limite d'évaluations**, **stagnation** (pas d'amélioration), ou **optimum
+> théorique atteint** (difficile à détecter).
+
+## Aucune méthode n'est universelle : le no free lunch
+
+Le module se referme sur une mise en garde théorique : le **théorème du *no free
+lunch*** (Wolpert et Macready).
+
+Le cours en donne une **image** parlante. Imaginez des **restaurants** — ce sont les
+**méthodes de résolution** — proposant chacun un **menu** de **plats** — les
+**problèmes** — à différents **prix** — la **performance de résolution**. Chaque
+restaurant propose **les mêmes plats**, mais **à des prix différents**. La morale :
+
+> *« Il n'existe pas de menu parfait pour un omnivore. »*
+
+Autrement dit : **aucune méthode d'optimisation n'est la meilleure sur tous les
+problèmes**. Une métaheuristique excellente sur une classe de problèmes sera
+médiocre sur une autre. Le recuit simulé n'échappe pas à cette règle — d'où
+l'importance de **régler** ses paramètres (température initiale, schéma de
+refroidissement, perturbation, critères d'arrêt) **en fonction du problème** traité.
+
+> ⚠️ **No free lunch** : **aucune méthode n'est universellement la meilleure**. Le
+> bon réglage du recuit simulé **dépend du problème** — il n'existe pas de jeu de
+> paramètres optimal pour tout.
+
+## Synthèse de la section
+
+Le **critère de Metropolis** décide, de manière **probabiliste**, de l'acceptation
+d'une solution voisine **dégradante** : un voisin tel que **`Δf ≤ 0` est accepté sans
+condition** ; un voisin **dégradant** n'est accepté qu'avec la **probabilité
+`exp(-Δf/T)`** — d'autant **plus faible** que la dégradation est forte. La
+**température `T`** règle ce critère : **haute**, `exp(-Δf/T) ≈ 1` et l'on **explore**
+largement ; **basse**, `exp(-Δf/T) ≈ 0` et l'on **exploite** seulement (`T = 0` :
+aucune dégradation ; `T = ∞` : tout est accepté). Le **refroidissement** fait
+**basculer** l'algorithme de l'exploration vers l'exploitation : trop **rapide**, il
+piège dans un **minimum local** (effet trempe) ; trop **lent**, il coûte cher. Les
+**schémas** sont **géométrique** (`T_{k+1} = α·T_k`, le plus courant),
+**logarithmique** (coûteux) et **exponentiel**. On **initialise `T`** de préférence
+**empiriquement**, et l'on **arrête** sur un **critère de convergence** (`T`
+minimale, limite d'évaluations, stagnation, optimum atteint). Enfin, le théorème du
+**no free lunch** rappelle qu'**aucune méthode n'est universellement la meilleure** :
+le réglage du recuit simulé **dépend du problème**.
+
+> **À retenir** : critère de Metropolis → accepter un voisin dégradant avec la
+> probabilité **`exp(-Δf/T)`** ; `T` haute = **exploration**, `T` basse =
+> **exploitation** ; le **refroidissement** (géométrique le plus courant) pilote ce
+> basculement ; l'algorithme s'arrête sur un **critère de convergence** ; et le **no
+> free lunch** impose un **réglage propre à chaque problème**.

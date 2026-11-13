@@ -1,0 +1,458 @@
+[
+  {
+    "chapterSlug": "fonctions",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Que signifie « surcharger » une fonction en C++ ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Lui donner un corps très long et complexe." },
+        { "id": "b", "label": "Définir plusieurs fonctions de même nom mais de listes de paramètres différentes." },
+        { "id": "c", "label": "L'appeler un très grand nombre de fois dans une boucle." },
+        { "id": "d", "label": "Lui ajouter une valeur par défaut sur chaque paramètre." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Surcharger une fonction, c'est définir plusieurs fonctions portant le **même nom** mais avec des **listes de paramètres différentes** (nombre ou type). Le compilateur choisit automatiquement la version dont la signature correspond à l'appel. C'est interdit en C, autorisé en C++.",
+    "concepts": ["surcharge-fonction"]
+  },
+  {
+    "chapterSlug": "fonctions",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Étant donné `int valeur();` déjà déclarée, quelle nouvelle déclaration provoque une **erreur de compilation** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "int valeur(int n);" },
+        { "id": "b", "label": "double valeur();" },
+        { "id": "c", "label": "int valeur(double d);" },
+        { "id": "d", "label": "int valeur(int a, int b);" }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "`double valeur();` ne diffère de `int valeur();` que par le **type de retour** — or le type de retour ne fait **pas** partie de la signature. C'est une erreur. Les autres déclarations changent le nombre ou le type des paramètres : ce sont des surcharges valides.",
+    "concepts": ["surcharge-fonction"]
+  },
+  {
+    "chapterSlug": "fonctions",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle déclaration de fonction est **incorrecte** à cause de la règle d'ordre des arguments par défaut ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "void f(int a, int b = 0, int c = 0);" },
+        { "id": "b", "label": "void f(int a = 1, int b = 2);" },
+        { "id": "c", "label": "void f(int a, int b = 5, int c);" },
+        { "id": "d", "label": "void f(int a, int b, int c = 10);" }
+      ]
+    },
+    "solution": { "correct": ["c"] },
+    "explanation": "Les paramètres par défaut doivent occuper la **fin** de la liste : une fois qu'un paramètre a une valeur par défaut, tous ceux qui le suivent doivent en avoir une. Dans `void f(int a, int b = 5, int c);`, `c` n'a pas de défaut alors qu'il suit `b` qui en a un — c'est une erreur.",
+    "concepts": ["argument-defaut"]
+  },
+  {
+    "chapterSlug": "fonctions",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi ces affirmations sur les fonctions `inline`, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "inline demande au compilateur de remplacer l'appel par le corps de la fonction." },
+        { "id": "b", "label": "inline convient aux petites fonctions appelées très souvent." },
+        { "id": "c", "label": "inline est un ordre que le compilateur est obligé de suivre." },
+        { "id": "d", "label": "Une fonction inline longue ou très utilisée peut gonfler la taille de l'exécutable." },
+        { "id": "e", "label": "inline accélère toujours toute fonction, quelle que soit sa taille." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "d"] },
+    "explanation": "`inline` **suggère** de remplacer l'appel par le corps de la fonction (comme un copier-coller), supprimant le coût de l'appel : idéal pour les petites fonctions appelées souvent. Mais ce n'est qu'une suggestion (le compilateur peut l'ignorer), et recopier un corps long partout **gonfle** l'exécutable — ce n'est donc pas toujours bénéfique.",
+    "concepts": ["inline"]
+  },
+  {
+    "chapterSlug": "fonctions",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quand une fonction est déclarée dans un `.h` et définie dans un `.cpp`, la valeur par défaut d'un paramètre doit être écrite dans la déclaration (le `.h`) et non répétée dans la définition.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai : la valeur par défaut s'écrit **une seule fois**, dans la **déclaration** (le `.h`). La répéter dans la définition (le `.cpp`) est une erreur de compilation. La déclaration suffit au compilateur pour connaître les défauts à chaque appel.",
+    "concepts": ["argument-defaut"]
+  },
+  {
+    "chapterSlug": "fonctions",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète : déclare `maximum` comme une fonction `inline` qui renvoie le plus grand de deux entiers, avec une valeur par défaut de 0 sur le second paramètre.",
+    "payload": {
+      "template": "{{kw}} int maximum(int i, int j {{def}} 0) {\n    return (i > j) ? i : j;\n}",
+      "slots": [
+        { "id": "kw", "width": "sm" },
+        { "id": "def", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "kw": "inline", "def": "=" },
+      "caseSensitive": false
+    },
+    "explanation": "Le mot-clé `inline` suggère de recopier le corps de la fonction à l'endroit de l'appel. La valeur par défaut s'écrit avec `=` après le type du paramètre : `int j = 0`. Si l'appelant omet le second argument, `j` vaudra 0.",
+    "concepts": ["inline", "argument-defaut"]
+  },
+  {
+    "chapterSlug": "fonctions",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque nouveauté du C++ sur les fonctions à sa description.",
+    "payload": {
+      "left": [
+        { "id": "surcharge", "label": "Surcharge de fonctions" },
+        { "id": "defaut", "label": "Arguments par défaut" },
+        { "id": "inline", "label": "Fonction inline" },
+        { "id": "type", "label": "Contrôle de type strict" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Plusieurs fonctions de même nom, signatures différentes" },
+        { "id": "r2", "label": "Valeur utilisée si l'appelant omet l'argument" },
+        { "id": "r3", "label": "Remplace l'appel par le corps de la fonction" },
+        { "id": "r4", "label": "Refuse les conversions implicites douteuses" }
+      ]
+    },
+    "solution": { "pairs": { "surcharge": "r1", "defaut": "r2", "inline": "r3", "type": "r4" } },
+    "explanation": "Le C++ enrichit les fonctions du C par : la **surcharge** (même nom, signatures différentes), les **arguments par défaut** (valeur utilisée si l'argument est omis), les fonctions **`inline`** (appel remplacé par le corps) et un **contrôle de type** plus strict (conversions douteuses refusées).",
+    "concepts": ["surcharge-fonction", "argument-defaut", "inline"]
+  },
+  {
+    "chapterSlug": "fonctions",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le compilateur rencontre l'appel `afficher(3.14)` avec les surcharges `afficher(int)` et `afficher(double)` disponibles. Remets dans l'ordre les étapes de la résolution de surcharge.",
+    "payload": {
+      "items": [
+        { "id": "call", "label": "Rencontrer l'appel afficher(3.14) et noter le type de l'argument (double)" },
+        { "id": "select", "label": "Comparer aux signatures candidates : afficher(int) et afficher(double)" },
+        { "id": "resolve", "label": "Choisir afficher(double), dont la signature correspond exactement" }
+      ]
+    },
+    "solution": { "order": ["call", "select", "resolve"] },
+    "explanation": "La **résolution de surcharge** se déroule en trois temps : le compilateur (1) lit l'appel et le type des arguments, (2) examine les surcharges candidates, (3) choisit celle dont la signature correspond. Ici `3.14` est un `double`, donc `afficher(double)` est retenue.",
+    "concepts": ["surcharge-fonction"]
+  },
+  {
+    "chapterSlug": "fonctions",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Attention au type de l'argument du troisième appel.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nvoid afficher(int n)    { cout << \"entier : \" << n << endl; }\nvoid afficher(double d) { cout << \"reel : \" << d << endl; }\n\nint main() {\n    afficher(7);\n    afficher(2.5);\n    afficher('A');\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "entier : 7\nreel : 2.5\nentier : 65" },
+    "explanation": "`afficher(7)` choisit `afficher(int)`. `afficher(2.5)` choisit `afficher(double)`. Pour `afficher('A')`, aucune surcharge ne prend un `char` : le compilateur convertit `'A'` en `int` (son code ASCII 65) et appelle `afficher(int)`, qui affiche `entier : 65`.",
+    "concepts": ["surcharge-fonction"]
+  },
+  {
+    "chapterSlug": "fonctions",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme utilisant un argument par défaut ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nint puissance(int base, int exposant = 2) {\n    int resultat = 1;\n    for (int i = 0; i < exposant; ++i)\n        resultat = resultat * base;\n    return resultat;\n}\n\nint main() {\n    cout << puissance(5) << endl;\n    cout << puissance(2, 5) << endl;\n    cout << puissance(3, 0) << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "25\n32\n1" },
+    "explanation": "`puissance(5)` omet l'exposant : il vaut 2 (défaut), d'où 5² = 25. `puissance(2, 5)` fournit l'exposant : 2⁵ = 32. `puissance(3, 0)` : la boucle ne s'exécute pas, `resultat` reste à 1.",
+    "concepts": ["argument-defaut"]
+  },
+  {
+    "chapterSlug": "fonctions",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme combinant deux arguments par défaut ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nvoid saluer(string nom = \"tout le monde\", int fois = 1) {\n    for (int i = 0; i < fois; ++i)\n        cout << \"Bonjour \" << nom << endl;\n}\n\nint main() {\n    saluer();\n    saluer(\"Alice\");\n    saluer(\"Bob\", 2);\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "Bonjour tout le monde\nBonjour Alice\nBonjour Bob\nBonjour Bob" },
+    "explanation": "`saluer()` utilise les deux défauts : `nom = \"tout le monde\"`, `fois = 1`. `saluer(\"Alice\")` fournit le nom, `fois` reste à 1. `saluer(\"Bob\", 2)` fournit les deux : la boucle affiche `Bonjour Bob` deux fois. Les arguments sont assignés de gauche à droite.",
+    "concepts": ["argument-defaut"]
+  },
+  {
+    "chapterSlug": "fonctions",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Surcharge la fonction `maximum` : une version à deux entiers et une version à trois entiers. Le `main` lit trois entiers x, y, z puis affiche, sur deux lignes, `maximum(x, y)` puis `maximum(x, y, z)`.",
+    "payload": {
+      "spec": "Definir deux surcharges de maximum (2 et 3 entiers). Le main lit trois entiers et affiche le max des deux premiers sur une ligne, puis le max des trois sur la ligne suivante.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// definis ici les deux surcharges de maximum\n\nint main() {\n    int x, y, z;\n    cin >> x >> y >> z;\n    cout << maximum(x, y) << endl;\n    cout << maximum(x, y, z) << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "ordre-quelconque", "stdin": "3 7 5", "expectedStdout": "7\n7" },
+        { "name": "egaux", "stdin": "100 100 100", "expectedStdout": "100\n100" },
+        { "name": "negatifs", "stdin": "-4 -9 -1", "expectedStdout": "-4\n-1", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nint maximum(int a, int b) {\n    if (a > b)\n        return a;\n    else\n        return b;\n}\n\nint maximum(int a, int b, int c) {\n    return maximum(maximum(a, b), c);\n}\n\nint main() {\n    int x, y, z;\n    cin >> x >> y >> z;\n    cout << maximum(x, y) << endl;\n    cout << maximum(x, y, z) << endl;\n    return 0;\n}"
+    },
+    "explanation": "Les deux fonctions portent le même nom `maximum` mais ont des signatures différentes (2 vs 3 paramètres) : c'est une surcharge valide. Le compilateur choisit la bonne version selon le nombre d'arguments. La version à trois entiers réutilise la version à deux en l'appelant deux fois.",
+    "concepts": ["surcharge-fonction"]
+  },
+  {
+    "chapterSlug": "fonctions",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Cette fonction `additionner` doit avoir des arguments par défaut, mais le programme ne compile pas à cause de la règle d'ordre. Corrige la déclaration.",
+    "payload": {
+      "spec": "additionner(a, b, c) renvoie a+b+c ; b et c valent 0 par defaut. Le main affiche additionner(5), additionner(5,10), additionner(5,10,20) sur trois lignes.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nint additionner(int a = 0, int b, int c) {\n    return a + b + c;\n}\n\nint main() {\n    cout << additionner(5) << endl;\n    cout << additionner(5, 10) << endl;\n    cout << additionner(5, 10, 20) << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "un-arg", "stdin": "", "expectedStdout": "5\n15\n35" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nint additionner(int a, int b = 0, int c = 0) {\n    return a + b + c;\n}\n\nint main() {\n    cout << additionner(5) << endl;\n    cout << additionner(5, 10) << endl;\n    cout << additionner(5, 10, 20) << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `int additionner(int a = 0, int b, int c)` met le défaut sur le **premier** paramètre alors que `b` et `c` n'en ont pas — interdit. Les défauts doivent être en **fin de liste** : `int a, int b = 0, int c = 0`. Ainsi `additionner(5)` vaut 5, `additionner(5, 10)` vaut 15, etc.",
+    "concepts": ["argument-defaut"]
+  },
+  {
+    "chapterSlug": "classes-objets",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la relation entre une **classe** et un **objet** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Une classe est une instance concrète d'un objet." },
+        { "id": "b", "label": "Un objet est une instance concrète d'une classe." },
+        { "id": "c", "label": "Classe et objet sont deux mots pour la même chose." },
+        { "id": "d", "label": "Une classe est une variable, un objet est un type." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "La **classe** est le moule (un type défini par le programmeur) ; l'**objet** est ce qui en sort, une **instance** concrète. La classe `Point` est un plan ; `p1` et `p2` sont deux points bien réels créés à partir de ce plan.",
+    "concepts": ["classe"]
+  },
+  {
+    "chapterSlug": "classes-objets",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quel est le niveau d'accès **par défaut** des membres d'une `class` en C++ ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "public" },
+        { "id": "b", "label": "private" },
+        { "id": "c", "label": "protected" },
+        { "id": "d", "label": "Aucun : il faut toujours le préciser." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Dans une `class`, les membres sont **`private`** par défaut : tant qu'on n'a pas écrit `public:`, tout membre n'est accessible que depuis l'intérieur de la classe. C'est cohérent avec l'encapsulation, qui protège l'état interne.",
+    "concepts": ["membre-prive-public", "encapsulation"]
+  },
+  {
+    "chapterSlug": "classes-objets",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Hors de la classe, dans `Point.cpp`, comment écrit-on l'en-tête de la méthode `getX` qui appartient à la classe `Point` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "int Point.getX() { ... }" },
+        { "id": "b", "label": "int getX::Point() { ... }" },
+        { "id": "c", "label": "int Point::getX() { ... }" },
+        { "id": "d", "label": "int Point->getX() { ... }" }
+      ]
+    },
+    "solution": { "correct": ["c"] },
+    "explanation": "Hors de la classe, chaque méthode doit indiquer à quelle classe elle appartient grâce à l'**opérateur de résolution de portée `::`** : `int Point::getX()` se lit « la méthode `getX` de la classe `Point` ». Sans le `Point::`, le compilateur croirait à une simple fonction libre.",
+    "concepts": ["header-impl"]
+  },
+  {
+    "chapterSlug": "classes-objets",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi ces affirmations sur l'encapsulation et les accesseurs, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "On rend les attributs private et on expose une interface de méthodes publiques." },
+        { "id": "b", "label": "Un getter renvoie la valeur d'un attribut ; un setter la modifie." },
+        { "id": "c", "label": "Le setter est un bon endroit pour valider une donnée avant de l'accepter." },
+        { "id": "d", "label": "Le code extérieur peut lire un attribut private directement, sans passer par un getter." },
+        { "id": "e", "label": "Un getter, qui ne modifie pas l'objet, se déclare de préférence const." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c", "e"] },
+    "explanation": "L'encapsulation : attributs **`private`** + interface **`public`** de méthodes. Les accesseurs donnent un accès **contrôlé** : le getter lit, le setter écrit (et peut valider). Un getter se déclare `const` car il ne modifie pas l'objet. En revanche un attribut `private` n'est **jamais** lisible directement de l'extérieur — c'est tout l'intérêt de l'encapsulation.",
+    "concepts": ["encapsulation", "accesseur"]
+  },
+  {
+    "chapterSlug": "classes-objets",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Le bloc d'une classe doit se terminer par un point-virgule `;` après l'accolade fermante.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai : le `;` après l'accolade fermante d'une classe est **obligatoire**. L'oublier produit des messages d'erreur déroutants sur la ligne *suivante* — c'est l'une des erreurs de débutant les plus fréquentes en C++.",
+    "concepts": ["classe"]
+  },
+  {
+    "chapterSlug": "classes-objets",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète le fichier d'en-tête `Point.h` : le mot-clé qui démarre une classe et le niveau d'accès qui protège les attributs.",
+    "payload": {
+      "template": "#ifndef POINT_H\n#define POINT_H\n\n{{kw}} Point {\n    {{acces}}:\n        int x, y;\n    public:\n        Point(int x, int y);\n        int getX() const;\n};\n\n#endif",
+      "slots": [
+        { "id": "kw", "width": "sm" },
+        { "id": "acces", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "kw": "class", "acces": "private" },
+      "caseSensitive": false
+    },
+    "explanation": "Une classe se déclare avec le mot-clé **`class`**. Les attributs `x` et `y` sont placés sous **`private`** pour protéger l'état interne : seules les méthodes de la classe peuvent y toucher. L'interface (constructeur, getter) est sous `public`.",
+    "concepts": ["classe", "membre-prive-public"]
+  },
+  {
+    "chapterSlug": "classes-objets",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque fichier du découpage d'une classe à son rôle.",
+    "payload": {
+      "left": [
+        { "id": "h", "label": "Point.h" },
+        { "id": "cpp", "label": "Point.cpp" },
+        { "id": "main", "label": "main.cpp" },
+        { "id": "guard", "label": "#ifndef / #define / #endif" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Déclare l'interface de la classe (le quoi)" },
+        { "id": "r2", "label": "Définit le corps des méthodes (le comment)" },
+        { "id": "r3", "label": "Utilise la classe : crée des objets, appelle des méthodes" },
+        { "id": "r4", "label": "Gardien d'inclusion : insère l'en-tête une seule fois" }
+      ]
+    },
+    "solution": { "pairs": { "h": "r1", "cpp": "r2", "main": "r3", "guard": "r4" } },
+    "explanation": "Le `.h` **déclare** l'interface (le *quoi*) ; le `.cpp` **définit** le corps des méthodes (le *comment*) ; `main.cpp` **utilise** la classe. Le trio `#ifndef`/`#define`/`#endif` est le **gardien d'inclusion** : il garantit que l'en-tête n'est inséré qu'une seule fois par fichier.",
+    "concepts": ["header-impl"]
+  },
+  {
+    "chapterSlug": "classes-objets",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remets dans l'ordre les lignes d'un `main` qui crée un point, le déplace via un setter, puis affiche sa coordonnée via un getter.",
+    "payload": {
+      "items": [
+        { "id": "print", "label": "cout << p.getX() << endl;   // lit via le getter" },
+        { "id": "create", "label": "Point p(0, 0);              // construit l'objet" },
+        { "id": "modify", "label": "p.setX(5);                  // modifie via le setter" }
+      ]
+    },
+    "solution": { "order": ["create", "modify", "print"] },
+    "explanation": "On **instancie** d'abord l'objet `p` (le constructeur initialise ses attributs). On le **modifie** ensuite via un setter (`p.setX(5)`). On **lit** enfin une valeur via un getter (`p.getX()`). Les méthodes s'appellent sur l'objet avec l'opérateur point `.`.",
+    "concepts": ["classe", "accesseur"]
+  },
+  {
+    "chapterSlug": "classes-objets",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Compteur {\n    private:\n        int valeur;\n    public:\n        Compteur() : valeur(0) {}\n        void incrementer() { valeur = valeur + 1; }\n        int getValeur() { return valeur; }\n};\n\nint main() {\n    Compteur c;\n    c.incrementer();\n    c.incrementer();\n    c.incrementer();\n    cout << c.getValeur() << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "3" },
+    "explanation": "Le constructeur initialise `valeur` à 0. Chaque appel à `incrementer()` ajoute 1 à l'attribut `valeur` de l'objet `c`. Après trois incréments, `getValeur()` renvoie 3.",
+    "concepts": ["classe", "accesseur"]
+  },
+  {
+    "chapterSlug": "classes-objets",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Le retrait de 200 est-il accepté ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass CompteBancaire {\n    private:\n        double solde;\n    public:\n        CompteBancaire(double depot) : solde(depot) {}\n        void deposer(double montant) { solde = solde + montant; }\n        void retirer(double montant) {\n            if (montant <= solde)\n                solde = solde - montant;\n        }\n        double getSolde() { return solde; }\n};\n\nint main() {\n    CompteBancaire c(100);\n    c.deposer(50);\n    c.retirer(200);\n    c.retirer(30);\n    cout << c.getSolde() << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "120" },
+    "explanation": "Solde initial 100, puis `deposer(50)` → 150. `retirer(200)` : 200 > 150, la condition est fausse, le retrait est **refusé** (solde inchangé). `retirer(30)` : 30 ≤ 150, accepté → 120. La méthode `retirer` contrôle la cohérence avant de modifier l'attribut.",
+    "concepts": ["encapsulation", "accesseur"]
+  },
+  {
+    "chapterSlug": "classes-objets",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme manipulant deux objets indépendants ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Rectangle {\n    private:\n        int largeur, hauteur;\n    public:\n        Rectangle(int l, int h) : largeur(l), hauteur(h) {}\n        int aire() { return largeur * hauteur; }\n        int perimetre() { return 2 * (largeur + hauteur); }\n};\n\nint main() {\n    Rectangle r1(3, 5);\n    Rectangle r2(4, 4);\n    cout << r1.aire() << \" \" << r1.perimetre() << endl;\n    cout << r2.aire() << \" \" << r2.perimetre() << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "15 16\n16 16" },
+    "explanation": "`r1` a ses propres attributs (3 et 5) : aire = 3×5 = 15, périmètre = 2×(3+5) = 16. `r2` a les siens (4 et 4) : aire = 4×4 = 16, périmètre = 2×(4+4) = 16. Chaque objet possède son propre jeu d'attributs, indépendant des autres.",
+    "concepts": ["classe"]
+  },
+  {
+    "chapterSlug": "classes-objets",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris un programme complet définissant une classe `Rectangle` avec deux attributs privés `largeur` et `hauteur`, un constructeur, et deux méthodes `aire()` et `perimetre()`. Le `main` lit la largeur et la hauteur, puis affiche l'aire sur une ligne et le périmètre sur la suivante.",
+    "payload": {
+      "spec": "Classe Rectangle : attributs prives largeur et hauteur, constructeur Rectangle(int, int), methodes aire() = largeur*hauteur et perimetre() = 2*(largeur+hauteur). Le main lit largeur puis hauteur, affiche aire puis perimetre sur deux lignes.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// definis ici la classe Rectangle\n\nint main() {\n    int l, h;\n    cin >> l >> h;\n    Rectangle r(l, h);\n    cout << r.aire() << endl;\n    cout << r.perimetre() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "rectangle", "stdin": "3 5", "expectedStdout": "15\n16" },
+        { "name": "aplati", "stdin": "10 2", "expectedStdout": "20\n24" },
+        { "name": "carre", "stdin": "7 7", "expectedStdout": "49\n28", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Rectangle {\n    private:\n        int largeur;\n        int hauteur;\n    public:\n        Rectangle(int l, int h) : largeur(l), hauteur(h) {}\n        int aire() { return largeur * hauteur; }\n        int perimetre() { return 2 * (largeur + hauteur); }\n};\n\nint main() {\n    int l, h;\n    cin >> l >> h;\n    Rectangle r(l, h);\n    cout << r.aire() << endl;\n    cout << r.perimetre() << endl;\n    return 0;\n}"
+    },
+    "explanation": "La classe `Rectangle` encapsule `largeur` et `hauteur` en `private`. Le constructeur les initialise via la liste d'initialisation `: largeur(l), hauteur(h)`. Les méthodes `aire()` et `perimetre()` sont des comportements métier qui calculent à partir des attributs. Ne pas oublier le `;` après l'accolade fermante de la classe.",
+    "concepts": ["classe", "encapsulation"]
+  },
+  {
+    "chapterSlug": "classes-objets",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme définit une classe `Point` mais ne compile pas. Il manque un détail de syntaxe sur la classe. Corrige-le.",
+    "payload": {
+      "spec": "Classe Point avec attributs prives x et y, constructeur, getters getX et getY. Le main cree Point p(2, 5) et affiche getX puis getY separes par une espace.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Point {\n    private:\n        int x, y;\n    public:\n        Point(int px, int py) : x(px), y(py) {}\n        int getX() const { return x; }\n        int getY() const { return y; }\n}\n\nint main() {\n    Point p(2, 5);\n    cout << p.getX() << \" \" << p.getY() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "affichage", "stdin": "", "expectedStdout": "2 5" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Point {\n    private:\n        int x, y;\n    public:\n        Point(int px, int py) : x(px), y(py) {}\n        int getX() const { return x; }\n        int getY() const { return y; }\n};\n\nint main() {\n    Point p(2, 5);\n    cout << p.getX() << \" \" << p.getY() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : il manque le **point-virgule `;`** après l'accolade fermante de la classe `Point`. Sans lui, le compilateur signale une erreur déroutante sur la ligne suivante (`int main`). Le bloc d'une classe se termine toujours par `};`.",
+    "concepts": ["classe"]
+  }
+]

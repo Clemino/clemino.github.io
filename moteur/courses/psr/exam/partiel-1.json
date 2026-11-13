@@ -1,0 +1,241 @@
+{
+  "slug": "partiel-1",
+  "title": "Partiel blanc 1 — Processus, signaux et tubes",
+  "description": "Examen blanc de programmation système couvrant les modules 1 à 3 : création et synchronisation des processus, signaux POSIX, tubes anonymes et redirections. Treize exercices de difficulté croissante — questions de cours, prédiction de sortie et écriture de code C — à traiter en 2 heures, notés sur 20.",
+  "durationMinutes": 120,
+  "totalPoints": 20,
+  "exercises": [
+    {
+      "chapterSlug": "os-role",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Un programme utilisateur veut lire des données sur le disque dur. Comment obtient-il ce service du noyau ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Il accède directement au contrôleur de disque, sans intermédiaire." },
+          { "id": "b", "label": "Il effectue un appel système, qui fait basculer le processeur en mode noyau le temps du service." },
+          { "id": "c", "label": "Il recompile le noyau pour y ajouter la lecture du disque." },
+          { "id": "d", "label": "Il passe en mode noyau de façon permanente jusqu'à la fin du programme." }
+        ]
+      },
+      "solution": { "correct": ["b"] },
+      "explanation": "Un programme utilisateur s'exécute en **mode utilisateur**, à droits restreints : il ne peut pas piloter directement le matériel. Pour obtenir un service du noyau — comme lire un bloc du disque — il effectue un **appel système**. Celui-ci fait **basculer le processeur en mode noyau** le temps de rendre le service, puis le rend au mode utilisateur. C'est la frontière de protection fondamentale entre le code applicatif et le code du système.",
+      "concepts": ["appel-systeme", "mode-noyau-utilisateur", "noyau"]
+    },
+    {
+      "chapterSlug": "processus-pid",
+      "type": "TRUE_FALSE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Deux processus différents qui s'exécutent en même temps sur la machine peuvent posséder, au même instant, le même PID.",
+      "payload": {},
+      "solution": { "value": false },
+      "explanation": "Faux. Le **PID** (Process IDentifier) est l'identifiant **unique** d'un processus : à un instant donné, deux processus vivants ne peuvent **jamais** avoir le même PID. C'est le système qui attribue ce numéro à la création du processus. Un même numéro pourra éventuellement être réutilisé **plus tard**, mais seulement une fois que le processus qui le portait a disparu.",
+      "concepts": ["pid", "processus"]
+    },
+    {
+      "chapterSlug": "fork",
+      "type": "MATCHING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Un appel `fork()` est exécuté. Associez chaque valeur de retour possible à la situation qu'elle décrit.",
+      "payload": {
+        "left": [
+          { "id": "neg", "label": "fork() renvoie une valeur strictement négative (-1)" },
+          { "id": "zero", "label": "fork() renvoie 0" },
+          { "id": "pos", "label": "fork() renvoie une valeur strictement positive" }
+        ],
+        "right": [
+          { "id": "echec", "label": "La création a échoué : aucun fils n'existe, seul le père poursuit" },
+          { "id": "fils", "label": "On exécute le code dans le processus fils nouvellement créé" },
+          { "id": "pere", "label": "On exécute le code dans le processus père ; la valeur est le PID du fils" }
+        ]
+      },
+      "solution": { "pairs": { "neg": "echec", "zero": "fils", "pos": "pere" } },
+      "explanation": "`fork()` est appelé une fois mais **renvoie deux fois**, avec une valeur différente dans chaque processus. Une valeur **négative** (-1) signale un **échec** : aucun fils n'a été créé. La valeur **0** est reçue par le **fils**. Une valeur **strictement positive** est reçue par le **père** : c'est le **PID du fils** créé, dont le père a besoin pour pouvoir l'attendre plus tard.",
+      "concepts": ["fork", "processus-parent", "processus-enfant"]
+    },
+    {
+      "chapterSlug": "exec-wait",
+      "type": "FILL_BLANK",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Complétez ce schéma classique « fork puis exec » : le fils remplace son image par la commande `/bin/ls`, le père attend sa terminaison.",
+      "payload": {
+        "template": "pid_t pid = fork();\nif (pid == 0) {\n    {{ex}}(\"/bin/ls\", \"ls\", NULL);   /* le fils devient /bin/ls */\n    perror(\"{{ex}}\");                  /* atteint seulement si exec echoue */\n    exit(EXIT_FAILURE);\n} else {\n    {{w}}(NULL);                       /* le pere attend la fin du fils */\n}",
+        "slots": [
+          { "id": "ex", "width": "sm", "placeholder": "fonction exec" },
+          { "id": "w", "width": "sm", "placeholder": "fonction d'attente" }
+        ]
+      },
+      "solution": {
+        "answers": {
+          "ex": "execl",
+          "w": ["wait", "waitpid"]
+        },
+        "caseSensitive": false,
+        "stripAccents": true
+      },
+      "explanation": "Le schéma standard pour lancer une commande externe est **`fork` puis `exec`**. Le fils appelle `execl(\"/bin/ls\", \"ls\", NULL)` : cette fonction de la famille `exec` **remplace l'image** du processus par le programme `/bin/ls`. Si `exec` réussit, le code qui suit n'est **jamais** exécuté — d'où le `perror` placé juste après, atteint uniquement en cas d'échec. Pendant ce temps, le père appelle `wait(NULL)` pour se **bloquer jusqu'à la terminaison** du fils et récupérer son statut.",
+      "concepts": ["exec", "recouvrement", "fork", "wait"]
+    },
+    {
+      "chapterSlug": "zombies-orphelins",
+      "type": "MCQ_MULTI",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Parmi ces affirmations comparant un processus **zombie** et un processus **orphelin**, lesquelles sont correctes ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Un zombie est un processus terminé dont le père n'a pas encore lu le statut par wait()." },
+          { "id": "b", "label": "Un orphelin est un processus encore vivant dont le père s'est terminé avant lui." },
+          { "id": "c", "label": "Un orphelin est adopté par le processus init, qui se chargera de l'attendre." },
+          { "id": "d", "label": "Un zombie consomme un processeur entier en exécutant une boucle infinie." },
+          { "id": "e", "label": "On évite l'accumulation de zombies en faisant appeler wait() au père pour chaque fils." }
+        ]
+      },
+      "solution": { "correct": ["a", "b", "c", "e"] },
+      "explanation": "Un **zombie** est un processus déjà **terminé** mais dont le père n'a pas encore appelé `wait()` : le système conserve une entrée pour mémoriser son statut de terminaison. Il ne s'exécute plus du tout — il ne consomme **pas** de processeur (l'affirmation d). Un **orphelin** est, au contraire, un processus **encore vivant** dont le père est mort avant lui ; il est alors **adopté par `init`** (PID 1), qui l'attendra à sa terminaison. Pour éviter d'accumuler des zombies, le père doit appeler `wait()` (ou `waitpid()`) pour **chacun** de ses fils.",
+      "concepts": ["zombie", "orphelin", "processus-init", "wait"]
+    },
+    {
+      "chapterSlug": "signaux-notion",
+      "type": "ORDERING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Ordonnez les étapes du cycle de vie d'un signal, depuis sa demande d'envoi jusqu'à son traitement par le processus destinataire.",
+      "payload": {
+        "items": [
+          { "id": "action", "label": "Le processus destinataire applique l'action associée au signal (gestionnaire, défaut ou ignoré)" },
+          { "id": "envoi", "label": "Un processus (ou le noyau) demande l'envoi du signal, par exemple via kill()" },
+          { "id": "pendant", "label": "Le signal devient pendant : le noyau le marque comme en attente pour le destinataire" },
+          { "id": "delivre", "label": "Le signal est délivré au destinataire dès qu'il n'est plus bloqué" }
+        ]
+      },
+      "solution": { "order": ["envoi", "pendant", "delivre", "action"] },
+      "explanation": "Un signal suit toujours le même cycle. (1) Un processus, ou le noyau, **demande l'envoi** du signal (par exemple avec `kill()`). (2) Le signal devient **pendant** : le noyau le marque comme en attente pour le processus destinataire. (3) Dès que ce signal n'est plus **bloqué** par le masque du destinataire, il lui est **délivré**. (4) Le destinataire **applique l'action** associée : exécuter un gestionnaire, appliquer l'action par défaut, ou l'ignorer.",
+      "concepts": ["signal", "signaux-pendants", "kill-fonction"]
+    },
+    {
+      "chapterSlug": "tubes-notion",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Une donnée a été écrite dans un tube anonyme, puis lue une première fois par un processus. Que se passe-t-il si un second `read()` tente de relire cette même donnée ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Il relit exactement les mêmes octets : la lecture dans un tube ne consomme rien." },
+          { "id": "b", "label": "Il ne relira pas ces octets : la lecture est destructrice, chaque octet n'est lu qu'une fois." },
+          { "id": "c", "label": "Il provoque une erreur, car un tube interdit toute seconde lecture." },
+          { "id": "d", "label": "Il relit la donnée à l'envers, le tube fonctionnant en pile (LIFO)." }
+        ]
+      },
+      "solution": { "correct": ["b"] },
+      "explanation": "La lecture dans un tube est **destructrice** : un octet lu est **retiré** du tube. Le second `read()` ne retrouvera donc pas les octets déjà consommés — il lira la suite du flux, ou bloquera s'il n'y a plus rien et qu'une extrémité d'écriture reste ouverte. Un tube est une **file** (FIFO, premier entré premier sorti), pas une pile : les octets sortent dans leur ordre d'écriture, et chacun n'est lu **qu'une seule fois**.",
+      "concepts": ["lecture-destructrice", "tube", "tube-anonyme"]
+    },
+    {
+      "chapterSlug": "fork",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "La variable locale `n` vaut 1 avant les fork(). Le père attend tous ses fils avant d'afficher. Quelle est la sortie exacte de ce programme ? (L'ordre des lignes est imposé par les wait().)",
+      "payload": {
+        "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int n = 1;\n    pid_t f1 = fork();\n    if (f1 == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (f1 == 0) {\n        n = n + 1;\n    } else {\n        pid_t f2 = fork();\n        if (f2 == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n        if (f2 == 0) {\n            n = n + 10;\n        } else {\n            while (wait(NULL) > 0)\n                ;\n            n = n + 100;\n        }\n    }\n    printf(\"n=%d\\n\", n);\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "n=2\nn=11\nn=101" },
+      "explanation": "Le père crée **deux** fils : `f1` dans la première branche, puis `f2` dans la branche `else`. Chaque processus possède sa **propre copie** de `n`, égale à 1 à l'instant du `fork`. Le premier fils fait `n = n + 1` → affiche `n=2`. Le second fils fait `n = n + 10` → affiche `n=11`. Le père boucle sur `wait(NULL)` jusqu'à ce qu'il n'ait plus de fils (la boucle s'arrête quand `wait` renvoie -1), puis fait `n = n + 100` → affiche `n=101` en **dernier**, car ses deux fils sont déjà terminés. Les trois copies de `n` sont indépendantes.",
+      "concepts": ["fork", "espace-adressage", "wait"]
+    },
+    {
+      "chapterSlug": "exec-wait",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Le fils se termine par `exit(7)`. Le père récupère son statut avec `wait()` et l'analyse avec les macros `WIFEXITED` et `WEXITSTATUS`. Quelle est la sortie exacte de ce programme ?",
+      "payload": {
+        "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (pid == 0) {\n        exit(7);\n    }\n    int statut;\n    wait(&statut);\n    if (WIFEXITED(statut)) {\n        printf(\"fils termine normalement, code = %d\\n\", WEXITSTATUS(statut));\n    } else {\n        printf(\"fils termine anormalement\\n\");\n    }\n    printf(\"fin du pere\\n\");\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "fils termine normalement, code = 7\nfin du pere" },
+      "explanation": "Le fils appelle `exit(7)` : il se termine **normalement** avec le code de retour 7. Le père passe l'adresse de `statut` à `wait(&statut)` : cet appel le bloque jusqu'à la terminaison du fils et **remplit `statut`** avec une valeur encodée. La macro `WIFEXITED(statut)` est **vraie** car le fils s'est terminé par `exit` — on entre dans la première branche. `WEXITSTATUS(statut)` en **extrait le code**, ici **7**. La sortie est donc `fils termine normalement, code = 7` puis `fin du pere`. On ne lit jamais `statut` directement : on passe toujours par ces macros.",
+      "concepts": ["wait", "statut-terminaison", "exit"]
+    },
+    {
+      "chapterSlug": "masquage-attente",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "SIGUSR1 est d'abord bloqué par `sigprocmask`, puis envoyé avec `raise`. Le gestionnaire met `recu` à 1. On consulte les signaux pendants avant de débloquer. Quelle est la sortie exacte de ce programme ?",
+      "payload": {
+        "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <signal.h>\n\nvolatile sig_atomic_t recu = 0;\n\nvoid traiter(int sig) {\n    (void) sig;\n    recu = 1;\n}\n\nint main(void) {\n    signal(SIGUSR1, traiter);\n\n    sigset_t bloc;\n    sigemptyset(&bloc);\n    sigaddset(&bloc, SIGUSR1);\n    sigprocmask(SIG_BLOCK, &bloc, NULL);\n\n    raise(SIGUSR1);\n\n    sigset_t pendants;\n    sigpending(&pendants);\n    if (sigismember(&pendants, SIGUSR1)) {\n        printf(\"SIGUSR1 pendant : oui\\n\");\n    } else {\n        printf(\"SIGUSR1 pendant : non\\n\");\n    }\n    printf(\"avant deblocage, recu = %d\\n\", (int) recu);\n\n    sigprocmask(SIG_UNBLOCK, &bloc, NULL);\n    printf(\"apres deblocage, recu = %d\\n\", (int) recu);\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "SIGUSR1 pendant : oui\navant deblocage, recu = 0\napres deblocage, recu = 1" },
+      "explanation": "`sigprocmask(SIG_BLOCK, ...)` ajoute `SIGUSR1` au **masque** du processus : le signal est désormais **bloqué**. Le `raise(SIGUSR1)` l'envoie quand même, mais comme il est bloqué, il ne peut pas être délivré : il devient **pendant**. `sigpending` le confirme — la première ligne affiche `oui`. Tant que le signal reste bloqué, le gestionnaire **ne s'exécute pas** : `recu` vaut encore **0** (deuxième ligne). Le `sigprocmask(SIG_UNBLOCK, ...)` retire `SIGUSR1` du masque : le signal pendant est alors **immédiatement délivré**, `traiter` s'exécute et met `recu` à 1 — d'où `apres deblocage, recu = 1`.",
+      "concepts": ["masque-signaux", "sigprocmask", "signaux-pendants", "raise"]
+    },
+    {
+      "chapterSlug": "handlers-sigaction",
+      "type": "CODE_FIX",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Ce programme installe un gestionnaire avec `sigaction()` et devrait afficher `compteur = 2` après s'être envoyé deux signaux. En réalité il meurt sans rien afficher. Trouvez et corrigez l'erreur.",
+      "payload": {
+        "spec": "Le programme doit installer le gestionnaire 'compter' pour SIGUSR1 avec sigaction(), se l'envoyer deux fois avec raise(SIGUSR1), puis afficher 'compteur = 2'. Le bug : le gestionnaire est installe pour SIGUSR2 alors que le programme se signale avec SIGUSR1. SIGUSR1 n'ayant aucun gestionnaire, son action par defaut (terminer le processus) s'applique et tue le programme avant tout affichage. Corrigez en installant le gestionnaire pour SIGUSR1, le signal reellement envoye.",
+        "std": "gnu11",
+        "compare": "trimmed",
+        "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <signal.h>\n\nvolatile sig_atomic_t compteur = 0;\n\nvoid compter(int sig) {\n    (void) sig;\n    compteur++;\n}\n\nint main(void) {\n    struct sigaction sa;\n    sa.sa_handler = compter;\n    sigemptyset(&sa.sa_mask);\n    sa.sa_flags = 0;\n    sigaction(SIGUSR2, &sa, NULL);\n\n    raise(SIGUSR1);\n    raise(SIGUSR1);\n\n    printf(\"compteur = %d\\n\", (int) compteur);\n    return 0;\n}\n",
+        "tests": [
+          { "name": "le gestionnaire est appele deux fois", "stdin": "", "expectedStdout": "compteur = 2", "compare": "trimmed" }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <signal.h>\n\nvolatile sig_atomic_t compteur = 0;\n\nvoid compter(int sig) {\n    (void) sig;\n    compteur++;\n}\n\nint main(void) {\n    struct sigaction sa;\n    sa.sa_handler = compter;\n    sigemptyset(&sa.sa_mask);\n    sa.sa_flags = 0;\n    sigaction(SIGUSR1, &sa, NULL);\n\n    raise(SIGUSR1);\n    raise(SIGUSR1);\n\n    printf(\"compteur = %d\\n\", (int) compteur);\n    return 0;\n}"
+      },
+      "explanation": "Le bug est une **confusion de signal**. La structure `sigaction` est correctement remplie, mais l'appel `sigaction(SIGUSR2, &sa, NULL)` installe le gestionnaire pour **SIGUSR2**. Or le programme se signale avec `raise(SIGUSR1)`. `SIGUSR1` n'ayant **aucun gestionnaire**, son **action par défaut** s'applique : elle **termine le processus** dès le premier `raise` — `compteur = 2` n'est jamais affiché. La correction consiste à installer le gestionnaire pour le **bon signal** : `sigaction(SIGUSR1, &sa, NULL)`. Les deux `raise(SIGUSR1)` déroutent alors vers `compter`, qui incrémente `compteur` jusqu'à 2.",
+      "concepts": ["sigaction", "gestionnaire-signal", "raise"]
+    },
+    {
+      "chapterSlug": "pipe-fork",
+      "type": "CODE_WRITE",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Écrivez un programme C qui crée un tube anonyme **puis** un processus fils. Le père écrit la chaîne `bonjour` (7 caractères) dans le tube ; le fils la lit et affiche exactement la ligne `fils a recu : bonjour`. Pensez à fermer les extrémités inutiles.",
+      "payload": {
+        "spec": "Le programme inclut <stdio.h>, <stdlib.h>, <string.h>, <unistd.h> et <sys/wait.h>. Il declare int fd[2], cree le tube avec pipe(fd) (en testant l'echec -1), puis appelle fork() (en testant l'echec -1). pipe() doit etre appele AVANT fork() pour que le fils herite des descripteurs. Dans le fils : fermer l'extremite d'ecriture fd[1], lire le tube avec read(fd[0], ...), terminer la chaine lue par '\\0' a l'indice rendu par read, afficher 'fils a recu : bonjour', fermer fd[0], puis exit. Dans le pere : fermer l'extremite de lecture fd[0], ecrire les 7 octets de \"bonjour\" avec write(fd[1], \"bonjour\", 7), fermer fd[1], puis attendre le fils avec wait(NULL).",
+        "std": "gnu11",
+        "compare": "trimmed",
+        "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    /* creez le tube, puis un fils ; le pere ecrit \"bonjour\" dans le tube,\n       le fils le lit et affiche 'fils a recu : bonjour' */\n    (void) fd;\n    return 0;\n}\n",
+        "tests": [
+          { "name": "transfert pere vers fils par le tube", "stdin": "", "expectedStdout": "fils a recu : bonjour", "compare": "trimmed" }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        close(fd[1]);\n        char buff[128];\n        ssize_t n = read(fd[0], buff, sizeof(buff) - 1);\n        if (n > 0) {\n            buff[n] = '\\0';\n            printf(\"fils a recu : %s\\n\", buff);\n        }\n        close(fd[0]);\n        exit(EXIT_SUCCESS);\n    }\n\n    close(fd[0]);\n    const char *msg = \"bonjour\";\n    write(fd[1], msg, strlen(msg));\n    close(fd[1]);\n    wait(NULL);\n    return 0;\n}"
+      },
+      "explanation": "Le tube doit être créé par `pipe(fd)` **avant** le `fork()` : c'est ainsi que le fils **hérite** des deux descripteurs `fd[0]` (lecture) et `fd[1]` (écriture). Chaque processus ferme ensuite l'extrémité qu'il n'utilise pas — étape **essentielle** : le père ferme `fd[0]`, le fils ferme `fd[1]`. Le père écrit les octets de `\"bonjour\"` dans `fd[1]` puis le ferme : cette fermeture est ce qui permettra au `read` du fils de voir la fin de fichier. Le fils lit dans `fd[0]`, exploite la valeur de retour de `read` pour terminer la chaîne par `'\\0'`, puis affiche. Le `wait(NULL)` final laisse le père attendre proprement son fils.",
+      "concepts": ["pipe-fork", "pipe-primitive", "fermeture-extremites", "extremite-lecture"]
+    },
+    {
+      "chapterSlug": "redirections",
+      "type": "CODE_WRITE",
+      "difficulty": 3,
+      "points": 3,
+      "prompt": "Écrivez un programme C qui relie un père et un fils par un tube, puis utilise une **redirection** dans le fils. Le père écrit le texte `rouge\\nvert\\nbleu\\njaune\\n` (quatre lignes) dans le tube. Le fils redirige son **entrée standard** (descripteur 0) sur l'extrémité de lecture du tube avec `dup2`, puis compte les lignes lues sur `stdin` avec `getchar()` et affiche exactement `lignes : 4`.",
+      "payload": {
+        "spec": "Le programme inclut <stdio.h>, <stdlib.h>, <string.h>, <unistd.h> et <sys/wait.h>. Il declare int fd[2], cree le tube avec pipe(fd) (test de l'echec -1), puis fork() (test de l'echec -1). Dans le fils : fermer fd[1], rediriger l'entree standard sur le tube avec dup2(fd[0], 0), fermer fd[0] (devenu inutile apres dup2), puis lire caractere par caractere avec getchar() jusqu'a EOF en comptant le nombre de '\\n', afficher 'lignes : <n>', puis exit. Dans le pere : fermer fd[0], ecrire la chaine \"rouge\\nvert\\nbleu\\njaune\\n\" dans fd[1] avec write, fermer fd[1] (ce qui provoquera EOF cote fils), puis wait(NULL). Le texte contient 4 caracteres '\\n', donc la sortie est 'lignes : 4'.",
+        "std": "gnu11",
+        "compare": "trimmed",
+        "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    /* TODO : creez le tube et un fils.\n       - Le pere ecrit le texte \"rouge\\nvert\\nbleu\\njaune\\n\" dans le tube.\n       - Le fils redirige son entree standard (descripteur 0) sur l'extremite\n         de lecture du tube avec dup2, puis compte les lignes lues sur stdin\n         avec getchar() et affiche 'lignes : <n>'. */\n    (void) fd;\n    return 0;\n}\n",
+        "tests": [
+          { "name": "comptage des lignes via stdin redirige", "stdin": "", "expectedStdout": "lignes : 4", "compare": "trimmed" }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        close(fd[1]);\n        dup2(fd[0], 0);\n        close(fd[0]);\n        int lignes = 0;\n        int c;\n        while ((c = getchar()) != EOF) {\n            if (c == '\\n')\n                lignes++;\n        }\n        printf(\"lignes : %d\\n\", lignes);\n        exit(EXIT_SUCCESS);\n    }\n\n    close(fd[0]);\n    const char *texte = \"rouge\\nvert\\nbleu\\njaune\\n\";\n    write(fd[1], texte, strlen(texte));\n    close(fd[1]);\n    wait(NULL);\n    return 0;\n}"
+      },
+      "explanation": "Le tube est créé avant le `fork`, si bien que le fils hérite de `fd[0]` et `fd[1]`. Le fils ferme l'extrémité d'écriture, puis appelle `dup2(fd[0], 0)` : cet appel **redirige le descripteur 0** (l'entrée standard) pour qu'il pointe vers l'extrémité de lecture du tube. Après cette duplication, `fd[0]` est devenu **redondant** et doit être fermé. Désormais toute lecture sur `stdin` — ici `getchar()` — lit en réalité **dans le tube** : le fils compte les `'\\n'` reçus et trouve **4**. Le père écrit les quatre lignes dans `fd[1]` puis le ferme ; cette fermeture provoque l'**EOF** qui arrête la boucle `getchar()` du fils. C'est le mécanisme exact qui relie deux commandes dans un pipeline du shell.",
+      "concepts": ["redirection", "dup2", "stdin-stdout-tube", "pipe-fork"]
+    }
+  ]
+}

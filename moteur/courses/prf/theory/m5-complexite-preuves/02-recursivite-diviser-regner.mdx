@@ -1,0 +1,28 @@
+---
+title: "Recursivite et diviser pour regner"
+slug: recursivite-diviser-regner
+order: 2
+estimatedReadMin: 14
+concepts: [recurrence, master, recursion, complexity]
+source: "Complexite/cours_theorique-2-15.pdf; Complexite/serie1 (1) (1) (2).pdf"
+---
+## Recurrences de cout
+
+Une fonction recursive induit souvent une recurrence. Factorielle donne `T(n)=T(n-1)+O(1)`, donc `Theta(n)`. Fibonacci naif duplique les appels et devient exponentiel.
+
+## Diviser pour regner
+
+Le schema general se lit : diviser, resoudre recursivement, combiner.
+
+```text
+T(n) = 2T(n/2) + O(n)
+```
+
+Cette recurrence correspond a un tri fusion : deux sous-problemes de taille `n/2`, puis fusion lineaire, donc `Theta(n log n)`.
+
+## Theoreme maitre
+
+Pour `T(n)=aT(n/b)+f(n)`, compare `f(n)` a `n^(log_b a)`.
+
+> **A retenir**  
+> Dessine l'arbre de recursion si tu hesites : nombre de niveaux, cout par niveau, cout total.

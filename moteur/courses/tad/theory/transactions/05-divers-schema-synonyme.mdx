@@ -1,0 +1,66 @@
+---
+title: Schémas et synonymes
+slug: schema-synonyme
+order: 5
+estimatedReadMin: 4
+concepts: [synonyme, schema-create]
+source: "CM3, slide 19"
+---
+
+## Synonymes
+
+Pour faciliter l'utilisation d'un objet d'un schéma par un autre utilisateur, Oracle propose les **synonymes** : des alias nommés vers un objet.
+
+### Synonyme public
+
+```sql
+CREATE PUBLIC SYNONYM nom_synonyme FOR proprietaire.nom_complet_objet;
+```
+
+Visible par tous les utilisateurs. À utiliser avec parcimonie (encombrement de l'espace de noms global).
+
+### Synonyme privé
+
+```sql
+CREATE SYNONYM nom_synonyme FOR proprietaire.nom_complet_objet;
+```
+
+Visible uniquement par l'utilisateur qui l'a créé.
+
+### Cas d'usage
+
+L'utilisateur `alice` veut lire la table `bob.Client` régulièrement :
+
+```sql
+-- bob accorde le droit :
+GRANT SELECT ON Client TO alice;
+
+-- alice crée son synonyme :
+CREATE SYNONYM Client FOR bob.Client;
+
+-- alice écrit ensuite simplement :
+SELECT * FROM Client;
+```
+
+## Schémas
+
+Pour des raisons de **cohérence et d'optimisation**, on peut découper une base de données en plusieurs parties : ce sont les **schémas**.
+
+> Un **schéma** est associé à un utilisateur et **a le même nom** que cet utilisateur.
+
+```sql
+CREATE SCHEMA AUTHORIZATION nom_schema
+  liste_de_tables
+  liste_de_vues
+  liste_de_synonymes
+  liste_de_droits_pour_d_autres_utilisateurs
+  ...;
+```
+
+Un schéma regroupe sous une unité logique tous les objets d'un utilisateur. Les objets d'un autre schéma sont accessibles par notation pointée (`autre_user.table`).
+
+> **À retenir**
+> - `CREATE [PUBLIC] SYNONYM nom FOR objet` : alias pour un objet.
+> - Synonyme privé = utilisateur courant ; public = tous.
+> - Schéma = ensemble nommé d'objets d'un utilisateur (même nom que l'utilisateur).
+> - Notation pointée `schema.objet` pour cibler un autre schéma.

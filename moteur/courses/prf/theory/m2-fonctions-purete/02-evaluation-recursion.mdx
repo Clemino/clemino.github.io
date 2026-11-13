@@ -1,0 +1,40 @@
+---
+title: "Evaluation et recursion"
+slug: evaluation-recursion
+order: 2
+estimatedReadMin: 13
+concepts: [recursion, tailrec, purete, termination]
+source: "Fonction/Fonction/Scala_02.pdf; Fonction/Fonction/Scala_02_TD.pdf"
+---
+## Raisonnement par evaluation
+
+Evaluer une expression fonctionnelle revient a remplacer une expression par une expression equivalente. Cette discipline est la base du raisonnement equationnel.
+
+```scala
+def carre(x: Int) = x * x
+carre(3 + 1)  // carre(4), puis 16
+```
+
+## Recursion
+
+Une fonction recursive doit avoir un cas de base et un appel sur un probleme plus petit.
+
+```scala
+def somme(n: Int): Int =
+  if (n == 0) 0 else n + somme(n - 1)
+```
+
+La version terminale transporte l'accumulateur et permet l'optimisation controlee par `@tailrec`.
+
+```scala
+@annotation.tailrec
+def loop(k: Int, acc: Int): Int =
+  if (k == 0) acc else loop(k - 1, acc + k)
+```
+
+## Methodes numeriques des TD
+
+Les TD utilisent suites, series, recherche par dichotomie, point fixe et methode de Newton. Ce qui compte en revision est de savoir tracer les iterations et identifier le critere d'arret.
+
+> **A retenir**  
+> Une recursion correcte prouve trois choses : cas de base, progression vers ce cas, resultat attendu.

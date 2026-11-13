@@ -1,0 +1,1493 @@
+[
+  {
+    "chapterSlug": "tubes-notion",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la définition la plus exacte d'un tube (pipe) en programmation système UNIX ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un fichier ordinaire sur le disque que deux processus ouvrent en même temps."
+        },
+        {
+          "id": "b",
+          "label": "Un fichier particulier, géré par le noyau, qui se comporte comme une file de données (FIFO) en mémoire et relie deux processus d'une même machine."
+        },
+        {
+          "id": "c",
+          "label": "Un signal spécial qui transporte une chaîne de caractères d'un processus à un autre."
+        },
+        {
+          "id": "d",
+          "label": "Une zone de mémoire partagée que les processus lisent et écrivent à l'aide de pointeurs."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Un **tube** est un **fichier particulier géré par le noyau** : on y accède avec `read` et `write` comme pour un fichier ordinaire, mais il n'a **aucun contenu sur disque** — c'est une structure **en mémoire**. Il se comporte comme une **file FIFO** (*First In, First Out*) : la première donnée écrite est la première lue. Il relie **deux processus d'une même machine**. Ce n'est ni un fichier disque, ni un signal (un signal ne transporte aucune donnée), ni de la mémoire partagée (on n'y accède pas par pointeurs, mais par descripteurs).",
+    "concepts": [
+      "tube",
+      "communication-inter-processus",
+      "fifo-tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "tubes-notion",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un tube est un canal half-duplex : il autorise la communication dans les deux sens, mais une seule direction à la fois.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Un tube est un canal **half-duplex** : si deux processus PA et PB partagent un tube, PA **peut parler** à PB et PB **peut parler** à PA — mais **pas en même temps**, et surtout pas de façon **fiable** dans les deux sens sur le même tube. Comme la lecture est destructrice, vouloir dialoguer dans les deux sens sur un **seul** tube expose un processus à **relire sa propre écriture** au lieu de la réponse de l'autre. Un seul tube sert donc un **sens unique** : pour un dialogue bidirectionnel, il faut **deux tubes**, un par sens.",
+    "concepts": [
+      "tube",
+      "communication-bidirectionnelle",
+      "lecture-destructrice"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "tubes-notion",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Deux processus quelconques, sans aucun lien de parenté, peuvent communiquer ensemble par un tube anonyme.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Un **tube anonyme** n'a **aucune référence** dans le système de fichiers : il ne peut être désigné que par les **descripteurs** qu'il a ouverts. Le seul moyen pour un autre processus d'obtenir ces descripteurs est d'en **hériter** par `fork`. Un tube anonyme ne peut donc relier que des processus **apparentés** : le processus créateur et ses **descendants créés après** la création du tube. Deux processus sans ancêtre commun n'ont **aucun moyen** de partager un tube anonyme — il leur faudrait un **tube nommé** (FIFO), étudié au Module 4.",
+    "concepts": [
+      "tube-anonyme",
+      "communication-inter-processus",
+      "descripteur-fichier"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "tubes-notion",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Parmi ces affirmations sur les propriétés d'un tube, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un tube possède deux extrémités, chacune désignée par un descripteur de fichier : une pour lire, une pour écrire."
+        },
+        {
+          "id": "b",
+          "label": "La capacité d'un tube est illimitée : un écrivain peut y déposer autant de données qu'il le souhaite sans jamais être bloqué."
+        },
+        {
+          "id": "c",
+          "label": "La lecture dans un tube est destructrice : une donnée lue disparaît du tube et ne peut pas être relue."
+        },
+        {
+          "id": "d",
+          "label": "On peut se repositionner dans un tube avec lseek pour relire des octets déjà consommés."
+        },
+        {
+          "id": "e",
+          "label": "Un tube anonyme est détruit automatiquement quand son dernier descripteur ouvert est fermé."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "c",
+        "e"
+      ]
+    },
+    "explanation": "Un tube possède bien **deux extrémités**, chacune désignée par un **descripteur** (lecture et écriture). Sa **lecture est destructrice** : une donnée lue est **retirée** du tube, aucun autre `read` ne la reverra. Et un tube anonyme est **détruit automatiquement** quand son dernier descripteur est fermé. En revanche (b) est fausse : la capacité d'un tube est **bornée** (constante `PIPE_BUF` de `<limits.h>`) — un écrivain trop rapide finit par **bloquer** sur tube plein. Et (d) est fausse : un tube est un **flux séquentiel strict** (FIFO), `lseek` y est **impossible** ; ce qui est lu est définitivement perdu.",
+    "concepts": [
+      "tube",
+      "lecture-destructrice",
+      "pipe-buf",
+      "extremite-lecture",
+      "extremite-ecriture"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "tubes-notion",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque caractéristique à la notion qu'elle décrit le mieux.",
+    "payload": {
+      "left": [
+        {
+          "id": "anonyme",
+          "label": "Aucune référence dans le système de fichiers ; créé par pipe()"
+        },
+        {
+          "id": "nomme",
+          "label": "Possède un nom de fichier (type p) ; créé par mkfifo()"
+        },
+        {
+          "id": "destructive",
+          "label": "Une information n'y est lue qu'une seule fois, puis disparaît"
+        },
+        {
+          "id": "fichier",
+          "label": "Lecture non destructrice et accès positionnable par lseek"
+        },
+        {
+          "id": "pipebuf",
+          "label": "Constante de <limits.h> liée à la capacité bornée d'un tube"
+        },
+        {
+          "id": "noyau",
+          "label": "Entité responsable de la création, du tampon et de la synchronisation du tube"
+        }
+      ],
+      "right": [
+        {
+          "id": "r-anonyme",
+          "label": "Le tube anonyme"
+        },
+        {
+          "id": "r-nomme",
+          "label": "Le tube nommé (FIFO)"
+        },
+        {
+          "id": "r-lecture",
+          "label": "La lecture dans un tube"
+        },
+        {
+          "id": "r-fichier",
+          "label": "Le fichier ordinaire"
+        },
+        {
+          "id": "r-pipebuf",
+          "label": "PIPE_BUF"
+        },
+        {
+          "id": "r-noyau",
+          "label": "Le noyau"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "anonyme": "r-anonyme",
+        "nomme": "r-nomme",
+        "destructive": "r-lecture",
+        "fichier": "r-fichier",
+        "pipebuf": "r-pipebuf",
+        "noyau": "r-noyau"
+      }
+    },
+    "explanation": "Le **tube anonyme** n'a aucune référence dans le système de fichiers et se crée avec `pipe()`. Le **tube nommé (FIFO)** porte un nom de fichier (type `p`) et se crée avec `mkfifo()`. La **lecture dans un tube** est destructrice : l'information n'y est lue qu'une fois. Le **fichier ordinaire** se distingue justement par sa lecture **non destructrice** et son accès **positionnable** (`lseek`). **`PIPE_BUF`** est la constante de `<limits.h>` liée à la capacité bornée d'un tube. Enfin, le **noyau** est l'entité qui crée le tube, gère son tampon et assure la synchronisation des accès.",
+    "concepts": [
+      "tube-anonyme",
+      "fifo-tube",
+      "lecture-destructrice",
+      "pipe-buf",
+      "tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "tubes-notion",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le shell exécute la commande `ps -a | wc -l`. Remettez dans l'ordre logique les étapes du fonctionnement de ce tube.",
+    "payload": {
+      "items": [
+        {
+          "id": "creer",
+          "label": "Le shell crée deux processus concurrents et installe un tube entre eux"
+        },
+        {
+          "id": "ecrire",
+          "label": "Le processus ps -a écrit ses résultats dans le tube"
+        },
+        {
+          "id": "memoriser",
+          "label": "Le tube mémorise les octets dans son tampon en attendant leur consommation"
+        },
+        {
+          "id": "lire",
+          "label": "Le processus wc -l lit les octets dans le tube et les traite"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "creer",
+        "ecrire",
+        "memoriser",
+        "lire"
+      ]
+    },
+    "explanation": "Le caractère `|` du shell provoque la création de **deux processus** concurrents reliés par un **tube**. (1) Le shell **crée** les deux processus et installe le tube. (2) Le premier processus, `ps -a`, **écrit** ses résultats dans le tube. (3) Le tube **mémorise** ces octets dans son tampon le temps que le second les consomme — c'est tout l'intérêt du tube. (4) Le second processus, `wc -l`, **lit** dans le tube et traite les données. C'est exactement ce mécanisme que ce module apprend à construire en C avec `pipe()`.",
+    "concepts": [
+      "tube",
+      "communication-inter-processus",
+      "fifo-tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "tubes-notion",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur la notion de tube et la lecture destructrice.",
+    "payload": {
+      "template": "Un tube se comporte comme une file de données en mémoire : c'est une structure {{c1}} (sigle anglais signifiant « premier entré, premier sorti »). Il possède deux extrémités, chacune désignée par un {{c2}}. La capacité d'un tube est bornée : la constante associée, {{c3}}, est définie dans l'en-tête <limits.h>. Enfin, la lecture y est {{c4}} : une donnée lue par un processus disparaît du tube et ne pourra jamais être relue.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm",
+          "placeholder": "sigle"
+        },
+        {
+          "id": "c2",
+          "width": "md",
+          "hint": "un entier qui identifie une extrémité ouverte"
+        },
+        {
+          "id": "c3",
+          "width": "sm"
+        },
+        {
+          "id": "c4",
+          "width": "md",
+          "hint": "lue une seule fois, l'information est perdue"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": "FIFO",
+        "c2": [
+          "descripteur",
+          "descripteur de fichier",
+          "descripteur de fichier (fd)"
+        ],
+        "c3": "PIPE_BUF",
+        "c4": "destructrice"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Un tube se comporte comme une file **FIFO** (*First In, First Out*) : la première donnée écrite est la première lue. Chacune de ses deux extrémités est désignée par un **descripteur de fichier** — un entier, comme pour un fichier ordinaire. Sa capacité est **bornée** : la constante **`PIPE_BUF`** de `<limits.h>` donne la garantie associée à cette capacité. Et sa lecture est **destructrice** : une donnée n'est lue **qu'une seule fois**, puis elle disparaît du tube — on ne peut ni la relire, ni se repositionner avec `lseek`.",
+    "concepts": [
+      "fifo-tube",
+      "descripteur-fichier",
+      "pipe-buf",
+      "lecture-destructrice"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "tubes-notion",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le père écrit deux fois dans le tube, le fils lit en boucle jusqu'à la fin de fichier et cumule le nombre total d'octets lus. La lecture étant destructrice, chaque octet n'est lu qu'une fois. Quelle est la sortie exacte de ce programme ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    char buff[50];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid > 0) {\n        close(fd[1]);\n        ssize_t n;\n        int total = 0;\n        while ((n = read(fd[0], buff, sizeof(buff))) > 0)\n            total += (int) n;\n        close(fd[0]);\n        wait(NULL);\n        printf(\"total lu : %d\\n\", total);\n    } else {\n        close(fd[0]);\n        write(fd[1], \"12345\", 5);\n        write(fd[1], \"678\", 3);\n        close(fd[1]);\n        exit(EXIT_SUCCESS);\n    }\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "total lu : 8"
+    },
+    "explanation": "Le père dépose dans le tube deux paquets : `\"12345\"` (5 octets) puis `\"678\"` (3 octets), soit **8 octets** au total, puis ferme `fd[1]`. Le fils, lui, a fermé son `fd[1]` : le **seul** `fd[1]` du tube est donc celui du père, et quand le père le ferme, le `read` du fils finira par voir la **fin de fichier** (`0`). Le fils lit en boucle, cumulant la valeur de retour de chaque `read` ; comme la lecture est **destructrice**, chaque octet n'est compté qu'**une seule fois**. La somme vaut **8**. Le père ayant fait `wait(NULL)`, son `printf` final s'exécute après la fin du fils : la sortie est l'unique ligne `total lu : 8`.",
+    "concepts": [
+      "lecture-destructrice",
+      "tube",
+      "eof-tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "tubes-notion",
+    "type": "CODE_WRITE",
+    "difficulty": 1,
+    "points": 2,
+    "prompt": "Écrivez un programme C qui crée un tube anonyme avec pipe(), y écrit la chaîne de 4 caractères `tube` par l'extrémité d'écriture, puis relit ce contenu par l'extrémité de lecture et l'affiche. La sortie doit être exactement la ligne `contenu lu : tube`.",
+    "payload": {
+      "spec": "Le programme inclut <stdio.h>, <stdlib.h> et <unistd.h>. Il déclare un tableau int fd[2] et crée le tube avec pipe(fd) (en testant l'échec -1). Il écrit les 4 octets de \"tube\" dans le tube avec write(fd[1], \"tube\", 4), puis lit le contenu avec read(fd[0], buff, ...). Il termine la chaîne lue par '\\0' à l'indice rendu par read, puis affiche la ligne 'contenu lu : tube'. Un même processus peut utiliser ses deux extrémités fd[0] et fd[1] : ici, aucun fork n'est nécessaire. On peut fermer fd[0] et fd[1] avant de terminer.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n\nint main(void) {\n    int fd[2];\n    char buff[100];\n\n    /* creez le tube, ecrivez \"tube\" dedans, relisez-le, affichez 'contenu lu : tube' */\n\n    (void) buff;\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "ecriture puis lecture dans le tube",
+          "stdin": "",
+          "expectedStdout": "contenu lu : tube",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n\nint main(void) {\n    int fd[2];\n    char buff[100];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    write(fd[1], \"tube\", 4);\n\n    ssize_t n = read(fd[0], buff, sizeof(buff) - 1);\n    buff[n] = '\\0';\n    printf(\"contenu lu : %s\\n\", buff);\n\n    close(fd[0]);\n    close(fd[1]);\n    return 0;\n}"
+    },
+    "explanation": "`pipe(fd)` crée le tube : `fd[1]` est l'extrémité d'**écriture**, `fd[0]` l'extrémité de **lecture**. On écrit les 4 octets de `\"tube\"` avec `write(fd[1], \"tube\", 4)`, puis on les relit avec `read(fd[0], buff, ...)`. Un **même processus** possède les deux descripteurs et peut donc écrire **puis** lire dans son propre tube — aucun `fork` n'est nécessaire pour ce premier exemple. On exploite la **valeur de retour** de `read` : `buff[n] = '\\0'` termine proprement la chaîne avant l'affichage. On ferme enfin les deux extrémités. La sortie est `contenu lu : tube`.",
+    "concepts": [
+      "tube-anonyme",
+      "pipe-primitive",
+      "extremite-lecture",
+      "extremite-ecriture"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipe-fork",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Dans le schéma standard de partage d'un tube anonyme entre un père et son fils, dans quel ordre faut-il impérativement appeler pipe() et fork() ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "fork() d'abord, puis pipe() dans chacun des deux processus."
+        },
+        {
+          "id": "b",
+          "label": "pipe() d'abord, puis fork() : le fils hérite ainsi des descripteurs du tube."
+        },
+        {
+          "id": "c",
+          "label": "L'ordre n'a aucune importance, le tube relie les processus dans tous les cas."
+        },
+        {
+          "id": "d",
+          "label": "fork() d'abord, puis pipe() uniquement dans le processus père."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Le `pipe()` doit **impérativement** précéder le `fork()`. `fork` ne copie que les descripteurs **déjà ouverts** au moment où il s'exécute : si le tube est créé **avant**, le fils — copie du père — **hérite** des deux extrémités `fd[0]` et `fd[1]`, et les deux processus partagent alors le **même** tube du noyau. Un tube créé **après** le `fork` n'existerait que dans le processus qui l'a créé : l'autre n'en aurait **aucune connaissance** et le tube ne relierait personne. C'est l'erreur la plus fréquente du débutant.",
+    "concepts": [
+      "pipe-fork",
+      "heritage-descripteurs",
+      "pipe-primitive"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipe-fork",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "La « règle d'or » impose que chaque processus ferme les extrémités du tube qu'il n'utilise pas. Parmi ces affirmations, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Dans le sens « le père écrit, le fils lit », le père doit fermer fd[0] et le fils doit fermer fd[1]."
+        },
+        {
+          "id": "b",
+          "label": "Un read sur un tube vide ne renvoie 0 (fin de fichier) que lorsque TOUS les descripteurs en écriture du tube ont été fermés."
+        },
+        {
+          "id": "c",
+          "label": "Si le fils lecteur oublie de fermer son propre fd[1] hérité, son read peut bloquer indéfiniment sans jamais voir la fin de fichier."
+        },
+        {
+          "id": "d",
+          "label": "Fermer les extrémités inutiles est une simple question de propreté, sans effet sur le fonctionnement du tube."
+        },
+        {
+          "id": "e",
+          "label": "Écrire dans un tube dont tous les descripteurs de lecture sont fermés déclenche le signal SIGPIPE chez l'écrivain."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "e"
+      ]
+    },
+    "explanation": "Dans le sens « le père écrit, le fils lit » : le père **n'utilise pas** `fd[0]` (il le ferme), le fils **n'utilise pas** `fd[1]` (il le ferme) — affirmation (a) correcte. La **fin de fichier** (`read` renvoie `0`) n'arrive que lorsque **tous** les descripteurs en **écriture** sont fermés (b). D'où (c) : si le fils lecteur garde son `fd[1]` hérité ouvert, le noyau compte « encore un écrivain » et son `read` **bloque pour toujours**. Et (e) : écrire dans un tube **sans aucun lecteur** déclenche **`SIGPIPE`**. L'affirmation (d) est donc fausse : fermer les extrémités inutiles est **indispensable** au bon fonctionnement — fin de fichier et `SIGPIPE` —, pas une coquetterie.",
+    "concepts": [
+      "fermeture-extremites",
+      "eof-tube",
+      "sigpipe-epipe",
+      "tube-blocage"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipe-fork",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Sur un tube vide, un appel read() est bloquant tant qu'il reste au moins un descripteur en écriture ouvert sur ce tube.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. C'est le mécanisme de **synchronisation** assuré par le noyau. Sur un tube **vide** : si des **écrivains** existent encore (au moins un descripteur en écriture ouvert, n'importe où), le `read` **bloque** — le noyau endort le lecteur en attendant que des données arrivent. Ce n'est que lorsque **tous** les descripteurs d'écriture du tube ont été **fermés** que le `read` renvoie **`0`** : la **fin de fichier**. Tant qu'un seul `fd[1]` subsiste, le tube est considéré comme ayant « encore un écrivain potentiel », et le `read` continue d'attendre.",
+    "concepts": [
+      "tube-blocage",
+      "eof-tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipe-fork",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur la primitive pipe() et ses deux descripteurs.",
+    "payload": {
+      "template": "La primitive {{c1}}, déclarée dans <unistd.h>, reçoit un tableau de deux entiers qu'elle remplit. À son retour, l'élément {{c2}} contient le descripteur de l'extrémité de lecture, et l'élément {{c3}} celui de l'extrémité d'écriture. La primitive renvoie la valeur {{c4}} en cas de succès, et -1 en cas d'échec.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "md",
+          "hint": "appel système qui crée le tube anonyme"
+        },
+        {
+          "id": "c2",
+          "width": "sm"
+        },
+        {
+          "id": "c3",
+          "width": "sm"
+        },
+        {
+          "id": "c4",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "pipe",
+          "pipe()",
+          "pipe(fd)",
+          "pipe(int fd[2])"
+        ],
+        "c2": [
+          "fd[0]",
+          "fd [0]"
+        ],
+        "c3": [
+          "fd[1]",
+          "fd [1]"
+        ],
+        "c4": "0"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "**`pipe(int fd[2])`**, déclarée dans `<unistd.h>`, crée le tube anonyme et **remplit** le tableau passé en argument. À son retour : **`fd[0]`** est le descripteur de l'extrémité de **lecture** (on y *lit*, comme `stdin` qui est 0), **`fd[1]`** celui de l'extrémité d'**écriture** (on y *écrit*, comme `stdout` qui est 1). La valeur de retour est **`0`** en cas de **succès**, et **`-1`** en cas d'échec (avec `errno` positionné) — il faut **toujours** tester ce `-1`.",
+    "concepts": [
+      "pipe-primitive",
+      "extremite-lecture",
+      "extremite-ecriture",
+      "descripteur-fichier"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipe-fork",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "On veut relier un père et son fils par un tube, dans le sens « le père écrit, le fils lit ». Remettez dans l'ordre les étapes de mise en place côté père.",
+    "payload": {
+      "items": [
+        {
+          "id": "pipe",
+          "label": "Créer le tube avec pipe(fd), avant toute autre opération"
+        },
+        {
+          "id": "fork",
+          "label": "Appeler fork() pour créer le fils, qui hérite des descripteurs du tube"
+        },
+        {
+          "id": "close",
+          "label": "Dans le père, fermer fd[0] : l'extrémité de lecture qu'il n'utilise pas"
+        },
+        {
+          "id": "write",
+          "label": "Dans le père, écrire le message dans le tube avec write(fd[1], ...)"
+        },
+        {
+          "id": "closew",
+          "label": "Dans le père, fermer fd[1] une fois l'écriture terminée, puis attendre le fils"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "pipe",
+        "fork",
+        "close",
+        "write",
+        "closew"
+      ]
+    },
+    "explanation": "Le schéma est toujours le même. (1) **`pipe(fd)`** crée le tube — il doit précéder le `fork`, sinon le fils n'hériterait de rien. (2) **`fork()`** crée le fils, qui **hérite** des deux extrémités du tube. (3) Le père **ferme `fd[0]`** : il écrit, il n'utilise pas l'extrémité de lecture (règle d'or). (4) Le père **écrit** son message avec `write(fd[1], ...)`. (5) Le père **ferme `fd[1]`** une fois l'écriture finie — ce qui permettra au `read` du fils de voir la fin de fichier — puis il **attend** la fin du fils par `wait`. Le fils, de son côté, fermera `fd[1]` et lira sur `fd[0]`.",
+    "concepts": [
+      "pipe-fork",
+      "fermeture-extremites",
+      "heritage-descripteurs"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipe-fork",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le père crée un tube, écrit le mot `Bonjour` (7 octets) puis ferme l'écriture ; le fils lit le tube et affiche le message reçu ainsi que le nombre d'octets lus. Le père attend la fin du fils. Quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    char buff[100];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid > 0) {\n        close(fd[0]);\n        write(fd[1], \"Bonjour\", 7);\n        close(fd[1]);\n        wait(NULL);\n    } else {\n        close(fd[1]);\n        ssize_t n = read(fd[0], buff, sizeof(buff) - 1);\n        buff[n] = '\\0';\n        printf(\"recu : %s\\n\", buff);\n        printf(\"octets : %ld\\n\", (long) n);\n        close(fd[0]);\n        exit(EXIT_SUCCESS);\n    }\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "recu : Bonjour\noctets : 7"
+    },
+    "explanation": "Le sens de communication est « le père écrit, le fils lit ». Le père **ferme `fd[0]`** (il ne lit pas), écrit les **7 octets** de `\"Bonjour\"`, **ferme `fd[1]`**, puis attend le fils. Le fils **ferme `fd[1]`** (il n'écrit pas) : c'est essentiel, sinon son `read` ne verrait jamais la fin de fichier. Son `read` extrait les **7 octets disponibles** dans le tube : `n` vaut **7**. Le fils écrit la chaîne lue (`recu : Bonjour`) puis le nombre d'octets (`octets : 7`). Le père ayant fait `wait(NULL)`, le déroulement est **déterministe** : la sortie est exactement `recu : Bonjour` puis `octets : 7`.",
+    "concepts": [
+      "pipe-fork",
+      "fermeture-extremites",
+      "heritage-descripteurs"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipe-fork",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Écrivez un programme C qui réalise un dialogue père/fils avec DEUX tubes anonymes. Le père envoie `ping` au fils par le premier tube ; le fils le lit, affiche `le fils a recu : ping`, puis renvoie `pong` au père par le second tube ; le père le lit et affiche `le pere a recu : pong`. La sortie attendue est `le fils a recu : ping` puis `le pere a recu : pong`.",
+    "payload": {
+      "spec": "Le programme inclut <stdio.h>, <stdlib.h>, <string.h>, <unistd.h> et <sys/wait.h>. Il crée DEUX tubes avec pipe() AVANT le fork : versFils (le père écrit, le fils lit) et versPere (le fils écrit, le père lit). Après fork(), le père ferme versFils[0] et versPere[1] (les extrémités qu'il n'utilise pas), écrit \"ping\" (4 octets) dans versFils[1], lit la réponse sur versPere[0], affiche 'le pere a recu : pong', ferme ses descripteurs restants et fait wait(NULL). Le fils ferme versFils[1] et versPere[0], lit la question sur versFils[0], affiche 'le fils a recu : ping', écrit \"pong\" (4 octets) dans versPere[1], ferme ses descripteurs et fait exit. Comme le fils affiche avant que le père ne lise la réponse, et que le père attend le fils, la sortie est déterministe : 'le fils a recu : ping' puis 'le pere a recu : pong'. Pensez à terminer chaque chaîne lue par '\\0' selon la valeur de retour de read.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int versFils[2];   /* le pere ecrit, le fils lit */\n    int versPere[2];   /* le fils ecrit, le pere lit */\n    char buff[100];\n\n    /* creez les deux tubes AVANT le fork, puis fork() */\n    /* pere : envoie \"ping\", lit la reponse, affiche 'le pere a recu : pong' */\n    /* fils : lit \"ping\", affiche 'le fils a recu : ping', renvoie \"pong\" */\n\n    (void) versFils; (void) versPere; (void) buff;\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "echange ping puis pong",
+          "stdin": "",
+          "expectedStdout": "le fils a recu : ping\nle pere a recu : pong",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int versFils[2];\n    int versPere[2];\n    char buff[100];\n\n    if (pipe(versFils) == -1 || pipe(versPere) == -1) {\n        perror(\"pipe\"); exit(EXIT_FAILURE);\n    }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid > 0) {\n        close(versFils[0]);\n        close(versPere[1]);\n\n        write(versFils[1], \"ping\", 4);\n        ssize_t n = read(versPere[0], buff, sizeof(buff) - 1);\n        buff[n] = '\\0';\n        printf(\"le pere a recu : %s\\n\", buff);\n\n        close(versFils[1]);\n        close(versPere[0]);\n        wait(NULL);\n    } else {\n        close(versFils[1]);\n        close(versPere[0]);\n\n        ssize_t n = read(versFils[0], buff, sizeof(buff) - 1);\n        buff[n] = '\\0';\n        printf(\"le fils a recu : %s\\n\", buff);\n        write(versPere[1], \"pong\", 4);\n\n        close(versFils[0]);\n        close(versPere[1]);\n        exit(EXIT_SUCCESS);\n    }\n    return 0;\n}"
+    },
+    "explanation": "Un **seul** tube ne peut pas servir fiablement dans les deux sens : un processus risquerait de **relire sa propre écriture**. Le dialogue exige donc **deux tubes**, un par sens — `versFils` (père → fils) et `versPere` (fils → père) — créés **avant** le `fork` pour que le fils en hérite. Dans chaque processus, on **ferme une extrémité par tube** (celle qui ne sert pas) : le père ferme `versFils[0]` et `versPere[1]`, le fils ferme `versFils[1]` et `versPere[0]`. Chaque tube est alors **unidirectionnel** et le comportement est **déterministe** : le père écrit `ping`, le fils le lit et affiche, renvoie `pong`, le père le lit et affiche. Le `wait(NULL)` garantit l'ordre des sorties.",
+    "concepts": [
+      "communication-bidirectionnelle",
+      "pipe-fork",
+      "fermeture-extremites"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipe-fork",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme devrait faire lire au fils le message envoyé par le père, puis afficher `octets recus : 7`. En réalité il se fige : le fils ne se termine jamais. Trouvez et corrigez l'erreur.",
+    "payload": {
+      "spec": "Le programme doit relier un père et son fils par un tube : le père écrit \"message\" (7 octets) puis ferme fd[1] ; le fils lit en boucle jusqu'à la fin de fichier, cumule les octets et affiche 'octets recus : 7'. Le bug : le fils, qui n'est que lecteur, a hérité d'un descripteur d'écriture fd[1] et NE LE FERME PAS. Un read sur un tube vide ne renvoie 0 (fin de fichier) que lorsque TOUS les descripteurs en écriture sont fermés. Tant que le fils garde SON fd[1] ouvert, le noyau considère qu'il reste un écrivain : le read du fils ne renvoie jamais 0, sa boucle ne se termine jamais, et comme le père l'attend par wait, tout le programme se fige. Corrigez en faisant fermer au fils son fd[1] inutile, dès le début de sa branche, avant la boucle de lecture.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    char buff[100];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid > 0) {\n        close(fd[0]);\n        write(fd[1], \"message\", 7);\n        close(fd[1]);\n        wait(NULL);\n    } else {\n        ssize_t n;\n        int total = 0;\n        while ((n = read(fd[0], buff, sizeof(buff))) > 0)\n            total += (int) n;\n        printf(\"octets recus : %d\\n\", total);\n        close(fd[0]);\n        exit(EXIT_SUCCESS);\n    }\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le fils detecte la fin de fichier",
+          "stdin": "",
+          "expectedStdout": "octets recus : 7",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    char buff[100];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid > 0) {\n        close(fd[0]);\n        write(fd[1], \"message\", 7);\n        close(fd[1]);\n        wait(NULL);\n    } else {\n        close(fd[1]);\n        ssize_t n;\n        int total = 0;\n        while ((n = read(fd[0], buff, sizeof(buff))) > 0)\n            total += (int) n;\n        printf(\"octets recus : %d\\n\", total);\n        close(fd[0]);\n        exit(EXIT_SUCCESS);\n    }\n    return 0;\n}"
+    },
+    "explanation": "C'est l'**interblocage le plus classique des tubes**. Le fils n'est que **lecteur**, mais comme il descend du père, il a **hérité** d'une copie de `fd[1]` — le descripteur d'**écriture** — et **ne l'a pas fermée**. Or un `read` sur tube vide ne renvoie **`0` (fin de fichier)** que lorsque **tous** les descripteurs en écriture sont fermés. Le père ferme bien le sien, mais **le `fd[1]` du fils reste ouvert** : du point de vue du noyau, « il reste un écrivain ». Le `read` du fils **bloque indéfiniment**, sa boucle ne se termine jamais, et comme le père fait `wait`, **tout le programme se fige**. La correction : le fils ferme **son** `fd[1]` inutile (`close(fd[1])`) dès le début de sa branche. Le seul `fd[1]` restant est alors celui du père ; quand il le ferme, le `read` du fils voit enfin la fin de fichier et renvoie `0`.",
+    "concepts": [
+      "fermeture-extremites",
+      "eof-tube",
+      "tube-blocage",
+      "heritage-descripteurs"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipe-fork",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Ce programme devrait permettre au fils de lire le message `donnee` envoyé par le père et d'afficher `le fils a recu : donnee`. En réalité le fils ne reçoit rien. Trouvez et corrigez l'erreur d'ordre des appels.",
+    "payload": {
+      "spec": "Le programme doit relier un père et son fils par un tube anonyme : le père écrit \"donnee\" (6 octets), le fils le lit et affiche 'le fils a recu : donnee'. Le bug : le programme appelle fork() AVANT pipe(). Or fork ne copie que les descripteurs déjà ouverts. Comme le tube n'existe pas encore au moment du fork, le père et le fils exécutent CHACUN leur propre pipe() après coup, et obtiennent deux tubes DISTINCTS et indépendants : le tube dans lequel le père écrit n'a aucun rapport avec celui dans lequel le fils lit. Les deux processus ne sont reliés par rien. Corrigez en remettant pipe(fd) AVANT fork(), de sorte qu'il n'y ait qu'un seul tube, créé par le père et hérité par le fils.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    char buff[100];\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    if (pid > 0) {\n        close(fd[0]);\n        write(fd[1], \"donnee\", 6);\n        close(fd[1]);\n        wait(NULL);\n    } else {\n        close(fd[1]);\n        ssize_t n = read(fd[0], buff, sizeof(buff) - 1);\n        buff[n] = '\\0';\n        printf(\"le fils a recu : %s\\n\", buff);\n        close(fd[0]);\n        exit(EXIT_SUCCESS);\n    }\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le fils recoit donnee",
+          "stdin": "",
+          "expectedStdout": "le fils a recu : donnee",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    char buff[100];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid > 0) {\n        close(fd[0]);\n        write(fd[1], \"donnee\", 6);\n        close(fd[1]);\n        wait(NULL);\n    } else {\n        close(fd[1]);\n        ssize_t n = read(fd[0], buff, sizeof(buff) - 1);\n        buff[n] = '\\0';\n        printf(\"le fils a recu : %s\\n\", buff);\n        close(fd[0]);\n        exit(EXIT_SUCCESS);\n    }\n    return 0;\n}"
+    },
+    "explanation": "Le bug est un **ordre inversé** : le programme appelle `fork()` **avant** `pipe()`. Or `fork` ne copie que les descripteurs **déjà ouverts** à l'instant du `fork`. Le tube n'existant pas encore, le père et le fils exécutent **chacun** leur propre `pipe()` ensuite : ils obtiennent **deux tubes distincts et indépendants**. Le tube dans lequel le père écrit n'a **aucun rapport** avec celui dans lequel le fils lit — les deux processus ne sont reliés par **rien**. La correction est de respecter le schéma standard : **`pipe(fd)` AVANT `fork()`**. Le père crée alors l'**unique** tube, le fils en **hérite** par `fork`, et leurs descripteurs pointent vers le **même** objet du noyau.",
+    "concepts": [
+      "pipe-fork",
+      "heritage-descripteurs",
+      "pipe-primitive"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "redirections",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la différence essentielle entre `dup` et `dup2` ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "dup duplique un descripteur sur le plus petit indice libre de la table, tandis que dup2 duplique sur un indice de destination que l'on impose."
+        },
+        {
+          "id": "b",
+          "label": "dup copie le contenu du fichier, tandis que dup2 ne copie que le descripteur."
+        },
+        {
+          "id": "c",
+          "label": "dup fonctionne sur les fichiers ordinaires et dup2 uniquement sur les tubes."
+        },
+        {
+          "id": "d",
+          "label": "dup ferme le descripteur d'origine après la copie, contrairement à dup2."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "`dup(ancien)` crée une copie du descripteur sur le **plus petit indice libre** de la table — on **subit** l'indice obtenu. `dup2(ancien, nouveau)` crée la même copie mais sur un indice de destination **imposé** : on **désigne** `nouveau`. C'est ce contrôle de la destination qui fait de `dup2` l'outil de la redirection : pour brancher la sortie standard sur un tube, on veut explicitement l'indice **1**, et `dup2(fd[1], STDOUT_FILENO)` le donne directement. Ni `dup` ni `dup2` ne copient le **contenu** d'un fichier (b) — ils ne dupliquent qu'un descripteur, qui désigne le **même objet**. Aucun des deux ne se limite à un type d'objet (c), et aucun ne ferme le descripteur **d'origine** (d) : `dup2` ferme seulement la **destination** si elle était ouverte.",
+    "concepts": [
+      "dup",
+      "dup2",
+      "redirection",
+      "table-descripteurs"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "redirections",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une redirection installée par `dup2` avant un `exec` reste active dans le programme lancé par cet `exec`.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Un `exec` **remplace** le code, les données et la pile du processus, mais il **conserve la table des descripteurs**. Une redirection posée par `dup2` **avant** le `exec` — par exemple `dup2(fd[1], STDOUT_FILENO)` — modifie justement cette table : après le recouvrement, le descripteur **1** pointe toujours l'extrémité du tube. C'est **exactement** ce qui permet de brancher une commande quelconque (`wc`, `sort`, `tr`…) sur un tube : la commande, écrite indépendamment, se contente d'écrire sur sa sortie standard, sans savoir que celle-ci a été redirigée. L'ordre est donc immuable : on **redirige d'abord** (`dup2` + `close`), on **`exec` ensuite**.",
+    "concepts": [
+      "redirection",
+      "dup2",
+      "exec",
+      "table-descripteurs"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "redirections",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un fils veut rediriger sa sortie standard vers l'extrémité d'écriture d'un tube. Parmi ces affirmations sur le motif de redirection, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "dup2(fd[1], STDOUT_FILENO) fait pointer le descripteur 1 vers la même extrémité d'écriture que fd[1]."
+        },
+        {
+          "id": "b",
+          "label": "Après ce dup2, deux descripteurs (1 et fd[1]) désignent la même extrémité d'écriture du tube."
+        },
+        {
+          "id": "c",
+          "label": "Oublier de fermer fd[1] après le dup2 peut empêcher le lecteur du tube de voir la fin de fichier."
+        },
+        {
+          "id": "d",
+          "label": "Comme dup2 a redirigé la sortie, il n'est plus nécessaire de fermer la moindre extrémité du tube dans ce fils."
+        },
+        {
+          "id": "e",
+          "label": "Si fd[1] valait déjà 1, dup2(fd[1], 1) ne ferme rien et laisse le descripteur 1 inchangé."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "`dup2(fd[1], STDOUT_FILENO)` fait du descripteur **1** une copie de `fd[1]` : les deux désignent désormais la **même** extrémité d'écriture (a et b corrects). Conséquence directe : il reste **un descripteur d'écriture en trop** — `fd[1]` —, et tant qu'il n'est pas fermé, le noyau compte « encore un écrivain », si bien que le lecteur ne verra **jamais la fin de fichier** (c correct). L'affirmation (d) est donc **fausse** : la redirection n'**élimine pas** les `close`, elle en **ajoute** un (le doublon `fd[1]`) ; il faut aussi fermer l'extrémité de lecture `fd[0]` inutile dans ce fils. Enfin (e) est un cas particulier que POSIX traite à part : si `ancien == nouveau` **et** que le descripteur est valide, `dup2` **ne ferme rien** et renvoie `nouveau` tel quel — mais ce n'est pas le cas usuel d'une redirection sur tube, où `fd[1]` vaut typiquement 3 ou 4.",
+    "concepts": [
+      "dup2",
+      "redirection",
+      "stdin-stdout-tube",
+      "eof-tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "redirections",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur les descripteurs standard et la redirection.",
+    "payload": {
+      "template": "À la création d'un processus, trois descripteurs sont déjà ouverts. L'indice {{c1}}, de constante STDIN_FILENO, est l'entrée standard ; l'indice 1, de constante {{c2}}, est la sortie standard. Pour qu'un printf écrive dans un tube, il faut faire pointer le descripteur 1 vers l'extrémité d'écriture du tube : on écrit pour cela l'appel {{c3}}. Cet appel est dit {{c4}} : il n'existe aucun instant où le descripteur de destination serait invalide.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm"
+        },
+        {
+          "id": "c2",
+          "width": "md",
+          "hint": "constante de <unistd.h> pour la sortie standard"
+        },
+        {
+          "id": "c3",
+          "width": "lg",
+          "hint": "redirige la sortie standard sur fd[1]"
+        },
+        {
+          "id": "c4",
+          "width": "md",
+          "hint": "tout-ou-rien, insécable"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": "0",
+        "c2": "STDOUT_FILENO",
+        "c3": [
+          "dup2(fd[1], STDOUT_FILENO)",
+          "dup2(fd[1],STDOUT_FILENO)",
+          "dup2(fd[1], 1)",
+          "dup2(fd[1],1)"
+        ],
+        "c4": [
+          "atomique",
+          "atomiques"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Les trois descripteurs standard sont ouverts dès la création du processus : **`0`** (`STDIN_FILENO`, entrée), **`1`** (**`STDOUT_FILENO`**, sortie), `2` (`STDERR_FILENO`, erreur). Pour qu'un `printf` — qui passe par le descripteur 1 — écrive dans un tube, on redirige la sortie standard sur l'extrémité d'écriture avec **`dup2(fd[1], STDOUT_FILENO)`**. Cet appel est **atomique** : `dup2` ferme l'ancienne destination (le 1 raccordé au terminal) **et** la réoriente vers le tube en une seule opération insécable — il n'y a, contrairement à la séquence `close` + `dup`, **aucune fenêtre** où le descripteur 1 serait invalide.",
+    "concepts": [
+      "descripteurs-standard",
+      "dup2",
+      "redirection",
+      "stdin-stdout-tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "redirections",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque élément à sa description la plus exacte.",
+    "payload": {
+      "left": [
+        {
+          "id": "stdin",
+          "label": "STDIN_FILENO"
+        },
+        {
+          "id": "stdout",
+          "label": "STDOUT_FILENO"
+        },
+        {
+          "id": "dup",
+          "label": "dup(ancien)"
+        },
+        {
+          "id": "dup2",
+          "label": "dup2(ancien, nouveau)"
+        },
+        {
+          "id": "table",
+          "label": "Table des descripteurs"
+        },
+        {
+          "id": "redir",
+          "label": "dup2(fd[0], STDIN_FILENO)"
+        }
+      ],
+      "right": [
+        {
+          "id": "r-stdin",
+          "label": "L'indice 0, descripteur de l'entrée standard"
+        },
+        {
+          "id": "r-stdout",
+          "label": "L'indice 1, descripteur de la sortie standard"
+        },
+        {
+          "id": "r-dup",
+          "label": "Duplique un descripteur sur le plus petit indice libre"
+        },
+        {
+          "id": "r-dup2",
+          "label": "Duplique un descripteur sur un indice de destination imposé"
+        },
+        {
+          "id": "r-table",
+          "label": "Tableau associant chaque descripteur à un objet ouvert"
+        },
+        {
+          "id": "r-redir",
+          "label": "Redirige l'entrée standard depuis l'extrémité de lecture du tube"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "stdin": "r-stdin",
+        "stdout": "r-stdout",
+        "dup": "r-dup",
+        "dup2": "r-dup2",
+        "table": "r-table",
+        "redir": "r-redir"
+      }
+    },
+    "explanation": "**`STDIN_FILENO`** est le nom symbolique de l'indice **0**, l'entrée standard ; **`STDOUT_FILENO`** celui de l'indice **1**, la sortie standard. **`dup(ancien)`** duplique un descripteur sur le **plus petit indice libre** de la table — l'indice obtenu est subi. **`dup2(ancien, nouveau)`** duplique sur un indice de destination **imposé** — c'est l'outil de la redirection. La **table des descripteurs** est le tableau, propre à chaque processus, qui associe chaque descripteur (un indice) à un **objet ouvert**. Enfin, **`dup2(fd[0], STDIN_FILENO)`** fait pointer le descripteur 0 vers l'extrémité de **lecture** du tube : tout `scanf` ou `read(0, …)` **lira alors dans le tube**.",
+    "concepts": [
+      "descripteurs-standard",
+      "dup",
+      "dup2",
+      "table-descripteurs",
+      "stdin-stdout-tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "redirections",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Dans un fils, on veut rediriger la sortie standard vers un tube, puis lancer une commande par `exec`. Remettez dans l'ordre correct les étapes à exécuter dans ce fils.",
+    "payload": {
+      "items": [
+        {
+          "id": "dup2",
+          "label": "Rediriger la sortie standard sur le tube : dup2(fd[1], STDOUT_FILENO)"
+        },
+        {
+          "id": "closedup",
+          "label": "Fermer fd[1], le descripteur de tube devenu un doublon après le dup2"
+        },
+        {
+          "id": "closeother",
+          "label": "Fermer fd[0], l'extrémité de lecture du tube, inutile dans ce fils"
+        },
+        {
+          "id": "exec",
+          "label": "Lancer la commande par exec : elle hérite de la redirection"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "dup2",
+        "closedup",
+        "closeother",
+        "exec"
+      ]
+    },
+    "explanation": "Le motif est immuable. (1) **`dup2(fd[1], STDOUT_FILENO)`** redirige la sortie standard : le descripteur 1 pointe désormais l'écriture du tube. (2) On **ferme `fd[1]`**, devenu un **doublon** : après le `dup2`, lui et le descripteur 1 désignent la même extrémité, et un descripteur d'écriture en trop empêcherait la fin de fichier. (3) On **ferme `fd[0]`**, l'extrémité de **lecture** dont ce fils ne se sert pas (règle d'or). (4) On lance **`exec`** : la table des descripteurs étant conservée, la commande lancée **hérite** de la redirection et écrit dans le tube sans le savoir. Les deux `close` doivent précéder le `exec`, car tout code placé **après** un `exec` réussi ne s'exécute jamais.",
+    "concepts": [
+      "redirection",
+      "dup2",
+      "fermeture-extremites",
+      "exec"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "redirections",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le fils redirige sa sortie standard vers le tube avec dup2, puis fait un printf. Le père lit le tube et affiche ce qu'il reçoit ainsi que le nombre d'octets lus. Le père attend le fils. Quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        dup2(fd[1], STDOUT_FILENO);\n        close(fd[0]);\n        close(fd[1]);\n        printf(\"ligne du fils\\n\");\n        exit(EXIT_SUCCESS);\n    } else {\n        char buff[100];\n        close(fd[1]);\n        ssize_t n = read(fd[0], buff, sizeof(buff) - 1);\n        buff[n] = '\\0';\n        close(fd[0]);\n        wait(NULL);\n        printf(\"le pere lit : %s\", buff);\n        printf(\"octets : %ld\\n\", (long) n);\n    }\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "le pere lit : ligne du fils\noctets : 14"
+    },
+    "explanation": "Le fils fait `dup2(fd[1], STDOUT_FILENO)` : son descripteur **1** pointe maintenant l'écriture du tube. Il ferme ensuite le doublon `fd[1]` et l'extrémité de lecture `fd[0]`. Son `printf(\"ligne du fils\\n\")` — qui passe par le descripteur 1 — part donc **dans le tube**, et non à l'écran ; la chaîne fait **14 octets** (13 caractères + le `\\n`). Le `exit` du fils vide le tampon de `printf` vers le tube et ferme son descripteur 1 : le tube n'a alors **plus aucun écrivain**. Le père, qui a fermé `fd[1]`, voit donc sa lecture aboutir : `read` rend les **14 octets**, `n` vaut **14**. Le `wait(NULL)` garantit l'ordre : la sortie est `le pere lit : ligne du fils` puis `octets : 14`.",
+    "concepts": [
+      "redirection",
+      "dup2",
+      "stdin-stdout-tube",
+      "eof-tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "redirections",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Écrivez un programme C où le fils REDIRIGE sa sortie standard vers un tube avec dup2, puis affiche la ligne `redirige vers le tube` avec un simple printf. Le père lit le tube et affiche `le pere a lu : redirige vers le tube`. La sortie attendue est exactement cette dernière ligne.",
+    "payload": {
+      "spec": "Le programme inclut <stdio.h>, <stdlib.h>, <unistd.h> et <sys/wait.h>. Il crée un tube avec pipe(fd) AVANT le fork (en testant l'échec -1), puis appelle fork(). Dans le FILS : rediriger la sortie standard sur l'extrémité d'écriture du tube avec dup2(fd[1], STDOUT_FILENO) ; fermer le doublon fd[1] ; fermer l'extrémité de lecture fd[0] inutile ; faire printf(\"redirige vers le tube\\n\") — ce printf, passant par le descripteur 1 redirigé, part dans le tube ; puis exit. Dans le PERE : fermer fd[1] (il ne fait que lire) ; lire le tube avec read(fd[0], buff, ...) ; terminer la chaîne lue par '\\0' selon la valeur de retour de read ; fermer fd[0] ; faire wait(NULL) ; afficher 'le pere a lu : ' suivi de la chaîne reçue. La sortie attendue est la ligne 'le pere a lu : redirige vers le tube'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    char buff[100];\n\n    /* creez le tube AVANT le fork, puis fork() */\n    /* fils : dup2 de la sortie standard sur le tube, close des doublons, printf */\n    /* pere : lit le tube et affiche 'le pere a lu : ...' */\n\n    (void) fd; (void) buff;\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le fils redirige sa sortie vers le tube",
+          "stdin": "",
+          "expectedStdout": "le pere a lu : redirige vers le tube",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    char buff[100];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        dup2(fd[1], STDOUT_FILENO);\n        close(fd[1]);\n        close(fd[0]);\n        printf(\"redirige vers le tube\\n\");\n        exit(EXIT_SUCCESS);\n    } else {\n        close(fd[1]);\n        ssize_t n = read(fd[0], buff, sizeof(buff) - 1);\n        buff[n] = '\\0';\n        close(fd[0]);\n        wait(NULL);\n        printf(\"le pere a lu : %s\", buff);\n    }\n    return 0;\n}"
+    },
+    "explanation": "Le fils fait **`dup2(fd[1], STDOUT_FILENO)`** : son descripteur **1** pointe désormais l'écriture du tube. Il ferme ensuite **`fd[1]`** — le doublon laissé par `dup2` — et **`fd[0]`** — l'extrémité de lecture inutile dans ce fils. Dès lors, son `printf(\"redirige vers le tube\\n\")`, qui passe par le descripteur 1, **écrit dans le tube** sans que le code de `printf` ait à le savoir. Le `exit` du fils vide le tampon vers le tube et ferme son descripteur 1 : il n'y a **plus aucun écrivain**. Le père, qui a fermé son `fd[1]`, voit son `read` aboutir, termine la chaîne lue par `'\\0'`, et l'affiche derrière `le pere a lu : `. Le `wait(NULL)` assure que l'affichage du père suit bien la fin du fils.",
+    "concepts": [
+      "redirection",
+      "dup2",
+      "stdin-stdout-tube",
+      "fermeture-extremites"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "redirections",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme devrait faire lire au fils, sur son entrée standard redirigée depuis un tube, les 10 octets envoyés par le père, puis afficher `octets lus : 10`. En réalité il se fige : le fils ne se termine jamais. Trouvez et corrigez l'erreur.",
+    "payload": {
+      "spec": "Le programme relie un père et son fils par un tube. Le fils redirige son ENTREE standard depuis le tube avec dup2(fd[0], STDIN_FILENO), puis lit son entrée standard en boucle jusqu'à la fin de fichier, cumule les octets et affiche 'octets lus : 10'. Le père écrit 10 octets dans le tube puis ferme fd[1]. Le bug : le fils a hérité de l'extrémité d'ECRITURE fd[1] du tube et NE LA FERME PAS. Or un read sur un tube vide ne renvoie 0 (fin de fichier) que lorsque TOUS les descripteurs en écriture du tube sont fermés. Tant que le fils garde SON fd[1] ouvert, le noyau considère qu'il reste un écrivain : la lecture du fils sur son entrée standard (redirigée depuis ce même tube) ne renvoie jamais 0, sa boucle ne se termine pas, et comme le père l'attend par wait, tout le programme se fige. Corrigez en faisant fermer au fils son fd[1] inutile, après le dup2 et avant la boucle de lecture.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    char buff[100];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        dup2(fd[0], STDIN_FILENO);\n        close(fd[0]);\n        ssize_t n;\n        int total = 0;\n        while ((n = read(STDIN_FILENO, buff, sizeof(buff))) > 0)\n            total += (int) n;\n        printf(\"octets lus : %d\\n\", total);\n        exit(EXIT_SUCCESS);\n    } else {\n        close(fd[0]);\n        write(fd[1], \"abcdefghij\", 10);\n        close(fd[1]);\n        wait(NULL);\n    }\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le fils detecte la fin de fichier sur son entree",
+          "stdin": "",
+          "expectedStdout": "octets lus : 10",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    char buff[100];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        dup2(fd[0], STDIN_FILENO);\n        close(fd[0]);\n        close(fd[1]);\n        ssize_t n;\n        int total = 0;\n        while ((n = read(STDIN_FILENO, buff, sizeof(buff))) > 0)\n            total += (int) n;\n        printf(\"octets lus : %d\\n\", total);\n        exit(EXIT_SUCCESS);\n    } else {\n        close(fd[0]);\n        write(fd[1], \"abcdefghij\", 10);\n        close(fd[1]);\n        wait(NULL);\n    }\n    return 0;\n}"
+    },
+    "explanation": "Le fils redirige bien son **entrée standard** depuis le tube (`dup2(fd[0], STDIN_FILENO)`) et ferme le doublon `fd[0]`. Mais comme il descend du père, il a aussi **hérité** d'une copie de **`fd[1]`** — l'extrémité d'**écriture** du tube — et il **ne la ferme pas**. Or un `read` sur un tube vide ne renvoie **`0` (fin de fichier)** que lorsque **tous** les descripteurs en écriture sont fermés. Le père ferme bien le sien, mais **le `fd[1]` du fils reste ouvert** : du point de vue du noyau, « il reste un écrivain ». La lecture du fils sur son entrée standard — qui est ce **même** tube — ne rend donc **jamais `0`**, sa boucle tourne indéfiniment, et comme le père fait `wait`, **tout le programme se fige**. La correction : le fils ferme **son** `fd[1]` inutile (`close(fd[1])`), après le `dup2` et avant la boucle. Rediriger un descripteur **ne dispense pas** de fermer les extrémités du tube qu'on n'utilise pas.",
+    "concepts": [
+      "redirection",
+      "dup2",
+      "fermeture-extremites",
+      "eof-tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "redirections",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme devrait rediriger la sortie standard du fils vers un tube, de sorte que son printf parte dans le tube et que le père compte `octets dans le tube : 8`. En réalité le père compte 0 octet. Trouvez et corrigez l'erreur.",
+    "payload": {
+      "spec": "Le programme relie un père et son fils par un tube. Le fils veut rediriger sa SORTIE standard (descripteur 1) vers l'extrémité d'écriture du tube, puis faire printf(\"contenu\\n\") (8 octets) : ce printf doit alors partir dans le tube. Le père lit le tube en boucle, cumule les octets et affiche 'octets dans le tube : 8'. Le bug : pour rediriger, le fils utilise dup(fd[1]) au lieu de dup2(fd[1], STDOUT_FILENO). Or dup choisit le PLUS PETIT INDICE LIBRE de la table : comme les descripteurs 0, 1 et 2 sont déjà ouverts, dup n'attribue PAS l'indice 1 mais un indice supérieur. La sortie standard (descripteur 1) n'est donc PAS redirigée : elle pointe toujours le terminal, et le printf du fils n'écrit jamais dans le tube. Le père ne lit rien et compte 0. Corrigez en remplaçant dup(fd[1]) par dup2(fd[1], STDOUT_FILENO), qui impose explicitement l'indice de destination 1.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    char buff[100];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        dup(fd[1]);\n        close(fd[1]);\n        close(fd[0]);\n        printf(\"contenu\\n\");\n        fflush(stdout);\n        exit(EXIT_SUCCESS);\n    } else {\n        ssize_t n;\n        int total = 0;\n        close(fd[1]);\n        while ((n = read(fd[0], buff, sizeof(buff))) > 0)\n            total += (int) n;\n        close(fd[0]);\n        wait(NULL);\n        printf(\"octets dans le tube : %d\\n\", total);\n    }\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "la sortie standard pointe bien le tube",
+          "stdin": "",
+          "expectedStdout": "octets dans le tube : 8",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n    char buff[100];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        dup2(fd[1], STDOUT_FILENO);\n        close(fd[1]);\n        close(fd[0]);\n        printf(\"contenu\\n\");\n        fflush(stdout);\n        exit(EXIT_SUCCESS);\n    } else {\n        ssize_t n;\n        int total = 0;\n        close(fd[1]);\n        while ((n = read(fd[0], buff, sizeof(buff))) > 0)\n            total += (int) n;\n        close(fd[0]);\n        wait(NULL);\n        printf(\"octets dans le tube : %d\\n\", total);\n    }\n    return 0;\n}"
+    },
+    "explanation": "Le bug est une **confusion entre `dup` et `dup2`**. Pour rediriger la **sortie standard**, le fils a besoin que le descripteur **1** pointe l'écriture du tube. Or `dup(fd[1])` choisit le **plus petit indice libre** de la table : les descripteurs **0, 1, 2 sont déjà ouverts**, donc `dup` attribue un indice **supérieur** (3, 4…) — **jamais le 1**. Résultat : la sortie standard n'est **pas redirigée**, elle pointe toujours le terminal, et le `printf(\"contenu\\n\")` du fils **n'écrit jamais dans le tube**. Le père ne lit rien : son `read` rend tout de suite `0` et `total` vaut **0**. La correction est de remplacer `dup(fd[1])` par **`dup2(fd[1], STDOUT_FILENO)`**, qui **impose** explicitement l'indice de destination **1** : c'est précisément le rôle de `dup2`, et la raison pour laquelle on lui préfère `dup` pour toute redirection.",
+    "concepts": [
+      "dup",
+      "dup2",
+      "redirection",
+      "stdin-stdout-tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipeline",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Pour reproduire en C le pipeline du shell `cmd1 | cmd2`, en quoi consiste la « redirection croisée » à mettre en place autour du tube ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Rediriger la sortie standard de cmd1 vers l'écriture du tube, et l'entrée standard de cmd2 depuis la lecture du tube."
+        },
+        {
+          "id": "b",
+          "label": "Rediriger l'entrée standard de cmd1 vers le tube, et la sortie standard de cmd2 vers le tube."
+        },
+        {
+          "id": "c",
+          "label": "Rediriger la sortie standard de cmd1 et la sortie standard de cmd2 vers la même extrémité du tube."
+        },
+        {
+          "id": "d",
+          "label": "Rediriger l'entrée et la sortie standard de cmd1 vers le tube, cmd2 n'ayant rien à rediriger."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Dans `cmd1 | cmd2`, la **sortie** de `cmd1` doit alimenter l'**entrée** de `cmd2`. On réalise donc une **redirection croisée** : la **sortie standard de `cmd1`** est redirigée vers l'**extrémité d'écriture** du tube (`dup2(fd[1], STDOUT_FILENO)`), et l'**entrée standard de `cmd2`** est redirigée depuis l'**extrémité de lecture** du tube (`dup2(fd[0], STDIN_FILENO)`). Ainsi, ce que `cmd1` croit envoyer à l'écran part dans le tube, et ce que `cmd2` croit lire au clavier provient du tube. Les autres réponses brancheraient les commandes du mauvais côté ou mettraient deux écrivains (ou deux lecteurs) sur la même extrémité, ce qui ne relie rien correctement.",
+    "concepts": [
+      "pipeline",
+      "redirection",
+      "dup2",
+      "stdin-stdout-tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipeline",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans un pipeline, un appel `close` placé juste après un `execlp` réussi sert quand même à fermer le descripteur visé.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Un `exec` **réussi** **remplace** entièrement le programme : le code, les données et la pile sont écrasés par ceux de la nouvelle commande. Tout ce qui est écrit **après** un `execlp` qui réussit n'est **jamais exécuté** — ce code est mort. Un `close` placé après le `execlp` ne sert donc **que si `exec` échoue** (auquel cas l'exécution se poursuit sur la ligne suivante). Pour fermer effectivement les descripteurs de tube inutiles d'un fils, les `close` doivent **impérativement précéder** le `exec`. C'est la « faute nº 2 » classique du pipeline : des `close` placés après le `exec` laissent en réalité les descripteurs **ouverts**, ce qui peut empêcher la fin de fichier et figer le pipeline.",
+    "concepts": [
+      "pipeline",
+      "exec",
+      "fermeture-extremites",
+      "eof-tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipeline",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On reproduit `cmd1 | cmd2` avec un pipe puis deux fork. Parmi ces affirmations sur la discipline de fermeture des descripteurs, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Après pipe(fd) puis deux fork(), six descripteurs au total sont ouverts sur le tube."
+        },
+        {
+          "id": "b",
+          "label": "Pour que le pipeline fonctionne, il ne doit rester qu'un seul descripteur en écriture et un seul en lecture sur le tube."
+        },
+        {
+          "id": "c",
+          "label": "Le père, même s'il ne lit ni n'écrit dans le tube, doit fermer fd[0] et fd[1]."
+        },
+        {
+          "id": "d",
+          "label": "Si le père oublie de fermer son fd[1], cmd2 risque de ne jamais voir la fin de fichier et de se figer."
+        },
+        {
+          "id": "e",
+          "label": "Le tube doit être créé par pipe() après les fork(), pour que chaque fils ait son propre tube."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Après `pipe(fd)` puis **deux `fork`**, le tube a **six** descripteurs : `fd[0]` et `fd[1]` dans le père, dans le fils 1 et dans le fils 2 (a correct). Pour que le pipeline fonctionne, il ne doit en rester qu'**un seul en écriture** (fils 1) et **un seul en lecture** (fils 2) — les quatre autres sont à fermer (b correct). Le **père**, bien qu'il ne transfère rien, possède `fd[0]` et `fd[1]` et **doit les fermer** (c correct) : sinon son `fd[1]` maintient « un écrivain » et **`cmd2` ne verra jamais la fin de fichier**, figeant le pipeline (d correct). L'affirmation (e) est **fausse** et constitue la faute nº 3 : `fork` ne duplique que les descripteurs **déjà ouverts** ; un `pipe()` appelé **après** le `fork` crée un tube qui n'existe que dans un seul processus et **ne relie rien**. Le `pipe` doit précéder les `fork`.",
+    "concepts": [
+      "pipeline",
+      "fermeture-extremites",
+      "eof-tube",
+      "pipe-fork"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipeline",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur la construction d'un pipeline cmd1 | cmd2.",
+    "payload": {
+      "template": "Un pipeline enchaîne des processus reliés par des tubes : la sortie de l'un alimente l'{{c1}} du suivant. Pour cmd1 | cmd2, on crée le tube par pipe() puis on fork() : l'ordre pipe puis fork est imposé car fork ne duplique que les descripteurs déjà ouverts. Le fils qui exécutera cmd1 redirige sa sortie standard vers le tube, le fils qui exécutera cmd2 redirige son entrée standard depuis le tube, et chaque fils lance ensuite sa commande par {{c2}}. Le père, lui, doit fermer ses deux extrémités puis attendre ses fils avec {{c3}}. Si un seul descripteur en {{c4}} reste ouvert quelque part, cmd2 ne voit jamais la fin de fichier et le pipeline se fige.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm"
+        },
+        {
+          "id": "c2",
+          "width": "sm",
+          "hint": "famille d'appels qui recouvre le processus"
+        },
+        {
+          "id": "c3",
+          "width": "md",
+          "hint": "primitive d'attente d'un fils précis"
+        },
+        {
+          "id": "c4",
+          "width": "sm",
+          "hint": "sens d'accès au tube"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "entree",
+          "entree standard"
+        ],
+        "c2": [
+          "exec",
+          "execlp",
+          "execvp",
+          "execl",
+          "execv"
+        ],
+        "c3": [
+          "waitpid",
+          "waitpid()",
+          "wait",
+          "wait()"
+        ],
+        "c4": [
+          "ecriture"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Un pipeline enchaîne des processus : la sortie de l'un alimente l'**entrée** du suivant. Pour `cmd1 | cmd2`, on crée le tube par `pipe()` **puis** on `fork()` — ordre imposé, car `fork` ne duplique que les descripteurs déjà ouverts. Après les redirections croisées, chaque fils lance sa commande par **`exec`** (par exemple `execlp`) : la redirection, inscrite dans la table des descripteurs, survit au recouvrement. Le père ferme ses deux extrémités puis attend ses fils avec **`waitpid`** (on peut aussi écrire `wait`). Enfin, il ne doit rester **aucun** descripteur en **écriture** parasite : un seul `fd[1]` oublié — fût-ce dans le père — et `cmd2` ne verra jamais la fin de fichier, figeant le pipeline.",
+    "concepts": [
+      "pipeline",
+      "pipe-fork",
+      "exec",
+      "eof-tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipeline",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Pour le pipeline `cmd1 | cmd2`, associez chaque processus ou opération à son rôle exact.",
+    "payload": {
+      "left": [
+        {
+          "id": "fils1",
+          "label": "Le fils qui exécute cmd1"
+        },
+        {
+          "id": "fils2",
+          "label": "Le fils qui exécute cmd2"
+        },
+        {
+          "id": "pere",
+          "label": "Le processus père du pipeline"
+        },
+        {
+          "id": "pipeavant",
+          "label": "pipe() appelé avant les fork()"
+        },
+        {
+          "id": "dup2sortie",
+          "label": "dup2(fd[1], STDOUT_FILENO)"
+        },
+        {
+          "id": "dup2entree",
+          "label": "dup2(fd[0], STDIN_FILENO)"
+        }
+      ],
+      "right": [
+        {
+          "id": "r-fils1",
+          "label": "Redirige sa sortie standard vers le tube, puis exec cmd1"
+        },
+        {
+          "id": "r-fils2",
+          "label": "Redirige son entrée standard depuis le tube, puis exec cmd2"
+        },
+        {
+          "id": "r-pere",
+          "label": "Ferme ses deux extrémités du tube, puis attend ses fils"
+        },
+        {
+          "id": "r-pipeavant",
+          "label": "Garantit que les deux fils héritent du même tube"
+        },
+        {
+          "id": "r-dup2sortie",
+          "label": "Branche la sortie standard sur l'écriture du tube"
+        },
+        {
+          "id": "r-dup2entree",
+          "label": "Branche l'entrée standard sur la lecture du tube"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "fils1": "r-fils1",
+        "fils2": "r-fils2",
+        "pere": "r-pere",
+        "pipeavant": "r-pipeavant",
+        "dup2sortie": "r-dup2sortie",
+        "dup2entree": "r-dup2entree"
+      }
+    },
+    "explanation": "Le **fils qui exécute `cmd1`** redirige sa **sortie** standard vers le tube puis lance `cmd1` par `exec`. Le **fils qui exécute `cmd2`** redirige son **entrée** standard depuis le tube puis lance `cmd2`. Le **père** ne transfère rien : il **ferme ses deux extrémités** du tube — sans quoi le pipeline se fige — puis **attend ses fils**. Le **`pipe()` appelé avant les `fork()`** garantit que les deux fils, créés ensuite, **héritent du même tube** du noyau. **`dup2(fd[1], STDOUT_FILENO)`** branche la **sortie** standard sur l'écriture du tube ; **`dup2(fd[0], STDIN_FILENO)`** branche l'**entrée** standard sur la lecture du tube — c'est la redirection croisée au cœur du pipeline.",
+    "concepts": [
+      "pipeline",
+      "pipe-fork",
+      "redirection",
+      "dup2",
+      "fermeture-extremites"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipeline",
+    "type": "ORDERING",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Remettez dans l'ordre les étapes du programme C qui reproduit le pipeline `cmd1 | cmd2`.",
+    "payload": {
+      "items": [
+        {
+          "id": "pipe",
+          "label": "Créer le tube avec pipe(fd)"
+        },
+        {
+          "id": "fork1",
+          "label": "fork() du fils 1, qui redirige sa sortie sur le tube, ferme ses descripteurs et exec cmd1"
+        },
+        {
+          "id": "fork2",
+          "label": "fork() du fils 2, qui redirige son entrée depuis le tube, ferme ses descripteurs et exec cmd2"
+        },
+        {
+          "id": "closepere",
+          "label": "Dans le père, fermer fd[0] et fd[1], les deux extrémités du tube"
+        },
+        {
+          "id": "wait",
+          "label": "Dans le père, attendre la fin des deux fils avec waitpid"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "pipe",
+        "fork1",
+        "fork2",
+        "closepere",
+        "wait"
+      ]
+    },
+    "explanation": "Le patron de référence du pipeline est strict. (1) **`pipe(fd)`** crée le tube — avant tout `fork`, sinon les fils n'en hériteraient pas. (2) Premier **`fork`** : le fils 1 redirige sa **sortie** sur le tube (`dup2`), ferme ses descripteurs de tube, puis `exec cmd1`. (3) Second **`fork`** : le fils 2 redirige son **entrée** depuis le tube, ferme ses descripteurs, puis `exec cmd2`. (4) Le père **ferme `fd[0]` et `fd[1]`** : étape indispensable, sinon son `fd[1]` empêche le fils 2 de voir la fin de fichier. (5) Le père **attend** ses deux fils par `waitpid`. La fermeture par le père doit précéder l'attente : s'il attendait d'abord sans avoir fermé, le fils 2 ne se terminerait jamais et le `waitpid` se figerait.",
+    "concepts": [
+      "pipeline",
+      "pipe-fork",
+      "fermeture-extremites",
+      "waitpid"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipeline",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme reproduit le pipeline `echo bonjour | wc -c`. Le fils 1 exécute `echo bonjour`, le fils 2 exécute `wc -c` ; ils sont reliés par un tube et le père attend ses deux fils. La commande `echo bonjour` écrit le mot `bonjour` suivi d'un saut de ligne, et `wc -c` compte les octets reçus sur son entrée. Quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t f1 = fork();\n    if (f1 == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (f1 == 0) {\n        dup2(fd[1], STDOUT_FILENO);\n        close(fd[0]);\n        close(fd[1]);\n        execlp(\"echo\", \"echo\", \"bonjour\", (char *) NULL);\n        perror(\"execlp echo\");\n        exit(EXIT_FAILURE);\n    }\n\n    pid_t f2 = fork();\n    if (f2 == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (f2 == 0) {\n        dup2(fd[0], STDIN_FILENO);\n        close(fd[1]);\n        close(fd[0]);\n        execlp(\"wc\", \"wc\", \"-c\", (char *) NULL);\n        perror(\"execlp wc\");\n        exit(EXIT_FAILURE);\n    }\n\n    close(fd[0]);\n    close(fd[1]);\n    waitpid(f1, NULL, 0);\n    waitpid(f2, NULL, 0);\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "8"
+    },
+    "explanation": "Le programme assemble le pipeline `echo bonjour | wc -c`. Le **fils 1** redirige sa sortie standard sur l'écriture du tube, ferme ses deux descripteurs de tube, puis `exec`utte `echo bonjour` : la commande écrit `bonjour\\n` — **8 octets** (7 lettres + le saut de ligne) — dans le tube, sans savoir que sa sortie a été redirigée. Le **fils 2** redirige son entrée standard depuis la lecture du tube, ferme ses descripteurs, puis `exec`utte `wc -c`, qui **compte les octets** reçus sur son entrée. Le **père** ferme ses **deux** extrémités — indispensable pour que le fils 2 voie la fin de fichier — puis attend ses deux fils. Quand `echo` se termine, plus aucun descripteur d'écriture ne subsiste : `wc -c` détecte la fin de fichier, affiche **`8`** et se termine. La sortie est l'unique ligne `8`.",
+    "concepts": [
+      "pipeline",
+      "redirection",
+      "dup2",
+      "exec",
+      "eof-tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipeline",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 5,
+    "prompt": "Écrivez un programme C qui reproduit le pipeline `echo bonjour | wc -c`. Le fils 1 doit exécuter `echo bonjour` avec sa sortie redirigée vers un tube, le fils 2 doit exécuter `wc -c` avec son entrée redirigée depuis ce tube. La commande `echo bonjour` produit `bonjour` plus un saut de ligne, donc `wc -c` doit afficher exactement `8`.",
+    "payload": {
+      "spec": "Le programme inclut <stdio.h>, <stdlib.h>, <unistd.h> et <sys/wait.h>. Il crée un tube avec pipe(fd) AVANT tout fork (en testant l'échec -1). Premier fork() : dans le fils 1, rediriger la sortie standard vers l'écriture du tube avec dup2(fd[1], STDOUT_FILENO), fermer fd[0] et fd[1] (les deux descripteurs de tube, AVANT l'exec), puis lancer la commande avec execlp(\"echo\", \"echo\", \"bonjour\", (char *) NULL) ; après l'execlp, appeler perror puis exit(EXIT_FAILURE) au cas où exec échoue. Second fork() : dans le fils 2, rediriger l'entrée standard depuis la lecture du tube avec dup2(fd[0], STDIN_FILENO), fermer fd[1] et fd[0] AVANT l'exec, puis execlp(\"wc\", \"wc\", \"-c\", (char *) NULL), suivi de perror et exit en cas d'échec. Dans le père : fermer fd[0] ET fd[1] (indispensable, sinon wc ne voit jamais la fin de fichier), puis attendre les deux fils avec waitpid. La sortie attendue est exactement la ligne '8' (les 8 octets de \"bonjour\\n\" comptés par wc -c).",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n\n    /* creez le tube AVANT les fork */\n    /* fils 1 : dup2 de la sortie sur le tube, close, execlp echo bonjour */\n    /* fils 2 : dup2 de l'entree depuis le tube, close, execlp wc -c */\n    /* pere : close fd[0] et fd[1], puis waitpid des deux fils */\n\n    (void) fd;\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "echo bonjour | wc -c affiche 8",
+          "stdin": "",
+          "expectedStdout": "8",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t f1 = fork();\n    if (f1 == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (f1 == 0) {\n        dup2(fd[1], STDOUT_FILENO);\n        close(fd[0]);\n        close(fd[1]);\n        execlp(\"echo\", \"echo\", \"bonjour\", (char *) NULL);\n        perror(\"execlp echo\");\n        exit(EXIT_FAILURE);\n    }\n\n    pid_t f2 = fork();\n    if (f2 == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (f2 == 0) {\n        dup2(fd[0], STDIN_FILENO);\n        close(fd[1]);\n        close(fd[0]);\n        execlp(\"wc\", \"wc\", \"-c\", (char *) NULL);\n        perror(\"execlp wc\");\n        exit(EXIT_FAILURE);\n    }\n\n    close(fd[0]);\n    close(fd[1]);\n    waitpid(f1, NULL, 0);\n    waitpid(f2, NULL, 0);\n    return 0;\n}"
+    },
+    "explanation": "C'est le **patron de référence** du module. On crée le tube par **`pipe(fd)` avant les `fork`**, pour que les deux fils en héritent. Le **fils 1** fait `dup2(fd[1], STDOUT_FILENO)` — sa sortie standard pointe l'écriture du tube — ferme **`fd[0]` et `fd[1]`** (les deux descripteurs de tube, **avant** le `exec` car le code après un `exec` réussi est mort), puis `execlp` lance `echo bonjour` : la commande écrit `bonjour\\n` dans le tube. Le **fils 2** fait `dup2(fd[0], STDIN_FILENO)` — son entrée standard pointe la lecture du tube —, ferme ses descripteurs, puis `execlp` lance `wc -c`. Le **père** ferme **ses deux extrémités** : étape **indispensable**, sinon son `fd[1]` maintient un écrivain et `wc` ne verra jamais la fin de fichier. Une fois `echo` terminé, il ne reste plus d'écrivain : `wc -c` lit la fin de fichier, affiche **`8`** et se termine ; les deux `waitpid` du père aboutissent.",
+    "concepts": [
+      "pipeline",
+      "pipe-fork",
+      "redirection",
+      "dup2",
+      "exec"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipeline",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme reproduit le pipeline `echo reseau | wc -c` et devrait afficher `7`. En réalité il se fige indéfiniment. Trouvez et corrigez l'erreur.",
+    "payload": {
+      "spec": "Le programme reproduit le pipeline echo reseau | wc -c. Le fils 1 exécute echo reseau (sa sortie redirigée vers le tube), le fils 2 exécute wc -c (son entrée redirigée depuis le tube). Les deux fils sont écrits correctement : ils redirigent, ferment leurs descripteurs de tube et font exec. Le bug est dans le PERE : après les deux fork, le père a lui aussi hérité de fd[0] et fd[1], mais il ne les ferme PAS — il passe directement aux waitpid. Or un read sur un tube ne renvoie la fin de fichier que lorsque TOUS les descripteurs en écriture sont fermés. Tant que le père garde son fd[1] ouvert, le noyau considère qu'il reste un écrivain : le wc du fils 2 ne voit jamais la fin de fichier sur son entrée, il ne se termine pas, et le père se fige sur le waitpid de ce fils. Corrigez en faisant fermer au père ses deux extrémités, close(fd[0]) et close(fd[1]), avant les waitpid.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t f1 = fork();\n    if (f1 == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (f1 == 0) {\n        dup2(fd[1], STDOUT_FILENO);\n        close(fd[0]);\n        close(fd[1]);\n        execlp(\"echo\", \"echo\", \"reseau\", (char *) NULL);\n        perror(\"execlp echo\");\n        exit(EXIT_FAILURE);\n    }\n\n    pid_t f2 = fork();\n    if (f2 == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (f2 == 0) {\n        dup2(fd[0], STDIN_FILENO);\n        close(fd[1]);\n        close(fd[0]);\n        execlp(\"wc\", \"wc\", \"-c\", (char *) NULL);\n        perror(\"execlp wc\");\n        exit(EXIT_FAILURE);\n    }\n\n    waitpid(f1, NULL, 0);\n    waitpid(f2, NULL, 0);\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "wc -c voit la fin de fichier",
+          "stdin": "",
+          "expectedStdout": "7",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t f1 = fork();\n    if (f1 == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (f1 == 0) {\n        dup2(fd[1], STDOUT_FILENO);\n        close(fd[0]);\n        close(fd[1]);\n        execlp(\"echo\", \"echo\", \"reseau\", (char *) NULL);\n        perror(\"execlp echo\");\n        exit(EXIT_FAILURE);\n    }\n\n    pid_t f2 = fork();\n    if (f2 == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (f2 == 0) {\n        dup2(fd[0], STDIN_FILENO);\n        close(fd[1]);\n        close(fd[0]);\n        execlp(\"wc\", \"wc\", \"-c\", (char *) NULL);\n        perror(\"execlp wc\");\n        exit(EXIT_FAILURE);\n    }\n\n    close(fd[0]);\n    close(fd[1]);\n    waitpid(f1, NULL, 0);\n    waitpid(f2, NULL, 0);\n    return 0;\n}"
+    },
+    "explanation": "C'est la **faute nº 1 du pipeline : le père qui ne ferme pas ses extrémités**. Le père a créé le tube avant les `fork` ; il possède donc lui aussi une copie de `fd[0]` et de `fd[1]`. Les deux fils sont pourtant écrits correctement. Mais le père passe directement aux `waitpid` **sans fermer ses descripteurs**. Or `wc -c` ne détecte la **fin de fichier** sur son entrée que lorsque **tous** les descripteurs en **écriture** du tube sont fermés. Le fils 1 ferme bien le sien (et `echo` se termine), mais **le `fd[1]` du père reste ouvert** : du point de vue du noyau, « il reste un écrivain ». `wc` attend donc indéfiniment d'autres données, ne se termine jamais, et le père se **fige** sur le `waitpid(f2, …)`. La correction : le père ferme **ses deux extrémités** — `close(fd[0])` et `close(fd[1])` — **avant** les `waitpid`. Le père, même s'il ne transfère rien, doit fermer les deux extrémités du tube.",
+    "concepts": [
+      "pipeline",
+      "fermeture-extremites",
+      "eof-tube",
+      "pipe-fork"
+    ],
+    "source": "Cours 3 — Les tubes"
+  },
+  {
+    "chapterSlug": "pipeline",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme reproduit le pipeline `echo tube | wc -c` et devrait afficher `5`. En réalité il se fige indéfiniment. L'erreur concerne la position des `close` dans le fils 2. Trouvez-la et corrigez-la.",
+    "payload": {
+      "spec": "Le programme reproduit le pipeline echo tube | wc -c. Le fils 1 (echo tube) et le père sont écrits correctement. Le bug est dans le fils 2 : ses deux close (close(fd[1]) et close(fd[0])) sont placés APRES l'appel execlp qui lance wc -c. Or un exec réussi remplace tout le programme : le code situé après un execlp réussi n'est JAMAIS exécuté. Les close du fils 2 sont donc du code mort — ils ne s'exécuteraient que si exec échouait. Résultat : le fils 2, devenu wc, garde ouverte sa copie héritée de fd[1], l'extrémité d'ÉCRITURE du tube. Tant que ce descripteur d'écriture reste ouvert, le noyau considère qu'il reste un écrivain : wc ne voit jamais la fin de fichier sur son entrée, ne se termine pas, et le père se fige sur le waitpid. Corrigez en DEPLAÇANT les deux close du fils 2 AVANT l'execlp, juste après le dup2.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t f1 = fork();\n    if (f1 == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (f1 == 0) {\n        dup2(fd[1], STDOUT_FILENO);\n        close(fd[0]);\n        close(fd[1]);\n        execlp(\"echo\", \"echo\", \"tube\", (char *) NULL);\n        perror(\"execlp echo\");\n        exit(EXIT_FAILURE);\n    }\n\n    pid_t f2 = fork();\n    if (f2 == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (f2 == 0) {\n        dup2(fd[0], STDIN_FILENO);\n        execlp(\"wc\", \"wc\", \"-c\", (char *) NULL);\n        close(fd[1]);\n        close(fd[0]);\n        perror(\"execlp wc\");\n        exit(EXIT_FAILURE);\n    }\n\n    close(fd[0]);\n    close(fd[1]);\n    waitpid(f1, NULL, 0);\n    waitpid(f2, NULL, 0);\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "les close du fils 2 precedent l'exec",
+          "stdin": "",
+          "expectedStdout": "5",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main(void) {\n    int fd[2];\n\n    if (pipe(fd) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t f1 = fork();\n    if (f1 == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (f1 == 0) {\n        dup2(fd[1], STDOUT_FILENO);\n        close(fd[0]);\n        close(fd[1]);\n        execlp(\"echo\", \"echo\", \"tube\", (char *) NULL);\n        perror(\"execlp echo\");\n        exit(EXIT_FAILURE);\n    }\n\n    pid_t f2 = fork();\n    if (f2 == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n    if (f2 == 0) {\n        dup2(fd[0], STDIN_FILENO);\n        close(fd[1]);\n        close(fd[0]);\n        execlp(\"wc\", \"wc\", \"-c\", (char *) NULL);\n        perror(\"execlp wc\");\n        exit(EXIT_FAILURE);\n    }\n\n    close(fd[0]);\n    close(fd[1]);\n    waitpid(f1, NULL, 0);\n    waitpid(f2, NULL, 0);\n    return 0;\n}"
+    },
+    "explanation": "C'est la **faute nº 2 du pipeline : fermer après le `exec`**. Dans le fils 2, les deux `close` sont écrits **après** l'`execlp`. Or un `exec` **réussi** remplace entièrement le programme : tout le code qui suit un `execlp` réussi est **mort** — il ne s'exécute que si `exec` **échoue**. Ici `execlp(\"wc\", …)` réussit, donc les `close(fd[1])` et `close(fd[0])` du fils 2 ne sont **jamais exécutés**. Le fils 2, devenu `wc`, conserve sa copie héritée de **`fd[1]`**, l'extrémité d'**écriture** du tube. Tant que ce descripteur d'écriture reste ouvert, le noyau compte « encore un écrivain » : `wc` ne voit **jamais la fin de fichier** sur son entrée, ne se termine pas, et le père se **fige** sur le `waitpid`. La correction : **déplacer les deux `close` avant l'`execlp`**, juste après le `dup2`. Dans un fils de pipeline, l'ordre est immuable : `dup2`, puis `close` de tous les descripteurs de tube, puis `exec`.",
+    "concepts": [
+      "pipeline",
+      "exec",
+      "fermeture-extremites",
+      "eof-tube"
+    ],
+    "source": "Cours 3 — Les tubes"
+  }
+]

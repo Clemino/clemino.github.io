@@ -1,0 +1,362 @@
+---
+title: "Rétropropagation et descente de gradient"
+slug: retropropagation-gradient
+order: 4
+estimatedReadMin: 24
+concepts: [apprentissage-par-correction-des-erreurs, regle-du-delta, fonction-de-perte, entropie-croisee-binaire, entropie-croisee-categorielle, descente-de-gradient, taux-d-apprentissage, retropropagation, terme-delta, versions-retropropagation, propagation-avant]
+source: "RNA_HSe_Fr_2324.pdf"
+---
+
+## Apprendre les paramètres d'un réseau
+
+Une fois les hyperparamètres déterminés, **il reste à calculer les paramètres,
+c'est-à-dire les poids et les biais de chaque neurone**. Pour ce faire, on
+**dispose d'un ensemble d'apprentissage** :
+
+```text
+D = { (Xₖ, Yₖ),  k = 1, …, K }
+```
+
+Le but est clair : **trouver des poids et des biais qui permettent au réseau,
+lorsqu'il reçoit l'entrée `Xₖ`, de produire une sortie aussi proche que possible
+de `Yₖ`**. Le réseau doit donc **apprendre ses paramètres**.
+
+Le **principe** des algorithmes utilisés est celui de la **correction des
+erreurs** : **calculer une erreur** par **comparaison** des sorties voulues
+`Yₖ` et des sorties produites `Ŷₖ` par le réseau, puis **ajuster les paramètres
+dans un sens qui permet de réduire cette erreur**.
+
+> **À retenir** : apprendre un réseau, c'est **calculer ses poids et biais** à
+> partir d'un **ensemble d'apprentissage** `D = {(Xₖ, Yₖ)}` pour que les sorties
+> `Ŷₖ` soient proches des `Yₖ`. Le principe est la **correction des erreurs** :
+> mesurer l'erreur, puis **ajuster les paramètres pour la réduire**.
+
+## Le schéma général : la correction des erreurs
+
+Le cours donne le **schéma général** de ces algorithmes sous forme d'un
+pseudocode (à **lire**).
+
+```text
+Algorithme : Calcul des poids par correction des erreurs
+1. Initialiser les poids et les biais de manière aléatoire.
+2. Tant que (le critère d'arrêt n'est pas atteint) :
+     Pour chaque exemple (X, Y) ∈ D :
+       a. Calculer la sortie Ŷ correspondant à l'entrée X.
+       b. Calculer l'erreur en comparant les valeurs Y et Ŷ.
+       c. Ajuster les poids et les biais de manière à réduire l'erreur.
+```
+
+Le cours indique que, **pour passer de ce schéma général aux algorithmes,
+plusieurs choix doivent être faits** — trois questions.
+
+1. **Comment le réseau doit-il calculer l'erreur ?** Cela amène à introduire les
+   **fonctions de perte (loss functions)**.
+2. **Comment ajuster les poids et les biais de manière à minimiser l'erreur ?**
+   Là, il s'agit de choisir un **algorithme d'optimisation**.
+3. **Quel critère d'arrêt appliquer ?** Un tel critère est inclus dans
+   l'algorithme d'optimisation ; il est lié à la **convergence** de ce dernier.
+
+Le cours présente alors **deux algorithmes** : d'abord un algorithme simple, la
+**règle du Delta**, puis l'algorithme le plus général, la **rétropropagation**.
+
+> **À retenir** : le schéma général de l'apprentissage est : **initialiser au
+> hasard**, puis répéter — **calculer `Ŷ`**, **mesurer l'erreur**, **ajuster**
+> les paramètres pour la réduire. Le concrétiser exige trois choix : la
+> **fonction de perte**, l'**algorithme d'optimisation**, le **critère
+> d'arrêt**.
+
+## La règle du Delta
+
+Le cours commence par un cas simple. On considère un **réseau sans couches
+cachées**, dont la couche de sortie comporte **`m` neurones** et dont la fonction
+d'activation est **linéaire**. L'ensemble d'apprentissage est
+`D = {(Xₖ, Yₖ), k = 1, …, K}`, avec `Xₖ = (xₖ₁, …, xₖₙ)` et
+`Yₖ = (yₖ₁, …, yₖₘ)`.
+
+Pour chaque exemple `(Xₖ, Yₖ)`, la sortie `Ŷₖ` calculée par le réseau est un
+`m`-uplet `(ŷₖ₁, …, ŷₖₘ)` tel que, pour `j = 1, …, m` (l'activation étant
+linéaire, l'identité) :
+
+```text
+ŷₖⱼ = Σᵢ₌₁ⁿ wⱼᵢ · xₖᵢ + bⱼ
+```
+
+**Définition de l'erreur.** Pour chaque exemple, **l'écart entre la sortie
+voulue et la sortie calculée** est mesuré par :
+
+```text
+Eₖ = ½ · Σⱼ₌₁ᵐ (yₖⱼ − ŷₖⱼ)²  =  ½ · ‖Yₖ − Ŷₖ‖²
+```
+
+L'**erreur globale** est la somme sur tous les exemples :
+
+```text
+E = Σₖ₌₁ᴷ Eₖ
+  = ½ · Σₖ₌₁ᴷ ‖Yₖ − Ŷₖ‖²
+  = ½ · Σₖ₌₁ᴷ Σⱼ₌₁ᵐ (yₖⱼ − ŷₖⱼ)²
+  = ½ · Σₖ₌₁ᴷ Σⱼ₌₁ᵐ (yₖⱼ − wⱼ₁·xₖ₁ − … − wⱼₙ·xₖₙ − bⱼ)²
+```
+
+Le cours observe le point décisif : **l'erreur `E` est une fonction quadratique
+des poids `w₁₁, …, wₘₙ` et des biais `b₁, …, bₘ`**. Pour la **minimiser**, on
+utilise une **descente du gradient**.
+
+> **À retenir** : la **règle du Delta** concerne un réseau **sans couche
+> cachée** à activation **linéaire**. L'erreur globale
+> `E = ½·Σₖ‖Yₖ − Ŷₖ‖²` est une fonction **quadratique** des poids et des biais ;
+> on la **minimise** par une **descente du gradient**.
+
+## La descente du gradient
+
+La **descente du gradient** est la méthode d'optimisation employée. En notant
+`W` le **vecteur contenant les poids et les biais** et `t` le numéro d'une
+itération, la mise à jour s'écrit :
+
+```text
+Wₜ₊₁ = Wₜ − η · ∇E(Wₜ)        (1)
+```
+
+où, précise le cours, **`η` est une constante réelle appelée taux
+d'apprentissage (learning rate)** et **`∇E()` est le gradient de `E`**.
+
+L'idée de la descente du gradient est intuitive : le gradient `∇E` **pointe dans
+le sens de la plus forte croissance** de l'erreur ; pour la **diminuer**, on
+déplace donc `W` **dans le sens opposé** — d'où le **signe `−`**. Le **taux
+d'apprentissage `η`** règle l'**amplitude du pas** à chaque itération.
+
+L'équation (1) peut être **réécrite composante par composante** :
+
+```text
+Pour i = 1,…,n et j = 1,…,m :   Δwⱼᵢ = − η · ∂E/∂wⱼᵢ (W)    (2a)
+Pour j = 1,…,m :                Δbⱼ  = − η · ∂E/∂bⱼ (W)     (2b)
+```
+
+Compte tenu de la **définition de `E`** (la fonction quadratique ci-dessus), le
+calcul des dérivées partielles donne les mises à jour explicites :
+
+```text
+Δwⱼᵢ = η · Σₖ₌₁ᴷ xₖᵢ · (yₖⱼ − ŷₖⱼ)        (3a)
+Δbⱼ  = η · Σₖ₌₁ᴷ (yₖⱼ − ŷₖⱼ)              (3b)
+```
+
+Le cours fait alors une observation capitale : **on constate la présence d'un
+terme commun dans les équations (3a) et (3b)**. C'est précisément ce **terme
+propre à chaque neurone qu'on appelle `δʲ`** :
+
+```text
+δʲ = (yⱼ − ŷⱼ)
+```
+
+Ce terme `δ` mesure, pour le neurone `j`, l'**écart** entre sa sortie voulue et
+sa sortie produite. Le cours annonce : **on retrouvera ce terme plus bas, dans
+le cas le plus général** — c'est lui qui donnera son nom et sa mécanique à la
+rétropropagation.
+
+> **À retenir** : la **descente du gradient** met à jour les paramètres par
+> `Wₜ₊₁ = Wₜ − η·∇E(Wₜ)`, `η` étant le **taux d'apprentissage**. Pour la règle
+> du Delta : `Δwⱼᵢ = η·Σₖ xₖᵢ(yₖⱼ − ŷₖⱼ)` et `Δbⱼ = η·Σₖ(yₖⱼ − ŷₖⱼ)`. Le
+> **terme commun** `δʲ = (yⱼ − ŷⱼ)`, propre à chaque neurone, mesure l'écart
+> sortie voulue / sortie produite.
+
+## Critère d'arrêt et convergence
+
+Reste à **définir un critère d'arrêt**. Le cours énumère **plusieurs
+possibilités**, qui peuvent être **combinées** :
+
+- `E < E_max` : l'erreur est passée sous un seuil fixé ;
+- **deux valeurs successives de `W` et `B` sont quasi-identiques** — on contrôle
+  cette stabilité par un **paramètre `ε`** ;
+- de même pour **deux valeurs successives de l'erreur** (ce qui revient au même
+  que pour les sorties `Ŷₖ`) ;
+- ces critères peuvent être combinés avec un **nombre d'itérations maximal**.
+
+Le cours conclut sur la **convergence** : **elle est assurée par le fait que
+l'erreur** — la fonction à minimiser — **est quadratique**. Dans ce cas, **cette
+fonction possède un minimum unique** : la descente du gradient ne risque pas de
+rester piégée dans un minimum local, elle atteint **le** minimum.
+
+> **À retenir** : le **critère d'arrêt** combine plusieurs tests — `E < E_max`,
+> stabilité de `W`/`B` ou de l'erreur (à `ε` près), nombre d'itérations
+> maximal. Pour la règle du Delta, la **convergence** est **assurée** : l'erreur
+> est **quadratique**, donc à **minimum unique**.
+
+## La rétropropagation : généraliser la règle du Delta
+
+Le cours passe ensuite au **cas général** : un réseau de neurones **quelconque**.
+La **rétropropagation** s'inspire de la règle du Delta pour fournir un **nouvel
+algorithme d'apprentissage**. Il s'agit de **généraliser la règle du Delta de
+trois manières** :
+
+| Règle du Delta | Rétropropagation |
+| --- | --- |
+| Réseau **sans couche cachée** | Réseau à **nombre de couches quelconque** |
+| Activation **linéaire** | Fonction d'activation **quelconque** |
+| Erreur **quadratique** | Fonction de perte **quelconque** |
+
+Le **principe reste identique** : **utiliser une descente du gradient pour
+mettre à jour, à chaque itération, les poids et les biais.**
+
+> **À retenir** : la **rétropropagation** **généralise la règle du Delta** sur
+> **trois** points : un nombre de couches **quelconque**, une activation
+> **quelconque**, une fonction de perte **quelconque**. Le principe reste la
+> **descente du gradient** sur les poids et les biais.
+
+## Les fonctions de perte
+
+La première généralisation porte sur la mesure de l'erreur. **Étant donné
+l'ensemble d'apprentissage `D = {(Xₖ, Yₖ), k = 1, …, n}`, la fonction de perte
+(loss function) mesure l'écart** entre les valeurs `Yₖ` et les sorties `Ŷₖ` que
+le réseau calcule pour les entrées `Xₖ`. **L'objectif de l'apprentissage est de
+minimiser la valeur de cette fonction.**
+
+Le cours présente les **trois principales fonctions de perte** utilisées dans
+les réseaux de neurones.
+
+**1. L'erreur quadratique** — c'est-à-dire la **méthode des moindres carrés**.
+C'est la fonction déjà rencontrée avec la règle du Delta : la somme des carrés
+des écarts.
+
+**2. L'entropie croisée binaire (binary cross-entropy)**, utilisée notamment
+dans les problèmes de **classification binaire**. Elle est définie par :
+
+```text
+BCE(ŷ, y) = − ( y·log(ŷ) + (1 − y)·log(1 − ŷ) )
+```
+
+**3. L'entropie croisée catégorielle (categorical cross-entropy)**, utilisée
+dans les problèmes de **multi-classification**. En utilisant pour `Y` la
+représentation **one-hot**, la fonction de perte s'écrit :
+
+```text
+CCE(ŷ, y) = − Σⱼ₌₁ᵐ yⱼ · log(ŷⱼ)
+```
+
+Le tableau suivant associe chaque perte à son type de problème.
+
+| Fonction de perte | Définition | Type de problème |
+| --- | --- | --- |
+| **Erreur quadratique** | `½·Σ(y − ŷ)²` (moindres carrés) | **Régression** |
+| **Entropie croisée binaire** | `BCE = −(y·log(ŷ) + (1−y)·log(1−ŷ))` | Classification **binaire** |
+| **Entropie croisée catégorielle** | `CCE = −Σⱼ yⱼ·log(ŷⱼ)` (`Y` en one-hot) | **Multi-classification** |
+
+> **À retenir** : la **fonction de perte (loss)** mesure l'écart sorties voulues
+> / sorties produites ; l'apprentissage la **minimise**. Trois pertes
+> principales : l'**erreur quadratique** (régression), l'**entropie croisée
+> binaire** `BCE = −(y·log ŷ + (1−y)·log(1−ŷ))` (binaire), l'**entropie croisée
+> catégorielle** `CCE = −Σⱼ yⱼ·log ŷⱼ` (multi-classification).
+
+## La mécanique de la rétropropagation
+
+Comment la descente du gradient s'applique-t-elle à un réseau à plusieurs
+couches ? La réponse **donne son nom à l'algorithme** : **les mises à jour des
+poids et des biais se font couche par couche, de droite à gauche.**
+
+C'est l'inverse de la propagation avant. La propagation avant va de la couche
+d'entrée vers la couche de sortie ; la rétropropagation **remonte** de la couche
+de sortie vers la première couche cachée — d'où le préfixe **rétro**.
+
+Le cours explique le ressort de ce sens « à rebours ». **Chaque neurone
+`(l, r)`, pour mettre à jour ses poids et ses biais, a besoin de calculer une
+valeur notée `δᵣˡ`** ; or **`δᵣˡ` dépend des valeurs `δₛˡ⁺¹` calculées par les
+neurones de la couche suivante**. C'est exactement le terme `δ` annoncé par la
+règle du Delta, ici **généralisé** : en couche de sortie, `δ` se calcule
+directement (l'écart sortie voulue / sortie produite) ; dans une **couche
+cachée**, `δᵣˡ` se déduit des `δ` de la couche `l + 1`. Pour calculer les `δ`
+d'une couche, **il faut donc déjà connaître ceux de la couche d'après** : le
+calcul **doit remonter** de la sortie vers l'entrée.
+
+Le cours résume l'apprentissage en **deux étapes** appliquées dans deux sens
+opposés :
+
+| Étape | Sens | Rôle |
+| --- | --- | --- |
+| **(1) Feedforward** | Entrée → sortie | Calculer les sorties de chaque couche, donc `Ŷ` |
+| **(2) Backpropagation** | Sortie → entrée | Calculer les `δ`, les dérivées de `E`, et **mettre à jour** poids et biais |
+
+> **À retenir** : la **rétropropagation** met à jour les poids et les biais
+> **couche par couche, de droite à gauche**. Chaque neurone calcule une valeur
+> **`δᵣˡ`** qui **dépend des `δₛˡ⁺¹`** de la couche suivante : le calcul **doit
+> remonter** de la sortie vers l'entrée. L'apprentissage enchaîne **feedforward**
+> (entrée→sortie) puis **backpropagation** (sortie→entrée).
+
+## L'algorithme de rétropropagation
+
+Le cours donne l'algorithme complet (pseudocode à **lire**).
+
+```text
+Algorithme : Rétropropagation
+Entrées : l'ensemble d'apprentissage D = { (Xₖ, Yₖ), k = 1, …, n }
+Initialiser W et B (poids et biais).
+Tant que (le critère d'arrêt n'est pas atteint) :
+  Pour k = 1, …, n :
+    1. Mettre Xₖ à l'entrée du réseau.
+    2. Pour l = 2, …, L : calculer les sorties de la couche l.   (Feedforward)
+    3. La sortie de la couche L est Ŷₖ.
+    4. Utiliser les valeurs Yₖ et Ŷₖ pour calculer l'erreur E.
+    5. Pour l = L, L−1, …, 1 :                                   (Rétropropagation)
+         Calculer les valeurs δₗ qui dépendent des valeurs δₗ₊₁.
+         Calculer les valeurs ∂E/∂wⱼₖˡ et ∂E/∂bⱼˡ.
+         Mettre à jour les valeurs de wⱼₖˡ et bⱼˡ.
+```
+
+On y lit clairement l'enchaînement : pour chaque exemple, une **passe avant**
+(étapes 1 à 3) calcule `Ŷₖ`, l'**erreur** est mesurée (étape 4), puis une
+**passe arrière** (étape 5) calcule les `δ` — **de la couche `L` vers la couche
+`1`** —, en déduit les **dérivées partielles** de `E` et **met à jour** chaque
+poids et chaque biais.
+
+> **À retenir** : pour chaque exemple, la rétropropagation fait une **passe
+> avant** (calcul de `Ŷₖ`), mesure l'**erreur**, puis une **passe arrière**
+> (`l = L → 1`) qui calcule les **`δ`**, les **dérivées** `∂E/∂wⱼₖˡ`, `∂E/∂bⱼˡ`,
+> et **met à jour** poids et biais.
+
+## La rétropropagation en pratique : batch, stochastique, mini-batch
+
+Tel qu'il vient d'être présenté, l'algorithme **met à jour les poids et les
+biais à chaque exemple**. Le cours précise que, **dans la pratique, ce n'est pas
+toujours le cas** : il existe **trois versions** de l'algorithme, selon le
+**moment** où la mise à jour intervient.
+
+| Version | Quand a lieu la mise à jour |
+| --- | --- |
+| **Batch learning** | À chaque itération, l'algorithme calcule une **erreur globale sur tous les exemples** avant de mettre à jour les poids et les biais |
+| **Descente du gradient stochastique** | À chaque itération, **un exemple est choisi aléatoirement** ; les calculs puis les mises à jour sont effectués sur ce seul exemple |
+| **Mini-batch learning** | La mise à jour se fait **tous les `mb` exemples**, `mb` étant la **taille du mini-batch** |
+
+Ces trois versions ne diffèrent que par le **regroupement des exemples** pour la
+mise à jour : **tous** (batch), **un seul tiré au hasard** (stochastique), ou
+par **paquets de `mb`** (mini-batch). La mécanique du feedforward et de la
+backpropagation, elle, reste la même.
+
+> **À retenir** : la rétropropagation a **trois versions** selon le moment de la
+> mise à jour : **batch** (erreur globale sur **tous** les exemples),
+> **stochastique** (**un** exemple tiré au hasard), **mini-batch** (par paquets
+> de **`mb`** exemples).
+
+## Synthèse de la section
+
+Apprendre un réseau, c'est **calculer ses poids et biais** à partir d'un
+**ensemble d'apprentissage** `D = {(Xₖ, Yₖ)}`, selon le principe de la
+**correction des erreurs** : initialiser au hasard, puis répéter — calculer
+`Ŷ`, mesurer l'erreur, ajuster les paramètres pour la réduire. Le concrétiser
+exige trois choix : la **fonction de perte**, l'**algorithme d'optimisation**,
+le **critère d'arrêt**. La **règle du Delta** traite le cas simple (réseau
+**sans couche cachée**, activation **linéaire**) : l'erreur quadratique
+`E = ½·Σₖ‖Yₖ − Ŷₖ‖²` est minimisée par une **descente du gradient**
+`Wₜ₊₁ = Wₜ − η·∇E(Wₜ)` (taux d'apprentissage `η`), faisant apparaître le terme
+commun `δʲ = (yⱼ − ŷⱼ)` ; la **convergence** est assurée car l'erreur
+quadratique a un **minimum unique**. La **rétropropagation** **généralise** la
+règle du Delta à un réseau **quelconque** (couches, activation et **fonction de
+perte** quelconques — erreur quadratique, **entropie croisée binaire** `BCE`,
+**entropie croisée catégorielle** `CCE`). Sa mécanique : les mises à jour se
+font **couche par couche, de droite à gauche**, car le `δᵣˡ` d'un neurone
+**dépend des `δₛˡ⁺¹`** de la couche suivante. L'algorithme enchaîne, par
+exemple, une **passe avant** (calcul de `Ŷ`), la mesure de l'**erreur**, puis
+une **passe arrière** (`l = L → 1`) qui calcule les `δ`, les dérivées et **met à
+jour** les paramètres. En pratique, trois versions : **batch**, **stochastique**,
+**mini-batch**.
+
+> **À retenir** : l'apprentissage d'un réseau repose sur la **descente du
+> gradient** appliquée à une **fonction de perte**. La **rétropropagation**
+> **généralise la règle du Delta** : elle calcule les `δ` et met à jour poids et
+> biais **de la sortie vers l'entrée**, après une passe **feedforward**.

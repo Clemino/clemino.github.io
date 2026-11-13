@@ -1,0 +1,1799 @@
+[
+  {
+    "chapterSlug": "ipc-cles-ftok",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un processus crée une file de messages System V, y dépose des données, puis se termine — sans appeler aucune suppression. Que devient cette file de messages ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Elle continue d'exister dans le noyau, avec ses données, jusqu'à une suppression explicite (IPC_RMID / ipcrm) ou l'arrêt de la machine."
+        },
+        {
+          "id": "b",
+          "label": "Elle est détruite automatiquement dès que le processus créateur se termine."
+        },
+        {
+          "id": "c",
+          "label": "Elle est détruite automatiquement à la fermeture du dernier descripteur qui la désignait."
+        },
+        {
+          "id": "d",
+          "label": "Elle survit quelques secondes, puis le noyau la récupère faute d'utilisateur."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "C'est la propriété la plus importante des IPC System V : un objet IPC est **persistant dans le noyau** (*kernel-persistent*). Une fois créé, il **survit à la terminaison de tous les processus** qui l'utilisaient et ne disparaît que de **deux** façons : par une **suppression explicite** (appel `*ctl` avec `IPC_RMID`, ou commande `ipcrm`) ou par l'**arrêt de la machine**. (b) et (c) décrivent le comportement des **tubes** — anonymes ou nommés —, pas celui des IPC System V. (d) est faux : le noyau ne « ramasse » jamais un objet IPC orphelin. Oublier de supprimer un objet IPC, c'est précisément la **fuite d'objet IPC**.",
+    "concepts": [
+      "objet-ipc",
+      "persistance-noyau",
+      "fuite-ipc"
+    ],
+    "source": "Cours 6 — Les files de messages (mécanisme IPC System V)"
+  },
+  {
+    "chapterSlug": "ipc-cles-ftok",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Le drapeau IPC_EXCL, employé seul comme second argument de msgget (sans IPC_CREAT), garantit l'échec de l'appel si l'objet existe déjà.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. **`IPC_EXCL` employé seul n'a aucun effet** : il ne prend son sens — « échouer avec `EEXIST` si l'objet existe déjà » — qu'**en présence de `IPC_CREAT`**. On écrit donc **toujours** `IPC_CREAT | IPC_EXCL`. La combinaison `IPC_CREAT | IPC_EXCL` garantit que l'appel `*get` ne réussit **que si c'est lui qui vient de créer l'objet** — utile pour savoir qui a la responsabilité de l'initialiser et de le supprimer. Seul, `IPC_EXCL` est ignoré, et l'appel se comporte comme un simple `*get` de récupération.",
+    "concepts": [
+      "ipc-excl",
+      "ipc-creat",
+      "motif-get"
+    ],
+    "source": "Cours 6 — Les files de messages (mécanisme IPC System V)"
+  },
+  {
+    "chapterSlug": "ipc-cles-ftok",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Un processus appelle un *get avec la clé spéciale IPC_PRIVATE. Que demande-t-il exactement au noyau, et qui pourra utiliser l'objet ainsi obtenu ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le noyau crée un objet toujours neuf, sans clé publique ; seuls les processus à qui le créateur transmet l'identifiant — typiquement ses fils créés par fork après — peuvent l'utiliser."
+        },
+        {
+          "id": "b",
+          "label": "Le noyau crée un objet dont la clé est secrète mais qu'un autre processus peut tout de même retrouver en appelant *get avec IPC_PRIVATE."
+        },
+        {
+          "id": "c",
+          "label": "Le noyau récupère l'objet IPC déjà existant qui appartient en propre au processus appelant."
+        },
+        {
+          "id": "d",
+          "label": "Le noyau crée un objet réservé à l'usage du seul processus appelant : même ses fils ne pourront pas y accéder."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "**`IPC_PRIVATE`** demande au noyau de créer un objet IPC **toujours neuf** et **sans clé publique**. Comme l'objet n'a pas de clé, **aucun** processus ne peut le retrouver par un appel `*get` — ce qui élimine la réponse (b). L'objet n'est accessible qu'aux processus à qui le créateur **transmet son identifiant** : en pratique, les **fils** créés par `fork` **après** la création, qui **héritent** la valeur de l'identifiant (un simple `int`). `IPC_PRIVATE` est donc l'analogue, pour les IPC System V, du **tube anonyme** : pas de nom public, partage par **héritage** entre processus apparentés. (c) confond avec une récupération d'objet existant ; (d) est faux puisque les fils, justement, peuvent y accéder.",
+    "concepts": [
+      "ipc-private",
+      "cle-ipc",
+      "motif-get"
+    ],
+    "source": "Cours 6 — Les files de messages (mécanisme IPC System V)"
+  },
+  {
+    "chapterSlug": "ipc-cles-ftok",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur la fonction ftok et la dérivation d'une clé IPC.",
+    "payload": {
+      "template": "La fonction {{c1}} fabrique une clé IPC de type {{c2}} à partir de deux éléments connus de tous les processus concernés : le {{c3}} d'un fichier qui doit déjà {{c4}}, et un identifiant de projet dont seuls les {{c5}} bits de poids faible sont utilisés. Si le fichier n'existe pas, la fonction renvoie la valeur {{c6}}.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm"
+        },
+        {
+          "id": "c2",
+          "width": "sm",
+          "hint": "le type d'une clé IPC"
+        },
+        {
+          "id": "c3",
+          "width": "sm",
+          "hint": "ce qui désigne un fichier dans l'arborescence"
+        },
+        {
+          "id": "c4",
+          "width": "sm",
+          "hint": "condition sur le fichier"
+        },
+        {
+          "id": "c5",
+          "width": "sm",
+          "hint": "un nombre"
+        },
+        {
+          "id": "c6",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "ftok",
+          "ftok()"
+        ],
+        "c2": [
+          "key_t"
+        ],
+        "c3": [
+          "chemin",
+          "pathname",
+          "chemin d'acces",
+          "chemin d acces"
+        ],
+        "c4": [
+          "exister"
+        ],
+        "c5": [
+          "8",
+          "huit"
+        ],
+        "c6": [
+          "-1",
+          "(key_t) -1",
+          "(key_t)-1"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "**`ftok`** (*file to key*) fabrique une clé **reproductible** : son type de retour est **`key_t`**, l'entier qui sert d'identité publique aux objets IPC. Ses deux arguments sont le **`pathname`** — le **chemin** d'un fichier qui doit **déjà exister** et être accessible (sinon `ftok` échoue) — et le `proj_id`, dont seuls les **8** bits de poids faible sont retenus (d'où une valeur utile dans `[1, 255]`). `ftok` combine le numéro d'**i-nœud** et l'identifiant de **périphérique** du fichier avec ces 8 bits : tant que le fichier et le `proj_id` sont identiques, **deux processus quelconques** obtiennent **la même clé**. En cas d'échec — notamment si le fichier **n'existe pas** —, `ftok` renvoie **`-1`** (de type `key_t`).",
+    "concepts": [
+      "ftok",
+      "cle-ipc"
+    ],
+    "source": "Cours 6 — Les files de messages (mécanisme IPC System V)"
+  },
+  {
+    "chapterSlug": "ipc-cles-ftok",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Deux processus conviennent d'appeler ftok(\"projet.cfg\", 50). Si, entre leurs deux appels, le fichier projet.cfg est supprimé puis recréé à l'identique, ils obtiendront malgré tout la même clé.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux — c'est un piège classique de `ftok`. La clé n'est **pas** dérivée du **nom** du fichier, mais de son **numéro d'i-nœud** (combiné à l'identifiant de périphérique et au `proj_id`). Or, supprimer puis recréer un fichier lui attribue **un nouvel i-nœud**, même si son nom et son contenu sont identiques. Les deux appels `ftok` produisent alors des clés **différentes**, et les processus ne se retrouvent plus sur le même objet IPC. La règle : `ftok` exige un fichier **stable**, qui n'est ni supprimé ni recréé pendant la vie de l'application.",
+    "concepts": [
+      "ftok",
+      "cle-ipc"
+    ],
+    "source": "Cours 6 — Les files de messages (mécanisme IPC System V)"
+  },
+  {
+    "chapterSlug": "ipc-cles-ftok",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Parmi ces affirmations sur les objets IPC System V et leur cycle de vie, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Les trois objets de la famille (sémaphores, files de messages, mémoire partagée) partagent une architecture commune : une clé, un appel *get, un appel *ctl."
+        },
+        {
+          "id": "b",
+          "label": "La clé (key_t) est l'identité publique de l'objet, choisie avant sa création ; l'identifiant (int) est un numéro interne attribué par le noyau au retour de *get."
+        },
+        {
+          "id": "c",
+          "label": "Comme un objet IPC est persistant, un IPC_CREAT | IPC_EXCL peut échouer au lancement d'un programme à cause d'un objet laissé par une exécution précédente."
+        },
+        {
+          "id": "d",
+          "label": "La commande ipcs supprime un objet IPC, tandis que la commande ipcrm permet de lister les objets IPC présents."
+        },
+        {
+          "id": "e",
+          "label": "Un objet IPC apparaît dans le système de fichiers, où on peut le voir avec ls."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "(a) Vrai : c'est tout l'intérêt d'étudier les trois objets ensemble — ils partagent une **architecture uniforme** (une **clé**, un appel **`*get`**, un appel **`*ctl`**). (b) Vrai : il faut distinguer rigoureusement la **clé** — identité **publique et externe**, choisie *avant* la création par `ftok` — et l'**identifiant** — numéro **interne** attribué *par le noyau* au retour de `*get`. (c) Vrai : un objet IPC étant **persistant**, un objet orphelin laissé par une exécution précédente fait **échouer** un `IPC_CREAT | IPC_EXCL` au lancement suivant (`EEXIST`), exactement comme un FIFO oublié fait échouer `mkfifo`. (d) est **faux** : c'est l'**inverse** — **`ipcs`** *liste* les objets, **`ipcrm`** les *supprime*. (e) est **faux** : un objet IPC System V **n'apparaît pas** dans le système de fichiers — il se désigne par une clé, pas par un chemin, et `ls` ne le montre pas.",
+    "concepts": [
+      "ipc-systemev",
+      "objet-ipc",
+      "cle-ipc",
+      "ipcs-ipcrm",
+      "ipc-excl"
+    ],
+    "source": "Cours 6 — Les files de messages (mécanisme IPC System V)"
+  },
+  {
+    "chapterSlug": "ipc-cles-ftok",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque élément du vocabulaire des IPC System V à sa description.",
+    "payload": {
+      "left": [
+        {
+          "id": "cle",
+          "label": "Valeur numérique de type key_t servant d'identité publique à un objet IPC"
+        },
+        {
+          "id": "ftok",
+          "label": "Fonction qui fabrique une clé reproductible à partir d'un fichier et d'un identifiant de projet"
+        },
+        {
+          "id": "private",
+          "label": "Clé spéciale demandant un objet toujours neuf et sans clé publique"
+        },
+        {
+          "id": "get",
+          "label": "Appel qui crée ou récupère l'objet et renvoie son identifiant entier"
+        },
+        {
+          "id": "creat",
+          "label": "Drapeau qui crée l'objet s'il n'existe pas, et le récupère simplement s'il existe déjà"
+        },
+        {
+          "id": "rmid",
+          "label": "Commande passée à *ctl pour supprimer définitivement un objet IPC du noyau"
+        }
+      ],
+      "right": [
+        {
+          "id": "r-cle",
+          "label": "clé IPC"
+        },
+        {
+          "id": "r-ftok",
+          "label": "ftok"
+        },
+        {
+          "id": "r-private",
+          "label": "IPC_PRIVATE"
+        },
+        {
+          "id": "r-get",
+          "label": "msgget / semget / shmget"
+        },
+        {
+          "id": "r-creat",
+          "label": "IPC_CREAT"
+        },
+        {
+          "id": "r-rmid",
+          "label": "IPC_RMID"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "cle": "r-cle",
+        "ftok": "r-ftok",
+        "private": "r-private",
+        "get": "r-get",
+        "creat": "r-creat",
+        "rmid": "r-rmid"
+      }
+    },
+    "explanation": "La **clé IPC** (`key_t`) est l'identité **publique** d'un objet : deux processus qui veulent partager le même objet fournissent la **même clé** à leur `*get`. **`ftok`** fabrique une telle clé de façon **reproductible**, à partir d'un **fichier existant** et d'un `proj_id`. **`IPC_PRIVATE`** est la clé spéciale qui demande un objet **neuf et anonyme**, partageable seulement par héritage. Le motif **`*get`** — `msgget`, `semget`, `shmget` — **crée ou récupère** l'objet et renvoie son **identifiant** entier. Le drapeau **`IPC_CREAT`** rend la création **idempotente** : il crée l'objet s'il n'existe pas, le récupère sinon. Enfin, **`IPC_RMID`** est la commande passée à `*ctl` (ou à `ipcrm`) pour **supprimer** définitivement l'objet du noyau.",
+    "concepts": [
+      "cle-ipc",
+      "ftok",
+      "ipc-private",
+      "motif-get",
+      "ipc-creat",
+      "objet-ipc"
+    ],
+    "source": "Cours 6 — Les files de messages (mécanisme IPC System V)"
+  },
+  {
+    "chapterSlug": "ipc-cles-ftok",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Deux processus indépendants veulent communiquer par une file de messages System V partagée, désignée par une clé publique. Remettez dans l'ordre les étapes du cycle de vie complet de cet objet IPC.",
+    "payload": {
+      "items": [
+        {
+          "id": "fichier",
+          "label": "On choisit un fichier stable et un proj_id, connus des deux processus"
+        },
+        {
+          "id": "ftok",
+          "label": "Chaque processus appelle ftok sur ce fichier et ce proj_id : tous deux obtiennent la même clé"
+        },
+        {
+          "id": "get",
+          "label": "Le premier processus appelle msgget avec IPC_CREAT : la file est créée, il reçoit son identifiant"
+        },
+        {
+          "id": "join",
+          "label": "Le second processus appelle msgget avec la même clé : il récupère l'identifiant de la file existante"
+        },
+        {
+          "id": "use",
+          "label": "Les deux processus échangent des messages via msgsnd et msgrcv"
+        },
+        {
+          "id": "rmid",
+          "label": "Quand la communication est finie, un processus supprime la file avec msgctl et IPC_RMID"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "fichier",
+        "ftok",
+        "get",
+        "join",
+        "use",
+        "rmid"
+      ]
+    },
+    "explanation": "Tout part d'une **convention** : les deux processus doivent s'accorder sur un **fichier stable** et un **`proj_id`** — c'est la seule information qu'ils partagent à l'avance. Chacun appelle alors **`ftok`** sur ce couple : `ftok` étant **déterministe**, tous deux obtiennent **rigoureusement la même clé**, sans rien s'être transmis. Le **premier** processus appelle `msgget` avec **`IPC_CREAT`** : la file n'existant pas encore, elle est **créée**, et il reçoit son **identifiant**. Le **second** processus appelle `msgget` avec la **même clé** : la file existe désormais, il en **récupère** l'identifiant. Les deux peuvent alors **échanger** des messages (`msgsnd` / `msgrcv`). Enfin — étape **à ne jamais oublier** —, un processus **supprime** la file avec `msgctl(..., IPC_RMID)` : sans cela, l'objet **persiste** dans le noyau.",
+    "concepts": [
+      "ftok",
+      "cle-ipc",
+      "motif-get",
+      "ipc-creat",
+      "persistance-noyau"
+    ],
+    "source": "Cours 6 — Les files de messages (mécanisme IPC System V)"
+  },
+  {
+    "chapterSlug": "ipc-cles-ftok",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme crée un fichier marqueur.tmp, appelle ftok dessus de deux façons, puis crée et supprime une file de messages privée. Quelle est sa sortie exacte ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <fcntl.h>\n#include <unistd.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/msg.h>\n\nint main(void) {\n    /* cree un fichier dans le repertoire courant : ftok exige un fichier existant */\n    const char *chemin = \"marqueur.tmp\";\n    int fd = open(chemin, O_CREAT | O_WRONLY, 0600);\n    if (fd == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n    close(fd);\n\n    /* deux appels ftok, MEME fichier, MEME proj_id : cles identiques */\n    key_t k1 = ftok(chemin, 65);\n    key_t k2 = ftok(chemin, 65);\n    if (k1 == (key_t) -1 || k2 == (key_t) -1) { perror(\"ftok\"); exit(EXIT_FAILURE); }\n    printf(\"k1 == k2 : %s\\n\", (k1 == k2) ? \"oui\" : \"non\");\n\n    /* meme fichier, proj_id DIFFERENT : cle differente */\n    key_t k3 = ftok(chemin, 66);\n    printf(\"k1 == k3 : %s\\n\", (k1 == k3) ? \"oui\" : \"non\");\n\n    /* une file de messages privee : IPC_PRIVATE fournit un objet neuf */\n    int id = msgget(IPC_PRIVATE, IPC_CREAT | 0600);\n    if (id == -1) { perror(\"msgget\"); exit(EXIT_FAILURE); }\n    printf(\"file creee : %s\\n\", (id >= 0) ? \"oui\" : \"non\");\n\n    /* objet IPC persistant : suppression obligatoire */\n    if (msgctl(id, IPC_RMID, NULL) == -1) { perror(\"msgctl\"); exit(EXIT_FAILURE); }\n    printf(\"file supprimee\\n\");\n\n    unlink(chemin);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "expectedOutput": "k1 == k2 : oui\nk1 == k3 : non\nfile creee : oui\nfile supprimee"
+    },
+    "explanation": "`ftok` est **déterministe** : il dérive la clé du numéro d'i-nœud du fichier (combiné au périphérique) et des 8 bits de poids faible du `proj_id`. **`k1`** et **`k2`** appellent `ftok` sur le **même fichier** avec le **même `proj_id`** (`65`) : ils obtiennent donc **la même clé** — `k1 == k2` est **`oui`**. **`k3`** utilise le même fichier mais un `proj_id` **différent** (`66`) : la clé change — `k1 == k3` est **`non`**. Ensuite, `msgget(IPC_PRIVATE, IPC_CREAT | 0600)` crée une file **neuve** et renvoie un identifiant valide (`>= 0`) : `file creee : oui`. Enfin, `msgctl(id, IPC_RMID, NULL)` **supprime** la file — indispensable, car un objet IPC est persistant — et le programme affiche `file supprimee`. La sortie est entièrement **déterministe** : aucun affichage de clé ou d'identifiant brut, seulement des comparaisons.",
+    "concepts": [
+      "ftok",
+      "ipc-private",
+      "cle-ipc",
+      "persistance-noyau"
+    ],
+    "source": "Cours 6 — Les files de messages (mécanisme IPC System V)"
+  },
+  {
+    "chapterSlug": "ipc-cles-ftok",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Écrivez un programme C où un père et son fils communiquent par une file de messages System V privée. Le programme reçoit un texte en premier argument de la ligne de commande. Il crée une file avec IPC_PRIVATE, puis fork. Le fils dépose dans la file un message de type 1 contenant ce texte, puis se termine. Le père attend le fils, reçoit le message, affiche `recu du fils : <texte>`, et supprime la file.",
+    "payload": {
+      "spec": "Le programme inclut <stdio.h>, <stdlib.h>, <string.h>, <unistd.h>, <sys/wait.h>, <sys/types.h>, <sys/ipc.h>, <sys/msg.h>. Il définit une structure de message « struct message { long mtype; char mtext[64]; }; ». Il vérifie argc >= 2. ÉTAPE 1 — il crée la file de messages AVANT le fork, avec msgget(IPC_PRIVATE, IPC_CREAT | 0600) ; créer la file avant fork est ESSENTIEL pour que le fils hérite de l'identifiant. ÉTAPE 2 — il appelle fork(). ÉTAPE 3 — le fils remplit une struct message (mtype = 1, mtext copié depuis argv[1]), l'envoie avec msgsnd(id, &m, sizeof m.mtext, 0), puis exit(EXIT_SUCCESS). ÉTAPE 4 — le père appelle wait(NULL) pour attendre le fils, puis msgrcv(id, &recu, sizeof recu.mtext, 1, 0) pour recevoir le message de type 1, et affiche la ligne 'recu du fils : <texte>' avec exactement ce format. ÉTAPE 5 — le père supprime la file avec msgctl(id, IPC_RMID, NULL). Toujours tester le retour -1 des appels msgget, fork, msgsnd, msgrcv.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/msg.h>\n\nstruct message {\n    long mtype;\n    char mtext[64];\n};\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s texte\\n\", argv[0]); return 1; }\n\n    /* 1. creer une file de messages privee avec IPC_PRIVATE, AVANT le fork */\n\n    /* 2. fork() */\n\n    /* 3. fils : deposer un message de type 1 contenant argv[1], puis exit */\n\n    /* 4. pere : attendre le fils, recevoir le message, afficher\n          'recu du fils : <texte>' */\n\n    /* 5. pere : supprimer la file avec IPC_RMID */\n\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "mot simple",
+          "stdin": "",
+          "args": [
+            "bonjour"
+          ],
+          "expectedStdout": "recu du fils : bonjour",
+          "compare": "trimmed"
+        },
+        {
+          "name": "identifiant",
+          "stdin": "",
+          "args": [
+            "PSR-2026"
+          ],
+          "expectedStdout": "recu du fils : PSR-2026",
+          "compare": "trimmed"
+        },
+        {
+          "name": "phrase courte",
+          "stdin": "",
+          "args": [
+            "message via IPC"
+          ],
+          "expectedStdout": "recu du fils : message via IPC",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/msg.h>\n\nstruct message {\n    long mtype;\n    char mtext[64];\n};\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s texte\\n\", argv[0]); return 1; }\n\n    int id = msgget(IPC_PRIVATE, IPC_CREAT | 0600);\n    if (id == -1) { perror(\"msgget\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        struct message m;\n        m.mtype = 1;\n        strncpy(m.mtext, argv[1], sizeof m.mtext - 1);\n        m.mtext[sizeof m.mtext - 1] = '\\0';\n        if (msgsnd(id, &m, sizeof m.mtext, 0) == -1) { perror(\"msgsnd\"); exit(EXIT_FAILURE); }\n        exit(EXIT_SUCCESS);\n    }\n\n    wait(NULL);\n\n    struct message recu;\n    if (msgrcv(id, &recu, sizeof recu.mtext, 1, 0) == -1) { perror(\"msgrcv\"); exit(EXIT_FAILURE); }\n    printf(\"recu du fils : %s\\n\", recu.mtext);\n\n    msgctl(id, IPC_RMID, NULL);\n    return 0;\n}\n"
+    },
+    "explanation": "Le point décisif est l'**ordre des opérations** : la file doit être créée **avant** le `fork`. `msgget(IPC_PRIVATE, IPC_CREAT | 0600)` renvoie un **identifiant** (un simple `int`) ; comme `fork` **duplique** tout l'espace d'adressage, le fils **hérite** de cette variable et désigne donc **la même file** que le père. Si l'on créait la file après le `fork`, chaque processus appellerait `msgget(IPC_PRIVATE, ...)` de son côté et obtiendrait une file **différente** — `IPC_PRIVATE` fabrique un objet **neuf à chaque appel**. Le fils **dépose** un message de type 1 avec `msgsnd` ; le père l'**attend** (`wait`) puis le **reçoit** avec `msgrcv(..., 1, 0)` — le `1` sélectionne les messages de type 1. La file étant un objet IPC **persistant**, le père la **supprime** avec `msgctl(id, IPC_RMID, NULL)` : sans cela, elle resterait orpheline dans le noyau.",
+    "concepts": [
+      "ipc-private",
+      "motif-get",
+      "objet-ipc",
+      "persistance-noyau"
+    ],
+    "source": "Cours 6 — Les files de messages (mécanisme IPC System V)"
+  },
+  {
+    "chapterSlug": "ipc-cles-ftok",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme veut faire communiquer un père et son fils par une file de messages : le fils envoie un texte, le père l'affiche sous la forme `recu du fils : <texte>`. En réalité le père échoue à la réception. Trouvez et corrigez l'erreur.",
+    "payload": {
+      "spec": "Le bug porte sur l'emploi de IPC_PRIVATE. Le programme appelle fork() D'ABORD, puis chaque branche — le fils ET le père — appelle de son côté msgget(IPC_PRIVATE, IPC_CREAT | 0600). Or IPC_PRIVATE demande au noyau un objet TOUJOURS NEUF : le fils et le père obtiennent donc DEUX files de messages DIFFÉRENTES. Le fils dépose son message dans SA file ; le père lit (avec IPC_NOWAIT) SA file à lui, qui est vide, et msgrcv échoue avec ENOMSG — le programme se termine anormalement. La correction : créer la file UNE SEULE FOIS, AVANT le fork, et la stocker dans une variable que le fils héritera par duplication de l'espace d'adressage. Concrètement, il faut sortir l'appel « int id = msgget(IPC_PRIVATE, IPC_CREAT | 0600); » de chaque branche et le placer une seule fois avant fork(), puis supprimer les deux appels msgget internes. Ainsi le père et le fils désignent la MÊME file via le même identifiant hérité. La sortie attendue est la ligne 'recu du fils : <texte>'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/msg.h>\n\nstruct message { long mtype; char mtext[64]; };\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s texte\\n\", argv[0]); return 1; }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* le fils cree une file avec IPC_PRIVATE */\n        int id = msgget(IPC_PRIVATE, IPC_CREAT | 0600);\n        if (id == -1) { perror(\"msgget\"); exit(EXIT_FAILURE); }\n        struct message m;\n        m.mtype = 1;\n        strncpy(m.mtext, argv[1], sizeof m.mtext - 1);\n        m.mtext[sizeof m.mtext - 1] = '\\0';\n        if (msgsnd(id, &m, sizeof m.mtext, 0) == -1) { perror(\"msgsnd\"); exit(EXIT_FAILURE); }\n        exit(EXIT_SUCCESS);\n    }\n\n    wait(NULL);\n\n    /* le pere cree une file avec IPC_PRIVATE, puis y lit le message du fils */\n    int id = msgget(IPC_PRIVATE, IPC_CREAT | 0600);\n    if (id == -1) { perror(\"msgget\"); exit(EXIT_FAILURE); }\n    struct message recu;\n    if (msgrcv(id, &recu, sizeof recu.mtext, 1, IPC_NOWAIT) == -1) { perror(\"msgrcv\"); exit(EXIT_FAILURE); }\n    printf(\"recu du fils : %s\\n\", recu.mtext);\n    msgctl(id, IPC_RMID, NULL);\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "mot simple",
+          "stdin": "",
+          "args": [
+            "bonjour"
+          ],
+          "expectedStdout": "recu du fils : bonjour",
+          "compare": "trimmed"
+        },
+        {
+          "name": "identifiant",
+          "stdin": "",
+          "args": [
+            "PSR-2026"
+          ],
+          "expectedStdout": "recu du fils : PSR-2026",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/msg.h>\n\nstruct message { long mtype; char mtext[64]; };\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s texte\\n\", argv[0]); return 1; }\n\n    /* la file est creee UNE SEULE FOIS, AVANT fork : le fils herite l'identifiant */\n    int id = msgget(IPC_PRIVATE, IPC_CREAT | 0600);\n    if (id == -1) { perror(\"msgget\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        struct message m;\n        m.mtype = 1;\n        strncpy(m.mtext, argv[1], sizeof m.mtext - 1);\n        m.mtext[sizeof m.mtext - 1] = '\\0';\n        if (msgsnd(id, &m, sizeof m.mtext, 0) == -1) { perror(\"msgsnd\"); exit(EXIT_FAILURE); }\n        exit(EXIT_SUCCESS);\n    }\n\n    wait(NULL);\n\n    struct message recu;\n    if (msgrcv(id, &recu, sizeof recu.mtext, 1, IPC_NOWAIT) == -1) { perror(\"msgrcv\"); exit(EXIT_FAILURE); }\n    printf(\"recu du fils : %s\\n\", recu.mtext);\n    msgctl(id, IPC_RMID, NULL);\n    return 0;\n}\n"
+    },
+    "explanation": "Le programme **crée la file après le `fork`**, séparément dans chaque branche. C'est le piège central de `IPC_PRIVATE` : cette clé spéciale demande au noyau un objet **toujours neuf**. Le fils exécute `msgget(IPC_PRIVATE, ...)` et obtient **une** file ; le père exécute `msgget(IPC_PRIVATE, ...)` et obtient **une autre** file. Le message déposé par le fils n'arrive donc **jamais** dans la file que lit le père : son `msgrcv` (en `IPC_NOWAIT`) échoue avec `ENOMSG`. La correction : appeler `msgget(IPC_PRIVATE, IPC_CREAT | 0600)` **une seule fois, avant le `fork`**. L'identifiant renvoyé est un `int` stocké dans une variable que le fils **hérite** lors de la duplication de l'espace d'adressage : père et fils désignent alors **la même file**. C'est la règle d'or de `IPC_PRIVATE` : l'objet se crée **avant** `fork`, et le partage se fait par **héritage de l'identifiant**.",
+    "concepts": [
+      "ipc-private",
+      "motif-get",
+      "objet-ipc"
+    ],
+    "source": "Cours 6 — Les files de messages (mécanisme IPC System V)"
+  },
+  {
+    "chapterSlug": "semaphores-systemev",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Que crée exactement l'appel semget(cle, nsems, semflg) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un ensemble (un tableau) de nsems sémaphores indépendants, désignés globalement par un seul identifiant ; chaque sémaphore est repéré par son indice, de 0 à nsems - 1."
+        },
+        {
+          "id": "b",
+          "label": "Un sémaphore unique dont la valeur initiale est nsems."
+        },
+        {
+          "id": "c",
+          "label": "Un sémaphore unique partagé par nsems processus au maximum."
+        },
+        {
+          "id": "d",
+          "label": "Une file de nsems messages servant à synchroniser des processus."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Première surprise de l'API System V : `semget` ne crée **jamais** un sémaphore isolé. Il crée un **ensemble** — un **tableau** de `nsems` sémaphores **indépendants** —, désigné globalement par **un seul identifiant**. Chaque sémaphore de l'ensemble est repéré par son **indice**, de `0` à `nsems - 1`. Un sémaphore « seul » s'obtient donc en demandant un ensemble de **taille 1** (`nsems == 1`), que l'on utilisera toujours via l'**indice 0**. (b) est faux : `nsems` est la **taille du tableau**, pas une valeur — d'ailleurs `semget` **n'initialise pas** la valeur des sémaphores. (c) et (d) confondent avec d'autres mécanismes.",
+    "concepts": [
+      "semget",
+      "ensemble-semaphores",
+      "semaphore-systemev"
+    ],
+    "source": "Cours 2 — Les sémaphores (mécanisme P/V abstrait) ; API System V (au-delà des diapositives)"
+  },
+  {
+    "chapterSlug": "semaphores-systemev",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Juste après semget, la valeur des sémaphores de l'ensemble est indéterminée : il faut l'initialiser explicitement, par exemple avec semctl et la commande SETVAL.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. `semget` **crée** l'ensemble mais **n'initialise pas** la valeur de ses sémaphores : à la création, leur valeur est **indéterminée**. C'est une différence majeure avec le sémaphore POSIX, où `sem_init` fixe la valeur au moment de la création. En System V, l'initialisation est une étape **séparée et indispensable** : on fixe la valeur du sémaphore d'indice `n` avec `semctl(semid, n, SETVAL, arg)`, où `arg.val` porte la valeur voulue (1 pour un sémaphore binaire, N pour N accès simultanés, 0 pour une signalisation). Utiliser un sémaphore sans l'avoir initialisé revient à travailler sur une valeur **farfelue** — un bogue classique des sémaphores System V.",
+    "concepts": [
+      "semget",
+      "semctl",
+      "semaphore-systemev"
+    ],
+    "source": "Cours 2 — Les sémaphores (mécanisme P/V abstrait) ; API System V (au-delà des diapositives)"
+  },
+  {
+    "chapterSlug": "semaphores-systemev",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur la structure struct sembuf et l'opération semop.",
+    "payload": {
+      "template": "Chaque opération sur un sémaphore se décrit par une struct sembuf. Son champ {{c1}} donne l'indice du sémaphore visé dans l'ensemble. Son champ {{c2}} décrit l'opération : pour une opération P, on lui donne une valeur de signe {{c3}} ; pour une opération V, une valeur de signe {{c4}}. La fonction {{c5}} reçoit un tableau de telles structures et les applique de façon {{c6}} : soit toutes réussissent, soit aucune.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "md",
+          "hint": "champ : indice du sémaphore"
+        },
+        {
+          "id": "c2",
+          "width": "md",
+          "hint": "champ : l'opération elle-même"
+        },
+        {
+          "id": "c3",
+          "width": "sm",
+          "hint": "P : prendre"
+        },
+        {
+          "id": "c4",
+          "width": "sm",
+          "hint": "V : rendre"
+        },
+        {
+          "id": "c5",
+          "width": "sm"
+        },
+        {
+          "id": "c6",
+          "width": "sm",
+          "hint": "tout ou rien"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "sem_num"
+        ],
+        "c2": [
+          "sem_op"
+        ],
+        "c3": [
+          "negatif",
+          "négatif"
+        ],
+        "c4": [
+          "positif"
+        ],
+        "c5": [
+          "semop",
+          "semop()"
+        ],
+        "c6": [
+          "atomique"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "La structure **`struct sembuf`** décrit **une** opération sur **un** sémaphore. Le champ **`sem_num`** est l'**indice** du sémaphore visé dans l'ensemble (`0` à `nsems - 1`). Le champ **`sem_op`** est le cœur du mécanisme : **son signe détermine l'opération**. Une valeur **négative** (par exemple `-1`) est une opération **P** — *prendre* : on tente de retrancher la valeur, et le processus **bloque** si elle deviendrait négative. Une valeur **positive** (par exemple `+1`) est une opération **V** — *rendre* : on ajoute la valeur et on réveille d'éventuels processus en attente. La fonction **`semop`** reçoit un **tableau** de `struct sembuf` et garantit une exécution **atomique** : soit **toutes** les opérations du tableau réussissent, soit **aucune** n'est appliquée. (Le troisième champ, `sem_flg`, porte des drapeaux comme `IPC_NOWAIT` ou `SEM_UNDO`.)",
+    "concepts": [
+      "sembuf",
+      "semop",
+      "operation-atomique-semop"
+    ],
+    "source": "Cours 2 — Les sémaphores (mécanisme P/V abstrait) ; API System V (au-delà des diapositives)"
+  },
+  {
+    "chapterSlug": "semaphores-systemev",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Parmi ces affirmations sur le champ sem_op d'une struct sembuf et sur l'appel semop, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un sem_op strictement négatif décrit une opération P : le processus peut bloquer si la valeur deviendrait négative."
+        },
+        {
+          "id": "b",
+          "label": "Un sem_op strictement positif décrit une opération V : la valeur est augmentée et d'éventuels processus en attente sont réveillés."
+        },
+        {
+          "id": "c",
+          "label": "Un sem_op égal à 0 demande au processus d'attendre que la valeur du sémaphore devienne nulle."
+        },
+        {
+          "id": "d",
+          "label": "semop applique le tableau d'opérations de façon atomique : soit toutes réussissent, soit aucune n'est appliquée."
+        },
+        {
+          "id": "e",
+          "label": "Pour faire une opération P, il faut donner à sem_op une valeur positive, car « prendre » fait grandir le compteur."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Le **signe de `sem_op`** détermine l'opération. (a) Vrai : `sem_op < 0` est une opération **P** — on tente de **retrancher** `|sem_op|` ; si la valeur deviendrait **négative**, le processus **bloque**. (b) Vrai : `sem_op > 0` est une opération **V** — on **ajoute** `sem_op` et on **réveille** d'éventuels processus en attente. (c) Vrai : `sem_op == 0` est le cas particulier de l'**attente de zéro** — le processus bloque tant que la valeur n'est pas nulle. (d) Vrai : `semop` garantit l'**atomicité** sur tout le tableau d'opérations — **tout ou rien**. (e) est **faux**, et c'est l'erreur à ne jamais commettre : une opération **P** (« prendre ») se fait avec un `sem_op` **négatif** (`-1`), car prendre une unité **décrémente** le compteur. Un `sem_op` positif, lui, fait une opération **V**.",
+    "concepts": [
+      "sembuf",
+      "semop",
+      "operation-atomique-semop"
+    ],
+    "source": "Cours 2 — Les sémaphores (mécanisme P/V abstrait) ; API System V (au-delà des diapositives)"
+  },
+  {
+    "chapterSlug": "semaphores-systemev",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque commande de semctl à son effet.",
+    "payload": {
+      "left": [
+        {
+          "id": "setval",
+          "label": "Fixe la valeur du sémaphore d'indice semnum à arg.val"
+        },
+        {
+          "id": "getval",
+          "label": "Renvoie, comme valeur de retour, la valeur courante du sémaphore d'indice semnum"
+        },
+        {
+          "id": "setall",
+          "label": "Fixe les valeurs de tous les sémaphores de l'ensemble depuis le tableau arg.array"
+        },
+        {
+          "id": "ipcstat",
+          "label": "Copie les métadonnées de l'ensemble dans arg.buf, une struct semid_ds"
+        },
+        {
+          "id": "ipcrmid",
+          "label": "Supprime l'ensemble de sémaphores du noyau"
+        }
+      ],
+      "right": [
+        {
+          "id": "r-setval",
+          "label": "SETVAL"
+        },
+        {
+          "id": "r-getval",
+          "label": "GETVAL"
+        },
+        {
+          "id": "r-setall",
+          "label": "SETALL"
+        },
+        {
+          "id": "r-ipcstat",
+          "label": "IPC_STAT"
+        },
+        {
+          "id": "r-ipcrmid",
+          "label": "IPC_RMID"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "setval": "r-setval",
+        "getval": "r-getval",
+        "setall": "r-setall",
+        "ipcstat": "r-ipcstat",
+        "ipcrmid": "r-ipcrmid"
+      }
+    },
+    "explanation": "**`semctl`** contrôle un ensemble de sémaphores. **`SETVAL`** **fixe** la valeur d'**un** sémaphore (celui d'indice `semnum`) à `arg.val` — c'est la commande d'**initialisation** indispensable, puisque `semget` ne fait pas ce travail. **`GETVAL`** **lit** la valeur courante d'un sémaphore et la renvoie **comme valeur de retour** de `semctl` (et non via le 4ᵉ argument). **`SETALL`** initialise **tous** les sémaphores de l'ensemble d'un coup, depuis le tableau `arg.array`. **`IPC_STAT`** copie les **métadonnées** de l'ensemble (droits, nombre de sémaphores…) dans `arg.buf`, une `struct semid_ds`. **`IPC_RMID`** **supprime** l'ensemble du noyau — l'étape de nettoyage obligatoire, puisqu'un objet IPC est persistant.",
+    "concepts": [
+      "semctl",
+      "union-semun",
+      "ensemble-semaphores"
+    ],
+    "source": "Cours 2 — Les sémaphores (mécanisme P/V abstrait) ; API System V (au-delà des diapositives)"
+  },
+  {
+    "chapterSlug": "semaphores-systemev",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Un programme protège une section critique partagée entre un père et son fils par un sémaphore binaire System V. Remettez dans l'ordre les étapes, de la création de l'ensemble jusqu'à sa suppression.",
+    "payload": {
+      "items": [
+        {
+          "id": "semget",
+          "label": "Créer un ensemble d'un seul sémaphore avec semget(IPC_PRIVATE, 1, IPC_CREAT | 0600)"
+        },
+        {
+          "id": "setval",
+          "label": "Initialiser le sémaphore d'indice 0 à la valeur 1 avec semctl et SETVAL"
+        },
+        {
+          "id": "fork",
+          "label": "Appeler fork() : le fils hérite de l'identifiant de l'ensemble"
+        },
+        {
+          "id": "pv",
+          "label": "Père et fils encadrent chacun leur section critique par P (semop, sem_op = -1) puis V (semop, sem_op = +1)"
+        },
+        {
+          "id": "wait",
+          "label": "Le père appelle wait(NULL) pour attendre la fin du fils"
+        },
+        {
+          "id": "rmid",
+          "label": "Le père, dernier vivant, supprime l'ensemble avec semctl et IPC_RMID"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "semget",
+        "setval",
+        "fork",
+        "pv",
+        "wait",
+        "rmid"
+      ]
+    },
+    "explanation": "On crée d'abord l'**ensemble** avec **`semget`** — ici avec `IPC_PRIVATE`, et **avant** le `fork`, pour que le fils en **hérite** l'identifiant. Vient ensuite l'**initialisation**, étape **séparée et obligatoire** : `semctl(..., SETVAL, ...)` fixe le sémaphore d'indice 0 à **1** (sémaphore **binaire**, pour l'exclusion mutuelle) — `semget` ne l'a pas fait. On appelle alors **`fork`** : le fils, copie de l'espace d'adressage, dispose du même identifiant. Père et fils encadrent leur **section critique** par **`P`** (`semop` avec `sem_op = -1`) avant et **`V`** (`semop` avec `sem_op = +1`) après : le premier à faire `P` passe le sémaphore à 0, l'autre **bloque** jusqu'au `V`. Le père **attend** le fils avec `wait(NULL)`. Enfin — l'ensemble étant un objet IPC **persistant** —, le père, **dernier vivant**, le **supprime** avec `semctl(..., IPC_RMID)`.",
+    "concepts": [
+      "semget",
+      "semctl",
+      "semop",
+      "semaphore-systemev",
+      "ensemble-semaphores"
+    ],
+    "source": "Cours 2 — Les sémaphores (mécanisme P/V abstrait) ; API System V (au-delà des diapositives)"
+  },
+  {
+    "chapterSlug": "semaphores-systemev",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme crée un ensemble d'un sémaphore initialisé à 0, puis fork. Le fils affiche un message et fait V ; le père fait P puis affiche. Quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/sem.h>\n\nunion semun { int val; struct semid_ds *buf; unsigned short *array; };\n\nint P(int id) { struct sembuf o = {0, -1, 0}; return semop(id, &o, 1); }\nint V(int id) { struct sembuf o = {0, +1, 0}; return semop(id, &o, 1); }\n\nint main(void) {\n    /* ensemble d'UN semaphore, prive : herite par le fils */\n    int semid = semget(IPC_PRIVATE, 1, IPC_CREAT | 0600);\n    if (semid == -1) { perror(\"semget\"); exit(EXIT_FAILURE); }\n\n    union semun arg;\n    arg.val = 0;                       /* valeur initiale 0 */\n    if (semctl(semid, 0, SETVAL, arg) == -1) { perror(\"semctl\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        printf(\"fils : travail termine\\n\");\n        V(semid);                      /* le fils signale */\n        exit(EXIT_SUCCESS);\n    }\n\n    P(semid);                          /* le pere bloque tant que le fils n'a pas fait V */\n    printf(\"pere : le fils a fini, je continue\\n\");\n\n    wait(NULL);\n    semctl(semid, 0, IPC_RMID);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "expectedOutput": "fils : travail termine\npere : le fils a fini, je continue"
+    },
+    "explanation": "Le sémaphore est initialisé à **0** par `semctl(..., SETVAL, ...)`. Après le `fork`, deux scénarios pour l'ordre d'exécution, mais **un seul** affichage possible. Le **père** exécute `P(semid)` : son `sem_op` vaut `-1`, mais la valeur est `0` — la retrancher la rendrait négative, donc le père **bloque**. Il ne peut **pas** afficher sa ligne tant qu'il est bloqué. Le **fils**, lui, affiche d'abord `fils : travail termine`, puis exécute `V(semid)` (`sem_op = +1`) : la valeur passe à `1` et le **père bloqué est réveillé**. Le `P` du père aboutit enfin (valeur ramenée à `0`), et il affiche `pere : le fils a fini, je continue`. La ligne du fils précède donc **toujours** celle du père : le sémaphore initialisé à 0 réalise une **synchronisation** stricte (le père *attend* un signal du fils). La sortie est **déterministe** quel que soit l'ordonnancement. À la fin, le père supprime l'ensemble avec `IPC_RMID`.",
+    "concepts": [
+      "semop",
+      "semget",
+      "semctl",
+      "operation-atomique-semop"
+    ],
+    "source": "Cours 2 — Les sémaphores (mécanisme P/V abstrait) ; API System V (au-delà des diapositives)"
+  },
+  {
+    "chapterSlug": "semaphores-systemev",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Écrivez un programme C qui manipule un sémaphore System V. Le programme reçoit un entier N en premier argument. Il crée un ensemble d'un sémaphore avec IPC_PRIVATE, l'initialise à la valeur N, puis fork. Le fils exécute deux fois l'opération P ; le père attend le fils, exécute une fois l'opération V, lit la valeur du sémaphore et affiche `valeur finale : <v>`, puis supprime l'ensemble. Vous devez écrire les fonctions P et V à l'aide de struct sembuf et semop.",
+    "payload": {
+      "spec": "Le programme inclut <stdio.h>, <stdlib.h>, <unistd.h>, <sys/wait.h>, <sys/types.h>, <sys/ipc.h>, <sys/sem.h>. Il DÉCLARE lui-même « union semun { int val; struct semid_ds *buf; unsigned short *array; }; » car cette union n'est pas fournie par <sys/sem.h>. Il définit deux fonctions : P(int id) remplit une struct sembuf avec sem_num = 0, sem_op = -1 (NÉGATIF, opération P), sem_flg = 0 et appelle semop(id, &op, 1) ; V(int id) fait de même avec sem_op = +1 (POSITIF, opération V). Dans main : il vérifie argc >= 2 et lit n = atoi(argv[1]). ÉTAPE 1 — semget(IPC_PRIVATE, 1, IPC_CREAT | 0600) crée un ensemble d'UN sémaphore. ÉTAPE 2 — une union semun arg avec arg.val = n, puis semctl(semid, 0, SETVAL, arg) initialise le sémaphore d'indice 0 à n (étape OBLIGATOIRE, semget n'initialise pas). ÉTAPE 3 — fork() ; le fils appelle P(semid) deux fois puis exit(EXIT_SUCCESS). ÉTAPE 4 — le père appelle wait(NULL), puis V(semid) une fois, puis « int v = semctl(semid, 0, GETVAL); » et affiche la ligne 'valeur finale : <v>'. ÉTAPE 5 — le père supprime l'ensemble avec semctl(semid, 0, IPC_RMID). Comme le sémaphore vaut N, deux P (chacun -1) puis un V (+1) le laissent à N - 1 ; le père attend le fils AVANT de lire, donc la valeur lue est déterministe.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/sem.h>\n\n/* l'union semun n'est PAS fournie par <sys/sem.h> : a declarer soi-meme */\nunion semun { int val; struct semid_ds *buf; unsigned short *array; };\n\n/* P : prendre une unite sur le semaphore d'indice 0 de l'ensemble id */\nint P(int id) {\n    /* a completer : remplir une struct sembuf et appeler semop */\n    return -1;\n}\n\n/* V : rendre une unite sur le semaphore d'indice 0 de l'ensemble id */\nint V(int id) {\n    /* a completer : remplir une struct sembuf et appeler semop */\n    return -1;\n}\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s N\\n\", argv[0]); return 1; }\n    int n = atoi(argv[1]);\n\n    /* 1. creer un ensemble d'UN semaphore avec IPC_PRIVATE */\n\n    /* 2. initialiser le semaphore d'indice 0 a la valeur n (semctl + SETVAL) */\n\n    /* 3. fork() ; le fils execute deux fois P, puis exit */\n\n    /* 4. pere : attendre le fils, executer une fois V, lire la valeur\n          (semctl + GETVAL) et afficher 'valeur finale : <v>' */\n\n    /* 5. pere : supprimer l'ensemble (semctl + IPC_RMID) */\n\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "N = 5",
+          "stdin": "",
+          "args": [
+            "5"
+          ],
+          "expectedStdout": "valeur finale : 4",
+          "compare": "trimmed"
+        },
+        {
+          "name": "N = 3",
+          "stdin": "",
+          "args": [
+            "3"
+          ],
+          "expectedStdout": "valeur finale : 2",
+          "compare": "trimmed"
+        },
+        {
+          "name": "N = 10",
+          "stdin": "",
+          "args": [
+            "10"
+          ],
+          "expectedStdout": "valeur finale : 9",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/sem.h>\n\nunion semun { int val; struct semid_ds *buf; unsigned short *array; };\n\nint P(int id) { struct sembuf o = {0, -1, 0}; return semop(id, &o, 1); }\nint V(int id) { struct sembuf o = {0, +1, 0}; return semop(id, &o, 1); }\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s N\\n\", argv[0]); return 1; }\n    int n = atoi(argv[1]);\n\n    int semid = semget(IPC_PRIVATE, 1, IPC_CREAT | 0600);\n    if (semid == -1) { perror(\"semget\"); exit(EXIT_FAILURE); }\n\n    union semun arg;\n    arg.val = n;\n    if (semctl(semid, 0, SETVAL, arg) == -1) { perror(\"semctl\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        P(semid);\n        P(semid);\n        exit(EXIT_SUCCESS);\n    }\n\n    wait(NULL);\n    V(semid);\n    int v = semctl(semid, 0, GETVAL);\n    printf(\"valeur finale : %d\\n\", v);\n\n    semctl(semid, 0, IPC_RMID);\n    return 0;\n}\n"
+    },
+    "explanation": "Le chapitre impose un motif précis. **`semget(IPC_PRIVATE, 1, IPC_CREAT | 0600)`** crée un **ensemble d'un seul** sémaphore (un sémaphore « seul » = un ensemble de taille 1, utilisé via l'indice 0). Comme `semget` **n'initialise pas** la valeur, on la fixe par **`semctl(semid, 0, SETVAL, arg)`** avec `arg.val = n` — d'où la nécessité de **déclarer soi-même** l'`union semun`, absente de `<sys/sem.h>`. Les fonctions **`P`** et **`V`** reposent sur le **signe de `sem_op`** : `P` remplit une `struct sembuf` avec `sem_op = -1` (négatif → *prendre*), `V` avec `sem_op = +1` (positif → *rendre*), et chacune appelle `semop(id, &op, 1)`. Le fils exécute **deux** `P` (valeur : `N` → `N-2`) ; le père, après `wait(NULL)`, exécute **un** `V` (valeur : `N-2` → `N-1`), lit la valeur avec **`GETVAL`** (renvoyée par `semctl`), et l'affiche. Le `wait` **avant** la lecture rend le résultat **déterministe**. Enfin, **`IPC_RMID`** supprime l'ensemble — obligatoire pour un objet IPC persistant.",
+    "concepts": [
+      "semget",
+      "semop",
+      "semctl",
+      "sembuf",
+      "union-semun",
+      "ensemble-semaphores"
+    ],
+    "source": "Cours 2 — Les sémaphores (mécanisme P/V abstrait) ; API System V (au-delà des diapositives)"
+  },
+  {
+    "chapterSlug": "semaphores-systemev",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme initialise un sémaphore à N, fait exécuter deux opérations P au fils, puis une opération V au père, et affiche la valeur finale — qui devrait être N - 1. En réalité il affiche N + 1. Trouvez et corrigez l'erreur.",
+    "payload": {
+      "spec": "Le bug est une INVERSION DU SIGNE de sem_op dans les fonctions P et V. La convention System V est sans appel : le signe de sem_op détermine l'opération. Une opération P (prendre) doit utiliser un sem_op NÉGATIF (-1) ; une opération V (rendre) doit utiliser un sem_op POSITIF (+1). Dans le programme fourni, c'est l'inverse : la fonction P remplit la struct sembuf avec sem_op = +1, et la fonction V avec sem_op = -1. Conséquence : les deux « P » du fils AJOUTENT chacun 1 (au lieu de retrancher), et le « V » du père RETRANCHE 1 — la valeur passe de N à N + 2, puis à N + 1, au lieu de N - 1. La correction : dans P, mettre sem_op = -1 ; dans V, mettre sem_op = +1. Aucune autre ligne n'est à toucher. Avec N = 5 le programme doit alors afficher 'valeur finale : 4'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/sem.h>\n\nunion semun { int val; struct semid_ds *buf; unsigned short *array; };\n\n/* P doit PRENDRE une unite (operation P) */\nint P(int id) { struct sembuf o = {0, +1, 0}; return semop(id, &o, 1); }\n/* V doit RENDRE une unite (operation V) */\nint V(int id) { struct sembuf o = {0, -1, 0}; return semop(id, &o, 1); }\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s N\\n\", argv[0]); return 1; }\n    int n = atoi(argv[1]);\n\n    int semid = semget(IPC_PRIVATE, 1, IPC_CREAT | 0600);\n    if (semid == -1) { perror(\"semget\"); exit(EXIT_FAILURE); }\n\n    union semun arg;\n    arg.val = n;\n    if (semctl(semid, 0, SETVAL, arg) == -1) { perror(\"semctl\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        P(semid);\n        P(semid);\n        exit(EXIT_SUCCESS);\n    }\n\n    wait(NULL);\n    V(semid);\n    int v = semctl(semid, 0, GETVAL);\n    printf(\"valeur finale : %d\\n\", v);\n\n    semctl(semid, 0, IPC_RMID);\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "N = 5",
+          "stdin": "",
+          "args": [
+            "5"
+          ],
+          "expectedStdout": "valeur finale : 4",
+          "compare": "trimmed"
+        },
+        {
+          "name": "N = 8",
+          "stdin": "",
+          "args": [
+            "8"
+          ],
+          "expectedStdout": "valeur finale : 7",
+          "compare": "trimmed"
+        },
+        {
+          "name": "N = 2",
+          "stdin": "",
+          "args": [
+            "2"
+          ],
+          "expectedStdout": "valeur finale : 1",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/sem.h>\n\nunion semun { int val; struct semid_ds *buf; unsigned short *array; };\n\nint P(int id) { struct sembuf o = {0, -1, 0}; return semop(id, &o, 1); }\nint V(int id) { struct sembuf o = {0, +1, 0}; return semop(id, &o, 1); }\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s N\\n\", argv[0]); return 1; }\n    int n = atoi(argv[1]);\n\n    int semid = semget(IPC_PRIVATE, 1, IPC_CREAT | 0600);\n    if (semid == -1) { perror(\"semget\"); exit(EXIT_FAILURE); }\n\n    union semun arg;\n    arg.val = n;\n    if (semctl(semid, 0, SETVAL, arg) == -1) { perror(\"semctl\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        P(semid);\n        P(semid);\n        exit(EXIT_SUCCESS);\n    }\n\n    wait(NULL);\n    V(semid);\n    int v = semctl(semid, 0, GETVAL);\n    printf(\"valeur finale : %d\\n\", v);\n\n    semctl(semid, 0, IPC_RMID);\n    return 0;\n}\n"
+    },
+    "explanation": "Le bug est une **inversion du signe de `sem_op`**. Dans l'API System V, **le signe de `sem_op` fait l'opération** — c'est la convention à mémoriser absolument : opération **P** (*prendre*) → `sem_op` **négatif** (`-1`) ; opération **V** (*rendre*) → `sem_op` **positif** (`+1`). Le programme fourni les a **échangés** : `P` utilise `sem_op = +1` et `V` utilise `sem_op = -1`. Du coup les deux « `P` » du fils **ajoutent** chacun 1 au lieu de retrancher (`N` → `N+2`), et le « `V` » du père **retranche** 1 (`N+2` → `N+1`) : on obtient `N+1` au lieu de `N-1`. La correction est minime : dans `P`, écrire `sem_op = -1` ; dans `V`, écrire `sem_op = +1`. Une fois les signes remis dans le bon sens, le fils retranche bien 2 et le père ajoute 1 : la valeur finale est `N - 1`, soit `4` pour `N = 5`.",
+    "concepts": [
+      "sembuf",
+      "semop",
+      "semaphore-systemev"
+    ],
+    "source": "Cours 2 — Les sémaphores (mécanisme P/V abstrait) ; API System V (au-delà des diapositives)"
+  },
+  {
+    "chapterSlug": "files-messages",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une file de messages contient, dans l'ordre d'arrivée, un message de type 3, un de type 1, puis un de type 2. Un processus appelle msgrcv avec le sélecteur msgtyp = 2. Quel message obtient-il ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le message de type exactement 2 — msgtyp > 0 demande le premier message du type exactement égal au sélecteur."
+        },
+        {
+          "id": "b",
+          "label": "Le message de type 3, parce que c'est le plus ancien de la file (règle FIFO)."
+        },
+        {
+          "id": "c",
+          "label": "Le message de type 1, car msgtyp = 2 sélectionne tous les messages de type inférieur ou égal à 2, et le 1 est le plus ancien d'entre eux."
+        },
+        {
+          "id": "d",
+          "label": "Aucun : msgtyp = 2 est une valeur invalide, msgrcv échoue avec EINVAL."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le sélecteur **`msgtyp`** de `msgrcv` a **trois cas**, et c'est la question d'examen par excellence. Ici `msgtyp = 2`, soit **`msgtyp > 0`** : `msgrcv` extrait le **premier message dont le type est exactement égal** à `2` — il **ignore** les types 3 et 1, même si le type 3 est arrivé avant. La réponse (a) est donc correcte. (b) décrit le cas **`msgtyp == 0`** (FIFO pur, le plus ancien quel que soit son type). (c) décrit le cas **`msgtyp < 0`** : c'est `msgtyp = -2` qui servirait « les types ≤ 2 en préférant le plus petit » — l'erreur classique est justement de croire que `msgtyp = 2` fait cela. (d) est faux : un `msgtyp` positif est parfaitement valide.",
+    "concepts": [
+      "selecteur-msgtyp",
+      "msgrcv",
+      "message-type"
+    ],
+    "source": "Cours 6 — Les files de messages ; TP07 (FDM)"
+  },
+  {
+    "chapterSlug": "files-messages",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Dans un message envoyé par msgsnd, le champ mtype peut valoir 0 : msgsnd accepte un message de type nul.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Le champ **`mtype`** d'un message **envoyé** doit être un entier **strictement positif** (`> 0`). Un `mtype` **nul ou négatif** fait **échouer `msgsnd`** avec `errno == EINVAL`. La valeur `0` et les valeurs négatives sont **réservées** à un tout autre rôle : celui de **sélecteur** à la **réception** — le paramètre `msgtyp` de `msgrcv`, où `0` signifie « le plus ancien message, quel que soit son type ». Il faut bien distinguer ces deux emplois du « type » : **à l'envoi**, `mtype` doit être `> 0` ; **à la réception**, `msgtyp` peut être nul, positif ou négatif.",
+    "concepts": [
+      "message-type",
+      "msgsnd",
+      "msgbuf"
+    ],
+    "source": "Cours 6 — Les files de messages ; TP07 (FDM)"
+  },
+  {
+    "chapterSlug": "files-messages",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur la structure d'un message (struct msgbuf) et son envoi par msgsnd.",
+    "payload": {
+      "template": "Un message suit le modèle de la structure {{c1}}. Son premier champ doit obligatoirement être de type {{c2}} : c'est le type du message, qui doit être un entier strictement {{c3}} à l'envoi. Le second champ est le corps du message. Lors de l'appel à msgsnd, l'argument msgsz doit valoir la taille du seul {{c4}} du message : le champ de type n'y est {{c5}} compté. La fonction {{c6}} retire ensuite un message de la file et le supprime de celle-ci.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm"
+        },
+        {
+          "id": "c2",
+          "width": "sm",
+          "hint": "le type du premier champ"
+        },
+        {
+          "id": "c3",
+          "width": "sm",
+          "hint": "signe du type à l'envoi"
+        },
+        {
+          "id": "c4",
+          "width": "sm",
+          "hint": "ce qui suit le champ de type"
+        },
+        {
+          "id": "c5",
+          "width": "sm",
+          "hint": "négation"
+        },
+        {
+          "id": "c6",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "msgbuf",
+          "struct msgbuf"
+        ],
+        "c2": [
+          "long"
+        ],
+        "c3": [
+          "positif"
+        ],
+        "c4": [
+          "corps",
+          "mtext",
+          "corps du message"
+        ],
+        "c5": [
+          "pas",
+          "jamais",
+          "pas du tout"
+        ],
+        "c6": [
+          "msgrcv",
+          "msgrcv()"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "L'en-tête `<sys/msg.h>` fournit le modèle **`struct msgbuf`** : un **premier champ `long`** — le **type** du message — suivi d'un **corps** de longueur variable. On peut définir sa propre structure, mais le **`long` en tête reste obligatoire**, et ce type doit être strictement **positif** à l'**envoi**. L'argument **`msgsz`** de `msgsnd` est la taille du **seul corps** (`mtext`) : le `long mtype` n'y est **pas** compté — c'est l'erreur numéro un des files de messages (`sizeof(msg)` au lieu de `sizeof(corps)`). Enfin, **`msgrcv`** retire un message de la file : il le **copie** dans le tampon fourni **et le supprime** de la file.",
+    "concepts": [
+      "msgbuf",
+      "message-type",
+      "msgsnd",
+      "msgrcv"
+    ],
+    "source": "Cours 6 — Les files de messages ; TP07 (FDM)"
+  },
+  {
+    "chapterSlug": "files-messages",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Parmi ces affirmations sur msgsnd, msgrcv et le comportement bloquant des files de messages, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "msgsnd et msgrcv attendent une taille msgsz qui ne compte que le corps du message, sans le long mtype."
+        },
+        {
+          "id": "b",
+          "label": "Par défaut, un msgrcv sur une file ne contenant aucun message du type demandé bloque le processus jusqu'à l'arrivée d'un tel message."
+        },
+        {
+          "id": "c",
+          "label": "Le drapeau IPC_NOWAIT fait échouer immédiatement une opération qui aurait dû bloquer, au lieu de bloquer le processus."
+        },
+        {
+          "id": "d",
+          "label": "Un msgrcv extrait une copie du message sans le retirer de la file : un autre processus peut donc lire le même message ensuite."
+        },
+        {
+          "id": "e",
+          "label": "msgsnd peut bloquer si la file est pleine, sa capacité en octets étant bornée."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "e"
+      ]
+    },
+    "explanation": "(a) Vrai : `msgsz`, dans `msgsnd` **comme** dans `msgrcv`, est la taille du **seul corps**, sans le `long mtype`. (b) Vrai : par défaut, un `msgrcv` sans message du type demandé **bloque** (attente passive) jusqu'à ce qu'un tel message arrive — c'est la **synchronisation** offerte par le noyau. (c) Vrai : **`IPC_NOWAIT`** supprime ce blocage — l'opération qui devrait attendre **échoue aussitôt** (`ENOMSG` pour `msgrcv`, `EAGAIN` pour `msgsnd`). (e) Vrai : la file a une **capacité bornée** en octets ; un `msgsnd` sur file **pleine** bloque jusqu'à ce qu'un lecteur libère de la place. (d) est **faux** : `msgrcv` **retire** le message de la file — il le **supprime** ; un seul processus le reçoit.",
+    "concepts": [
+      "msgsnd",
+      "msgrcv",
+      "blocage-fdm",
+      "ipc-nowait"
+    ],
+    "source": "Cours 6 — Les files de messages ; TP07 (FDM)"
+  },
+  {
+    "chapterSlug": "files-messages",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque fonction ou commande des files de messages à son rôle.",
+    "payload": {
+      "left": [
+        {
+          "id": "msgget",
+          "label": "Crée ou récupère une file de messages et renvoie son identifiant"
+        },
+        {
+          "id": "msgsnd",
+          "label": "Dépose un message dans la file"
+        },
+        {
+          "id": "msgrcv",
+          "label": "Retire un message de la file, en le sélectionnant par son type"
+        },
+        {
+          "id": "stat",
+          "label": "Commande de msgctl copiant l'état de la file (struct msqid_ds) dans un tampon"
+        },
+        {
+          "id": "rmid",
+          "label": "Commande de msgctl qui supprime la file du noyau"
+        },
+        {
+          "id": "nowait",
+          "label": "Drapeau qui rend une opération non bloquante"
+        }
+      ],
+      "right": [
+        {
+          "id": "r-msgget",
+          "label": "msgget"
+        },
+        {
+          "id": "r-msgsnd",
+          "label": "msgsnd"
+        },
+        {
+          "id": "r-msgrcv",
+          "label": "msgrcv"
+        },
+        {
+          "id": "r-stat",
+          "label": "IPC_STAT"
+        },
+        {
+          "id": "r-rmid",
+          "label": "IPC_RMID"
+        },
+        {
+          "id": "r-nowait",
+          "label": "IPC_NOWAIT"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "msgget": "r-msgget",
+        "msgsnd": "r-msgsnd",
+        "msgrcv": "r-msgrcv",
+        "stat": "r-stat",
+        "rmid": "r-rmid",
+        "nowait": "r-nowait"
+      }
+    },
+    "explanation": "**`msgget`** suit le motif `*get` : il **crée ou récupère** la file et renvoie son **identifiant** (`msqid`). **`msgsnd`** **dépose** un message ; **`msgrcv`** en **retire** un, sélectionné par le sélecteur `msgtyp`. La fonction **`msgctl`** contrôle la file : la commande **`IPC_STAT`** **copie son état** — la `struct msqid_ds`, avec `msg_qnum`, les droits… — dans le tampon fourni ; la commande **`IPC_RMID`** **supprime** la file du noyau (étape obligatoire, la file étant persistante). Enfin, le drapeau **`IPC_NOWAIT`**, placé dans `msgflg`, rend `msgsnd` ou `msgrcv` **non bloquant** : l'opération échoue aussitôt au lieu d'attendre.",
+    "concepts": [
+      "msgget",
+      "msgsnd",
+      "msgrcv",
+      "msgctl",
+      "ipc-nowait"
+    ],
+    "source": "Cours 6 — Les files de messages ; TP07 (FDM)"
+  },
+  {
+    "chapterSlug": "files-messages",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Un client et un serveur dialoguent par une seule file de messages : type 1 pour les requêtes (client → serveur), type 2 pour les réponses (serveur → client). Remettez dans l'ordre les étapes d'un échange complet.",
+    "payload": {
+      "items": [
+        {
+          "id": "creer",
+          "label": "Le serveur crée la file avec msgget et IPC_CREAT"
+        },
+        {
+          "id": "req",
+          "label": "Le client dépose une requête : un message de type 1, via msgsnd"
+        },
+        {
+          "id": "lire-req",
+          "label": "Le serveur reçoit la requête : msgrcv avec msgtyp = 1"
+        },
+        {
+          "id": "rep",
+          "label": "Le serveur dépose la réponse : un message de type 2, via msgsnd"
+        },
+        {
+          "id": "lire-rep",
+          "label": "Le client reçoit la réponse : msgrcv avec msgtyp = 2"
+        },
+        {
+          "id": "rmid",
+          "label": "Le serveur supprime la file avec msgctl et IPC_RMID"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "creer",
+        "req",
+        "lire-req",
+        "rep",
+        "lire-rep",
+        "rmid"
+      ]
+    },
+    "explanation": "C'est le motif **client/serveur** de référence du chapitre. Le **serveur**, créateur de la file, l'établit avec `msgget` et **`IPC_CREAT`**. Le **client** dépose alors sa **requête** : un message de **type 1** (`msgsnd`). Le serveur la **reçoit** avec `msgrcv` et `msgtyp = 1` — il ne lit **que** le canal des requêtes. Il **traite** et dépose sa **réponse** : un message de **type 2** (`msgsnd`). Le client **récupère** cette réponse avec `msgrcv` et `msgtyp = 2` — il ne lit **que** les réponses, et ne risque **jamais** de relire sa propre requête. Le **typage** des messages remplace ainsi les **deux FIFO** du schéma client/serveur classique. Enfin, le serveur — créateur de la file — la **supprime** avec `msgctl(..., IPC_RMID)` : un objet IPC est persistant.",
+    "concepts": [
+      "msgget",
+      "msgsnd",
+      "msgrcv",
+      "selecteur-msgtyp",
+      "msgctl"
+    ],
+    "source": "Cours 6 — Les files de messages ; TP07 (FDM)"
+  },
+  {
+    "chapterSlug": "files-messages",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme crée une file de messages privée, fork, le fils y dépose trois messages de types 3, 1 puis 2, le père les relit. Quelle est sa sortie exacte ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/msg.h>\n\nstruct message { long mtype; char texte[32]; };\n\nint main(void) {\n    int id = msgget(IPC_PRIVATE, IPC_CREAT | 0600);\n    if (id == -1) { perror(\"msgget\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* le fils depose trois messages, dans cet ordre, de types 3, 1, 2 */\n        struct message m;\n        m.mtype = 3; strcpy(m.texte, \"log\");     msgsnd(id, &m, sizeof m.texte, 0);\n        m.mtype = 1; strcpy(m.texte, \"urgent\");  msgsnd(id, &m, sizeof m.texte, 0);\n        m.mtype = 2; strcpy(m.texte, \"normal\");  msgsnd(id, &m, sizeof m.texte, 0);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* le pere attend que les trois messages soient deposes */\n    wait(NULL);\n\n    struct message r;\n    /* msgtyp = -3 : parmi les types <= 3, le PLUS PETIT type d'abord */\n    msgrcv(id, &r, sizeof r.texte, -3, 0);\n    printf(\"1 : type %ld -> %s\\n\", r.mtype, r.texte);\n    msgrcv(id, &r, sizeof r.texte, -3, 0);\n    printf(\"2 : type %ld -> %s\\n\", r.mtype, r.texte);\n    /* msgtyp = 0 : le plus ancien, quel que soit son type */\n    msgrcv(id, &r, sizeof r.texte, 0, 0);\n    printf(\"3 : type %ld -> %s\\n\", r.mtype, r.texte);\n\n    msgctl(id, IPC_RMID, NULL);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "expectedOutput": "1 : type 1 -> urgent\n2 : type 2 -> normal\n3 : type 3 -> log"
+    },
+    "explanation": "Le fils dépose trois messages, dans cet ordre : type **3** (`log`), type **1** (`urgent`), type **2** (`normal`). Le père fait `wait(NULL)` : les trois messages sont donc tous présents avant qu'il ne lise — la sortie est **déterministe**.\n\n- Premier `msgrcv` avec **`msgtyp = -3`** : `msgtyp < 0` sélectionne, parmi les messages de type **≤ 3**, celui de **plus petit type** — c'est le type **1** (`urgent`).\n- Deuxième `msgrcv` avec **`msgtyp = -3`** : restent les types 3 et 2 ; le plus petit est le **2** (`normal`).\n- Troisième `msgrcv` avec **`msgtyp = 0`** : `msgtyp == 0` prend le **plus ancien** message, quel que soit son type — il ne reste que le type **3** (`log`).\n\nLe sélecteur négatif réalise un **traitement par priorité** (petit type d'abord), tandis que `msgtyp == 0` ignore le type. La sortie ne dépend **pas** de l'ordonnancement, grâce au `wait`.",
+    "concepts": [
+      "selecteur-msgtyp",
+      "msgrcv",
+      "msgsnd",
+      "message-type"
+    ],
+    "source": "Cours 6 — Les files de messages ; TP07 (FDM)"
+  },
+  {
+    "chapterSlug": "files-messages",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Écrivez un programme C où un père et son fils dialoguent par une file de messages System V privée, en utilisant deux types de messages. Le programme reçoit deux textes en arguments. Il crée une file avec IPC_PRIVATE, puis fork. Le fils dépose argv[1] dans un message de type 1, puis argv[2] dans un message de type 2. Le père attend le fils, reçoit d'abord le message de type 2 puis celui de type 1, et affiche pour chacun `type 2 : <texte>` puis `type 1 : <texte>`. Le père supprime la file.",
+    "payload": {
+      "spec": "Le programme inclut <stdio.h>, <stdlib.h>, <string.h>, <unistd.h>, <sys/wait.h>, <sys/types.h>, <sys/ipc.h>, <sys/msg.h>. Il définit « struct message { long mtype; char mtext[128]; }; ». Il vérifie argc >= 3. ÉTAPE 1 — créer la file AVANT le fork : msgget(IPC_PRIVATE, IPC_CREAT | 0600) ; créer la file avant fork est ESSENTIEL pour que le fils hérite de l'identifiant. ÉTAPE 2 — fork(). ÉTAPE 3 — le fils remplit une struct message avec mtype = 1 et mtext copié de argv[1], l'envoie avec msgsnd(id, &m, sizeof m.mtext, 0) ; il recommence avec mtype = 2 et mtext copié de argv[2] ; puis exit(EXIT_SUCCESS). ATTENTION : msgsz vaut sizeof m.mtext, la taille du SEUL corps, JAMAIS sizeof m. ÉTAPE 4 — le père appelle wait(NULL), puis msgrcv(id, &r, sizeof r.mtext, 2, 0) pour recevoir le message de type 2 et affiche 'type 2 : <texte>', puis msgrcv(id, &r, sizeof r.mtext, 1, 0) pour le type 1 et affiche 'type 1 : <texte>', exactement dans cet ordre et avec ce format. ÉTAPE 5 — le père supprime la file avec msgctl(id, IPC_RMID, NULL). Tester le retour -1 de msgget, fork, msgsnd, msgrcv.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/msg.h>\n\nstruct message {\n    long mtype;\n    char mtext[128];\n};\n\nint main(int argc, char *argv[]) {\n    if (argc < 3) { fprintf(stderr, \"usage: %s texte1 texte2\\n\", argv[0]); return 1; }\n\n    /* 1. creer une file de messages privee (IPC_PRIVATE), AVANT le fork */\n\n    /* 2. fork() */\n\n    /* 3. fils : deposer argv[1] dans un message de type 1, puis argv[2]\n          dans un message de type 2 (msgsnd, msgsz = taille du SEUL corps),\n          puis exit */\n\n    /* 4. pere : attendre le fils, recevoir d'abord le message de type 2\n          puis celui de type 1, et afficher pour chacun\n          'type 2 : <texte>' puis 'type 1 : <texte>' */\n\n    /* 5. pere : supprimer la file avec IPC_RMID */\n\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "deux mots",
+          "stdin": "",
+          "args": [
+            "alpha",
+            "beta"
+          ],
+          "expectedStdout": "type 2 : beta\ntype 1 : alpha",
+          "compare": "trimmed"
+        },
+        {
+          "name": "identifiants",
+          "stdin": "",
+          "args": [
+            "REQ-1",
+            "REP-2"
+          ],
+          "expectedStdout": "type 2 : REP-2\ntype 1 : REQ-1",
+          "compare": "trimmed"
+        },
+        {
+          "name": "phrases",
+          "stdin": "",
+          "args": [
+            "bonjour serveur",
+            "ok client"
+          ],
+          "expectedStdout": "type 2 : ok client\ntype 1 : bonjour serveur",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/msg.h>\n\nstruct message {\n    long mtype;\n    char mtext[128];\n};\n\nint main(int argc, char *argv[]) {\n    if (argc < 3) { fprintf(stderr, \"usage: %s texte1 texte2\\n\", argv[0]); return 1; }\n\n    int id = msgget(IPC_PRIVATE, IPC_CREAT | 0600);\n    if (id == -1) { perror(\"msgget\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        struct message m;\n        m.mtype = 1;\n        strncpy(m.mtext, argv[1], sizeof m.mtext - 1);\n        m.mtext[sizeof m.mtext - 1] = '\\0';\n        if (msgsnd(id, &m, sizeof m.mtext, 0) == -1) { perror(\"msgsnd\"); exit(EXIT_FAILURE); }\n        m.mtype = 2;\n        strncpy(m.mtext, argv[2], sizeof m.mtext - 1);\n        m.mtext[sizeof m.mtext - 1] = '\\0';\n        if (msgsnd(id, &m, sizeof m.mtext, 0) == -1) { perror(\"msgsnd\"); exit(EXIT_FAILURE); }\n        exit(EXIT_SUCCESS);\n    }\n\n    wait(NULL);\n\n    struct message r;\n    if (msgrcv(id, &r, sizeof r.mtext, 2, 0) == -1) { perror(\"msgrcv\"); exit(EXIT_FAILURE); }\n    printf(\"type 2 : %s\\n\", r.mtext);\n    if (msgrcv(id, &r, sizeof r.mtext, 1, 0) == -1) { perror(\"msgrcv\"); exit(EXIT_FAILURE); }\n    printf(\"type 1 : %s\\n\", r.mtext);\n\n    msgctl(id, IPC_RMID, NULL);\n    return 0;\n}\n"
+    },
+    "explanation": "Comme pour toute file privée, l'**ordre** est décisif : `msgget(IPC_PRIVATE, IPC_CREAT | 0600)` doit précéder le `fork`, pour que le fils **hérite** de l'identifiant (un `int`) et désigne **la même file**. Le fils dépose **deux** messages avec des **types différents** — `1` puis `2` — ce qui crée **deux canaux logiques** dans une **seule** file. Point capital de `msgsnd` : `msgsz` vaut **`sizeof m.mtext`**, la taille du **seul corps**, **jamais** `sizeof m` (qui inclurait à tort les 8 octets du `long mtype`). Le père, après `wait(NULL)`, lit **dans l'ordre qu'il choisit** grâce au sélecteur : `msgrcv(..., 2, 0)` extrait le message de **type 2**, `msgrcv(..., 1, 0)` celui de **type 1** — l'ordre d'**arrivée** (1 puis 2) n'impose **pas** l'ordre de **lecture**. Enfin, `msgctl(id, IPC_RMID, NULL)` supprime la file : objet IPC persistant.",
+    "concepts": [
+      "msgget",
+      "msgsnd",
+      "msgrcv",
+      "selecteur-msgtyp",
+      "msgbuf"
+    ],
+    "source": "Cours 6 — Les files de messages ; TP07 (FDM)"
+  },
+  {
+    "chapterSlug": "files-messages",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme veut faire transmettre un texte d'un fils à son père par une file de messages. Le fils envoie, le père reçoit et affiche `recu : <texte>`. En réalité le père échoue à la réception. Trouvez et corrigez l'erreur.",
+    "payload": {
+      "spec": "Le bug porte sur le calcul de msgsz dans msgsnd. La structure est « struct message { long mtype; char mtext[64]; }; ». msgsz doit toujours être la taille du SEUL corps du message — sizeof m.mtext, soit 64 octets — JAMAIS sizeof m, qui inclurait à tort les 8 octets du long mtype. Dans le programme, le fils appelle msgsnd(id, &m, sizeof m, 0) : il annonce donc un corps de sizeof(struct message) octets (72 sur la cible), alors que mtext n'en fait que 64. Le père, lui, appelle correctement msgrcv(id, &r, sizeof r.mtext, 1, 0) : il accepte au plus 64 octets de corps. Comme le message « envoyé » est annoncé plus grand (72) que ce que le père accepte (64), msgrcv échoue avec E2BIG (« Argument list too long ») et le programme se termine anormalement. La correction : dans msgsnd, remplacer « sizeof m » par « sizeof m.mtext ». Aucune autre ligne n'est à toucher. Le programme doit alors afficher 'recu : <texte>'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/msg.h>\n\nstruct message { long mtype; char mtext[64]; };\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s texte\\n\", argv[0]); return 1; }\n\n    int id = msgget(IPC_PRIVATE, IPC_CREAT | 0600);\n    if (id == -1) { perror(\"msgget\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        struct message m;\n        m.mtype = 1;\n        strncpy(m.mtext, argv[1], sizeof m.mtext - 1);\n        m.mtext[sizeof m.mtext - 1] = '\\0';\n        /* le fils envoie le message */\n        if (msgsnd(id, &m, sizeof m, 0) == -1) { perror(\"msgsnd\"); exit(EXIT_FAILURE); }\n        exit(EXIT_SUCCESS);\n    }\n\n    wait(NULL);\n\n    struct message r;\n    /* le pere accepte au plus sizeof r.mtext octets de corps */\n    if (msgrcv(id, &r, sizeof r.mtext, 1, 0) == -1) { perror(\"msgrcv\"); exit(EXIT_FAILURE); }\n    printf(\"recu : %s\\n\", r.mtext);\n    msgctl(id, IPC_RMID, NULL);\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "mot",
+          "stdin": "",
+          "args": [
+            "bonjour"
+          ],
+          "expectedStdout": "recu : bonjour",
+          "compare": "trimmed"
+        },
+        {
+          "name": "identifiant",
+          "stdin": "",
+          "args": [
+            "PSR-2026"
+          ],
+          "expectedStdout": "recu : PSR-2026",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/msg.h>\n\nstruct message { long mtype; char mtext[64]; };\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s texte\\n\", argv[0]); return 1; }\n\n    int id = msgget(IPC_PRIVATE, IPC_CREAT | 0600);\n    if (id == -1) { perror(\"msgget\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        struct message m;\n        m.mtype = 1;\n        strncpy(m.mtext, argv[1], sizeof m.mtext - 1);\n        m.mtext[sizeof m.mtext - 1] = '\\0';\n        /* le fils envoie le message : msgsz = taille du SEUL corps mtext */\n        if (msgsnd(id, &m, sizeof m.mtext, 0) == -1) { perror(\"msgsnd\"); exit(EXIT_FAILURE); }\n        exit(EXIT_SUCCESS);\n    }\n\n    wait(NULL);\n\n    struct message r;\n    /* le pere accepte au plus sizeof r.mtext octets de corps */\n    if (msgrcv(id, &r, sizeof r.mtext, 1, 0) == -1) { perror(\"msgrcv\"); exit(EXIT_FAILURE); }\n    printf(\"recu : %s\\n\", r.mtext);\n    msgctl(id, IPC_RMID, NULL);\n    return 0;\n}\n"
+    },
+    "explanation": "Le bug est l'**erreur numéro un** des files de messages : un **`msgsz` mal calculé**. L'argument `msgsz` de `msgsnd` (et de `msgrcv`) est la taille du **seul corps** du message — ici `sizeof m.mtext`, soit **64** octets —, **jamais** `sizeof m`. Écrire `sizeof m` y inclut par erreur les **8 octets du `long mtype`** : le fils annonce alors un corps de `sizeof(struct message)` octets (**72** sur la cible). Or le père appelle `msgrcv(..., sizeof r.mtext, ...)`, donc accepte au plus **64** octets de corps. Le message reçu (72) **dépasse** la taille acceptée (64) : `msgrcv` échoue avec **`E2BIG`** (« *Argument list too long* ») et le programme se termine anormalement. La correction est minime : dans `msgsnd`, écrire **`sizeof m.mtext`** au lieu de `sizeof m`. La règle infaillible : `msgsz = sizeof(struct message) - sizeof(long)`, ou directement la taille du champ qui suit `mtype` — et le **même** calcul des deux côtés.",
+    "concepts": [
+      "msgsnd",
+      "msgrcv",
+      "msgbuf"
+    ],
+    "source": "Cours 6 — Les files de messages ; TP07 (FDM)"
+  },
+  {
+    "chapterSlug": "memoire-partagee",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Pourquoi la mémoire partagée est-elle l'IPC le plus rapide, et quelle contrepartie cette rapidité impose-t-elle ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Elle est la plus rapide car la donnée ne transite par aucun tampon du noyau : une fois le segment attaché, lire et écrire sont de simples accès mémoire. Contrepartie : elle n'offre aucune synchronisation, il faut la combiner à un sémaphore."
+        },
+        {
+          "id": "b",
+          "label": "Elle est la plus rapide car le noyau y recopie les données en priorité haute ; contrepartie : elle consomme beaucoup de processeur."
+        },
+        {
+          "id": "c",
+          "label": "Elle est la plus rapide car elle compresse les données ; contrepartie : les données lues sont parfois corrompues."
+        },
+        {
+          "id": "d",
+          "label": "Elle est la plus rapide car elle bloque automatiquement les lecteurs jusqu'à ce qu'une donnée soit prête ; contrepartie : elle ne transporte que de petits volumes."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La mémoire partagée fait apparaître **la même zone physique** dans l'espace d'adressage de plusieurs processus. Contrairement au tube et à la file — où la donnée subit **deux recopies** (émetteur → tampon noyau → récepteur) —, ici **aucune donnée ne transite par le noyau** : une fois le segment **attaché**, lire et écrire sont de **simples accès mémoire**, sans appel système. D'où sa **rapidité** inégalée, idéale pour de **gros volumes**. Mais cette rapidité a un prix, énoncé par (a) : la mémoire partagée **n'offre AUCUNE synchronisation**. C'est une zone de mémoire **brute** — rien n'empêche deux processus d'écrire au même endroit, rien ne signale qu'une donnée est prête. Elle expose donc aux **conditions de course** et doit **presque toujours** être combinée à un **sémaphore** : la mémoire partagée transporte, le sémaphore **protège**. (d) est faux — c'est le tube, pas la mémoire partagée, qui bloque les lecteurs.",
+    "concepts": [
+      "memoire-partagee",
+      "ipc-sans-synchronisation"
+    ],
+    "source": "Cours 6 — IPC System V (mémoire partagée)"
+  },
+  {
+    "chapterSlug": "memoire-partagee",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Lorsqu'un processus appelle shmdt sur un segment de mémoire partagée, ce segment est détruit et les autres processus qui l'avaient attaché ne peuvent plus l'utiliser.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. **`shmdt` ne détruit PAS le segment** : il le retire **seulement de l'espace d'adressage du processus appelant**. Le segment **continue d'exister** dans le noyau, et **tous les autres processus** qui l'ont attaché **continuent de l'utiliser** normalement. C'est l'exact parallèle de `close` pour un descripteur de FIFO : `shmdt` est comme `close` — il libère l'accès **local** —, alors que la **destruction** réelle du segment, c'est **`shmctl(shmid, IPC_RMID, NULL)`**. Et même `IPC_RMID` **marque** seulement le segment pour destruction : si des processus l'ont encore attaché, la libération effective est **différée** jusqu'au **dernier détachement**.",
+    "concepts": [
+      "shmdt",
+      "shmctl",
+      "cycle-vie-shm"
+    ],
+    "source": "Cours 6 — IPC System V (mémoire partagée)"
+  },
+  {
+    "chapterSlug": "memoire-partagee",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur le cycle de vie d'un segment de mémoire partagée.",
+    "payload": {
+      "template": "On crée un segment de mémoire partagée avec l'appel {{c1}}, dont la taille est fixée définitivement à la création. Pour y accéder, un processus doit l'attacher à son espace d'adressage avec {{c2}}, qui renvoie un {{c3}}. En cas d'échec, cet appel renvoie la valeur spéciale {{c4}}, et non NULL. Quand le processus n'a plus besoin du segment, il le détache avec {{c5}}. Enfin, on supprime définitivement le segment du noyau avec shmctl et la commande {{c6}}.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm"
+        },
+        {
+          "id": "c2",
+          "width": "sm"
+        },
+        {
+          "id": "c3",
+          "width": "sm",
+          "hint": "ce que shmat renvoie"
+        },
+        {
+          "id": "c4",
+          "width": "md",
+          "hint": "valeur d'échec de shmat"
+        },
+        {
+          "id": "c5",
+          "width": "sm"
+        },
+        {
+          "id": "c6",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "shmget",
+          "shmget()"
+        ],
+        "c2": [
+          "shmat",
+          "shmat()"
+        ],
+        "c3": [
+          "pointeur",
+          "pointeur sur le segment"
+        ],
+        "c4": [
+          "(void *) -1",
+          "(void*)-1",
+          "(void *)-1",
+          "-1"
+        ],
+        "c5": [
+          "shmdt",
+          "shmdt()"
+        ],
+        "c6": [
+          "IPC_RMID"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Le cycle de vie d'un segment compte **cinq étapes**. **`shmget`** **crée** (ou récupère) le segment — sa **taille**, fixée à la création, ne pourra **plus changer**. **`shmat`** l'**attache** à l'espace d'adressage et renvoie un **pointeur** : c'est par ce pointeur que l'on lit et écrit le segment, comme de la mémoire ordinaire. En cas d'**échec**, `shmat` renvoie la valeur spéciale **`(void *) -1`** — **pas** `NULL` : tester `if (p == NULL)` laisserait passer l'erreur. **`shmdt`** **détache** le segment du seul processus appelant (sans le détruire). Enfin, **`shmctl`** avec la commande **`IPC_RMID`** **supprime** le segment du noyau — étape obligatoire, un objet IPC étant persistant.",
+    "concepts": [
+      "shmget",
+      "shmat",
+      "shmdt",
+      "shmctl",
+      "cycle-vie-shm"
+    ],
+    "source": "Cours 6 — IPC System V (mémoire partagée)"
+  },
+  {
+    "chapterSlug": "memoire-partagee",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Parmi ces affirmations sur shmat, shmdt et shmctl, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "shmat renvoie un pointeur ; en cas d'échec, il renvoie (void *) -1, et non NULL."
+        },
+        {
+          "id": "b",
+          "label": "On passe presque toujours NULL comme adresse souhaitée à shmat, laissant le noyau choisir une adresse libre appropriée."
+        },
+        {
+          "id": "c",
+          "label": "Les étapes attacher (shmat) et détacher (shmdt) sont propres à chaque processus : chacun attache et détache pour lui-même."
+        },
+        {
+          "id": "d",
+          "label": "shmctl avec IPC_RMID détruit le segment instantanément, même si des processus l'ont encore attaché."
+        },
+        {
+          "id": "e",
+          "label": "Une fois le segment attaché, lire et écrire le segment ne nécessitent plus aucun appel système : ce sont de simples accès mémoire par le pointeur."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "e"
+      ]
+    },
+    "explanation": "(a) Vrai : `shmat` renvoie un **pointeur** ; son échec se teste contre **`(void *) -1`**, **pas** `NULL` — exception notable, car `0` (donc `NULL`) pourrait être une adresse d'attachement légitime. (b) Vrai : on passe presque toujours **`NULL`** comme `shmaddr` — le noyau choisit alors une adresse libre **appropriée**, choix portable et recommandé. (c) Vrai : **attacher** et **détacher** sont **propres à chaque processus** ; **créer** et **supprimer**, en revanche, concernent l'**objet IPC global**. (e) Vrai : une fois le segment attaché, lire et écrire sont de **simples accès mémoire** par le pointeur — **aucun** appel système —, d'où la rapidité de la mémoire partagée. (d) est **faux** : `IPC_RMID` **marque** le segment pour destruction ; si des processus l'ont encore attaché, la libération réelle est **différée** au **dernier détachement**.",
+    "concepts": [
+      "shmat",
+      "shmdt",
+      "shmctl",
+      "cycle-vie-shm"
+    ],
+    "source": "Cours 6 — IPC System V (mémoire partagée)"
+  },
+  {
+    "chapterSlug": "memoire-partagee",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque appel ou notion de la mémoire partagée à sa description.",
+    "payload": {
+      "left": [
+        {
+          "id": "shmget",
+          "label": "Crée ou récupère un segment de mémoire partagée et renvoie son identifiant"
+        },
+        {
+          "id": "shmat",
+          "label": "Attache un segment à l'espace d'adressage du processus et renvoie un pointeur"
+        },
+        {
+          "id": "shmdt",
+          "label": "Détache un segment de l'espace d'adressage du seul processus appelant"
+        },
+        {
+          "id": "rmid",
+          "label": "Commande de shmctl qui supprime le segment du noyau"
+        },
+        {
+          "id": "echec",
+          "label": "Valeur que shmat renvoie en cas d'échec"
+        },
+        {
+          "id": "sync",
+          "label": "Outil IPC à associer à la mémoire partagée pour protéger l'accès concurrent"
+        }
+      ],
+      "right": [
+        {
+          "id": "r-shmget",
+          "label": "shmget"
+        },
+        {
+          "id": "r-shmat",
+          "label": "shmat"
+        },
+        {
+          "id": "r-shmdt",
+          "label": "shmdt"
+        },
+        {
+          "id": "r-rmid",
+          "label": "IPC_RMID"
+        },
+        {
+          "id": "r-echec",
+          "label": "(void *) -1"
+        },
+        {
+          "id": "r-sync",
+          "label": "un sémaphore"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "shmget": "r-shmget",
+        "shmat": "r-shmat",
+        "shmdt": "r-shmdt",
+        "rmid": "r-rmid",
+        "echec": "r-echec",
+        "sync": "r-sync"
+      }
+    },
+    "explanation": "**`shmget`** suit le motif `*get` : il **crée ou récupère** un segment et renvoie son **identifiant** (`shmid`). **`shmat`** **attache** le segment à l'espace d'adressage et renvoie un **pointeur** — l'adresse à laquelle le segment devient accessible ; en cas d'**échec**, il renvoie la valeur spéciale **`(void *) -1`** (et **non** `NULL`). **`shmdt`** **détache** le segment du **seul processus appelant** — sans le détruire. La commande **`IPC_RMID`** de **`shmctl`** **supprime** le segment du noyau. Enfin, comme la mémoire partagée n'offre **aucune synchronisation**, on lui **associe un sémaphore** (System V, même famille IPC) pour **protéger** tout accès concurrent : la mémoire partagée transporte les données, le sémaphore protège l'accès.",
+    "concepts": [
+      "shmget",
+      "shmat",
+      "shmdt",
+      "shmctl",
+      "ipc-sans-synchronisation"
+    ],
+    "source": "Cours 6 — IPC System V (mémoire partagée)"
+  },
+  {
+    "chapterSlug": "memoire-partagee",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Un père et son fils échangent une donnée par un segment de mémoire partagée privé, sans condition de course. Remettez dans l'ordre les étapes, de la création du segment jusqu'à sa suppression.",
+    "payload": {
+      "items": [
+        {
+          "id": "shmget",
+          "label": "Le père crée le segment avec shmget(IPC_PRIVATE, taille, IPC_CREAT | 0600)"
+        },
+        {
+          "id": "shmat",
+          "label": "Le père attache le segment avec shmat : il obtient un pointeur"
+        },
+        {
+          "id": "fork",
+          "label": "Le père appelle fork() : le fils hérite de l'identifiant et du pointeur"
+        },
+        {
+          "id": "ecrire",
+          "label": "Le fils écrit une donnée dans le segment via le pointeur, puis se termine"
+        },
+        {
+          "id": "wait",
+          "label": "Le père appelle wait(NULL) : l'écriture du fils est alors terminée, sans course"
+        },
+        {
+          "id": "lire",
+          "label": "Le père lit la donnée dans le segment via le pointeur"
+        },
+        {
+          "id": "rmid",
+          "label": "Le père détache (shmdt) puis supprime le segment (shmctl IPC_RMID)"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "shmget",
+        "shmat",
+        "fork",
+        "ecrire",
+        "wait",
+        "lire",
+        "rmid"
+      ]
+    },
+    "explanation": "Le père **crée** le segment avec **`shmget`** (`IPC_PRIVATE`), puis l'**attache** avec **`shmat`** — il obtient un **pointeur**. Vient ensuite le **`fork`** : comme `fork` duplique l'espace d'adressage, le fils **hérite** à la fois de l'identifiant `shmid` **et** du pointeur d'attachement — il voit donc **le même segment** que le père. Le fils **écrit** sa donnée via le pointeur, puis **se termine**. Étape clé pour la **déterminisme** : le père appelle **`wait(NULL)`**. La mémoire partagée n'offre **aucune synchronisation** par elle-même ; ici, c'est le `wait` qui joue ce rôle — quand il rend la main, le fils est **terminé**, donc son écriture est **forcément achevée**. Le père peut alors **lire** la donnée **sans condition de course**. Enfin, il **détache** (`shmdt`) puis **supprime** le segment (`shmctl`, `IPC_RMID`) — nettoyage obligatoire d'un objet IPC persistant.",
+    "concepts": [
+      "shmget",
+      "shmat",
+      "shmdt",
+      "shmctl",
+      "ipc-sans-synchronisation",
+      "cycle-vie-shm"
+    ],
+    "source": "Cours 6 — IPC System V (mémoire partagée)"
+  },
+  {
+    "chapterSlug": "memoire-partagee",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme crée un segment de mémoire partagée privé, l'initialise, fork, le fils le modifie, et le père relit après wait(). Quelle est sa sortie exacte ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/shm.h>\n\nstruct partage { int compteur; char message[32]; };\n\nint main(void) {\n    int shmid = shmget(IPC_PRIVATE, sizeof(struct partage), IPC_CREAT | 0600);\n    if (shmid == -1) { perror(\"shmget\"); exit(EXIT_FAILURE); }\n\n    struct partage *d = (struct partage *) shmat(shmid, NULL, 0);\n    if (d == (void *) -1) { perror(\"shmat\"); exit(EXIT_FAILURE); }\n\n    /* le pere initialise le segment AVANT le fork */\n    d->compteur = 10;\n    strcpy(d->message, \"init\");\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* le fils ecrit dans le segment partage, puis se termine */\n        d->compteur += 5;\n        strcpy(d->message, \"fils ici\");\n        shmdt(d);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* wait() garantit que l'ecriture du fils est terminee : pas de course */\n    wait(NULL);\n    printf(\"compteur = %d\\n\", d->compteur);\n    printf(\"message = %s\\n\", d->message);\n\n    shmdt(d);\n    shmctl(shmid, IPC_RMID, NULL);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "expectedOutput": "compteur = 15\nmessage = fils ici"
+    },
+    "explanation": "Le père **crée** le segment, l'**attache** (`shmat` renvoie le pointeur `d`), puis l'**initialise** : `d->compteur = 10`, `d->message = \"init\"` — tout cela **avant** le `fork`. Après `fork`, le **fils** hérite de l'identifiant **et** du pointeur : il voit **le même segment physique**. Il écrit `d->compteur += 5` (10 → **15**) et `d->message = \"fils ici\"`, puis se termine.\n\nLe père appelle **`wait(NULL)`** : c'est lui qui assure la **synchronisation** — la mémoire partagée n'en offre **aucune**. Quand `wait` rend la main, le fils est **terminé**, donc ses **deux écritures** dans le segment sont **forcément achevées**. Le père lit alors `d->compteur` (= **15**) et `d->message` (= **fils ici**) : ce sont les valeurs **écrites par le fils**, puisqu'ils partagent le **même octet physique**. La sortie est **déterministe** grâce au `wait` ; **sans** ce `wait`, on aurait une **condition de course** et un résultat imprévisible.",
+    "concepts": [
+      "memoire-partagee",
+      "segment-partage",
+      "shmat",
+      "ipc-sans-synchronisation"
+    ],
+    "source": "Cours 6 — IPC System V (mémoire partagée)"
+  },
+  {
+    "chapterSlug": "memoire-partagee",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Écrivez un programme C où un père et son fils partagent une structure via un segment de mémoire partagée System V privé. Le programme reçoit un entier et un texte en arguments. Il crée un segment avec IPC_PRIVATE, l'attache, puis fork. Le fils écrit dans le segment le double de l'entier et le texte, puis se détache et se termine. Le père attend le fils, affiche `total = <n>` puis `texte = <t>`, se détache et supprime le segment.",
+    "payload": {
+      "spec": "Le programme inclut <stdio.h>, <stdlib.h>, <string.h>, <unistd.h>, <sys/wait.h>, <sys/types.h>, <sys/ipc.h>, <sys/shm.h>. Il définit « struct partage { int total; char texte[64]; }; ». Il vérifie argc >= 3. ÉTAPE 1 — créer le segment AVANT le fork : shmget(IPC_PRIVATE, sizeof(struct partage), IPC_CREAT | 0600). ÉTAPE 2 — attacher avec « struct partage *d = (struct partage *) shmat(shmid, NULL, 0); » et TESTER l'échec contre (void *) -1 (PAS NULL). Créer et attacher avant fork permet au fils d'hériter de l'identifiant ET du pointeur. ÉTAPE 3 — fork(). ÉTAPE 4 — le fils écrit d->total = 2 * atoi(argv[1]) et d->texte = argv[2] (avec strncpy et terminaison par '\\0'), puis appelle shmdt(d) et exit(EXIT_SUCCESS). ÉTAPE 5 — le père appelle wait(NULL) : cela garantit que l'écriture du fils est terminée, donc PAS de condition de course. Il affiche ensuite 'total : <total>' sous la forme 'total = ' suivi de l'entier, puis 'texte = ' suivi du texte, exactement dans cet ordre. ÉTAPE 6 — le père appelle shmdt(d) puis shmctl(shmid, IPC_RMID, NULL). Tester le retour -1 de shmget, fork ; tester shmat contre (void *) -1.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/shm.h>\n\nstruct partage {\n    int total;\n    char texte[64];\n};\n\nint main(int argc, char *argv[]) {\n    if (argc < 3) { fprintf(stderr, \"usage: %s entier texte\\n\", argv[0]); return 1; }\n\n    /* 1. creer un segment de memoire partagee prive, a la taille de\n          struct partage (shmget + IPC_PRIVATE) */\n\n    /* 2. attacher le segment (shmat) ; tester l'echec contre (void *) -1 */\n\n    /* 3. fork() */\n\n    /* 4. fils : ecrire dans le segment total = 2 * atoi(argv[1]) et\n          texte = argv[2], detacher (shmdt), puis exit */\n\n    /* 5. pere : attendre le fils, afficher 'total = <total>' puis\n          'texte = <texte>', detacher (shmdt), supprimer (shmctl IPC_RMID) */\n\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "valeur 7",
+          "stdin": "",
+          "args": [
+            "7",
+            "bonjour"
+          ],
+          "expectedStdout": "total = 14\ntexte = bonjour",
+          "compare": "trimmed"
+        },
+        {
+          "name": "valeur 21",
+          "stdin": "",
+          "args": [
+            "21",
+            "memoire partagee"
+          ],
+          "expectedStdout": "total = 42\ntexte = memoire partagee",
+          "compare": "trimmed"
+        },
+        {
+          "name": "valeur 0",
+          "stdin": "",
+          "args": [
+            "0",
+            "vide"
+          ],
+          "expectedStdout": "total = 0\ntexte = vide",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/shm.h>\n\nstruct partage {\n    int total;\n    char texte[64];\n};\n\nint main(int argc, char *argv[]) {\n    if (argc < 3) { fprintf(stderr, \"usage: %s entier texte\\n\", argv[0]); return 1; }\n\n    int shmid = shmget(IPC_PRIVATE, sizeof(struct partage), IPC_CREAT | 0600);\n    if (shmid == -1) { perror(\"shmget\"); exit(EXIT_FAILURE); }\n\n    struct partage *d = (struct partage *) shmat(shmid, NULL, 0);\n    if (d == (void *) -1) { perror(\"shmat\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        d->total = atoi(argv[1]) * 2;\n        strncpy(d->texte, argv[2], sizeof d->texte - 1);\n        d->texte[sizeof d->texte - 1] = '\\0';\n        if (shmdt(d) == -1) { perror(\"shmdt\"); exit(EXIT_FAILURE); }\n        exit(EXIT_SUCCESS);\n    }\n\n    wait(NULL);\n    printf(\"total = %d\\n\", d->total);\n    printf(\"texte = %s\\n\", d->texte);\n\n    if (shmdt(d) == -1) { perror(\"shmdt\"); exit(EXIT_FAILURE); }\n    shmctl(shmid, IPC_RMID, NULL);\n    return 0;\n}\n"
+    },
+    "explanation": "Le segment doit être **créé et attaché avant** le `fork`. `shmget(IPC_PRIVATE, sizeof(struct partage), IPC_CREAT | 0600)` crée un segment **exactement dimensionné** pour la structure ; `shmat` l'attache et renvoie un **pointeur** — dont l'échec se teste **impérativement** contre **`(void *) -1`**, **pas** `NULL`. Comme `fork` duplique l'espace d'adressage, le fils **hérite** de l'identifiant **et** du pointeur : père et fils voient **le même segment physique**. Le fils **écrit** directement dans le segment (`d->total`, `d->texte`) — de **simples accès mémoire**, aucun appel système —, puis se **détache** (`shmdt`). Point décisif : la mémoire partagée **n'offre aucune synchronisation**. C'est le **`wait(NULL)`** du père qui synchronise : quand il rend la main, le fils est **terminé**, son écriture **achevée** — le père peut lire **sans condition de course**. Enfin, le père se **détache** (`shmdt`) et **supprime** le segment (`shmctl`, `IPC_RMID`) : objet IPC persistant.",
+    "concepts": [
+      "shmget",
+      "shmat",
+      "shmdt",
+      "shmctl",
+      "segment-partage",
+      "cycle-vie-shm"
+    ],
+    "source": "Cours 6 — IPC System V (mémoire partagée)"
+  },
+  {
+    "chapterSlug": "memoire-partagee",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme veut transmettre un entier d'un fils à son père par un segment de mémoire partagée : le fils écrit N * 3 dans le segment, le père l'affiche sous la forme `valeur = <v>`. En réalité le père affiche `valeur = 0`. Trouvez et corrigez l'erreur.",
+    "payload": {
+      "spec": "Le bug est une CONDITION DE COURSE : il manque la synchronisation entre le père et le fils. La mémoire partagée n'offre AUCUN mécanisme de synchronisation — c'est une zone de mémoire brute. Dans le programme, après le fork, le fils écrit d->valeur = n * 3 dans le segment ; mais le père exécute « printf(\"valeur = %d\\n\", d->valeur); » IMMÉDIATEMENT, sans attendre le fils. Le segment de mémoire partagée étant initialisé à zéro par le noyau à sa création, le père lit donc d->valeur AVANT que le fils n'ait eu le temps de l'écrire : il affiche valeur = 0. Le wait(NULL) est présent mais placé APRÈS le printf, donc trop tard. La correction : DÉPLACER l'appel wait(NULL) AVANT le printf, de sorte que le père attende la fin du fils — donc la fin de son écriture — avant de lire le segment. (Accessoirement, le test « if (d == NULL) » après shmat est lui aussi incorrect — shmat signale l'échec par (void *) -1 — mais c'est le défaut de synchronisation qui produit le mauvais résultat.) Une fois le wait(NULL) remonté avant le printf, le programme affiche la bonne valeur, par exemple 'valeur = 12' pour N = 4.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/shm.h>\n\nstruct partage { int valeur; };\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s N\\n\", argv[0]); return 1; }\n    int n = atoi(argv[1]);\n\n    int shmid = shmget(IPC_PRIVATE, sizeof(struct partage), IPC_CREAT | 0600);\n    if (shmid == -1) { perror(\"shmget\"); exit(EXIT_FAILURE); }\n\n    struct partage *d = (struct partage *) shmat(shmid, NULL, 0);\n    if (d == NULL) { perror(\"shmat\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        d->valeur = n * 3;\n        shmdt(d);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* le pere lit la valeur ecrite par le fils */\n    printf(\"valeur = %d\\n\", d->valeur);\n\n    wait(NULL);\n    shmdt(d);\n    shmctl(shmid, IPC_RMID, NULL);\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "N = 4",
+          "stdin": "",
+          "args": [
+            "4"
+          ],
+          "expectedStdout": "valeur = 12",
+          "compare": "trimmed"
+        },
+        {
+          "name": "N = 10",
+          "stdin": "",
+          "args": [
+            "10"
+          ],
+          "expectedStdout": "valeur = 30",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/shm.h>\n\nstruct partage { int valeur; };\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s N\\n\", argv[0]); return 1; }\n    int n = atoi(argv[1]);\n\n    int shmid = shmget(IPC_PRIVATE, sizeof(struct partage), IPC_CREAT | 0600);\n    if (shmid == -1) { perror(\"shmget\"); exit(EXIT_FAILURE); }\n\n    struct partage *d = (struct partage *) shmat(shmid, NULL, 0);\n    if (d == (void *) -1) { perror(\"shmat\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        d->valeur = n * 3;\n        shmdt(d);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* on attend le fils AVANT de lire : son ecriture est alors terminee */\n    wait(NULL);\n    printf(\"valeur = %d\\n\", d->valeur);\n\n    shmdt(d);\n    shmctl(shmid, IPC_RMID, NULL);\n    return 0;\n}\n"
+    },
+    "explanation": "Le bug est une **condition de course** — le danger central de la mémoire partagée. Un segment partagé est une zone de mémoire **brute** : il **n'offre aucune synchronisation**. Rien ne **signale** au père qu'une donnée est **prête**. Dans le programme buggé, le père exécute `printf(\"valeur = %d\\n\", d->valeur)` **immédiatement** après le `fork`, **sans attendre** le fils. Or le noyau **initialise le segment à zéro** à sa création : le père gagne la course et lit `d->valeur` **avant** que le fils n'ait écrit — il affiche donc `valeur = 0`. Le `wait(NULL)` existe bien, mais il est placé **après** le `printf` : trop tard. La correction : **remonter `wait(NULL)` avant le `printf`**. Le père attend alors la **fin du fils** — donc la fin de son **écriture** — avant de lire : la valeur lue est **correcte et déterministe**. (Le test `if (d == NULL)` est aussi erroné — `shmat` échoue avec `(void *) -1` —, mais c'est bien l'absence de synchronisation qui cause le mauvais résultat.) Leçon : avec la mémoire partagée, **toute donnée partagée doit être synchronisée** — ici par `wait`, ailleurs par un **sémaphore**.",
+    "concepts": [
+      "ipc-sans-synchronisation",
+      "memoire-partagee",
+      "segment-partage"
+    ],
+    "source": "Cours 6 — IPC System V (mémoire partagée)"
+  }
+]

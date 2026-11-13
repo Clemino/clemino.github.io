@@ -1,0 +1,198 @@
+---
+title: Qu'est-ce que l'intelligence artificielle ?
+slug: qu-est-ce-que-l-ia
+order: 1
+estimatedReadMin: 11
+concepts: [intelligence-artificielle, programme-intelligent, conference-de-dartmouth, test-de-turing]
+source: "Intro_IA_Slides1.pdf"
+---
+
+## Introduire l'IA par son vocabulaire et ses réalisations
+
+Plutôt que de chercher d'emblée une définition unique et fermée de l'intelligence
+artificielle (IA), nous l'aborderons à travers **son vocabulaire**, quelques-uns de
+**ses concepts** et quelques-unes de **ses réalisations**. Ce module suit un fil
+directeur clair : partir des bases de l'IA pour arriver, étape après étape, jusqu'à
+des systèmes comme **ChatGPT**.
+
+Cette première section répond à la question fondatrice : **qu'est-ce qui rend un
+programme « intelligent » ?** Nous y répondrons d'abord par l'exemple, puis en
+dégageant la notion de *faculté*, avant de présenter les deux repères historiques
+incontournables : la conférence fondatrice de Dartmouth (1956) et le test de Turing.
+
+> **À retenir** : on n'apprend pas l'IA par une définition apprise par cœur, mais
+> en confrontant des exemples de programmes intelligents et non intelligents.
+
+## De quoi s'agit-il ? Deux groupes de programmes
+
+Pour cerner ce qu'est l'IA, comparons deux groupes de programmes informatiques.
+
+**Groupe 1 — ceci n'est *pas* de l'IA :**
+
+- un programme qui calcule le nombre Π avec autant de décimales qu'on veut ;
+- un programme qui résout un système ayant des milliers d'équations ;
+- un programme qui recherche toutes les occurrences d'un mot ou d'une phrase dans
+  un grand nombre de documents ;
+- un programme qui trie un tableau de très grande taille.
+
+**Groupe 2 — ceci *est* de l'IA :**
+
+- un programme qui joue aux échecs ;
+- un programme qui conduit un véhicule ;
+- un programme capable de reconnaître des visages ;
+- un programme capable de discuter avec un humain ;
+- un programme capable de traduire un texte ;
+- un programme capable de résumer un texte.
+
+À première vue, les programmes du groupe 1 ne sont pas « plus simples » que ceux du
+groupe 2 : calculer des milliers d'équations ou trier un immense tableau demande de
+la **puissance** de calcul considérable. La différence n'est donc pas une question
+de difficulté ou de quantité de calculs.
+
+## Ordre explicite contre autonomie
+
+Quelle différence y a-t-il réellement entre les deux groupes ?
+
+- Dans les programmes du **groupe 1**, la machine se contente d'**exécuter des
+  ordres** donnés par l'homme — le programmeur. Elle est **explicitement
+  programmée** pour la tâche qu'elle exécute. Ces programmes supposent de la
+  **puissance**, dont la machine dispose grâce à ses composants électroniques,
+  mais ils ne font qu'appliquer une recette fournie pas à pas.
+- Dans les programmes du **groupe 2**, la machine fait preuve de bien plus
+  d'**autonomie**. Elle exécute des tâches pour lesquelles elle n'a **pas** été
+  explicitement programmée — par exemple le choix d'un coup dans une partie
+  d'échecs. Pour y parvenir, elle est amenée à **raisonner**, à **déduire**, à
+  **généraliser**.
+
+C'est cette autonomie, et non la puissance brute, qui caractérise un programme
+intelligent.
+
+> ⚠️ Ne confondez pas *puissance de calcul* et *intelligence*. Un programme peut
+> mobiliser d'énormes ressources de calcul (trier un milliard de valeurs) sans être
+> intelligent : il applique simplement, très vite, des ordres explicites.
+
+## La notion de faculté
+
+Ce que montrent les exemples précédents, c'est qu'on considère comme **intelligent**
+un programme possédant une ou plusieurs **facultés** qui, réunies, forment ce que
+l'on appelle l'intelligence.
+
+Il n'est pas aisé de dresser une liste exhaustive de ces facultés, mais on peut citer,
+parmi les plus importantes :
+
+- **apprendre** ;
+- **analyser** ;
+- **comprendre** ;
+- **anticiper** ;
+- **démontrer** ;
+
+et bien d'autres encore. Un programme « intelligent » est ainsi la réalisation
+concrète d'un programme doté de telles facultés. Ces programmes incarnent un
+objectif qui fut fixé dès la naissance officielle de la discipline.
+
+| Programme | Explicitement programmé ? | Facultés mobilisées |
+| --- | --- | --- |
+| Trier un grand tableau | Oui (ordres pas à pas) | Aucune — pure exécution |
+| Résoudre un système d'équations | Oui (méthode fixée) | Aucune — pure exécution |
+| Jouer aux échecs | Non (choix du coup) | Raisonner, anticiper |
+| Reconnaître un visage | Non (cas jamais vu) | Apprendre, analyser |
+| Traduire un texte | Non (phrase nouvelle) | Comprendre, généraliser |
+
+## La conférence fondatrice de Dartmouth (1956)
+
+Les programmes intelligents sont la réalisation concrète d'un objectif fixé lors de
+la **conférence fondatrice** de l'intelligence artificielle, tenue au **Dartmouth
+College** (Hanover, New Hampshire) en **1956**.
+
+Deux extraits du projet de cette conférence éclairent l'ambition de la discipline.
+
+> **Extrait 1** : « Nous proposons qu'une étude de deux mois sur l'intelligence
+> artificielle soit menée pendant l'été 1956. L'étude qui s'intéressera à chaque
+> aspect de l'**apprentissage** ou à toute **autre caractéristique de
+> l'intelligence**, décrira avec précision toutes les étapes qu'une machine pourra
+> alors simuler. On tentera de trouver un moyen pour que les machines utilisent le
+> **langage**, forment des **abstractions**, des **concepts** et **résolvent des
+> problèmes** qui sont maintenant réservés aux humains. »
+
+> **Extrait 2** : « On tentera de trouver comment faire pour que les machines
+> utilisent le **langage**, forment des **abstractions** et des **concepts**,
+> **résolvent** des types de **problèmes** habituellement réservés aux humains, et
+> se **perfectionnent**. »
+
+Ces deux extraits posent, dès 1956, le programme de recherche de l'IA : faire
+simuler à la machine l'apprentissage, l'usage du langage, la formation de concepts
+et d'abstractions, la résolution de problèmes et l'amélioration de soi-même.
+
+> **À retenir** : l'IA naît officiellement en **1956** à **Dartmouth**, avec
+> l'objectif de faire **simuler** par des machines l'apprentissage et les autres
+> caractéristiques de l'intelligence.
+
+## Le test de Turing : une définition opérationnelle
+
+Aux côtés de cette définition par les facultés, il existe une **définition
+opérationnelle** célèbre de l'intelligence artificielle, proposée par **Alan
+Turing** dans les **années 1950**.
+
+Le **test de Turing** se présente comme un jeu à **trois acteurs** :
+
+1. un **interrogateur** ;
+2. un **programme informatique** ;
+3. un **autre humain**.
+
+L'interrogateur doit converser avec les deux autres acteurs **sans avoir d'indice**
+sur leurs identités respectives. On considère alors que le programme — ou la machine
+— est intelligent **si l'interrogateur est incapable de dire** lequel de ses deux
+interlocuteurs est une machine et lequel est un humain.
+
+Ce que l'on doit retenir du test de Turing, c'est que pour être considérée comme
+intelligente, une machine doit **au moins** :
+
+- **comprendre le langage « naturel »** ;
+- **savoir raisonner** ;
+- **s'exprimer dans le langage « naturel »**.
+
+On retrouve ici, exprimées autrement, les facultés évoquées plus haut. Le test de
+Turing relie ainsi définition opérationnelle et définition par les facultés.
+
+## Un test débattu, critiqué et amendé
+
+Cette définition a été **abondamment débattue, critiquée et amendée**. Jusqu'à très
+récemment, la **quasi-totalité** des programmes « intelligents » ne passaient **pas**
+le test de Turing : on parvenait, en conversant, à reconnaître la machine. Mais des
+exceptions existent désormais, et les choses commencent à changer. Deux exemples
+l'illustrent.
+
+- **Exemple 1 — Deep Blue (1997).** L'ordinateur **Deep Blue** d'IBM bat le champion
+  du monde des échecs, **Gary Kasparov**, sur le score de **3,5 à 2,5**. À l'issue
+  du match, Kasparov accuse l'équipe d'IBM d'avoir triché en faisant jouer un
+  humain : des observateurs avertis trouvent que la machine a joué avec
+  « **subtilité** » et « **nuance** ». D'autres déclarent que, sans le savoir, on
+  aurait pu prendre son jeu pour celui de l'un des meilleurs joueurs **humains** du
+  monde.
+- **Exemple 2 — Yoshua Bengio (2023).** Dans une interview accordée au journal
+  *Le Monde* au sujet de **ChatGPT**, **Yoshua Bengio** affirme que « ce système de
+  langage à très grande échelle passe haut la main le test de Turing » :
+  c'est-à-dire qu'on ne peut pas facilement savoir, lorsqu'on converse avec lui,
+  s'il s'agit d'une machine ou d'un humain.
+
+Ces deux exemples montrent qu'après des décennies durant lesquelles le test résistait
+aux programmes, des systèmes récents — en particulier les grands modèles de langage —
+parviennent à le franchir.
+
+> ⚠️ Le test de Turing évalue l'**indistinguabilité** dans une conversation. Passer
+> le test ne prouve pas que la machine « pense » comme un humain : c'est un critère
+> de comportement observable, pas une mesure de conscience.
+
+## Synthèse de la section
+
+Un programme est dit *intelligent* non parce qu'il calcule beaucoup, mais parce
+qu'il agit avec **autonomie** sur des tâches pour lesquelles il n'a pas été
+explicitement programmé, en mobilisant des **facultés** (apprendre, analyser,
+comprendre, anticiper, démontrer). La discipline est née officiellement en **1956**
+à la conférence de **Dartmouth**, et le **test de Turing** en fournit une définition
+opérationnelle fondée sur la conversation.
+
+> **À retenir** : l'intelligence d'un programme se mesure à son **autonomie** et à
+> ses **facultés**, pas à sa puissance de calcul. Repères clés : **Dartmouth 1956**
+> (conférence fondatrice) et le **test de Turing** (définition opérationnelle), que
+> les LLM récents franchissent désormais.

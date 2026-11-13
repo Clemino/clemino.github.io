@@ -1,0 +1,1709 @@
+[
+  {
+    "chapterSlug": "blockchain-bitcoin",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quel problème le livre blanc de Bitcoin cherche-t-il à résoudre sans tiers de confiance ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La lenteur des virements internationaux"
+        },
+        {
+          "id": "b",
+          "label": "L'inflation des monnaies officielles"
+        },
+        {
+          "id": "c",
+          "label": "Le coût des cartes bancaires"
+        },
+        {
+          "id": "d",
+          "label": "La double dépense d'une même unité de monnaie électronique"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "Sans banque pour tenir le registre, rien n'empêche de dépenser deux fois une pièce numérique. Le registre public validé par preuve de travail résout ce problème.",
+    "concepts": [
+      "double-depense",
+      "bitcoin"
+    ],
+    "source": "Livre blanc de Bitcoin, traduction française (bitcoin.org)"
+  },
+  {
+    "chapterSlug": "blockchain-bitcoin",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Selon la règle de consensus de Bitcoin, quelle chaîne fait foi ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La chaîne la plus récente"
+        },
+        {
+          "id": "b",
+          "label": "La chaîne qui contient le plus de transactions"
+        },
+        {
+          "id": "c",
+          "label": "La chaîne validée par la fondation Bitcoin"
+        },
+        {
+          "id": "d",
+          "label": "La chaîne la plus longue, qui a demandé le plus de travail"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "Les nœuds considèrent la chaîne ayant accumulé le plus de preuve de travail comme la bonne. Réécrire l'histoire exigerait de refaire tout ce travail.",
+    "concepts": [
+      "preuve-de-travail",
+      "blockchain"
+    ],
+    "source": "Livre blanc de Bitcoin, traduction française (bitcoin.org)"
+  },
+  {
+    "chapterSlug": "blockchain-bitcoin",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Les transactions Bitcoin sont anonymes et impossibles à retracer.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Toutes les transactions sont publiques sur la blockchain. Seule l'identité derrière une adresse est masquée : on parle de pseudonymat, et les analyses de chaîne permettent souvent de remonter jusqu'aux personnes.",
+    "concepts": [
+      "bitcoin",
+      "blockchain"
+    ],
+    "source": "Livre blanc de Bitcoin, traduction française (bitcoin.org)"
+  },
+  {
+    "chapterSlug": "blockchain-bitcoin",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Si tu perds ta clé privée sans sauvegarde, il n'existe aucun moyen de récupérer tes bitcoins.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Seule la clé privée permet de signer une transaction. Aucune autorité ne peut la régénérer : les fonds restent sur la blockchain, mais inaccessibles pour toujours.",
+    "concepts": [
+      "cle-privee"
+    ],
+    "source": "Livre blanc de Bitcoin, traduction française (bitcoin.org)"
+  },
+  {
+    "chapterSlug": "blockchain-bitcoin",
+    "type": "NUMERIC",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Combien de bitcoins pourront exister au maximum ?",
+    "payload": {
+      "unit": "BTC",
+      "hint": "Sans espace ni symbole ; décimale avec un point ou une virgule."
+    },
+    "solution": {
+      "value": 21000000
+    },
+    "explanation": "Le halving tous les 210 000 blocs fait tendre l'offre totale vers 21 millions de bitcoins.",
+    "concepts": [
+      "bitcoin"
+    ],
+    "source": "Livre blanc de Bitcoin, traduction française (bitcoin.org)"
+  },
+  {
+    "chapterSlug": "blockchain-bitcoin",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pourquoi une modification d'une ancienne transaction est-elle immédiatement détectable ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Les mineurs relisent manuellement chaque bloc"
+        },
+        {
+          "id": "b",
+          "label": "Une autorité centrale compare la chaîne à une copie de référence"
+        },
+        {
+          "id": "c",
+          "label": "Les transactions sont chiffrées avec le mot de passe de leur auteur"
+        },
+        {
+          "id": "d",
+          "label": "Chaque bloc contient l'empreinte du bloc précédent : tous les blocs suivants deviendraient invalides"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "Les blocs sont chaînés par leurs empreintes (hachages). Modifier un bloc change son empreinte et casse le lien avec tous les blocs suivants.",
+    "concepts": [
+      "blockchain"
+    ],
+    "source": "Livre blanc de Bitcoin, traduction française (bitcoin.org)"
+  },
+  {
+    "chapterSlug": "blockchain-bitcoin",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque élément à son rôle dans Bitcoin.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Clé privée"
+        },
+        {
+          "id": "l2",
+          "label": "Adresse"
+        },
+        {
+          "id": "l3",
+          "label": "Mineur"
+        },
+        {
+          "id": "l4",
+          "label": "Halving"
+        }
+      ],
+      "right": [
+        {
+          "id": "r2",
+          "label": "Permet de recevoir des bitcoins"
+        },
+        {
+          "id": "r3",
+          "label": "Ajoute des blocs en fournissant une preuve de travail"
+        },
+        {
+          "id": "r4",
+          "label": "Divise la récompense de bloc par deux tous les 210 000 blocs"
+        },
+        {
+          "id": "r1",
+          "label": "Signe les transactions"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4"
+      }
+    },
+    "explanation": "La clé privée signe, l'adresse (dérivée de la clé publique) reçoit, le mineur sécurise la chaîne et le halving organise la raréfaction de la création monétaire.",
+    "concepts": [
+      "cle-privee",
+      "preuve-de-travail",
+      "bitcoin"
+    ],
+    "source": "Livre blanc de Bitcoin, traduction française (bitcoin.org)"
+  },
+  {
+    "chapterSlug": "blockchain-bitcoin",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Que reçoit le mineur qui trouve un nouveau bloc ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Des bitcoins nouvellement créés (récompense de bloc)"
+        },
+        {
+          "id": "b",
+          "label": "Les frais des transactions incluses dans le bloc"
+        },
+        {
+          "id": "c",
+          "label": "Un remboursement de son électricité par les utilisateurs"
+        },
+        {
+          "id": "d",
+          "label": "Un dividende versé par le réseau"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b"
+      ]
+    },
+    "explanation": "Le livre blanc décrit cette double incitation : création de nouvelles unités et frais de transaction. Elle rend plus rentable de jouer honnêtement que d'attaquer le réseau.",
+    "concepts": [
+      "preuve-de-travail"
+    ],
+    "source": "Livre blanc de Bitcoin, traduction française (bitcoin.org)"
+  },
+  {
+    "chapterSlug": "blockchain-bitcoin",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complète la description de la preuve de travail.",
+    "payload": {
+      "template": "Pour ajouter un bloc, le mineur dépense de la puissance de {{calcul}} ; un attaquant devrait contrôler plus de {{pct}} % de cette puissance pour réécrire l'historique.",
+      "slots": [
+        {
+          "id": "calcul",
+          "placeholder": "mot"
+        },
+        {
+          "id": "pct",
+          "placeholder": "nombre"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "calcul": [
+          "calcul",
+          "calculs"
+        ],
+        "pct": [
+          "50",
+          "51"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "La sécurité repose sur la majorité de la puissance de calcul honnête : au-delà de la moitié, on parle d'attaque des 51 %.",
+    "concepts": [
+      "preuve-de-travail"
+    ],
+    "source": "Livre blanc de Bitcoin, traduction française (bitcoin.org)"
+  },
+  {
+    "chapterSlug": "ethereum-tokens-stablecoins",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce qu'un smart contract ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un contrat juridique signé électroniquement"
+        },
+        {
+          "id": "b",
+          "label": "Un ordre de bourse automatique"
+        },
+        {
+          "id": "c",
+          "label": "Une assurance contre le piratage"
+        },
+        {
+          "id": "d",
+          "label": "Un programme stocké sur une blockchain qui s'exécute automatiquement selon ses règles"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "Un smart contract est un programme déployé sur une blockchain comme Ethereum. Une fois déployé, il s'exécute seul et ne peut plus être modifié.",
+    "concepts": [
+      "smart-contract",
+      "ethereum"
+    ],
+    "source": "ESMA, AES, « Crypto-actifs : ce que MiCA signifie pour vous en tant qu'investisseur » (2025)"
+  },
+  {
+    "chapterSlug": "ethereum-tokens-stablecoins",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Selon MiCA, qu'est-ce qu'un jeton de monnaie électronique (EMT) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un NFT émis par une banque"
+        },
+        {
+          "id": "b",
+          "label": "Un crypto-actif qui vise une valeur stable en se référant à une seule monnaie officielle"
+        },
+        {
+          "id": "c",
+          "label": "Un jeton qui donne accès à un service"
+        },
+        {
+          "id": "d",
+          "label": "Un crypto-actif qui se réfère à un panier de matières premières"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "L'EMT se réfère à une monnaie officielle (par exemple l'euro). Le détenteur a le droit d'être remboursé à la valeur nominale par l'émetteur, qui doit être un établissement de crédit ou de monnaie électronique.",
+    "concepts": [
+      "emt-art",
+      "stablecoin"
+    ],
+    "source": "ESMA, AES, « Crypto-actifs : ce que MiCA signifie pour vous en tant qu'investisseur » (2025)"
+  },
+  {
+    "chapterSlug": "ethereum-tokens-stablecoins",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Un émetteur de stablecoin agréé MiCA peut verser des intérêts à ses détenteurs.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "MiCA interdit aux émetteurs d'EMT comme d'ART d'accorder des intérêts aux détenteurs.",
+    "concepts": [
+      "emt-art"
+    ],
+    "source": "ESMA, AES, « Crypto-actifs : ce que MiCA signifie pour vous en tant qu'investisseur » (2025)"
+  },
+  {
+    "chapterSlug": "ethereum-tokens-stablecoins",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque type de stablecoin à son risque principal.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Adossé à une monnaie"
+        },
+        {
+          "id": "l2",
+          "label": "Adossé à des crypto-actifs"
+        },
+        {
+          "id": "l3",
+          "label": "Algorithmique"
+        }
+      ],
+      "right": [
+        {
+          "id": "r2",
+          "label": "La chute brutale de la garantie en crypto"
+        },
+        {
+          "id": "r3",
+          "label": "L'effondrement de la confiance, sans réserve pour le soutenir"
+        },
+        {
+          "id": "r1",
+          "label": "La qualité et la réalité des réserves de l'émetteur"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "Un stablecoin n'est stable que si son mécanisme tient. L'algorithmique TerraUSD s'est effondré en mai 2022 faute de réserves.",
+    "concepts": [
+      "stablecoin"
+    ],
+    "source": "ESMA, AES, « Crypto-actifs : ce que MiCA signifie pour vous en tant qu'investisseur » (2025)"
+  },
+  {
+    "chapterSlug": "ethereum-tokens-stablecoins",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles affirmations sur les meme coins sont exactes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Ils sont garantis par leur émetteur"
+        },
+        {
+          "id": "b",
+          "label": "Ils sont inspirés de tendances ou de sujets humoristiques"
+        },
+        {
+          "id": "c",
+          "label": "Ils financent en général une entreprise qui verse des bénéfices"
+        },
+        {
+          "id": "d",
+          "label": "Leur valeur repose surtout sur la viralité et la communauté"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b",
+        "d"
+      ]
+    },
+    "explanation": "La fiche des autorités européennes les décrit comme créés pour engager une communauté, souvent accompagnés d'un marketing viral. Il n'y a ni bénéfices ni garantie derrière.",
+    "concepts": [
+      "token"
+    ],
+    "source": "ESMA, AES, « Crypto-actifs : ce que MiCA signifie pour vous en tant qu'investisseur » (2025)"
+  },
+  {
+    "chapterSlug": "ethereum-tokens-stablecoins",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un stablecoin libellé en euros est couvert par la garantie des dépôts bancaires, comme un compte courant.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Un stablecoin n'est pas un dépôt bancaire. Aucune garantie des dépôts ne s'applique ; MiCA donne seulement un droit de remboursement auprès de l'émetteur d'un EMT.",
+    "concepts": [
+      "stablecoin",
+      "emt-art"
+    ],
+    "source": "ESMA, AES, « Crypto-actifs : ce que MiCA signifie pour vous en tant qu'investisseur » (2025)"
+  },
+  {
+    "chapterSlug": "ethereum-tokens-stablecoins",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "À quoi sert l'ether (ETH) sur la blockchain Ethereum ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "À rien : c'est une monnaie purement spéculative"
+        },
+        {
+          "id": "b",
+          "label": "À garantir la valeur des stablecoins"
+        },
+        {
+          "id": "c",
+          "label": "À voter les décisions d'une fondation centrale"
+        },
+        {
+          "id": "d",
+          "label": "À payer les frais de calcul (gas) des transactions et des smart contracts"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "Chaque opération sur Ethereum consomme du calcul, payé en ether sous forme de frais de gas.",
+    "concepts": [
+      "ethereum"
+    ],
+    "source": "ESMA, AES, « Crypto-actifs : ce que MiCA signifie pour vous en tant qu'investisseur » (2025)"
+  },
+  {
+    "chapterSlug": "ethereum-tokens-stablecoins",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Depuis septembre 2022, quel mécanisme de consensus utilise Ethereum ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le vote des utilisateurs"
+        },
+        {
+          "id": "b",
+          "label": "La preuve d'enjeu"
+        },
+        {
+          "id": "c",
+          "label": "La preuve de travail"
+        },
+        {
+          "id": "d",
+          "label": "La validation par une banque centrale"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Depuis « The Merge », les validateurs bloquent de l'ether en garantie au lieu de dépenser de l'électricité comme les mineurs de Bitcoin.",
+    "concepts": [
+      "ethereum"
+    ],
+    "source": "Connaissance générale du protocole Ethereum"
+  },
+  {
+    "chapterSlug": "plateformes-wallets-securite",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Tu achètes du bitcoin sur une plateforme centralisée et le laisses dessus. Que détiens-tu juridiquement ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Les clés privées de tes bitcoins"
+        },
+        {
+          "id": "b",
+          "label": "Un dépôt garanti à 100 000 €"
+        },
+        {
+          "id": "c",
+          "label": "Une action de la plateforme"
+        },
+        {
+          "id": "d",
+          "label": "Une créance sur la plateforme, qui détient les clés"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "Sur une plateforme (custodial), c'est elle qui détient les clés. Tu as une créance sur elle : en cas de faillite ou de gel, tu dépends de sa solvabilité.",
+    "concepts": [
+      "wallet",
+      "risque-plateforme"
+    ],
+    "source": "ESMA, AES, fiche MiCA investisseurs ; livre blanc de Bitcoin"
+  },
+  {
+    "chapterSlug": "plateformes-wallets-securite",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un « support technique » te contacte et te demande ta phrase de récupération pour sécuriser ton wallet. Que fais-tu ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Je l'envoie par e-mail chiffré"
+        },
+        {
+          "id": "b",
+          "label": "Je la donne, c'est pour ma sécurité"
+        },
+        {
+          "id": "c",
+          "label": "Je refuse : personne de légitime ne demande jamais cette phrase"
+        },
+        {
+          "id": "d",
+          "label": "Je donne seulement la moitié des mots"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "La phrase de récupération donne un accès total aux fonds. Toute demande de cette phrase est une tentative de vol.",
+    "concepts": [
+      "phrase-de-recuperation"
+    ],
+    "source": "ESMA, AES, fiche MiCA investisseurs ; livre blanc de Bitcoin"
+  },
+  {
+    "chapterSlug": "plateformes-wallets-securite",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles pratiques protègent ta phrase de récupération ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La photographier pour l'avoir toujours sur soi"
+        },
+        {
+          "id": "b",
+          "label": "La ranger en lieu sûr, éventuellement en deux exemplaires"
+        },
+        {
+          "id": "c",
+          "label": "La noter sur papier ou sur métal"
+        },
+        {
+          "id": "d",
+          "label": "La stocker dans un document en ligne"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Tout support connecté (photo, cloud, e-mail) peut être piraté. Un support physique conservé en lieu sûr est la règle.",
+    "concepts": [
+      "phrase-de-recuperation"
+    ],
+    "source": "ESMA, AES, fiche MiCA investisseurs ; livre blanc de Bitcoin"
+  },
+  {
+    "chapterSlug": "plateformes-wallets-securite",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque type de wallet à son principal risque.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Wallet sur une plateforme (custodial)"
+        },
+        {
+          "id": "l2",
+          "label": "Wallet logiciel sur un téléphone connecté"
+        },
+        {
+          "id": "l3",
+          "label": "Wallet matériel hors ligne"
+        }
+      ],
+      "right": [
+        {
+          "id": "r2",
+          "label": "Piratage de l'appareil et hameçonnage"
+        },
+        {
+          "id": "r3",
+          "label": "Perte de l'appareil et de la phrase de récupération"
+        },
+        {
+          "id": "r1",
+          "label": "Faillite, piratage ou gel des retraits par la plateforme"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "Chaque solution déplace le risque : vers la plateforme, vers l'appareil connecté, ou vers ta propre organisation.",
+    "concepts": [
+      "wallet"
+    ],
+    "source": "ESMA, AES, fiche MiCA investisseurs ; livre blanc de Bitcoin"
+  },
+  {
+    "chapterSlug": "plateformes-wallets-securite",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un wallet contient physiquement les bitcoins de son propriétaire.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Les crypto-actifs restent sur la blockchain. Le wallet ne contient que les clés qui permettent de les dépenser.",
+    "concepts": [
+      "wallet",
+      "cle-privee"
+    ],
+    "source": "ESMA, AES, fiche MiCA investisseurs ; livre blanc de Bitcoin"
+  },
+  {
+    "chapterSlug": "plateformes-wallets-securite",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Tu dois envoyer 5 000 € de crypto vers une nouvelle adresse. Range les étapes de la procédure prudente.",
+    "payload": {
+      "items": [
+        {
+          "id": "s1",
+          "label": "Vérifier l'adresse du site ou de l'application utilisée"
+        },
+        {
+          "id": "s3",
+          "label": "Vérifier que le réseau choisi est le même des deux côtés"
+        },
+        {
+          "id": "s5",
+          "label": "Confirmer la bonne réception du test"
+        },
+        {
+          "id": "s2",
+          "label": "Copier l'adresse de destination et vérifier ses premiers et derniers caractères"
+        },
+        {
+          "id": "s4",
+          "label": "Envoyer un petit montant de test"
+        },
+        {
+          "id": "s6",
+          "label": "Envoyer le reste"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ]
+    },
+    "explanation": "Les transactions sont irréversibles : on vérifie le site, l'adresse et le réseau, puis on teste avec un petit montant avant d'envoyer la somme principale.",
+    "concepts": [
+      "wallet"
+    ],
+    "source": "ESMA, AES, fiche MiCA investisseurs ; livre blanc de Bitcoin"
+  },
+  {
+    "chapterSlug": "plateformes-wallets-securite",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle leçon principale tirer de la faillite de FTX en 2022 ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Les wallets matériels sont dangereux"
+        },
+        {
+          "id": "b",
+          "label": "Une grande plateforme peut détourner ou perdre les fonds de ses clients ; il faut un prestataire agréé et limiter les montants laissés dessus"
+        },
+        {
+          "id": "c",
+          "label": "Le bitcoin a cessé de fonctionner"
+        },
+        {
+          "id": "d",
+          "label": "Les plateformes décentralisées sont garanties par l'État"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Les fonds des clients de FTX avaient été utilisés par la société. La taille d'une plateforme ne garantit rien : agrément, ségrégation des actifs et prudence sur les montants laissés en garde sont les vraies protections.",
+    "concepts": [
+      "risque-plateforme"
+    ],
+    "source": "ESMA, AES, fiche MiCA investisseurs ; livre blanc de Bitcoin"
+  },
+  {
+    "chapterSlug": "mica-prestataires",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Où vérifier qu'un prestataire de crypto-actifs est agréé au titre de MiCA ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Sur le site du prestataire"
+        },
+        {
+          "id": "b",
+          "label": "Dans le registre de l'ESMA ou sur le site de l'AMF"
+        },
+        {
+          "id": "c",
+          "label": "Sur la blockchain"
+        },
+        {
+          "id": "d",
+          "label": "Sur un classement des plateformes publié par un influenceur"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "L'ESMA tient le registre des prestataires agréés dans l'UE et l'AMF publie la liste des acteurs autorisés en France.",
+    "concepts": [
+      "psca",
+      "esma"
+    ],
+    "source": "ESMA, AES, « Crypto-actifs : ce que MiCA signifie pour vous en tant qu'investisseur » (2025)"
+  },
+  {
+    "chapterSlug": "mica-prestataires",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Lesquels de ces crypto-actifs entrent dans le champ de MiCA ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une œuvre d'art numérique unique (NFT isolé)"
+        },
+        {
+          "id": "b",
+          "label": "Un jeton utilitaire"
+        },
+        {
+          "id": "c",
+          "label": "Un jeton se référant à un panier de devises"
+        },
+        {
+          "id": "d",
+          "label": "Des points de fidélité non transférables"
+        },
+        {
+          "id": "e",
+          "label": "Un jeton de monnaie électronique adossé à l'euro"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b",
+        "c",
+        "e"
+      ]
+    },
+    "explanation": "MiCA couvre les EMT, les ART et les autres crypto-actifs. Il exclut les actifs uniques non fongibles, les jetons non transférables et ceux qui sont déjà des instruments financiers.",
+    "concepts": [
+      "mica",
+      "emt-art"
+    ],
+    "source": "ESMA, AES, « Crypto-actifs : ce que MiCA signifie pour vous en tant qu'investisseur » (2025)"
+  },
+  {
+    "chapterSlug": "mica-prestataires",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Investir dans un crypto-actif via un prestataire agréé MiCA garantit contre la baisse de son prix.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "MiCA encadre les prestataires et l'information des investisseurs. Il ne protège pas contre le risque de marché, et aucun fonds de garantie ne couvre les pertes de valeur.",
+    "concepts": [
+      "mica"
+    ],
+    "source": "ESMA, AES, « Crypto-actifs : ce que MiCA signifie pour vous en tant qu'investisseur » (2025)"
+  },
+  {
+    "chapterSlug": "mica-prestataires",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Depuis quand le régime français des PSAN ne permet-il plus de servir des clients en France sans agrément MiCA ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Depuis le 30 décembre 2024"
+        },
+        {
+          "id": "b",
+          "label": "Depuis 2019"
+        },
+        {
+          "id": "c",
+          "label": "Ce régime reste valable sans limite"
+        },
+        {
+          "id": "d",
+          "label": "Depuis le 1er juillet 2026, fin de la période de transition"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "MiCA s'applique depuis le 30 décembre 2024, mais la France avait prévu une période de transition pour les PSAN, achevée le 1er juillet 2026.",
+    "concepts": [
+      "mica",
+      "psca"
+    ],
+    "source": "ESMA, AES, « Crypto-actifs : ce que MiCA signifie pour vous en tant qu'investisseur » (2025)"
+  },
+  {
+    "chapterSlug": "mica-prestataires",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles exigences s'imposent à un prestataire agréé MiCA ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Des exigences de gouvernance et de capital"
+        },
+        {
+          "id": "b",
+          "label": "Garantir un rendement minimal aux clients"
+        },
+        {
+          "id": "c",
+          "label": "Des règles de conduite et de protection des investisseurs"
+        },
+        {
+          "id": "d",
+          "label": "Conserver les actifs des clients séparément des siens"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "La fiche européenne cite gouvernance, capital, conduite et protection des investisseurs. La ségrégation des actifs des clients en fait partie. Aucun rendement n'est garanti.",
+    "concepts": [
+      "psca"
+    ],
+    "source": "ESMA, AES, « Crypto-actifs : ce que MiCA signifie pour vous en tant qu'investisseur » (2025)"
+  },
+  {
+    "chapterSlug": "mica-prestataires",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Une plateforme non agréée dans l'UE t'accepte comme client parce que tu l'as contactée de ta propre initiative. Quelle conséquence ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Ce n'est pas forcément illégal, mais tu ne bénéficies pas des protections de MiCA"
+        },
+        {
+          "id": "b",
+          "label": "Tu commets une infraction pénale"
+        },
+        {
+          "id": "c",
+          "label": "Elle devient automatiquement agréée"
+        },
+        {
+          "id": "d",
+          "label": "L'AMF garantit tes fonds"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La fiche européenne cite cette « sollicitation inversée » : l'activité n'est pas nécessairement illégale, mais tes droits et protections sont limités, voire inexistants.",
+    "concepts": [
+      "mica",
+      "psca"
+    ],
+    "source": "ESMA, AES, « Crypto-actifs : ce que MiCA signifie pour vous en tant qu'investisseur » (2025)"
+  },
+  {
+    "chapterSlug": "mica-prestataires",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complète la phrase sur MiCA.",
+    "payload": {
+      "template": "MiCA s'applique entièrement depuis le 30 décembre {{annee}} ; un agrément obtenu dans un pays de l'UE vaut dans toute l'Union grâce au {{mot}} européen.",
+      "slots": [
+        {
+          "id": "annee",
+          "placeholder": "année"
+        },
+        {
+          "id": "mot",
+          "placeholder": "mot"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "annee": "2024",
+        "mot": [
+          "passeport",
+          "passeport europeen"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Le règlement est pleinement applicable depuis le 30 décembre 2024 et l'agrément d'un prestataire est valable dans toute l'UE (passeport européen).",
+    "concepts": [
+      "mica"
+    ],
+    "source": "ESMA, AES, « Crypto-actifs : ce que MiCA signifie pour vous en tant qu'investisseur » (2025)"
+  },
+  {
+    "chapterSlug": "fiscalite-crypto",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Indique, pour chaque opération réalisée par un résident fiscal français, si elle est imposable.",
+    "payload": {
+      "figure": {
+        "kind": "data-table",
+        "columns": [
+          "#",
+          "Opération"
+        ],
+        "rows": [
+          [
+            1,
+            "Vente de 0,1 BTC contre 6 000 €"
+          ],
+          [
+            2,
+            "Échange de 1 ETH contre un stablecoin en dollars"
+          ],
+          [
+            3,
+            "Achat d'un ordinateur payé en bitcoins"
+          ],
+          [
+            4,
+            "Achat de 500 € de bitcoins"
+          ]
+        ]
+      },
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "TRUE_FALSE",
+          "prompt": "L'opération 1 est imposable.",
+          "payload": {}
+        },
+        {
+          "id": "q2",
+          "type": "TRUE_FALSE",
+          "prompt": "L'opération 2 est imposable.",
+          "payload": {}
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "L'opération 3 est imposable.",
+          "payload": {}
+        },
+        {
+          "id": "q4",
+          "type": "TRUE_FALSE",
+          "prompt": "L'opération 4 est imposable.",
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": true
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": false
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": true
+          }
+        },
+        {
+          "id": "q4",
+          "solution": {
+            "value": false
+          }
+        }
+      ]
+    },
+    "explanation": "Sont imposables les cessions contre des euros (1) ou contre un bien ou service (3). Un échange entre crypto-actifs sans soulte bénéficie d'un sursis (2) ; un achat n'est jamais imposable (4).",
+    "concepts": [
+      "fiscalite-crypto",
+      "echange-crypto-crypto"
+    ],
+    "source": "impots.gouv.fr, notice du formulaire 2086 (revenus 2024)"
+  },
+  {
+    "chapterSlug": "fiscalite-crypto",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Reprends l'exemple de la notice 2086 : achat de 1 000 € en janvier ; en mars, portefeuille de 1 200 €, vente de 450 € ; en août, portefeuille de 1 300 €, vente de tout.",
+    "payload": {
+      "cells": [
+        {
+          "id": "pv1",
+          "label": "Plus-value de mars (€)",
+          "kind": "number"
+        },
+        {
+          "id": "frac",
+          "label": "Fraction de capital consommée en mars (€)",
+          "kind": "number"
+        },
+        {
+          "id": "pv2",
+          "label": "Plus-value d'août (€)",
+          "kind": "number"
+        },
+        {
+          "id": "tot",
+          "label": "Plus-value totale de l'année (€)",
+          "kind": "number"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "pv1",
+          "expected": 75,
+          "absTol": 0.01
+        },
+        {
+          "id": "frac",
+          "expected": 375,
+          "absTol": 0.01
+        },
+        {
+          "id": "pv2",
+          "expected": 675,
+          "absTol": 0.01
+        },
+        {
+          "id": "tot",
+          "expected": 750,
+          "absTol": 0.01
+        }
+      ]
+    },
+    "explanation": "Mars : 450 − 1 000 × 450 / 1 200 = 450 − 375 = 75 €. Août : prix d'acquisition restant 1 000 − 375 = 625 € ; 1 300 − 625 × 1 300 / 1 300 = 675 €. Total 750 € = 1 750 € encaissés − 1 000 € payés.",
+    "concepts": [
+      "fiscalite-crypto"
+    ],
+    "source": "impots.gouv.fr, notice du formulaire 2086 (revenus 2024)"
+  },
+  {
+    "chapterSlug": "fiscalite-crypto",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Tu as payé 4 000 € de crypto-actifs au total. Ton portefeuille vaut 10 000 € et tu vends pour 2 500 € (sans frais). Quelle est la plus-value imposable ?",
+    "payload": {
+      "unit": "€",
+      "hint": "Sans espace ni symbole ; décimale avec un point ou une virgule."
+    },
+    "solution": {
+      "value": 1500,
+      "absTol": 0.01
+    },
+    "explanation": "2 500 − 4 000 × 2 500 / 10 000 = 2 500 − 1 000 = 1 500 €.",
+    "concepts": [
+      "fiscalite-crypto"
+    ],
+    "source": "impots.gouv.fr, notice du formulaire 2086 (revenus 2024)"
+  },
+  {
+    "chapterSlug": "fiscalite-crypto",
+    "type": "NUMERIC",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Sur cette plus-value de 1 500 €, quel impôt paies-tu avec un PFU de 30 % ?",
+    "payload": {
+      "unit": "€",
+      "hint": "Sans espace ni symbole ; décimale avec un point ou une virgule."
+    },
+    "solution": {
+      "value": 450,
+      "absTol": 0.01
+    },
+    "explanation": "30 % × 1 500 = 450 €.",
+    "concepts": [
+      "fiscalite-crypto",
+      "pfu"
+    ],
+    "source": "impots.gouv.fr, notice du formulaire 2086 (revenus 2024)"
+  },
+  {
+    "chapterSlug": "fiscalite-crypto",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Cette année, tu as vendu pour 280 € de crypto-actifs au total, avec 200 € de plus-value. Que dois-tu ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "30 % de 200 €"
+        },
+        {
+          "id": "b",
+          "label": "30 % de 280 €"
+        },
+        {
+          "id": "c",
+          "label": "12,8 % de 200 € seulement"
+        },
+        {
+          "id": "d",
+          "label": "Rien : le total des cessions ne dépasse pas 305 €"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "Si le total des prix de cession du foyer ne dépasse pas 305 € sur l'année, les plus-values sont exonérées.",
+    "concepts": [
+      "seuil-305"
+    ],
+    "source": "impots.gouv.fr, notice du formulaire 2086 (revenus 2024)"
+  },
+  {
+    "chapterSlug": "fiscalite-crypto",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Le seuil d'exonération de 305 € porte sur :",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La valeur du portefeuille au 31 décembre"
+        },
+        {
+          "id": "b",
+          "label": "Chaque cession prise séparément"
+        },
+        {
+          "id": "c",
+          "label": "Le total des prix de cession de l'année"
+        },
+        {
+          "id": "d",
+          "label": "Le total des plus-values de l'année"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "C'est le total des ventes (prix de cession) qui est comparé à 305 €, pas le gain. Au-delà, l'impôt porte dès le premier euro de plus-value.",
+    "concepts": [
+      "seuil-305"
+    ],
+    "source": "impots.gouv.fr, notice du formulaire 2086 (revenus 2024)"
+  },
+  {
+    "chapterSlug": "fiscalite-crypto",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Une moins-value sur crypto-actifs peut être reportée sur les plus-values crypto des dix années suivantes, comme pour les actions.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Les moins-values sur actifs numériques ne s'imputent que sur les plus-values de même nature de la même année. Elles ne sont pas reportables.",
+    "concepts": [
+      "fiscalite-crypto"
+    ],
+    "source": "impots.gouv.fr, notice du formulaire 2086 (revenus 2024)"
+  },
+  {
+    "chapterSlug": "fiscalite-crypto",
+    "type": "MATCHING",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Associe chaque formulaire ou case à son usage.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Formulaire 2086"
+        },
+        {
+          "id": "l2",
+          "label": "Case 3AN de la 2042 C"
+        },
+        {
+          "id": "l3",
+          "label": "Case 3CN de la 2042 C"
+        },
+        {
+          "id": "l4",
+          "label": "Formulaire 3916-bis"
+        }
+      ],
+      "right": [
+        {
+          "id": "r2",
+          "label": "Report d'une plus-value globale"
+        },
+        {
+          "id": "r3",
+          "label": "Option pour le barème progressif"
+        },
+        {
+          "id": "r4",
+          "label": "Déclaration des comptes ouverts sur des plateformes étrangères"
+        },
+        {
+          "id": "r1",
+          "label": "Détail des cessions d'actifs numériques"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4"
+      }
+    },
+    "explanation": "La 2086 détaille les cessions, la 2042 C reçoit le résultat (3AN, 3BN) et l'option éventuelle pour le barème (3CN), la 3916-bis déclare les comptes à l'étranger.",
+    "concepts": [
+      "fiscalite-crypto"
+    ],
+    "source": "impots.gouv.fr, notice du formulaire 2086 (revenus 2024)"
+  },
+  {
+    "chapterSlug": "fiscalite-crypto",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Prix total d'acquisition 3 000 €. Portefeuille de 6 000 € ; tu vends pour 1 200 € et la plateforme prend 12 € de frais. Quelle est la plus-value (les frais réduisent le prix de cession, mais pas dans le quotient) ?",
+    "payload": {
+      "unit": "€",
+      "hint": "Sans espace ni symbole ; décimale avec un point ou une virgule."
+    },
+    "solution": {
+      "value": 588,
+      "absTol": 0.01
+    },
+    "explanation": "Premier terme : 1 200 − 12 = 1 188 €. Quotient : 1 200 / 6 000 = 0,2, appliqué au prix d'acquisition : 3 000 × 0,2 = 600 €. Plus-value : 1 188 − 600 = 588 €.",
+    "concepts": [
+      "fiscalite-crypto"
+    ],
+    "source": "impots.gouv.fr, notice du formulaire 2086 (revenus 2024)"
+  },
+  {
+    "chapterSlug": "risques-crypto",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Un crypto-actif perd 75 %. Quel gain lui faut-il ensuite pour revenir à son prix de départ ?",
+    "payload": {
+      "unit": "%"
+    },
+    "solution": {
+      "value": 300,
+      "absTol": 0.5
+    },
+    "explanation": "Après −75 %, il reste 25 % de la valeur. Pour revenir à 100, il faut multiplier par 4, soit +300 %.",
+    "concepts": [
+      "volatilite"
+    ],
+    "source": "ESMA, AES, fiche MiCA investisseurs ; livre blanc de Bitcoin"
+  },
+  {
+    "chapterSlug": "risques-crypto",
+    "type": "NUMERIC",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un actif perd 20 %. Quel gain lui faut-il pour revenir à son prix de départ ?",
+    "payload": {
+      "unit": "%"
+    },
+    "solution": {
+      "value": 25,
+      "absTol": 0.1
+    },
+    "explanation": "Il reste 80 % ; 100 / 80 = 1,25, soit +25 %.",
+    "concepts": [
+      "volatilite"
+    ],
+    "source": "ESMA, AES, fiche MiCA investisseurs ; livre blanc de Bitcoin"
+  },
+  {
+    "chapterSlug": "risques-crypto",
+    "type": "ALGO_TRACE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Tu investis 2 000 € dans un jeton. Il chute de 60 %, puis remonte de 60 %.",
+    "payload": {
+      "cells": [
+        {
+          "id": "v1",
+          "label": "Valeur après la baisse (€)",
+          "kind": "number"
+        },
+        {
+          "id": "v2",
+          "label": "Valeur après la remontée (€)",
+          "kind": "number"
+        },
+        {
+          "id": "p",
+          "label": "Perte finale par rapport au départ (€)",
+          "kind": "number"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "v1",
+          "expected": 800,
+          "absTol": 0.01
+        },
+        {
+          "id": "v2",
+          "expected": 1280,
+          "absTol": 0.01
+        },
+        {
+          "id": "p",
+          "expected": 720,
+          "absTol": 0.01
+        }
+      ]
+    },
+    "explanation": "2 000 × 0,4 = 800 € ; 800 × 1,6 = 1 280 € ; perte : 720 €. Une hausse de même pourcentage qu'une baisse ne compense pas cette baisse.",
+    "concepts": [
+      "volatilite"
+    ],
+    "source": "ESMA, AES, fiche MiCA investisseurs ; livre blanc de Bitcoin"
+  },
+  {
+    "chapterSlug": "risques-crypto",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quels risques sont propres aux crypto-actifs, par rapport aux actions détenues sur un compte-titres ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La perte définitive des fonds si la phrase de récupération est perdue"
+        },
+        {
+          "id": "b",
+          "label": "L'absence de flux de revenus permettant de calculer une valeur fondamentale"
+        },
+        {
+          "id": "c",
+          "label": "La variation des prix"
+        },
+        {
+          "id": "d",
+          "label": "L'absence de fonds de garantie en cas de défaillance de la plateforme"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "d"
+      ]
+    },
+    "explanation": "La variation des prix concerne aussi les actions. Les trois autres risques sont spécifiques : garde des clés, absence de garantie, absence de valeur fondamentale.",
+    "concepts": [
+      "risque-plateforme",
+      "phrase-de-recuperation",
+      "volatilite"
+    ],
+    "source": "ESMA, AES, fiche MiCA investisseurs ; livre blanc de Bitcoin"
+  },
+  {
+    "chapterSlug": "risques-crypto",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Détenir dix crypto-actifs différents protège efficacement contre une chute générale du marché crypto.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "En période de panique, la plupart des crypto-actifs chutent ensemble : la diversification entre eux protège peu contre le risque de marché crypto.",
+    "concepts": [
+      "volatilite"
+    ],
+    "source": "ESMA, AES, fiche MiCA investisseurs ; livre blanc de Bitcoin"
+  },
+  {
+    "chapterSlug": "risques-crypto",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle règle de gestion du risque est la plus adaptée pour débuter en crypto ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Investir ses économies de précaution pour profiter d'un rendement plus élevé"
+        },
+        {
+          "id": "b",
+          "label": "Acheter les jetons qui ont le plus monté le mois dernier"
+        },
+        {
+          "id": "c",
+          "label": "Utiliser un effet de levier pour accélérer les gains"
+        },
+        {
+          "id": "d",
+          "label": "N'y placer que de l'argent dont la perte totale ne mettrait pas ta situation en danger"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "Le montant que l'on accepte de perdre se décide avant d'acheter. Épargne de précaution et effet de levier sont à exclure au départ.",
+    "concepts": [
+      "volatilite"
+    ],
+    "source": "ESMA, AES, fiche MiCA investisseurs ; livre blanc de Bitcoin"
+  },
+  {
+    "chapterSlug": "risques-crypto",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Qu'est-ce qu'un « rug pull » ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une baisse de 10 % du bitcoin"
+        },
+        {
+          "id": "b",
+          "label": "Un mécanisme de stabilisation des stablecoins"
+        },
+        {
+          "id": "c",
+          "label": "Une mise à jour du protocole Ethereum"
+        },
+        {
+          "id": "d",
+          "label": "Un projet dont les créateurs disparaissent avec les fonds levés"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "Le « rug pull » (tirer le tapis) désigne une fraude où les créateurs d'un jeton retirent la liquidité et s'enfuient avec l'argent des acheteurs.",
+    "concepts": [
+      "token"
+    ],
+    "source": "ESMA, AES, fiche MiCA investisseurs ; livre blanc de Bitcoin"
+  },
+  {
+    "chapterSlug": "risques-crypto",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Un ami te propose d'acheter un jeton avec un effet de levier de 10 sur une plateforme étrangère. Que se passe-t-il si le jeton baisse de 10 % ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La plateforme compense la perte"
+        },
+        {
+          "id": "b",
+          "label": "Tu perds 10 % de ta mise"
+        },
+        {
+          "id": "c",
+          "label": "Ta mise est entièrement perdue (liquidation)"
+        },
+        {
+          "id": "d",
+          "label": "Tu perds 1 % de ta mise"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "Avec un levier de 10, une baisse de 10 % de l'actif représente −100 % de ta mise : la position est liquidée.",
+    "concepts": [
+      "volatilite",
+      "risque-plateforme"
+    ],
+    "source": "ESMA, AES, fiche MiCA investisseurs ; livre blanc de Bitcoin"
+  }
+]

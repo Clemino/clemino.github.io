@@ -1,0 +1,1207 @@
+[
+  {
+    "chapterSlug": "criteres-decoupage",
+    "type": "MATCHING",
+    "difficulty": 1,
+    "points": 2,
+    "prompt": "Associez chaque élément d'un arbre de décision à ce à quoi il correspond, selon le cours.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "La racine"
+        },
+        {
+          "id": "l2",
+          "label": "Un nœud interne"
+        },
+        {
+          "id": "l3",
+          "label": "Une branche (arête)"
+        },
+        {
+          "id": "l4",
+          "label": "Une feuille"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "L'ensemble E de toutes les instances possibles"
+        },
+        {
+          "id": "r2",
+          "label": "Un sous-ensemble Eᴺ, étiqueté par un test"
+        },
+        {
+          "id": "r3",
+          "label": "Une valeur du test du nœud parent"
+        },
+        {
+          "id": "r4",
+          "label": "Une région R de E, étiquetée par une valeur de la cible C"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4"
+      }
+    },
+    "explanation": "La racine correspond à E tout entier ; chaque nœud interne à un sous-ensemble Eᴺ étiqueté par un test ; chaque branche à une valeur du test ; chaque feuille à une région R de E, étiquetée par une valeur de C (classe ou valeur réelle).",
+    "concepts": [
+      "arbre-de-decision",
+      "noeud-de-decision",
+      "feuille"
+    ],
+    "source": "DM_Slides_DT.pdf"
+  },
+  {
+    "chapterSlug": "criteres-decoupage",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Dans un problème de régression, les feuilles d'un arbre de décision portent une valeur réelle ; on parle alors d'arbre de régression.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Chaque feuille indique une valeur de C : une valeur réelle dans les problèmes de régression (arbre de régression) ou une classe dans les problèmes de classification (arbre de classification).",
+    "concepts": [
+      "feuille",
+      "regression",
+      "classification"
+    ],
+    "source": "DM_Slides_DT.pdf"
+  },
+  {
+    "chapterSlug": "criteres-decoupage",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un nœud contient 20 exemples, tous de la même classe. Quelle est son entropie ?",
+    "payload": {
+      "placeholder": "ex. 0",
+      "hint": "Que vaut l'entropie d'un ensemble pur ?"
+    },
+    "solution": {
+      "value": 0,
+      "absTol": 0.001
+    },
+    "explanation": "Si tous les éléments appartiennent à la même classe, p_k = 1 pour cette classe et Ent = −1·log₂ 1 = 0. L'entropie est nulle pour un ensemble pur.",
+    "concepts": [
+      "entropie",
+      "critere-de-decoupage"
+    ],
+    "source": "DM_Slides_DT.pdf"
+  },
+  {
+    "chapterSlug": "criteres-decoupage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une feuille d'un arbre de classification contient 95 % d'exemples de la classe c₁ et 5 % de c₂. Que peut-on en dire, selon le cours ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La classe prédite est c₁ (classe majoritaire), et la proportion 95 % indique une prévision fiable"
+        },
+        {
+          "id": "b",
+          "label": "La feuille est invalide : une feuille doit être parfaitement pure"
+        },
+        {
+          "id": "c",
+          "label": "La classe prédite est c₂, car c₂ est plus rare donc plus informative"
+        },
+        {
+          "id": "d",
+          "label": "L'arbre doit obligatoirement être ré-élagué à cette feuille"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Plusieurs classes peuvent coexister dans une feuille. La classe prédite est la classe majoritaire (ici c₁), et la proportion de cette classe mesure la fiabilité : une décision à 95 % est bien plus confortable qu'une décision à 51 %.",
+    "concepts": [
+      "feuille",
+      "classification",
+      "arbre-de-decision"
+    ],
+    "source": "ING2_GI_ML_Tree_SLIDES.pdf"
+  },
+  {
+    "chapterSlug": "criteres-decoupage",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un nœud contient 40 exemples : 10 de classe C1 et 30 de classe C2. Calculez l'entropie de ce nœud (logarithme en base 2). Arrondissez au millième.",
+    "payload": {
+      "placeholder": "ex. 0.811",
+      "hint": "Ent = − Σ pᵢ log₂ pᵢ avec p₁ = 10/40 et p₂ = 30/40."
+    },
+    "solution": {
+      "value": 0.811,
+      "absTol": 0.01
+    },
+    "explanation": "p₁ = 10/40 = 0,25 et p₂ = 30/40 = 0,75. Ent = −0,25·log₂(0,25) − 0,75·log₂(0,75) = 0,5 + 0,311 = 0,811.",
+    "concepts": [
+      "entropie",
+      "critere-de-decoupage"
+    ],
+    "source": "DM_Slides_DT.pdf"
+  },
+  {
+    "chapterSlug": "criteres-decoupage",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un nœud contient 40 exemples : 10 de classe C1 et 30 de classe C2. Calculez l'indice de Gini de ce nœud. Arrondissez au millième.",
+    "payload": {
+      "placeholder": "ex. 0.375",
+      "hint": "Gini = 1 − Σ pᵢ² avec p₁ = 10/40 et p₂ = 30/40."
+    },
+    "solution": {
+      "value": 0.375,
+      "absTol": 0.005
+    },
+    "explanation": "p₁ = 0,25 et p₂ = 0,75. Gini = 1 − (0,25)² − (0,75)² = 1 − 0,0625 − 0,5625 = 0,375.",
+    "concepts": [
+      "indice-de-gini",
+      "critere-de-decoupage"
+    ],
+    "source": "ING2_GI_ML_Tree_SLIDES.pdf"
+  },
+  {
+    "chapterSlug": "criteres-decoupage",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un problème de classification comporte 4 classes, chacune représentée par le même nombre d'exemples. Quelle est l'entropie d'un tel nœud (logarithme en base 2) ?",
+    "payload": {
+      "placeholder": "ex. 2",
+      "hint": "Pour n classes équiréparties, Ent = log₂ n."
+    },
+    "solution": {
+      "value": 2,
+      "absTol": 0.001
+    },
+    "explanation": "Pour n classes équiréparties, chaque pᵢ = 1/n et Ent = log₂ n. Avec n = 4 classes, Ent = log₂ 4 = 2. C'est la valeur maximale de l'entropie pour 4 classes.",
+    "concepts": [
+      "entropie",
+      "critere-de-decoupage"
+    ],
+    "source": "DM_Slides_DT.pdf"
+  },
+  {
+    "chapterSlug": "criteres-decoupage",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Sur le jeu PlayTennis (14 exemples, Ent(D) = 0,940), l'attribut Humidity partage D en deux sous-ensembles : « high » (3 Yes, 4 No) et « normal » (6 Yes, 1 No), chacun de taille 7. Calculez le gain d'information de Humidity. Arrondissez au centième.",
+    "payload": {
+      "placeholder": "ex. 0.15",
+      "hint": "Calculez Ent(high) et Ent(normal), puis IG = 0,940 − Σ (|Dⱼ|/|D|)·Ent(Dⱼ)."
+    },
+    "solution": {
+      "value": 0.15,
+      "absTol": 0.02
+    },
+    "explanation": "Ent(high) = −(3/7)log₂(3/7) − (4/7)log₂(4/7) ≈ 0,985 ; Ent(normal) = −(6/7)log₂(6/7) − (1/7)log₂(1/7) ≈ 0,592. Entropie après partitionnement = (7/14)·0,985 + (7/14)·0,592 ≈ 0,79. IG_humidity = 0,94 − 0,79 = 0,15.",
+    "concepts": [
+      "entropie",
+      "gain-d-information",
+      "critere-de-decoupage"
+    ],
+    "source": "DM_Slides_DT.pdf"
+  },
+  {
+    "chapterSlug": "criteres-decoupage",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un nœud contient 12 exemples : 3 de classe C1 et 9 de classe C2. Calculez l'indice de Gini de ce nœud. Arrondissez au millième.",
+    "payload": {
+      "placeholder": "ex. 0.375",
+      "hint": "Gini = 1 − Σ pᵢ² avec p₁ = 3/12 et p₂ = 9/12."
+    },
+    "solution": {
+      "value": 0.375,
+      "absTol": 0.005
+    },
+    "explanation": "p₁ = 3/12 = 0,25 et p₂ = 9/12 = 0,75. Gini = 1 − (0,25)² − (0,75)² = 1 − 0,0625 − 0,5625 = 0,375.",
+    "concepts": [
+      "indice-de-gini",
+      "critere-de-decoupage"
+    ],
+    "source": "ING2_GI_ML_Tree_SLIDES.pdf"
+  },
+  {
+    "chapterSlug": "construction-elagage",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Tout algorithme de construction d'un arbre de décision se ramène à deux questions : un nœud est-il terminal ? et quel attribut choisir pour le partager ?",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Le cours résume tout algorithme de construction à ces deux décisions. Les familles d'algorithmes (CART, ID3/C4.5/C5.0) se distinguent précisément par leur façon d'y répondre.",
+    "concepts": [
+      "construction-d-arbre",
+      "critere-d-arret"
+    ],
+    "source": "DM_Slides_DT.pdf"
+  },
+  {
+    "chapterSlug": "construction-elagage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans l'algorithme C4.5, que devient un nœud lorsqu'aucun attribut n'est disponible (A = ∅) sans que son ensemble soit pur ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une feuille étiquetée par la classe la plus fréquente de l'ensemble"
+        },
+        {
+          "id": "b",
+          "label": "Un nœud interne supplémentaire choisi au hasard"
+        },
+        {
+          "id": "c",
+          "label": "Une feuille étiquetée par la classe la moins fréquente"
+        },
+        {
+          "id": "d",
+          "label": "Le nœud est supprimé de l'arbre"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Dans C4.5 : un nœud devient une feuille dès que son ensemble est pur ; si plus aucun attribut n'est disponible (A = ∅) sans pureté, le nœud devient une feuille étiquetée par la classe la plus fréquente c_M.",
+    "concepts": [
+      "construction-d-arbre",
+      "critere-d-arret"
+    ],
+    "source": "DM_Slides_DT.pdf"
+  },
+  {
+    "chapterSlug": "construction-elagage",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Dans l'algorithme C4.5, l'attribut choisi à un nœud reste disponible pour les nœuds situés plus bas dans l'arbre.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. L'attribut choisi à un nœud est retiré de l'ensemble des attributs disponibles dans les sous-arbres : C4.5 appelle Decision-Tree(Dⱼ, A − {A_g}, Tⱼ).",
+    "concepts": [
+      "construction-d-arbre"
+    ],
+    "source": "DM_Slides_DT.pdf"
+  },
+  {
+    "chapterSlug": "construction-elagage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Sur quels hyperparamètres repose principalement le critère d'arrêt d'un arbre de décision ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La profondeur maximale de l'arbre et la taille minimale d'un nœud"
+        },
+        {
+          "id": "b",
+          "label": "Le taux d'apprentissage et le nombre d'époques"
+        },
+        {
+          "id": "c",
+          "label": "Le nombre de couches cachées et la fonction d'activation"
+        },
+        {
+          "id": "d",
+          "label": "La température initiale et le facteur de refroidissement"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le critère d'arrêt est défini par l'un et/ou l'autre de deux hyperparamètres : la profondeur maximale de l'arbre et la taille minimale d'un nœud (on peut aussi arrêter sur l'homogénéité totale du nœud).",
+    "concepts": [
+      "critere-d-arret",
+      "construction-d-arbre"
+    ],
+    "source": "DM_Slides_DT.pdf"
+  },
+  {
+    "chapterSlug": "construction-elagage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une variable explicative n'est pas renseignée pour une nouvelle instance, et cette variable intervient à un nœud de l'arbre. Comment l'algorithme CART gère-t-il ce cas ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Par une variable de substitution (surrogate split) : un attribut produisant le même partage prend le relais"
+        },
+        {
+          "id": "b",
+          "label": "En supprimant définitivement la nouvelle instance"
+        },
+        {
+          "id": "c",
+          "label": "En remplaçant la valeur manquante par zéro systématiquement"
+        },
+        {
+          "id": "d",
+          "label": "En reconstruisant l'arbre entier sans la variable manquante"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Une valeur manquante sur une variable utilisée dans l'arbre empêche en principe la prédiction. CART y répond par des variables de substitution (surrogate splits) : un attribut produisant le même partage prend le relais de la variable manquante.",
+    "concepts": [
+      "variable-de-substitution",
+      "algorithme-cart"
+    ],
+    "source": "ING2_GI_ML_Tree_SLIDES.pdf"
+  },
+  {
+    "chapterSlug": "construction-elagage",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un arbre CART partage un nœud de 12 exemples (8 de classe C1, 4 de classe C2) en deux sous-ensembles : à gauche 6 exemples tous de classe C1, à droite 6 exemples (2 C1, 4 C2). Calculez le gain de l'indice de Gini de ce partage. Arrondissez au millième.",
+    "payload": {
+      "placeholder": "ex. 0.222",
+      "hint": "Gain = Gini(parent) − [(n_L/n)·Gini(gauche) + (n_R/n)·Gini(droite)]."
+    },
+    "solution": {
+      "value": 0.222,
+      "absTol": 0.01
+    },
+    "explanation": "Gini(parent) avec 8 C1 et 4 C2 : 1 − (8/12)² − (4/12)² = 1 − 4/9 − 1/9 = 4/9 ≈ 0,444. Sous-ensemble gauche pur : Gini = 0. Sous-ensemble droit (2 C1, 4 C2) : Gini = 1 − (2/6)² − (4/6)² = 4/9 ≈ 0,444. Gain = 0,444 − [(6/12)·0 + (6/12)·0,444] = 0,444 − 0,222 = 0,222.",
+    "concepts": [
+      "indice-de-gini",
+      "gain-d-information",
+      "algorithme-cart"
+    ],
+    "source": "ING2_GI_ML_Tree_SLIDES.pdf"
+  },
+  {
+    "chapterSlug": "construction-elagage",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "L'arbre binaire CART ci-dessous a été appris pour prédire si un client est « Satisfait » ou « Insatisfait ». Lisez-le et répondez aux sous-questions.",
+    "payload": {
+      "figure": {
+        "kind": "decision-tree",
+        "root": {
+          "type": "attribute",
+          "label": "Emplacement = banlieue ou ville",
+          "branches": [
+            {
+              "edgeLabel": "Vrai",
+              "child": {
+                "type": "attribute",
+                "label": "Revenu = élevé",
+                "branches": [
+                  {
+                    "edgeLabel": "Vrai",
+                    "child": {
+                      "type": "leaf",
+                      "label": "Insatisfait"
+                    }
+                  },
+                  {
+                    "edgeLabel": "Faux",
+                    "child": {
+                      "type": "leaf",
+                      "label": "Satisfait"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "edgeLabel": "Faux",
+              "child": {
+                "type": "leaf",
+                "label": "Satisfait"
+              }
+            }
+          ]
+        },
+        "caption": "Arbre CART : prédiction de la satisfaction client"
+      },
+      "caption": "Lecture d'un arbre binaire CART",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quelle classe l'arbre prédit-il pour un client dont Emplacement = ville et Revenu = élevé ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Insatisfait"
+              },
+              {
+                "id": "b",
+                "label": "Satisfait"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quelle classe l'arbre prédit-il pour un client dont Emplacement = rural ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Satisfait"
+              },
+              {
+                "id": "b",
+                "label": "Insatisfait"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la profondeur de cet arbre (nombre de tests à traverser au maximum, de la racine à la feuille la plus basse) ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Comptez les nœuds-tests sur le plus long chemin racine → feuille."
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": 2,
+            "absTol": 0.001
+          }
+        }
+      ]
+    },
+    "explanation": "Client (ville, revenu élevé) : Emplacement = banlieue ou ville → Vrai, puis Revenu = élevé → Vrai → feuille Insatisfait. Client (rural) : Emplacement = banlieue ou ville → Faux → feuille Satisfait directement. Le plus long chemin traverse 2 nœuds-tests (Emplacement puis Revenu) : la profondeur de l'arbre est 2.",
+    "concepts": [
+      "arbre-de-decision",
+      "algorithme-cart",
+      "feuille"
+    ],
+    "source": "ING2_GI_ML_Tree_SLIDES.pdf"
+  },
+  {
+    "chapterSlug": "construction-elagage",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un nœud de 12 exemples (6 de classe C1, 6 de classe C2, entropie = 1) est partagé en deux sous-ensembles : à gauche 5 exemples (4 C1, 1 C2), à droite 7 exemples (2 C1, 5 C2). Calculez le gain d'entropie de ce partage. Arrondissez au centième.",
+    "payload": {
+      "placeholder": "ex. 0.20",
+      "hint": "Gain = Ent(parent) − [(n_L/n)·Ent(gauche) + (n_R/n)·Ent(droite)]."
+    },
+    "solution": {
+      "value": 0.2,
+      "absTol": 0.03
+    },
+    "explanation": "Ent(gauche) = −(4/5)log₂(4/5) − (1/5)log₂(1/5) ≈ 0,722 ; Ent(droite) = −(2/7)log₂(2/7) − (5/7)log₂(5/7) ≈ 0,863. Entropie après = (5/12)·0,722 + (7/12)·0,863 ≈ 0,804. Gain = 1 − 0,804 ≈ 0,196 ≈ 0,20.",
+    "concepts": [
+      "entropie",
+      "gain-d-information",
+      "construction-d-arbre"
+    ],
+    "source": "DM_Slides_DT.pdf"
+  },
+  {
+    "chapterSlug": "surapprentissage-arbres",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi les arbres de décision sont-ils particulièrement exposés au sur-apprentissage ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Laissés sans contrainte, ils créent des branches isolant un ou deux exemples souvent bruités : ils mémorisent au lieu de généraliser"
+        },
+        {
+          "id": "b",
+          "label": "Parce qu'ils utilisent l'indice de Gini plutôt que l'entropie"
+        },
+        {
+          "id": "c",
+          "label": "Parce qu'ils ne peuvent traiter que des attributs numériques"
+        },
+        {
+          "id": "d",
+          "label": "Parce qu'ils sont entraînés par descente de gradient"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Un algorithme comme C4.5 ou CART, laissé sans contrainte, décompose les nœuds jusqu'à des feuilles pures, créant des branches qui n'isolent qu'un ou deux exemples — souvent bruités ou atypiques. L'arbre mémorise ces cas particuliers au lieu de dégager des régularités.",
+    "concepts": [
+      "sur-apprentissage",
+      "arbre-de-decision"
+    ],
+    "source": "ING2_GI_ML_Tree_SLIDES.pdf"
+  },
+  {
+    "chapterSlug": "surapprentissage-arbres",
+    "type": "TRUE_FALSE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Un arbre de décision profond et complexe est nécessairement en sur-apprentissage.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Un arbre complexe n'est pas toujours en sur-apprentissage : pour approcher une frontière oblique par des frontières perpendiculaires aux axes (« en escalier »), un arbre doit empiler beaucoup de nœuds. Seul l'écart entre erreur d'ajustement et erreur de prévision — et non la taille de l'arbre — permet de conclure.",
+    "concepts": [
+      "sur-apprentissage",
+      "arbre-de-decision",
+      "generalisation"
+    ],
+    "source": "ING2_GI_ML_Tree_TD_Corr.pdf"
+  },
+  {
+    "chapterSlug": "surapprentissage-arbres",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ces deux courbes représentent l'erreur d'un arbre de décision en fonction de sa profondeur, mesurée sur l'ensemble d'apprentissage et sur l'ensemble de test. Lisez-les et répondez aux sous-questions.",
+    "payload": {
+      "figure": {
+        "kind": "training-curve",
+        "series": [
+          {
+            "label": "Erreur d'ajustement (apprentissage)",
+            "points": [
+              {
+                "x": 1,
+                "y": 0.3
+              },
+              {
+                "x": 2,
+                "y": 0.18
+              },
+              {
+                "x": 3,
+                "y": 0.1
+              },
+              {
+                "x": 4,
+                "y": 0.04
+              },
+              {
+                "x": 5,
+                "y": 0
+              }
+            ],
+            "tone": "info"
+          },
+          {
+            "label": "Erreur de prévision (test)",
+            "points": [
+              {
+                "x": 1,
+                "y": 0.33
+              },
+              {
+                "x": 2,
+                "y": 0.22
+              },
+              {
+                "x": 3,
+                "y": 0.19
+              },
+              {
+                "x": 4,
+                "y": 0.24
+              },
+              {
+                "x": 5,
+                "y": 0.31
+              }
+            ],
+            "tone": "error"
+          }
+        ],
+        "xLabel": "Profondeur de l'arbre",
+        "yLabel": "Erreur",
+        "caption": "Erreur d'apprentissage et erreur de test selon la profondeur"
+      },
+      "caption": "Diagnostic du sur-apprentissage par les courbes d'erreur",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "À quelle profondeur l'erreur de prévision (test) est-elle la plus faible ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Repérez le minimum de la courbe d'erreur de test."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Que se passe-t-il lorsque la profondeur dépasse cette valeur optimale ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "L'erreur d'ajustement continue de baisser, mais l'erreur de prévision remonte : c'est le sur-apprentissage"
+              },
+              {
+                "id": "b",
+                "label": "Les deux erreurs baissent ensemble jusqu'à zéro"
+              },
+              {
+                "id": "c",
+                "label": "L'erreur d'ajustement remonte tandis que l'erreur de prévision baisse"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "À la profondeur 5, l'arbre a une erreur d'ajustement nulle mais une erreur de prévision élevée : il est en sur-apprentissage.",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 3,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": true
+          }
+        }
+      ]
+    },
+    "explanation": "L'erreur de prévision est minimale à la profondeur 3 (0,19). Au-delà, l'erreur d'ajustement continue de baisser (jusqu'à 0 en profondeur 5) mais l'erreur de prévision remonte (0,24 puis 0,31) : c'est exactement le sur-apprentissage, reconnu à l'écart croissant entre les deux courbes. À la profondeur 5, l'erreur d'ajustement nulle accompagnée d'une erreur de prévision élevée (0,31) en est la signature.",
+    "concepts": [
+      "sur-apprentissage",
+      "generalisation",
+      "jeu-de-test"
+    ],
+    "source": "ING2_GI_ML_Tree_SLIDES.pdf"
+  },
+  {
+    "chapterSlug": "bagging-forets",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi ne soumet-on pas simplement ntree fois le même ensemble D aux arbres d'une forêt ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "On obtiendrait des arbres identiques — ou presque — donc une agrégation sans intérêt"
+        },
+        {
+          "id": "b",
+          "label": "Le calcul prendrait trop de mémoire"
+        },
+        {
+          "id": "c",
+          "label": "L'ensemble D ne peut être lu qu'une seule fois"
+        },
+        {
+          "id": "d",
+          "label": "Les arbres ne savent pas traiter deux fois le même exemple"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Soumettre ntree fois le même ensemble D produirait des arbres identiques — ou presque. La bonne réponse est le bootstrapping : chaque échantillon bootstrap est une variante de D, et c'est cette diversité qui produit des arbres différents.",
+    "concepts": [
+      "echantillon-bootstrap",
+      "bagging",
+      "foret-aleatoire"
+    ],
+    "source": "Slides_RF_DM.pdf"
+  },
+  {
+    "chapterSlug": "bagging-forets",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi tirer les variables au hasard à chaque nœud améliore-t-il la forêt ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Sans cela, tous les arbres choisiraient les mêmes attributs forts près de la racine et se ressembleraient : leurs erreurs seraient corrélées"
+        },
+        {
+          "id": "b",
+          "label": "Cela accélère le calcul de l'indice de Gini"
+        },
+        {
+          "id": "c",
+          "label": "Cela garantit que chaque arbre est parfaitement pur"
+        },
+        {
+          "id": "d",
+          "label": "Cela permet d'éliminer les variables inutiles avant l'apprentissage"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Sans la sélection aléatoire de variables, tous les arbres choisiraient quasiment les mêmes attributs forts près de la racine et se ressembleraient : leurs erreurs seraient corrélées et l'agrégation n'apporterait presque rien. Restreindre le choix à mtry variables tirées au hasard force la diversité et décorrèle les arbres.",
+    "concepts": [
+      "selection-aleatoire-de-variables",
+      "foret-aleatoire",
+      "agregation"
+    ],
+    "source": "ING2_GI_ML_Tree_SLIDES.pdf"
+  },
+  {
+    "chapterSlug": "bagging-forets",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un problème de classification comporte p = 49 variables explicatives. En appliquant la recommandation du cours mtry = √p, quelle valeur de mtry obtient-on ?",
+    "payload": {
+      "placeholder": "ex. 7",
+      "hint": "mtry = √p en classification."
+    },
+    "solution": {
+      "value": 7,
+      "absTol": 0.001
+    },
+    "explanation": "En classification, le cours recommande d'essayer d'abord mtry = √p. Avec p = 49, mtry = √49 = 7. Tirer environ √p variables à chaque nœud décorrèle les arbres.",
+    "concepts": [
+      "selection-aleatoire-de-variables",
+      "foret-aleatoire"
+    ],
+    "source": "ING2_GI_ML_Tree_SLIDES.pdf"
+  },
+  {
+    "chapterSlug": "bagging-forets",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Dans un échantillon bootstrap (tirage avec remise de n éléments parmi n), une part importante des observations de la base d'apprentissage — environ un tiers — n'est pas tirée.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Le tirage avec remise fait qu'un même exemple peut être tiré plusieurs fois, tandis que d'autres ne sont pas tirés du tout. En pratique, environ un tiers des observations (plus précisément près de 36,8 %) ne figure pas dans un échantillon bootstrap donné — ce sont elles qui forment l'échantillon out-of-bag.",
+    "concepts": [
+      "echantillon-bootstrap",
+      "echantillon-out-of-bag",
+      "bagging"
+    ],
+    "source": "Slides_RF_DM.pdf"
+  },
+  {
+    "chapterSlug": "bagging-forets",
+    "type": "NUMERIC",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une forêt aléatoire de 9 arbres prédit la classe d'un nouvel individu. 6 arbres votent « Survécu » et 3 votent « Décédé ». Quelle classe la forêt prédit-elle, et combien de votes recueille-t-elle ? Donnez le nombre de votes de la classe finale.",
+    "payload": {
+      "placeholder": "ex. 6",
+      "hint": "La prédiction finale est la classe majoritaire ; comptez ses votes."
+    },
+    "solution": {
+      "value": 6,
+      "absTol": 0.001
+    },
+    "explanation": "La prédiction de la forêt est le vote majoritaire des 9 arbres : « Survécu » l'emporte avec 6 votes contre 3. La classe finale « Survécu » recueille 6 votes sur 9 (≈ 67 %), proportion qui mesure la fiabilité.",
+    "concepts": [
+      "agregation",
+      "foret-aleatoire"
+    ],
+    "source": "Slides_RF_DM.pdf"
+  },
+  {
+    "chapterSlug": "oob-importance",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pour un exemple e donné, comment est défini le classifieur Out-Of-Bag (OOB) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le vote des seuls arbres dont l'échantillon bootstrap ne contient pas e"
+        },
+        {
+          "id": "b",
+          "label": "Le vote de tous les arbres de la forêt, sans exception"
+        },
+        {
+          "id": "c",
+          "label": "Le vote du seul arbre le plus profond de la forêt"
+        },
+        {
+          "id": "d",
+          "label": "La moyenne des entropies des feuilles atteintes par e"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Pour chaque exemple e, on ne retient que les arbres construits sur un échantillon bootstrap ne contenant pas e ; le vote de ces arbres définit le classifieur OOB. Sa prédiction porte donc sur une donnée non vue par les arbres concernés — une évaluation honnête.",
+    "concepts": [
+      "echantillon-out-of-bag",
+      "erreur-oob"
+    ],
+    "source": "Slides_RF_DM.pdf"
+  },
+  {
+    "chapterSlug": "oob-importance",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quel avantage l'erreur OOB présente-t-elle par rapport à la validation croisée ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Elle est obtenue sans surcoût, en parallèle de la construction de la forêt, là où la validation croisée est coûteuse en temps de calcul"
+        },
+        {
+          "id": "b",
+          "label": "Elle est toujours exactement égale à zéro"
+        },
+        {
+          "id": "c",
+          "label": "Elle ne nécessite aucune base d'apprentissage"
+        },
+        {
+          "id": "d",
+          "label": "Elle ne peut être calculée que pour les problèmes de régression"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La validation croisée, technique habituelle pour estimer l'erreur de prévision, est coûteuse en temps de calcul. Avec les forêts aléatoires, cette technique est directement intégrée dans l'algorithme : l'erreur OOB est une estimation de la performance obtenue sans surcoût.",
+    "concepts": [
+      "erreur-oob",
+      "echantillon-out-of-bag"
+    ],
+    "source": "ING2_GI_ML_Tree_SLIDES.pdf"
+  },
+  {
+    "chapterSlug": "oob-importance",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "L'erreur OOB d'une forêt et son erreur de test (sur un jeu de test séparé) sont éloignées l'une de l'autre. Comment le cours interprète-t-il ce constat ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "L'ensemble d'apprentissage et l'ensemble de test ne sont pas issus de la même distribution"
+        },
+        {
+          "id": "b",
+          "label": "La forêt ne contient pas assez d'arbres"
+        },
+        {
+          "id": "c",
+          "label": "L'erreur OOB est toujours fausse et doit être ignorée"
+        },
+        {
+          "id": "d",
+          "label": "C'est la preuve de l'absence totale de sur-ajustement"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "L'erreur de test et l'erreur OOB n'ont aucune raison d'être égales, mais doivent être proches. Des erreurs éloignées signifient que l'ensemble d'apprentissage et l'ensemble de test ne sont pas issus de la même distribution. Des erreurs proches attestent au contraire de l'absence de sur-ajustement.",
+    "concepts": [
+      "erreur-oob",
+      "jeu-de-test",
+      "sur-apprentissage"
+    ],
+    "source": "Slides_RF_DM.pdf"
+  },
+  {
+    "chapterSlug": "oob-importance",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Après permutation aléatoire des valeurs d'un attribut, une forte chute de la précision OOB révèle un attribut important.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Permuter au hasard les valeurs d'un attribut détruit le lien entre cet attribut et la classe. Si la précision chute fortement, c'est que l'attribut portait beaucoup d'information : il est important. Si la précision ne bouge presque pas, l'attribut était peu utile.",
+    "concepts": [
+      "importance-des-variables",
+      "erreur-oob"
+    ],
+    "source": "ING2_GI_ML_Tree_SLIDES.pdf"
+  },
+  {
+    "chapterSlug": "oob-importance",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pour mesurer l'importance d'une variable A, on estime la précision OOB d'un arbre à 0,86. Après permutation aléatoire des valeurs de A, la précision OOB tombe à 0,71. Quelle est la diminution de précision due à la permutation de A ?",
+    "payload": {
+      "placeholder": "ex. 0.15",
+      "hint": "Diminution = précision avant permutation − précision après permutation."
+    },
+    "solution": {
+      "value": 0.15,
+      "absTol": 0.005
+    },
+    "explanation": "Diminution de précision = 0,86 − 0,71 = 0,15. Cette diminution mesure l'importance de A : une chute nette indique que A portait beaucoup d'information — c'est une variable importante. (La mesure finale est la moyenne de ces diminutions sur tous les arbres.)",
+    "concepts": [
+      "importance-des-variables",
+      "erreur-oob"
+    ],
+    "source": "Slides_RF_DM.pdf"
+  },
+  {
+    "chapterSlug": "oob-importance",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Ce graphique d'importance par permutation classe les variables d'une forêt aléatoire selon la diminution moyenne de précision OOB qu'entraîne le brouillage de leurs valeurs. Lisez-le et répondez aux sous-questions.",
+    "payload": {
+      "figure": {
+        "kind": "data-table",
+        "columns": [
+          "Variable",
+          "Diminution moyenne de précision OOB"
+        ],
+        "rows": [
+          [
+            "Sex",
+            "0,142"
+          ],
+          [
+            "Pclass",
+            "0,088"
+          ],
+          [
+            "FareGroup",
+            "0,051"
+          ],
+          [
+            "AgeGroup",
+            "0,034"
+          ],
+          [
+            "Family",
+            "0,012"
+          ],
+          [
+            "Cabin2",
+            "0,004"
+          ]
+        ],
+        "caption": "Importance par permutation des variables (jeu Titanic)"
+      },
+      "caption": "Classement des variables par importance",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quelle est la variable la plus discriminante de cette forêt ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Sex"
+              },
+              {
+                "id": "b",
+                "label": "Cabin2"
+              },
+              {
+                "id": "c",
+                "label": "Family"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quelle variable a le moins d'impact sur la classification ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Cabin2"
+              },
+              {
+                "id": "b",
+                "label": "Pclass"
+              },
+              {
+                "id": "c",
+                "label": "Sex"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "Une diminution de précision quasi nulle (comme pour Cabin2) signale une variable peu influente.",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": true
+          }
+        }
+      ]
+    },
+    "explanation": "La variable la plus discriminante est celle dont le brouillage dégrade le plus la précision OOB : ici Sex (0,142). À l'inverse, Cabin2 (0,004) entraîne une diminution quasi nulle : c'est une variable peu influente. Une précision OOB quasi inchangée après permutation révèle bien un attribut peu utile.",
+    "concepts": [
+      "importance-des-variables",
+      "erreur-oob"
+    ],
+    "source": "TD_RF_Exo3_2.r"
+  },
+  {
+    "chapterSlug": "oob-importance",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "La matrice de confusion OOB d'une forêt aléatoire, sur 160 individus, est CONF = [[72, 8], [12, 68]] (lignes : classe réelle ; colonnes : classe prédite). Quelle est l'erreur OOB ? Donnez une valeur décimale.",
+    "payload": {
+      "placeholder": "ex. 0.125",
+      "hint": "erreur OOB = (hors-diagonale) / total = (8 + 12) / 160."
+    },
+    "solution": {
+      "value": 0.125,
+      "absTol": 0.005
+    },
+    "explanation": "Bien classés (diagonale) = 72 + 68 = 140. Mal classés (hors-diagonale) = 8 + 12 = 20. Total = 160. erreur OOB = 20/160 = 0,125. C'est la proportion d'observations mal classées par le classifieur OOB.",
+    "concepts": [
+      "erreur-oob",
+      "echantillon-out-of-bag"
+    ],
+    "source": "Slides_RF_DM.pdf"
+  }
+]

@@ -1,0 +1,180 @@
+---
+title: "Probabilités conditionnelles et théorème de Bayes"
+slug: probabilites-bayes
+order: 1
+estimatedReadMin: 16
+concepts: [classifieur-bayesien, apprentissage-supervise, probabilite-conditionnelle, theoreme-de-bayes, classification]
+source: "Slides_Bayes.pdf"
+---
+
+## De quoi s'agit-il ? Le classifieur bayésien
+
+Le module précédent a présenté l'arbre de décision, une méthode d'apprentissage
+supervisé fondée sur un découpage de l'espace des instances. Ce module aborde
+une **autre méthode de classification** : le **classifieur bayésien**. Le cours
+en donne d'emblée les trois traits caractéristiques.
+
+- C'est une méthode d'**apprentissage supervisé** : comme l'arbre de décision,
+  elle apprend à partir d'un ensemble d'exemples **étiquetés** (dont la classe
+  est connue), afin de pouvoir classer de nouvelles instances.
+- Elle adopte un **point de vue probabiliste** : le classifieur procède par
+  **estimation de la probabilité qu'une instance donnée appartienne à une classe
+  `C`**. Là où l'arbre fait « descendre » une instance jusqu'à une feuille, le
+  classifieur bayésien **calcule, pour chaque classe possible, une probabilité**.
+- Il est qualifié de **naïf** car **il suppose que les variables (attributs)
+  sont indépendantes**. Cette hypothèse, examinée en détail à la section
+  suivante, est ce qui rend les calculs réalisables — d'où le nom complet de
+  **classifieur bayésien naïf**.
+
+Ce premier point est essentiel pour comprendre la suite : classer une instance,
+pour ce modèle, c'est **comparer des probabilités**. Pour mener ces calculs, il
+faut deux outils de la théorie des probabilités — la **probabilité
+conditionnelle** et le **théorème de Bayes** — que cette section met en place.
+
+> **À retenir** : le **classifieur bayésien** est une méthode d'**apprentissage
+> supervisé** qui adopte un **point de vue probabiliste** : elle **estime la
+> probabilité qu'une instance appartienne à une classe `C`**. Il est dit
+> **naïf** parce qu'il **suppose les attributs indépendants**.
+
+## La probabilité conditionnelle
+
+Le raisonnement probabiliste repose sur la notion de **probabilité
+conditionnelle** : la probabilité d'un événement **lorsqu'on sait qu'un autre
+événement est réalisé**. Le cours adopte la notation suivante, qu'il faut bien
+fixer car elle est utilisée dans toutes les formules du module :
+
+> **Notation.** `Pr(X/Y)` désigne la **probabilité de `X` sachant `Y`** —
+> c'est-à-dire la probabilité que l'événement `X` se produise **étant donné que**
+> l'événement `Y` est réalisé.
+
+Le trait « `/` » se lit donc « **sachant** ». L'événement écrit **à droite** du
+trait est celui que l'on **suppose connu** (la condition, l'information dont on
+dispose) ; l'événement écrit **à gauche** est celui dont on **cherche la
+probabilité** une fois cette information prise en compte.
+
+Une probabilité conditionnelle réévalue donc une probabilité **à la lumière
+d'une information**. Connaître `Y` peut changer la chance que l'on accorde à `X` :
+`Pr(X/Y)` n'est en général **pas égale** à `Pr(X)`. C'est exactement ce dont le
+classifieur a besoin — il veut savoir quelle est la probabilité d'une classe
+**une fois connues les valeurs des attributs** d'une instance.
+
+L'ordre des deux événements compte : `Pr(X/Y)` et `Pr(Y/X)` sont **deux
+quantités différentes**. Le théorème de Bayes, présenté ci-dessous, est
+précisément l'outil qui **relie l'une à l'autre**.
+
+> **À retenir** : `Pr(X/Y)` est la **probabilité de `X` sachant `Y`** — la
+> probabilité de `X` **quand on sait que `Y` est réalisé**. L'événement **à
+> droite** du trait est la **condition** (l'information connue), celui **à
+> gauche** est l'**inconnu** cherché. En général `Pr(X/Y) ≠ Pr(Y/X)`.
+
+## La première formule de Bayes
+
+Le cours énonce ce qu'il appelle la **première formule de Bayes** — le
+**théorème de Bayes**. C'est la pierre angulaire de tout le module.
+
+> **Théorème de Bayes.** Étant donné deux événements `A` et `B`, nous avons :
+>
+> `Pr(A/B) = Pr(B/A) · Pr(A) / Pr(B)`
+>
+> où `Pr(X/Y)` est la probabilité de `X` sachant `Y`.
+
+Cette formule mérite d'être lue lentement. Elle exprime la probabilité
+conditionnelle `Pr(A/B)` — `A` sachant `B` — à l'aide de **trois autres
+quantités** :
+
+- `Pr(B/A)` : la probabilité conditionnelle **dans l'autre sens**, `B` sachant
+  `A` ;
+- `Pr(A)` : la probabilité de `A` **seul**, sans aucune condition ;
+- `Pr(B)` : la probabilité de `B` **seul**, sans aucune condition.
+
+L'intérêt du théorème est donc d'**inverser le conditionnement** : il permet de
+calculer `Pr(A/B)` lorsqu'on connaît, non pas `Pr(A/B)` directement, mais la
+probabilité conditionnelle **renversée** `Pr(B/A)` et les deux probabilités
+simples `Pr(A)` et `Pr(B)`.
+
+| Terme | Lecture |
+| --- | --- |
+| `Pr(A/B)` | Ce que l'on **cherche** : `A` sachant `B` |
+| `Pr(B/A)` | La probabilité conditionnelle **inverse** : `B` sachant `A` |
+| `Pr(A)` | La probabilité de `A` **sans condition** |
+| `Pr(B)` | La probabilité de `B` **sans condition** |
+
+C'est ce renversement qui rend le théorème si utile pour la classification. Dans
+un problème de classification, on aimerait connaître `Pr(classe / observation)`
+— la probabilité d'une classe sachant ce que l'on a observé. Cette quantité est
+difficile à obtenir directement ; en revanche, `Pr(observation / classe)` —
+« à quoi ressemblent les instances de telle classe » — peut s'**estimer sur les
+exemples d'apprentissage**. Le théorème de Bayes fait précisément le pont entre
+les deux.
+
+> **À retenir** : la **première formule de Bayes** s'écrit
+> `Pr(A/B) = Pr(B/A) · Pr(A) / Pr(B)`. Elle **inverse le conditionnement** :
+> elle exprime `Pr(A/B)` à partir de la conditionnelle **renversée** `Pr(B/A)`
+> et des probabilités **simples** `Pr(A)` et `Pr(B)`.
+
+## Du théorème de Bayes à la classification
+
+Pourquoi ce théorème est-il l'outil naturel d'un classifieur ? Reprenons le
+point de vue probabiliste annoncé au début de la section.
+
+Classer une instance, c'est répondre à la question : **à quelle classe cette
+instance a-t-elle le plus de chances d'appartenir ?** Formellement, si l'on note
+`d` l'instance et `Cⱼ` une classe possible, on cherche à évaluer la probabilité
+`Pr(Cⱼ / d)` — la probabilité que `d` appartienne à `Cⱼ`, **sachant ce que l'on
+observe de `d`** (les valeurs de ses attributs).
+
+Cette probabilité `Pr(Cⱼ / d)` est une **probabilité conditionnelle** : la
+classe sachant l'instance. Et c'est exactement la forme `Pr(A/B)` du théorème de
+Bayes, avec `A` = « la classe `Cⱼ` » et `B` = « l'instance `d` ». Le théorème
+donne donc directement :
+
+`Pr(Cⱼ / d) = Pr(d / Cⱼ) · Pr(Cⱼ) / Pr(d)`
+
+On a ainsi ramené la quantité cherchée — difficile à atteindre directement — à
+**trois quantités plus accessibles** :
+
+- `Pr(d / Cⱼ)` : la probabilité d'observer l'instance `d` **parmi les instances
+  de la classe `Cⱼ`** ;
+- `Pr(Cⱼ)` : la probabilité **a priori** de la classe `Cⱼ`, sa fréquence
+  d'apparition ;
+- `Pr(d)` : la probabilité d'observer l'instance `d`.
+
+Le **plan du module** découle directement de cette formule. La section 2 montre
+comment l'**hypothèse d'indépendance** (le caractère « naïf » du classifieur)
+permet de calculer `Pr(d / Cⱼ)`. La section 3 explique comment **estimer** les
+probabilités `Pr(Cⱼ)` et `Pr(d / Cⱼ)` à partir de l'ensemble d'apprentissage —
+et comment corriger le **problème des probabilités nulles**. La section 4
+rassemble tout pour **prédire** la classe d'une nouvelle instance.
+
+> ⚠️ Bien distinguer les **deux sens** du conditionnement. On **cherche**
+> `Pr(Cⱼ/d)` — la classe sachant l'instance. On sait **estimer** `Pr(d/Cⱼ)` —
+> l'instance sachant la classe. Le théorème de Bayes est ce qui permet de passer
+> de la seconde, accessible, à la première, recherchée.
+
+> **À retenir** : classer l'instance `d`, c'est évaluer la probabilité
+> conditionnelle `Pr(Cⱼ/d)`. Le théorème de Bayes la réécrit
+> `Pr(Cⱼ/d) = Pr(d/Cⱼ) · Pr(Cⱼ) / Pr(d)`, ramenant le problème à **trois
+> quantités estimables** : `Pr(d/Cⱼ)`, `Pr(Cⱼ)` et `Pr(d)`.
+
+## Synthèse de la section
+
+Le **classifieur bayésien** est une méthode d'**apprentissage supervisé** de
+**point de vue probabiliste** : pour classer une instance, il **estime la
+probabilité qu'elle appartienne à chaque classe**. Il est dit **naïf** parce
+qu'il **suppose les attributs indépendants**. Son moteur repose sur deux
+notions. La **probabilité conditionnelle** `Pr(X/Y)` est la probabilité de `X`
+**sachant `Y`** — `Y`, écrit à droite du trait, est l'information connue ; `X`,
+à gauche, l'inconnu cherché ; en général `Pr(X/Y) ≠ Pr(Y/X)`. Le **théorème de
+Bayes** — la **première formule de Bayes** —
+`Pr(A/B) = Pr(B/A) · Pr(A) / Pr(B)` **inverse le conditionnement** : il exprime
+`Pr(A/B)` à partir de la conditionnelle **renversée** et des probabilités
+**simples**. Appliqué à la classification, il donne
+`Pr(Cⱼ/d) = Pr(d/Cⱼ) · Pr(Cⱼ) / Pr(d)` : la probabilité — recherchée — qu'une
+instance `d` appartienne à la classe `Cⱼ` se ramène à **trois quantités
+estimables**, `Pr(d/Cⱼ)`, `Pr(Cⱼ)` et `Pr(d)`.
+
+> **À retenir** : le classifieur bayésien **compare des probabilités de
+> classes**. Ses deux outils sont la **probabilité conditionnelle** `Pr(X/Y)`
+> (« `X` sachant `Y` ») et le **théorème de Bayes**
+> `Pr(A/B) = Pr(B/A)·Pr(A)/Pr(B)`, qui permet d'écrire
+> `Pr(Cⱼ/d) = Pr(d/Cⱼ)·Pr(Cⱼ)/Pr(d)`.

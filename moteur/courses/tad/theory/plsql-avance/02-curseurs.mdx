@@ -1,0 +1,171 @@
+---
+title: Curseurs
+slug: curseurs
+order: 2
+estimatedReadMin: 10
+concepts: [curseur-implicite, curseur-explicite, curseur-for, curseur-attributs]
+source: "CM6, slides 10-18"
+---
+
+## Le concept de curseur
+
+Un **curseur** est un objet permettant de manipuler **l'ensemble des résultats** d'une requête `SELECT`. C'est l'équivalent PL/SQL d'un *itérateur* sur les lignes.
+
+Le curseur **contient** les données de la requête : on l'ouvre, on parcourt ligne par ligne avec `FETCH`, on le ferme.
+
+Deux types de déclarations :
+
+- **Implicite** : `SELECT ... INTO ... FROM ...` — pour une seule ligne.
+- **Explicite** : `CURSOR ... IS SELECT ...` — pour zéro, une ou plusieurs lignes.
+
+## Curseurs implicites
+
+Le `SELECT INTO` est un curseur implicite : il **doit** retourner exactement une ligne.
+
+```sql
+BEGIN
+   SELECT nom, prenom INTO v_nom, v_prenom
+   FROM clients
+   WHERE id = p_id_client;
+END;
+```
+
+- 0 ligne → exception `NO_DATA_FOUND`.
+- > 1 ligne → exception `TOO_MANY_ROWS`.
+
+### EXECUTE IMMEDIATE
+
+Pour exécuter une requête **construite dynamiquement** :
+
+```sql
+BEGIN
+   v_num := 100016;
+   r_req := 'SELECT * FROM users WHERE uso_num = :p_mun';
+   EXECUTE IMMEDIATE r_req INTO v_res USING v_num;
+END;
+```
+
+`:p_mun` est un paramètre lié remplacé par la valeur `v_num`. C'est la façon d'écrire du SQL dynamique en PL/SQL.
+
+## Curseurs explicites
+
+### Déclaration
+
+```sql
+CREATE OR REPLACE PROCEDURE nom_procedure
+IS
+   CURSOR <cur_nom> IS
+   SELECT ... FROM ...;
+   v_item <cur_nom>%ROWTYPE;
+BEGIN
+   ...
+END;
+```
+
+`<cur_nom>%ROWTYPE` produit un type d'enregistrement adapté aux colonnes du SELECT.
+
+### Cycle de vie : OPEN / FETCH / CLOSE
+
+```sql
+BEGIN
+   OPEN <cur_nom>;
+   LOOP
+      FETCH <cur_nom> INTO v_item;
+      EXIT WHEN <cur_nom>%NOTFOUND;
+      -- traitements sur v_item
+   END LOOP;
+   CLOSE <cur_nom>;
+END;
+```
+
+**Toujours fermer le curseur** après usage (sinon fuite de ressources).
+
+### Pseudo-attributs du curseur
+
+| Attribut | Type | Sens |
+|---|---|---|
+| `%FOUND` | BOOLEAN | Vrai si la dernière `FETCH` a ramené une ligne. |
+| `%NOTFOUND` | BOOLEAN | Vrai si la dernière `FETCH` n'a pas ramené de ligne. |
+| `%ISOPEN` | BOOLEAN | Vrai si le curseur est ouvert. |
+| `%ROWCOUNT` | NUMBER | Nombre de FETCH effectués jusqu'ici. |
+
+## Boucle FOR sur curseur (automatique)
+
+L'écriture **idiomatique** la plus courante : `OPEN`, `FETCH`, `CLOSE` sont automatiques.
+
+```sql
+CREATE OR REPLACE PROCEDURE nom_procedure
+IS
+   CURSOR <cur_nom> IS
+   SELECT ... FROM ... ;
+BEGIN
+   FOR <v_ligne> IN <cur_nom> LOOP
+      -- v_ligne.col1, v_ligne.col2, ...
+   END LOOP;
+END;
+```
+
+Encore plus court : on peut **inliner** la requête sans déclarer le curseur :
+
+```sql
+BEGIN
+   FOR v_ligne IN (SELECT ... FROM ...) LOOP
+      ...
+   END LOOP;
+END;
+```
+
+C'est cette forme qu'on retrouvera dans la plupart des partiels et TPs.
+
+## Curseurs paramétrés
+
+On peut **paramétrer** un curseur pour le réutiliser :
+
+```sql
+CREATE OR REPLACE PROCEDURE nom_procedure
+IS
+   CURSOR <cur_nom>(p_num NUMBER) IS
+      SELECT * FROM <table> WHERE no = p_num;
+BEGIN
+   ...
+   OPEN <cur_nom>(12);
+   ...
+END;
+```
+
+## Patterns
+
+### Compter les lignes traitées
+
+```sql
+DECLARE
+   CURSOR c IS SELECT id FROM produit WHERE stock < 10;
+   v_count NUMBER := 0;
+BEGIN
+   FOR r IN c LOOP
+      v_count := v_count + 1;
+      -- traitement
+   END LOOP;
+   DBMS_OUTPUT.PUT_LINE(v_count || ' produits sous stock');
+END;
+```
+
+### Sortir prématurément
+
+```sql
+FOR r IN c LOOP
+   IF r.montant > 10000 THEN
+      EXIT;   -- on sort dès qu'on dépasse 10 000
+   END IF;
+   ...
+END LOOP;
+```
+
+> **À retenir**
+> - Curseur implicite = `SELECT ... INTO ...` (exactement 1 ligne).
+> - Curseur explicite = `CURSOR ... IS SELECT ...` ; cycle `OPEN`/`FETCH`/`CLOSE`.
+> - Toujours fermer un curseur ouvert manuellement.
+> - Préférer **`FOR v IN cur LOOP ... END LOOP;`** : ouverture/fermeture automatiques.
+> - Attributs : `%FOUND`, `%NOTFOUND`, `%ISOPEN`, `%ROWCOUNT`.
+> - Curseur paramétré : `CURSOR c(p NUMBER) IS SELECT ... WHERE ... = p;`.
+> - `EXECUTE IMMEDIATE` pour SQL dynamique.

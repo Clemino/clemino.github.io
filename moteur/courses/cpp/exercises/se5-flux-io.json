@@ -1,0 +1,604 @@
+[
+  {
+    "chapterSlug": "flux-standard",
+    "type": "MATCHING",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Associe chaque flux standard de `<iostream>` à son rôle.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "std::cout" },
+        { "id": "l2", "label": "std::cin" },
+        { "id": "l3", "label": "std::cerr" },
+        { "id": "l4", "label": "std::clog" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Sortie standard : affichage normal vers l'écran" },
+        { "id": "r2", "label": "Entrée standard : saisie depuis le clavier" },
+        { "id": "r3", "label": "Sortie d'erreur, non tamponnée" },
+        { "id": "r4", "label": "Sortie de journalisation (log)" }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3", "l4": "r4" } },
+    "explanation": "`<iostream>` fournit quatre flux ouverts au démarrage : **`cout`** (sortie écran, affichage normal), **`cin`** (entrée clavier), **`cerr`** (messages d'erreur, **non tamponné** — affiché immédiatement) et **`clog`** (journalisation). Séparer la sortie normale (`cout`) des erreurs (`cerr`) permet au système de les rediriger indépendamment.",
+    "concepts": ["flux-cout-cin-cerr"]
+  },
+  {
+    "chapterSlug": "flux-standard",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles affirmations sur le comportement de l'opérateur `>>` sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Il ignore les espaces, tabulations et sauts de ligne qui précèdent la valeur." },
+        { "id": "b", "label": "Il lit les caractères jusqu'au premier séparateur (espace, tabulation, saut de ligne)." },
+        { "id": "c", "label": "Pour une std::string, il lit la ligne entière, espaces compris." },
+        { "id": "d", "label": "Il lit un « mot » à la fois et considère tout blanc comme une frontière." },
+        { "id": "e", "label": "Il renvoie le flux d'entrée, ce qui autorise le chaînage cin >> a >> b." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "d", "e"] },
+    "explanation": "`>>` **ignore d'abord** les blancs de tête, puis lit jusqu'au **premier séparateur** : il lit donc **un mot** à la fois. Pour une `std::string`, il s'arrête au premier espace — `cin >> nom` sur « Jean Dupont » ne lit que `Jean` (c est faux). Lire une **ligne entière** est le rôle de `std::getline`. `>>` renvoie son flux, d'où le chaînage.",
+    "concepts": ["flux-cout-cin-cerr", "getline"]
+  },
+  {
+    "chapterSlug": "flux-standard",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la différence essentielle entre `std::endl` et le caractère `'\\n'` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "endl insère un saut de ligne PUIS vide le tampon (flush) ; '\\n' n'écrit qu'un saut de ligne dans le tampon." },
+        { "id": "b", "label": "endl saute deux lignes, '\\n' n'en saute qu'une." },
+        { "id": "c", "label": "'\\n' vide le tampon, endl ne le vide jamais." },
+        { "id": "d", "label": "Aucune : les deux sont strictement équivalents." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Un flux de sortie est **tamponné** : il accumule les caractères en mémoire. **`'\\n'`** écrit juste un saut de ligne dans ce tampon. **`std::endl`** est un **manipulateur** : il insère `'\\n'` **puis force un flush** (vidage du tampon). `endl` à chaque ligne peut ralentir une boucle ; on préfère `'\\n'` en courant, et `endl` quand l'affichage doit être visible immédiatement.",
+    "concepts": ["manipulateurs-flux"]
+  },
+  {
+    "chapterSlug": "flux-standard",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète : on veut afficher `prix` avec exactement **2 décimales**. Les manipulateurs nécessaires sont dans l'en-tête `<iomanip>`.",
+    "payload": {
+      "template": "#include <iostream>\n#include <iomanip>\nint main() {\n    double prix = 3.14159;\n    std::cout << std::{{manip}} << std::setprecision({{n}});\n    std::cout << prix << \"\\n\";\n    return 0;\n}",
+      "slots": [
+        { "id": "manip", "width": "sm" },
+        { "id": "n", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "manip": "fixed", "n": "2" },
+      "caseSensitive": false
+    },
+    "explanation": "Pour fixer un nombre de **décimales**, on combine deux manipulateurs : **`std::fixed`** (notation à virgule fixe) et **`std::setprecision(2)`**. Avec `fixed`, `setprecision(n)` désigne le nombre de **décimales** (et non de chiffres significatifs). Le programme affiche alors `3.14`. Les deux manipulateurs sont **persistants** : ils restent actifs sur les écritures suivantes.",
+    "concepts": ["manipulateurs-flux"]
+  },
+  {
+    "chapterSlug": "flux-standard",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "L'utilisateur tape exactement `  12   34 ` (avec des espaces autour et entre). Quelle est la sortie exacte de ce programme ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    cout << \"a=\" << a << \" b=\" << b << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "a=12 b=34" },
+    "explanation": "`>>` **ignore les blancs** : les espaces de tête, les espaces entre les deux nombres et l'espace final sont tous sautés. `cin >> a` lit `12`, `cin >> b` lit `34`. La sortie est donc `a=12 b=34`. La disposition exacte des espaces tapés n'a aucune importance pour l'extraction d'entiers.",
+    "concepts": ["flux-cout-cin-cerr"]
+  },
+  {
+    "chapterSlug": "flux-standard",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe le comportement de `std::setw`.",
+    "payload": {
+      "program": "#include <iostream>\n#include <iomanip>\nusing namespace std;\n\nint main() {\n    cout << setw(6) << 42 << \"|\" << \"\\n\";\n    cout << 42 << \"|\" << \"\\n\";\n    cout << setw(6) << \"ab\" << \"|\" << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "    42|\n42|\n    ab|" },
+    "explanation": "`std::setw(6)` fixe la largeur du **champ immédiatement suivant** à 6 caractères, justifié à droite : `42` devient `    42` (4 espaces + `42`). `setw` est **ponctuel** : il se réinitialise aussitôt — la deuxième ligne affiche `42` sans remplissage. Sur la troisième ligne, `setw(6)` agit sur `\"ab\"` → `    ab`.",
+    "concepts": ["manipulateurs-flux"]
+  },
+  {
+    "chapterSlug": "flux-standard",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe la persistance de `std::setprecision`.",
+    "payload": {
+      "program": "#include <iostream>\n#include <iomanip>\nusing namespace std;\n\nint main() {\n    double prix = 3.14159;\n    cout << fixed << setprecision(2);\n    cout << prix << \"\\n\";\n    cout << setprecision(4) << prix << \"\\n\";\n    cout << prix << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "3.14\n3.1416\n3.1416" },
+    "explanation": "`fixed` et `setprecision` sont **persistants**. La première écriture utilise `setprecision(2)` → `3.14`. `setprecision(4)` change ensuite le réglage : la deuxième écriture donne `3.1416`. Comme le réglage **reste actif**, la troisième écriture, sans nouveau manipulateur, affiche encore `3.1416`.",
+    "concepts": ["manipulateurs-flux"]
+  },
+  {
+    "chapterSlug": "flux-standard",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe les bases `hex` / `dec`.",
+    "payload": {
+      "program": "#include <iostream>\n#include <iomanip>\nusing namespace std;\n\nint main() {\n    int n = 255;\n    cout << hex << n << \"\\n\";\n    cout << n << \"\\n\";\n    cout << dec << n << \"\\n\";\n    cout << boolalpha << (n > 0) << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "ff\nff\n255\ntrue" },
+    "explanation": "`std::hex` est **persistant** : il fait afficher les entiers en base 16. `255` devient `ff`, et la deuxième écriture (sans nouveau manipulateur) reste en hexadécimal → `ff`. `std::dec` rétablit la base 10 → `255`. Enfin `boolalpha` fait afficher le `bool` `(n > 0)` en `true` plutôt qu'en `1`.",
+    "concepts": ["manipulateurs-flux"]
+  },
+  {
+    "chapterSlug": "flux-standard",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "L'utilisateur tape la ligne `Jean Dupont Martin`, puis sur la ligne suivante `ligne suivante`. Quelle est la sortie exacte de ce programme ?",
+    "payload": {
+      "program": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string mot;\n    cin >> mot;\n    cout << \"[\" << mot << \"]\" << \"\\n\";\n    string reste;\n    getline(cin, reste);\n    cout << \"[\" << reste << \"]\" << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "[Jean]\n[ Dupont Martin]" },
+    "explanation": "`cin >> mot` lit **un seul mot**, `Jean`, et **s'arrête à l'espace** qui suit — cet espace, et le reste de la ligne, **restent** dans le flux. `getline` lit alors tout ce qui reste de la **même ligne** : `' Dupont Martin'`, espace de tête inclus. C'est le piège classique du mélange `>>` puis `getline` : on récupère la fin de la ligne courante, jamais la ligne d'après.",
+    "concepts": ["flux-cout-cin-cerr", "getline"]
+  },
+  {
+    "chapterSlug": "flux-standard",
+    "type": "CODE_WRITE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Écris un programme qui lit deux entiers sur l'entrée standard, puis affiche leur somme et leur produit, chacun sur sa ligne, au format exact attendu.",
+    "payload": {
+      "spec": "Lire deux entiers a et b avec cin >> a >> b. Afficher sur la sortie standard, sur deux lignes : 'somme = ' suivi de a + b, puis 'produit = ' suivi de a * b. Chaque ligne se termine par un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    // a completer : afficher la somme puis le produit\n    return 0;\n}\n",
+      "tests": [
+        { "name": "valeurs positives", "stdin": "7 5", "expectedStdout": "somme = 12\nproduit = 35" },
+        { "name": "un zero", "stdin": "0 9", "expectedStdout": "somme = 9\nproduit = 0" },
+        { "name": "cache", "stdin": "12 3", "expectedStdout": "somme = 15\nproduit = 36", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    cout << \"somme = \" << a + b << \"\\n\";\n    cout << \"produit = \" << a * b << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "`cin >> a >> b` extrait les deux entiers ; les espaces ou sauts de ligne qui les séparent sont ignorés par `>>`. L'affichage utilise le **chaînage** de `<<` : `cout << \"somme = \" << a + b << \"\\n\"`. Les sous-expressions `a + b` et `a * b` sont calculées avant d'être insérées dans le flux.",
+    "concepts": ["flux-cout-cin-cerr"]
+  },
+  {
+    "chapterSlug": "flux-standard",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit une **ligne entière** (espaces compris) avec `getline`, puis affiche sa longueur et le nombre d'espaces qu'elle contient.",
+    "payload": {
+      "spec": "Lire une ligne complete dans une std::string avec std::getline(cin, ligne). Afficher sur deux lignes : 'longueur = ' suivi du nombre de caracteres de la ligne (ligne.size()), puis 'espaces = ' suivi du nombre de caracteres espace ' ' presents dans la ligne. Chaque ligne se termine par un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string ligne;\n    // a completer : lire la ligne entiere, puis compter\n    return 0;\n}\n",
+      "tests": [
+        { "name": "phrase avec espaces", "stdin": "le chat dort ici", "expectedStdout": "longueur = 16\nespaces = 3" },
+        { "name": "un seul mot", "stdin": "bonjour", "expectedStdout": "longueur = 7\nespaces = 0" },
+        { "name": "cache", "stdin": "a b c d e", "expectedStdout": "longueur = 9\nespaces = 4", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string ligne;\n    getline(cin, ligne);\n    int n = 0;\n    for (char c : ligne) {\n        if (c == ' ') n++;\n    }\n    cout << \"longueur = \" << ligne.size() << \"\\n\";\n    cout << \"espaces = \" << n << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "`std::getline(cin, ligne)` lit la **ligne complète**, espaces inclus — ce que `cin >> ligne` ne ferait pas (il s'arrêterait au premier espace). On parcourt ensuite la chaîne caractère par caractère pour compter les espaces. `ligne.size()` donne le nombre total de caractères.",
+    "concepts": ["getline", "flux-cout-cin-cerr"]
+  },
+  {
+    "chapterSlug": "flux-standard",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit un prix (`double`) et une quantité (`int`), puis affiche le total formaté avec exactement **2 décimales** grâce aux manipulateurs de `<iomanip>`.",
+    "payload": {
+      "spec": "Lire un double prix et un int quantite avec cin >> prix >> quantite. Calculer total = prix * quantite. Afficher 'total = ' suivi de total formate avec EXACTEMENT deux decimales (utiliser std::fixed et std::setprecision(2)), puis un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <iomanip>\nusing namespace std;\n\nint main() {\n    double prix;\n    int quantite;\n    cin >> prix >> quantite;\n    // a completer : calculer et afficher le total a 2 decimales\n    return 0;\n}\n",
+      "tests": [
+        { "name": "prix simple", "stdin": "2.5 4", "expectedStdout": "total = 10.00" },
+        { "name": "prix avec centimes", "stdin": "1.99 3", "expectedStdout": "total = 5.97" },
+        { "name": "cache", "stdin": "10 2", "expectedStdout": "total = 20.00", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <iomanip>\nusing namespace std;\n\nint main() {\n    double prix;\n    int quantite;\n    cin >> prix >> quantite;\n    double total = prix * quantite;\n    cout << fixed << setprecision(2);\n    cout << \"total = \" << total << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Pour un nombre de **décimales** fixe, on combine **`std::fixed`** (virgule fixe) et **`std::setprecision(2)`**. Avec `fixed`, `setprecision` désigne les décimales et non les chiffres significatifs : `10` s'affiche `10.00`, `5.97` reste `5.97`. Ces manipulateurs sont posés une seule fois sur le flux (ils sont persistants).",
+    "concepts": ["manipulateurs-flux"]
+  },
+  {
+    "chapterSlug": "flux-standard",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui affiche, pour les entiers de 1 à 5, un tableau de deux colonnes : le nombre (largeur 3) et son carré (largeur 6), alignés à droite avec `setw`.",
+    "payload": {
+      "spec": "Pour chaque i de 1 a 5 inclus, afficher sur une ligne : i dans un champ de largeur 3 (std::setw(3)) puis i*i dans un champ de largeur 6 (std::setw(6)). Les deux champs sont sur la meme ligne, sans autre separateur, suivis d'un retour a la ligne. setw doit etre repete avant chaque champ car il est ponctuel.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <iomanip>\nusing namespace std;\n\nint main() {\n    // a completer : tableau des carres de 1 a 5\n    return 0;\n}\n",
+      "tests": [
+        { "name": "tableau des carres", "stdin": "", "expectedStdout": "  1     1\n  2     4\n  3     9\n  4    16\n  5    25" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <iomanip>\nusing namespace std;\n\nint main() {\n    for (int i = 1; i <= 5; i++) {\n        cout << setw(3) << i << setw(6) << i * i << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "`std::setw(n)` n'agit que sur le **champ immédiatement suivant** : il faut le **réinsérer avant chaque valeur**. `setw(3) << i` justifie `i` à droite sur 3 caractères, `setw(6) << i*i` sur 6. Chaque ligne aligne ainsi proprement les deux colonnes — l'usage typique de `setw` pour des tableaux.",
+    "concepts": ["manipulateurs-flux"]
+  },
+  {
+    "chapterSlug": "flux-standard",
+    "type": "CODE_FIX",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Ce programme ne compile pas. L'auteur a utilisé le mauvais opérateur pour **lire** une valeur au clavier. Corrige-le.",
+    "payload": {
+      "spec": "Le programme doit demander l'age puis le lire au clavier. La lecture depuis l'entree standard se fait avec le flux cin et l'operateur d'extraction >>. L'auteur a ecrit 'cout >> age', ce qui est doublement faux : cout est un flux de SORTIE et >> doit s'appliquer a un flux d'entree. Il faut ecrire 'cin >> age'. Le programme lit un entier et affiche 'Vous avez ' suivi de cet entier puis ' ans'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int age;\n    cout << \"Quel age avez-vous ? \";\n    cout >> age;\n    cout << \"Vous avez \" << age << \" ans\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "lecture de l'age", "stdin": "25", "expectedStdout": "Quel age avez-vous ? Vous avez 25 ans" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int age;\n    cout << \"Quel age avez-vous ? \";\n    cin >> age;\n    cout << \"Vous avez \" << age << \" ans\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `cout >> age`. `cout` est un flux de **sortie** et `>>` est l'opérateur d'**extraction** (lecture) — il n'existe pas d'`operator>>` pour un flux de sortie, g++ refuse (`no match for 'operator>>'`). On **lit** depuis l'entrée standard `cin` : `cin >> age`. Mnémonique : les chevrons pointent dans le sens du transfert.",
+    "concepts": ["flux-cout-cin-cerr"]
+  },
+  {
+    "chapterSlug": "flux-standard",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas : `setprecision` est signalé comme non déclaré. Un en-tête manque. Corrige-le.",
+    "payload": {
+      "spec": "Le programme utilise les manipulateurs std::setprecision et std::fixed pour afficher pi avec 3 decimales. Ces manipulateurs parametres vivent dans l'en-tete <iomanip>, qui n'est pas inclus. Il faut ajouter #include <iomanip>. Le programme affiche 'pi vaut ' suivi de pi (3.14159265) arrondi a 3 decimales.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    double pi = 3.14159265;\n    cout << setprecision(3) << fixed;\n    cout << \"pi vaut \" << pi << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "pi a 3 decimales", "stdin": "", "expectedStdout": "pi vaut 3.142" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <iomanip>\nusing namespace std;\n\nint main() {\n    double pi = 3.14159265;\n    cout << setprecision(3) << fixed;\n    cout << \"pi vaut \" << pi << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `setprecision` (un manipulateur **paramétré**) n'est pas déclaré, car l'en-tête **`<iomanip>`** manque — g++ le signale d'ailleurs explicitement. `<iostream>` fournit `cout`, `endl`, mais les manipulateurs à argument (`setw`, `setprecision`) exigent `<iomanip>`. La correction : ajouter `#include <iomanip>`. Le programme affiche alors `pi vaut 3.142`.",
+    "concepts": ["manipulateurs-flux"]
+  },
+  {
+    "chapterSlug": "flux-standard",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris un programme qui lit un entier `n`, puis `n` couples (nom, prix). Pour chacun, affiche le nom **aligné à gauche** sur 10 caractères et le prix **aligné à droite** sur 8 caractères avec 2 décimales.",
+    "payload": {
+      "spec": "Lire un int n. Afficher d'abord std::fixed et std::setprecision(2) sur cout. Puis, n fois : lire une std::string nom et un double prix avec cin >> nom >> prix, et afficher sur une ligne le nom justifie A GAUCHE dans un champ de largeur 10 (std::left puis std::setw(10)) suivi du prix justifie A DROITE dans un champ de largeur 8 (std::right puis std::setw(8)), puis un retour a la ligne. Le prix est affiche avec 2 decimales.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <iomanip>\n#include <string>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    // a completer : afficher n lignes (nom a gauche, prix a droite)\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois produits", "stdin": "3\npomme 1.5\nlait 0.99\nchocolat 12.4", "expectedStdout": "pomme         1.50\nlait          0.99\nchocolat     12.40" },
+        { "name": "un produit", "stdin": "1\nx 7", "expectedStdout": "x             7.00" },
+        { "name": "cache", "stdin": "2\nab 100\ncde 3.333", "expectedStdout": "ab          100.00\ncde           3.33", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <iomanip>\n#include <string>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    cout << fixed << setprecision(2);\n    for (int i = 0; i < n; i++) {\n        string nom;\n        double prix;\n        cin >> nom >> prix;\n        cout << left << setw(10) << nom << right << setw(8) << prix << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "Plusieurs manipulateurs coopèrent ici. `std::fixed` + `setprecision(2)` (persistants) fixent les décimales. `std::left` et `std::right` règlent la **justification** du prochain champ ; `setw(n)` en fixe la largeur. On combine `left << setw(10) << nom` (nom collé à gauche, complété d'espaces à droite) puis `right << setw(8) << prix`. `setw` étant ponctuel, on le réinsère pour chaque champ.",
+    "concepts": ["manipulateurs-flux"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "MATCHING",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Associe chaque classe de flux de fichier de `<fstream>` à son rôle.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "std::ifstream" },
+        { "id": "l2", "label": "std::ofstream" },
+        { "id": "l3", "label": "std::fstream" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Lire depuis un fichier (input file stream)" },
+        { "id": "r2", "label": "Écrire dans un fichier (output file stream)" },
+        { "id": "r3", "label": "Lire ET écrire le même fichier" }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3" } },
+    "explanation": "`<fstream>` fournit trois classes : **`ifstream`** pour **lire** (dérive d'`istream`), **`ofstream`** pour **écrire** (dérive d'`ostream`), **`fstream`** pour les **deux**. Un flux de fichier est un flux ordinaire : tout ce qu'on sait de `cin`/`cout` (les opérateurs `<<`/`>>`, le chaînage, le comportement de `>>` sur les espaces) s'y applique à l'identique.",
+    "concepts": ["ifstream-ofstream-fstream"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On ouvre un fichier `notes.txt` qui contient déjà des données avec `std::ofstream f(\"notes.txt\");`. Que devient le contenu existant ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Il est entièrement effacé : un ofstream simple ouvre en mode trunc implicite." },
+        { "id": "b", "label": "Il est conservé, et les nouvelles écritures s'ajoutent à la fin." },
+        { "id": "c", "label": "L'ouverture échoue car le fichier existe déjà." },
+        { "id": "d", "label": "Le contenu est conservé en lecture seule." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Un `ofstream` simple ouvre par défaut en `std::ios::out | std::ios::trunc` : le mode **`trunc`** est implicite et **vide le fichier** à l'ouverture. Ouvrir un fichier existant avec un `ofstream` simple **efface donc tout son contenu**. Pour **ajouter** à la fin sans effacer, il faut préciser le mode `std::ios::app`.",
+    "concepts": ["mode-ouverture"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi ces affirmations sur les modes d'ouverture (`std::ios::...`), lesquelles sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "std::ios::app fait écrire à la fin du fichier existant, sans effacer son contenu." },
+        { "id": "b", "label": "std::ios::trunc vide le fichier à l'ouverture." },
+        { "id": "c", "label": "On combine plusieurs modes avec l'opérateur | (OU binaire)." },
+        { "id": "d", "label": "Le mode par défaut d'un ifstream est std::ios::out." },
+        { "id": "e", "label": "std::ios::binary ouvre le fichier en mode binaire plutôt qu'en mode texte." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c", "e"] },
+    "explanation": "`app` (append) écrit **à la fin** sans effacer ; `trunc` **vide** le fichier ; `binary` ouvre en **binaire**. On **combine** les modes avec `|` : `ios::out | ios::app`. En revanche le mode par défaut d'un **`ifstream`** est `std::ios::in` (lecture) — `ios::out` est le défaut de l'`ofstream` (d est faux).",
+    "concepts": ["mode-ouverture"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Il écrit deux lignes dans un fichier, puis les relit.",
+    "payload": {
+      "program": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"contacts.txt\");\n    sortie << \"Dupont\" << \" \" << \"0612\" << \"\\n\";\n    sortie << \"Martin\" << \" \" << \"0698\" << \"\\n\";\n    sortie.close();\n\n    ifstream entree(\"contacts.txt\");\n    string nom, tel;\n    while (entree >> nom >> tel) {\n        cout << nom << \"->\" << tel << \"\\n\";\n    }\n    entree.close();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "Dupont->0612\nMartin->0698" },
+    "explanation": "Le programme écrit dans `contacts.txt` deux lignes : `Dupont 0612` et `Martin 0698`. À la relecture, `entree >> nom >> tel` lit **mot par mot** : l'espace et le saut de ligne servent de frontières. Premier tour : `nom = Dupont`, `tel = 0612` ; deuxième tour : `nom = Martin`, `tel = 0698`. La boucle s'arrête à la fin du fichier.",
+    "concepts": ["ifstream-ofstream-fstream"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe l'effet de la **deuxième** ouverture en `ofstream`.",
+    "payload": {
+      "program": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    ofstream f(\"notes.txt\");\n    f << 12 << \" \" << 15 << \"\\n\";\n    f.close();\n\n    ofstream g(\"notes.txt\");\n    g << 8 << \"\\n\";\n    g.close();\n\n    ifstream e(\"notes.txt\");\n    int x;\n    while (e >> x) {\n        cout << \"lu: \" << x << \"\\n\";\n    }\n    e.close();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "lu: 8" },
+    "explanation": "La première ouverture écrit `12 15` dans `notes.txt`. Mais la **deuxième** ouverture, `ofstream g(\"notes.txt\")`, ouvre en `trunc` implicite : elle **efface tout le contenu** avant d'écrire `8`. Le fichier ne contient donc plus que `8` au moment de la relecture. La sortie est la seule ligne `lu: 8`.",
+    "concepts": ["mode-ouverture", "ifstream-ofstream-fstream"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? La deuxième ouverture utilise le mode `std::ios::app`.",
+    "payload": {
+      "program": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    ofstream f(\"journal.txt\");\n    f << \"ligne A\\n\";\n    f.close();\n\n    ofstream g(\"journal.txt\", ios::app);\n    g << \"ligne B\\n\";\n    g.close();\n\n    ifstream e(\"journal.txt\");\n    string ligne;\n    while (getline(e, ligne)) {\n        cout << ligne << \"\\n\";\n    }\n    e.close();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "ligne A\nligne B" },
+    "explanation": "La première ouverture écrit `ligne A`. La deuxième ouverture précise le mode **`ios::app`** : elle écrit **à la fin** du fichier sans en effacer le contenu — contrairement à un `ofstream` simple qui aurait tronqué. Le fichier contient donc `ligne A` puis `ligne B`, que la boucle `getline` affiche dans l'ordre.",
+    "concepts": ["mode-ouverture", "getline"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Il combine `>>` et `getline` sur le même flux de fichier.",
+    "payload": {
+      "program": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    ofstream f(\"data.txt\");\n    f << \"Jean Dupont 42\\n\";\n    f.close();\n\n    ifstream e(\"data.txt\");\n    string mot;\n    e >> mot;\n    cout << \"mot1=\" << mot << \"\\n\";\n    string reste;\n    getline(e, reste);\n    cout << \"reste=[\" << reste << \"]\\n\";\n    e.close();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "mot1=Jean\nreste=[ Dupont 42]" },
+    "explanation": "Le fichier contient la ligne `Jean Dupont 42`. `e >> mot` lit **un seul mot**, `Jean`, et s'arrête à l'espace suivant — qui **reste** dans le flux. `getline(e, reste)` lit alors tout le reste de la **même ligne** : `' Dupont 42'`, espace de tête inclus. C'est le même piège `>>` puis `getline` qu'avec `cin`.",
+    "concepts": ["getline", "ifstream-ofstream-fstream"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Le même fichier est relu deux fois, d'abord avec `>>`, puis avec `getline`.",
+    "payload": {
+      "program": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    ofstream f(\"v.txt\");\n    f << \"10 20 30 40\";\n    f.close();\n\n    ifstream e(\"v.txt\");\n    int somme = 0;\n    int valeur;\n    while (e >> valeur) {\n        somme += valeur;\n    }\n    e.close();\n    cout << somme << \"\\n\";\n\n    ifstream e2(\"v.txt\");\n    string ligne;\n    getline(e2, ligne);\n    e2.close();\n    cout << ligne << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "100\n10 20 30 40" },
+    "explanation": "Le fichier `v.txt` contient `10 20 30 40` (une seule ligne, sans saut final). Le premier flux `e` lit les entiers **un par un** avec `>>` : `10 + 20 + 30 + 40 = 100`. Le second flux `e2` relit le fichier **depuis le début** et `getline` récupère la **ligne entière**, espaces compris : `10 20 30 40`. Deux flux distincts ont chacun leur propre curseur.",
+    "concepts": ["ifstream-ofstream-fstream", "getline"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "CODE_WRITE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Écris un programme qui lit une ligne au clavier, l'écrit dans un fichier `message.txt`, puis **relit** ce fichier et affiche son contenu sur la sortie standard.",
+    "payload": {
+      "spec": "Lire une ligne complete au clavier avec getline(cin, message). Ouvrir un ofstream sur 'message.txt', y ecrire la ligne suivie d'un retour a la ligne, puis fermer le fichier. Rouvrir 'message.txt' avec un ifstream, lire sa ligne avec getline, fermer le fichier, et afficher cette ligne sur cout suivie d'un retour a la ligne. Le programme cree lui-meme le fichier dont il a besoin.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string message;\n    getline(cin, message);\n    // a completer : ecrire message dans message.txt, le relire, l'afficher\n    return 0;\n}\n",
+      "tests": [
+        { "name": "phrase", "stdin": "Bonjour le monde", "expectedStdout": "Bonjour le monde" },
+        { "name": "autre phrase", "stdin": "Test simple", "expectedStdout": "Test simple" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string message;\n    getline(cin, message);\n\n    ofstream sortie(\"message.txt\");\n    sortie << message << \"\\n\";\n    sortie.close();\n\n    ifstream entree(\"message.txt\");\n    string ligne;\n    getline(entree, ligne);\n    entree.close();\n\n    cout << ligne << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Le programme fait un **aller-retour fichier** complet. On **écrit** avec un `ofstream` et l'opérateur `<<`, en insérant soi-même le `'\\n'`. Après `close()`, on **rouvre** le fichier avec un `ifstream` et on lit la ligne avec `getline`. Écrire dans un fichier est identique à écrire sur `cout` : un flux de fichier est un flux ordinaire.",
+    "concepts": ["ifstream-ofstream-fstream", "getline"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit trois entiers au clavier, les écrit séparés par des espaces dans un fichier `nombres.txt`, puis relit le fichier et affiche leur somme.",
+    "payload": {
+      "spec": "Lire trois int a, b, c avec cin >> a >> b >> c. Ouvrir un ofstream sur 'nombres.txt' et y ecrire les trois entiers separes par des espaces (a, ' ', b, ' ', c) suivis d'un retour a la ligne, puis fermer. Rouvrir 'nombres.txt' avec un ifstream, lire les trois entiers x, y, z avec >>, fermer, et afficher 'somme = ' suivi de x + y + z puis un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    int a, b, c;\n    cin >> a >> b >> c;\n    // a completer : ecrire dans nombres.txt, relire, afficher la somme\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois valeurs", "stdin": "10 20 30", "expectedStdout": "somme = 60" },
+        { "name": "petites valeurs", "stdin": "1 2 3", "expectedStdout": "somme = 6" },
+        { "name": "cache", "stdin": "100 0 5", "expectedStdout": "somme = 105", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\nusing namespace std;\n\nint main() {\n    int a, b, c;\n    cin >> a >> b >> c;\n\n    ofstream sortie(\"nombres.txt\");\n    sortie << a << \" \" << b << \" \" << c << \"\\n\";\n    sortie.close();\n\n    ifstream entree(\"nombres.txt\");\n    int x, y, z;\n    entree >> x >> y >> z;\n    entree.close();\n\n    cout << \"somme = \" << x + y + z << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Point clé : un fichier ne contient **que ce qu'on y écrit**. Sans les espaces explicites entre `a`, `b` et `c`, le fichier contiendrait `102030` — impossible à relire en trois entiers. Les espaces servent de **séparateurs** que `>>` reconnaît à la relecture. `entree >> x >> y >> z` retrouve alors les trois valeurs.",
+    "concepts": ["ifstream-ofstream-fstream"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit un entier `n`, écrit `n` lignes (`ligne 1`, `ligne 2`, ...) dans un fichier `liste.txt`, puis le relit ligne par ligne avec la boucle `while (getline(...))` et affiche chaque ligne suivie du nombre total.",
+    "payload": {
+      "spec": "Lire un int n. Ouvrir un ofstream sur 'liste.txt' et y ecrire n lignes : pour i de 1 a n, ecrire 'ligne ' suivi de i et d'un retour a la ligne. Fermer. Rouvrir 'liste.txt' avec un ifstream et le parcourir avec while (getline(entree, ligne)) : afficher chaque ligne lue suivie d'un retour a la ligne, et compter le nombre de lignes. Apres la boucle, fermer le fichier et afficher 'total : ' suivi du nombre de lignes puis un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    // a completer : ecrire n lignes, les relire avec getline, compter\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois lignes", "stdin": "3", "expectedStdout": "ligne 1\nligne 2\nligne 3\ntotal : 3" },
+        { "name": "une ligne", "stdin": "1", "expectedStdout": "ligne 1\ntotal : 1" },
+        { "name": "cache", "stdin": "5", "expectedStdout": "ligne 1\nligne 2\nligne 3\nligne 4\nligne 5\ntotal : 5", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n\n    ofstream sortie(\"liste.txt\");\n    for (int i = 1; i <= n; i++) {\n        sortie << \"ligne \" << i << \"\\n\";\n    }\n    sortie.close();\n\n    ifstream entree(\"liste.txt\");\n    string ligne;\n    int compteur = 0;\n    while (getline(entree, ligne)) {\n        compteur++;\n        cout << ligne << \"\\n\";\n    }\n    entree.close();\n\n    cout << \"total : \" << compteur << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "La boucle `while (getline(entree, ligne))` est l'**idiome standard** de parcours d'un fichier texte : `getline` **renvoie le flux**, qui devient « faux » quand il n'y a plus de ligne à lire — la boucle s'arrête alors d'elle-même, sans qu'on ait à connaître le nombre de lignes à l'avance.",
+    "concepts": ["getline", "ifstream-ofstream-fstream"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui crée un fichier `scores.txt` contenant `Alice 50` et `Bob 30`, lui **ajoute** (sans effacer) un couple (nom, score) lu au clavier, puis relit tout le fichier et affiche la somme des scores.",
+    "payload": {
+      "spec": "Lire au clavier une std::string nom et un int score avec cin >> nom >> score. Ouvrir un ofstream sur 'scores.txt' (mode par defaut) et y ecrire deux lignes : 'Alice 50' et 'Bob 30', puis fermer. Rouvrir 'scores.txt' avec un ofstream EN MODE AJOUT (std::ios::app) et y ecrire le couple lu : nom, ' ', score, retour a la ligne. Fermer. Enfin, rouvrir 'scores.txt' avec un ifstream, lire en boucle des couples (string, int) avec >>, additionner les scores, fermer, et afficher 'total des scores = ' suivi de la somme puis un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string nom;\n    int score;\n    cin >> nom >> score;\n    // a completer : creer scores.txt, ajouter le couple, relire, sommer\n    return 0;\n}\n",
+      "tests": [
+        { "name": "ajout d'un score", "stdin": "Chloe 70", "expectedStdout": "total des scores = 150" },
+        { "name": "score nul", "stdin": "Max 0", "expectedStdout": "total des scores = 80" },
+        { "name": "cache", "stdin": "Yann 120", "expectedStdout": "total des scores = 200", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string nom;\n    int score;\n    cin >> nom >> score;\n\n    ofstream depart(\"scores.txt\");\n    depart << \"Alice 50\\n\";\n    depart << \"Bob 30\\n\";\n    depart.close();\n\n    ofstream ajout(\"scores.txt\", ios::app);\n    ajout << nom << \" \" << score << \"\\n\";\n    ajout.close();\n\n    ifstream entree(\"scores.txt\");\n    string n;\n    int s;\n    int total = 0;\n    while (entree >> n >> s) {\n        total += s;\n    }\n    entree.close();\n\n    cout << \"total des scores = \" << total << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "La distinction de mode est centrale ici. Le premier `ofstream` (mode défaut) **crée** le fichier avec `Alice 50` et `Bob 30`. Le second, ouvert en **`ios::app`**, **ajoute** la nouvelle ligne **sans effacer** les deux premières — un `ofstream` simple aurait tout tronqué. La relecture `while (entree >> n >> s)` accumule alors les trois scores.",
+    "concepts": ["mode-ouverture", "ifstream-ofstream-fstream"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "CODE_FIX",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Ce programme ne compile pas : `ofstream` et `ifstream` sont signalés comme types incomplets. Un en-tête manque. Corrige-le.",
+    "payload": {
+      "spec": "Le programme declare un ofstream et un ifstream, classes fournies par l'en-tete <fstream>. Or seul <iostream> est inclus : le compilateur ne connait pas ofstream/ifstream et signale un 'type incomplet'. Il faut ajouter #include <fstream>. Le programme ecrit 'Hello' dans note.txt puis le relit et affiche son contenu.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"note.txt\");\n    sortie << \"Hello\\n\";\n    sortie.close();\n\n    ifstream entree(\"note.txt\");\n    string ligne;\n    getline(entree, ligne);\n    entree.close();\n\n    cout << ligne << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "aller-retour fichier", "stdin": "", "expectedStdout": "Hello" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"note.txt\");\n    sortie << \"Hello\\n\";\n    sortie.close();\n\n    ifstream entree(\"note.txt\");\n    string ligne;\n    getline(entree, ligne);\n    entree.close();\n\n    cout << ligne << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `ofstream` et `ifstream` sont déclarés dans **`<fstream>`**, qui n'est pas inclus. `<iostream>` fournit `cout`/`cin` mais **pas** les flux de fichier — g++ signale un `type incomplet`. La correction : ajouter `#include <fstream>`. À noter : `<fstream>` ne garantit pas d'inclure `<iostream>` ; un programme qui utilise à la fois les flux fichiers et `cout`/`cerr` doit inclure les deux en-têtes.",
+    "concepts": ["ifstream-ofstream-fstream"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme devrait afficher deux lignes mais n'en affiche qu'une : `second`. La deuxième ouverture du fichier efface la première ligne. Corrige-le.",
+    "payload": {
+      "spec": "Le programme ecrit 'premier' dans histo.txt, puis veut AJOUTER 'second' sans effacer. Mais la deuxieme ouverture, 'ofstream suite(\"histo.txt\")', est un ofstream simple : il ouvre en trunc implicite et efface 'premier'. Il faut ouvrir en mode ajout : 'ofstream suite(\"histo.txt\", ios::app)'. Le programme doit alors relire et afficher 'premier' puis 'second'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    ofstream depart(\"histo.txt\");\n    depart << \"premier\\n\";\n    depart.close();\n\n    ofstream suite(\"histo.txt\");\n    suite << \"second\\n\";\n    suite.close();\n\n    ifstream entree(\"histo.txt\");\n    string ligne;\n    while (getline(entree, ligne)) {\n        cout << ligne << \"\\n\";\n    }\n    entree.close();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "contenu conserve puis ajout", "stdin": "", "expectedStdout": "premier\nsecond" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    ofstream depart(\"histo.txt\");\n    depart << \"premier\\n\";\n    depart.close();\n\n    ofstream suite(\"histo.txt\", ios::app);\n    suite << \"second\\n\";\n    suite.close();\n\n    ifstream entree(\"histo.txt\");\n    string ligne;\n    while (getline(entree, ligne)) {\n        cout << ligne << \"\\n\";\n    }\n    entree.close();\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `ofstream suite(\"histo.txt\")` est un `ofstream` **simple**. Il ouvre en `std::ios::trunc` implicite et **vide le fichier** — `premier` est effacé avant l'écriture de `second`. La correction : ouvrir en mode **`ios::app`** (`ofstream suite(\"histo.txt\", ios::app)`), qui écrit **à la fin** sans effacer le contenu existant.",
+    "concepts": ["mode-ouverture", "ifstream-ofstream-fstream"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas : on tente de **lire** un fichier avec un flux déclaré `ofstream`. Corrige le type du flux de lecture.",
+    "payload": {
+      "spec": "Le programme ecrit trois mots dans mots.txt, puis veut les relire et les afficher un par un. Mais le flux de relecture est declare 'ofstream entree' : un ofstream est un flux d'ECRITURE, il ne possede pas d'operateur >> pour lire. Il faut le declarer 'ifstream entree'. Le programme doit afficher rouge, vert, bleu chacun sur sa ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"mots.txt\");\n    sortie << \"rouge vert bleu\\n\";\n    sortie.close();\n\n    ofstream entree(\"mots.txt\");\n    string mot;\n    while (entree >> mot) {\n        cout << mot << \"\\n\";\n    }\n    entree.close();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "lecture mot par mot", "stdin": "", "expectedStdout": "rouge\nvert\nbleu" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    ofstream sortie(\"mots.txt\");\n    sortie << \"rouge vert bleu\\n\";\n    sortie.close();\n\n    ifstream entree(\"mots.txt\");\n    string mot;\n    while (entree >> mot) {\n        cout << mot << \"\\n\";\n    }\n    entree.close();\n    return 0;\n}"
+    },
+    "explanation": "Le bug : le flux de relecture est un **`ofstream`** — un flux d'**écriture**. Il ne dérive pas d'`istream` et ne possède donc **pas** d'`operator>>` ; g++ refuse `entree >> mot`. La correction : déclarer **`ifstream entree`**, le flux d'**entrée**, qui hérite d'`istream` et sait extraire avec `>>`. On lit alors les trois mots un par un.",
+    "concepts": ["ifstream-ofstream-fstream"]
+  },
+  {
+    "chapterSlug": "fichiers-fstream",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris un mini-répertoire : lis un entier `n`, puis `n` couples (nom, téléphone) saisis au clavier ; enregistre-les dans `repertoire.txt` ; vérifie l'ouverture en lecture avec `is_open()` ; relis le fichier et affiche chaque contact en **sautant une ligne** entre deux contacts.",
+    "payload": {
+      "spec": "Lire un int n. Ouvrir un ofstream sur 'repertoire.txt' et, n fois, lire une std::string nom et une std::string tel avec cin >> nom >> tel, puis ecrire dans le fichier : nom, ' ', tel, retour a la ligne. Fermer. Rouvrir 'repertoire.txt' avec un ifstream ; si is_open() est faux, ecrire \"Impossible d'ouvrir le fichier\" sur cerr et retourner 1. Sinon, lire en boucle des couples (nom, tel) avec >> et, pour chacun, afficher sur cout : nom, ' : ', tel, retour a la ligne, PUIS un retour a la ligne supplementaire (ligne vide entre deux contacts). Fermer le fichier.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    // a completer : enregistrer n contacts puis les reafficher\n    return 0;\n}\n",
+      "tests": [
+        { "name": "deux contacts", "stdin": "2\nDupont 0612\nMartin 0698", "expectedStdout": "Dupont : 0612\n\nMartin : 0698" },
+        { "name": "un contact", "stdin": "1\nZoe 0700", "expectedStdout": "Zoe : 0700" },
+        { "name": "cache trois contacts", "stdin": "3\nA 1\nB 2\nC 3", "expectedStdout": "A : 1\n\nB : 2\n\nC : 3", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <fstream>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n\n    ofstream sortie(\"repertoire.txt\");\n    for (int i = 0; i < n; i++) {\n        string nom, tel;\n        cin >> nom >> tel;\n        sortie << nom << \" \" << tel << \"\\n\";\n    }\n    sortie.close();\n\n    ifstream entree(\"repertoire.txt\");\n    if (!entree.is_open()) {\n        cerr << \"Impossible d'ouvrir le fichier\\n\";\n        return 1;\n    }\n    string nom, tel;\n    while (entree >> nom >> tel) {\n        cout << nom << \" : \" << tel << \"\\n\";\n        cout << \"\\n\";\n    }\n    entree.close();\n    return 0;\n}"
+    },
+    "explanation": "Ce programme reprend l'exercice « répertoire » du cours. Phase d'écriture : on enregistre chaque contact avec ses **séparateurs explicites** (espace, saut de ligne). On **vérifie** ensuite l'ouverture en lecture avec `is_open()` — réflexe indispensable. Phase de relecture : `while (entree >> nom >> tel)` lit chaque couple ; le `cout << \"\\n\"` ajouté insère la **ligne vide** entre contacts. La comparaison `trimmed` du juge ignore les blancs en fin de sortie.",
+    "concepts": ["ifstream-ofstream-fstream", "mode-ouverture"]
+  }
+]

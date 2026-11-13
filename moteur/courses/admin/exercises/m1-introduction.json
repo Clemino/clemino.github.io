@@ -1,0 +1,799 @@
+[
+ {
+  "chapterSlug": "histoire-droit-administratif",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel texte sépare les autorités judiciaires et administratives ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Les lois des 16 et 24 août 1790"
+    },
+    {
+     "id": "b",
+     "label": "La Constitution de l'an VIII"
+    },
+    {
+     "id": "c",
+     "label": "La Déclaration des droits de l'homme de 1789"
+    },
+    {
+     "id": "d",
+     "label": "La loi du 24 mai 1872"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Les lois des 16 et 24 août 1790 interdisent aux juges judiciaires de troubler l'action de l'administration.",
+  "hint": "Cherche du côté de la Révolution : on veut empêcher les juges de gêner l'administration.",
+  "concepts": [
+   "separation-autorites"
+  ],
+  "source": "CM, Introduction, §1"
+ },
+ {
+  "chapterSlug": "histoire-droit-administratif",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Que change la loi du 24 mai 1872 ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Elle fait passer le Conseil d'État à la justice déléguée"
+    },
+    {
+     "id": "b",
+     "label": "Elle crée les départements"
+    },
+    {
+     "id": "c",
+     "label": "Elle crée le Conseil d'État"
+    },
+    {
+     "id": "d",
+     "label": "Elle met fin à la théorie du ministre-juge et donne compétence au Conseil d'État en premier ressort"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "En 1872, le Conseil d'État statue seul, au nom du peuple français. La fin du ministre-juge vient de l'arrêt Cadot, en 1889.",
+  "hint": "Le cours distingue trois temps : le ministre juge, le Conseil d'État propose, puis il décide seul.",
+  "concepts": [
+   "justice-retenue-deleguee"
+  ],
+  "source": "CM, Introduction, §1"
+ },
+ {
+  "chapterSlug": "histoire-droit-administratif",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quel est l'apport de l'arrêt Cadot ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Il abandonne la théorie du ministre-juge"
+    },
+    {
+     "id": "b",
+     "label": "Il pose la responsabilité de l'État du fait de ses services publics"
+    },
+    {
+     "id": "c",
+     "label": "Il consacre l'autonomie du droit administratif"
+    },
+    {
+     "id": "d",
+     "label": "Il crée le Tribunal des conflits"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Depuis Cadot (1889), le Conseil d'État peut être saisi directement, sans passer par le ministre.",
+  "hint": "Avant 1889, le justiciable devait passer par une autorité qui n'était pas un juge.",
+  "concepts": [
+   "cadot"
+  ],
+  "source": "CM, Introduction, §1"
+ },
+ {
+  "chapterSlug": "histoire-droit-administratif",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Dès la Constitution de l'an VIII, le Conseil d'État tranche seul les litiges administratifs.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "En l'an VIII, c'est la justice retenue : le chef de l'État décide sur proposition du Conseil d'État. La justice déléguée date de 1872.",
+  "hint": "Sous l'an VIII, qui signe la décision : le Conseil d'État ou le chef de l'État ?",
+  "concepts": [
+   "justice-retenue-deleguee"
+  ],
+  "source": "CM, Introduction, §1"
+ },
+ {
+  "chapterSlug": "histoire-droit-administratif",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Le Tribunal des conflits tranche les désaccords entre l'ordre judiciaire et l'ordre administratif.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "C'est sa fonction, depuis 1872.",
+  "hint": "Le dualisme juridictionnel a besoin d'un arbitre entre les deux ordres.",
+  "concepts": [
+   "tribunal-conflits"
+  ],
+  "source": "CM, Introduction, §1"
+ },
+ {
+  "chapterSlug": "histoire-droit-administratif",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Sous l'Ancien Régime, il n'existe aucune règle administrative.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Il existe déjà des règles d'organisation et des règles édictées par l'administration, mais les pouvoirs sont confondus au profit du roi.",
+  "hint": "L'administration existe bien avant 1789 : ce sont les pouvoirs qui sont confondus.",
+  "concepts": [
+   "ancien-regime"
+  ],
+  "source": "CM, Introduction, §1"
+ },
+ {
+  "chapterSlug": "histoire-droit-administratif",
+  "type": "ORDERING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Remets ces étapes dans l'ordre chronologique.",
+  "payload": {
+   "items": [
+    {
+     "id": "i0",
+     "label": "Édit de Saint-Germain-en-Laye"
+    },
+    {
+     "id": "i1",
+     "label": "Lois des 16 et 24 août 1790"
+    },
+    {
+     "id": "i4",
+     "label": "Arrêt Cadot"
+    },
+    {
+     "id": "i3",
+     "label": "Loi du 24 mai 1872"
+    },
+    {
+     "id": "i2",
+     "label": "Constitution de l'an VIII"
+    }
+   ]
+  },
+  "solution": {
+   "order": [
+    "i0",
+    "i1",
+    "i2",
+    "i3",
+    "i4"
+   ]
+  },
+  "explanation": "1641, 1790, an VIII (1799), 1872, 1889.",
+  "hint": "Pars de l'Ancien Régime, puis la Révolution, l'an VIII et la IIIe République.",
+  "concepts": [
+   "justice-retenue-deleguee"
+  ],
+  "source": "CM, Introduction, §1"
+ },
+ {
+  "chapterSlug": "histoire-droit-administratif",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque date à ce qu'elle apporte.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "1790"
+    },
+    {
+     "id": "l1",
+     "label": "An VIII"
+    },
+    {
+     "id": "l2",
+     "label": "1872"
+    },
+    {
+     "id": "l3",
+     "label": "1889"
+    }
+   ],
+   "right": [
+    {
+     "id": "r0",
+     "label": "Séparation des autorités judiciaires et administratives"
+    },
+    {
+     "id": "r3",
+     "label": "Fin de la théorie du ministre-juge"
+    },
+    {
+     "id": "r2",
+     "label": "Justice déléguée et Tribunal des conflits"
+    },
+    {
+     "id": "r1",
+     "label": "Création du Conseil d'État"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2",
+    "l3": "r3"
+   }
+  },
+  "explanation": "Ces quatre dates résument la naissance de la juridiction administrative.",
+  "hint": "Chaque date marque une étape dans l'indépendance du juge de l'administration.",
+  "concepts": [
+   "justice-retenue-deleguee"
+  ],
+  "source": "CM, Introduction, §1"
+ },
+ {
+  "chapterSlug": "histoire-droit-administratif",
+  "type": "FILL_BLANK",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Complète la phrase.",
+  "payload": {
+   "template": "Jusqu'à l'arrêt {{a}} de 1889, le justiciable devait d'abord s'adresser au {{b}}, qui tranchait lui-même le litige.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "md"
+    },
+    {
+     "id": "b",
+     "width": "md"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "Cadot"
+    ],
+    "b": [
+     "ministre"
+    ]
+   }
+  },
+  "explanation": "C'est la théorie du ministre-juge, abandonnée en 1889.",
+  "hint": "Le justiciable ne pouvait pas saisir directement le Conseil d'État avant cette décision.",
+  "concepts": [
+   "ministre-juge"
+  ],
+  "source": "CM, Introduction, §1"
+ },
+ {
+  "chapterSlug": "histoire-droit-administratif",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quel principe la création des départements en 1790 traduit-elle ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'égalité, par un territoire uniforme"
+    },
+    {
+     "id": "b",
+     "label": "La souveraineté du roi"
+    },
+    {
+     "id": "c",
+     "label": "La séparation des pouvoirs, par la division du territoire en départements"
+    },
+    {
+     "id": "d",
+     "label": "La justice déléguée"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "La loi du 26 février 1790 uniformise le territoire, ce qui exprime l'égalité.",
+  "hint": "Un même découpage pour tout le pays : quel principe révolutionnaire cela traduit-il ?",
+  "concepts": [
+   "separation-autorites"
+  ],
+  "source": "CM, Introduction, §1"
+ },
+ {
+  "chapterSlug": "caracteres-autonomie",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quelle juridiction a rendu la décision Blanco ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le Tribunal des conflits"
+    },
+    {
+     "id": "b",
+     "label": "Le Conseil constitutionnel"
+    },
+    {
+     "id": "c",
+     "label": "Le Conseil d'État"
+    },
+    {
+     "id": "d",
+     "label": "La Cour de cassation"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Blanco est une décision du Tribunal des conflits, du 8 février 1873.",
+  "hint": "Cette décision porte justement sur une question de compétence entre les deux ordres.",
+  "concepts": [
+   "blanco"
+  ],
+  "source": "CM, Introduction, §2"
+ },
+ {
+  "chapterSlug": "caracteres-autonomie",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quelles idées l'arrêt Blanco réunit-il ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La responsabilité de l'État du fait des services publics"
+    },
+    {
+     "id": "b",
+     "label": "La compétence du juge administratif"
+    },
+    {
+     "id": "c",
+     "label": "L'autonomie du droit administratif"
+    },
+    {
+     "id": "d",
+     "label": "La fin de la théorie du ministre-juge"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "b",
+    "c"
+   ]
+  },
+  "explanation": "Blanco lie service public, règles spéciales et juge administratif. La fin du ministre-juge vient de Cadot.",
+  "hint": "Pense à ce que la décision dit du service public, des règles applicables et du juge.",
+  "concepts": [
+   "blanco"
+  ],
+  "source": "CM, Introduction, §2"
+ },
+ {
+  "chapterSlug": "caracteres-autonomie",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Selon l'arrêt Blanco, la responsabilité de l'État est régie par le code civil.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Elle a ses règles spéciales, qui varient selon les besoins du service et la conciliation des droits de l'État et des particuliers.",
+  "hint": "Le but est de concilier les besoins du service et les droits des particuliers.",
+  "concepts": [
+   "blanco"
+  ],
+  "source": "CM, Introduction, §2"
+ },
+ {
+  "chapterSlug": "caracteres-autonomie",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Que signifie dire que le droit administratif est « prétorien » ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Il est écrit par le Parlement"
+    },
+    {
+     "id": "b",
+     "label": "Il s'applique seulement aux agents publics"
+    },
+    {
+     "id": "c",
+     "label": "Il vient du droit romain"
+    },
+    {
+     "id": "d",
+     "label": "Il est créé par le juge"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Le juge comble les silences du législateur et dégage lui-même les règles.",
+  "hint": "Le mot vient du préteur romain, un magistrat qui créait le droit.",
+  "concepts": [
+   "droit-pretorien"
+  ],
+  "source": "CM, Introduction, §2"
+ },
+ {
+  "chapterSlug": "caracteres-autonomie",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quelle est la méthode du juge administratif pour créer le droit ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'analogie : appliquer à chaque litige la règle du code civil la plus proche"
+    },
+    {
+     "id": "b",
+     "label": "L'induction : partir du cas pour dégager une règle générale"
+    },
+    {
+     "id": "c",
+     "label": "La consultation du ministre"
+    },
+    {
+     "id": "d",
+     "label": "La déduction à partir d'un code complet"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "On part du cas concret et on identifie la règle générale.",
+  "hint": "Le juge n'a pas de code complet : il raisonne à partir des affaires qu'il tranche.",
+  "concepts": [
+   "droit-pretorien"
+  ],
+  "source": "CM, Introduction, §2"
+ },
+ {
+  "chapterSlug": "caracteres-autonomie",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Le droit administratif est critiqué comme un droit de privilège pour l'administration.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "C'est la critique classique : il offrirait à l'administration un régime plus favorable que le droit commun.",
+  "hint": "Certains reprochent à l'administration d'échapper aux règles communes.",
+  "concepts": [
+   "autonomie"
+  ],
+  "source": "CM, Introduction, §2"
+ },
+ {
+  "chapterSlug": "caracteres-autonomie",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Qu'est-ce qui rend le droit administratif moins prétorien aujourd'hui ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Les normes de l'Union européenne"
+    },
+    {
+     "id": "b",
+     "label": "La disparition du juge administratif"
+    },
+    {
+     "id": "c",
+     "label": "L'intervention plus fréquente du législateur"
+    },
+    {
+     "id": "d",
+     "label": "La rédaction de codes"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "c",
+    "d"
+   ]
+  },
+  "explanation": "Le juge reste central, mais les textes écrits se multiplient.",
+  "hint": "Le juge reste central, mais d'autres sources écrites se développent.",
+  "concepts": [
+   "droit-pretorien"
+  ],
+  "source": "CM, Introduction, §2"
+ },
+ {
+  "chapterSlug": "caracteres-autonomie",
+  "type": "FILL_BLANK",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Complète la référence de l'arrêt.",
+  "payload": {
+   "template": "L'arrêt Blanco a été rendu en {{a}} par le {{b}} des conflits.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "md"
+    },
+    {
+     "id": "b",
+     "width": "md"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "1873"
+    ],
+    "b": [
+     "Tribunal"
+    ]
+   }
+  },
+  "explanation": "TC, 8 février 1873, Blanco.",
+  "hint": "C'est le grand arrêt fondateur du droit administratif, sous la IIIe République.",
+  "concepts": [
+   "blanco"
+  ],
+  "source": "CM, Introduction, §2"
+ },
+ {
+  "chapterSlug": "criteres-administration",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Sur quoi repose le critère organique ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le juge compétent"
+    },
+    {
+     "id": "b",
+     "label": "Le contenu de l'acte"
+    },
+    {
+     "id": "c",
+     "label": "La date de l'acte"
+    },
+    {
+     "id": "d",
+     "label": "L'auteur de l'acte"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Le critère organique demande qui agit.",
+  "hint": "L'organe, c'est celui qui agit.",
+  "concepts": [
+   "critere-organique"
+  ],
+  "source": "CM, Introduction, §3"
+ },
+ {
+  "chapterSlug": "criteres-administration",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Pourquoi le critère organique est-il insuffisant ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Parce que le juge refuse de l'appliquer"
+    },
+    {
+     "id": "b",
+     "label": "Parce que des personnes privées exercent des missions administratives et que l'administration n'est pas toujours soumise au droit public"
+    },
+    {
+     "id": "c",
+     "label": "Parce que seul l'État agit au nom de l'administration, alors que les collectivités et les établissements publics n'ont pas de personnalité morale"
+    },
+    {
+     "id": "d",
+     "label": "Parce qu'il a été abrogé par la loi"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "Le SPIC est largement soumis au droit privé, et des personnes privées assurent des missions administratives.",
+  "hint": "Regarde les SPIC, et les personnes privées qui exercent des missions administratives.",
+  "concepts": [
+   "critere-organique"
+  ],
+  "source": "CM, Introduction, §3"
+ },
+ {
+  "chapterSlug": "criteres-administration",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Toute activité d'intérêt général est un service public.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Des activités privées contribuent à l'intérêt général sans être des services publics : il faut un rattachement à une personne publique.",
+  "hint": "Il faut aussi un rattachement à une personne publique.",
+  "concepts": [
+   "critere-materiel"
+  ],
+  "source": "CM, Introduction, §3"
+ },
+ {
+  "chapterSlug": "criteres-administration",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Le critère matériel s'intéresse à l'activité exercée.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Il cherche à définir l'administration par ce qu'elle fait, l'intérêt général, et non par qui elle est.",
+  "hint": "Matériel renvoie à ce qui est fait, organique à celui qui le fait.",
+  "concepts": [
+   "critere-materiel"
+  ],
+  "source": "CM, Introduction, §3"
+ },
+ {
+  "chapterSlug": "criteres-administration",
+  "type": "MATCHING",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Associe chaque critère à sa question.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Critère organique"
+    },
+    {
+     "id": "l1",
+     "label": "Critère matériel"
+    }
+   ],
+   "right": [
+    {
+     "id": "r0",
+     "label": "Qui agit ?"
+    },
+    {
+     "id": "r1",
+     "label": "Quelle activité est exercée ?"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1"
+   }
+  },
+  "explanation": "Aucun des deux ne suffit seul.",
+  "hint": "Un critère regarde l'auteur, l'autre le contenu de l'action.",
+  "concepts": [
+   "critere-organique"
+  ],
+  "source": "CM, Introduction, §3"
+ },
+ {
+  "chapterSlug": "criteres-administration",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quel exemple montre que l'administration n'est pas toujours soumise au droit public ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Une université"
+    },
+    {
+     "id": "b",
+     "label": "Le préfet"
+    },
+    {
+     "id": "c",
+     "label": "Le Conseil d'État"
+    },
+    {
+     "id": "d",
+     "label": "Un service public industriel et commercial"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Le SPIC est soumis pour l'essentiel au droit privé.",
+  "hint": "Certains services publics fonctionnent comme des entreprises.",
+  "concepts": [
+   "critere-organique"
+  ],
+  "source": "CM, Introduction, §3"
+ }
+]

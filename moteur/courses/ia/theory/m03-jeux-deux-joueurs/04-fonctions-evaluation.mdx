@@ -1,0 +1,173 @@
+---
+title: "Fonctions d'évaluation"
+slug: fonctions-evaluation
+order: 4
+estimatedReadMin: 12
+concepts: [fonction-d-evaluation, profondeur-de-recherche, fonction-d-utilite, algorithme-minimax, facteur-de-branchement, valeur-minimax]
+source: "Jeux_IA_slides.pdf"
+---
+
+## Le problème laissé ouvert par minimax
+
+La deuxième section a établi un résultat et une difficulté.
+
+Le **résultat** : minimax calcule la valeur d'une position en construisant l'arbre
+de jeu, en valuant les feuilles, puis en remontant les valeurs (`max` aux nœuds
+`Max`, `min` aux nœuds `Min`).
+
+La **difficulté** : **si la construction de l'arbre est poussée jusqu'à la profondeur
+`m` et que le facteur de branchement est `b`, la complexité temporelle de minimax est
+en `O(bᵐ)`**. Cette complexité **rend l'algorithme inutilisable** pour des jeux comme
+les **échecs** *si l'on pousse la construction jusqu'aux états finals* — il faudrait
+énumérer toutes les parties, ce qui est hors de portée.
+
+Cette section apporte la **solution** à ce blocage : la **fonction d'évaluation**.
+
+> **À retenir** : minimax coûte `O(bᵐ)` ; construire l'arbre **jusqu'aux états
+> finals** est impossible pour un jeu réaliste. La **fonction d'évaluation** est la
+> réponse à ce problème.
+
+## Limiter la profondeur de recherche
+
+L'idée centrale est simple à énoncer : **au lieu de pousser la construction de
+l'arbre jusqu'à la fin, nous nous contenterons d'une profondeur raisonnable**.
+
+Concrètement, on **fixe une profondeur de recherche** : l'arbre de jeu est construit
+**jusqu'à ce niveau seulement**, puis la construction s'arrête. Cette profondeur
+limite est choisie pour que l'arbre reste de **taille abordable** — c'est elle qui,
+en remplaçant `m` dans `O(bᵐ)`, ramène le coût à quelque chose de calculable.
+
+Mais cette idée soulève aussitôt une question. Quand on s'arrête à une profondeur
+fixée, **les feuilles de l'arbre tronqué ne sont, en général, pas des états finals** :
+la partie n'est pas terminée à ces nœuds. Or, à la section sur minimax, les feuilles
+étaient valuées par la **fonction d'utilité** — laquelle **n'est définie que sur les
+états finals**.
+
+On ne peut donc **pas** appliquer la fonction d'utilité à ces feuilles non
+terminales. **Il faut un autre moyen de leur attribuer une valeur.** Ce moyen est une
+**heuristique**.
+
+> ⚠️ La **fonction d'utilité** ne s'applique qu'aux **états finals**. Dès que l'on
+> arrête la recherche **avant** la fin de la partie, ses feuilles sont **non
+> terminales** : il faut alors une **autre** fonction pour les valuer.
+
+## La fonction d'évaluation : une heuristique sur les états
+
+**Au lieu de pousser jusqu'à la fin, nous utiliserons une heuristique pour associer
+une valeur à chaque feuille** — feuille qui **représente donc un état non terminal**.
+
+Une **heuristique est une fonction qui associe à chaque état une valeur estimant sa
+qualité**. Dans le contexte des jeux, cette heuristique s'appelle une **fonction
+d'évaluation**. La « qualité » dont il est question peut s'entendre, d'après le
+cours, de deux manières :
+
+- la fonction d'évaluation peut être **une moyenne des valeurs des états finals
+  auxquels l'état conduit** ;
+- ou bien la **probabilité que cet état conduise à un état gagnant**.
+
+Dans les deux cas, la fonction d'évaluation **estime** ce que vaudrait la position si
+la partie était jouée jusqu'au bout — sans, justement, jouer la partie jusqu'au bout.
+C'est une **prédiction** chiffrée de l'issue, calculée directement sur l'état non
+terminal.
+
+| | Fonction d'utilité | Fonction d'évaluation |
+| --- | --- | --- |
+| S'applique aux | États **finals** uniquement | États **non terminaux** (feuilles tronquées) |
+| Nature de la valeur | **Exacte** (l'issue réelle) | **Estimée** (qualité de la position) |
+| Exemple de définition | `1` / `−1` / `0` aux échecs | Moyenne des issues, ou probabilité de gain |
+| Quand l'emploie-t-on | Arbre poussé jusqu'à la fin | Arbre arrêté à une profondeur limitée |
+
+> **À retenir** : la **fonction d'évaluation** est une **heuristique** qui **estime
+> la qualité** d'un état **non terminal** — par exemple une moyenne des issues
+> possibles, ou la probabilité de gagner. Elle **remplace** la fonction d'utilité
+> sur les feuilles de l'arbre tronqué.
+
+## Minimax avec profondeur limitée
+
+La fonction d'évaluation s'intègre à minimax **sans en bouleverser le déroulement**.
+Le seul changement concerne **les feuilles** ; tout le reste est identique.
+
+L'algorithme devient alors :
+
+1. **générer l'arbre de jeu jusqu'à la profondeur de recherche fixée** — et non plus
+   jusqu'aux états finals ;
+2. **valuer chaque feuille** de cet arbre tronqué :
+   - si la feuille **est** un état final, on lui applique la **fonction d'utilité** ;
+   - si la feuille est un état **non terminal**, on lui applique la **fonction
+     d'évaluation** ;
+3. **remonter les valeurs** des feuilles vers la racine, **exactement comme dans
+   minimax** : valeur d'un nœud `Max` = maximum de ses fils, valeur d'un nœud `Min` =
+   minimum de ses fils ;
+4. faire **jouer `Max`** vers le fils de **plus grande valeur**.
+
+On retrouve donc la **même mécanique** que minimax — la remontée par `max` et `min`,
+le choix du meilleur fils. La fonction d'évaluation ne fait que **fournir les valeurs
+de départ** des feuilles non terminales, là où la fonction d'utilité ne pouvait pas
+s'appliquer.
+
+Il faut cependant garder à l'esprit une nuance importante : avec une profondeur
+limitée, la valeur calculée pour la racine **n'est plus exacte**. Elle ne repose plus
+sur les véritables issues de la partie, mais sur des **estimations**. La qualité de
+la décision de `Max` dépend donc directement de la **qualité de la fonction
+d'évaluation** : une bonne fonction d'évaluation oriente vers de bons coups, une
+mauvaise peut tromper le joueur.
+
+## Le compromis profondeur / fonction d'évaluation
+
+Limiter la profondeur fait apparaître un **compromis** que tout joueur artificiel
+doit régler.
+
+- **Profondeur plus grande** : on construit l'arbre **plus loin**, on s'approche des
+  états finals, l'estimation est **meilleure** — mais le coût `O(bᵐ)` **augmente
+  fortement**, puisqu'il croît exponentiellement avec la profondeur `m`.
+- **Profondeur plus faible** : l'arbre est **plus petit**, le calcul est **rapide** —
+  mais les feuilles sont **plus éloignées des fins de partie**, et l'on **dépend
+  davantage** de la justesse de la fonction d'évaluation.
+
+Ce compromis explique le rôle **central** de la fonction d'évaluation. Comme on ne
+peut pas pousser la profondeur très loin sans faire exploser le coût, **c'est la
+qualité de l'estimation faite sur les feuilles non terminales qui détermine, pour
+l'essentiel, la force du jeu**. Concevoir une bonne fonction d'évaluation est donc un
+travail décisif : elle doit refléter fidèlement la **qualité** d'une position, tout
+en restant **rapide à calculer** — puisqu'elle est invoquée sur un très grand nombre
+de feuilles.
+
+> ⚠️ Une fonction d'évaluation n'est utile que si elle est **rapide à calculer** :
+> elle est appelée sur **toutes** les feuilles de l'arbre tronqué. Une estimation
+> coûteuse ruinerait le bénéfice de la limitation de profondeur.
+
+## Articulation avec l'élagage alpha-bêta
+
+La fonction d'évaluation et l'**élagage alpha-bêta**, vu à la section précédente, ne
+s'opposent pas : ce sont **deux moyens complémentaires** de rendre minimax
+praticable.
+
+- La **fonction d'évaluation** s'attaque à l'**exposant** du coût `O(bᵐ)` : en
+  limitant la profondeur `m`, elle réduit la **hauteur** de l'arbre à construire.
+- L'**élagage alpha-bêta** s'attaque au **nombre de nœuds réellement visités** à
+  profondeur donnée : il **coupe** les branches inutiles, sans changer le résultat.
+
+Les deux techniques se **combinent** : on construit l'arbre **jusqu'à une profondeur
+limitée** (fonction d'évaluation sur les feuilles), **et** l'on **élague** au passage
+les branches que les bornes `α` et `β` rendent inutiles. C'est cette combinaison qui
+permet à un programme de jouer correctement à des jeux où la **force brute** — vue à
+la première section — est, elle, totalement hors d'atteinte.
+
+## Synthèse de la section
+
+Comme minimax coûte `O(bᵐ)` et qu'on **ne peut pas** construire l'arbre de jeu
+jusqu'aux états finals pour un jeu réaliste, on **limite la profondeur de recherche**.
+Les feuilles de l'arbre ainsi tronqué étant, en général, des **états non terminaux**,
+la **fonction d'utilité** ne s'y applique pas : on les value avec une **fonction
+d'évaluation**, c'est-à-dire une **heuristique** estimant la **qualité** d'un état —
+par exemple une **moyenne des valeurs des états finals** auxquels il conduit, ou la
+**probabilité qu'il mène à un état gagnant**. Le reste de minimax — la remontée par
+`max` et `min` — est **inchangé**. La profondeur retenue résulte d'un **compromis**
+entre la **précision** de l'estimation et le **coût** de calcul, et la fonction
+d'évaluation se **combine** avec l'**élagage alpha-bêta**.
+
+> **À retenir** : on **limite la profondeur** et l'on value les feuilles non
+> terminales par une **fonction d'évaluation** (heuristique de **qualité** :
+> moyenne des issues, ou probabilité de gain) ; profondeur et précision forment un
+> **compromis**, et la fonction d'évaluation se **combine** avec l'élagage
+> alpha-bêta.

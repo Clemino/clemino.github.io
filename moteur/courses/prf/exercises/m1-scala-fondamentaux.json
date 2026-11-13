@@ -1,0 +1,296 @@
+[
+  {
+    "chapterSlug": "paradigme-expressions",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle affirmation caracterise le mieux une expression Scala ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Elle produit une valeur et possede un type."
+        },
+        {
+          "id": "b",
+          "label": "Elle doit obligatoirement modifier une variable."
+        },
+        {
+          "id": "c",
+          "label": "Elle est toujours evaluee par le systeme d'exploitation."
+        },
+        {
+          "id": "d",
+          "label": "Elle ne peut pas contenir de condition."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Une expression Scala produit une valeur et a un type statique. Une condition `if` peut elle-meme etre une expression.",
+    "concepts": [
+      "expression",
+      "type-inference"
+    ]
+  },
+  {
+    "chapterSlug": "paradigme-expressions",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "`println(42)` est utile pour sa valeur de retour principale.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "`println` est utile pour son effet d'affichage ; sa valeur est `()` de type `Unit`.",
+    "concepts": [
+      "unit",
+      "side-effect"
+    ]
+  },
+  {
+    "chapterSlug": "paradigme-expressions",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle est la valeur de l'expression ?",
+    "payload": {
+      "program": "val n = 3\nif n % 2 == 0 then \"pair\" else \"impair\"",
+      "language": "scala"
+    },
+    "solution": {
+      "expectedOutput": "impair"
+    },
+    "explanation": "La condition est fausse pour 3, donc la branche `else` fournit la valeur.",
+    "concepts": [
+      "expression",
+      "instruction-vs-expression"
+    ]
+  },
+  {
+    "chapterSlug": "types-valeurs-blocs",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complete les mots-cles.",
+    "payload": {
+      "template": "Une liaison {{immutable}} se declare avec {{valkw}}, tandis qu'une liaison reassociable se declare avec {{varkw}}.",
+      "slots": [
+        {
+          "id": "immutable",
+          "width": "md"
+        },
+        {
+          "id": "valkw",
+          "width": "md"
+        },
+        {
+          "id": "varkw",
+          "width": "md"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "immutable": [
+          "immutable",
+          "immuable"
+        ],
+        "valkw": "val",
+        "varkw": "var"
+      },
+      "stripAccents": true
+    },
+    "explanation": "`val` cree une liaison non reassociable ; `var` autorise l'affectation.",
+    "concepts": [
+      "val",
+      "var"
+    ]
+  },
+  {
+    "chapterSlug": "types-valeurs-blocs",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle valeur vaut `x` ?",
+    "payload": {
+      "program": "val x = {\n  val a = 10\n  val b = a / 2\n  b + 1\n}",
+      "language": "scala"
+    },
+    "solution": {
+      "expectedOutput": "6"
+    },
+    "explanation": "La valeur du bloc est sa derniere expression, `b + 1`, donc 5 + 1.",
+    "concepts": [
+      "bloc"
+    ]
+  },
+  {
+    "chapterSlug": "types-valeurs-blocs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quel type de retour a typiquement une expression comme `println(\"ok\")` ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Unit"
+        },
+        {
+          "id": "b",
+          "label": "String"
+        },
+        {
+          "id": "c",
+          "label": "Boolean"
+        },
+        {
+          "id": "d",
+          "label": "Nothing"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "`println` renvoie `Unit`, car l'interet est l'effet d'affichage.",
+    "concepts": [
+      "unit"
+    ]
+  },
+  {
+    "chapterSlug": "types-valeurs-blocs",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un `lazy val` est evalue au moment de sa declaration, meme s'il n'est jamais lu.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Un `lazy val` est evalue au premier acces, puis memorise.",
+    "concepts": [
+      "lazy-val"
+    ]
+  },
+  {
+    "chapterSlug": "option-tuples-if",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle valeur represente explicitement une absence dans `Option[Int]` ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "None"
+        },
+        {
+          "id": "b",
+          "label": "0"
+        },
+        {
+          "id": "c",
+          "label": "null"
+        },
+        {
+          "id": "d",
+          "label": "Unit"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "`None` represente l'absence. `Some(x)` represente une presence.",
+    "concepts": [
+      "option"
+    ]
+  },
+  {
+    "chapterSlug": "option-tuples-if",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle valeur est produite ?",
+    "payload": {
+      "program": "val p = (\"Ada\", 20)\np._2",
+      "language": "scala"
+    },
+    "solution": {
+      "expectedOutput": "20"
+    },
+    "explanation": "`_2` selectionne le deuxieme element du tuple.",
+    "concepts": [
+      "tuple"
+    ]
+  },
+  {
+    "chapterSlug": "option-tuples-if",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque construction a son role.",
+    "payload": {
+      "left": [
+        {
+          "id": "some",
+          "label": "Some(x)"
+        },
+        {
+          "id": "none",
+          "label": "None"
+        },
+        {
+          "id": "tuple",
+          "label": "(a,b)"
+        },
+        {
+          "id": "ifexp",
+          "label": "if ... then ... else ..."
+        }
+      ],
+      "right": [
+        {
+          "id": "present",
+          "label": "Valeur presente"
+        },
+        {
+          "id": "absent",
+          "label": "Valeur absente"
+        },
+        {
+          "id": "group",
+          "label": "Regroupement temporaire"
+        },
+        {
+          "id": "choice",
+          "label": "Choix qui renvoie une valeur"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "some": "present",
+        "none": "absent",
+        "tuple": "group",
+        "ifexp": "choice"
+      }
+    },
+    "explanation": "Chaque construction a un role de representation ou de choix ferme.",
+    "concepts": [
+      "option",
+      "tuple",
+      "instruction-vs-expression"
+    ]
+  }
+]

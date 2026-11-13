@@ -1,0 +1,270 @@
+---
+title: "Le paysage de l'IA : du ML aux LLM"
+slug: paysage-de-l-ia
+order: 2
+estimatedReadMin: 14
+concepts: [apprentissage-automatique, apprentissage-supervise, reseau-de-neurones, apprentissage-profond, ia-generative, modele-de-langage, grand-modele-de-langage, transformeur]
+source: "Intro_IA_Slides1.pdf"
+---
+
+## Une chaîne de concepts emboîtés
+
+L'IA moderne se présente comme une **chaîne de concepts emboîtés**, chacun étant un
+sous-ensemble du précédent : **Intelligence artificielle → Machine learning →
+Réseaux de neurones → Deep learning → IA générative → LLM.**
+
+En parallèle, une seconde branche relie l'IA au **traitement du langage naturel**,
+puis aux **modèles de langage**, et rejoint elle aussi les **LLM**, qui sont
+finalement à la base de systèmes comme **ChatGPT**. Cette section parcourt cette
+chaîne maillon par maillon.
+
+> **À retenir** : le ML est un sous-domaine de l'IA, les réseaux de neurones une
+> méthode du ML, le deep learning des réseaux de neurones profonds, et les LLM une
+> réalisation de l'IA générative — chaque notion est *incluse* dans la précédente.
+
+## Le machine learning, sous-domaine de l'IA
+
+Ce qui distingue un programme intelligent d'un programme classique, c'est qu'il
+exécute des tâches pour lesquelles il n'a **pas été explicitement programmé** :
+reconnaître un chat, jouer aux échecs, reconnaître des chiffres manuscrits, répondre
+aux questions des utilisateurs. Comment y parvient-il ? **Réponse : il *apprend* à le
+faire.** Cela conduit à introduire l'**apprentissage automatique** (*machine
+learning*, ML).
+
+Le ML est un **sous-domaine de l'IA**. On peut le définir ainsi :
+
+> Étant donné un programme conçu pour exécuter une tâche **T**, on dit que ce
+> programme **apprend** si sa **performance** dans l'exécution de cette tâche
+> **s'améliore avec l'expérience**.
+
+Historiquement, il a existé des systèmes intelligents qui n'incluaient **pas**
+d'apprentissage : les plus célèbres sont les **systèmes experts**, qui ont dominé
+l'IA de la fin des années soixante jusqu'au milieu des années quatre-vingt.
+Aujourd'hui, il est généralement admis qu'un système **intelligent** est
+nécessairement un système **apprenant**.
+
+## Les trois approches du machine learning
+
+Comment un programme peut-il apprendre ? Il existe **trois approches** du ML, et un
+grand nombre de méthodes pour les mettre en œuvre.
+
+L'une de ces trois approches s'appelle l'**apprentissage supervisé**. Elle consiste
+à apprendre à partir d'**exemples** — c'est-à-dire à partir d'exemples et à
+**généraliser**. Deux illustrations :
+
+- on montre au système des **images de chats** pour qu'il puisse reconnaître les
+  chats **en général** ;
+- on montre au système des exemples de **phrases en français** et leur **traduction
+  en anglais** pour qu'il apprenne à traduire toute phrase qu'on lui soumettra.
+
+L'idée centrale est la **généralisation** : on n'apprend pas par cœur les exemples
+fournis, on en extrait une capacité valable sur des cas nouveaux. Les **réseaux de
+neurones** sont l'une des méthodes de l'apprentissage supervisé.
+
+> ⚠️ Apprendre n'est pas mémoriser. Un système qui se contenterait de retenir les
+> exemples d'entraînement échouerait sur tout cas nouveau : c'est la **généralisation**
+> qui fait la valeur d'un modèle appris.
+
+## Le réseau de neurones vu comme une boîte noire
+
+Vu comme une **boîte noire**, un réseau de neurones est un système ayant des
+**entrées numériques** et des **sorties numériques**. Autrement dit, du point de vue
+mathématique, un réseau de neurones est une **fonction de R^n dans R^m**. On note
+`(x1, ..., xn)` les entrées du réseau et `(y1, ..., yp)` ses sorties.
+
+**Exemple d'utilisation, dans un problème de classification.** On conçoit un réseau
+pour reconnaître les chiffres manuscrits : on lui soumet des images de taille
+28 × 28 et il doit dire de quel chiffre il s'agit. Dans ce cas, **n = 28 × 28
+entrées** (chaque image est représentée par 28 × 28 réels, les valeurs de ses
+pixels) et **p = 10 sorties** — autant que de chiffres — chacune interprétée comme
+la **probabilité** que l'image représente un chiffre donné.
+
+## L'intérieur de la boîte noire : les couches
+
+Un réseau de neurones se compose d'une **suite de couches** :
+
+- la **couche d'entrée** sert juste à introduire les données dans le réseau ;
+- les **couches cachées** reçoivent chacune leurs entrées de la couche précédente,
+  font des calculs, et transmettent les résultats à la couche suivante ;
+- la **couche de sortie** reçoit ses entrées de la couche précédente, fait des
+  calculs, et transmet les résultats — les sorties du réseau — à l'extérieur.
+
+Du point de vue mathématique, chaque couche cachée et la couche de sortie sont des
+fonctions de R^n1 dans R^n2 ; le réseau de neurones est la **composée** de ces
+fonctions.
+
+En zoomant davantage : une **couche** est un tableau de **neurones** ; un **neurone**
+est une **unité de calcul** qui possède des **paramètres** que l'on peut **ajuster** ;
+et l'**apprentissage** dans les réseaux de neurones consiste précisément à **ajuster
+les paramètres**.
+
+> **À retenir** : un réseau de neurones est une fonction de R^n dans R^m, composée de
+> couches d'unités de calcul ; apprendre, pour un réseau, c'est **ajuster ses
+> paramètres**.
+
+## Du réseau de neurones au deep learning
+
+La **profondeur** d'un réseau de neurones est son **nombre de couches**. Une première
+définition : un réseau de neurones **profond** (*deep*) est un réseau ayant **plus de
+couches** qu'un réseau de neurones standard.
+
+À quoi servent ces couches supplémentaires ? À **représenter les données selon
+différents niveaux d'abstraction**. Exemple de niveaux d'abstraction pour une image :
+
+- niveau le plus bas : l'ensemble des **pixels** ;
+- niveau intermédiaire : les **groupes de pixels** ayant une forme particulière ;
+- niveaux plus hauts : les **arêtes** et les **objets**.
+
+**Motivation et intérêt du deep learning :**
+
+- traiter de manière plus efficace de plus **grandes quantités de données**, en
+  exploitant les progrès de la **puissance** des machines ;
+- les humains apprennent d'abord des **concepts simples**, puis les combinent pour
+  représenter des concepts plus abstraits — le deep learning s'inspire de cette
+  démarche. Cela tient notamment à l'architecture « profonde » du cerveau, en
+  particulier le **cortex visuel**, qui contient une série d'aires contenant chacune
+  une représentation différente du champ visuel.
+
+## Contexte historique et technologique du deep learning
+
+Le deep learning n'a été **possible** que grâce à deux conditions :
+
+1. la **gigantesque quantité de données disponibles** — le « **Big data** » ;
+2. l'**explosion de la puissance** des machines, notamment grâce aux **GPU**
+   (*Graphics Processing Unit*).
+
+L'une et l'autre étaient indispensables pour **entraîner** — c'est-à-dire faire
+apprendre — des réseaux ayant un grand nombre de couches, donc un grand nombre de
+neurones, donc un nombre de **paramètres** très important (de l'ordre de grandeur de
+**centaines de milliards**).
+
+Les **architectures** utilisées dans les réseaux profonds existent depuis les **années
+quatre-vingt-dix**, mais elles n'ont montré toute leur utilité que lorsque ces deux
+conditions ont été remplies, c'est-à-dire **vers 2010**. Ce nouveau contexte a permis
+au deep learning de montrer sa **supériorité** sur des méthodes plus traditionnelles,
+notamment en reconnaissance de la parole, en vision par ordinateur et en traitement
+du langage naturel.
+
+**Une date clé : 2012.** À la conférence **ECCV**, l'équipe de **G. Hinton** présente
+un réseau profond de reconnaissance d'images qui fait passer l'erreur de **27 % à
+17 %**.
+
+## Les types de réseaux profonds
+
+Plusieurs types de réseaux profonds existent. Parmi les principaux :
+
+- les **réseaux convolutifs** (*ConvNet*, pour *Convolutional Neural Network*) :
+  ainsi nommés car l'une des opérations principales pour passer d'une couche à
+  l'autre est la **convolution**. Ils sont surtout utilisés en traitement d'images
+  et de la parole.
+- les **réseaux récurrents** (*RNN*) : des réseaux dans lesquels la sortie d'un
+  neurone peut être connectée à l'entrée d'un neurone appartenant à un niveau
+  inférieur — autrement dit, des réseaux contenant des **cycles**. Ils sont surtout
+  utilisés dans le traitement du langage naturel.
+
+## Des RNN aux transformeurs
+
+En partant des RNN, les chercheurs ont introduit de nouvelles architectures
+neuronales, chacune améliorant la précédente. Schématiquement, cette évolution a
+suivi les étapes suivantes :
+
+1. Introduction des **LSTM** et **GRU**, versions des RNN ayant une **mémoire** plus
+   longue.
+2. Introduction des architectures **encodeurs-décodeurs**, qui consistaient à mettre
+   bout à bout deux RNN — application importante : la **traduction automatique**.
+3. Ajout aux encodeurs-décodeurs d'un mécanisme appelé l'**attention**. Le principe,
+   assez intuitif, consiste à **souligner**, à chaque moment du traitement, les
+   parties des données les plus importantes pour le traitement en cours — par
+   exemple les mots les plus importants pour la traduction du mot courant.
+4. Dernière étape : l'introduction des **transformeurs**, dont l'idée de base est
+   bien exprimée par le titre de l'article qui les a introduits : *« Attention is
+   all you need »*.
+
+Aujourd'hui, ce sont ces **transformeurs** qui sont à la base de l'une des
+principales — sinon la principale — réalisations de l'**IA générative** : les
+**modèles massifs de langage** (LLM).
+
+## IA discriminative contre IA générative
+
+L'adjectif « **générative** », utilisé pour qualifier la tendance actuelle de l'IA,
+peut être compris en l'**opposant** à l'adjectif « **discriminative** », que l'on
+peut appliquer à « l'IA d'avant ».
+
+- Une tâche typique d'un modèle **discriminatif** consiste à recevoir en entrée un
+  **objet** (par exemple une image) et à le **classer**, c'est-à-dire à fournir en
+  sortie une **classe** pour cet objet (la classe *Chat*, ou la classe *Chien*).
+  Pour cela, le modèle passe d'abord par une **phase d'apprentissage**.
+- Une tâche typique d'un modèle **génératif** consiste à recevoir en entrée des
+  **indications**, ou une **description** — les fameux **prompts** — et à fournir en
+  sortie un **nouvel objet** correspondant à cette description : typiquement un
+  texte, une image ou une vidéo.
+
+| Critère | IA discriminative | IA générative |
+| --- | --- | --- |
+| Entrée | Un objet (image, texte…) | Une description (prompt) |
+| Sortie | Une classe | Un nouvel objet |
+| Tâche type | Classer | Produire / créer |
+
+## Qu'est-ce qu'un modèle de langage ?
+
+Un **modèle de langage** (LM) est un **modèle statistique** de la **distribution des
+mots** dans une langue ou un ensemble de langues.
+
+Le principal objectif d'un LM est de « **deviner** » le mot qui vient à la suite
+d'une séquence de mots — autrement dit, de calculer la **probabilité** de chaque mot
+connaissant la première partie de la séquence. Cela lui permet de **générer** des
+textes.
+
+On distingue essentiellement **deux types** de LM :
+
+- les LM **statistiques** ;
+- les LM **neuronaux**.
+
+Aujourd'hui, les LM neuronaux sont qualifiés de **massifs** (*Large*, **LLM**) compte
+tenu de leur taille : nombre de mots utilisés, nombre de paramètres à apprendre, etc.
+Les principaux LLM sont **BERT**, **GPT** et **LLAMA**. BERT et GPT utilisent le
+**transformeur**.
+
+## La généralisation dans les modèles de langage
+
+Un modèle de langage n'apprend **pas par cœur** les séquences de mots : il doit être
+capable de **généraliser**. Par exemple, à partir de « Le chat marche dans la
+chambre », un LM doit pouvoir passer à « un chien court dans le salon », « Le chat
+court dans le salon », « Le chien marchait dans la chambre », etc.
+
+La généralisation est possible grâce à la capacité du LM à détecter la **similarité
+syntaxique** (un / le / la) et/ou **sémantique** (marcher / courir) entre les mots.
+Ce qui permet de mesurer cette similarité, c'est la représentation des mots par des
+**vecteurs de nombres** : deux mots similaires — donc apparaissant dans des contextes
+semblables — ont des représentations proches. La création de ces représentations se
+fait, elle aussi, à l'aide de réseaux de neurones.
+
+## L'apprentissage des modèles de langage en trois phases
+
+L'apprentissage dans les LM passe essentiellement par **trois phases** :
+
+1. **Phase 1.** Le modèle dispose d'une gigantesque quantité de **documents**. Il
+   crée un exemple *(séquence, mot suivant)* à partir de chaque séquence de mots, et
+   utilise ces exemples pour apprendre.
+2. **Phase 2.** Le modèle apprend avec des exemples de la forme *(question,
+   réponse)*.
+3. **Phase 3.** Une **intervention humaine** note et valide ce que le LM a appris :
+   c'est une phase de **renforcement**.
+
+> **À retenir** : un LLM est un modèle de langage neuronal de très grande taille,
+> fondé sur le **transformeur**, qui prédit le mot suivant et **généralise** grâce à
+> la représentation vectorielle des mots ; son apprentissage combine pré-entraînement
+> sur des documents, exemples *(question, réponse)* et renforcement humain.
+
+## Synthèse de la section
+
+Le paysage de l'IA s'organise comme une chaîne emboîtée : l'**IA** contient le
+**machine learning** (apprendre de l'expérience) ; le ML emploie les **réseaux de
+neurones** (fonctions de R^n dans R^m, faites de couches) ; empilés en profondeur,
+ils donnent le **deep learning**, rendu possible vers 2010 par le Big data et les
+GPU ; de l'évolution RNN → LSTM/GRU → encodeurs-décodeurs → attention naissent les
+**transformeurs**, socle des **LLM** et de l'**IA générative**.
+
+> **À retenir** : retenez la chaîne **IA → ML → réseaux de neurones → deep learning →
+> IA générative → LLM**, et que le deep learning a décollé **vers 2010** grâce au
+> **Big data** et aux **GPU**.

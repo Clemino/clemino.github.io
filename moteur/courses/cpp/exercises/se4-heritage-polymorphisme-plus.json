@@ -1,0 +1,600 @@
+[
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Comment déclare-t-on une méthode virtuelle pure en C++ ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "virtual double aire() const = 0;" },
+        { "id": "b", "label": "pure virtual double aire() const;" },
+        { "id": "c", "label": "virtual double aire() const { return 0; }" },
+        { "id": "d", "label": "abstract double aire() const;" }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Une méthode est **virtuelle pure** lorsqu'elle est `virtual` et **dépourvue de définition**, ce que signale le suffixe **`= 0`** : `virtual double aire() const = 0;`. Le `= 0` — le *pure-specifier* — indique l'absence d'implémentation dans la classe de base. Il n'existe pas de mot-clé `pure` ni `abstract` en C++ ; une méthode avec un corps `{ return 0; }` est une virtuelle ordinaire, pas pure.",
+    "concepts": ["methode-virtuelle-pure"]
+  },
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "À partir de quand une classe est-elle considérée comme abstraite ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Dès qu'elle contient au moins une méthode virtuelle pure." },
+        { "id": "b", "label": "Dès qu'elle contient au moins une méthode virtuelle (même avec un corps)." },
+        { "id": "c", "label": "Seulement si toutes ses méthodes sont virtuelles pures." },
+        { "id": "d", "label": "Dès qu'on écrit le mot-clé abstract devant le nom de la classe." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Une classe est **abstraite** dès qu'elle possède **au moins une** méthode virtuelle pure — il en suffit d'**une seule**, même si toutes les autres méthodes ont un corps. Une classe abstraite peut donc parfaitement contenir, à côté de sa virtuelle pure, des méthodes ordinaires, des attributs et des constructeurs. Une méthode `virtual` avec un corps ne rend pas la classe abstraite ; et le mot-clé `abstract` n'existe pas en C++.",
+    "concepts": ["classe-abstraite", "methode-virtuelle-pure"]
+  },
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une classe abstraite ne peut pas être instanciée : `Forme f;` est une erreur de compilation si `Forme` est abstraite.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. Une classe abstraite **ne peut pas être instanciée** : `Forme f;` comme `new Forme` sont refusés par le compilateur. C'est logique — une méthode virtuelle pure n'a **aucun code**, donc un objet `Forme` « pur » exposerait un appel sans implémentation. La classe abstraite reste cependant utilisable comme **type de pointeur ou de référence** (`Forme* p = new Cercle(...)`).",
+    "concepts": ["classe-abstraite"]
+  },
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une classe abstraite `Forme` déclare `virtual double aire() const = 0;`. Quelles affirmations sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "On ne peut pas écrire Forme f; — Forme est abstraite." },
+        { "id": "b", "label": "Forme* p = new Cercle(5.0); est valide si Cercle dérive de Forme et est concrète." },
+        { "id": "c", "label": "Une classe abstraite peut aussi contenir des méthodes ordinaires avec un corps." },
+        { "id": "d", "label": "Une classe dérivée de Forme est automatiquement concrète, même sans implémenter aire()." },
+        { "id": "e", "label": "Une référence Forme& peut désigner un objet d'une classe dérivée concrète." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c", "e"] },
+    "explanation": "`Forme` étant abstraite, `Forme f;` est interdit (a vrai), mais un **pointeur** `Forme*` ou une **référence** `Forme&` peut désigner un objet d'une classe dérivée **concrète** (b et e vrais). Une classe abstraite peut contenir des méthodes ordinaires à côté de sa virtuelle pure (c vrai). En revanche, une dérivée n'est **pas** automatiquement concrète : elle ne le devient qu'en **implémentant toutes** les virtuelles pures héritées — sinon elle reste abstraite (d faux).",
+    "concepts": ["classe-abstraite", "methode-virtuelle-pure"]
+  },
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète la classe abstraite `Forme` : `aire()` doit être une méthode virtuelle pure, et le destructeur doit être virtuel pour une classe de base polymorphe.",
+    "payload": {
+      "template": "class Forme {\n    public:\n        virtual double aire() const {{pure}};\n        {{kw}} ~Forme() = default;\n};",
+      "slots": [
+        { "id": "pure", "width": "sm" },
+        { "id": "kw", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "pure": "= 0", "kw": "virtual" },
+      "caseSensitive": false
+    },
+    "explanation": "Le suffixe **`= 0`** transforme `aire()` en méthode **virtuelle pure** : `virtual double aire() const = 0;`. Cela rend `Forme` abstraite. Le destructeur, lui, doit être **`virtual`** : `Forme` est conçue comme base polymorphe, manipulée par pointeur de base — sans destructeur virtuel, `delete` sur un `Forme*` ne détruirait pas la partie dérivée.",
+    "concepts": ["methode-virtuelle-pure", "classe-abstraite"]
+  },
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque sorte de méthode d'une classe de base à la contrainte qu'elle impose à une classe dérivée.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "Méthode non virtuelle (void f();)" },
+        { "id": "l2", "label": "Méthode virtuelle (virtual void f();)" },
+        { "id": "l3", "label": "Méthode virtuelle pure (virtual void f() = 0;)" }
+      ],
+      "right": [
+        { "id": "r1", "label": "La dérivée hérite un comportement fixe ; elle n'est pas censée le redéfinir" },
+        { "id": "r2", "label": "La dérivée hérite une implémentation par défaut qu'elle peut redéfinir si elle le souhaite" },
+        { "id": "r3", "label": "La dérivée doit fournir l'implémentation pour devenir concrète, sinon elle reste abstraite" }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3" } },
+    "explanation": "Une méthode **non virtuelle** transmet un comportement **fixe**, identique pour toute la hiérarchie. Une méthode **virtuelle** transmet une interface **et** une implémentation **par défaut** que la dérivée **peut** redéfinir. Une méthode **virtuelle pure** ne transmet qu'une **interface** : la dérivée **doit** l'implémenter pour devenir concrète (instanciable), sinon elle **reste abstraite**.",
+    "concepts": ["methode-virtuelle-pure", "classe-abstraite", "methode-virtuelle"]
+  },
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remets dans l'ordre logique les étapes de conception d'une hiérarchie reposant sur une classe abstraite `Forme`.",
+    "payload": {
+      "items": [
+        { "id": "e1", "label": "Déclarer la classe Forme avec la méthode virtuelle pure aire() = 0" },
+        { "id": "e2", "label": "Forme devient abstraite : aucun objet Forme ne peut être créé" },
+        { "id": "e3", "label": "Définir Cercle : public Forme qui implémente aire()" },
+        { "id": "e4", "label": "Cercle est concrète : on peut écrire Cercle c(5.0);" }
+      ]
+    },
+    "solution": { "order": ["e1", "e2", "e3", "e4"] },
+    "explanation": "On déclare d'abord la classe `Forme` avec sa méthode virtuelle pure `aire() = 0`. Ce `= 0` rend aussitôt `Forme` **abstraite** : aucun objet `Forme` n'est instanciable. On définit ensuite une classe dérivée `Cercle` qui **implémente** `aire()`. Ayant rempli le contrat, `Cercle` devient **concrète** : `Cercle c(5.0);` est alors légal.",
+    "concepts": ["classe-abstraite", "methode-virtuelle-pure"]
+  },
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ? `Cercle` dérive de la classe abstraite `Forme`.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual void description() const {\n            cout << \"Ceci est une forme.\" << endl;\n        }\n        virtual double aire() const = 0;\n};\n\nclass Cercle : public Forme {\n    private:\n        double rayon;\n    public:\n        Cercle(double r) : rayon(r) {}\n        void description() const override {\n            cout << \"Ceci est un cercle.\" << endl;\n        }\n        double aire() const override { return 3.0 * rayon * rayon; }\n};\n\nint main() {\n    Cercle c(2.0);\n    c.description();\n    cout << c.aire() << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "Ceci est un cercle.\n12" },
+    "explanation": "`Cercle` implémente les deux méthodes de `Forme` : c'est une classe **concrète**, donc `Cercle c(2.0);` est légal. `c.description()` exécute la version redéfinie de `Cercle` → `Ceci est un cercle.`. `c.aire()` calcule `3.0 * 2.0 * 2.0` = `12`.",
+    "concepts": ["classe-abstraite", "methode-virtuelle-pure"]
+  },
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? `Operation` est une classe abstraite.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Operation {\n    public:\n        virtual int calculer(int a, int b) const = 0;\n        virtual ~Operation() = default;\n};\n\nclass Addition : public Operation {\n    public:\n        int calculer(int a, int b) const override { return a + b; }\n};\n\nclass Produit : public Operation {\n    public:\n        int calculer(int a, int b) const override { return a * b; }\n};\n\nint main() {\n    Operation* ops[2];\n    ops[0] = new Addition;\n    ops[1] = new Produit;\n    for (int i = 0; i < 2; i++)\n        cout << ops[i]->calculer(3, 4) << endl;\n    delete ops[0];\n    delete ops[1];\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "7\n12" },
+    "explanation": "`Operation` est abstraite : on ne crée pas d'`Operation`, mais un tableau de pointeurs `Operation*` désignant des objets **concrets**. `ops[0]` pointe une `Addition` → `calculer(3, 4)` renvoie `3 + 4` = `7` ; `ops[1]` pointe un `Produit` → `3 * 4` = `12`. La liaison dynamique aiguille chaque appel vers la bonne implémentation.",
+    "concepts": ["classe-abstraite", "methode-virtuelle-pure"]
+  },
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? `presenter()` est une méthode ordinaire de la classe abstraite `Animal`.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Animal {\n    public:\n        virtual void crier() const = 0;\n        void presenter() const {\n            cout << \"Un animal qui dit : \";\n            crier();\n        }\n        virtual ~Animal() = default;\n};\n\nclass Chien : public Animal {\n    public:\n        void crier() const override { cout << \"Wouf\" << endl; }\n};\n\nint main() {\n    Chien c;\n    c.presenter();\n    Animal* a = &c;\n    a->presenter();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "Un animal qui dit : Wouf\nUn animal qui dit : Wouf" },
+    "explanation": "`Animal` est abstraite (`crier()` est virtuelle pure) mais possède une méthode **ordinaire** `presenter()` avec un corps. `presenter()` appelle `crier()` : grâce à la liaison dynamique, c'est `Chien::crier()` qui s'exécute → `Wouf`. L'appel direct `c.presenter()` et l'appel `a->presenter()` via le pointeur `Animal*` produisent donc la **même** ligne.",
+    "concepts": ["classe-abstraite", "methode-virtuelle-pure"]
+  },
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Définis la classe abstraite `Forme` (méthode virtuelle pure `aire()`) et la classe concrète `Rectangle` qui l'implémente.",
+    "payload": {
+      "spec": "Definir une classe abstraite Forme avec une methode virtuelle PURE double aire() const (donc = 0) et un destructeur virtuel par defaut. Definir la classe Rectangle qui herite publiquement de Forme, a deux attributs prives double largeur et hauteur, un constructeur Rectangle(double l, double h), et qui REDEFINIT aire() const avec override pour renvoyer largeur*hauteur. Le main lit deux doubles, construit un Rectangle, le pointe avec un Forme* et affiche aire() via ce pointeur. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// a completer : la classe abstraite Forme et la classe Rectangle\n\nint main() {\n    double l, h;\n    cin >> l >> h;\n    Rectangle r(l, h);\n    Forme* f = &r;\n    cout << f->aire() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "rectangle 4x5", "stdin": "4 5", "expectedStdout": "20" },
+        { "name": "rectangle 7x3", "stdin": "7 3", "expectedStdout": "21" },
+        { "name": "cache carre", "stdin": "6 6", "expectedStdout": "36", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual double aire() const = 0;\n        virtual ~Forme() = default;\n};\n\nclass Rectangle : public Forme {\n    private:\n        double largeur, hauteur;\n    public:\n        Rectangle(double l, double h) : largeur(l), hauteur(h) {}\n        double aire() const override { return largeur * hauteur; }\n};\n\nint main() {\n    double l, h;\n    cin >> l >> h;\n    Rectangle r(l, h);\n    Forme* f = &r;\n    cout << f->aire() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le `= 0` rend `aire()` **virtuelle pure** : `Forme` est abstraite et ne peut pas être instanciée. `Rectangle` **implémente** `aire()` (marquée `override`) : elle devient **concrète**, donc `Rectangle r(l, h);` est valide. L'appel `f->aire()` via le pointeur `Forme*` est en liaison dynamique et exécute `Rectangle::aire()`.",
+    "concepts": ["classe-abstraite", "methode-virtuelle-pure"]
+  },
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "La classe abstraite `Animal` impose une méthode `cri()`. Écris deux classes concrètes `Chat` et `Vache` qui l'implémentent.",
+    "payload": {
+      "spec": "La classe abstraite Animal (deja fournie) declare une methode virtuelle pure string cri() const et un destructeur virtuel par defaut. Definir deux classes concretes Chat et Vache qui heritent publiquement d'Animal : Chat::cri() renvoie la chaine \"Miaou\", Vache::cri() renvoie la chaine \"Meuh\". Chaque redefinition utilise override. Le main lit un entier n : si n vaut 1 il cree un Chat via un Animal*, sinon un Vache, affiche cri() puis fait delete. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Animal {\n    public:\n        virtual string cri() const = 0;\n        virtual ~Animal() = default;\n};\n\n// a completer : les classes Chat et Vache\n\nint main() {\n    int n;\n    cin >> n;\n    Animal* a;\n    if (n == 1)\n        a = new Chat;\n    else\n        a = new Vache;\n    cout << a->cri() << endl;\n    delete a;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "chat", "stdin": "1", "expectedStdout": "Miaou" },
+        { "name": "vache", "stdin": "2", "expectedStdout": "Meuh" },
+        { "name": "cache autre", "stdin": "0", "expectedStdout": "Meuh", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Animal {\n    public:\n        virtual string cri() const = 0;\n        virtual ~Animal() = default;\n};\n\nclass Chat : public Animal {\n    public:\n        string cri() const override { return \"Miaou\"; }\n};\n\nclass Vache : public Animal {\n    public:\n        string cri() const override { return \"Meuh\"; }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    Animal* a;\n    if (n == 1)\n        a = new Chat;\n    else\n        a = new Vache;\n    cout << a->cri() << endl;\n    delete a;\n    return 0;\n}"
+    },
+    "explanation": "`Animal` est une **interface** : sa méthode virtuelle pure `cri()` impose la signature, sans dicter l'implémentation. `Chat` et `Vache` remplissent ce contrat chacune à sa façon et deviennent **concrètes**. Le `main` crée l'objet sans connaître son type final ; l'appel `a->cri()` via `Animal*` exécute la bonne version par liaison dynamique.",
+    "concepts": ["classe-abstraite", "methode-virtuelle-pure"]
+  },
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "La classe abstraite `CapteurTemperature` fournit une méthode ordinaire `rapport()` qui s'appuie sur la virtuelle pure `lire()`. Écris la classe concrète `CapteurFixe`.",
+    "payload": {
+      "spec": "La classe abstraite CapteurTemperature (deja fournie) declare une methode virtuelle pure int lire() const, un destructeur virtuel par defaut, et une methode ORDINAIRE rapport() const qui : ecrit 'Temperature : ' suivi de la valeur renvoyee par lire() et d'un retour a la ligne, puis ecrit 'Alerte chaleur' si cette valeur est strictement superieure a 30, sinon 'Normal', suivi d'un retour a la ligne. Definir la classe concrete CapteurFixe qui herite publiquement de CapteurTemperature, a un attribut prive int valeur, un constructeur CapteurFixe(int v), et redefinit lire() const avec override pour renvoyer valeur. Le main lit un entier, construit un CapteurFixe et appelle rapport(). Ne pas modifier le main ni la classe CapteurTemperature.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass CapteurTemperature {\n    public:\n        virtual int lire() const = 0;\n        void rapport() const {\n            int t = lire();\n            cout << \"Temperature : \" << t << endl;\n            if (t > 30)\n                cout << \"Alerte chaleur\" << endl;\n            else\n                cout << \"Normal\" << endl;\n        }\n        virtual ~CapteurTemperature() = default;\n};\n\n// a completer : la classe CapteurFixe\n\nint main() {\n    int v;\n    cin >> v;\n    CapteurFixe c(v);\n    c.rapport();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "chaleur", "stdin": "35", "expectedStdout": "Temperature : 35\nAlerte chaleur" },
+        { "name": "normal", "stdin": "22", "expectedStdout": "Temperature : 22\nNormal" },
+        { "name": "cache limite", "stdin": "30", "expectedStdout": "Temperature : 30\nNormal", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass CapteurTemperature {\n    public:\n        virtual int lire() const = 0;\n        void rapport() const {\n            int t = lire();\n            cout << \"Temperature : \" << t << endl;\n            if (t > 30)\n                cout << \"Alerte chaleur\" << endl;\n            else\n                cout << \"Normal\" << endl;\n        }\n        virtual ~CapteurTemperature() = default;\n};\n\nclass CapteurFixe : public CapteurTemperature {\n    private:\n        int valeur;\n    public:\n        CapteurFixe(int v) : valeur(v) {}\n        int lire() const override { return valeur; }\n};\n\nint main() {\n    int v;\n    cin >> v;\n    CapteurFixe c(v);\n    c.rapport();\n    return 0;\n}"
+    },
+    "explanation": "Cette structure illustre le **patron méthode-modèle** : la classe abstraite fixe un algorithme générique (`rapport()`) qui délègue le détail variable (`lire()`) à une méthode virtuelle pure. `CapteurFixe` n'a qu'à implémenter `lire()` pour devenir concrète ; `rapport()`, héritée telle quelle, appelle automatiquement la bonne version de `lire()` par liaison dynamique.",
+    "concepts": ["classe-abstraite", "methode-virtuelle-pure"]
+  },
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas. Le `main` tente de créer un objet d'une classe abstraite. Corrige-le.",
+    "payload": {
+      "spec": "Forme est une classe abstraite (methode virtuelle pure aire()). On ne peut donc PAS ecrire 'Forme f;'. Cette ligne, inutile, doit etre supprimee. La classe Carre est concrete et reste utilisable : il faut manipuler la Forme via un pointeur ou une reference vers un objet Carre. Le main lit un double cote, construit un Carre, et doit afficher son aire via un pointeur Forme*.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual double aire() const = 0;\n        virtual ~Forme() = default;\n};\n\nclass Carre : public Forme {\n    private:\n        double cote;\n    public:\n        Carre(double c) : cote(c) {}\n        double aire() const override { return cote * cote; }\n};\n\nint main() {\n    double c;\n    cin >> c;\n    Forme f;\n    Carre carre(c);\n    cout << carre.aire() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "carre 5", "stdin": "5", "expectedStdout": "25" },
+        { "name": "carre 3", "stdin": "3", "expectedStdout": "9" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual double aire() const = 0;\n        virtual ~Forme() = default;\n};\n\nclass Carre : public Forme {\n    private:\n        double cote;\n    public:\n        Carre(double c) : cote(c) {}\n        double aire() const override { return cote * cote; }\n};\n\nint main() {\n    double c;\n    cin >> c;\n    Carre carre(c);\n    Forme* f = &carre;\n    cout << f->aire() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `Forme f;` tente d'**instancier une classe abstraite** — g++ refuse (`cannot declare variable 'f' to be of abstract type 'Forme'`), car la virtuelle pure `aire()` n'a pas de code. On ne crée jamais une `Forme` directement : on crée un objet **concret** (`Carre`) et on le **désigne** par un pointeur `Forme*`. La correction supprime `Forme f;` et utilise `Forme* f = &carre;`.",
+    "concepts": ["classe-abstraite", "methode-virtuelle-pure"]
+  },
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme ne compile pas. La classe `Piano` est censée être concrète, mais l'auteur a oublié d'implémenter une méthode héritée. Corrige-le.",
+    "payload": {
+      "spec": "La classe abstraite Instrument declare DEUX methodes virtuelles pures : string nom() const et string jouer() const. Une classe derivee n'est concrete que si elle implemente TOUTES les virtuelles pures heritees. Piano n'implemente que nom() : elle reste donc abstraite, et 'Piano p;' echoue a la compilation. Il faut ajouter dans Piano la redefinition de jouer() const (avec override) : elle doit renvoyer la chaine \"Do Re Mi\". Le main cree un Piano et affiche nom() puis jouer().",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Instrument {\n    public:\n        virtual string nom() const = 0;\n        virtual string jouer() const = 0;\n        virtual ~Instrument() = default;\n};\n\nclass Piano : public Instrument {\n    public:\n        string nom() const override { return \"Piano\"; }\n};\n\nint main() {\n    Piano p;\n    cout << p.nom() << endl;\n    cout << p.jouer() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "piano", "stdin": "", "expectedStdout": "Piano\nDo Re Mi" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Instrument {\n    public:\n        virtual string nom() const = 0;\n        virtual string jouer() const = 0;\n        virtual ~Instrument() = default;\n};\n\nclass Piano : public Instrument {\n    public:\n        string nom() const override { return \"Piano\"; }\n        string jouer() const override { return \"Do Re Mi\"; }\n};\n\nint main() {\n    Piano p;\n    cout << p.nom() << endl;\n    cout << p.jouer() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `Instrument` a **deux** virtuelles pures, mais `Piano` n'implémente que `nom()`. La virtuelle pure `jouer()` reste sans implémentation → `Piano` **reste abstraite**, et `Piano p;` échoue (`cannot declare variable 'p' to be of abstract type 'Piano'`). Une dérivée n'est concrète que si elle implémente **toutes** les virtuelles pures héritées. La correction ajoute `jouer()` à `Piano`.",
+    "concepts": ["methode-virtuelle-pure", "classe-abstraite"]
+  },
+  {
+    "chapterSlug": "classes-abstraites",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme ne compile pas. `Triangle` est censée être concrète, mais sa méthode `aire()` n'a pas la bonne signature et ne redéfinit donc pas la virtuelle pure. Corrige-le.",
+    "payload": {
+      "spec": "Dans Forme, la methode virtuelle pure est declaree double aire() const (avec const). Pour qu'une redefinition remplace une methode virtuelle, elle doit avoir EXACTEMENT la meme signature. Triangle::aire() a oublie le const : sa signature differe de celle de la base, elle ne redefinit donc pas aire() = 0. La virtuelle pure reste sans implementation et Triangle reste abstraite, ce qui fait echouer 'Triangle t(...)'. Il faut ajouter le const manquant (et override) a Triangle::aire(). Le main lit deux doubles base et hauteur, construit un Triangle et affiche son aire (base*hauteur/2).",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual double aire() const = 0;\n        virtual ~Forme() = default;\n};\n\nclass Triangle : public Forme {\n    private:\n        double base, hauteur;\n    public:\n        Triangle(double b, double h) : base(b), hauteur(h) {}\n        double aire() { return base * hauteur / 2.0; }\n};\n\nint main() {\n    double b, h;\n    cin >> b >> h;\n    Triangle t(b, h);\n    cout << t.aire() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "triangle 6x4", "stdin": "6 4", "expectedStdout": "12" },
+        { "name": "triangle 10x5", "stdin": "10 5", "expectedStdout": "25" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual double aire() const = 0;\n        virtual ~Forme() = default;\n};\n\nclass Triangle : public Forme {\n    private:\n        double base, hauteur;\n    public:\n        Triangle(double b, double h) : base(b), hauteur(h) {}\n        double aire() const override { return base * hauteur / 2.0; }\n};\n\nint main() {\n    double b, h;\n    cin >> b >> h;\n    Triangle t(b, h);\n    cout << t.aire() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `Forme::aire()` est `const`, mais `Triangle::aire()` ne l'est pas — les signatures **diffèrent**, donc cette méthode ne **redéfinit pas** la virtuelle pure (elle la **masquerait**). La virtuelle pure héritée restant sans implémentation, `Triangle` **reste abstraite** et `Triangle t(b, h);` échoue (`cannot declare variable 't' to be of abstract type 'Triangle'`). La correction ajoute le `const` manquant pour que les signatures coïncident ; `override` aurait d'ailleurs signalé l'erreur plus tôt.",
+    "concepts": ["methode-virtuelle-pure", "classe-abstraite"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Comment déclare-t-on une collection hétérogène de formes en C++ ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "std::vector<Forme*> formes;" },
+        { "id": "b", "label": "std::vector<Forme> formes;" },
+        { "id": "c", "label": "std::vector<Forme&> formes;" },
+        { "id": "d", "label": "Forme formes[];" }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Une **collection polymorphe** se déclare comme un conteneur de **pointeurs vers la classe de base** : `std::vector<Forme*>`. Chaque pointeur peut alors désigner un objet de n'importe quelle classe dérivée. On ne peut **pas** stocker les objets par valeur (`std::vector<Forme>`) : `Forme` est abstraite, et même concrète la copie par valeur découperait les objets. Un conteneur de références (`std::vector<Forme&>`) est interdit — une référence n'est ni copiable ni réaffectable.",
+    "concepts": ["collection-polymorphe", "polymorphisme"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Lors de l'appel `f->description()` sur un pointeur `Forme* f` (méthode `virtual`), comment le programme sait-il quelle version exécuter ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Il suit le pointeur caché de l'objet vers la vtable de sa classe réelle, y lit l'adresse de la méthode, puis l'exécute." },
+        { "id": "b", "label": "Le compilateur a déjà fixé la méthode à appeler d'après le type Forme* — aucune décision à l'exécution." },
+        { "id": "c", "label": "Le programme teste le type de l'objet avec une série de if puis appelle la méthode correspondante." },
+        { "id": "d", "label": "Le système choisit la méthode au hasard parmi les classes dérivées." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Le compilateur génère, pour chaque classe polymorphe, une **vtable** : une table contenant l'**adresse** de chaque méthode virtuelle dans sa version propre à la classe. Chaque objet polymorphe contient un **pointeur caché** vers la vtable de sa classe réelle. L'appel `f->description()` suit ce pointeur jusqu'à la vtable, y **lit l'adresse** de la bonne version, puis l'**exécute**. Il n'y a ni série de `if` ni choix figé à la compilation : c'est une indirection par table.",
+    "concepts": ["liaison-dynamique", "polymorphisme"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quand on parcourt un `std::vector<Forme*>` pour libérer ses objets, `formes.clear()` suffit à éviter toute fuite mémoire.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. Le conteneur ne gère que **les pointeurs** : `formes.clear()` détruit les `Forme*` du vecteur, mais **jamais** les objets pointés, créés par `new` sur le tas. Sans un `delete` explicite sur chaque élément **avant** le `clear()`, les objets fuient. Il faut d'abord boucler `for (Forme* f : formes) delete f;`, puis éventuellement `formes.clear()`.",
+    "concepts": ["collection-polymorphe", "polymorphisme"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On parcourt un `std::vector<Forme*>` rempli de `Cercle` et de `Triangle`. Quelles affirmations sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Une seule boucle, sans aucun test de type, traite tous les éléments." },
+        { "id": "b", "label": "Pour que f->aire() exécute la bonne version, aire() doit être virtual dans Forme." },
+        { "id": "c", "label": "Ajouter une classe Carre n'oblige pas à modifier la boucle de parcours." },
+        { "id": "d", "label": "Sans virtual, f->aire() appellerait toujours Forme::aire() (liaison statique)." },
+        { "id": "e", "label": "Le polymorphisme fonctionne ici parce que les objets sont copiés par valeur dans le vecteur." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c", "d"] },
+    "explanation": "Le traitement polymorphe d'une collection se fait par une **seule boucle sans test de type** (a vrai) : la liaison dynamique aiguille chaque appel. Cela exige que la méthode soit **`virtual`** (b vrai) ; sans `virtual`, l'appel via `Forme*` reste en **liaison statique** et appelle toujours `Forme::aire()` (d vrai). Ajouter une nouvelle forme ne change rien à la boucle (c vrai). En revanche, le polymorphisme tient justement parce qu'on stocke des **pointeurs**, pas des copies par valeur — copier par valeur découperait les objets (e faux).",
+    "concepts": ["collection-polymorphe", "liaison-dynamique", "polymorphisme"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète la boucle qui parcourt une collection polymorphe `std::vector<Forme*> formes` et affiche l'aire de chaque forme via la liaison dynamique.",
+    "payload": {
+      "template": "for (Forme* f : formes) {\n    cout << f{{acces}}aire() << endl;\n}",
+      "slots": [
+        { "id": "acces", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "acces": "->" },
+      "caseSensitive": false
+    },
+    "explanation": "`f` est un **pointeur** (`Forme*`) : on accède à un membre via l'opérateur flèche **`->`**, qui déréférence le pointeur puis accède au membre. `f->aire()`, équivalent à `(*f).aire()`, est résolu en **liaison dynamique** et exécute la version du type réel de l'objet pointé. L'opérateur point `.` s'emploierait sur un objet ou une référence, pas sur un pointeur.",
+    "concepts": ["collection-polymorphe", "liaison-dynamique"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque ingrédient du polymorphisme au rôle qu'il joue.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "Pointeur ou référence de la classe de base" },
+        { "id": "l2", "label": "Méthode déclarée virtual" },
+        { "id": "l3", "label": "Destructeur virtual" },
+        { "id": "l4", "label": "std::vector<Base*>" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Permet de désigner un objet dérivé sans connaître son type exact" },
+        { "id": "r2", "label": "Active la liaison dynamique : l'appel exécute la version du type réel" },
+        { "id": "r3", "label": "Garantit que delete via un pointeur de base détruit aussi la partie dérivée" },
+        { "id": "r4", "label": "Rassemble des objets de classes dérivées différentes dans un conteneur unique" }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3", "l4": "r4" } },
+    "explanation": "Le polymorphisme tient ensemble par quatre pièces : un **pointeur/référence de base** désigne un objet dérivé sans connaître son type exact ; une méthode **`virtual`** active la **liaison dynamique** ; un **destructeur `virtual`** garantit que `delete` via un pointeur de base détruit la partie dérivée ; un **`std::vector<Base*>`** rassemble des objets hétérogènes dans une structure unique.",
+    "concepts": ["polymorphisme", "liaison-dynamique", "collection-polymorphe"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remets dans l'ordre les étapes du cycle de vie complet d'une collection polymorphe `std::vector<Forme*>`.",
+    "payload": {
+      "items": [
+        { "id": "e1", "label": "Déclarer std::vector<Forme*> formes;" },
+        { "id": "e2", "label": "Remplir le vecteur avec formes.push_back(new Cercle(...));" },
+        { "id": "e3", "label": "Parcourir le vecteur et appeler f->aire() sur chaque élément" },
+        { "id": "e4", "label": "Boucler sur le vecteur et faire delete f sur chaque pointeur" }
+      ]
+    },
+    "solution": { "order": ["e1", "e2", "e3", "e4"] },
+    "explanation": "On **déclare** le conteneur de pointeurs, on le **remplit** avec des objets dérivés créés par `new`, on le **parcourt** pour traiter chaque élément par liaison dynamique, puis on **libère** chaque objet avec `delete` — les objets viennent du tas, le conteneur ne libère que les pointeurs. Oublier la dernière étape provoque une fuite mémoire.",
+    "concepts": ["collection-polymorphe", "polymorphisme"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? On somme les pattes d'une collection polymorphe d'animaux.",
+    "payload": {
+      "program": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Animal {\n    public:\n        virtual int pattes() const = 0;\n        virtual ~Animal() = default;\n};\n\nclass Chien : public Animal {\n    public:\n        int pattes() const override { return 4; }\n};\n\nclass Oiseau : public Animal {\n    public:\n        int pattes() const override { return 2; }\n};\n\nint main() {\n    vector<Animal*> zoo;\n    zoo.push_back(new Chien);\n    zoo.push_back(new Oiseau);\n    zoo.push_back(new Oiseau);\n    zoo.push_back(new Chien);\n    int total = 0;\n    for (Animal* a : zoo)\n        total += a->pattes();\n    cout << total << endl;\n    for (Animal* a : zoo)\n        delete a;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "12" },
+    "explanation": "Le vecteur contient quatre `Animal*` : un `Chien` (4 pattes), deux `Oiseau` (2 pattes chacun), un `Chien` (4 pattes). La boucle appelle `a->pattes()` en **liaison dynamique** pour chaque élément : `4 + 2 + 2 + 4` = `12`. Une seule boucle, sans test de type, somme la collection hétérogène.",
+    "concepts": ["collection-polymorphe", "liaison-dynamique"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe l'ordre de construction et de destruction via un pointeur de base.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Base {\n    public:\n        Base()  { cout << \"Base()\" << endl; }\n        virtual ~Base() { cout << \"~Base()\" << endl; }\n};\n\nclass Derivee : public Base {\n    public:\n        Derivee()  { cout << \"Derivee()\" << endl; }\n        ~Derivee() override { cout << \"~Derivee()\" << endl; }\n};\n\nint main() {\n    Base* p = new Derivee;\n    cout << \"--- delete ---\" << endl;\n    delete p;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "Base()\nDerivee()\n--- delete ---\n~Derivee()\n~Base()" },
+    "explanation": "`new Derivee` construit l'objet de la base vers le sommet : `Base()` puis `Derivee()`. Le destructeur de `Base` étant **`virtual`**, `delete p` (sur un `Base*`) passe en **liaison dynamique** : il appelle d'abord `~Derivee()`, puis `~Base()`. La partie dérivée est donc bien détruite — sans destructeur virtuel, seul `~Base()` s'exécuterait.",
+    "concepts": ["liaison-dynamique", "polymorphisme"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Compare le passage par valeur et le passage par référence.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual void dessiner() const { cout << \"Forme\" << endl; }\n};\n\nclass Etoile : public Forme {\n    public:\n        void dessiner() const override { cout << \"Etoile\" << endl; }\n};\n\nvoid tracer(Forme f) {\n    f.dessiner();\n}\n\nvoid tracerRef(const Forme& f) {\n    f.dessiner();\n}\n\nint main() {\n    Etoile e;\n    tracer(e);\n    tracerRef(e);\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "Forme\nEtoile" },
+    "explanation": "`tracer(Forme f)` reçoit son paramètre **par valeur** : l'`Etoile` est **découpée** (object slicing), seule la sous-partie `Forme` est copiée dans `f`. `f.dessiner()` exécute donc `Forme::dessiner()` → `Forme`. `tracerRef(const Forme& f)` reçoit une **référence** : aucune copie, la liaison dynamique opère et `f.dessiner()` exécute `Etoile::dessiner()` → `Etoile`. Le polymorphisme exige un pointeur ou une référence, jamais une valeur.",
+    "concepts": ["polymorphisme", "liaison-dynamique"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Construis une collection polymorphe `std::vector<Forme*>` de `Rectangle` et de `Carre`, puis affiche la somme de leurs aires.",
+    "payload": {
+      "spec": "Definir une classe abstraite Forme avec une methode virtuelle pure int aire() const et un destructeur virtuel par defaut. Definir Rectangle (attributs prives int largeur et hauteur, constructeur Rectangle(int l, int h), aire() renvoie largeur*hauteur) et Carre (attribut prive int cote, constructeur Carre(int c), aire() renvoie cote*cote), toutes deux derivees publiques de Forme avec override. Le main lit un entier n, puis pour chacune des n formes lit un entier type : si type vaut 1 il lit largeur et hauteur et ajoute un Rectangle, sinon il lit cote et ajoute un Carre. Toutes les formes sont rangees dans un vector<Forme*>. Le programme affiche la somme des aires puis libere chaque objet. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\n// a completer : Forme (abstraite), Rectangle, Carre\n\nint main() {\n    int n;\n    cin >> n;\n    vector<Forme*> formes;\n    for (int i = 0; i < n; i++) {\n        int type;\n        cin >> type;\n        if (type == 1) {\n            int l, h;\n            cin >> l >> h;\n            formes.push_back(new Rectangle(l, h));\n        } else {\n            int c;\n            cin >> c;\n            formes.push_back(new Carre(c));\n        }\n    }\n    int total = 0;\n    for (Forme* f : formes)\n        total += f->aire();\n    cout << total << endl;\n    for (Forme* f : formes)\n        delete f;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "mixte", "stdin": "3\n1 4 5\n2 3\n1 2 2", "expectedStdout": "33" },
+        { "name": "carres", "stdin": "2\n2 10\n2 1", "expectedStdout": "101" },
+        { "name": "cache", "stdin": "1\n1 7 8", "expectedStdout": "56", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual int aire() const = 0;\n        virtual ~Forme() = default;\n};\n\nclass Rectangle : public Forme {\n    private:\n        int largeur, hauteur;\n    public:\n        Rectangle(int l, int h) : largeur(l), hauteur(h) {}\n        int aire() const override { return largeur * hauteur; }\n};\n\nclass Carre : public Forme {\n    private:\n        int cote;\n    public:\n        Carre(int c) : cote(c) {}\n        int aire() const override { return cote * cote; }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    vector<Forme*> formes;\n    for (int i = 0; i < n; i++) {\n        int type;\n        cin >> type;\n        if (type == 1) {\n            int l, h;\n            cin >> l >> h;\n            formes.push_back(new Rectangle(l, h));\n        } else {\n            int c;\n            cin >> c;\n            formes.push_back(new Carre(c));\n        }\n    }\n    int total = 0;\n    for (Forme* f : formes)\n        total += f->aire();\n    cout << total << endl;\n    for (Forme* f : formes)\n        delete f;\n    return 0;\n}"
+    },
+    "explanation": "Le `vector<Forme*>` rassemble des `Rectangle` et des `Carre` dans une **structure unique**. La boucle de calcul appelle `f->aire()` en **liaison dynamique** : chaque pointeur exécute la version de son type réel, sans aucun test de type. La boucle finale `delete f` libère les objets créés par `new` — le conteneur ne libère que les pointeurs.",
+    "concepts": ["collection-polymorphe", "liaison-dynamique", "polymorphisme"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "La classe `Employe` est polymorphe (`salaire()` virtuelle). Écris `Manager` puis calcule la masse salariale d'une collection `std::vector<Employe*>`.",
+    "payload": {
+      "spec": "La classe Employe (deja fournie) a un attribut PROTECTED int base, un constructeur Employe(int b), une methode virtual int salaire() const qui renvoie base, et un destructeur virtuel par defaut. Definir la classe Manager qui herite publiquement d'Employe, ajoute un attribut prive int prime, un constructeur Manager(int b, int p) qui appelle Employe(b) et initialise prime, et redefinit salaire() const avec override pour renvoyer base + prime. Le main lit un entier n, puis pour chacun des n employes lit un type et un salaire de base b : si type vaut 1 il lit une prime p et ajoute un Manager(b, p), sinon il ajoute un Employe(b). Tous sont ranges dans un vector<Employe*>. Le programme affiche la somme des salaires puis libere chaque objet. Ne pas modifier le main ni la classe Employe.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Employe {\n    protected:\n        int base;\n    public:\n        Employe(int b) : base(b) {}\n        virtual int salaire() const { return base; }\n        virtual ~Employe() = default;\n};\n\n// a completer : la classe Manager\n\nint main() {\n    int n;\n    cin >> n;\n    vector<Employe*> equipe;\n    for (int i = 0; i < n; i++) {\n        int t, b;\n        cin >> t >> b;\n        if (t == 1) {\n            int p;\n            cin >> p;\n            equipe.push_back(new Manager(b, p));\n        } else {\n            equipe.push_back(new Employe(b));\n        }\n    }\n    int masse = 0;\n    for (Employe* e : equipe)\n        masse += e->salaire();\n    cout << masse << endl;\n    for (Employe* e : equipe)\n        delete e;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "equipe mixte", "stdin": "3\n1 2000 500\n2 1800\n1 3000 1000", "expectedStdout": "8300" },
+        { "name": "employes simples", "stdin": "2\n2 1500\n2 1600", "expectedStdout": "3100" },
+        { "name": "cache", "stdin": "1\n1 2500 750", "expectedStdout": "3250", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Employe {\n    protected:\n        int base;\n    public:\n        Employe(int b) : base(b) {}\n        virtual int salaire() const { return base; }\n        virtual ~Employe() = default;\n};\n\nclass Manager : public Employe {\n    private:\n        int prime;\n    public:\n        Manager(int b, int p) : Employe(b), prime(p) {}\n        int salaire() const override { return base + prime; }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    vector<Employe*> equipe;\n    for (int i = 0; i < n; i++) {\n        int t, b;\n        cin >> t >> b;\n        if (t == 1) {\n            int p;\n            cin >> p;\n            equipe.push_back(new Manager(b, p));\n        } else {\n            equipe.push_back(new Employe(b));\n        }\n    }\n    int masse = 0;\n    for (Employe* e : equipe)\n        masse += e->salaire();\n    cout << masse << endl;\n    for (Employe* e : equipe)\n        delete e;\n    return 0;\n}"
+    },
+    "explanation": "`Employe` n'est pas abstraite ici : `salaire()` est `virtual` avec une **implémentation par défaut**. La collection `vector<Employe*>` mêle des `Employe` (qui gardent le comportement par défaut) et des `Manager` (qui le redéfinissent). La boucle `e->salaire()` appelle pour chacun la bonne version : `Employe::salaire()` renvoie `base`, `Manager::salaire()` renvoie `base + prime`. `Manager` lit `base` directement car cet attribut est `protected`.",
+    "concepts": ["collection-polymorphe", "liaison-dynamique", "polymorphisme"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris la fonction `plusGrande` qui reçoit une collection polymorphe `const std::vector<Forme*>&` et renvoie un pointeur vers la forme d'aire maximale.",
+    "payload": {
+      "spec": "La classe abstraite Forme (methode virtuelle pure int aire() const, destructeur virtuel) et la classe Rectangle (attributs prives int largeur et hauteur, constructeur Rectangle(int l, int h), aire() = largeur*hauteur, override) sont a definir. Definir la fonction const Forme* plusGrande(const vector<Forme*>& formes) qui parcourt la collection et renvoie le pointeur vers la forme dont aire() est la plus grande (le vecteur n'est jamais vide ; en cas d'egalite, n'importe quelle forme d'aire maximale convient). Le main lit un entier n, lit n couples largeur hauteur construisant chacun un Rectangle range dans un vector<Forme*>, affiche l'aire de la plus grande forme via plusGrande, puis libere chaque objet. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\n// a completer : Forme (abstraite), Rectangle, et la fonction plusGrande\n\nint main() {\n    int n;\n    cin >> n;\n    vector<Forme*> formes;\n    for (int i = 0; i < n; i++) {\n        int l, h;\n        cin >> l >> h;\n        formes.push_back(new Rectangle(l, h));\n    }\n    cout << plusGrande(formes)->aire() << endl;\n    for (Forme* f : formes)\n        delete f;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois rectangles", "stdin": "3\n2 3\n5 5\n4 1", "expectedStdout": "25" },
+        { "name": "deux rectangles", "stdin": "2\n10 10\n3 3", "expectedStdout": "100" },
+        { "name": "cache un seul", "stdin": "1\n6 7", "expectedStdout": "42", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual int aire() const = 0;\n        virtual ~Forme() = default;\n};\n\nclass Rectangle : public Forme {\n    private:\n        int largeur, hauteur;\n    public:\n        Rectangle(int l, int h) : largeur(l), hauteur(h) {}\n        int aire() const override { return largeur * hauteur; }\n};\n\nconst Forme* plusGrande(const vector<Forme*>& formes) {\n    const Forme* max = formes[0];\n    for (const Forme* f : formes)\n        if (f->aire() > max->aire())\n            max = f;\n    return max;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<Forme*> formes;\n    for (int i = 0; i < n; i++) {\n        int l, h;\n        cin >> l >> h;\n        formes.push_back(new Rectangle(l, h));\n    }\n    cout << plusGrande(formes)->aire() << endl;\n    for (Forme* f : formes)\n        delete f;\n    return 0;\n}"
+    },
+    "explanation": "`plusGrande` reçoit la collection par **référence constante** — pas de copie du vecteur. Elle parcourt les pointeurs et compare `f->aire()`, appelé en **liaison dynamique** : la fonction fonctionne pour n'importe quelle forme concrète, présente ou future, sans connaître leur type. Elle renvoie un `const Forme*` : un pointeur de base désignant l'élément gagnant.",
+    "concepts": ["collection-polymorphe", "polymorphisme", "liaison-dynamique"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas : la collection tente de stocker des objets d'une classe abstraite par valeur. Corrige-le.",
+    "payload": {
+      "spec": "Une collection polymorphe doit etre un conteneur de POINTEURS vers la classe de base : vector<Forme*>, pas vector<Forme>. Forme est abstraite, donc vector<Forme> est impossible (et meme concrete, stocker par valeur decouperait les objets). Il faut declarer vector<Forme*>, remplir avec push_back(new Carre(c)), parcourir avec des Forme* et f->aire(), et liberer chaque objet avec delete a la fin. Le main lit un entier n puis n entiers cote ; il construit n Carre et affiche la somme de leurs aires.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual int aire() const = 0;\n        virtual ~Forme() = default;\n};\n\nclass Carre : public Forme {\n    private:\n        int cote;\n    public:\n        Carre(int c) : cote(c) {}\n        int aire() const override { return cote * cote; }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    vector<Forme> formes;\n    for (int i = 0; i < n; i++) {\n        int c;\n        cin >> c;\n        formes.push_back(Carre(c));\n    }\n    int total = 0;\n    for (const Forme& f : formes)\n        total += f.aire();\n    cout << total << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois carres", "stdin": "3\n2\n3\n4", "expectedStdout": "29" },
+        { "name": "un carre", "stdin": "1\n5", "expectedStdout": "25" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual int aire() const = 0;\n        virtual ~Forme() = default;\n};\n\nclass Carre : public Forme {\n    private:\n        int cote;\n    public:\n        Carre(int c) : cote(c) {}\n        int aire() const override { return cote * cote; }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    vector<Forme*> formes;\n    for (int i = 0; i < n; i++) {\n        int c;\n        cin >> c;\n        formes.push_back(new Carre(c));\n    }\n    int total = 0;\n    for (const Forme* f : formes)\n        total += f->aire();\n    cout << total << endl;\n    for (Forme* f : formes)\n        delete f;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `vector<Forme>` exige des objets `Forme` **par valeur**, mais `Forme` est **abstraite** — g++ refuse d'instancier le conteneur. Une collection polymorphe se déclare comme un conteneur de **pointeurs de base** : `vector<Forme*>`. La correction stocke `new Carre(c)`, parcourt avec des `Forme*` et `f->aire()`, et ajoute la boucle `delete f` pour libérer les objets du tas.",
+    "concepts": ["collection-polymorphe", "classe-abstraite", "polymorphisme"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme compile mais affiche `0` au lieu de `22` : la boucle ne calcule pas les bonnes aires. Corrige le code.",
+    "payload": {
+      "spec": "La collection vector<Forme*> contient des Rectangle, mais l'appel f->aire() via un pointeur Forme* affiche 0 : la methode aire() de Forme n'est pas declaree VIRTUAL, donc l'appel est resolu en liaison statique et execute toujours Forme::aire() qui renvoie 0. Il faut declarer aire() VIRTUAL dans Forme (en gardant son corps return 0) et marquer la redefinition de Rectangle avec override. Le programme cree deux Rectangle (3x4 et 5x2) dans un vector<Forme*>, affiche la somme de leurs aires, puis libere chaque objet : il doit afficher 22.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Forme {\n    public:\n        int aire() const { return 0; }\n        virtual ~Forme() = default;\n};\n\nclass Rectangle : public Forme {\n    private:\n        int largeur, hauteur;\n    public:\n        Rectangle(int l, int h) : largeur(l), hauteur(h) {}\n        int aire() const { return largeur * hauteur; }\n};\n\nint main() {\n    vector<Forme*> formes;\n    formes.push_back(new Rectangle(3, 4));\n    formes.push_back(new Rectangle(5, 2));\n    int total = 0;\n    for (Forme* f : formes)\n        total += f->aire();\n    cout << total << endl;\n    for (Forme* f : formes)\n        delete f;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "somme des aires", "stdin": "", "expectedStdout": "22" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual int aire() const { return 0; }\n        virtual ~Forme() = default;\n};\n\nclass Rectangle : public Forme {\n    private:\n        int largeur, hauteur;\n    public:\n        Rectangle(int l, int h) : largeur(l), hauteur(h) {}\n        int aire() const override { return largeur * hauteur; }\n};\n\nint main() {\n    vector<Forme*> formes;\n    formes.push_back(new Rectangle(3, 4));\n    formes.push_back(new Rectangle(5, 2));\n    int total = 0;\n    for (Forme* f : formes)\n        total += f->aire();\n    cout << total << endl;\n    for (Forme* f : formes)\n        delete f;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `aire()` n'est pas `virtual` dans `Forme`. L'appel `f->aire()`, fait via un pointeur `Forme*`, est alors résolu en **liaison statique** d'après le type **déclaré** du pointeur — il exécute toujours `Forme::aire()`, qui renvoie `0`, d'où le total `0`. La correction déclare `aire()` **`virtual`** dans `Forme` : l'appel passe en liaison dynamique et exécute `Rectangle::aire()` → `12 + 10` = `22`. Le `override` sur la version de `Rectangle` fait vérifier la redéfinition par le compilateur.",
+    "concepts": ["liaison-dynamique", "collection-polymorphe", "polymorphisme"]
+  },
+  {
+    "chapterSlug": "polymorphisme-collections",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme détruit ses objets via des pointeurs de base, mais le destructeur de `Cercle` n'est jamais appelé : la sortie est `cercle` puis `~Forme` seulement. Corrige le code.",
+    "payload": {
+      "spec": "Les objets de la collection vector<Forme*> sont detruits par delete via un pointeur Forme*. Pour que delete appelle aussi le destructeur de la classe derivee, le destructeur de la classe de base Forme doit etre declare VIRTUAL. Sans cela, seul ~Forme s'execute et la partie Cercle fuit. Il faut declarer le destructeur de Forme virtual (et marquer celui de Cercle avec override). Forme::~Forme() ecrit '~Forme', Cercle::~Cercle() ecrit '~Cercle', chaque message suivi d'un retour a la ligne ; Cercle::description() ecrit 'cercle'. Le programme cree un Cercle dans un vector<Forme*>, appelle description() puis fait delete : il doit afficher 'cercle' puis '~Cercle' puis '~Forme'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual void description() const = 0;\n        ~Forme() { cout << \"~Forme\" << endl; }\n};\n\nclass Cercle : public Forme {\n    public:\n        void description() const override { cout << \"cercle\" << endl; }\n        ~Cercle() { cout << \"~Cercle\" << endl; }\n};\n\nint main() {\n    vector<Forme*> formes;\n    formes.push_back(new Cercle);\n    for (Forme* f : formes)\n        f->description();\n    for (Forme* f : formes)\n        delete f;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "destruction complete", "stdin": "", "expectedStdout": "cercle\n~Cercle\n~Forme" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual void description() const = 0;\n        virtual ~Forme() { cout << \"~Forme\" << endl; }\n};\n\nclass Cercle : public Forme {\n    public:\n        void description() const override { cout << \"cercle\" << endl; }\n        ~Cercle() override { cout << \"~Cercle\" << endl; }\n};\n\nint main() {\n    vector<Forme*> formes;\n    formes.push_back(new Cercle);\n    for (Forme* f : formes)\n        f->description();\n    for (Forme* f : formes)\n        delete f;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : le destructeur de `Forme` n'est pas `virtual`. `delete f`, appliqué à un `Forme*` qui pointe un `Cercle`, est alors résolu en **liaison statique** : seul `~Forme()` s'exécute, `~Cercle()` est ignoré — toute ressource propre au `Cercle` fuirait. La correction déclare `virtual ~Forme()` : `delete f` passe en liaison dynamique et appelle `~Cercle()` **puis** `~Forme()`. Détruire une collection polymorphe sans destructeur virtuel, c'est programmer une fuite mémoire.",
+    "concepts": ["collection-polymorphe", "polymorphisme", "liaison-dynamique"]
+  }
+]

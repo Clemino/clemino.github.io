@@ -1,0 +1,536 @@
+[
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quel en-tête faut-il inclure pour utiliser `std::cout` et `std::cin` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "<stdio.h>" },
+        { "id": "b", "label": "<iostream>" },
+        { "id": "c", "label": "<string>" },
+        { "id": "d", "label": "<namespace>" }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Les flux d'entrée/sortie de C++ (`cout`, `cin`, `cerr`, `endl`) sont déclarés dans l'en-tête standard `<iostream>` (input/output stream). `<stdio.h>` est l'en-tête d'entrées/sorties du C (`printf`/`scanf`).",
+    "concepts": ["iostream"]
+  },
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Le C++ dispose d'un ramasse-miettes (garbage collector) qui libère automatiquement la mémoire, comme Java.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux : contrairement à Java, le C++ impose une gestion mémoire **manuelle**. C'est au programmeur de libérer ce qu'il a alloué, sous peine de fuites mémoire. C'est l'un des points où C++ privilégie le contrôle et la performance plutôt que la sécurité automatique.",
+    "concepts": ["cpp-vs-c"]
+  },
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi ces affirmations sur le C++ comparé à C et Java, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "C++ est multi-paradigme : procédural et orienté objet." },
+        { "id": "b", "label": "C++ applique un contrôle de type plus strict que le C." },
+        { "id": "c", "label": "Un programme C++ est interprété par une machine virtuelle." },
+        { "id": "d", "label": "C++ est compilé en code machine exécuté directement par le système." },
+        { "id": "e", "label": "C++ interdit toute programmation procédurale." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "d"] },
+    "explanation": "C++ est multi-paradigme (procédural + objet + générique) et a un typage plus strict que le C. Il est compilé en code machine natif exécuté par l'OS — c'est Java qui est compilé en bytecode interprété par la JVM. C++ n'interdit pas le procédural : il l'autorise au contraire pleinement.",
+    "concepts": ["cpp-vs-c"]
+  },
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ordonne les trois étapes successives de la production d'un exécutable C++, de la première à la dernière.",
+    "payload": {
+      "items": [
+        { "id": "link", "label": "Édition de liens : fusionner les .o en un exécutable" },
+        { "id": "prep", "label": "Préprocesseur : traiter les directives #include" },
+        { "id": "comp", "label": "Compilation : traduire chaque .cpp en fichier objet .o" }
+      ]
+    },
+    "solution": { "order": ["prep", "comp", "link"] },
+    "explanation": "Le modèle de compilation C++ se déroule en trois temps : (1) le **préprocesseur** traite les directives `#` comme `#include` ; (2) la **compilation** traduit chaque `.cpp` isolément en fichier objet `.o` ; (3) l'**édition de liens** fusionne tous les `.o` (et les bibliothèques) en un seul exécutable.",
+    "concepts": ["compilation-gpp"]
+  },
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque option de `g++` à son effet.",
+    "payload": {
+      "left": [
+        { "id": "wall", "label": "-Wall" },
+        { "id": "c", "label": "-c" },
+        { "id": "o", "label": "-o prog" },
+        { "id": "std", "label": "-std=c++17" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Active tous les avertissements" },
+        { "id": "r2", "label": "Compile seulement, sans édition de liens" },
+        { "id": "r3", "label": "Nomme le fichier produit" },
+        { "id": "r4", "label": "Fixe la version du langage" }
+      ]
+    },
+    "solution": { "pairs": { "wall": "r1", "c": "r2", "o": "r3", "std": "r4" } },
+    "explanation": "`-Wall` active tous les avertissements (à utiliser systématiquement) ; `-c` arrête le processus après la compilation, sans lier (produit un `.o`) ; `-o nom` choisit le nom du fichier produit ; `-std=c++17` fixe la version du langage.",
+    "concepts": ["compilation-gpp"]
+  },
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complète le programme minimal en C++ : l'inclusion de l'en-tête d'E/S et l'opérateur d'affichage.",
+    "payload": {
+      "template": "#include {{h}}\nusing namespace std;\nint main() {\n    cout {{op}} \"Hello world!\" << endl;\n    return 0;\n}",
+      "slots": [
+        { "id": "h", "width": "md" },
+        { "id": "op", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "h": "<iostream>", "op": "<<" },
+      "caseSensitive": false
+    },
+    "explanation": "`#include <iostream>` donne accès aux flux d'E/S. L'opérateur d'injection `<<` envoie une valeur (ici une chaîne) vers le flux de sortie `cout`. On peut chaîner les `<<` autant de fois que nécessaire.",
+    "concepts": ["iostream"]
+  },
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète la commande g++ : compiler `point.cpp` en fichier objet seulement, avec tous les avertissements.",
+    "payload": {
+      "template": "g++ -Wall {{opt}} point.cpp",
+      "slots": [
+        { "id": "opt", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "opt": "-c" },
+      "caseSensitive": false
+    },
+    "explanation": "L'option `-c` (compile seulement) arrête le processus après la compilation : `g++` produit le fichier objet `point.o` sans réaliser l'édition de liens. L'exécutable sera produit dans une seconde commande qui lie les `.o`.",
+    "concepts": ["compilation-gpp"]
+  },
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Que désigne `cout` écrit en réalité, sans la clause `using namespace std;` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "std.cout" },
+        { "id": "b", "label": "std->cout" },
+        { "id": "c", "label": "std::cout" },
+        { "id": "d", "label": "std#cout" }
+      ]
+    },
+    "solution": { "correct": ["c"] },
+    "explanation": "Toute la bibliothèque standard vit dans l'espace de noms `std`. Le nom complet est `std::cout`, où `::` est l'opérateur de résolution de portée. La clause `using namespace std;` rend les noms de `std` accessibles sans le préfixe `std::`.",
+    "concepts": ["namespace-std"]
+  },
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un même espace de noms peut être déclaré en plusieurs blocs, même dans des fichiers différents, et tous ces blocs contribuent au même espace.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai : un espace de noms est **réouvrable**. Plusieurs blocs `namespace nom { ... }` portant le même nom contribuent tous au même espace. C'est exactement ce qui permet à la bibliothèque standard d'étaler `std` sur de nombreux en-têtes.",
+    "concepts": ["namespace-std"]
+  },
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\nint main() {\n    int a = 4;\n    cout << \"a vaut \" << a << endl;\n    cout << \"son carre vaut \" << a * a << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "a vaut 4\nson carre vaut 16" },
+    "explanation": "On peut chaîner les `<<` en mélangeant texte et valeurs. `a` vaut 4 et `a * a` est évalué à 16. Chaque `endl` insère un retour à la ligne, d'où deux lignes de sortie.",
+    "concepts": ["iostream"]
+  },
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme utilisant deux espaces de noms ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nnamespace jeu {\n    int score = 10;\n}\nnamespace menu {\n    int score = 3;\n}\n\nint main() {\n    cout << jeu::score << \" \" << menu::score << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "10 3" },
+    "explanation": "Les deux espaces de noms `jeu` et `menu` définissent chacun un `score` sans conflit. L'accès qualifié `jeu::score` vaut 10 et `menu::score` vaut 3 : c'est le rôle des espaces de noms, éviter les collisions de noms.",
+    "concepts": ["namespace-std"]
+  },
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "CODE_WRITE",
+    "difficulty": 1,
+    "points": 2,
+    "prompt": "Écris le programme C++ minimal complet qui affiche exactement `Hello world!` suivi d'un retour à la ligne.",
+    "payload": {
+      "spec": "Le programme doit inclure <iostream>, définir int main() et afficher Hello world! avec un retour à la ligne via cout et endl.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // affiche Hello world! ici\n    return 0;\n}\n",
+      "tests": [
+        { "name": "affichage", "stdin": "", "expectedStdout": "Hello world!" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Hello world!\" << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le programme minimal C++ : `#include <iostream>` pour les flux, `int main()` comme point d'entrée, `cout << \"Hello world!\" << endl;` pour l'affichage et `return 0;` pour signaler le succès.",
+    "concepts": ["iostream"]
+  },
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Écris un programme qui lit un entier au clavier avec `cin` et affiche son carré avec `cout`.",
+    "payload": {
+      "spec": "Lis un entier sur l'entrée standard, puis affiche uniquement son carré (n*n) sur la sortie standard.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n;\n    // lis n puis affiche son carre\n    return 0;\n}\n",
+      "tests": [
+        { "name": "six", "stdin": "6", "expectedStdout": "36" },
+        { "name": "neuf", "stdin": "9", "expectedStdout": "81" },
+        { "name": "cache", "stdin": "12", "expectedStdout": "144", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    cout << n * n << endl;\n    return 0;\n}"
+    },
+    "explanation": "`cin >> n` lit l'entier sur l'entrée standard avec l'opérateur d'extraction `>>`. `cout << n * n` affiche le carré avec l'opérateur d'injection `<<`. On n'affiche que le résultat demandé.",
+    "concepts": ["iostream"]
+  },
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme doit afficher le triple de l'entier lu, sous la forme `le triple vaut X`. Il contient une erreur. Corrige-le.",
+    "payload": {
+      "spec": "Lire un entier n et afficher la chaine 'le triple vaut ' suivie de 3*n.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    cout << \"le triple vaut \" << n + 3 << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "quatre", "stdin": "4", "expectedStdout": "le triple vaut 12" },
+        { "name": "dix", "stdin": "10", "expectedStdout": "le triple vaut 30" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    cout << \"le triple vaut \" << n * 3 << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `n + 3` calcule l'addition, pas le triple. Pour tripler un nombre il faut le multiplier : `n * 3`.",
+    "concepts": ["iostream"]
+  },
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Ce programme doit lire deux entiers et afficher leur somme sous la forme `somme = X`, mais il ne compile pas. Corrige-le.",
+    "payload": {
+      "spec": "Lire deux entiers a et b sur l'entree standard, afficher 'somme = ' suivi de a+b.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    cout << \"somme = \" << a + b << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "petits", "stdin": "3 5", "expectedStdout": "somme = 8" },
+        { "name": "grands", "stdin": "20 22", "expectedStdout": "somme = 42" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    cout << \"somme = \" << a + b << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : sans `using namespace std;` (ni préfixe `std::`), les noms `cin`, `cout` et `endl` sont inconnus du compilateur — ils vivent dans l'espace de noms `std`. Il fallait ajouter `using namespace std;` après l'inclusion.",
+    "concepts": ["namespace-std"]
+  },
+  {
+    "chapterSlug": "types-references",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelles sont les deux seules valeurs possibles d'une variable de type `bool` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "0 et 1 uniquement" },
+        { "id": "b", "label": "true et false" },
+        { "id": "c", "label": "yes et no" },
+        { "id": "d", "label": "oui et non" }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Le C++ introduit le type booléen `bool`, absent du C. Une variable `bool` ne prend que deux valeurs : `true` ou `false`.",
+    "concepts": ["auto-bool"]
+  },
+  {
+    "chapterSlug": "types-references",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle déclaration provoque une **erreur de compilation** à cause d'une conversion avec perte d'information ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "int i = 7.2;" },
+        { "id": "b", "label": "double d(7.2);" },
+        { "id": "c", "label": "int j{7.2};" },
+        { "id": "d", "label": "double e{7.2};" }
+      ]
+    },
+    "solution": { "correct": ["c"] },
+    "explanation": "L'initialisation par accolades `{}` interdit les conversions avec perte d'information (narrowing). `int j{7.2}` est une erreur car `7.2` ne tient pas exactement dans un `int`. `int i = 7.2;` compile mais perd silencieusement la partie décimale (i vaut 7). La forme `{}` est plus sûre.",
+    "concepts": ["auto-bool"]
+  },
+  {
+    "chapterSlug": "types-references",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une référence peut être réattachée à une autre variable après son initialisation.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux : une référence doit obligatoirement être initialisée à sa déclaration, et elle ne peut **plus jamais** être réattachée à une autre variable. Elle est liée à vie à la variable d'origine. C'est une différence majeure avec le pointeur, qui peut changer de cible.",
+    "concepts": ["reference"]
+  },
+  {
+    "chapterSlug": "types-references",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Passer un paramètre par référence (`int& x`) évite la copie et permet à la fonction de modifier la variable de l'appelant.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai : le passage par référence fait travailler la fonction directement sur la variable de l'appelant, sans copie. Les modifications sont donc visibles à l'extérieur. Le passage par valeur, lui, transmet une copie isolée.",
+    "concepts": ["passage-par-reference"]
+  },
+  {
+    "chapterSlug": "types-references",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles affirmations sur les références (par rapport aux pointeurs) sont correctes ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Une référence doit obligatoirement être initialisée." },
+        { "id": "b", "label": "Une référence peut être nulle (nullptr)." },
+        { "id": "c", "label": "Une référence s'utilise avec la syntaxe d'une variable ordinaire." },
+        { "id": "d", "label": "Une référence doit être du même type que la variable référencée." },
+        { "id": "e", "label": "Une référence peut changer de cible en cours de programme." }
+      ]
+    },
+    "solution": { "correct": ["a", "c", "d"] },
+    "explanation": "Une référence doit obligatoirement être initialisée, est du même type que la variable référencée, et s'utilise comme une variable normale (sans `*` ni `&`). Elle ne peut jamais être nulle ni changer de cible — ce sont justement les libertés (et les risques) du pointeur.",
+    "concepts": ["reference"]
+  },
+  {
+    "chapterSlug": "types-references",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque mode de passage de paramètre à sa description.",
+    "payload": {
+      "left": [
+        { "id": "val", "label": "Passage par valeur — int x" },
+        { "id": "ref", "label": "Passage par référence — int& x" },
+        { "id": "constref", "label": "Passage par référence constante — const string& x" }
+      ],
+      "right": [
+        { "id": "r1", "label": "La fonction reçoit une copie ; aucune modification visible dehors" },
+        { "id": "r2", "label": "Pas de copie ; les modifications sont visibles à l'extérieur" },
+        { "id": "r3", "label": "Pas de copie ; objet protégé en lecture seule" }
+      ]
+    },
+    "solution": { "pairs": { "val": "r1", "ref": "r2", "constref": "r3" } },
+    "explanation": "Le passage par valeur transmet une copie isolée. Le passage par référence travaille sur la variable d'origine (modifications visibles). Le passage par `const&` évite la copie tout en interdisant la modification : c'est la forme idéale pour consulter un gros objet sans le copier.",
+    "concepts": ["passage-par-reference"]
+  },
+  {
+    "chapterSlug": "types-references",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remets dans l'ordre les lignes qui déclarent une variable, créent une référence vers elle, puis modifient la variable via la référence.",
+    "payload": {
+      "items": [
+        { "id": "use", "label": "ri = ri + 1;   // i vaut maintenant 1" },
+        { "id": "decl", "label": "int i = 0;     // variable d'origine" },
+        { "id": "alias", "label": "int& ri = i;   // ri est un alias de i" }
+      ]
+    },
+    "solution": { "order": ["decl", "alias", "use"] },
+    "explanation": "On déclare d'abord la variable `i`. On crée ensuite la référence `ri` qui doit être initialisée immédiatement (vers `i`). Enfin, modifier `ri` revient à modifier `i` : les deux noms désignent la même case mémoire.",
+    "concepts": ["reference"]
+  },
+  {
+    "chapterSlug": "types-references",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète la fonction pour qu'elle reçoive son paramètre **par référence** et le double réellement chez l'appelant.",
+    "payload": {
+      "template": "void doubler(int{{amp}} n) {\n    n = n * 2;\n}",
+      "slots": [
+        { "id": "amp", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "amp": "&" },
+      "caseSensitive": false
+    },
+    "explanation": "Le symbole `&` après le type fait du paramètre une **référence** : `int& n`. La fonction travaille alors directement sur la variable de l'appelant. Sans le `&`, ce serait un passage par valeur et le doublement ne serait visible que sur la copie locale.",
+    "concepts": ["passage-par-reference"]
+  },
+  {
+    "chapterSlug": "types-references",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète : déclare une constante entière nommée `taille` valant 10, non modifiable, et inclus l'en-tête du type texte du C++.",
+    "payload": {
+      "template": "#include {{h}}\n{{kw}} int taille = 10;",
+      "slots": [
+        { "id": "h", "width": "md" },
+        { "id": "kw", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "h": "<string>", "kw": "const" },
+      "caseSensitive": false
+    },
+    "explanation": "Le mot-clé `const` rend une variable non modifiable : toute écriture après l'initialisation provoque une erreur de compilation. Le type texte objet du C++, `string`, est fourni par l'en-tête `<string>`.",
+    "concepts": ["const"]
+  },
+  {
+    "chapterSlug": "types-references",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme utilisant une référence ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\nint main() {\n    int a = 5;\n    int& r = a;\n    r = 9;\n    cout << a << \" \" << r << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "9 9" },
+    "explanation": "`r` est une référence vers `a` : les deux noms désignent la même case mémoire. Écrire `r = 9` modifie donc aussi `a`. Les deux valent 9, d'où la sortie `9 9`.",
+    "concepts": ["reference"]
+  },
+  {
+    "chapterSlug": "types-references",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nvoid parValeur(int x) {\n    x = 100;\n}\n\nint main() {\n    int n = 7;\n    parValeur(n);\n    cout << n << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "7" },
+    "explanation": "`parValeur` reçoit son paramètre **par valeur** : `x` est une copie de `n`. Mettre `x = 100` ne modifie que la copie locale. La variable `n` de l'appelant reste à 7.",
+    "concepts": ["passage-par-reference"]
+  },
+  {
+    "chapterSlug": "types-references",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Attention à la conversion et à la division entière.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\nint main() {\n    int i = 7.9;\n    auto x = i / 2;\n    cout << i << \" \" << x << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "7 3" },
+    "explanation": "`int i = 7.9;` convertit 7.9 vers un `int` : la partie décimale est tronquée, `i` vaut 7. `i / 2` est une division entre deux `int` : 7 / 2 vaut 3 (division entière). `auto` déduit donc le type `int` pour `x`.",
+    "concepts": ["auto-bool"]
+  },
+  {
+    "chapterSlug": "types-references",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris une fonction `void doubler(int& n)` qui double `n` par référence, et un `main` qui lit un entier, appelle `doubler`, puis affiche `n`.",
+    "payload": {
+      "spec": "Lis un entier sur l'entree standard, double-le via une fonction prenant son parametre par reference, puis affiche le resultat.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// definis la fonction doubler ici\n\nint main() {\n    int n;\n    // lis n, appelle doubler, affiche n\n    return 0;\n}\n",
+      "tests": [
+        { "name": "positif", "stdin": "7", "expectedStdout": "14" },
+        { "name": "zero", "stdin": "0", "expectedStdout": "0" },
+        { "name": "negatif", "stdin": "-5", "expectedStdout": "-10" },
+        { "name": "cache", "stdin": "21", "expectedStdout": "42", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nvoid doubler(int& n) {\n    n = n * 2;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    doubler(n);\n    cout << n << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le paramètre `int& n` est une référence : la fonction `doubler` modifie directement la variable de l'appelant. Après l'appel `doubler(n)`, le `n` du `main` a bien été doublé, ce que confirme l'affichage.",
+    "concepts": ["passage-par-reference"]
+  },
+  {
+    "chapterSlug": "types-references",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "La fonction `echanger` doit échanger les valeurs de deux entiers, mais après l'appel rien ne change. Corrige la signature pour que l'échange soit visible chez l'appelant.",
+    "payload": {
+      "spec": "Lire deux entiers x et y, les echanger via la fonction echanger, puis afficher x puis y separes par une espace.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nvoid echanger(int a, int b) {\n    int tmp = a;\n    a = b;\n    b = tmp;\n}\n\nint main() {\n    int x, y;\n    cin >> x >> y;\n    echanger(x, y);\n    cout << x << \" \" << y << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "petits", "stdin": "3 8", "expectedStdout": "8 3" },
+        { "name": "grands", "stdin": "100 200", "expectedStdout": "200 100" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nvoid echanger(int& a, int& b) {\n    int tmp = a;\n    a = b;\n    b = tmp;\n}\n\nint main() {\n    int x, y;\n    cin >> x >> y;\n    echanger(x, y);\n    cout << x << \" \" << y << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `echanger(int a, int b)` reçoit ses paramètres **par valeur**. La fonction n'échange que ses copies locales, sans effet sur `x` et `y`. Il faut passer les paramètres **par référence** — `int& a, int& b` — pour que l'échange agisse sur les variables de l'appelant.",
+    "concepts": ["passage-par-reference"]
+  },
+  {
+    "chapterSlug": "du-c-au-cpp",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme doit lire un mot et afficher sa longueur sous la forme `longueur = X`, mais il ne compile pas. Corrige-le.",
+    "payload": {
+      "spec": "Lire un mot sur l'entree standard, afficher 'longueur = ' suivi du nombre de caracteres du mot.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string mot;\n    cin >> mot;\n    cout << \"longueur = \" << mot.length << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "bonjour", "stdin": "bonjour", "expectedStdout": "longueur = 7" },
+        { "name": "court", "stdin": "ok", "expectedStdout": "longueur = 2" },
+        { "name": "cache", "stdin": "programmation", "expectedStdout": "longueur = 13", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string mot;\n    cin >> mot;\n    cout << \"longueur = \" << mot.length() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `mot.length` désigne la méthode elle-même, pas son résultat — il manque les parenthèses d'appel. Sans `()`, le compilateur voit un membre non appelé et refuse de l'envoyer dans `cout`. Toute méthode s'appelle avec des parenthèses, même sans argument : il fallait écrire `mot.length()`.",
+    "concepts": ["iostream"]
+  }
+]

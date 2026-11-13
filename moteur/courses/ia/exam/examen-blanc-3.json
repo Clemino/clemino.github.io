@@ -1,0 +1,485 @@
+{
+  "slug": "examen-blanc-3",
+  "title": "Examen blanc 3 — Deep learning, renforcement & NLP",
+  "description": "Partiel blanc chronométré couvrant la deuxième moitié du cours (modules 9 à 13) : réseaux de neurones (neurone formel, propagation avant, comptage de paramètres), deep learning convolutif (dimensions des cartes de caractéristiques, paramètres d'une Conv2D, pooling, analyse de code Keras, courbes d'apprentissage), réseaux récurrents (état caché d'un RNN, cellule LSTM), apprentissage par renforcement (gain actualisé, Value Iteration, mise à jour du Q-learning) et introduction au NLP (TF-IDF, n-grammes, niveaux d'analyse, grammaire hors-contexte). Inspiré des examens « IA Sem 2 » : analyse de ConvNet, traces de renforcement et question CFG dans l'esprit de « IA Sem 1 ».",
+  "durationMinutes": 90,
+  "totalPoints": 20,
+  "exercises": [
+    {
+      "chapterSlug": "neurone-formel-activations",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Un neurone reçoit deux entrées x₁ = 4 et x₂ = 2, avec les poids w₁ = 0,3 et w₂ = −0,6 et un biais b = 0,5. Il applique ensuite la fonction sigmoïde σ(z) = 1 / (1 + e^(−z)). Calculez sa sortie, arrondie au millième.",
+      "payload": { "placeholder": "ex. 0.622", "hint": "Calculez d'abord z = w₁·x₁ + w₂·x₂ + b, puis σ(z)." },
+      "solution": { "value": 0.622, "absTol": 0.003 },
+      "explanation": "Somme pondérée : z = 0,3·4 + (−0,6)·2 + 0,5 = 1,2 − 1,2 + 0,5 = 0,5. Sortie : σ(0,5) = 1 / (1 + e^(−0,5)) ≈ 0,622. Un neurone enchaîne une partie linéaire (la somme pondérée) et une partie non linéaire (la fonction d'activation).",
+      "concepts": ["neurone-formel", "somme-ponderee", "fonction-sigmoide"],
+      "source": "RNA_HSe_Fr_2324.pdf"
+    },
+    {
+      "chapterSlug": "perceptron-multicouche",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Pourquoi aucun perceptron (réseau sans couche cachée, activation de Heaviside) ne peut-il calculer la fonction XOR ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Parce qu'un perceptron ne représente que les fonctions linéairement séparables, or le XOR ne l'est pas" },
+          { "id": "b", "label": "Parce que le XOR a trop d'entrées pour un perceptron" },
+          { "id": "c", "label": "Parce que la fonction de Heaviside n'est pas dérivable" },
+          { "id": "d", "label": "Parce qu'un perceptron ne peut pas recevoir d'entrées binaires" }
+        ],
+        "shuffle": true
+      },
+      "solution": { "correct": ["a"] },
+      "explanation": "Le cours énonce une équivalence : un perceptron représente une fonction si et seulement si elle est linéairement séparable. Les points y = 1 du XOR — (1,0) et (0,1) — et les points y = 0 — (0,0) et (1,1) — occupent les deux diagonales du carré : aucune droite ne les sépare. Il faut une couche cachée pour ré-encoder l'entrée.",
+      "concepts": ["perceptron", "probleme-xor", "separabilite-lineaire"],
+      "source": "RNA_HSe_Fr_2324.pdf"
+    },
+    {
+      "chapterSlug": "propagation-avant",
+      "type": "NUMERIC",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Dans un réseau 2 → 2 → 1, la couche cachée à activation sigmoïde calcule h₁ = σ(z₁) et h₂ = σ(z₂) avec z₁ = 0,5·x₁ + 0,5·x₂ − 1 et z₂ = −x₁ + x₂ + 0,5. Le neurone de sortie (activation sigmoïde) calcule σ(1·h₁ − 1·h₂ + 0). Pour l'entrée (x₁,x₂) = (1,2), donnez la sortie finale du réseau, arrondie au centième.",
+      "payload": { "placeholder": "ex. 0.45", "hint": "Calculez z₁ et z₂, puis h₁ = σ(z₁), h₂ = σ(z₂) ; enfin zₒ = h₁ − h₂ et σ(zₒ)." },
+      "solution": { "value": 0.45, "absTol": 0.02 },
+      "explanation": "z₁ = 0,5·1 + 0,5·2 − 1 = 0,5 → h₁ = σ(0,5) ≈ 0,6225. z₂ = −1 + 2 + 0,5 = 1,5 → h₂ = σ(1,5) ≈ 0,8176. zₒ = h₁ − h₂ ≈ −0,195. Sortie = σ(−0,195) ≈ 0,45. En propagation avant, les sorties d'une couche deviennent les entrées de la suivante.",
+      "concepts": ["propagation-avant", "fonction-sigmoide", "couche-cachee"],
+      "source": "RNA_HSe_Fr_2324.pdf"
+    },
+    {
+      "chapterSlug": "poids-et-biais",
+      "type": "NUMERIC",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Un réseau totalement connecté a l'architecture 3 → 6 → 4 → 2 (3 neurones d'entrée, deux couches cachées de 6 et 4 neurones, une couche de sortie de 2 neurones). Calculez le nombre total de paramètres (poids + biais).",
+      "payload": { "placeholder": "ex. 62", "hint": "Pour chaque couche : (neurones de la couche précédente + 1) × neurones. La couche d'entrée n'a aucun paramètre." },
+      "solution": { "value": 62, "absTol": 0.001 },
+      "explanation": "1ʳᵉ couche cachée : (3+1)×6 = 24. 2ᵉ couche cachée : (6+1)×4 = 28. Couche de sortie : (4+1)×2 = 10. La couche d'entrée ne calcule rien : 0 paramètre. Total = 24 + 28 + 10 = 62.",
+      "concepts": ["nombre-de-parametres", "couche-de-neurones", "biais"],
+      "source": "RNA_HSe_Fr_2324.pdf"
+    },
+    {
+      "chapterSlug": "retropropagation-gradient",
+      "type": "MATCHING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Associez chaque fonction de perte au type de problème pour lequel le cours la recommande.",
+      "payload": {
+        "left": [
+          { "id": "quad", "label": "Erreur quadratique (moindres carrés)" },
+          { "id": "bce", "label": "Entropie croisée binaire" },
+          { "id": "cce", "label": "Entropie croisée catégorielle" }
+        ],
+        "right": [
+          { "id": "r1", "label": "Régression" },
+          { "id": "r2", "label": "Classification binaire" },
+          { "id": "r3", "label": "Multi-classification (sortie one-hot)" }
+        ]
+      },
+      "solution": { "pairs": { "quad": "r1", "bce": "r2", "cce": "r3" } },
+      "explanation": "Erreur quadratique → régression. Entropie croisée binaire (BCE) → classification binaire. Entropie croisée catégorielle (CCE), avec Y en one-hot → multi-classification. La fonction de perte mesure l'écart entre la sortie produite et la sortie voulue ; la rétropropagation la minimise.",
+      "concepts": ["fonction-de-perte", "entropie-croisee-binaire", "entropie-croisee-categorielle"],
+      "source": "RNA_HSe_Fr_2324.pdf"
+    },
+    {
+      "chapterSlug": "couche-convolution",
+      "type": "NUMERIC",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Une couche Conv2D applique 64 filtres de taille 5 × 5 à une entrée en couleurs (3 canaux). Combien de paramètres (poids + biais) cette couche doit-elle apprendre ?",
+      "payload": { "placeholder": "ex. 4864", "hint": "Nombre de paramètres d'une Conv2D = (F·F·C_in + 1)·n_filtres ; le +1 est le biais par filtre." },
+      "solution": { "value": 4864, "absTol": 0.001 },
+      "explanation": "(F·F·C_in + 1)·n_filtres = (5·5·3 + 1)·64 = (75 + 1)·64 = 76·64 = 4864. Chaque filtre couvre les 3 canaux de couleur (75 poids) plus 1 biais ; il y a 64 filtres.",
+      "concepts": ["nombre-de-parametres", "couche-de-convolution"],
+      "source": "DL_Exo5_Corr.py"
+    },
+    {
+      "chapterSlug": "pooling-architecture-cnn",
+      "type": "ALGO_TRACE",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "On suit l'évolution de la taille d'une carte le long d'un ConvNet. Entrée : 28 × 28. Conv2D filtres 3 × 3 (P = 0, S = 1), puis MaxPooling2D p = 2, puis Conv2D filtres 3 × 3 (P = 0, S = 1), puis MaxPooling2D p = 2. Donnez la dimension (une dimension) après chaque couche.",
+      "payload": {
+        "description": "Conv (P = 0, S = 1) : dimension = W − 3 + 1 = W − 2. Pooling p = 2 : dimension divisée par 2 (division entière, le carré incomplet est ignoré).",
+        "cells": [
+          { "id": "d1", "label": "Après la 1re Conv2D", "kind": "number", "placeholder": "0" },
+          { "id": "d2", "label": "Après le 1er MaxPooling", "kind": "number", "placeholder": "0" },
+          { "id": "d3", "label": "Après la 2e Conv2D", "kind": "number", "placeholder": "0" },
+          { "id": "d4", "label": "Après le 2e MaxPooling", "kind": "number", "placeholder": "0" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "d1", "expected": 26, "absTol": 0.001 },
+          { "id": "d2", "expected": 13, "absTol": 0.001 },
+          { "id": "d3", "expected": 11, "absTol": 0.001 },
+          { "id": "d4", "expected": 5, "absTol": 0.001 }
+        ]
+      },
+      "explanation": "1re Conv : 28 − 3 + 1 = 26. 1er Pool : 26 / 2 = 13. 2e Conv : 13 − 3 + 1 = 11. 2e Pool : 11 / 2 = 5 (division entière, le carré incomplet est ignoré).",
+      "concepts": ["architecture-cnn", "dimension-de-sortie-convolution", "pooling"],
+      "source": "Slides_ConvNet.pdf"
+    },
+    {
+      "chapterSlug": "pooling-architecture-cnn",
+      "type": "CODE_ANALYSIS",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Dans l'esprit des examens « IA Sem 2 », le code Keras ci-dessous définit un ConvNet pour classer des images en couleurs 32 × 32 (CIFAR-10, 10 classes). Lisez le code et répondez. Rappel : Conv2D → (F·F·C_in + 1)·n_filtres.",
+      "payload": {
+        "code": "from keras.models import Sequential\nfrom keras.layers import Dense, Dropout, Flatten\nfrom keras.layers import Conv2D, MaxPooling2D\n\nmodel = Sequential()\nmodel.add(Conv2D(32, (3, 3), activation='relu',\n                 input_shape=(32, 32, 3)))\nmodel.add(MaxPooling2D(pool_size=(2, 2)))\nmodel.add(Dropout(0.25))\nmodel.add(Flatten())\nmodel.add(Dense(10, activation='softmax'))\n\nmodel.summary()",
+        "language": "keras",
+        "caption": "ConvNet pour CIFAR-10 (images couleur 32 × 32)",
+        "subQuestions": [
+          {
+            "id": "q1",
+            "type": "NUMERIC",
+            "prompt": "Combien de paramètres la couche Conv2D doit-elle apprendre ? (32 filtres 3 × 3, entrée à 3 canaux)",
+            "weight": 1,
+            "payload": { "placeholder": "ex. 896", "hint": "(3·3·3 + 1)·32." }
+          },
+          {
+            "id": "q2",
+            "type": "MCQ_SINGLE",
+            "prompt": "Parmi ces couches, lesquelles n'ont AUCUN paramètre à apprendre ?",
+            "weight": 1,
+            "payload": {
+              "options": [
+                { "id": "a", "label": "MaxPooling2D, Dropout et Flatten" },
+                { "id": "b", "label": "Conv2D et Dense" },
+                { "id": "c", "label": "Conv2D et MaxPooling2D" }
+              ]
+            }
+          },
+          {
+            "id": "q3",
+            "type": "MCQ_SINGLE",
+            "prompt": "Pourquoi la couche de sortie utilise-t-elle l'activation softmax ?",
+            "weight": 1,
+            "payload": {
+              "options": [
+                { "id": "a", "label": "Parce qu'il s'agit d'une multi-classification : ses 10 sorties s'interprètent comme les probabilités des 10 classes" },
+                { "id": "b", "label": "Parce que softmax est obligatoire dans toutes les couches de convolution" },
+                { "id": "c", "label": "Parce que softmax conserve la taille des cartes de caractéristiques" }
+              ]
+            }
+          }
+        ]
+      },
+      "solution": {
+        "subSolutions": [
+          { "id": "q1", "solution": { "value": 896, "absTol": 0.001 } },
+          { "id": "q2", "solution": { "correct": ["a"] } },
+          { "id": "q3", "solution": { "correct": ["a"] } }
+        ]
+      },
+      "explanation": "Conv2D : (3·3·3 + 1)·32 = (27 + 1)·32 = 28·32 = 896 (le filtre couvre les 3 canaux de couleur). Les couches MaxPooling2D, Dropout et Flatten n'ont aucun paramètre ; seules Conv2D et Dense en ont. La couche de sortie utilise softmax car CIFAR-10 est une multi-classification à 10 classes : ses 10 sorties sont les probabilités des 10 classes.",
+      "concepts": ["nombre-de-parametres", "architecture-cnn", "softmax"],
+      "source": "DL_Exo5_Corr.py"
+    },
+    {
+      "chapterSlug": "entrainement-regularisation",
+      "type": "FIGURE_INTERPRET",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Comme dans les examens « IA Sem 2 », on calcule l'erreur d'un ConvNet sur le jeu d'apprentissage et sur le jeu de test pour plusieurs valeurs du nombre d'epochs. La figure résume le résultat. Lisez les courbes et répondez.",
+      "payload": {
+        "figure": {
+          "kind": "training-curve",
+          "xLabel": "Epoch",
+          "yLabel": "Erreur",
+          "series": [
+            {
+              "label": "Erreur d'apprentissage",
+              "tone": "accent",
+              "points": [
+                { "x": 5, "y": 0.45 },
+                { "x": 10, "y": 0.3 },
+                { "x": 15, "y": 0.18 },
+                { "x": 20, "y": 0.1 },
+                { "x": 25, "y": 0.05 },
+                { "x": 30, "y": 0.03 }
+              ]
+            },
+            {
+              "label": "Erreur de test",
+              "tone": "error",
+              "points": [
+                { "x": 5, "y": 0.47 },
+                { "x": 10, "y": 0.34 },
+                { "x": 15, "y": 0.27 },
+                { "x": 20, "y": 0.28 },
+                { "x": 25, "y": 0.35 },
+                { "x": 30, "y": 0.44 }
+              ]
+            }
+          ],
+          "caption": "Erreur d'apprentissage et de test en fonction du nombre d'epochs"
+        },
+        "caption": "Diagnostic de l'entraînement d'un ConvNet",
+        "subQuestions": [
+          {
+            "id": "q1",
+            "type": "MCQ_SINGLE",
+            "prompt": "Quel problème ces courbes mettent-elles en évidence ?",
+            "weight": 1,
+            "payload": {
+              "options": [
+                { "id": "a", "label": "Du sur-apprentissage : l'erreur d'apprentissage continue de baisser tandis que l'erreur de test remonte" },
+                { "id": "b", "label": "Du sous-apprentissage : les deux erreurs restent élevées et proches" },
+                { "id": "c", "label": "Un apprentissage idéal : les deux erreurs baissent ensemble jusqu'au bout" }
+              ]
+            }
+          },
+          {
+            "id": "q2",
+            "type": "NUMERIC",
+            "prompt": "À quelle epoch l'erreur de test est-elle minimale ? C'est le moment idéal pour arrêter l'entraînement.",
+            "weight": 1,
+            "payload": { "placeholder": "ex. 15" }
+          },
+          {
+            "id": "q3",
+            "type": "MCQ_SINGLE",
+            "prompt": "Quel outil vu dans le module aide à réduire ce problème ?",
+            "weight": 1,
+            "payload": {
+              "options": [
+                { "id": "a", "label": "La couche dropout" },
+                { "id": "b", "label": "La couche Flatten" },
+                { "id": "c", "label": "Le padding 'same'" }
+              ]
+            }
+          }
+        ]
+      },
+      "solution": {
+        "subSolutions": [
+          { "id": "q1", "solution": { "correct": ["a"] } },
+          { "id": "q2", "solution": { "value": 15, "absTol": 0.001 } },
+          { "id": "q3", "solution": { "correct": ["a"] } }
+        ]
+      },
+      "explanation": "L'erreur d'apprentissage baisse jusqu'à 0,03 alors que l'erreur de test, après un minimum, remonte (0,27 → 0,44) : c'est la signature du sur-apprentissage. L'erreur de test est minimale à l'epoch 15 (0,27) : c'est le bon moment pour arrêter l'entraînement. La couche dropout, en désactivant aléatoirement des neurones, aide à réduire le sur-apprentissage.",
+      "concepts": ["sur-apprentissage", "epoch-batch-size", "dropout"],
+      "source": "Slides_ConvNet.pdf"
+    },
+    {
+      "chapterSlug": "etat-cache-bptt",
+      "type": "ALGO_TRACE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "On déplie un neurone récurrent (1 entrée, 1 neurone caché) sur 2 instants, avec l'activation tanh : hₜ = tanh(u·xₜ + v·hₜ₋₁ + b). Les poids sont u = 0,5, v = 0,5, b = 0 ; l'état initial est h₀ = 0 et la séquence est x₁ = 2, x₂ = −1. Calculez la somme pondérée a₁ et l'état h₁, puis a₂ et l'état h₂ (arrondir les états à 0,01).",
+      "payload": {
+        "description": "À chaque instant : aₜ = u·xₜ + v·hₜ₋₁ + b, puis hₜ = tanh(aₜ). Calculez d'abord a₁ et h₁, puis réutilisez h₁ pour a₂ et h₂.",
+        "cells": [
+          { "id": "a1", "label": "a₁ = u·x₁ + v·h₀ + b", "kind": "number", "placeholder": "0" },
+          { "id": "h1", "label": "h₁ = tanh(a₁), arrondi à 0,01", "kind": "number", "placeholder": "0" },
+          { "id": "a2", "label": "a₂ = u·x₂ + v·h₁ + b", "kind": "number", "placeholder": "0" },
+          { "id": "h2", "label": "h₂ = tanh(a₂), arrondi à 0,01", "kind": "number", "placeholder": "0" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "a1", "expected": 1, "absTol": 0.001 },
+          { "id": "h1", "expected": 0.76, "absTol": 0.02 },
+          { "id": "a2", "expected": -0.12, "absTol": 0.02 },
+          { "id": "h2", "expected": -0.12, "absTol": 0.02 }
+        ]
+      },
+      "explanation": "a₁ = 0,5·2 + 0,5·0 + 0 = 1 → h₁ = tanh(1) ≈ 0,76. a₂ = 0,5·(−1) + 0,5·0,76 + 0 = −0,5 + 0,38 = −0,12 → h₂ = tanh(−0,12) ≈ −0,12. La somme pondérée d'un neurone récurrent comporte deux termes : l'entrée courante et l'état caché précédent.",
+      "concepts": ["recurrence", "etat-cache", "depliage-temporel"],
+      "source": "Exo_RNN1.py"
+    },
+    {
+      "chapterSlug": "lstm-gru",
+      "type": "ALGO_TRACE",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "On déroule une cellule LSTM (scalaire) sur 2 instants. L'état de cellule suit cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ c̃ₜ et la sortie hₜ = oₜ ∗ tanh(cₜ). L'état initial est c₀ = 0. Instant 1 : f₁ = 0,5, i₁ = 1,0, c̃₁ = 2,0, o₁ = 1,0. Instant 2 : f₂ = 1,0, i₂ = 0,5, c̃₂ = 2,0, o₂ = 0,5. Calculez c₁, c₂ et la sortie h₂.",
+      "payload": {
+        "description": "À chaque instant : cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ c̃ₜ, puis hₜ = oₜ ∗ tanh(cₜ). Calculez d'abord c₁, puis c₂ à partir de c₁, puis h₂ à partir de c₂. Arrondir h₂ à 0,01.",
+        "cells": [
+          { "id": "c1", "label": "c₁ (état de cellule)", "kind": "number", "placeholder": "0" },
+          { "id": "c2", "label": "c₂ (état de cellule)", "kind": "number", "placeholder": "0" },
+          { "id": "h2", "label": "h₂ (sortie, arrondir à 0,01)", "kind": "number", "placeholder": "0" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "c1", "expected": 2, "absTol": 0.001 },
+          { "id": "c2", "expected": 3, "absTol": 0.001 },
+          { "id": "h2", "expected": 0.4975, "absTol": 0.02 }
+        ]
+      },
+      "explanation": "c₁ = 0,5·0 + 1,0·2,0 = 2,0. c₂ = 1,0·2,0 + 0,5·2,0 = 2,0 + 1,0 = 3,0 (la porte d'oubli f₂ = 1 conserve tout l'ancien état). h₂ = o₂ ∗ tanh(c₂) = 0,5 · tanh(3,0) ≈ 0,5 · 0,9951 ≈ 0,4975.",
+      "concepts": ["lstm", "etat-de-cellule", "porte-cellule"],
+      "source": "Slides_RNN_2526.pdf"
+    },
+    {
+      "chapterSlug": "value-iteration",
+      "type": "ALGO_TRACE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "On applique Value Iteration sur le couloir d'états s1 — s2 — s3 — s4 de la figure. s4 est terminal : sa valeur reste fixée à V(s4) = 0. Deux actions par état, « gauche » et « droite », déterministes ; tenter de sortir du couloir laisse l'agent sur place. La récompense est nulle pour toutes les actions, SAUF l'action « droite » depuis s3 qui mène à s4 et rapporte R(s3, droite) = 10. On prend γ = 0,8. Toutes les valeurs sont initialisées à 0. La mise à jour est V(s) = maxₐ (R(s, a) + γ·V(s′)). Donnez V(s1), V(s2), V(s3) après l'itération 1 et après l'itération 2.",
+      "payload": {
+        "description": "Itération 1 : on utilise les valeurs initiales (toutes à 0) pour calculer les nouvelles valeurs. Itération 2 : on réutilise les valeurs obtenues à l'itération 1. À chaque état, on prend le maximum sur les deux actions de R(s, a) + γ·V(s′). Rappel : V(s4) = 0 (terminal).",
+        "figure": {
+          "kind": "grid-world",
+          "rows": 1,
+          "cols": 4,
+          "cells": [
+            { "row": 0, "col": 0, "label": "s1" },
+            { "row": 0, "col": 1, "label": "s2" },
+            { "row": 0, "col": 2, "label": "s3" },
+            { "row": 0, "col": 3, "reward": 10, "terminal": true, "label": "s4" }
+          ],
+          "caption": "Couloir d'états : R(s3, droite) = 10, toutes les autres récompenses nulles"
+        },
+        "cells": [
+          { "id": "it1_s1", "label": "Itération 1 — V(s1)", "kind": "number", "placeholder": "0" },
+          { "id": "it1_s2", "label": "Itération 1 — V(s2)", "kind": "number", "placeholder": "0" },
+          { "id": "it1_s3", "label": "Itération 1 — V(s3)", "kind": "number", "placeholder": "0" },
+          { "id": "it2_s1", "label": "Itération 2 — V(s1)", "kind": "number", "placeholder": "0" },
+          { "id": "it2_s2", "label": "Itération 2 — V(s2)", "kind": "number", "placeholder": "0" },
+          { "id": "it2_s3", "label": "Itération 2 — V(s3)", "kind": "number", "placeholder": "0" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "it1_s1", "expected": 0, "absTol": 0.001 },
+          { "id": "it1_s2", "expected": 0, "absTol": 0.001 },
+          { "id": "it1_s3", "expected": 10, "absTol": 0.001 },
+          { "id": "it2_s1", "expected": 0, "absTol": 0.001 },
+          { "id": "it2_s2", "expected": 8, "absTol": 0.001 },
+          { "id": "it2_s3", "expected": 10, "absTol": 0.001 }
+        ]
+      },
+      "explanation": "Itération 1 (valeurs initiales toutes nulles) : V(s1) = max(0 + 0,8·0 ; 0 + 0,8·0) = 0 ; V(s2) = 0 de même ; V(s3) = max(0 + 0,8·V(s2)=0 ; 10 + 0,8·V(s4)=10) = 10. Itération 2 (on réutilise V(s1)=0, V(s2)=0, V(s3)=10) : V(s1) = max(0 ; 0,8·0) = 0 ; V(s2) = max(0,8·V(s1)=0 ; 0,8·V(s3)=8) = 8 ; V(s3) = max(0,8·V(s2)=0 ; 10 + 0,8·0) = 10. La valeur « se propage » d'une case par itération depuis l'objectif.",
+      "concepts": ["value-iteration", "equation-de-bellman", "gridworld"],
+      "source": "TD_RL.pdf"
+    },
+    {
+      "chapterSlug": "q-learning",
+      "type": "NUMERIC",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Q-learning. On a actuellement Q(s, a) = 1. L'agent exécute a dans s, reçoit la récompense r = 2 et arrive dans un état s′ où la meilleure Q-valeur est maxₐ′ Q(s′, a′) = 5. Avec α = 0,5 et γ = 0,8, calculez la nouvelle valeur de Q(s, a) : Q(s, a) ← Q(s, a) + α·(r + γ·maxₐ′ Q(s′, a′) − Q(s, a)).",
+      "payload": { "placeholder": "ex. 3.5", "hint": "Cible = r + γ·maxQ′ = 2 + 0,8·5 = 6. Écart = 6 − 1 = 5. Q ← 1 + 0,5·5." },
+      "solution": { "value": 3.5, "absTol": 0.001 },
+      "explanation": "Nouvelle estimation (cible) : r + γ·maxₐ′ Q(s′, a′) = 2 + 0,8·5 = 6. Écart avec l'ancienne valeur : 6 − 1 = 5. Mise à jour : Q(s, a) ← 1 + 0,5·5 = 1 + 2,5 = 3,5. On peut vérifier : (1−α)·Q + α·cible = 0,5·1 + 0,5·6 = 3,5.",
+      "concepts": ["regle-de-mise-a-jour-q", "q-learning", "facteur-d-apprentissage"],
+      "source": "Apprentissage_renforcement.pdf"
+    },
+    {
+      "chapterSlug": "modeles-langage-embeddings",
+      "type": "CODE_ANALYSIS",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Dans l'esprit de l'exercice CFG des examens « IA Sem 1 / Sem 2 », on considère la grammaire hors-contexte ci-dessous, écrite sous forme de règles de production. Σ désigne les symboles terminaux, N les symboles non terminaux. Lisez la grammaire et répondez.",
+      "payload": {
+        "code": "S    -> NP VP\nNP   -> Det N\nNP   -> NP PP\nVP   -> V NP\nVP   -> VP PP\nPP   -> Prep NP\nDet  -> le | la | un | une\nN    -> chat | poisson | jardin\nV    -> voit | mange\nPrep -> dans | avec",
+        "language": "pseudocode",
+        "caption": "Grammaire hors-contexte d'analyse syntaxique",
+        "subQuestions": [
+          {
+            "id": "q1",
+            "type": "TRUE_FALSE",
+            "prompt": "Cette grammaire est hors-contexte : chacune de ses règles a un unique symbole non terminal en partie gauche (S, NP, VP, …).",
+            "weight": 1,
+            "payload": {}
+          },
+          {
+            "id": "q2",
+            "type": "MCQ_SINGLE",
+            "prompt": "La phrase « le chat voit le poisson avec une loupe » admet deux arbres syntaxiques différents avec cette grammaire. Comment nomme-t-on ce phénomène ?",
+            "weight": 1,
+            "payload": {
+              "options": [
+                { "id": "a", "label": "Une ambiguïté syntaxique : la phrase a deux analyses possibles" },
+                { "id": "b", "label": "Une erreur de tokenisation" },
+                { "id": "c", "label": "Un n-gramme" }
+              ]
+            }
+          },
+          {
+            "id": "q3",
+            "type": "MCQ_SINGLE",
+            "prompt": "Le symbole de départ de cette grammaire, qui désigne les phrases entières, est :",
+            "weight": 1,
+            "payload": {
+              "options": [
+                { "id": "a", "label": "S" },
+                { "id": "b", "label": "NP" },
+                { "id": "c", "label": "Det" }
+              ]
+            }
+          }
+        ]
+      },
+      "solution": {
+        "subSolutions": [
+          { "id": "q1", "solution": { "value": true } },
+          { "id": "q2", "solution": { "correct": ["a"] } },
+          { "id": "q3", "solution": { "correct": ["a"] } }
+        ]
+      },
+      "explanation": "Toutes les règles ont un seul symbole non terminal à gauche de la flèche : la grammaire est bien hors-contexte. La double règle NP -> NP PP et VP -> VP PP fait que le syntagme prépositionnel « avec une loupe » peut se rattacher soit au nom (« le poisson avec une loupe »), soit au verbe (« voit … avec une loupe ») : la phrase a deux arbres syntaxiques, c'est une ambiguïté syntaxique. Le symbole de départ, qui désigne les phrases entières, est S.",
+      "concepts": ["grammaire-hors-contexte", "analyse-syntaxique", "ambiguite-linguistique"],
+      "source": "TD_NLP.pdf"
+    },
+    {
+      "chapterSlug": "pretraitement-representation",
+      "type": "ALGO_TRACE",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "On calcule le TF-IDF du terme « mange » dans le document d = « le chat noir mange la souris » (6 termes, « mange » y apparaît 1 fois). Le corpus contient N = 5 documents et le terme « mange » apparaît dans 2 d'entre eux (df = 2). On applique les formules du cours : TF(t, d) = (occurrences de t) / (nombre total de termes de d), IDF(t) = log10(N / df(t)) en base 10, et TF-IDF = TF × IDF. Remplissez les trois étapes du calcul.",
+      "payload": {
+        "description": "Étape 1 : TF = (occurrences de « mange ») / (nombre de termes de d). Étape 2 : IDF = log10(N / df). Étape 3 : TF-IDF = TF × IDF. Donnez chaque valeur avec au moins 3 décimales.",
+        "cells": [
+          { "id": "tf", "label": "TF(mange, d)", "kind": "number", "placeholder": "0,000" },
+          { "id": "idf", "label": "IDF(mange) (base 10)", "kind": "number", "placeholder": "0,000" },
+          { "id": "tfidf", "label": "TF-IDF(mange, d)", "kind": "number", "placeholder": "0,000" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "tf", "expected": 0.1667, "absTol": 0.005 },
+          { "id": "idf", "expected": 0.3979, "absTol": 0.005 },
+          { "id": "tfidf", "expected": 0.0663, "absTol": 0.005 }
+        ]
+      },
+      "explanation": "Étape 1 : TF = 1 / 6 ≈ 0,1667. Étape 2 : IDF = log10(5 / 2) = log10(2,5) ≈ 0,3979. Étape 3 : TF-IDF = 0,1667 × 0,3979 ≈ 0,0663. Le score reste modéré car « mange » apparaît dans une partie notable du corpus.",
+      "concepts": ["tf-idf"],
+      "source": "Intro_NLP.pdf"
+    },
+    {
+      "chapterSlug": "traitement-langage-naturel",
+      "type": "MATCHING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Le cours énumère plusieurs niveaux d'analyse du langage. Associez chaque niveau à sa définition.",
+      "payload": {
+        "left": [
+          { "id": "l1", "label": "Morphologie" },
+          { "id": "l2", "label": "Syntaxe" },
+          { "id": "l3", "label": "Sémantique" },
+          { "id": "l4", "label": "Pragmatique" }
+        ],
+        "right": [
+          { "id": "r1", "label": "L'étude de la forme des mots" },
+          { "id": "r2", "label": "L'analyse des mots dans une phrase" },
+          { "id": "r3", "label": "La compréhension du sens du document" },
+          { "id": "r4", "label": "La manière dont les connaissances sur le monde interagissent avec le sens littéral" }
+        ]
+      },
+      "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3", "l4": "r4" } },
+      "explanation": "Le cours définit : morphologie — l'étude de la forme des mots ; syntaxe — l'analyse des mots dans une phrase ; sémantique — la compréhension du sens du document ; pragmatique — l'interaction des connaissances sur le monde avec le sens littéral. La chaîne de traitement va du niveau lexical/morphologique vers le sémantique.",
+      "concepts": ["niveaux-d-analyse-linguistique"],
+      "source": "Intro_NLP.pdf"
+    }
+  ]
+}

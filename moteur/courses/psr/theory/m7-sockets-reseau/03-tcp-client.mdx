@@ -1,0 +1,267 @@
+---
+title: "Socket TCP côté client"
+slug: tcp-client
+order: 3
+estimatedReadMin: 18
+concepts: [sequence-client-tcp, connect, adresse-serveur, send-recv, flot-octets-tcp, lecture-partielle, boucle-reception, getsockname, getpeername, close-socket]
+source: "Cours 5 — Sockets et programmation réseau"
+---
+
+Le serveur TCP du chapitre précédent **attend** ; il faut maintenant le **client** qui l'appelle. Le client a une séquence d'appels **plus courte** que le serveur — pas de `bind`, pas de `listen`, pas de `accept` — mais introduit une primitive nouvelle, **`connect`**, et un piège fondamental : TCP est un **flot d'octets**, et un `recv` peut renvoyer **moins** de données qu'on n'en attend. Compléter un client TCP est, avec le serveur, l'exercice d'examen le plus courant du module.
+
+## La séquence du client TCP
+
+Le client est **plus simple** que le serveur. Il n'a pas à `bind`er d'adresse (le système lui en attribue une **automatiquement**), ni à `listen` ou `accept` (il ne reçoit pas de connexions, il en **établit** une) :
+
+```text
+   socket()   -> creer la socket
+   connect()  -> se connecter au serveur (IP + port du serveur)
+   send() / recv()  -> dialoguer avec le serveur
+   close()    -> fermer la socket
+```
+
+Comparé au serveur, le client **ne fait pas** `bind`, `listen`, `accept` — et n'a **qu'une seule** socket (pas de distinction écoute / service). Toute la spécificité tient dans **`connect`**.
+
+## Étape 1 — Créer la socket : `socket()`
+
+Comme le serveur, le client crée une socket TCP (`SOCK_STREAM`) dans le domaine Internet :
+
+```c
+int sk = socket(AF_INET, SOCK_STREAM, 0);
+if (sk == -1) {
+    perror("socket");
+    exit(EXIT_FAILURE);
+}
+```
+
+Le client **ne `bind`e pas** cette socket : lors du `connect`, le système lui attribue **automatiquement** une adresse IP locale et un **port libre** (un *port éphémère*). On laisse donc faire le système — un `bind` explicite côté client est possible mais inutile dans l'usage courant.
+
+## Étape 2 — Construire l'adresse du serveur
+
+Avant de se connecter, le client doit décrire **où** se trouve le serveur : son **adresse IP** et son **port**. On remplit pour cela une `struct sockaddr_in` — celle du **serveur** à joindre :
+
+```c
+struct sockaddr_in adr_serveur;
+
+memset(&adr_serveur, 0, sizeof(adr_serveur));
+adr_serveur.sin_family = AF_INET;                 /* domaine Internet     */
+adr_serveur.sin_port   = htons(8080);             /* port du SERVEUR      */
+
+/* adresse IP du serveur, depuis une chaine pointee */
+if (inet_aton("127.0.0.1", &adr_serveur.sin_addr) == 0) {
+    fprintf(stderr, "adresse IP invalide\n");
+    exit(EXIT_FAILURE);
+}
+```
+
+- `sin_family` = `AF_INET` ;
+- `sin_port` = le port **du serveur**, converti par **`htons`** ;
+- `sin_addr` = l'**adresse IP du serveur**, ici obtenue de la chaîne `"127.0.0.1"` par **`inet_aton`** (le **bouclage**, pour un test local).
+
+Si l'on disposait d'un **nom de machine** plutôt que d'une IP, on emploierait `gethostbyname` (chapitre 1) pour le résoudre, puis on recopierait `h_addr_list[0]` dans `sin_addr`.
+
+> ⚠️ La structure remplie ici décrit le **serveur**, pas le client. Le client met dans `sin_port` et `sin_addr` les coordonnées de **sa cible**. C'est une différence à bien voir avec le serveur : côté serveur, la `sockaddr_in` du `bind` décrit la **machine locale** (`INADDR_ANY`) ; côté client, la `sockaddr_in` du `connect` décrit la **machine distante**.
+
+## Étape 3 — Se connecter : `connect()`
+
+```c
+#include <sys/socket.h>
+
+int connect(int s, const struct sockaddr *dest, socklen_t lg_dest);
+```
+
+**`connect`** **établit la connexion** entre la socket du client et le serveur désigné. Ses paramètres :
+
+- **`s`** — le descripteur de la socket du client ;
+- **`dest`** — un pointeur vers la `struct sockaddr_in` du **serveur** (transtypée en `struct sockaddr *`) ;
+- **`lg_dest`** — la **taille** de cette structure (`sizeof`).
+
+`connect` renvoie **`0`** en cas de succès, **`-1`** en cas d'échec.
+
+`connect` est un appel **bloquant** : il **suspend** le client le temps d'établir la connexion. Côté serveur, c'est l'appel `connect` du client qui débloque l'`accept` en attente : les deux primitives se **rejoignent** pour former la connexion — exactement comme le **rendez-vous** des `open` d'un FIFO (Module 4).
+
+```c
+if (connect(sk, (struct sockaddr *) &adr_serveur, sizeof(adr_serveur)) == -1) {
+    perror("connect");
+    exit(EXIT_FAILURE);
+}
+printf("connecte au serveur\n");
+```
+
+> ⚠️ **`connect` échoue si le serveur n'est pas prêt.** Si aucun serveur n'écoute sur l'adresse et le port visés, `connect` renvoie `-1` avec `errno` = **`ECONNREFUSED`** (« *Connection refused* »). Le serveur doit être **lancé en premier**, et avoir atteint son `listen`, **avant** que le client ne tente son `connect`. Toujours tester la valeur de retour de `connect` — c'est le point d'échec le plus probable d'un client.
+
+## Étape 4 — Dialoguer : `send` / `recv`
+
+La connexion établie, le client échange des données avec le serveur. Comme côté serveur, on dispose des primitives `send`/`recv` (spécifiques sockets) **ou** des appels universels `write`/`read` :
+
+```c
+char buffer[1024] = {0};
+
+/* envoyer un message au serveur */
+const char *message = "Bonjour, serveur !";
+send(sk, message, strlen(message), 0);
+printf("message envoye\n");
+
+/* lire la reponse du serveur */
+ssize_t n = recv(sk, buffer, sizeof(buffer) - 1, 0);
+if (n > 0) {
+    buffer[n] = '\0';
+    printf("reponse du serveur : %s\n", buffer);
+}
+```
+
+Le paramètre `flags` vaut `0`. Le **protocole applicatif** — qui parle en premier, dans quel ordre — doit être **cohérent** entre client et serveur : si le serveur attend une requête avant de répondre, le client doit `send` **avant** de `recv`, faute de quoi les deux processus s'attendent mutuellement (un interblocage).
+
+## TCP est un flot d'octets : le piège de la lecture partielle
+
+Voici le point **fondamental** de ce chapitre — la source du bogue réseau le plus subtil.
+
+> ⚠️ **TCP est un flot d'octets, sans frontières de messages.** Un `send` de 1000 octets côté émetteur **n'arrive pas forcément** en un seul `recv` de 1000 octets côté récepteur. Le réseau peut **découper** les données : un `recv` peut renvoyer 600 octets, puis un autre 400. Réciproquement, deux `send` successifs peuvent être **fusionnés** et lus en un seul `recv`. **`recv` renvoie ce qui est disponible à l'instant t**, pas nécessairement tout ce qui a été envoyé.
+
+C'est une différence **majeure** avec les **files de messages** du Module 6 : là, un `msgrcv` extrayait **exactement** un `msgsnd`, les messages étaient **indivisibles**. En TCP, **rien de tel** : le flot est continu, et la valeur renvoyée par `recv` (le nombre d'octets effectivement lus) doit **toujours** être examinée.
+
+### La conséquence : lire en boucle
+
+Si l'on attend un nombre **précis** d'octets (par exemple une structure de taille connue), un **seul** `recv` ne suffit pas : il faut **boucler** jusqu'à avoir tout reçu. Le motif standard :
+
+```c
+/* recevoir EXACTEMENT 'attendu' octets, malgre le decoupage TCP */
+ssize_t recevoir_tout(int sk, char *buf, size_t attendu) {
+    size_t recus = 0;
+    while (recus < attendu) {
+        ssize_t n = recv(sk, buf + recus, attendu - recus, 0);
+        if (n == -1) { perror("recv"); return -1; }   /* erreur          */
+        if (n == 0)  break;                            /* connexion fermee */
+        recus += n;                                    /* progression     */
+    }
+    return (ssize_t) recus;
+}
+```
+
+À chaque tour : on lit dans `buf + recus` (la suite du tampon, après ce qui est déjà reçu), on demande `attendu - recus` octets (ce qu'il reste), et on cumule. La boucle s'arrête quand tout est reçu, ou si `recv` renvoie `0` (le serveur a fermé).
+
+> ⚠️ Ne **jamais** présumer qu'un `recv` (ou un `read`) renvoie tout ce qui a été envoyé. Le code naïf `recv(sk, buf, 1000, 0);` qui suppose recevoir 1000 octets d'un coup est **faux** dès que les données dépassent quelques centaines d'octets ou que le réseau est chargé. Quand la quantité attendue est connue, on **boucle**. Le retour **`0`** de `recv` signale toujours la **fermeture** de la connexion par le correspondant — il faut le distinguer d'une erreur (`-1`).
+
+## Étape 5 — Fermer : `close()`
+
+Le dialogue terminé, le client ferme sa socket :
+
+```c
+close(sk);
+```
+
+`close` libère le descripteur **et** ferme la connexion TCP. Le client n'a qu'**une** socket à fermer (pas de distinction écoute / service comme le serveur).
+
+## Connaître les adresses : `getsockname` et `getpeername`
+
+Deux fonctions permettent d'**interroger** les adresses associées à une socket connectée.
+
+```c
+#include <sys/socket.h>
+
+int getsockname(int s, struct sockaddr *adr, socklen_t *lg);  /* adresse LOCALE   */
+int getpeername(int s, struct sockaddr *adr, socklen_t *lg);  /* adresse DISTANTE */
+```
+
+- **`getsockname`** remplit `adr` avec l'**adresse locale** de la socket `s` — l'IP et le **port** que le système a attribués. C'est utile côté **client** pour découvrir le **port éphémère** choisi automatiquement (puisque le client n'a pas fait de `bind`).
+- **`getpeername`** remplit `adr` avec l'adresse du **correspondant** (le *peer*) — l'autre extrémité de la connexion.
+
+Comme pour `accept`, le troisième argument est un paramètre **entrée/sortie** : on l'initialise avec `sizeof` avant l'appel.
+
+```c
+struct sockaddr_in locale;
+socklen_t lg = sizeof(locale);
+
+if (getsockname(sk, (struct sockaddr *) &locale, &lg) == 0)
+    printf("adresse locale du client : %s:%d\n",
+           inet_ntoa(locale.sin_addr), ntohs(locale.sin_port));
+```
+
+## Client TCP complet
+
+Voici un client TCP complet, conforme au cours et au pendant du serveur du chapitre 2 : il se connecte, envoie un message, lit la réponse, puis ferme.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+#define SERVER_IP   "127.0.0.1"   /* adresse IP du serveur (bouclage) */
+#define PORT        8080          /* port du serveur                  */
+#define BUFFER_SIZE 1024
+
+int main(void) {
+    int sk;
+    struct sockaddr_in adr_serveur;
+    char buffer[BUFFER_SIZE] = {0};
+
+    /* 1. creer la socket (TCP) */
+    if ((sk = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+        perror("socket");
+        exit(EXIT_FAILURE);
+    }
+
+    /* 2. construire l'adresse du SERVEUR a joindre */
+    memset(&adr_serveur, 0, sizeof(adr_serveur));
+    adr_serveur.sin_family = AF_INET;
+    adr_serveur.sin_port   = htons(PORT);
+    if (inet_aton(SERVER_IP, &adr_serveur.sin_addr) == 0) {
+        fprintf(stderr, "adresse IP invalide\n");
+        exit(EXIT_FAILURE);
+    }
+
+    /* 3. se connecter au serveur */
+    if (connect(sk, (struct sockaddr *) &adr_serveur,
+                sizeof(adr_serveur)) == -1) {
+        perror("connect");
+        exit(EXIT_FAILURE);
+    }
+    printf("connecte au serveur %s:%d\n", SERVER_IP, PORT);
+
+    /* 4. dialoguer : envoyer une requete */
+    const char *message = "Bonjour, serveur !";
+    send(sk, message, strlen(message), 0);
+    printf("message envoye\n");
+
+    /* lire la reponse du serveur */
+    ssize_t n = recv(sk, buffer, sizeof(buffer) - 1, 0);
+    if (n > 0) {
+        buffer[n] = '\0';
+        printf("reponse du serveur : %s\n", buffer);
+    }
+
+    /* 5. fermer la socket */
+    close(sk);
+    return 0;
+}
+```
+
+## Mise en service : serveur d'abord, client ensuite
+
+Pour tester le couple client / serveur **sur une même machine** (le cadre habituel des exercices), on utilise l'adresse de **bouclage** `127.0.0.1` et l'on respecte l'**ordre de lancement** :
+
+```text
+$ ./serveur &                     # le serveur d'abord, en tache de fond
+en attente de connexion sur le port 8080...
+$ ./client                        # le client ensuite
+connecte au serveur 127.0.0.1:8080
+message envoye
+reponse du serveur : Message bien recu !
+```
+
+Le serveur doit être **prêt** (avoir atteint son `listen`) **avant** le `connect` du client — sinon `connect` échoue avec `ECONNREFUSED`.
+
+> **À retenir**
+> - La séquence du client TCP est **`socket` → `connect` → `send`/`recv` → `close`** : **plus courte** que celle du serveur — **pas** de `bind`, **pas** de `listen`, **pas** de `accept`.
+> - Le client **ne `bind`e pas** sa socket : le système lui attribue **automatiquement** une adresse IP locale et un **port éphémère** lors du `connect`.
+> - Avant `connect`, le client remplit une **`struct sockaddr_in`** décrivant le **serveur** : `sin_family` = `AF_INET`, `sin_port` = **`htons`** du port serveur, `sin_addr` = IP du serveur (via **`inet_aton`** ou `gethostbyname`).
+> - **`connect(s, (struct sockaddr *) &adr, sizeof(adr))`** établit la connexion ; il **bloque** et **rejoint** l'`accept` du serveur. Il échoue avec **`ECONNREFUSED`** si aucun serveur n'écoute — le serveur doit être lancé **en premier**.
+> - On **dialogue** avec **`send`/`recv`** (ou `write`/`read`), `flags` = `0`.
+> - **TCP est un flot d'octets sans frontières** : un `recv` peut renvoyer **moins** d'octets qu'un `send` n'en a émis (et deux `send` peuvent être fusionnés). Quand la quantité attendue est connue, il faut **lire en boucle** ; un `recv` renvoyant **`0`** signale la **fermeture** de la connexion.
+> - **`getsockname`** donne l'adresse **locale** d'une socket (utile pour connaître le port éphémère du client), **`getpeername`** donne l'adresse du **correspondant**.
+> - Pour tester localement : adresse de **bouclage** `127.0.0.1`, et **serveur lancé avant** le client.

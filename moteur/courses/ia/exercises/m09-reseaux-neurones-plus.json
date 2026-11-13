@@ -1,0 +1,1266 @@
+[
+  {
+    "chapterSlug": "neurone-formel-activations",
+    "type": "NUMERIC",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un neurone reçoit x = (1, 1, 1) avec les poids w = (1, 2, 3) et un biais b = −2. Calculez sa somme pondérée z = Σwᵢxᵢ + b.",
+    "payload": {
+      "placeholder": "ex. 4",
+      "hint": "z = 1·1 + 2·1 + 3·1 − 2."
+    },
+    "solution": {
+      "value": 4,
+      "absTol": 0.001
+    },
+    "explanation": "z = 1·1 + 2·1 + 3·1 − 2 = 1 + 2 + 3 − 2 = 4. La somme pondérée combine linéairement les entrées avant l'activation.",
+    "concepts": [
+      "neurone-formel",
+      "somme-ponderee"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "neurone-formel-activations",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Calculez la valeur de la fonction sigmoïde σ(z) = 1 / (1 + e^(−z)) en z = −1, arrondie au millième.",
+    "payload": {
+      "placeholder": "ex. 0.269",
+      "hint": "σ(−1) = 1 / (1 + e¹), avec e¹ ≈ 2,718."
+    },
+    "solution": {
+      "value": 0.269,
+      "absTol": 0.003
+    },
+    "explanation": "σ(−1) = 1 / (1 + e^(−(−1))) = 1 / (1 + e¹) = 1 / (1 + 2,718) = 1 / 3,718 ≈ 0,269. Pour une somme pondérée négative, la sigmoïde donne une valeur inférieure à 0,5.",
+    "concepts": [
+      "fonction-sigmoide"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "neurone-formel-activations",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un neurone à activation linéaire f(x) = λ·x avec λ = 0,5 reçoit x = (2, 4) avec les poids w = (1, 1) et un biais b = 0. Calculez sa sortie f(z).",
+    "payload": {
+      "placeholder": "ex. 3",
+      "hint": "z = 1·2 + 1·4 + 0, puis f(z) = 0,5·z."
+    },
+    "solution": {
+      "value": 3,
+      "absTol": 0.001
+    },
+    "explanation": "z = 1·2 + 1·4 + 0 = 6. Activation linéaire : f(z) = λ·z = 0,5·6 = 3. La fonction linéaire (identité si λ = 1) sert typiquement en couche de sortie d'une régression.",
+    "concepts": [
+      "neurone-formel",
+      "fonction-activation-lineaire"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "neurone-formel-activations",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quel terme le cours emploie-t-il pour la circulation des données dans un réseau, toujours dans le sens entrée → sortie ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Feedforward"
+        },
+        {
+          "id": "b",
+          "label": "Récurrent"
+        },
+        {
+          "id": "c",
+          "label": "Convolutif"
+        },
+        {
+          "id": "d",
+          "label": "Bidirectionnel"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le sens unique de circulation, de l'entrée vers la sortie, qualifie le réseau de feedforward (à propagation avant).",
+    "concepts": [
+      "reseau-feedforward",
+      "reseau-de-neurones"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "neurone-formel-activations",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Une couche softmax de 3 neurones a calculé les sommes pondérées z = (3, 1, 1). La sortie du neurone j est ŷⱼ = exp(zⱼ) / Σᵢ exp(zᵢ). Calculez ŷ₁ (la sortie du 1ᵉʳ neurone), arrondie au millième.",
+    "payload": {
+      "placeholder": "ex. 0.787",
+      "hint": "exp(3) ≈ 20,086 ; exp(1) ≈ 2,718. Dénominateur = exp(3) + exp(1) + exp(1)."
+    },
+    "solution": {
+      "value": 0.787,
+      "absTol": 0.005
+    },
+    "explanation": "Dénominateur = e³ + e¹ + e¹ = 20,086 + 2,718 + 2,718 = 25,522. ŷ₁ = 20,086 / 25,522 ≈ 0,787. Les deux autres sorties valent chacune 2,718 / 25,522 ≈ 0,107, et la somme fait bien 1.",
+    "concepts": [
+      "softmax"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "neurone-formel-activations",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la description des trois sortes de couches d'un réseau de neurones.",
+    "payload": {
+      "template": "La couche d'{{s1}} sert juste à introduire les données. Les couches {{s2}} reçoivent leurs entrées de la couche précédente et font des calculs. La couche de {{s3}} transmet ses résultats à l'extérieur.",
+      "slots": [
+        {
+          "id": "s1",
+          "width": "sm",
+          "placeholder": "mot"
+        },
+        {
+          "id": "s2",
+          "width": "sm",
+          "placeholder": "mot"
+        },
+        {
+          "id": "s3",
+          "width": "sm",
+          "placeholder": "mot"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": [
+          "entrée",
+          "entree"
+        ],
+        "s2": [
+          "cachées",
+          "cachees"
+        ],
+        "s3": "sortie"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Un réseau se compose d'une couche d'entrée (introduit les données), de couches cachées (font des calculs) et d'une couche de sortie (transmet les résultats à l'extérieur).",
+    "concepts": [
+      "couche-de-neurones",
+      "couche-cachee"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "neurone-formel-activations",
+    "type": "ALGO_TRACE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Une couche cachée comporte 2 neurones à activation ReLU (g(z) = max(0, z)). Ils reçoivent la même entrée x = (1, −1) ; le neurone 1 a w⁽¹⁾ = (2, 1) et b⁽¹⁾ = 0, le neurone 2 a w⁽²⁾ = (−1, 1) et b⁽²⁾ = 0,5. Calculez la somme pondérée z et la sortie g(z) de chaque neurone.",
+    "payload": {
+      "description": "Neurone 1 : z₁ = 2·x₁ + 1·x₂ + 0. Neurone 2 : z₂ = −1·x₁ + 1·x₂ + 0,5. Activation : g(z) = max(0, z). Entrée x = (1, −1).",
+      "cells": [
+        {
+          "id": "z1",
+          "label": "z₁ (somme pondérée du neurone 1)",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "g1",
+          "label": "g(z₁) = max(0, z₁)",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "z2",
+          "label": "z₂ (somme pondérée du neurone 2)",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "g2",
+          "label": "g(z₂) = max(0, z₂)",
+          "kind": "number",
+          "placeholder": "0"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "z1",
+          "expected": 1,
+          "absTol": 0.001
+        },
+        {
+          "id": "g1",
+          "expected": 1,
+          "absTol": 0.001
+        },
+        {
+          "id": "z2",
+          "expected": -1.5,
+          "absTol": 0.001
+        },
+        {
+          "id": "g2",
+          "expected": 0,
+          "absTol": 0.001
+        }
+      ]
+    },
+    "explanation": "Neurone 1 : z₁ = 2·1 + 1·(−1) + 0 = 1 → g(1) = 1. Neurone 2 : z₂ = −1·1 + 1·(−1) + 0,5 = −2 + 0,5 = −1,5 → g(−1,5) = max(0, −1,5) = 0. Le neurone 2 est « inactif » sur cette entrée.",
+    "concepts": [
+      "neurone-formel",
+      "somme-ponderee",
+      "fonction-d-activation"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "perceptron-multicouche",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "D'après la définition du cours, quand une fonction f de ℝⁿ dans {0,1} est-elle linéairement séparable ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Quand il existe un hyperplan séparant ses points d'image 1 de ceux d'image 0"
+        },
+        {
+          "id": "b",
+          "label": "Quand elle ne prend que des valeurs entières"
+        },
+        {
+          "id": "c",
+          "label": "Quand son graphe est une droite"
+        },
+        {
+          "id": "d",
+          "label": "Quand elle possède au moins deux variables d'entrée"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "f est linéairement séparable s'il existe un hyperplan (une droite en dimension 2, un plan en dimension 3) qui sépare les points où f = 1 de ceux où f = 0.",
+    "concepts": [
+      "separabilite-lineaire"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "perceptron-multicouche",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un perceptron calcule h(w₁·x₁ + w₂·x₂ + b) avec w₁ = 2, w₂ = −2, b = 0 et la Heaviside (h(x) = 1 si x > 0, sinon 0). Quelle est sa sortie pour l'entrée (x₁,x₂) = (0,1) ?",
+    "payload": {
+      "placeholder": "0 ou 1",
+      "hint": "z = 2·0 + (−2)·1 + 0, puis h(z)."
+    },
+    "solution": {
+      "value": 0,
+      "absTol": 0.001
+    },
+    "explanation": "z = 2·0 + (−2)·1 + 0 = −2. Comme z = −2 ≤ 0, la Heaviside donne h(z) = 0.",
+    "concepts": [
+      "perceptron",
+      "fonction-heaviside"
+    ],
+    "source": "premiersExos.pdf"
+  },
+  {
+    "chapterSlug": "perceptron-multicouche",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours résout le XOR en deux étapes via une couche cachée. Remettez le raisonnement dans l'ordre.",
+    "payload": {
+      "items": [
+        {
+          "id": "a",
+          "label": "Constater que le XOR n'est pas linéairement séparable : aucun perceptron ne le calcule"
+        },
+        {
+          "id": "b",
+          "label": "Ajouter une couche cachée de 2 neurones qui ré-encode (x₁,x₂) en (y₁,y₂)"
+        },
+        {
+          "id": "c",
+          "label": "Vérifier que dans le plan (y₁,y₂) les points sont devenus linéairement séparables"
+        },
+        {
+          "id": "d",
+          "label": "Définir le neurone de sortie par la droite séparatrice du plan (y₁,y₂)"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "On constate l'échec du perceptron, on ajoute une couche cachée qui ré-encode l'entrée, on vérifie que le nouveau problème est séparable, puis on trace la droite séparatrice avec le neurone de sortie.",
+    "concepts": [
+      "probleme-xor",
+      "perceptron-multicouche",
+      "couche-cachee",
+      "separabilite-lineaire"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "perceptron-multicouche",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Quelles caractéristiques distinguent le perceptron multicouche du perceptron simple ? (plusieurs réponses)",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il possède une ou plusieurs couches cachées"
+        },
+        {
+          "id": "b",
+          "label": "Il peut tracer des frontières de décision plus complexes qu'une seule droite"
+        },
+        {
+          "id": "c",
+          "label": "Il peut représenter des fonctions non linéairement séparables, comme le XOR"
+        },
+        {
+          "id": "d",
+          "label": "Il n'utilise que la fonction de Heaviside"
+        },
+        {
+          "id": "e",
+          "label": "Il ne peut avoir qu'un seul neurone de sortie"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Le perceptron multicouche a des couches cachées, trace des frontières complexes et représente des fonctions non séparables (XOR). Faux : (d) il peut utiliser sigmoïde, tanh, softmax… ; (e) il peut avoir plusieurs neurones de sortie.",
+    "concepts": [
+      "perceptron-multicouche",
+      "couche-cachee",
+      "separabilite-lineaire"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "perceptron-multicouche",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez le ré-encodage opéré par la couche cachée dans la résolution du XOR par le cours.",
+    "payload": {
+      "template": "La couche cachée transforme (x₁,x₂) en (y₁,y₂) avec y₁ = x₁ {{s1}} x₂ (le OU logique) et y₂ = x₁ {{s2}} x₂ (le ET logique). Le problème devient alors linéairement {{s3}}.",
+      "slots": [
+        {
+          "id": "s1",
+          "width": "sm",
+          "placeholder": "symbole"
+        },
+        {
+          "id": "s2",
+          "width": "sm",
+          "placeholder": "symbole"
+        },
+        {
+          "id": "s3",
+          "width": "md",
+          "placeholder": "mot"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": [
+          "∨",
+          "OU",
+          "ou"
+        ],
+        "s2": [
+          "∧",
+          "ET",
+          "et"
+        ],
+        "s3": [
+          "séparable",
+          "separable"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Le cours prend y₁ = x₁ ∨ x₂ et y₂ = x₁ ∧ x₂. Dans le plan (y₁,y₂), le XOR devient linéairement séparable.",
+    "concepts": [
+      "probleme-xor",
+      "couche-cachee",
+      "separabilite-lineaire"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "propagation-avant",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On déroule la propagation avant d'un réseau 2 → 3 → 1. La couche cachée (sigmoïde) calcule h_j = σ(z_j) avec z₁ = 0,5·x₁ + 0,5·x₂ − 1, z₂ = −x₁ + 0,5·x₂ + 0,5, z₃ = 0,2·x₁ − 0,2·x₂ + 0,1. L'entrée est (x₁,x₂) = (1,1). Remplissez les trois sommes pondérées z₁, z₂, z₃, puis la sortie cachée h₁ = σ(z₁).",
+    "payload": {
+      "description": "Couche cachée sigmoïde, entrée (x₁,x₂) = (1,1) : z₁ = 0,5·x₁ + 0,5·x₂ − 1 ; z₂ = −x₁ + 0,5·x₂ + 0,5 ; z₃ = 0,2·x₁ − 0,2·x₂ + 0,1.",
+      "figure": {
+        "kind": "nn-diagram",
+        "layers": [
+          {
+            "neurons": 2,
+            "label": "Entrée",
+            "role": "input"
+          },
+          {
+            "neurons": 3,
+            "label": "Cachée (sigmoïde)",
+            "role": "hidden"
+          },
+          {
+            "neurons": 1,
+            "label": "Sortie",
+            "role": "output"
+          }
+        ],
+        "caption": "Réseau 2 → 3 → 1"
+      },
+      "cells": [
+        {
+          "id": "z1",
+          "label": "z₁ = 0,5·1 + 0,5·1 − 1",
+          "kind": "number",
+          "placeholder": "0.0"
+        },
+        {
+          "id": "z2",
+          "label": "z₂ = −1·1 + 0,5·1 + 0,5",
+          "kind": "number",
+          "placeholder": "0.0"
+        },
+        {
+          "id": "z3",
+          "label": "z₃ = 0,2·1 − 0,2·1 + 0,1",
+          "kind": "number",
+          "placeholder": "0.0"
+        },
+        {
+          "id": "h1",
+          "label": "h₁ = σ(z₁)",
+          "kind": "number",
+          "placeholder": "0.00"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "z1",
+          "expected": 0,
+          "absTol": 0.001
+        },
+        {
+          "id": "z2",
+          "expected": 0,
+          "absTol": 0.001
+        },
+        {
+          "id": "z3",
+          "expected": 0.1,
+          "absTol": 0.001
+        },
+        {
+          "id": "h1",
+          "expected": 0.5,
+          "absTol": 0.01
+        }
+      ]
+    },
+    "explanation": "z₁ = 0,5 + 0,5 − 1 = 0 ; z₂ = −1 + 0,5 + 0,5 = 0 ; z₃ = 0,2 − 0,2 + 0,1 = 0,1. Puis h₁ = σ(0) = 0,5. La sigmoïde vaut exactement 0,5 quand sa somme pondérée est nulle.",
+    "concepts": [
+      "propagation-avant",
+      "somme-ponderee",
+      "fonction-sigmoide"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "propagation-avant",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Réseau 2 → 2 → 1. La couche cachée (sigmoïde) calcule h₁ = σ(z₁), h₂ = σ(z₂) avec z₁ = 0,6·x₁ − 0,4·x₂ + 0,4 et z₂ = 0,7·x₁ + 0,3·x₂ − 0,2. Le neurone de sortie (sigmoïde) calcule σ(0,5·h₁ + 0,1·h₂ − 0,3). Pour l'entrée (x₁,x₂) = (1,1), donnez la sortie finale, arrondie au centième.",
+    "payload": {
+      "placeholder": "ex. 0.52",
+      "hint": "z₁ = 0,6 ; z₂ = 0,8. Calculez h₁ = σ(z₁), h₂ = σ(z₂), puis zₒ = 0,5·h₁ + 0,1·h₂ − 0,3 et σ(zₒ)."
+    },
+    "solution": {
+      "value": 0.52,
+      "absTol": 0.02
+    },
+    "explanation": "z₁ = 0,6·1 − 0,4·1 + 0,4 = 0,6 → h₁ = σ(0,6) ≈ 0,6457. z₂ = 0,7·1 + 0,3·1 − 0,2 = 0,8 → h₂ = σ(0,8) ≈ 0,6900. zₒ = 0,5·0,6457 + 0,1·0,6900 − 0,3 ≈ 0,3229 + 0,0690 − 0,3 = 0,0919. Sortie = σ(0,0919) ≈ 0,52.",
+    "concepts": [
+      "propagation-avant",
+      "fonction-sigmoide",
+      "couche-cachee"
+    ],
+    "source": "premiersExos.pdf"
+  },
+  {
+    "chapterSlug": "propagation-avant",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours écrit la sortie du réseau comme une composition Ŷ = f_L(…f₃(f₂(X))…). Que représente cette écriture ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le réseau est la composée des fonctions portées par ses couches, appliquées dans l'ordre"
+        },
+        {
+          "id": "b",
+          "label": "Le réseau choisit aléatoirement l'une des fonctions f₂,…,f_L"
+        },
+        {
+          "id": "c",
+          "label": "Chaque couche calcule la même fonction f"
+        },
+        {
+          "id": "d",
+          "label": "Le réseau additionne les sorties de toutes les couches"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Chaque couche (cachée ou de sortie) est une fonction ; le réseau est leur composée. La propagation avant évalue cette composée : f₂ sur X, puis f₃ sur le résultat, etc.",
+    "concepts": [
+      "propagation-avant",
+      "reseau-feedforward"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "retropropagation-gradient",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Descente du gradient : w' = w − η·∂E/∂w. On a w = 0,5, le taux d'apprentissage η = 0,1 et le gradient ∂E/∂w = 2. Calculez le nouveau poids w'.",
+    "payload": {
+      "placeholder": "ex. 0.3",
+      "hint": "w' = 0,5 − 0,1·2."
+    },
+    "solution": {
+      "value": 0.3,
+      "absTol": 0.001
+    },
+    "explanation": "w' = 0,5 − 0,1·2 = 0,5 − 0,2 = 0,3. Le gradient étant positif, le poids diminue : on se déplace dans le sens opposé au gradient.",
+    "concepts": [
+      "descente-de-gradient",
+      "taux-d-apprentissage"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "retropropagation-gradient",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Règle du Delta : sur un exemple, Δwⱼᵢ = η·xᵢ·(yⱼ − ŷⱼ). On a η = 0,2, l'entrée xᵢ = 3, la sortie voulue yⱼ = 1 et la sortie produite ŷⱼ = 0,5. Le poids initial est wⱼᵢ = 1,0. Calculez le nouveau poids wⱼᵢ + Δwⱼᵢ.",
+    "payload": {
+      "placeholder": "ex. 1.3",
+      "hint": "Δw = 0,2·3·(1 − 0,5)."
+    },
+    "solution": {
+      "value": 1.3,
+      "absTol": 0.001
+    },
+    "explanation": "δ = y − ŷ = 1 − 0,5 = 0,5. Δw = η·x·δ = 0,2·3·0,5 = 0,3. Nouveau poids : 1,0 + 0,3 = 1,3. La sortie produite étant trop basse, le poids augmente.",
+    "concepts": [
+      "regle-du-delta",
+      "terme-delta",
+      "descente-de-gradient"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "retropropagation-gradient",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Calculez l'entropie croisée binaire BCE(ŷ, y) = −(y·log(ŷ) + (1−y)·log(1−ŷ)) pour une sortie produite ŷ = 0,1 et une sortie voulue y = 0. Donnez le résultat arrondi au millième (log népérien).",
+    "payload": {
+      "placeholder": "ex. 0.105",
+      "hint": "Pour y = 0, BCE = −log(1−ŷ) = −log(0,9). ln(0,9) ≈ −0,1054."
+    },
+    "solution": {
+      "value": 0.105,
+      "absTol": 0.003
+    },
+    "explanation": "Avec y = 0 : BCE = −(0·log(0,1) + 1·log(0,9)) = −log(0,9) ≈ 0,105. La prédiction (ŷ = 0,1) étant proche de la classe réelle (0), la perte est faible.",
+    "concepts": [
+      "entropie-croisee-binaire",
+      "fonction-de-perte"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "retropropagation-gradient",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Calculez l'entropie croisée catégorielle CCE(ŷ, y) = −Σⱼ yⱼ·log(ŷⱼ) pour la sortie voulue (one-hot) y = (0, 0, 1) et la sortie produite ŷ = (0,1 ; 0,1 ; 0,8). Donnez le résultat arrondi au millième (log népérien).",
+    "payload": {
+      "placeholder": "ex. 0.223",
+      "hint": "Seule la composante où yⱼ = 1 compte : CCE = −log(ŷ₃). ln(0,8) ≈ −0,2231."
+    },
+    "solution": {
+      "value": 0.223,
+      "absTol": 0.005
+    },
+    "explanation": "Y étant one-hot, seul le terme j = 3 (où y₃ = 1) compte : CCE = −1·log(0,8) ≈ 0,223. Le réseau attribue 0,8 à la vraie classe : la perte est modérée.",
+    "concepts": [
+      "entropie-croisee-categorielle",
+      "fonction-de-perte"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "retropropagation-gradient",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "La rétropropagation calcule les termes δ de la couche d'entrée vers la couche de sortie.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. La rétropropagation procède de la sortie vers l'entrée (de droite à gauche). C'est l'inverse de la propagation avant — d'où le préfixe « rétro ». Le δ d'un neurone dépend des δ de la couche suivante.",
+    "concepts": [
+      "retropropagation",
+      "terme-delta"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "retropropagation-gradient",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la description du terme δ dans la règle du Delta et la rétropropagation.",
+    "payload": {
+      "template": "Dans la règle du Delta, le terme commun δʲ = (yⱼ − ŷⱼ) mesure, pour le neurone j, l'écart entre sa sortie {{s1}} et sa sortie {{s2}}. Dans la rétropropagation, le δ d'un neurone d'une couche cachée se déduit des δ de la couche {{s3}}.",
+      "slots": [
+        {
+          "id": "s1",
+          "width": "sm",
+          "placeholder": "mot"
+        },
+        {
+          "id": "s2",
+          "width": "sm",
+          "placeholder": "mot"
+        },
+        {
+          "id": "s3",
+          "width": "sm",
+          "placeholder": "mot"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": [
+          "voulue",
+          "désirée",
+          "desiree",
+          "cible"
+        ],
+        "s2": [
+          "produite",
+          "calculée",
+          "calculee",
+          "prédite",
+          "predite"
+        ],
+        "s3": "suivante"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "δʲ = yⱼ − ŷⱼ mesure l'écart sortie voulue / sortie produite. En rétropropagation, le δ d'une couche cachée se déduit des δ de la couche suivante : le calcul remonte de la sortie vers l'entrée.",
+    "concepts": [
+      "terme-delta",
+      "regle-du-delta",
+      "retropropagation"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "retropropagation-gradient",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans la descente du gradient stochastique, quand la mise à jour des poids a-t-elle lieu ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Sur un seul exemple choisi aléatoirement à chaque itération"
+        },
+        {
+          "id": "b",
+          "label": "Après avoir calculé l'erreur globale sur tous les exemples"
+        },
+        {
+          "id": "c",
+          "label": "Une seule fois, à la toute fin de l'apprentissage"
+        },
+        {
+          "id": "d",
+          "label": "Tous les 100 exemples exactement"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Dans la descente du gradient stochastique, à chaque itération un exemple est tiré aléatoirement, et les calculs puis la mise à jour se font sur ce seul exemple. Le batch utilise tous les exemples, le mini-batch des paquets de mb.",
+    "concepts": [
+      "versions-retropropagation",
+      "descente-de-gradient"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "retropropagation-gradient",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Parmi les critères d'arrêt cités par le cours pour la descente du gradient, lesquels sont valables ? (plusieurs réponses)",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "L'erreur E passe sous un seuil fixé E_max"
+        },
+        {
+          "id": "b",
+          "label": "Deux valeurs successives des poids et biais sont quasi-identiques (à ε près)"
+        },
+        {
+          "id": "c",
+          "label": "Deux valeurs successives de l'erreur sont quasi-identiques"
+        },
+        {
+          "id": "d",
+          "label": "Un nombre maximal d'itérations est atteint"
+        },
+        {
+          "id": "e",
+          "label": "Le réseau a exactement 43 paramètres"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Le cours cite : E < E_max, stabilité des poids/biais (à ε près), stabilité de l'erreur, nombre maximal d'itérations — et ces critères peuvent être combinés. Le nombre de paramètres (e) n'est pas un critère d'arrêt.",
+    "concepts": [
+      "descente-de-gradient",
+      "retropropagation"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "poids-et-biais",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un réseau totalement connecté a l'architecture 2 → 4 → 1. Calculez son nombre total de paramètres (poids + biais).",
+    "payload": {
+      "placeholder": "ex. 17",
+      "hint": "Couche cachée : (2+1)×4. Couche de sortie : (4+1)×1."
+    },
+    "solution": {
+      "value": 17,
+      "absTol": 0.001
+    },
+    "explanation": "Couche cachée : (2+1)×4 = 12. Couche de sortie : (4+1)×1 = 5. Total = 12 + 5 = 17. La couche d'entrée n'a aucun paramètre.",
+    "concepts": [
+      "nombre-de-parametres",
+      "couche-de-neurones"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "poids-et-biais",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un réseau totalement connecté a l'architecture 3 → 6 → 6 → 3 (deux couches cachées de 6 neurones). Calculez son nombre total de paramètres (poids + biais).",
+    "payload": {
+      "placeholder": "ex. 87",
+      "hint": "(3+1)×6 + (6+1)×6 + (6+1)×3."
+    },
+    "solution": {
+      "value": 87,
+      "absTol": 0.001
+    },
+    "explanation": "1ʳᵉ couche cachée : (3+1)×6 = 24. 2ᵉ couche cachée : (6+1)×6 = 42. Couche de sortie : (6+1)×3 = 21. Total = 24 + 42 + 21 = 87.",
+    "concepts": [
+      "nombre-de-parametres",
+      "couche-cachee"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "poids-et-biais",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Le code Keras ci-dessous définit un réseau de régression sur le jeu de données Boston housing (13 attributs numériques, on prédit le prix). Lisez le code et répondez. Rappel : pour une couche Dense, nombre de paramètres = (entrées + 1) × (neurones).",
+    "payload": {
+      "code": "from keras.models import Sequential\nfrom keras.layers import Dense\n\nmodele = Sequential()\nmodele.add(Dense(10, input_dim=13, activation='relu'))\nmodele.add(Dense(1, activation='linear'))\n\nmodele.compile(loss='mean_squared_error', optimizer='adam')\nmodele.summary()",
+      "language": "keras",
+      "caption": "Réseau de régression Boston housing : 13 → 10 → 1",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Combien de paramètres possède la couche cachée Dense(10, input_dim=13, ...) ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 140",
+            "hint": "(13 + 1) × 10."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Combien de paramètres le réseau compte-t-il au total ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 151",
+            "hint": "(13+1)×10 + (10+1)×1."
+          }
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Pourquoi la couche de sortie a-t-elle 1 neurone et une activation linéaire ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Parce qu'il s'agit d'une régression à une seule variable à prédire (le prix) : activation linéaire en sortie"
+              },
+              {
+                "id": "b",
+                "label": "Parce qu'il s'agit d'une multi-classification à 10 classes"
+              },
+              {
+                "id": "c",
+                "label": "Parce que l'activation linéaire est obligatoire dans les couches cachées"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 140,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 151,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "Couche cachée : (13+1)×10 = 140. Couche de sortie : (10+1)×1 = 11. Total = 140 + 11 = 151. La couche de sortie a 1 neurone à activation linéaire car c'est une régression : une seule variable à prédire, le prix.",
+    "concepts": [
+      "nombre-de-parametres",
+      "fonction-activation-lineaire",
+      "couche-de-neurones"
+    ],
+    "source": "TD_RNA_Exo3_Corr_Firstpart.py"
+  },
+  {
+    "chapterSlug": "poids-et-biais",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Le code Keras ci-dessous définit un réseau pour la détection de spam (jeu de données spamDataNum, 57 attributs numériques, classe binaire spam / non-spam). Lisez le code et répondez. Rappel : pour une couche Dense, nombre de paramètres = (entrées + 1) × (neurones).",
+    "payload": {
+      "code": "from keras.models import Sequential\nfrom keras.layers import Dense\n\nmodele = Sequential()\nmodele.add(Dense(16, input_dim=57, activation='relu'))\nmodele.add(Dense(8, activation='relu'))\nmodele.add(Dense(1, activation='sigmoid'))\n\nmodele.summary()",
+      "language": "keras",
+      "caption": "Réseau de détection de spam : 57 → 16 → 8 → 1",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Combien de paramètres possède la première couche cachée Dense(16, input_dim=57, ...) ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 928",
+            "hint": "(57 + 1) × 16."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Combien de paramètres possède la deuxième couche cachée Dense(8, activation='relu') ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 136",
+            "hint": "(16 + 1) × 8."
+          }
+        },
+        {
+          "id": "q3",
+          "type": "NUMERIC",
+          "prompt": "Combien de paramètres le réseau compte-t-il au total ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 1073",
+            "hint": "(57+1)×16 + (16+1)×8 + (8+1)×1."
+          }
+        },
+        {
+          "id": "q4",
+          "type": "TRUE_FALSE",
+          "prompt": "La couche de sortie Dense(1, activation='sigmoid') est cohérente avec un problème de classification binaire.",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 928,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 136,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": 1073,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q4",
+          "solution": {
+            "value": true
+          }
+        }
+      ]
+    },
+    "explanation": "1ʳᵉ couche cachée : (57+1)×16 = 928. 2ᵉ couche cachée : (16+1)×8 = 136. Couche de sortie : (8+1)×1 = 9. Total = 928 + 136 + 9 = 1073. Une couche de sortie à 1 neurone sigmoïde est bien adaptée à une classification binaire (spam / non-spam).",
+    "concepts": [
+      "nombre-de-parametres",
+      "fonction-sigmoide",
+      "couche-de-neurones"
+    ],
+    "source": "Guide_RNA_Python.py"
+  },
+  {
+    "chapterSlug": "poids-et-biais",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "La figure montre l'architecture d'un réseau totalement connecté. Lisez le diagramme et comptez ses paramètres. Rappel : paramètres d'une couche = ((neurones de la couche précédente) + 1) × (neurones de la couche).",
+    "payload": {
+      "figure": {
+        "kind": "nn-diagram",
+        "layers": [
+          {
+            "neurons": 5,
+            "label": "Entrée",
+            "role": "input"
+          },
+          {
+            "neurons": 10,
+            "label": "Cachée",
+            "role": "hidden"
+          },
+          {
+            "neurons": 2,
+            "label": "Sortie",
+            "role": "output"
+          }
+        ],
+        "caption": "Réseau 5 → 10 → 2"
+      },
+      "caption": "Comptage des paramètres d'un réseau 5 → 10 → 2",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Combien de paramètres possède la couche cachée (10 neurones, après l'entrée de 5 neurones) ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 60",
+            "hint": "(5 + 1) × 10."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Combien de paramètres possède la couche de sortie (2 neurones, après une couche de 10 neurones) ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 22",
+            "hint": "(10 + 1) × 2."
+          }
+        },
+        {
+          "id": "q3",
+          "type": "NUMERIC",
+          "prompt": "Combien de paramètres le réseau compte-t-il au total ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 82"
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 60,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 22,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": 82,
+            "absTol": 0.001
+          }
+        }
+      ]
+    },
+    "explanation": "Couche cachée : (5+1)×10 = 60. Couche de sortie : (10+1)×2 = 22. Total = 60 + 22 = 82. La couche d'entrée ne compte pour aucun paramètre.",
+    "concepts": [
+      "nombre-de-parametres",
+      "couche-de-neurones"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "poids-et-biais",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez le décompte des paramètres du réseau Iris 4 → 5 → 3 du cours.",
+    "payload": {
+      "template": "Couche cachée : (4 + 1) × 5 = {{s1}} paramètres. Couche de sortie : (5 + 1) × 3 = {{s2}} paramètres. Total du réseau = {{s3}} paramètres.",
+      "slots": [
+        {
+          "id": "s1",
+          "width": "sm",
+          "placeholder": "nombre"
+        },
+        {
+          "id": "s2",
+          "width": "sm",
+          "placeholder": "nombre"
+        },
+        {
+          "id": "s3",
+          "width": "sm",
+          "placeholder": "nombre"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": "25",
+        "s2": "18",
+        "s3": "43"
+      },
+      "caseSensitive": false,
+      "stripAccents": false
+    },
+    "explanation": "Couche cachée : (4+1)×5 = 25. Couche de sortie : (5+1)×3 = 18. Total = 25 + 18 = 43 — c'est ce qu'affiche nn.summary() dans le code du cours.",
+    "concepts": [
+      "nombre-de-parametres",
+      "couche-de-neurones"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  },
+  {
+    "chapterSlug": "poids-et-biais",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Comptez les paramètres, couche par couche, du réseau totalement connecté d'architecture 6 → 10 → 4. Rappel : paramètres d'une couche = ((neurones de la couche précédente) + 1) × (neurones de la couche).",
+    "payload": {
+      "description": "Réseau 6 → 10 → 4. Couche cachée : (6+1)×10. Couche de sortie : (10+1)×4. La couche d'entrée n'a aucun paramètre.",
+      "figure": {
+        "kind": "nn-diagram",
+        "layers": [
+          {
+            "neurons": 6,
+            "label": "Entrée",
+            "role": "input"
+          },
+          {
+            "neurons": 10,
+            "label": "Cachée",
+            "role": "hidden"
+          },
+          {
+            "neurons": 4,
+            "label": "Sortie",
+            "role": "output"
+          }
+        ],
+        "caption": "Réseau 6 → 10 → 4"
+      },
+      "cells": [
+        {
+          "id": "cin",
+          "label": "Paramètres de la couche d'entrée",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "ccache",
+          "label": "Paramètres de la couche cachée",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "csortie",
+          "label": "Paramètres de la couche de sortie",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "total",
+          "label": "Nombre total de paramètres du réseau",
+          "kind": "number",
+          "placeholder": "0"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "cin",
+          "expected": 0,
+          "absTol": 0.001
+        },
+        {
+          "id": "ccache",
+          "expected": 70,
+          "absTol": 0.001
+        },
+        {
+          "id": "csortie",
+          "expected": 44,
+          "absTol": 0.001
+        },
+        {
+          "id": "total",
+          "expected": 114,
+          "absTol": 0.001
+        }
+      ]
+    },
+    "explanation": "Couche d'entrée : 0 paramètre (aucun calcul). Couche cachée : (6+1)×10 = 70. Couche de sortie : (10+1)×4 = 44. Total = 0 + 70 + 44 = 114.",
+    "concepts": [
+      "nombre-de-parametres",
+      "couche-de-neurones"
+    ],
+    "source": "RNA_HSe_Fr_2324.pdf"
+  }
+]

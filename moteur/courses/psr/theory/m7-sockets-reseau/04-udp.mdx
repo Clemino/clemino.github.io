@@ -1,0 +1,257 @@
+---
+title: "Socket UDP (mode non connecté)"
+slug: udp
+order: 4
+estimatedReadMin: 20
+concepts: [udp, mode-non-connecte, datagramme, sequence-udp, sendto, recvfrom, adresse-emetteur, frontiere-datagramme, tcp-vs-udp, sock-dgram]
+source: "Cours 5 — Sockets et programmation réseau"
+---
+
+Les chapitres 2 et 3 ont construit une communication **TCP** : connectée, fiable, en flot d'octets. Ce chapitre présente l'**autre** protocole de transport, son **opposé** : **UDP**. UDP est **non connecté** et **non fiable**, mais **simple** et **léger**. Son A.P.I. tient en **deux primitives** — `sendto` et `recvfrom` — et un serveur UDP **n'a ni `listen` ni `accept`**. Compléter un client/serveur UDP sur un port de bouclage est un exercice d'examen récurrent.
+
+## UDP : un protocole non connecté et non fiable
+
+Le protocole **UDP** (*User Datagram Protocol*) est le protocole de transport du type `SOCK_DGRAM`. Ses propriétés sont **à l'opposé** de celles de TCP :
+
+- **mode non connecté** : **aucune connexion** n'est établie au préalable. On envoie des données « à l'aveugle », vers une adresse, sans poignée de main initiale ;
+- **livraison non fiable** : un datagramme peut être **perdu**, **dupliqué**, ou **arriver dans le désordre** — UDP ne le détecte pas et ne retransmet pas. C'est à l'application de gérer ces aléas si elle en a besoin ;
+- **en-tête minimal** : UDP ajoute très peu d'information de contrôle, ce qui le rend **rapide** et **léger** ;
+- **frontières de messages préservées** : les données voyagent en **datagrammes** — des paquets **indépendants** et **délimités**.
+
+UDP convient lorsque la **rapidité** prime sur la fiabilité parfaite, ou quand l'application tolère des pertes : streaming audio/vidéo, requêtes DNS, jeux en réseau, télémétrie. Là où TCP garantit tout au prix d'un protocole lourd, UDP fait **simple et vite**, sans garantie.
+
+## Le datagramme : un message délimité
+
+> Un **datagramme** est un **paquet de données autonome et délimité**. Contrairement au flot d'octets de TCP, un datagramme a une **frontière** : un `recvfrom` extrait **exactement un** datagramme — le produit **d'un seul** `sendto`. Si l'émetteur envoie un datagramme de 200 octets, le récepteur le reçoit **en un bloc de 200 octets**, ni plus ni moins.
+
+C'est une différence **capitale** avec TCP. On retrouve ici, sur le réseau, la propriété d'**indivisibilité** qu'avaient les **messages** des files System V (Module 6) : **un `sendto` ↔ un `recvfrom`**. Il n'y a **jamais** besoin de « lire en boucle » pour reconstituer un datagramme — il arrive entier ou pas du tout.
+
+> ⚠️ Si le tampon fourni à `recvfrom` est **plus petit** que le datagramme reçu, l'excédent est **perdu** (tronqué et **jeté**) — pas conservé pour la lecture suivante comme le ferait TCP. Il faut donc dimensionner le tampon de réception assez grand pour le **plus gros** datagramme attendu.
+
+## La séquence UDP : ni `listen`, ni `accept`, ni `connect`
+
+Comme il n'y a **pas de connexion**, l'enchaînement des appels est **bien plus court** que pour TCP. Surtout, la dissymétrie client/serveur s'estompe : les deux côtés se ressemblent.
+
+```text
+   SERVEUR UDP                          CLIENT UDP
+   ───────────                          ──────────
+   socket()                             socket()
+   bind()      <- attache un port          (pas de bind : port automatique)
+   recvfrom()  <- recoit un datagramme   sendto()    -> envoie un datagramme
+   sendto()    -> repond                 recvfrom()  -> recoit la reponse
+   close()                               close()
+```
+
+Trois absences **fondamentales** par rapport à TCP :
+
+- **pas de `listen`** — il n'y a pas de file d'attente de connexions, puisqu'il n'y a pas de connexion ;
+- **pas de `accept`** — le serveur ne « reçoit » pas de connexion et ne crée donc **aucune socket de service**. Il garde **une seule** socket pour **tous** les clients ;
+- **pas de `connect`** (côté client) — le client n'établit pas de connexion ; il précise l'adresse du destinataire **à chaque envoi**.
+
+Le serveur UDP se contente de `socket` + `bind` : il **attache un port** connu, puis **reçoit** directement. Le client se contente de `socket` : il **envoie** directement.
+
+## L'adresse voyage avec chaque datagramme : `sendto` et `recvfrom`
+
+Sans connexion, le système ne « sait » plus avec qui l'on parle. L'adresse du correspondant doit donc être **fournie explicitement** : à **chaque envoi** pour `sendto`, et **récupérée à chaque réception** par `recvfrom`. C'est là toute la spécificité de l'A.P.I. UDP.
+
+### Émettre : `sendto`
+
+```c
+#include <sys/socket.h>
+
+ssize_t sendto(int s, const void *buf, size_t lg, int flags,
+               const struct sockaddr *dest, socklen_t lg_dest);
+```
+
+`sendto` envoie un datagramme. Comparée à `send`, elle ajoute **deux paramètres** :
+
+- **`s`, `buf`, `lg`, `flags`** — comme `send` : la socket, les données, leur taille, et `flags` (= `0`) ;
+- **`dest`** — un pointeur vers la `struct sockaddr_in` du **destinataire** (transtypée en `struct sockaddr *`) ;
+- **`lg_dest`** — la **taille** de cette structure.
+
+`sendto` renvoie le **nombre d'octets envoyés**, ou `-1` en cas d'erreur. L'adresse du destinataire est donnée **ici, à chaque appel** — c'est ce qui remplace le `connect` de TCP.
+
+### Recevoir : `recvfrom`
+
+```c
+#include <sys/socket.h>
+
+ssize_t recvfrom(int s, void *buf, size_t lg, int flags,
+                 struct sockaddr *from, socklen_t *lg_from);
+```
+
+`recvfrom` reçoit un datagramme. Comparée à `recv`, elle ajoute **deux paramètres** :
+
+- **`s`, `buf`, `lg`, `flags`** — comme `recv` ;
+- **`from`** — un pointeur vers une `struct sockaddr_in` que `recvfrom` **remplit** avec l'adresse de l'**émetteur** du datagramme ;
+- **`lg_from`** — un pointeur vers un entier : **en entrée** la taille du tampon `from`, **en sortie** la taille réellement écrite. C'est un paramètre **entrée/sortie**, à **initialiser** avec `sizeof` avant l'appel — comme pour `accept`.
+
+`recvfrom` renvoie le **nombre d'octets reçus** (un datagramme entier), ou `-1`.
+
+> ⚠️ Le paramètre **`from` de `recvfrom` est essentiel côté serveur** : c'est la **seule** façon de savoir **qui** a envoyé le datagramme. Sans connexion, le serveur ne le sait pas d'avance. Pour **répondre**, il **réutilise** cette adresse `from` comme paramètre `dest` du `sendto` de réponse. Et comme pour `accept`, son dernier argument doit être **initialisé** avec `sizeof` avant l'appel.
+
+## Serveur UDP complet
+
+Voici un serveur UDP complet : il attache un port, attend un datagramme, affiche son contenu, et **renvoie une réponse à l'émetteur** — en réutilisant l'adresse récupérée par `recvfrom`.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+#define PORT        9000
+#define BUFFER_SIZE 1024
+
+int main(void) {
+    int sk;
+    struct sockaddr_in adr_locale, adr_client;
+    char buffer[BUFFER_SIZE];
+
+    /* 1. creer la socket UDP (SOCK_DGRAM) */
+    if ((sk = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
+        perror("socket");
+        exit(EXIT_FAILURE);
+    }
+
+    /* 2. attacher le port local (bind) -- PAS de listen, PAS de accept */
+    memset(&adr_locale, 0, sizeof(adr_locale));
+    adr_locale.sin_family      = AF_INET;
+    adr_locale.sin_addr.s_addr = htonl(INADDR_ANY);
+    adr_locale.sin_port        = htons(PORT);
+
+    if (bind(sk, (struct sockaddr *) &adr_locale, sizeof(adr_locale)) == -1) {
+        perror("bind");
+        exit(EXIT_FAILURE);
+    }
+    printf("serveur UDP en attente sur le port %d...\n", PORT);
+
+    /* 3. recevoir un datagramme -- recvfrom remplit adr_client */
+    socklen_t lg = sizeof(adr_client);     /* INITIALISER avant l'appel */
+    ssize_t n = recvfrom(sk, buffer, sizeof(buffer) - 1, 0,
+                         (struct sockaddr *) &adr_client, &lg);
+    if (n == -1) { perror("recvfrom"); exit(EXIT_FAILURE); }
+    buffer[n] = '\0';
+    printf("datagramme recu de %s:%d : %s\n",
+           inet_ntoa(adr_client.sin_addr), ntohs(adr_client.sin_port), buffer);
+
+    /* 4. repondre : on REUTILISE adr_client comme destinataire */
+    const char *reponse = "Datagramme bien recu !";
+    sendto(sk, reponse, strlen(reponse), 0,
+           (struct sockaddr *) &adr_client, lg);
+
+    /* 5. fermer la socket (une seule, pour tous les clients) */
+    close(sk);
+    return 0;
+}
+```
+
+À noter : le serveur n'a **qu'une seule** socket — pas de socket de service comme en TCP. Pour servir **plusieurs** clients à la suite, on entoure simplement les étapes 3 et 4 d'une boucle `while (1)` : chaque `recvfrom` renseigne `adr_client`, et chaque `sendto` répond au bon émetteur. **Aucun `fork` n'est nécessaire** — la même socket reçoit indifféremment les datagrammes de tous.
+
+## Client UDP complet
+
+Le client UDP crée une socket, **envoie** un datagramme au serveur avec `sendto`, puis **reçoit** la réponse avec `recvfrom`. Il ne fait **ni `bind` ni `connect`** :
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+#define SERVER_IP   "127.0.0.1"
+#define PORT        9000
+#define BUFFER_SIZE 1024
+
+int main(void) {
+    int sk;
+    struct sockaddr_in adr_serveur, adr_recue;
+    char buffer[BUFFER_SIZE];
+
+    /* 1. creer la socket UDP */
+    if ((sk = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
+        perror("socket");
+        exit(EXIT_FAILURE);
+    }
+
+    /* 2. construire l'adresse du SERVEUR */
+    memset(&adr_serveur, 0, sizeof(adr_serveur));
+    adr_serveur.sin_family = AF_INET;
+    adr_serveur.sin_port   = htons(PORT);
+    if (inet_aton(SERVER_IP, &adr_serveur.sin_addr) == 0) {
+        fprintf(stderr, "adresse IP invalide\n");
+        exit(EXIT_FAILURE);
+    }
+
+    /* 3. envoyer un datagramme -- l'adresse du serveur est donnee ICI */
+    const char *message = "Bonjour en UDP !";
+    if (sendto(sk, message, strlen(message), 0,
+               (struct sockaddr *) &adr_serveur, sizeof(adr_serveur)) == -1) {
+        perror("sendto");
+        exit(EXIT_FAILURE);
+    }
+    printf("datagramme envoye au serveur\n");
+
+    /* 4. recevoir la reponse */
+    socklen_t lg = sizeof(adr_recue);
+    ssize_t n = recvfrom(sk, buffer, sizeof(buffer) - 1, 0,
+                         (struct sockaddr *) &adr_recue, &lg);
+    if (n == -1) { perror("recvfrom"); exit(EXIT_FAILURE); }
+    buffer[n] = '\0';
+    printf("reponse du serveur : %s\n", buffer);
+
+    /* 5. fermer la socket */
+    close(sk);
+    return 0;
+}
+```
+
+Mise en service, sur une même machine via le bouclage `127.0.0.1` :
+
+```text
+$ ./serveur_udp &                  # le serveur d'abord
+serveur UDP en attente sur le port 9000...
+$ ./client_udp                     # le client ensuite
+datagramme envoye au serveur
+datagramme recu de 127.0.0.1:51324 : Bonjour en UDP !
+reponse du serveur : Datagramme bien recu !
+```
+
+Le port `51324` du client n'a **pas été choisi** par le programme : le système l'a **attribué automatiquement** au premier `sendto`, le client n'ayant pas fait de `bind`.
+
+> ⚠️ En UDP, **`sendto` réussit même si personne n'écoute** en face. Comme il n'y a pas de connexion, `sendto` se contente de **remettre le datagramme au réseau** ; il ne peut pas savoir s'il sera reçu. Un `sendto` qui renvoie un nombre positif signifie « datagramme **émis** », **pas** « datagramme **reçu** ». Si le datagramme se perd, le `recvfrom` du client **bloquera indéfiniment** en attendant une réponse qui ne viendra jamais. La **fiabilité** (accusés de réception, délais d'attente, retransmissions) est **à la charge de l'application** si elle en a besoin.
+
+## TCP contre UDP : le tableau de synthèse
+
+Le choix entre les deux protocoles est une question d'examen classique. Voici leur comparaison terme à terme :
+
+| Critère | **TCP** (`SOCK_STREAM`) | **UDP** (`SOCK_DGRAM`) |
+|---|---|---|
+| Connexion | **connecté** (établie avant l'échange) | **non connecté** |
+| Fiabilité | **fiable** : pas de perte, ordre garanti, sans doublon | **non fiable** : pertes, désordre, doublons possibles |
+| Nature des données | **flot d'octets** continu, sans frontières | **datagrammes** délimités et indépendants |
+| Lecture | un `recv` peut renvoyer **moins** que le `send` | un `recvfrom` ↔ **un** `sendto` (message entier) |
+| Primitives d'échange | `send` / `recv` (ou `read` / `write`) | **`sendto` / `recvfrom`** (adresse à chaque appel) |
+| Côté serveur | `socket`, `bind`, **`listen`**, **`accept`** | `socket`, `bind` (**ni** `listen` **ni** `accept`) |
+| Côté client | `socket`, **`connect`** | `socket` (**pas de** `connect`) |
+| Socket de service | `accept` crée une **nouvelle socket** par client | **une seule** socket pour tous les clients |
+| En-tête / surcoût | en-tête plus lourd, protocole de contrôle | en-tête **minimal**, rapide et léger |
+| Usages typiques | Web, mail, transfert de fichiers, SSH | DNS, streaming, jeux, télémétrie |
+
+La règle de choix : **TCP** quand on a besoin de **fiabilité** et que l'ordre des données compte ; **UDP** quand la **rapidité** et la **simplicité** priment et que l'application tolère des pertes (ou gère elle-même sa fiabilité).
+
+> **À retenir**
+> - **UDP** (`SOCK_DGRAM`) est un protocole **non connecté** et **non fiable** : pas de connexion préalable, et les **datagrammes** peuvent être **perdus**, **dupliqués** ou **désordonnés** — l'en-tête est minimal, le transport rapide.
+> - Un **datagramme** est un message **délimité** : un **`recvfrom` extrait exactement un `sendto`** (message entier), comme les messages indivisibles d'une file System V — jamais besoin de lire en boucle. Un tampon trop petit **tronque** le datagramme.
+> - La séquence UDP est courte : serveur = **`socket` + `bind`**, client = **`socket`** ; **ni `listen`, ni `accept`, ni `connect`**. Le serveur garde **une seule** socket pour tous les clients (pas de socket de service).
+> - **`sendto(s, buf, lg, 0, (struct sockaddr *) &dest, lg_dest)`** envoie un datagramme : l'adresse du **destinataire** est fournie **à chaque appel** (elle remplace le `connect`).
+> - **`recvfrom(s, buf, lg, 0, (struct sockaddr *) &from, &lg_from)`** reçoit un datagramme et **remplit `from`** avec l'adresse de l'**émetteur** ; `lg_from` est un paramètre entrée/sortie à **initialiser** avec `sizeof`. Le serveur **réutilise** `from` comme destinataire pour répondre.
+> - `sendto` **réussit même sans destinataire à l'écoute** : il signifie « datagramme **émis** », pas « datagramme **reçu** ». La **fiabilité** est à la charge de l'application.
+> - **TCP vs UDP** : TCP = connecté, fiable, flot d'octets, `listen`/`accept`/`connect` ; UDP = non connecté, non fiable, datagrammes délimités, `sendto`/`recvfrom`.

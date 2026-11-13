@@ -1,0 +1,232 @@
+---
+title: "L'apprentissage profond"
+slug: apprentissage-profond
+order: 1
+estimatedReadMin: 18
+concepts: [apprentissage-profond, reseau-convolutif, couche-de-convolution, pooling, couche-dense]
+source: "Slides_ConvNet.pdf"
+---
+
+## De quoi s'agit-il ?
+
+Ce module ouvre le **premier chapitre consacré à l'apprentissage profond**. Le
+cours l'introduit à travers l'un des réseaux les plus utilisés, le **réseau de
+neurones convolutif**. Avant d'en arriver là, il faut répondre à une question
+simple : **qu'est-ce qu'un réseau profond ?**
+
+Le point de départ est la notion de **profondeur d'un réseau de neurones** :
+c'est le **nombre de couches**. Le cours en donne **une première définition** :
+
+> **Définition (première version).** Un **réseau de neurones profond (deep)**
+> est un réseau ayant **plus de couches** qu'un réseau de neurones ordinaire
+> (**shallow**).
+
+Cette première définition oppose deux mots : **deep** (profond) et **shallow**
+(peu profond, superficiel). Un réseau ordinaire — ceux du module précédent — est
+dit *shallow* ; un réseau profond se distingue d'abord par son **nombre de
+couches plus important**.
+
+Mais cette définition appelle aussitôt une question : **à quoi servent ces
+couches supplémentaires ?**
+
+> **À retenir** : la **profondeur** d'un réseau de neurones est son **nombre de
+> couches**. Une **première définition** : un réseau **profond (deep)** a **plus
+> de couches** qu'un réseau ordinaire (**shallow**).
+
+## Les niveaux d'abstraction
+
+Le cours répond : les couches supplémentaires servent **à représenter les
+données selon différents niveaux d'abstraction**.
+
+L'idée est illustrée sur une **image**. Une même image peut être décrite à
+plusieurs niveaux :
+
+- l'ensemble de ses **pixels** — c'est le **niveau le plus bas** ;
+- les **groupes de pixels ayant une forme particulière** ;
+- les **arêtes** et les **objets** — ce sont les **niveaux les plus hauts**.
+
+Un **exemple d'application** précise cette hiérarchie. Considérons une image
+représentant un **visage humain** :
+
+- le **visage** se compose des **yeux**, du **nez**, etc. ;
+- chaque **partie « simple »** du visage se compose de **groupes de pixels
+  ayant une forme particulière** ;
+- chaque **forme** se compose de **pixels**.
+
+On lit donc une **chaîne** allant du plus concret (les pixels) au plus abstrait
+(le visage entier). Cette lecture conduit le cours à **compléter sa
+définition** :
+
+> **Définition (complément).** Dans une architecture profonde, **chaque niveau
+> (couche) permet un traitement non-linéaire de l'information issue des niveaux
+> plus bas** (en termes d'abstraction), c'est-à-dire **plus proches de la couche
+> d'entrée**. Ce traitement consiste à **créer de nouveaux objets correspondant
+> à un niveau d'abstraction plus élevé**.
+
+Autrement dit, une couche profonde ne se contente pas de calculer : elle
+**construit une représentation plus abstraite** à partir de la représentation
+fournie par les couches qui la précèdent. On retrouve l'idée du module
+précédent — une couche cachée **ré-encode** les données — poussée jusqu'à une
+**hiérarchie de représentations**.
+
+> **À retenir** : les couches d'un réseau profond servent à représenter les
+> données selon **différents niveaux d'abstraction** (des **pixels** aux
+> **objets**). Chaque couche applique un **traitement non-linéaire** aux niveaux
+> plus bas et **crée des objets d'un niveau d'abstraction plus élevé**.
+
+## Motivation et intérêt
+
+Pourquoi recourir à des architectures profondes ? Le cours donne **trois
+motivations**.
+
+- **Traiter plus efficacement de plus grandes quantités de données**, en
+  utilisant **les progrès dans la puissance des machines**. Les réseaux profonds
+  vont de pair avec l'abondance des **données** et la **puissance** de calcul
+  disponible.
+- **Un nombre de couches réduit peut conduire à une explosion du nombre de
+  neurones par couche.** Répartir le calcul sur **davantage de couches** évite
+  d'avoir des couches démesurément larges.
+- **Les humains apprennent d'abord des concepts simples, puis les combinent pour
+  représenter des concepts plus abstraits.** Cela est notamment dû à
+  l'**architecture « profonde » du cerveau** : c'est particulièrement vrai pour
+  le **cortex visuel**, qui contient une **série d'aires**, chacune contenant une
+  **représentation différente du champ visuel**.
+
+Cette dernière motivation est importante : l'architecture en couches d'un réseau
+profond **s'inspire** de la façon dont le cerveau, et en particulier le cortex
+visuel, traite l'information par **étapes successives** de représentation.
+
+> **À retenir** : trois motivations pour le profond — traiter de **grandes
+> quantités de données** grâce à la **puissance** des machines ; **éviter
+> l'explosion du nombre de neurones** d'une couche en répartissant le calcul sur
+> plus de couches ; **s'inspirer du cerveau** (le **cortex visuel** enchaîne des
+> aires de représentation).
+
+## Caractéristiques des réseaux profonds
+
+Le cours insiste sur un point : **si la première différence entre les réseaux
+profonds et les réseaux standards est le nombre de couches, cette différence
+n'est pas la seule** — elle en entraîne d'autres. Le tableau suivant les
+récapitule.
+
+| Caractéristique | Réseaux standards | Réseaux profonds |
+| --- | --- | --- |
+| **Nombre de couches** | Faible | Important |
+| **Types de couches** | Unique | Plusieurs |
+| **Circulation des données** | Feedforward | Possibilité de boucles |
+| **Connexion des couches** | Totalement connectées | Différents types |
+| **Contenu des couches** | 1 tableau de neurones | 1 ou plusieurs tableaux |
+| **Fonctions d'activation** | — | Nouvelle(s) fonction(s) |
+| **Apprentissage** | Descente du gradient | DdG + autres outils |
+
+Plusieurs nouveautés se lisent dans ce tableau, par rapport aux réseaux
+« standards » du module précédent :
+
+- les réseaux profonds comportent **plusieurs types de couches**, là où un réseau
+  standard n'en avait qu'**un seul** ;
+- la **circulation des données** peut comporter des **boucles** (et non plus
+  seulement un sens unique *feedforward*) ;
+- les couches ne sont plus forcément **totalement connectées** : il existe
+  **différents types** de connexions ;
+- une couche peut contenir **plusieurs tableaux de neurones**, et non un seul ;
+- de **nouvelles fonctions d'activation** apparaissent ;
+- l'apprentissage reste fondé sur la **descente du gradient**, mais s'accompagne
+  d'**autres outils**.
+
+> **À retenir** : le nombre de couches n'est **pas** la seule différence. Un
+> réseau profond a **plusieurs types de couches**, peut comporter des
+> **boucles**, des connexions de **types variés**, des couches à **plusieurs
+> tableaux** de neurones, de **nouvelles activations**, et un apprentissage par
+> **descente du gradient assistée d'autres outils**.
+
+## Les types de réseaux profonds
+
+**Plusieurs types de réseaux profonds existent.** Le cours en cite **deux**.
+
+**Les réseaux récurrents.** Ce sont des réseaux dans lesquels **la sortie d'un
+neurone peut être connectée à l'entrée d'un neurone appartenant à un niveau
+inférieur**. Autrement dit, ce sont des réseaux contenant des **cycles**. Le
+cours les **oppose aux réseaux « acycliques » ou « feed-forward »** : un réseau
+récurrent n'est pas *feedforward*, puisque l'information peut **revenir en
+arrière**.
+
+**Les réseaux convolutifs (ConvNet, pour Convolutionnal Neural Network).** Ils
+sont ainsi appelés car **l'une des opérations principales pour passer d'une
+couche à l'autre est la convolution** — en l'occurrence entre un **tableau à
+deux dimensions** représentant une couche du réseau et un **tableau plus petit
+appelé filtre (filter) ou noyau (kernel)**.
+
+Ce module est consacré aux **réseaux convolutifs** ; les **réseaux récurrents**
+font l'objet du module suivant.
+
+> **À retenir** : le cours cite **deux** types de réseaux profonds — les réseaux
+> **récurrents** (contenant des **cycles**, donc **non feedforward**) et les
+> réseaux **convolutifs (ConvNet)**, dont l'opération clé entre deux couches est
+> la **convolution** par un **filtre (noyau)**.
+
+## Le principe d'un ConvNet
+
+Le cours énonce le **principe** des réseaux convolutifs.
+
+**L'idée de départ des ConvNet est de prendre en compte la structure spatiale
+des données.** Le principal domaine d'application de ce type de réseau étant le
+**traitement d'images**, **les neurones de la couche d'entrée sont disposés sous
+la forme d'un tableau à deux dimensions** — comme les pixels d'une image.
+
+Sur cette base, le cours présente les **deux opérations** caractéristiques d'un
+ConvNet.
+
+- **La convolution.** **L'opération principale qui relie deux couches
+  successives est la convolution.** Cela donne lieu aux **couches de
+  convolution**, dont **chaque neurone est connecté aux neurones d'un carré
+  `t × t` de la couche précédente** — et non à tous les neurones de cette
+  couche. C'est une **connexion locale**.
+- **Le pooling.** Une autre opération importante est le **pooling**. **Une couche
+  de pooling peut être considérée comme une copie sous-échantillonnée de la
+  couche qui la précède** : elle **résume** l'information.
+
+Le cours ajoute deux précisions sur l'**architecture** d'ensemble :
+
+- **le réseau se termine par une ou plusieurs couches entièrement connectées**,
+  telles qu'on en trouve dans les réseaux de neurones standards ;
+- **d'autres types de couches peuvent exister** dans le réseau (on les verra
+  plus loin — notamment la couche **dropout**).
+
+On retrouve donc, dans un ConvNet, **plusieurs types de couches** : convolution,
+pooling, entièrement connectées, et d'autres encore. Chacun de ces types est
+détaillé dans les chapitres suivants.
+
+> **À retenir** : un **ConvNet** prend en compte la **structure spatiale** des
+> données — sa couche d'entrée est un **tableau 2D**. Deux opérations clés : la
+> **convolution** (couches à **connexions locales**, un carré `t × t`) et le
+> **pooling** (**copie sous-échantillonnée** d'une couche). Le réseau **se
+> termine** par des couches **entièrement connectées** ; d'autres types de
+> couches peuvent s'y ajouter.
+
+## Synthèse de la section
+
+L'**apprentissage profond** repose sur des réseaux dont la **profondeur** — le
+**nombre de couches** — est **importante** : un réseau **profond (deep)** a plus
+de couches qu'un réseau ordinaire (**shallow**). Ces couches supplémentaires
+servent à représenter les données selon **différents niveaux d'abstraction**,
+des **pixels** aux **objets** : chaque couche applique un **traitement
+non-linéaire** aux niveaux plus bas et **crée des objets plus abstraits**. Trois
+**motivations** : traiter de **grandes quantités de données** grâce à la
+**puissance** des machines, **éviter l'explosion du nombre de neurones** par
+couche, et **s'inspirer du cerveau** (le **cortex visuel** et sa série d'aires).
+Le nombre de couches n'est pas la seule différence avec les réseaux standards :
+un réseau profond a **plusieurs types de couches**, possiblement des **boucles**,
+des connexions de **types variés**, des couches à **plusieurs tableaux** de
+neurones, de **nouvelles activations**, et un apprentissage par **descente du
+gradient assistée**. Parmi les types de réseaux profonds : les réseaux
+**récurrents** (avec **cycles**) et les réseaux **convolutifs (ConvNet)**. Un
+**ConvNet** prend en compte la **structure spatiale** des données : sa couche
+d'entrée est un **tableau 2D**, ses opérations clés sont la **convolution**
+(connexions **locales**) et le **pooling** (**sous-échantillonnage**), et il se
+**termine** par des couches **entièrement connectées**.
+
+> **À retenir** : un réseau **profond** a un **nombre important de couches** qui
+> construisent une **hiérarchie de niveaux d'abstraction**. Le **réseau
+> convolutif (ConvNet)**, dédié aux **images**, prend en compte la **structure
+> spatiale** : il enchaîne **convolution** et **pooling**, puis des couches
+> **entièrement connectées**.

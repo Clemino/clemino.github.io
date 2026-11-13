@@ -1,0 +1,828 @@
+[
+  {
+    "chapterSlug": "conteneurs-stl",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce que la **STL** (*Standard Template Library*) ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "La partie de la bibliothèque standard de C++ qui fournit, toute prête, une collection de structures de données et d'algorithmes fondamentaux." },
+        { "id": "b", "label": "Un compilateur C++ spécialisé dans les programmes utilisant des templates." },
+        { "id": "c", "label": "Un langage de programmation distinct de C++, dédié aux structures de données." },
+        { "id": "d", "label": "Un éditeur de code qui complète automatiquement les classes templates." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "La **STL** est la partie de la bibliothèque standard de C++ qui offre, **prêts à l'emploi**, des **structures de données et des algorithmes** fondamentaux : conteneurs, itérateurs, algorithmes, foncteurs. Ses composants sont bien codés, testés et optimisés — d'où le slogan de Stroustrup *« don't reinvent the wheel »*. Tout y repose sur les **templates**. Ce n'est ni un compilateur, ni un langage à part, ni un éditeur.",
+    "concepts": ["conteneur-stl"]
+  },
+  {
+    "chapterSlug": "conteneurs-stl",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Tous les conteneurs de la STL offrent les méthodes `size()` et `empty()`.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. Quel que soit le conteneur — `vector`, `list`, `map`, `set`… — `size()` renvoie le **nombre d'éléments** et `empty()` indique si le conteneur est **vide**. C'est l'intérêt d'une bibliothèque **uniforme** : certaines méthodes existent toujours, on les utilise de la même façon partout. `vector` ajoute en plus l'accès direct `v[i]`, `map` l'accès par clé, etc., mais le socle commun reste identique.",
+    "concepts": ["conteneur-stl"]
+  },
+  {
+    "chapterSlug": "conteneurs-stl",
+    "type": "MATCHING",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Associe chaque conteneur de la STL à sa description.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "std::vector" },
+        { "id": "l2", "label": "std::list" },
+        { "id": "l3", "label": "std::map" },
+        { "id": "l4", "label": "std::set" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Tableau dynamique à accès direct par indice." },
+        { "id": "r2", "label": "Liste doublement chaînée, insertions rapides à toute position." },
+        { "id": "r3", "label": "Table associative qui relie une clé à une valeur, triée par clé." },
+        { "id": "r4", "label": "Ensemble trié de clés uniques, sans valeur associée." }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3", "l4": "r4" } },
+    "explanation": "`std::vector` est un **tableau dynamique** : accès direct `v[i]` en temps constant. `std::list` est une **liste doublement chaînée** : pas d'indice, mais insertions/suppressions rapides partout. `std::map` est une **table associative** clé → valeur, automatiquement triée par clé. `std::set` stocke des **clés seules** : un ensemble trié sans doublon. `vector` et `list` sont séquentiels, `map` et `set` sont associatifs.",
+    "concepts": ["vector-list-map", "conteneur-stl"]
+  },
+  {
+    "chapterSlug": "conteneurs-stl",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la **différence** entre un conteneur **séquentiel** et un conteneur **associatif** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Dans un séquentiel, le programmeur choisit la position des éléments ; dans un associatif, les éléments sont rangés automatiquement selon une clé." },
+        { "id": "b", "label": "Un séquentiel ne peut contenir que des nombres, un associatif que des chaînes de caractères." },
+        { "id": "c", "label": "Un séquentiel est plus rapide qu'un associatif dans tous les cas." },
+        { "id": "d", "label": "Un séquentiel se trouve dans la STL, un associatif dans une autre bibliothèque." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Dans un conteneur **séquentiel** (`vector`, `list`, `deque`), les éléments occupent des positions successives et le **programmeur décide où va chaque élément**. Dans un conteneur **associatif** (`map`, `set`), les éléments sont identifiés par une **clé** et **rangés automatiquement** selon cette clé, pour rendre la recherche rapide — on ne choisit pas leur position. Les deux familles acceptent n'importe quel type d'élément et appartiennent toutes deux à la STL.",
+    "concepts": ["conteneur-stl"]
+  },
+  {
+    "chapterSlug": "conteneurs-stl",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complète la ligne qui ajoute la valeur `42` **à la fin** d'un `std::vector<int>` nommé `v`.",
+    "payload": {
+      "template": "std::vector<int> v;\nv.{{op}}(42);   // v contient maintenant {42}",
+      "slots": [{ "id": "op", "width": "md" }]
+    },
+    "solution": { "answers": { "op": "push_back" }, "caseSensitive": false },
+    "explanation": "`push_back` ajoute un élément **à la fin** du `vector` ; sa taille s'agrandit automatiquement. C'est l'opération d'insertion de base d'un `vector`. Les opérations symétriques sont `pop_back` (retire le dernier) et `back()` (lit le dernier). Une `list` ou une `deque` proposent en plus `push_front` (ajout en tête), que `vector` n'offre pas efficacement.",
+    "concepts": ["vector-list-map"]
+  },
+  {
+    "chapterSlug": "conteneurs-stl",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe `size()` et `empty()` avant et après les ajouts.",
+    "payload": {
+      "program": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    vector<int> v;\n    cout << v.size() << \" \" << (v.empty() ? \"vide\" : \"pleine\") << \"\\n\";\n    v.push_back(10);\n    v.push_back(20);\n    v.push_back(30);\n    cout << v.size() << \" \" << (v.empty() ? \"vide\" : \"pleine\") << \"\\n\";\n    v.pop_back();\n    cout << v.size() << \" \" << v.back() << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "0 vide\n3 pleine\n2 20" },
+    "explanation": "Le `vector` est d'abord vide : `size()` vaut `0` et `empty()` est `true` → `0 vide`. Trois `push_back` portent la taille à `3`, `empty()` devient `false` → `3 pleine`. `pop_back()` retire le dernier élément (`30`) : la taille tombe à `2` et `back()` renvoie le nouveau dernier élément, `20` → `2 20`.",
+    "concepts": ["vector-list-map", "conteneur-stl"]
+  },
+  {
+    "chapterSlug": "conteneurs-stl",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte ? Une `std::map` est parcourue après plusieurs insertions par `[]`.",
+    "payload": {
+      "program": "#include <iostream>\n#include <map>\n#include <string>\nusing namespace std;\n\nint main() {\n    map<string, int> ages;\n    ages[\"Chloe\"] = 30;\n    ages[\"Adam\"] = 25;\n    ages[\"Bruno\"] = 40;\n    for (auto& p : ages) {\n        cout << p.first << \" \" << p.second << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "Adam 25\nBruno 40\nChloe 30" },
+    "explanation": "Les entrées sont insérées dans l'ordre `Chloe`, `Adam`, `Bruno`, mais une `std::map` **range automatiquement ses entrées par clé**. Le parcours suit donc l'ordre **alphabétique des clés** : `Adam`, `Bruno`, `Chloe`. Chaque élément `p` est une paire : `p.first` est la clé, `p.second` la valeur. L'ordre d'insertion n'a aucune influence sur l'ordre de parcours d'une `map`.",
+    "concepts": ["vector-list-map", "conteneur-stl"]
+  },
+  {
+    "chapterSlug": "conteneurs-stl",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte ? Observe ce qui arrive aux doublons insérés dans un `std::set`.",
+    "payload": {
+      "program": "#include <iostream>\n#include <set>\nusing namespace std;\n\nint main() {\n    set<int> s;\n    s.insert(5);\n    s.insert(2);\n    s.insert(8);\n    s.insert(2);\n    s.insert(5);\n    cout << \"taille \" << s.size() << \"\\n\";\n    for (int x : s) {\n        cout << x << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "taille 3\n2\n5\n8" },
+    "explanation": "Un `std::set` est un **ensemble trié de clés uniques** : il **refuse les doublons**. Cinq `insert` sont tentés, mais `2` et `5` apparaissent deux fois — la seconde insertion de chacun est ignorée. Le set ne contient donc que `{2, 5, 8}`, d'où `taille 3`. Le parcours suit l'ordre **trié** des clés : `2`, `5`, `8`.",
+    "concepts": ["vector-list-map", "conteneur-stl"]
+  },
+  {
+    "chapterSlug": "conteneurs-stl",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte ? Attention à l'effet de `stock[\"banane\"]` sur une clé encore absente.",
+    "payload": {
+      "program": "#include <iostream>\n#include <map>\n#include <string>\nusing namespace std;\n\nint main() {\n    map<string, int> stock;\n    stock[\"pomme\"] = 3;\n    stock[\"poire\"] = 7;\n    cout << stock.size() << \"\\n\";\n    stock[\"pomme\"] = 10;\n    cout << stock.size() << \"\\n\";\n    cout << stock[\"pomme\"] << \"\\n\";\n    cout << stock[\"banane\"] << \"\\n\";\n    cout << stock.size() << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "2\n2\n10\n0\n3" },
+    "explanation": "Deux clés insérées (`pomme`, `poire`) → `size()` vaut `2`. `stock[\"pomme\"] = 10` **écrase** la valeur d'une clé déjà présente sans en créer de nouvelle → toujours `2`. `stock[\"pomme\"]` lit `10`. Mais `stock[\"banane\"]` accède à une clé **absente** : l'opérateur `[]` la **crée** alors avec la valeur par défaut `0` (et l'affiche `0`). La `map` compte maintenant `3` entrées. C'est un piège classique : lire avec `[]` une clé absente l'ajoute.",
+    "concepts": ["vector-list-map", "conteneur-stl"]
+  },
+  {
+    "chapterSlug": "conteneurs-stl",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit un entier `n` puis `n` entiers, les range dans un `std::vector<int>`, et affiche la **taille** du vecteur suivie de la **somme** de ses éléments.",
+    "payload": {
+      "spec": "Inclure <vector>. Lire n (int). Creer un vector<int> vide. Lire n entiers avec cin et les ajouter au vector avec push_back. Calculer la somme de tous les elements (par indice v[i] ou par parcours). Afficher sur une seule ligne : la taille du vector (v.size()), une espace, puis la somme, suivies d'un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    // A completer : remplir un vector avec n entiers, afficher taille et somme\n    return 0;\n}\n",
+      "tests": [
+        { "name": "cinq valeurs", "stdin": "5 10 20 30 40 50", "expectedStdout": "5 150" },
+        { "name": "trois valeurs", "stdin": "3 1 2 3", "expectedStdout": "3 6" },
+        { "name": "une valeur", "stdin": "1 99", "expectedStdout": "1 99", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> v;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        v.push_back(x);\n    }\n    int somme = 0;\n    for (int i = 0; i < (int)v.size(); ++i)\n        somme += v[i];\n    cout << v.size() << \" \" << somme << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "On crée un `vector<int>` **vide**, puis chaque entier lu est ajouté avec `push_back` — la taille s'ajuste toute seule. La somme se calcule en parcourant le vecteur par indice : `v[i]` donne l'**accès direct** à chaque case. `v.size()` renvoie le nombre d'éléments. Le cast `(int)v.size()` évite l'avertissement de comparaison entre `int` et type non signé.",
+    "concepts": ["vector-list-map", "conteneur-stl"]
+  },
+  {
+    "chapterSlug": "conteneurs-stl",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit des mots jusqu'à la fin de l'entrée et compte combien de fois chaque mot apparaît, à l'aide d'une `std::map<string,int>`. Affiche chaque mot et son compte, un par ligne.",
+    "payload": {
+      "spec": "Inclure <map> et <string>. Creer une map<string,int>. Lire des mots un par un avec while (cin >> mot) jusqu'a la fin de l'entree. Pour chaque mot lu, incrementer compteur[mot] (l'operateur [] cree l'entree a 0 si le mot est absent). A la fin, parcourir la map et afficher pour chaque entree : le mot, une espace, son compte, suivis d'un retour a la ligne. La map etant triee par cle, les mots sortent dans l'ordre alphabetique.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <map>\n#include <string>\nusing namespace std;\n\nint main() {\n    // A completer : compter les occurrences de chaque mot avec une map\n    return 0;\n}\n",
+      "tests": [
+        { "name": "mots repetes", "stdin": "le chat le chien le chat", "expectedStdout": "chat 2\nchien 1\nle 3" },
+        { "name": "deux mots", "stdin": "alpha beta alpha", "expectedStdout": "alpha 2\nbeta 1" },
+        { "name": "un seul mot", "stdin": "unique", "expectedStdout": "unique 1", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <map>\n#include <string>\nusing namespace std;\n\nint main() {\n    map<string, int> compteur;\n    string mot;\n    while (cin >> mot) {\n        compteur[mot] += 1;\n    }\n    for (auto& p : compteur) {\n        cout << p.first << \" \" << p.second << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "La boucle `while (cin >> mot)` lit les mots un par un jusqu'à la fin de l'entrée. `compteur[mot] += 1` exploite l'opérateur `[]` d'une `map` : si le mot est **absent**, l'entrée est créée avec la valeur `0` puis incrémentée à `1` ; s'il est **présent**, sa valeur augmente. Le parcours final, sur une `map`, suit l'ordre **alphabétique des clés** — d'où la sortie triée. C'est l'usage typique d'une `map` comme dictionnaire de comptage.",
+    "concepts": ["vector-list-map", "conteneur-stl"]
+  },
+  {
+    "chapterSlug": "conteneurs-stl",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme doit remplir un `std::vector<int>` avec `n` entiers lus, puis afficher sa taille. Il **plante à l'exécution**. Corrige-le.",
+    "payload": {
+      "spec": "Le vector v est cree VIDE (taille 0). La boucle tente d'ecrire dans v[i], mais ces cases n'existent pas encore : l'operateur [] sur un index hors limites est une erreur. Pour ajouter un element a un vector vide, il faut push_back, qui agrandit le vector. Remplacer v[i] = x par v.push_back(x). Le programme doit afficher v.size().",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> v;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        v[i] = x;\n    }\n    cout << v.size() << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois entiers", "stdin": "3 1 2 3", "expectedStdout": "3" },
+        { "name": "cinq entiers", "stdin": "5 9 8 7 6 5", "expectedStdout": "5" },
+        { "name": "un entier", "stdin": "1 42", "expectedStdout": "1", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> v;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        v.push_back(x);\n    }\n    cout << v.size() << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Le `vector` est créé **vide** : `v[0]`, `v[1]`… n'existent pas encore. Écrire `v[i] = x` accède à une case **hors limites**, ce qui est une erreur — le programme plante. Pour **ajouter** un élément à un `vector`, on utilise `push_back`, qui agrandit le conteneur et place la valeur en fin. L'opérateur `[]` ne sert qu'à lire ou modifier une case **déjà existante**, jamais à en créer une nouvelle.",
+    "concepts": ["vector-list-map", "conteneur-stl"]
+  },
+  {
+    "chapterSlug": "conteneurs-stl",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remets dans l'ordre les lignes pour construire un `std::vector<int>`, y ajouter deux valeurs et afficher la première.",
+    "payload": {
+      "items": [
+        { "id": "i1", "label": "std::vector<int> v;" },
+        { "id": "i2", "label": "v.push_back(8);" },
+        { "id": "i3", "label": "v.push_back(3);" },
+        { "id": "i4", "label": "std::cout << v[0] << '\\n';" }
+      ]
+    },
+    "solution": { "order": ["i1", "i2", "i3", "i4"] },
+    "explanation": "On déclare d'abord le `vector` vide (`std::vector<int> v;`). On ne peut ajouter des éléments qu'**après** : `push_back(8)` place `8`, `push_back(3)` place `3` derrière lui — le contenu est `{8, 3}`. Enfin `v[0]` lit le **premier** élément, `8`. On ne peut ni ajouter ni lire avant que le conteneur existe.",
+    "concepts": ["vector-list-map"]
+  },
+  {
+    "chapterSlug": "conteneurs-stl",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris un programme qui lit un entier `n`, puis `n` entiers dans un `std::vector<int>`, puis une valeur `cible`. Affiche l'**indice** de la première occurrence de `cible` dans le vecteur, ou `-1` si elle est absente.",
+    "payload": {
+      "spec": "Inclure <vector>. Lire n (int). Remplir un vector<int> avec n entiers via push_back. Lire ensuite un entier cible. Parcourir le vector par indice : des que v[i] == cible, memoriser i et arreter la recherche. Si aucun element n'egale cible, le resultat vaut -1. Afficher ce resultat (l'indice trouve ou -1) suivi d'un retour a la ligne. L'indice de la PREMIERE occurrence est attendu.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    // A completer : remplir le vector, lire la cible, afficher l'indice ou -1\n    return 0;\n}\n",
+      "tests": [
+        { "name": "cible presente", "stdin": "5 4 8 15 16 23 16", "expectedStdout": "3" },
+        { "name": "cible absente", "stdin": "4 1 2 3 4 9", "expectedStdout": "-1" },
+        { "name": "premiere occurrence", "stdin": "3 7 7 7 7", "expectedStdout": "0", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n, cible;\n    cin >> n;\n    vector<int> v;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        v.push_back(x);\n    }\n    cin >> cible;\n    int position = -1;\n    for (int i = 0; i < (int)v.size(); ++i) {\n        if (v[i] == cible) {\n            position = i;\n            break;\n        }\n    }\n    cout << position << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "On remplit le `vector` avec `push_back`, puis on lit `cible`. La recherche parcourt le vecteur par indice : `position` part à `-1` (valeur « non trouvé ») ; dès que `v[i] == cible`, on enregistre `i` et on **interrompt** la boucle avec `break` — ce qui garantit la **première** occurrence. Si aucune case n'égale `cible`, `position` reste `-1`. L'accès direct `v[i]` est le mode de parcours naturel d'un `vector`.",
+    "concepts": ["vector-list-map", "conteneur-stl"]
+  },
+  {
+    "chapterSlug": "conteneurs-stl",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Au sujet de `std::map`, quelles affirmations sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "On instancie une map avec deux types : celui de la clé et celui de la valeur." },
+        { "id": "b", "label": "m[cle] = valeur crée l'entrée si la clé est absente, et écrase la valeur si la clé existe déjà." },
+        { "id": "c", "label": "Les entrées d'une map sont automatiquement triées par clé." },
+        { "id": "d", "label": "Une map autorise plusieurs entrées partageant exactement la même clé." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "**a** vrai : `std::map<Cle, Valeur>` prend **deux** types entre chevrons. **b** vrai : `m[cle] = valeur` crée l'entrée si la clé manque, sinon **écrase** la valeur existante (on peut aussi insérer avec `m.insert(std::pair<...>(...))`). **c** vrai : les entrées sont **triées par clé** automatiquement. **d** faux : une `map` impose des **clés uniques** ; pour autoriser des clés en double, il faut une `std::multimap`.",
+    "concepts": ["vector-list-map", "conteneur-stl"]
+  },
+  {
+    "chapterSlug": "iterateurs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce qu'un **itérateur** en C++ ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Un objet capable de pointer sur un élément d'un conteneur et de le parcourir via ++, * et == / != : une généralisation du pointeur." },
+        { "id": "b", "label": "Une boucle for spéciale réservée aux conteneurs de la STL." },
+        { "id": "c", "label": "Une méthode qui trie automatiquement les éléments d'un conteneur." },
+        { "id": "d", "label": "Le nombre d'éléments actuellement stockés dans un conteneur." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Un **itérateur** est un **objet** capable de **pointer sur un élément** d'un conteneur et de **parcourir** ses éléments via un jeu d'opérateurs : `++` (élément suivant), `*` (accès à l'élément pointé), `==` / `!=` (comparaison). C'est une **généralisation du pointeur**. Il offre un parcours **uniforme** : mêmes opérateurs quel que soit le conteneur. Ce n'est ni une boucle, ni un tri, ni un compteur d'éléments.",
+    "concepts": ["iterateur"]
+  },
+  {
+    "chapterSlug": "iterateurs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Sur quel élément pointe l'itérateur renvoyé par `end()` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Sur la position juste après le dernier élément : une sentinelle, sans élément à déréférencer." },
+        { "id": "b", "label": "Sur le dernier élément du conteneur." },
+        { "id": "c", "label": "Sur le premier élément du conteneur." },
+        { "id": "d", "label": "Sur le milieu du conteneur." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "`end()` renvoie un itérateur sur la position **juste après le dernier** élément — une **sentinelle « au-delà de la fin »**. Il ne pointe **pas** sur le dernier élément : déréférencer `end()` avec `*` est une **erreur**, il n'y a aucun élément à cet emplacement. `end()` ne sert qu'à **détecter la fin** du parcours, dans la condition `it != c.end()`. C'est `begin()` qui pointe sur le premier élément.",
+    "concepts": ["iterateur"]
+  },
+  {
+    "chapterSlug": "iterateurs",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Le mot-clé `auto` demande au compilateur de **déduire** le type d'une variable à partir de son initialisation.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. `auto` laisse le compilateur **déduire le type** d'une variable d'après la valeur qui l'initialise. `auto it = v.begin();` donne exactement le même type que `std::vector<int>::iterator it`, mais sans l'écrire — précieux quand le type est long ou illisible (itérateur de `map`). C'est le réflexe moderne avec les itérateurs : plus court, et inchangé si le type du conteneur évolue.",
+    "concepts": ["iterateur"]
+  },
+  {
+    "chapterSlug": "iterateurs",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complète la condition de cette boucle pour qu'elle s'arrête une fois tous les éléments parcourus.",
+    "payload": {
+      "template": "for (auto it = v.begin(); it {{cond}} v.end(); ++it) {\n    std::cout << *it << '\\n';\n}",
+      "slots": [{ "id": "cond", "width": "sm" }]
+    },
+    "solution": { "answers": { "cond": "!=" }, "caseSensitive": false },
+    "explanation": "La condition de parcours est `it != v.end()` : on **continue tant que** l'itérateur n'a pas atteint la sentinelle de fin. Quand `it` devient égal à `end()`, tous les éléments ont été visités et la boucle s'arrête. On utilise `!=` (et non `<`) car cette comparaison fonctionne pour **tous** les conteneurs, y compris `list` et `map` dont les itérateurs ne supportent pas `<`.",
+    "concepts": ["iterateur"]
+  },
+  {
+    "chapterSlug": "iterateurs",
+    "type": "MATCHING",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Associe chaque élément d'une boucle de parcours par itérateur à son rôle.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "v.begin()" },
+        { "id": "l2", "label": "v.end()" },
+        { "id": "l3", "label": "++it" },
+        { "id": "l4", "label": "*it" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Itérateur sur le premier élément : point de départ." },
+        { "id": "r2", "label": "Itérateur après le dernier élément : sert à détecter la fin." },
+        { "id": "r3", "label": "Fait avancer l'itérateur à l'élément suivant." },
+        { "id": "r4", "label": "Donne accès à l'élément actuellement pointé." }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3", "l4": "r4" } },
+    "explanation": "`begin()` fournit le **point de départ** (premier élément). `end()` est la **sentinelle de fin** (après le dernier), utilisée dans la condition. `++it` **avance** d'un élément à chaque tour. `*it` **déréférence** l'itérateur pour lire ou modifier l'élément pointé. La boucle type combine ces quatre éléments : `for (it = c.begin(); it != c.end(); ++it) { ... *it ... }`.",
+    "concepts": ["iterateur"]
+  },
+  {
+    "chapterSlug": "iterateurs",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte ? Un `std::vector` est parcouru avec un itérateur explicite.",
+    "payload": {
+      "program": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    vector<int> v {2, 4, 6, 8};\n    int somme = 0;\n    for (vector<int>::iterator it = v.begin(); it != v.end(); ++it) {\n        somme += *it;\n    }\n    cout << somme << \"\\n\";\n    cout << *v.begin() << \"\\n\";\n    cout << *(v.end() - 1) << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "20\n2\n8" },
+    "explanation": "La boucle additionne tous les éléments : `2 + 4 + 6 + 8 = 20`. `*v.begin()` déréférence l'itérateur sur le **premier** élément → `2`. `v.end() - 1` recule d'un cran depuis la sentinelle de fin pour atteindre le **dernier** élément ; `*(v.end() - 1)` vaut donc `8`. Ce décalage `- 1` n'est possible que parce qu'un `vector` fournit des itérateurs à **accès direct**.",
+    "concepts": ["iterateur"]
+  },
+  {
+    "chapterSlug": "iterateurs",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte ? Observe l'effet de `auto&` dans la première boucle.",
+    "payload": {
+      "program": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    vector<int> v {1, 2, 3, 4};\n    for (auto& x : v) {\n        x *= 10;\n    }\n    for (auto x : v) {\n        cout << x << \" \";\n    }\n    cout << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "10 20 30 40" },
+    "explanation": "La première boucle utilise `auto& x` : `x` est une **référence** à chaque élément, donc `x *= 10` **modifie réellement** le vecteur — son contenu devient `{10, 20, 30, 40}`. La seconde boucle utilise `auto x` (une **copie**) seulement pour lire et afficher. Sans le `&` dans la première boucle, `x` serait une copie et le vecteur resterait inchangé.",
+    "concepts": ["iterateur"]
+  },
+  {
+    "chapterSlug": "iterateurs",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte ? Un itérateur à accès direct se déplace avec `+` et se compare par soustraction.",
+    "payload": {
+      "program": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    vector<int> v {10, 20, 30, 40, 50};\n    auto it = v.begin();\n    it = it + 2;\n    cout << *it << \"\\n\";\n    ++it;\n    cout << *it << \"\\n\";\n    cout << (v.end() - it) << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "30\n40\n2" },
+    "explanation": "`it = v.begin() + 2` saute deux crans depuis le début : `it` pointe sur le **3e** élément, `30`. `++it` avance d'un cran → `it` pointe sur `40`. `v.end() - it` calcule la **distance** entre la sentinelle de fin et la position courante : `it` est sur l'indice 3, `end()` au-delà de l'indice 4, soit `2` éléments d'écart. Ces opérations `+` et `-` ne sont permises que pour les itérateurs à **accès direct** (`vector`, `deque`).",
+    "concepts": ["iterateur"]
+  },
+  {
+    "chapterSlug": "iterateurs",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remets dans l'ordre les étapes d'un parcours de conteneur par itérateur, de l'initialisation à l'arrêt.",
+    "payload": {
+      "items": [
+        { "id": "i1", "label": "Initialisation : it = c.begin() — on se place sur le premier élément." },
+        { "id": "i2", "label": "Condition : it != c.end() — on vérifie qu'on n'a pas atteint la fin." },
+        { "id": "i3", "label": "Accès : *it — on lit ou modifie l'élément pointé." },
+        { "id": "i4", "label": "Avance : ++it — on passe à l'élément suivant." },
+        { "id": "i5", "label": "La condition devient fausse (it == c.end()) : la boucle s'arrête." }
+      ]
+    },
+    "solution": { "order": ["i1", "i2", "i3", "i4", "i5"] },
+    "explanation": "Le schéma de parcours : on **initialise** l'itérateur sur `begin()` (i1) ; on **teste** la condition `it != end()` (i2) ; tant qu'elle est vraie, on **accède** à l'élément via `*it` (i3) puis on **avance** avec `++it` (i4) — on revient alors tester la condition. Quand `it` atteint `end()`, la condition devient **fausse** et la boucle **s'arrête** (i5). Ce schéma est identique pour `vector`, `list`, `map`.",
+    "concepts": ["iterateur"]
+  },
+  {
+    "chapterSlug": "iterateurs",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit un entier `n` puis `n` entiers dans un `std::vector<int>`, et affiche leur somme en parcourant le vecteur avec un **itérateur explicite** (pas de boucle par indice, pas de range-based for).",
+    "payload": {
+      "spec": "Inclure <vector>. Lire n (int), remplir un vector<int> avec n entiers via push_back. Calculer la somme en parcourant le vector avec un iterateur : declarer it (type vector<int>::iterator ou auto), boucle for (it = v.begin(); it != v.end(); ++it), accumuler *it. Afficher la somme suivie d'un retour a la ligne. Le parcours DOIT utiliser un iterateur explicite, ni v[i] ni for (auto x : v).",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    // A completer : remplir le vector, sommer avec un iterateur explicite\n    return 0;\n}\n",
+      "tests": [
+        { "name": "quatre valeurs", "stdin": "4 2 4 6 8", "expectedStdout": "20" },
+        { "name": "trois valeurs", "stdin": "3 100 200 300", "expectedStdout": "600" },
+        { "name": "valeur negative", "stdin": "1 -5", "expectedStdout": "-5", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> v;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        v.push_back(x);\n    }\n    int somme = 0;\n    for (vector<int>::iterator it = v.begin(); it != v.end(); ++it) {\n        somme += *it;\n    }\n    cout << somme << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Le parcours suit le schéma type : `it = v.begin()` se place sur le premier élément, `it != v.end()` arrête à la fin, `++it` avance, `*it` donne accès à l'élément courant que l'on ajoute à `somme`. Le type complet est `std::vector<int>::iterator` — on aurait pu écrire `auto it = v.begin()` pour le même résultat. Ce schéma fonctionne à l'identique sur n'importe quel conteneur.",
+    "concepts": ["iterateur"]
+  },
+  {
+    "chapterSlug": "iterateurs",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit un entier `n` puis `n` entiers dans un `std::vector<int>`, **double chaque élément sur place** avec une boucle `for` sur intervalle, puis affiche le vecteur (valeurs séparées par une espace).",
+    "payload": {
+      "spec": "Inclure <vector>. Lire n (int), remplir un vector<int> avec n entiers via push_back. Parcourir le vector avec un range-based for utilisant une REFERENCE (for (auto& x : v)) et faire x *= 2 pour doubler chaque element sur place. Puis parcourir une seconde fois (lecture) et afficher chaque element suivi d'une espace. Terminer par un retour a la ligne. Le doublage doit modifier reellement le vector, d'ou la reference auto&.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    // A completer : remplir le vector, doubler chaque element, l'afficher\n    return 0;\n}\n",
+      "tests": [
+        { "name": "quatre valeurs", "stdin": "4 1 2 3 4", "expectedStdout": "2 4 6 8" },
+        { "name": "avec un zero", "stdin": "3 0 5 10", "expectedStdout": "0 10 20" },
+        { "name": "valeur negative", "stdin": "2 -3 7", "expectedStdout": "-6 14", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> v;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        v.push_back(x);\n    }\n    for (auto& x : v) {\n        x *= 2;\n    }\n    for (const auto& x : v) {\n        cout << x << \" \";\n    }\n    cout << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "La boucle `for (auto& x : v)` parcourt le vecteur élément par élément ; le `&` rend `x` une **référence**, donc `x *= 2` modifie **réellement** chaque case du vecteur. La seconde boucle utilise `const auto& x` pour parcourir en **lecture seule** et afficher. Le choix `auto&` (modification) contre `const auto&` (lecture) est central : sans le `&`, on n'agirait que sur des copies. La sortie a une espace finale, sans incidence avec la comparaison `trimmed`.",
+    "concepts": ["iterateur"]
+  },
+  {
+    "chapterSlug": "iterateurs",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme doit augmenter de 1 chaque élément d'un `std::vector<int>` puis l'afficher. Il **compile et s'exécute**, mais le vecteur **n'est pas modifié**. Corrige-le.",
+    "payload": {
+      "spec": "La boucle qui doit incrementer utilise for (auto x : v) : x est une COPIE de chaque element, donc x += 1 ne touche pas le vector. Pour modifier reellement les elements, il faut une reference : for (auto& x : v). Ajouter le & a la variable de boucle. Le programme lit n puis n entiers, ajoute 1 a chacun, et affiche le vector (valeurs separees par une espace).",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> v;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        v.push_back(x);\n    }\n    for (auto x : v) {\n        x += 1;\n    }\n    for (const auto& x : v) {\n        cout << x << \" \";\n    }\n    cout << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "quatre valeurs", "stdin": "4 1 2 3 4", "expectedStdout": "2 3 4 5" },
+        { "name": "trois valeurs", "stdin": "3 10 20 30", "expectedStdout": "11 21 31" },
+        { "name": "valeurs negatives", "stdin": "2 -1 0", "expectedStdout": "0 1", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> v;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        v.push_back(x);\n    }\n    for (auto& x : v) {\n        x += 1;\n    }\n    for (const auto& x : v) {\n        cout << x << \" \";\n    }\n    cout << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "La boucle fautive était `for (auto x : v)` : `x` est une **copie** de chaque élément, donc `x += 1` n'agit que sur la copie locale — le vecteur reste inchangé. La correction consiste à prendre une **référence** : `for (auto& x : v)`. Avec le `&`, `x` désigne directement l'élément du vecteur, et `x += 1` le modifie réellement. C'est l'erreur la plus fréquente avec la boucle `for` sur intervalle : oublier le `&` quand on veut modifier.",
+    "concepts": ["iterateur"]
+  },
+  {
+    "chapterSlug": "iterateurs",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme doit compter combien d'éléments d'un `std::vector<int>` sont **strictement supérieurs** à un seuil. Il **compile et s'exécute**, mais le résultat est **faux** (le premier élément est ignoré). Corrige-le.",
+    "payload": {
+      "spec": "La boucle de parcours demarre l'iterateur a v.begin() + 1 : elle SAUTE le premier element du vector, qui n'est donc jamais compare au seuil. Pour parcourir TOUS les elements, l'iterateur doit partir de v.begin(). Corriger l'initialisation de la boucle (v.begin() + 1 devient v.begin()). Le programme lit n, n entiers, puis un seuil, et affiche le nombre d'elements strictement superieurs au seuil.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> v;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        v.push_back(x);\n    }\n    int seuil;\n    cin >> seuil;\n    int compte = 0;\n    for (auto it = v.begin() + 1; it != v.end(); ++it) {\n        if (*it > seuil)\n            ++compte;\n    }\n    cout << compte << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "premier element compte", "stdin": "5 100 1 1 1 1 50", "expectedStdout": "1" },
+        { "name": "tous au-dessus", "stdin": "4 9 9 9 9 5", "expectedStdout": "4" },
+        { "name": "un seul au-dessus", "stdin": "3 8 1 1 5", "expectedStdout": "1", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> v;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        v.push_back(x);\n    }\n    int seuil;\n    cin >> seuil;\n    int compte = 0;\n    for (auto it = v.begin(); it != v.end(); ++it) {\n        if (*it > seuil)\n            ++compte;\n    }\n    cout << compte << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "La boucle partait de `v.begin() + 1`, ce qui **saute le premier élément** : il n'est jamais comparé au seuil. Pour parcourir **tous** les éléments, l'itérateur doit démarrer à `v.begin()` — qui pointe précisément sur le **premier**. La correction est `auto it = v.begin()`. Un parcours complet va toujours de `begin()` (premier élément inclus) à `end()` (sentinelle de fin, exclue).",
+    "concepts": ["iterateur"]
+  },
+  {
+    "chapterSlug": "iterateurs",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Au sujet du parcours d'un conteneur par itérateur, quelles affirmations sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Le même schéma de boucle (begin, end, ++, *) fonctionne pour vector, list et map ; seul le type de l'itérateur change." },
+        { "id": "b", "label": "Déréférencer end() avec * est une erreur : aucun élément ne s'y trouve." },
+        { "id": "c", "label": "auto permet d'éviter d'écrire un type d'itérateur long comme std::map<string,int>::iterator." },
+        { "id": "d", "label": "Sur une list, on peut atteindre le 5e élément en écrivant begin() + 4." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "**a** vrai : c'est tout l'intérêt des itérateurs — le **schéma de boucle est identique** pour tous les conteneurs, seul le type d'itérateur diffère. **b** vrai : `end()` est une sentinelle **après** le dernier élément ; `*end()` est une erreur. **c** vrai : `auto` déduit le type et évite d'écrire des types d'itérateurs verbeux. **d** faux : `begin() + 4` n'est **pas** permis sur une `list` — ses itérateurs ne sont **pas** à accès direct, on n'avance que d'un cran avec `++`.",
+    "concepts": ["iterateur"]
+  },
+  {
+    "chapterSlug": "iterateurs",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris un programme qui lit un entier `n` puis `n` entiers dans un `std::vector<int>`, et affiche la **plus grande** valeur du vecteur. Tu peux utiliser une boucle `for` sur intervalle ou un itérateur.",
+    "payload": {
+      "spec": "Inclure <vector>. Lire n (int), remplir un vector<int> avec n entiers via push_back. Trouver le maximum : initialiser une variable maxi avec le premier element du vector (v[0] ou *v.begin()), puis parcourir le vector (range-based for ou iterateur) et, pour chaque element strictement plus grand que maxi, mettre a jour maxi. Afficher maxi suivi d'un retour a la ligne. On suppose n >= 1.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    // A completer : remplir le vector, trouver et afficher le maximum\n    return 0;\n}\n",
+      "tests": [
+        { "name": "maximum au milieu", "stdin": "5 4 8 15 16 23", "expectedStdout": "23" },
+        { "name": "tous negatifs", "stdin": "3 -5 -2 -9", "expectedStdout": "-2" },
+        { "name": "un seul element", "stdin": "1 42", "expectedStdout": "42", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> v;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        v.push_back(x);\n    }\n    int maxi = v[0];\n    for (const auto& x : v) {\n        if (x > maxi)\n            maxi = x;\n    }\n    cout << maxi << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "On initialise `maxi` avec le **premier** élément (`v[0]`) — un point de départ sûr puisque `n >= 1`. La boucle `for (const auto& x : v)` parcourt tout le vecteur en **lecture seule** (`const auto&` : pas de copie, pas de modification) ; chaque fois qu'un élément dépasse `maxi`, on met `maxi` à jour. Initialiser avec `v[0]` plutôt qu'avec `0` est essentiel : avec des valeurs toutes négatives, partir de `0` donnerait un résultat faux.",
+    "concepts": ["iterateur"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce qu'un **algorithme** de la STL ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Une fonction template qui agit sur une collection d'éléments en travaillant à travers des itérateurs, sans connaître le conteneur." },
+        { "id": "b", "label": "Une méthode propre à chaque conteneur, qu'il faut réécrire pour vector, list et map." },
+        { "id": "c", "label": "Un conteneur spécialisé qui range automatiquement ses éléments." },
+        { "id": "d", "label": "Un mot-clé du langage qui accélère les boucles." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Un **algorithme** de la STL est une **fonction template** qui traite une **collection d'éléments** en travaillant uniquement à travers des **itérateurs** : il reçoit typiquement deux itérateurs (`c.begin()` et `c.end()`) délimitant l'intervalle. Comme il ne manipule que des itérateurs, l'algorithme **ne connaît pas le conteneur** — le **même algorithme fonctionne sur n'importe quel conteneur**. Les algorithmes vivent dans l'en-tête `<algorithm>`. Ce n'est ni une méthode de conteneur, ni un conteneur, ni un mot-clé.",
+    "concepts": ["algorithme-stl"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "`std::sort` trie un intervalle en ordre **croissant** par défaut, en utilisant `operator<`.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. Appelé avec deux itérateurs seulement — `std::sort(v.begin(), v.end())` — `std::sort` trie en ordre **croissant** : il compare les éléments avec `operator<`. Pour changer ce critère, on lui fournit un **troisième argument**, un foncteur comparateur : `std::sort(v.begin(), v.end(), std::greater<int>())` trie alors en ordre **décroissant**. `std::sort` exige des itérateurs à **accès direct** (`vector`, `deque`) ; il ne s'applique pas directement à une `list`.",
+    "concepts": ["algorithme-stl", "tri-comparateur"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Après `auto it = std::find(v.begin(), v.end(), 7);`, comment sait-on si la valeur `7` a été **trouvée** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "On compare it à v.end() : si it != v.end(), la valeur est présente ; si it == v.end(), elle est absente." },
+        { "id": "b", "label": "On déréférence directement it : si *it vaut 7, la valeur est présente." },
+        { "id": "c", "label": "std::find renvoie true ou false ; il suffit de tester it." },
+        { "id": "d", "label": "On compare it à v.begin() : s'ils sont égaux, la valeur est absente." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "`std::find` renvoie **toujours un itérateur**. Pour savoir si la valeur existe, on **compare le résultat à `end()`** : si l'itérateur renvoyé vaut `end()`, l'élément est **absent** ; sinon il pointe sur la première occurrence. Il ne faut **jamais déréférencer** le résultat (`*it`) sans avoir fait ce test : si la valeur est absente, `it` vaut `end()`, une sentinelle qu'on ne peut pas déréférencer. `std::find` ne renvoie pas un `bool`.",
+    "concepts": ["algorithme-stl"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complète la déclaration pour que cette classe soit un **foncteur** : un objet qu'on peut « appeler » comme une fonction.",
+    "payload": {
+      "template": "class Addition {\npublic:\n    int {{op}}(int a, int b) {\n        return a + b;\n    }\n};",
+      "slots": [{ "id": "op", "width": "md" }]
+    },
+    "solution": { "answers": { "op": "operator()" }, "caseSensitive": false },
+    "explanation": "Un **foncteur** (*objet-fonction*) est une classe qui **surcharge l'opérateur d'appel `operator()`**. C'est cette surcharge qui permet d'« appeler » une instance comme une fonction : si `add` est un objet `Addition`, l'écriture `add(2, 3)` déclenche `add.operator()(2, 3)`. La classe `Addition` n'a aucun attribut et une seule méthode — le constructeur par défaut suffit. C'est ce qui fait qu'un foncteur « se comporte comme une fonction ».",
+    "concepts": ["foncteur"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte ? `std::sort` puis `std::find` sont appliqués à un vecteur.",
+    "payload": {
+      "program": "#include <iostream>\n#include <algorithm>\n#include <vector>\nusing namespace std;\n\nint main() {\n    vector<int> v {4, 2, 7, 1, 9};\n    sort(v.begin(), v.end());\n    for (int x : v)\n        cout << x << \" \";\n    cout << \"\\n\";\n\n    auto it = find(v.begin(), v.end(), 7);\n    if (it != v.end())\n        cout << \"7 trouve\\n\";\n    else\n        cout << \"7 absent\\n\";\n\n    auto it2 = find(v.begin(), v.end(), 5);\n    if (it2 != v.end())\n        cout << \"5 trouve\\n\";\n    else\n        cout << \"5 absent\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "1 2 4 7 9 \n7 trouve\n5 absent" },
+    "explanation": "`sort(v.begin(), v.end())` trie le vecteur en ordre **croissant** : il devient `{1, 2, 4, 7, 9}`, affiché `1 2 4 7 9 ` (espace finale incluse). `find` cherche `7` : le vecteur le contient, l'itérateur renvoyé est **différent de `end()`** → `7 trouve`. `find` cherche ensuite `5` : absent, l'itérateur renvoyé **vaut `end()`** → `5 absent`. C'est le test `it != end()` qui distingue présence et absence.",
+    "concepts": ["algorithme-stl"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte ? Un objet de la classe `Addition` est utilisé comme une fonction.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Addition {\npublic:\n    int operator()(int a, int b) {\n        return a + b;\n    }\n};\n\nint main() {\n    Addition add;\n    cout << add(2, 3) << \"\\n\";\n    cout << add(10, 7) << \"\\n\";\n    cout << add(add(1, 1), 5) << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "5\n17\n7" },
+    "explanation": "`add` est un **objet** de la classe `Addition`, mais comme cette classe surcharge `operator()`, on peut l'« appeler » comme une fonction. `add(2, 3)` déclenche `operator()(2, 3)` → `5`. `add(10, 7)` → `17`. `add(add(1, 1), 5)` : l'appel interne `add(1, 1)` vaut `2`, puis `add(2, 5)` vaut `7`. Un foncteur s'emploie partout où une fonction conviendrait.",
+    "concepts": ["foncteur"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque algorithme de la STL à son rôle.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "std::sort(deb, fin)" },
+        { "id": "l2", "label": "std::find(deb, fin, val)" },
+        { "id": "l3", "label": "std::count(deb, fin, val)" },
+        { "id": "l4", "label": "std::for_each(deb, fin, f)" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Trie l'intervalle (croissant par défaut)." },
+        { "id": "r2", "label": "Renvoie un itérateur sur la 1re occurrence de val, ou fin si absente." },
+        { "id": "r3", "label": "Compte les éléments égaux à val." },
+        { "id": "r4", "label": "Applique la fonction f à chaque élément de l'intervalle." }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3", "l4": "r4" } },
+    "explanation": "`std::sort` **trie** l'intervalle (en ordre croissant par défaut). `std::find` **cherche** une valeur et renvoie un itérateur sur sa première occurrence, ou `fin` si elle est absente. `std::count` **compte** combien d'éléments égalent une valeur donnée. `std::for_each` **applique** une fonction (ou un foncteur, ou une lambda) à chaque élément. Tous reçoivent l'intervalle sous la forme de deux itérateurs et vivent dans `<algorithm>`.",
+    "concepts": ["algorithme-stl"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Au sujet des **foncteurs** (objets-fonctions), quelles affirmations sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Un foncteur est une classe qui surcharge operator()." },
+        { "id": "b", "label": "Possédant des attributs, un foncteur peut conserver un état entre deux appels (une mémoire)." },
+        { "id": "c", "label": "Un prédicat est un foncteur qui renvoie un bool." },
+        { "id": "d", "label": "Un foncteur ne peut être appelé qu'une seule fois dans tout le programme." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "**a** vrai : un foncteur est une **classe surchargeant `operator()`**, ce qui permet d'« appeler » ses instances. **b** vrai : étant un objet, un foncteur peut avoir des **attributs** et donc une **mémoire** — son comportement dépend d'un état conservé entre les appels (foncteur `Remplir`). **c** vrai : un foncteur renvoyant un `bool` est un **prédicat**, utilisé pour tester une propriété. **d** faux : un foncteur s'appelle **autant de fois qu'on veut**, exactement comme une fonction.",
+    "concepts": ["foncteur"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte ? Le même vecteur est trié deux fois, avec et sans comparateur.",
+    "payload": {
+      "program": "#include <iostream>\n#include <algorithm>\n#include <vector>\n#include <functional>\nusing namespace std;\n\nint main() {\n    vector<int> v {1, 5, 2, 4, 3};\n    sort(v.begin(), v.end(), greater<int>());\n    for (int x : v)\n        cout << x << \" \";\n    cout << \"\\n\";\n    sort(v.begin(), v.end());\n    for (int x : v)\n        cout << x << \" \";\n    cout << \"\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "5 4 3 2 1 \n1 2 3 4 5 " },
+    "explanation": "Le premier `sort` reçoit un **troisième argument** : `greater<int>()`, un foncteur comparateur « est plus grand que ». Il trie donc en ordre **décroissant** → `5 4 3 2 1`. Le second `sort` n'a que les deux itérateurs : il utilise le comparateur par défaut (`operator<`) et trie en ordre **croissant** → `1 2 3 4 5`. Changer le foncteur passé en troisième argument, c'est changer le critère de tri sans toucher à `sort`.",
+    "concepts": ["tri-comparateur", "foncteur"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remets dans l'ordre les lignes pour trier un `std::vector<int>` en ordre **décroissant** avec un comparateur, puis afficher le premier élément.",
+    "payload": {
+      "items": [
+        { "id": "i1", "label": "std::vector<int> v {1, 5, 2, 4, 3};" },
+        { "id": "i2", "label": "std::sort(v.begin(), v.end(), std::greater<int>());" },
+        { "id": "i3", "label": "std::cout << v[0] << '\\n';   // affiche 5" }
+      ]
+    },
+    "solution": { "order": ["i1", "i2", "i3"] },
+    "explanation": "On déclare d'abord le vecteur avec ses valeurs (`{1, 5, 2, 4, 3}`). On le **trie ensuite** : `std::sort` reçoit les deux itérateurs **et** le foncteur comparateur `std::greater<int>()` en troisième argument — le tri se fait en ordre **décroissant**, le vecteur devient `{5, 4, 3, 2, 1}`. Enfin `v[0]` lit le **premier** élément du vecteur trié, le plus grand, `5`. On ne peut afficher le résultat qu'après le tri.",
+    "concepts": ["tri-comparateur", "algorithme-stl"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit un entier `n` puis `n` entiers dans un `std::vector<int>`, le trie en ordre **décroissant** avec `std::sort` et un comparateur, et l'affiche (valeurs séparées par une espace, sans espace finale).",
+    "payload": {
+      "spec": "Inclure <vector>, <algorithm> et <functional>. Lire n (int), remplir un vector<int> avec n entiers via push_back. Trier le vector en ordre DECROISSANT : appeler std::sort avec v.begin(), v.end() et le foncteur comparateur std::greater<int>() en troisieme argument. Afficher les elements du vector tries, separes par une espace, SANS espace apres le dernier, puis un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <functional>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    // A completer : remplir le vector, le trier en decroissant, l'afficher\n    return 0;\n}\n",
+      "tests": [
+        { "name": "six valeurs", "stdin": "6 5 4 8 1 9 2", "expectedStdout": "9 8 5 4 2 1" },
+        { "name": "valeurs egales", "stdin": "3 7 7 7", "expectedStdout": "7 7 7" },
+        { "name": "une valeur", "stdin": "1 42", "expectedStdout": "42", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <functional>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> v;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        v.push_back(x);\n    }\n    sort(v.begin(), v.end(), greater<int>());\n    for (size_t i = 0; i < v.size(); ++i) {\n        cout << v[i];\n        if (i + 1 < v.size())\n            cout << \" \";\n    }\n    cout << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Après avoir rempli le vecteur, on appelle `sort(v.begin(), v.end(), greater<int>())` : les deux itérateurs délimitent l'intervalle, et le **troisième argument** `greater<int>()` est le foncteur comparateur « est plus grand que » — il fait trier en ordre **décroissant**. Les `()` après `greater<int>` **instancient** le foncteur (un objet temporaire). L'affichage place une espace entre les éléments mais pas après le dernier, grâce au test `i + 1 < v.size()`.",
+    "concepts": ["tri-comparateur", "algorithme-stl"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un **foncteur** `EstPair` (classe surchargeant `operator()`) qui teste si un entier est pair. Le programme lit `n` puis `n` entiers et affiche combien sont pairs.",
+    "payload": {
+      "spec": "Definir une classe EstPair qui surcharge operator() : bool operator()(int x) const qui renvoie true si x est pair (x % 2 == 0), false sinon. C'est un predicat. Dans main : lire n (int), creer un objet EstPair, lire n entiers, et pour chacun, appeler le foncteur (pred(x)) ; compter ceux pour lesquels il renvoie true. Afficher ce compte suivi d'un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// A completer : le foncteur EstPair (un predicat)\n\nint main() {\n    int n;\n    cin >> n;\n    // A completer : lire n entiers, compter les pairs avec le foncteur\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois pairs sur six", "stdin": "6 1 2 3 4 5 6", "expectedStdout": "3" },
+        { "name": "aucun pair", "stdin": "4 7 9 11 13", "expectedStdout": "0" },
+        { "name": "tous pairs", "stdin": "3 2 4 6", "expectedStdout": "3", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass EstPair {\npublic:\n    bool operator()(int x) const {\n        return x % 2 == 0;\n    }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    EstPair pred;\n    int compte = 0;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        if (pred(x))\n            ++compte;\n    }\n    cout << compte << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "`EstPair` est un **foncteur** : une classe dont la seule méthode est `operator()`. Surchargeant l'opérateur d'appel, ses objets s'« appellent » comme des fonctions — `pred(x)` déclenche `pred.operator()(x)`. Comme `operator()` renvoie un `bool`, c'est un **prédicat** : il teste une propriété (être pair). Pas d'attribut, donc le constructeur par défaut suffit. À chaque entier lu, on appelle `pred(x)` et on incrémente `compte` si le test est vrai.",
+    "concepts": ["foncteur"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme doit lire `n` entiers, les trier en ordre croissant et les afficher. Il **ne compile pas**. Corrige-le.",
+    "payload": {
+      "spec": "Le programme appelle std::sort mais a oublie d'inclure l'en-tete <algorithm>, ou vivent les algorithmes de la STL. Sans cet include, sort n'est pas declare et la compilation echoue. Ajouter #include <algorithm> en tete du fichier. Le programme lit n, n entiers, trie le vector en ordre croissant et l'affiche (valeurs separees par une espace, sans espace finale).",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> v;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        v.push_back(x);\n    }\n    // tri croissant du vecteur\n    sort(v.begin(), v.end());\n    for (size_t i = 0; i < v.size(); ++i) {\n        cout << v[i];\n        if (i + 1 < v.size())\n            cout << \" \";\n    }\n    cout << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "six valeurs", "stdin": "6 5 4 8 1 9 2", "expectedStdout": "1 2 4 5 8 9" },
+        { "name": "trois valeurs", "stdin": "3 30 10 20", "expectedStdout": "10 20 30" },
+        { "name": "une valeur", "stdin": "1 7", "expectedStdout": "7", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> v;\n    for (int i = 0; i < n; ++i) {\n        int x;\n        cin >> x;\n        v.push_back(x);\n    }\n    // tri croissant du vecteur\n    sort(v.begin(), v.end());\n    for (size_t i = 0; i < v.size(); ++i) {\n        cout << v[i];\n        if (i + 1 < v.size())\n            cout << \" \";\n    }\n    cout << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "`std::sort` est un **algorithme de la STL** : il vit dans l'en-tête `<algorithm>`. Le programme l'utilise mais ne l'inclut pas — g++ répond `'sort' was not declared in this scope`. La correction consiste à ajouter `#include <algorithm>` en tête du fichier. `<vector>` fournit le conteneur, mais pas les algorithmes : chaque famille a son en-tête.",
+    "concepts": ["algorithme-stl"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pour utiliser une `std::priority_queue` avec des **objets** d'une classe métier, il faut lui fournir un **foncteur comparateur** qui définit l'ordre de priorité.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. Sur des types simples (`int`, `char`), l'ordre va de soi : `priority_queue<int>` rend le plus grand. Mais pour des **objets** d'une classe métier, le compilateur ne sait pas ce que « prioritaire » veut dire — il faut le lui **dire avec un comparateur**. On instancie alors la file avec **trois** paramètres template : le type des éléments, le conteneur sous-jacent, et le **type du foncteur comparateur** — par exemple `priority_queue<Processus, vector<Processus>, Comparaison>`. La file appelle `Comparaison::operator()` pour décider de l'ordre.",
+    "concepts": ["priority-queue", "foncteur"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris un programme qui lit `n` élèves (un nom puis une note entière chacun) et les affiche **triés par note décroissante**, à l'aide de `std::sort` et d'un **foncteur comparateur**.",
+    "payload": {
+      "spec": "Inclure <vector> et <algorithm>. Definir une structure Eleve avec deux champs : string nom et int note. Definir un foncteur comparateur ParNoteDecroissante : bool operator()(const Eleve& a, const Eleve& b) const qui renvoie a.note > b.note (pour trier les notes en ordre decroissant). Dans main : lire n (int), puis pour chaque eleve lire son nom et sa note (cin >> nom >> note) et l'ajouter a un vector<Eleve>. Trier le vector avec std::sort en passant un objet ParNoteDecroissante en troisieme argument. Afficher chaque eleve sur sa ligne : le nom, une espace, la note, un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\n// A completer : la structure Eleve et le foncteur comparateur ParNoteDecroissante\n\nint main() {\n    int n;\n    cin >> n;\n    // A completer : lire n eleves, trier par note decroissante, afficher\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois eleves", "stdin": "3 Alice 14 Bob 18 Chloe 11", "expectedStdout": "Bob 18\nAlice 14\nChloe 11" },
+        { "name": "deux eleves", "stdin": "2 Zoe 9 Yann 20", "expectedStdout": "Yann 20\nZoe 9" },
+        { "name": "un eleve", "stdin": "1 Solo 15", "expectedStdout": "Solo 15", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <string>\nusing namespace std;\n\nstruct Eleve {\n    string nom;\n    int note;\n};\n\nclass ParNoteDecroissante {\npublic:\n    bool operator()(const Eleve& a, const Eleve& b) const {\n        return a.note > b.note;\n    }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    vector<Eleve> v;\n    for (int i = 0; i < n; ++i) {\n        Eleve e;\n        cin >> e.nom >> e.note;\n        v.push_back(e);\n    }\n    sort(v.begin(), v.end(), ParNoteDecroissante());\n    for (const Eleve& e : v)\n        cout << e.nom << \" \" << e.note << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "`std::sort` ne sait pas comparer deux `Eleve` : il faut lui fournir un **foncteur comparateur**. `ParNoteDecroissante` surcharge `operator()` avec **deux** arguments `const Eleve&` — c'est un **comparateur**. Il renvoie `a.note > b.note` : un élève passe avant un autre quand sa note est **plus grande**, d'où le tri par note **décroissante**. On passe `ParNoteDecroissante()` (un objet temporaire instancié par les `()`) en troisième argument de `sort`. C'est ainsi qu'on trie une collection d'objets selon un critère métier.",
+    "concepts": ["tri-comparateur", "foncteur"]
+  },
+  {
+    "chapterSlug": "algorithmes-foncteurs",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Cet ordonnanceur doit servir la tâche de **plus forte priorité** en premier. Le programme **compile et s'exécute**, mais sert les tâches de la plus **faible** priorité d'abord. Corrige le foncteur comparateur.",
+    "payload": {
+      "spec": "La priority_queue est instanciee avec le foncteur Comparaison comme troisieme parametre template. Pour qu'une priority_queue serve le plus PRIORITAIRE (priorite la plus forte) en premier, le comparateur doit definir 'moins prioritaire que' : il doit renvoyer a.priorite < b.priorite (une priorite plus faible passe APRES). Le foncteur fourni renvoie a.priorite > b.priorite, ce qui inverse l'ordre : ce sont les priorites faibles qui sortent en premier. Corriger l'operator() du foncteur Comparaison (a.priorite > b.priorite devient a.priorite < b.priorite). Le programme lit n taches (nom puis priorite) et les affiche de la plus forte priorite a la plus faible.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <queue>\n#include <vector>\nusing namespace std;\n\nstruct Tache {\n    string nom;\n    int priorite;\n};\n\n// Comparateur : doit servir la tache de plus FORTE priorite en premier.\nclass Comparaison {\npublic:\n    bool operator()(const Tache& a, const Tache& b) const {\n        return a.priorite > b.priorite;\n    }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    priority_queue<Tache, vector<Tache>, Comparaison> pq;\n    for (int i = 0; i < n; ++i) {\n        Tache t;\n        cin >> t.nom >> t.priorite;\n        pq.push(t);\n    }\n    while (!pq.empty()) {\n        cout << pq.top().nom << \"\\n\";\n        pq.pop();\n    }\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois taches", "stdin": "3 Bas 1 Haut 9 Moyen 5", "expectedStdout": "Haut\nMoyen\nBas" },
+        { "name": "deux taches", "stdin": "2 Urgent 10 Tranquille 2", "expectedStdout": "Urgent\nTranquille" },
+        { "name": "deux taches priorite", "stdin": "2 Critique 8 Faible 3", "expectedStdout": "Critique\nFaible", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <queue>\n#include <vector>\n#include <string>\nusing namespace std;\n\nstruct Tache {\n    string nom;\n    int priorite;\n};\n\n// Comparateur : doit servir la tache de plus FORTE priorite en premier.\nclass Comparaison {\npublic:\n    bool operator()(const Tache& a, const Tache& b) const {\n        return a.priorite < b.priorite;\n    }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    priority_queue<Tache, vector<Tache>, Comparaison> pq;\n    for (int i = 0; i < n; ++i) {\n        Tache t;\n        cin >> t.nom >> t.priorite;\n        pq.push(t);\n    }\n    while (!pq.empty()) {\n        cout << pq.top().nom << \"\\n\";\n        pq.pop();\n    }\n    return 0;\n}"
+    },
+    "explanation": "Le comparateur d'une `priority_queue` définit la relation « **moins prioritaire que** » : `top()` renvoie l'élément qu'aucun autre ne dépasse selon ce comparateur. Pour servir la **plus forte** priorité en premier, le comparateur doit dire qu'une priorité **plus faible** passe après — soit `a.priorite < b.priorite`. Le foncteur fautif renvoyait `a.priorite > b.priorite` : il inversait la relation, faisant remonter les **faibles** priorités. La correction est de remplacer `>` par `<`. C'est exactement le comparateur `Comparaison` de l'ordonnanceur de processus du cours.",
+    "concepts": ["priority-queue", "foncteur"]
+  }
+]

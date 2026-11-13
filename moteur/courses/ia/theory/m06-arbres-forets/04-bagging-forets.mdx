@@ -1,0 +1,282 @@
+---
+title: "Bagging et forêts aléatoires"
+slug: bagging-forets
+order: 4
+estimatedReadMin: 21
+concepts: [methode-d-ensemble, bagging, echantillon-bootstrap, foret-aleatoire, selection-aleatoire-de-variables, agregation, algorithme-cart, indice-de-gini, critere-d-arret]
+source: "ING2_GI_ML_Tree_SLIDES.pdf, Slides_RF_DM.pdf"
+---
+
+## De quoi s'agit-il ? La forêt aléatoire
+
+La **forêt aléatoire** (*Random Forest*, RF) est une technique d'apprentissage
+supervisé **introduite par L. Breiman au début des années 2000** (Breiman,
+2001). Le cours en donne la définition.
+
+- Elle est utilisée à la fois pour la **classification** et pour la
+  **régression**.
+- Elle vise à construire un **classifieur** — le RF — **constitué d'une
+  collection d'arbres de décision** développés sur des **sous-ensembles** des
+  données originales.
+- La **prédiction** de la forêt est obtenue en prenant le **vote majoritaire**
+  des arbres dans le cas de la **classification**, et la **moyenne** de leurs
+  prédictions dans le cas de la **régression**.
+
+Comme son nom l'indique, une forêt aléatoire est donc une **agrégation d'arbres
+de décision**. L'**objectif** est de **rendre la méthode moins sensible au bruit
+et aux points aberrants** de la base d'apprentissage — précisément les défauts
+que la section 3 reprochait à un arbre isolé.
+
+C'est une **méthode d'ensemble** : on ne se fie pas à un seul modèle, on en
+**combine plusieurs** pour obtenir un classifieur plus **robuste** qu'aucun des
+modèles pris isolément.
+
+> **À retenir** : une **forêt aléatoire** (Breiman, 2001) est une **collection
+> d'arbres de décision** dont la prédiction est le **vote majoritaire**
+> (classification) ou la **moyenne** (régression). C'est une **méthode
+> d'ensemble** dont le but est de **réduire la sensibilité au bruit** et aux
+> points aberrants.
+
+## Le bagging et l'échantillon bootstrap
+
+L'idée d'une forêt est **simple** : construire **plusieurs arbres** sur des
+**échantillons bootstrap** de la base d'apprentissage. Mais un problème
+« caché » se pose d'abord — celui des **ensembles d'apprentissage** que l'on
+soumettra aux arbres. Lui soumettre **`ntree` fois le même ensemble `D`** ne
+serait **pas une bonne réponse** : on obtiendrait des arbres **identiques — ou
+presque**. La bonne réponse à cette question est le **bootstrapping**.
+
+Un **échantillon bootstrap** est un **tirage aléatoire d'éléments de la base
+d'apprentissage** :
+
+- soit de **`n` éléments avec remise** ;
+- soit de **`k < n` éléments** (avec ou sans remise) ;
+
+parmi les `n` observations de la base d'apprentissage. Notons `n` la taille de
+l'ensemble d'apprentissage `D`. Les ensembles `D_k`, obtenus chacun par une
+**série de `n` tirages avec remise dans `D`** — on les appelle les **échantillons
+de bootstrap** — ont donc tous la **même taille que `D`**, soit `n`.
+
+Le **tirage avec remise** est essentiel : un même exemple peut être tiré
+**plusieurs fois**, tandis que d'autres ne sont **pas tirés du tout**. Chaque
+échantillon bootstrap est donc une **variante** de `D` — et c'est cette
+**diversité** qui produira des **arbres différents**.
+
+Le procédé qui consiste à **construire un modèle sur chaque échantillon
+bootstrap puis à agréger les prédictions** porte un nom : le **bagging**, pour
+*bootstrap aggregating* (**bootstrap** + **aggregating**).
+
+> **À retenir** : un **échantillon bootstrap** est un **tirage avec remise** de
+> `n` éléments (ou de `k < n`) dans la base d'apprentissage : un exemple peut y
+> figurer **plusieurs fois** ou **pas du tout**. Le **bagging** (*bootstrap
+> aggregating*) construit un modèle sur **chaque échantillon bootstrap** puis
+> **agrège** les prédictions.
+
+## Construire la forêt : du bootstrap à l'agrégation
+
+La construction d'une forêt revient à **appeler `ntree` fois un algorithme de
+création d'arbre de décision** — `ntree` étant un **hyperparamètre** (le nombre
+d'arbres), choisi de manière **empirique** ; il n'existe pas de « théorie » pour
+le fixer.
+
+Un premier schéma d'algorithme — le **bagging d'arbres** — est donc :
+
+```
+Entrée : D, ntree
+Pour k = 1, …, ntree :
+    Construire un échantillon de bootstrap D_k à partir de D.
+    Appliquer l'algorithme de création des arbres de décision
+        pour construire l'arbre de décision T_k à partir de D_k.
+RF = { T_k, k = 1, …, ntree }.
+```
+
+Pour chaque échantillon bootstrap, on construit un arbre de décision ; **chaque
+arbre fournit une estimation de la classe** de la variable cible pour un nouvel
+individu, et l'**estimation finale se fait par vote majoritaire**.
+
+```
+Base d'apprentissage
+   │
+   ├── Échantillon 1  ──> Arbre T₁ ──> Classe estimée
+   ├── Échantillon 2  ──> Arbre T₂ ──> Classe estimée
+   ├──     …                          …
+   └── Échantillon B  ──> Arbre T_B ──> Classe estimée
+                                          │
+                          Vote majoritaire ──> Classe finale
+```
+
+Cette **agrégation** — vote majoritaire en classification, moyenne en régression
+— est le second « a » de *bagging*. Quel algorithme de création d'arbre
+utiliser ? **En théorie, tous conviennent.** Le créateur des RF, L. Breiman, a
+choisi d'utiliser une **variante de CART** (dont il est lui-même l'auteur).
+
+> **À retenir** : on construit la forêt en appliquant `ntree` fois un algorithme
+> de création d'arbre — un par **échantillon bootstrap** — puis en **agrégeant**
+> les prédictions (**vote majoritaire** ou **moyenne**). Le nombre d'arbres
+> `ntree` est un **hyperparamètre** fixé empiriquement ; l'algorithme d'arbre
+> retenu est une **variante de CART**.
+
+## La sélection aléatoire de variables
+
+Le bagging ne suffit pas : Breiman ajoute un **second mécanisme aléatoire**, qui
+fait toute la différence d'une **forêt aléatoire**.
+
+Le cours énonce le principe : **l'algorithme est d'autant plus performant que
+les estimations des arbres sont « décorrélées » les unes des autres**. Pour ce
+faire, on adopte la stratégie suivante :
+
+- **construire beaucoup d'arbres mais de faible profondeur** ;
+- **pour chaque nœud de chaque arbre, sélectionner un petit sous-ensemble de
+  variables pour le partage**, parmi les `p` variables explicatives — de l'ordre
+  de **`√p`**.
+
+Chacun de ces petits arbres est donc **moins performant** pris isolément, mais
+leur **agrégation est performante**. Le choix de l'attribut à chaque nœud se
+fait alors **en deux temps** :
+
+1. **Sélection aléatoire d'un nombre limité d'attributs.** Ce nombre est le
+   **même** tout au long de l'exécution de l'algorithme : c'est un
+   **hyperparamètre**, que l'on note **`mtry`**. Il se fixe de manière
+   **empirique**, mais il est recommandé d'essayer d'abord la valeur
+   **`mtry = √p`** dans les problèmes de **classification** et la valeur
+   **`mtry = p/4`** dans les problèmes de **régression**.
+2. **Choix du meilleur test** parmi les tests candidats construits avec les
+   attributs sélectionnés : on choisit celui qui produit les **deux
+   sous-ensembles les plus purs**, la pureté étant mesurée à l'aide du **critère
+   de Gini**.
+
+Pourquoi tirer les variables au hasard ? Sans ce mécanisme, **tous les arbres
+choisiraient quasiment les mêmes attributs forts** près de la racine, et se
+**ressembleraient** : leurs erreurs seraient **corrélées**, et l'agrégation
+n'apporterait presque rien. En **restreignant le choix à `mtry` variables
+tirées au hasard**, on **force la diversité** : les arbres deviennent
+**décorrélés**, condition de l'efficacité de la forêt.
+
+> **À retenir** : la **sélection aléatoire de variables** restreint, à **chaque
+> nœud**, le choix du test à **`mtry` attributs tirés au hasard** (de l'ordre de
+> **`√p`** en classification, **`p/4`** en régression) ; le meilleur test est
+> retenu via le **critère de Gini**. Ce mécanisme **décorrèle** les arbres —
+> condition de la performance de la forêt.
+
+## L'algorithme des forêts aléatoires
+
+En combinant **bootstrap** et **sélection aléatoire de variables**, on obtient
+l'**algorithme des forêts aléatoires**. Le cours en donne une formulation. Il
+fait intervenir trois **hyperparamètres** :
+
+- **`ntree`** : le **nombre d'arbres** de la forêt ;
+- **`mtry`** : le **nombre d'attributs tirés au hasard** à chaque nœud ;
+- **`ndsize`** : le **nombre minimal d'exemples** dans un nœud — c'est le
+  **critère d'arrêt** retenu (parmi les critères possibles : homogénéité totale,
+  profondeur maximale, ou nombre minimal d'exemples, c'est ce dernier qui est
+  utilisé ici).
+
+```
+Algorithme des random forests
+Entrée : D (ensemble d'apprentissage), ntree, mtry, ndsize
+Pour k = 1, …, ntree :
+    Construire un échantillon D_k de bootstrap à partir de D.
+    Initialiser l'arbre T_k au nœud racine correspondant à l'ensemble D.
+    Tant que la taille du nœud est supérieure ou égale à ndsize,
+    répéter récursivement les étapes suivantes :
+        Sélectionner aléatoirement mtry attributs.
+        Calculer le gain d'information (IG) de chaque test candidat,
+            et choisir celui qui a le meilleur IG.
+        Appliquer ce test pour partitionner le nœud.
+RF = { T_k, k = 1, …, ntree }.
+Pour un nouvel individu défini par x :
+    estimer sa classe pour chacun des ntree arbres ;
+    choisir la classe majoritaire.
+```
+
+Trois caractéristiques héritées de **CART** structurent chaque arbre :
+
+- les **deux types de test** utilisés aux nœuds sont **ceux de CART** —
+  `Aᵢ < val` pour les variables numériques et ordinales, `Aᵢ ∈ {val1, …}` pour
+  les variables nominales ;
+- le **critère de pureté** est l'**indice de Gini** ;
+- le **critère d'arrêt** est le **nombre minimal d'exemples par nœud**
+  (`ndsize`).
+
+Le gain d'information utilisé est celui de CART (section 2) :
+`IG(N, A) = Gini(Dᴺ) − [ (n_NL/n_N)·Gini(Dᴺᴸ) + (n_NR/n_N)·Gini(Dᴺᴿ) ]`.
+
+> **À retenir** : l'algorithme des **forêts aléatoires** combine, pour chacun
+> des `ntree` arbres, un **échantillon bootstrap** et, à chaque nœud, la
+> **sélection de `mtry` attributs** au hasard suivie du choix du **meilleur
+> test** (gain de **Gini**), jusqu'au critère d'arrêt **`ndsize`**. La
+> prédiction finale est la **classe majoritaire** des `ntree` arbres.
+
+## Faire une prédiction et estimer sa fiabilité
+
+Une fois la forêt construite, **prédire** la classe d'un nouvel individu `x`
+consiste à :
+
+1. faire **descendre `x` dans chacun des `ntree` arbres**, jusqu'à une feuille,
+   ce qui donne `ntree` **classes estimées** ;
+2. **choisir la classe majoritaire** parmi ces `ntree` votes (en régression, on
+   prendrait la **moyenne** des prédictions).
+
+Comme pour un arbre isolé, la **proportion des votes** renseigne sur la
+**fiabilité** : une prédiction recueillant 95 % des votes est plus sûre qu'une
+prédiction obtenue à 51 %.
+
+Un effet de bord du bagging mérite d'être souligné — il sera exploité à la
+section suivante : puisque chaque arbre est construit sur un **échantillon
+bootstrap** (tirage avec remise), **certaines observations ne sont pas tirées**
+pour un arbre donné. **Les échantillons bootstrap n'utilisent donc pas toutes
+les observations**, ce qui ouvre une possibilité d'évaluation interne à la
+forêt.
+
+> **À retenir** : on **prédit** avec une forêt en faisant **voter** ses `ntree`
+> arbres et en retenant la **classe majoritaire** (ou la **moyenne** en
+> régression) ; la **proportion des votes** mesure la fiabilité. Comme les
+> échantillons bootstrap **n'utilisent pas toutes les observations**, la forêt
+> peut s'**auto-évaluer** (section 5).
+
+## Bilan : pourquoi la forêt est plus robuste
+
+La forêt aléatoire **répond directement aux limites de l'arbre isolé**
+recensées à la section 3.
+
+| Défaut de l'arbre isolé | Réponse de la forêt aléatoire |
+| --- | --- |
+| **Instabilité** | **Agrégation** de nombreux arbres : la **moyenne / le vote** est stable |
+| **Sensibilité au bruit** et aux points aberrants | Chaque arbre ne voit qu'un **échantillon bootstrap** : le bruit est dilué |
+| Arbres **corrélés**, donc peu complémentaires | **Sélection aléatoire de `mtry` variables** : arbres **décorrélés** |
+| **Sur-apprentissage** | Diversité bootstrap + variables → meilleure **généralisation** |
+
+La forêt aléatoire **conserve** par ailleurs les avantages des arbres :
+variables **mixtes**, aucune hypothèse de distribution, robustesse aux échelles
+et aux valeurs atypiques. Elle paie cet avantage d'un **prix** — la **perte de
+lisibilité** : on ne visualise plus la forêt par un seul graphe (la section 5
+montre comment, malgré tout, mesurer le rôle de chaque variable).
+
+> **À retenir** : la forêt aléatoire **corrige** l'arbre isolé — l'**agrégation**
+> annule l'**instabilité**, le **bootstrap** dilue le **bruit**, la **sélection
+> aléatoire de variables** **décorrèle** les arbres — au prix d'une **perte de
+> lisibilité** du modèle.
+
+## Synthèse de la section
+
+Une **forêt aléatoire** (Breiman, 2001) est une **collection d'arbres de
+décision**, agrégés par **vote majoritaire** (classification) ou **moyenne**
+(régression) : une **méthode d'ensemble** destinée à **réduire la sensibilité au
+bruit** et l'instabilité d'un arbre isolé. Elle repose sur le **bagging**
+(*bootstrap aggregating*) : chaque arbre est construit sur un **échantillon
+bootstrap** — un **tirage avec remise** de `n` éléments dans `D`, où un exemple
+peut figurer plusieurs fois ou pas du tout. Breiman y ajoute un second mécanisme
+aléatoire, la **sélection aléatoire de variables** : à **chaque nœud**, le test
+est cherché parmi **`mtry` attributs tirés au hasard** (≈ `√p` en classification,
+`p/4` en régression), ce qui **décorrèle** les arbres et fait la performance de
+la forêt. L'algorithme dépend de trois **hyperparamètres** — `ntree` (nombre
+d'arbres), `mtry` (attributs tirés par nœud), `ndsize` (taille minimale de
+nœud) — et utilise pour chaque arbre une **variante de CART** : tests `A < val`
+ou `A ∈ {…}`, critère de **Gini**. La forêt **corrige** ainsi instabilité,
+sensibilité au bruit et corrélation des arbres, au prix d'une **perte de
+lisibilité**.
+
+> **À retenir** : **forêt aléatoire** = **bagging** d'arbres (un **échantillon
+> bootstrap** par arbre) **+ sélection aléatoire de `mtry` variables** par nœud,
+> le tout **agrégé** par vote ou moyenne. Trois hyperparamètres — `ntree`,
+> `mtry`, `ndsize` — et des arbres de type **CART** (Gini).

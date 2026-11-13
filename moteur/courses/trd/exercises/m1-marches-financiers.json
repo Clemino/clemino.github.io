@@ -1,0 +1,1742 @@
+[
+  {
+    "chapterSlug": "role-de-la-bourse",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Tu achètes 50 actions TotalEnergies en bourse à un autre particulier. Qui reçoit ton argent ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "L'AMF, jusqu'au règlement-livraison"
+        },
+        {
+          "id": "b",
+          "label": "Le vendeur des actions"
+        },
+        {
+          "id": "c",
+          "label": "TotalEnergies, qui finance ainsi ses projets"
+        },
+        {
+          "id": "d",
+          "label": "Euronext, qui conserve le montant"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Sur le marché secondaire, les titres changent de main entre investisseurs : l'argent va au vendeur. L'entreprise ne reçoit des fonds que sur le marché primaire, quand elle émet de nouvelles actions.",
+    "concepts": [
+      "marche-secondaire",
+      "marche-primaire"
+    ],
+    "source": "Varsity, module 1 « Introduction to Stock Markets », chapitres 1, 2 et 5"
+  },
+  {
+    "chapterSlug": "role-de-la-bourse",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Lors d'une introduction en bourse avec émission d'actions nouvelles, sur quel marché l'entreprise lève-t-elle des fonds ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le marché primaire"
+        },
+        {
+          "id": "b",
+          "label": "Le marché des changes"
+        },
+        {
+          "id": "c",
+          "label": "Le marché monétaire"
+        },
+        {
+          "id": "d",
+          "label": "Le marché secondaire"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "L'émission de titres neufs, dont l'argent va à l'émetteur, se fait sur le marché primaire. Les titres s'échangent ensuite sur le marché secondaire.",
+    "concepts": [
+      "marche-primaire",
+      "introduction-en-bourse"
+    ],
+    "source": "Varsity, module 1 « Introduction to Stock Markets », chapitres 1, 2 et 5"
+  },
+  {
+    "chapterSlug": "role-de-la-bourse",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Le marché secondaire est inutile pour les entreprises, puisqu'elles n'y reçoivent aucun argent.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Il leur est indispensable : sans possibilité de revendre facilement, les investisseurs exigeraient un rendement bien plus élevé, voire refuseraient d'acheter lors des émissions. La liquidité du secondaire rend possible le financement sur le primaire.",
+    "concepts": [
+      "marche-secondaire"
+    ],
+    "source": "Varsity, module 1 « Introduction to Stock Markets », chapitres 1, 2 et 5"
+  },
+  {
+    "chapterSlug": "role-de-la-bourse",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Tu laisses 10 000 € sur un compte non rémunéré pendant 10 ans avec une inflation de 2 % par an. Quel pouvoir d'achat, exprimé en euros d'aujourd'hui, te reste-t-il ? (10 000 / 1,02^10)",
+    "payload": {
+      "unit": "€",
+      "hint": "Arrondi à l'euro, sans espace ni symbole."
+    },
+    "solution": {
+      "value": 8203,
+      "absTol": 5
+    },
+    "explanation": "10 000 / 1,02^10 = 10 000 / 1,219 ≈ 8 203 €. Une épargne qui ne rapporte rien perd environ 18 % de pouvoir d'achat en dix ans avec 2 % d'inflation.",
+    "concepts": [
+      "inflation",
+      "rendement-reel"
+    ],
+    "source": "Varsity, module 1 « Introduction to Stock Markets », chapitres 1, 2 et 5"
+  },
+  {
+    "chapterSlug": "role-de-la-bourse",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Un livret rapporte 3 % par an et l'inflation est de 2,5 %. Quel est, approximativement, son rendement réel ?",
+    "payload": {
+      "unit": "%",
+      "hint": "En pourcentage, par exemple 1.2"
+    },
+    "solution": {
+      "value": 0.5,
+      "absTol": 0.02
+    },
+    "explanation": "Rendement réel ≈ rendement nominal − inflation = 3 − 2,5 = 0,5 %. (Le calcul exact (1,03 / 1,025) − 1 donne 0,49 %.)",
+    "concepts": [
+      "rendement-reel",
+      "inflation"
+    ],
+    "source": "Varsity, module 1 « Introduction to Stock Markets », chapitres 1, 2 et 5"
+  },
+  {
+    "chapterSlug": "role-de-la-bourse",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Tu places 10 000 € à 7 % par an, intérêts réinvestis. Quel capital obtiens-tu au bout de 10 ans ?",
+    "payload": {
+      "unit": "€",
+      "hint": "Arrondi à l'euro, sans espace ni symbole."
+    },
+    "solution": {
+      "value": 19672,
+      "relTol": 0.002
+    },
+    "explanation": "10 000 × 1,07^10 = 10 000 × 1,967 ≈ 19 672 €. Le capital a presque doublé : c'est l'effet des intérêts composés.",
+    "concepts": [
+      "interets-composes"
+    ],
+    "source": "Varsity, module 1 « Introduction to Stock Markets », chapitres 1, 2 et 5"
+  },
+  {
+    "chapterSlug": "role-de-la-bourse",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles sont les fonctions d'un marché financier selon le cours ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Garantir un rendement minimal aux épargnants"
+        },
+        {
+          "id": "b",
+          "label": "Financer les entreprises et les États"
+        },
+        {
+          "id": "c",
+          "label": "Donner de la liquidité aux investisseurs"
+        },
+        {
+          "id": "d",
+          "label": "Fixer un prix qui résume l'information disponible"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "La bourse finance l'économie (primaire), permet de revendre (liquidité du secondaire) et fixe un prix en continu. Elle ne garantit aucun rendement : le risque de perte est réel.",
+    "concepts": [
+      "marche-primaire",
+      "marche-secondaire"
+    ],
+    "source": "Yale ECON 252, séance 1 ; Varsity, module 1, chapitre 2"
+  },
+  {
+    "chapterSlug": "role-de-la-bourse",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque terme à sa définition.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Investir"
+        },
+        {
+          "id": "l2",
+          "label": "Spéculer"
+        },
+        {
+          "id": "l3",
+          "label": "Trader"
+        },
+        {
+          "id": "l4",
+          "label": "Épargner"
+        }
+      ],
+      "right": [
+        {
+          "id": "r2",
+          "label": "Parier sur une variation de prix"
+        },
+        {
+          "id": "r3",
+          "label": "Spéculer avec des règles d'entrée, de sortie et de taille appliquées avec discipline"
+        },
+        {
+          "id": "r4",
+          "label": "Mettre de côté une partie de ses revenus"
+        },
+        {
+          "id": "r1",
+          "label": "Acheter un actif pour sa capacité à produire de la valeur sur plusieurs années"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4"
+      }
+    },
+    "explanation": "Le trading méthodique se distingue de la simple spéculation par ses règles écrites ; l'investissement vise la création de valeur à long terme ; l'épargne n'est que la mise de côté, qui ne protège pas de l'inflation.",
+    "concepts": [
+      "epargne-investissement"
+    ],
+    "source": "Varsity, module 1 « Introduction to Stock Markets », chapitres 1, 2 et 5"
+  },
+  {
+    "chapterSlug": "role-de-la-bourse",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complète la formule des intérêts composés.",
+    "payload": {
+      "template": "capital final = capital initial × (1 + {{t}}) ^ {{n}}",
+      "slots": [
+        {
+          "id": "t",
+          "placeholder": "?"
+        },
+        {
+          "id": "n",
+          "placeholder": "?"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "t": [
+          "taux",
+          "taux annuel",
+          "r"
+        ],
+        "n": [
+          "nombre d'années",
+          "n",
+          "durée",
+          "nombre d annees",
+          "annees"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Chaque année, le capital est multiplié par (1 + taux) ; après n années, il l'est par (1 + taux)^n.",
+    "concepts": [
+      "interets-composes"
+    ],
+    "source": "Varsity, module 1 « Introduction to Stock Markets », chapitres 1, 2 et 5"
+  },
+  {
+    "chapterSlug": "actions-obligations",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Que détiens-tu quand tu possèdes une action ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une créance que la société doit rembourser"
+        },
+        {
+          "id": "b",
+          "label": "Un droit garanti à un dividende annuel"
+        },
+        {
+          "id": "c",
+          "label": "Un contrat qui protège contre la baisse du cours"
+        },
+        {
+          "id": "d",
+          "label": "Une fraction du capital de la société"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "Une action est un titre de propriété. Elle donne droit aux dividendes décidés par l'assemblée générale, jamais garantis, et à un droit de vote.",
+    "concepts": [
+      "action",
+      "dividende"
+    ],
+    "source": "Varsity, module 1, chapitres 4 et 6 ; Yale ECON 252, séance 9"
+  },
+  {
+    "chapterSlug": "actions-obligations",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "En cas de liquidation d'une entreprise, qui est remboursé en dernier ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Les salariés"
+        },
+        {
+          "id": "b",
+          "label": "Les actionnaires"
+        },
+        {
+          "id": "c",
+          "label": "Les détenteurs d'obligations"
+        },
+        {
+          "id": "d",
+          "label": "Les banques prêteuses"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Les actionnaires sont propriétaires : ils passent après tous les créanciers (salariés, État, banques, obligataires). C'est pourquoi le rendement espéré des actions doit être plus élevé.",
+    "concepts": [
+      "action",
+      "obligation"
+    ],
+    "source": "Varsity, module 1, chapitres 4 et 6 ; Yale ECON 252, séance 9"
+  },
+  {
+    "chapterSlug": "actions-obligations",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Tu achètes une action 40 €, tu touches 1,20 € de dividende puis la revends 46 € un an plus tard. Quel est ton rendement total ?",
+    "payload": {
+      "unit": "%"
+    },
+    "solution": {
+      "value": 18,
+      "absTol": 0.05
+    },
+    "explanation": "(46 − 40 + 1,20) / 40 = 7,20 / 40 = 18 %. Le rendement total additionne la plus-value et les dividendes.",
+    "concepts": [
+      "action",
+      "dividende"
+    ],
+    "source": "Varsity, module 1, chapitres 4 et 6 ; Yale ECON 252, séance 9"
+  },
+  {
+    "chapterSlug": "actions-obligations",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Une société a 500 millions d'actions et cote 60 €. Quelle est sa capitalisation boursière, en milliards d'euros ?",
+    "payload": {
+      "unit": "Md€"
+    },
+    "solution": {
+      "value": 30,
+      "absTol": 0.01
+    },
+    "explanation": "500 000 000 × 60 = 30 000 000 000 €, soit 30 milliards d'euros.",
+    "concepts": [
+      "capitalisation-boursiere"
+    ],
+    "source": "Varsity, module 1, chapitres 4 et 6 ; Yale ECON 252, séance 9"
+  },
+  {
+    "chapterSlug": "actions-obligations",
+    "type": "NUMERIC",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une obligation de nominal 1 000 € verse un coupon annuel de 4 %. Combien rapporte-t-elle en coupons chaque année ?",
+    "payload": {
+      "unit": "€"
+    },
+    "solution": {
+      "value": 40
+    },
+    "explanation": "Le coupon se calcule sur le nominal : 4 % × 1 000 € = 40 € par an, quel que soit le prix de l'obligation sur le marché.",
+    "concepts": [
+      "obligation",
+      "coupon"
+    ],
+    "source": "Varsity, module 1, chapitres 4 et 6 ; Yale ECON 252, séance 9"
+  },
+  {
+    "chapterSlug": "actions-obligations",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Les taux d'intérêt du marché passent de 3 % à 5 %. Que devient le prix d'une obligation existante à coupon fixe de 3 % ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il monte"
+        },
+        {
+          "id": "b",
+          "label": "Il devient nul"
+        },
+        {
+          "id": "c",
+          "label": "Il baisse"
+        },
+        {
+          "id": "d",
+          "label": "Il ne change pas, le coupon étant fixe"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "Personne ne paiera le prix plein pour un titre à 3 % quand les nouveaux titres rapportent 5 % : le prix baisse jusqu'à ce que le rendement de l'obligation rejoigne celui du marché. Prix et taux évoluent en sens inverse.",
+    "concepts": [
+      "prix-taux-obligation"
+    ],
+    "source": "Varsity, module 1, chapitres 4 et 6 ; Yale ECON 252, séance 9"
+  },
+  {
+    "chapterSlug": "actions-obligations",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une obligation d'entreprise est sans risque puisque le coupon est fixé à l'avance.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Elle porte un risque de taux (son prix baisse si les taux montent) et un risque de crédit (l'émetteur peut faire défaut). Le coupon fixe ne protège ni de l'un ni de l'autre.",
+    "concepts": [
+      "risque-de-credit",
+      "prix-taux-obligation"
+    ],
+    "source": "Varsity, module 1, chapitres 4 et 6 ; Yale ECON 252, séance 9"
+  },
+  {
+    "chapterSlug": "actions-obligations",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une action cotée 300 € est forcément plus chère qu'une action cotée 30 €.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Le cours seul ne dit rien : il dépend du nombre d'actions. Pour comparer deux entreprises, on rapporte la capitalisation (ou le cours) aux bénéfices.",
+    "concepts": [
+      "capitalisation-boursiere"
+    ],
+    "source": "Varsity, module 1, chapitres 4 et 6 ; Yale ECON 252, séance 9"
+  },
+  {
+    "chapterSlug": "actions-obligations",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quels droits l'action donne-t-elle à son détenteur ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un droit sur le patrimoine restant en cas de liquidation"
+        },
+        {
+          "id": "b",
+          "label": "Un droit de vote aux assemblées"
+        },
+        {
+          "id": "c",
+          "label": "Le remboursement du prix d'achat à une échéance"
+        },
+        {
+          "id": "d",
+          "label": "Un droit aux dividendes votés par l'assemblée générale"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "d"
+      ]
+    },
+    "explanation": "L'action n'a pas d'échéance : on récupère son argent en revendant le titre. Les trois autres droits sont ceux de l'actionnaire propriétaire.",
+    "concepts": [
+      "action",
+      "dividende"
+    ],
+    "source": "Varsity, module 1, chapitres 4 et 6 ; Yale ECON 252, séance 9"
+  },
+  {
+    "chapterSlug": "actions-obligations",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque caractéristique au bon titre.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Titre de propriété"
+        },
+        {
+          "id": "l2",
+          "label": "Titre de créance"
+        },
+        {
+          "id": "l3",
+          "label": "Revenu fixé à l'avance"
+        },
+        {
+          "id": "l4",
+          "label": "Revenu voté chaque année, non garanti"
+        }
+      ],
+      "right": [
+        {
+          "id": "r2",
+          "label": "Obligation"
+        },
+        {
+          "id": "r3",
+          "label": "Coupon"
+        },
+        {
+          "id": "r4",
+          "label": "Dividende"
+        },
+        {
+          "id": "r1",
+          "label": "Action"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4"
+      }
+    },
+    "explanation": "L'action est un titre de propriété qui verse un dividende variable ; l'obligation est une créance qui verse un coupon fixé à l'émission.",
+    "concepts": [
+      "action",
+      "obligation",
+      "coupon",
+      "dividende"
+    ],
+    "source": "Varsity, module 1, chapitres 4 et 6 ; Yale ECON 252, séance 9"
+  },
+  {
+    "chapterSlug": "actions-obligations",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce tableau compare trois obligations de même échéance.",
+    "payload": {
+      "figure": {
+        "kind": "data-table",
+        "columns": [
+          "Émetteur",
+          "Note",
+          "Taux proposé"
+        ],
+        "rows": [
+          [
+            "État allemand",
+            "AAA",
+            "2,4 %"
+          ],
+          [
+            "Grande entreprise française",
+            "A",
+            "3,6 %"
+          ],
+          [
+            "Entreprise très endettée",
+            "B",
+            "7,9 %"
+          ]
+        ],
+        "caption": "Obligations à 5 ans, données fictives"
+      },
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Pourquoi l'entreprise très endettée doit-elle offrir 7,9 % ?",
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Parce que son obligation est plus liquide"
+              },
+              {
+                "id": "b",
+                "label": "Parce que la note B est la meilleure note"
+              },
+              {
+                "id": "c",
+                "label": "Pour compenser un risque de crédit plus élevé"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Quel supplément de taux (en points) l'entreprise notée A paie-t-elle par rapport à l'État allemand ?",
+          "payload": {
+            "unit": "pt"
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "c"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 1.2,
+            "absTol": 0.01
+          }
+        }
+      ]
+    },
+    "explanation": "Plus le risque de défaut est élevé, plus l'émetteur doit rémunérer les prêteurs. L'écart de taux avec un émetteur sûr (le « spread de crédit ») mesure ce risque : 3,6 − 2,4 = 1,2 point.",
+    "concepts": [
+      "risque-de-credit",
+      "obligation"
+    ],
+    "source": "Varsity, module 1, chapitres 4 et 6 ; Yale ECON 252, séance 9"
+  },
+  {
+    "chapterSlug": "indices-etf",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Comment le CAC 40 pondère-t-il ses valeurs ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Par la capitalisation boursière flottante, avec un plafond par valeur"
+        },
+        {
+          "id": "b",
+          "label": "À parts égales, chaque valeur pèse 2,5 %"
+        },
+        {
+          "id": "c",
+          "label": "Par le chiffre d'affaires"
+        },
+        {
+          "id": "d",
+          "label": "Par le cours de l'action"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le CAC 40 est pondéré par la capitalisation flottante, et le poids d'une valeur est plafonné à 15 %. Un indice pondéré par le cours (comme le Dow Jones américain) est une exception historique.",
+    "concepts": [
+      "cac-40",
+      "flottant"
+    ],
+    "source": "Varsity, module 1, chapitre 7 (transposé au CAC 40)"
+  },
+  {
+    "chapterSlug": "indices-etf",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'appelle-t-on le flottant d'une société cotée ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La part des actions réellement disponible à l'échange en bourse"
+        },
+        {
+          "id": "b",
+          "label": "La variation quotidienne du cours"
+        },
+        {
+          "id": "c",
+          "label": "La trésorerie disponible de l'entreprise"
+        },
+        {
+          "id": "d",
+          "label": "L'écart entre cours d'achat et de vente"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le flottant exclut les blocs détenus durablement (famille fondatrice, État, actionnaire de contrôle). Seul le flottant compte dans la pondération des grands indices.",
+    "concepts": [
+      "flottant"
+    ],
+    "source": "Varsity, module 1, chapitre 7 (transposé au CAC 40)"
+  },
+  {
+    "chapterSlug": "indices-etf",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Un mini-indice contient trois sociétés de capitalisations flottantes 60, 30 et 10 milliards d'euros. Si seule la plus grande monte de 5 %, de combien monte l'indice ?",
+    "payload": {
+      "unit": "%"
+    },
+    "solution": {
+      "value": 3,
+      "absTol": 0.01
+    },
+    "explanation": "Son poids est 60 / 100 = 60 %. Contribution : 60 % × 5 % = 3 %.",
+    "concepts": [
+      "indice-boursier",
+      "capitalisation-boursiere"
+    ],
+    "source": "Varsity, module 1, chapitre 7 (transposé au CAC 40)"
+  },
+  {
+    "chapterSlug": "indices-etf",
+    "type": "ALGO_TRACE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Calcule les poids de chaque valeur dans ce mini-indice pondéré par la capitalisation flottante.",
+    "payload": {
+      "cells": [
+        {
+          "id": "pa",
+          "label": "Poids de A (%)",
+          "kind": "number"
+        },
+        {
+          "id": "pb",
+          "label": "Poids de B (%)",
+          "kind": "number"
+        },
+        {
+          "id": "pc",
+          "label": "Poids de C (%)",
+          "kind": "number"
+        },
+        {
+          "id": "var",
+          "label": "Variation de l'indice si A fait −4 % et B +2 % (%)",
+          "kind": "number"
+        }
+      ],
+      "figure": {
+        "kind": "data-table",
+        "columns": [
+          "Valeur",
+          "Capitalisation flottante"
+        ],
+        "rows": [
+          [
+            "A",
+            "100 Md€"
+          ],
+          [
+            "B",
+            "60 Md€"
+          ],
+          [
+            "C",
+            "40 Md€"
+          ]
+        ],
+        "caption": "Mini-indice fictif"
+      }
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "pa",
+          "expected": 50,
+          "absTol": 0.1
+        },
+        {
+          "id": "pb",
+          "expected": 30,
+          "absTol": 0.1
+        },
+        {
+          "id": "pc",
+          "expected": 20,
+          "absTol": 0.1
+        },
+        {
+          "id": "var",
+          "expected": -1.4,
+          "absTol": 0.01
+        }
+      ]
+    },
+    "explanation": "Total 200 Md€ : A pèse 100/200 = 50 %, B 60/200 = 30 %, C 40/200 = 20 %. Variation : 0,5 × (−4) + 0,3 × 2 + 0,2 × 0 = −2 + 0,6 = −1,4 %.",
+    "concepts": [
+      "indice-boursier",
+      "flottant"
+    ],
+    "source": "Varsity, module 1, chapitre 7 (transposé au CAC 40)"
+  },
+  {
+    "chapterSlug": "indices-etf",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Le CAC 40 affiché dans les journaux intègre les dividendes versés par les entreprises.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "C'est un indice de prix : les dividendes n'y sont pas réintégrés. Pour mesurer une performance complète, il faut utiliser la version dividendes réinvestis (CAC 40 GR ou NR).",
+    "concepts": [
+      "indice-dividendes-reinvestis",
+      "cac-40"
+    ],
+    "source": "Varsity, module 1, chapitre 7 (transposé au CAC 40)"
+  },
+  {
+    "chapterSlug": "indices-etf",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Ton portefeuille d'actions françaises a fait +9 % sur l'année, dividendes compris. À quel indice dois-tu le comparer ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Au taux du livret A"
+        },
+        {
+          "id": "b",
+          "label": "Au CAC 40 dividendes réinvestis"
+        },
+        {
+          "id": "c",
+          "label": "Au S&P 500"
+        },
+        {
+          "id": "d",
+          "label": "Au CAC 40 de prix"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "La comparaison doit être homogène : ta performance inclut les dividendes, la référence doit donc les inclure aussi, et porter sur le même marché.",
+    "concepts": [
+      "indice-dividendes-reinvestis"
+    ],
+    "source": "Varsity, module 1, chapitre 7 (transposé au CAC 40)"
+  },
+  {
+    "chapterSlug": "indices-etf",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce qu'un ETF ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une obligation indexée sur l'inflation"
+        },
+        {
+          "id": "b",
+          "label": "Un compte d'épargne à taux garanti"
+        },
+        {
+          "id": "c",
+          "label": "Un fonds qui réplique un indice et s'échange en bourse comme une action"
+        },
+        {
+          "id": "d",
+          "label": "Une action d'une société de gestion"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "Un ETF (fonds indiciel coté) cherche à reproduire la performance d'un indice. Il se négocie en continu sur le marché, avec les mêmes ordres qu'une action.",
+    "concepts": [
+      "etf"
+    ],
+    "source": "Varsity, module 1, chapitre 7 (transposé au CAC 40)"
+  },
+  {
+    "chapterSlug": "indices-etf",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque notion liée aux ETF à sa définition.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Réplication physique"
+        },
+        {
+          "id": "l2",
+          "label": "Réplication synthétique"
+        },
+        {
+          "id": "l3",
+          "label": "ETF capitalisant"
+        },
+        {
+          "id": "l4",
+          "label": "ETF distribuant"
+        },
+        {
+          "id": "l5",
+          "label": "Frais courants"
+        }
+      ],
+      "right": [
+        {
+          "id": "r2",
+          "label": "Le fonds obtient la performance de l'indice via un swap"
+        },
+        {
+          "id": "r3",
+          "label": "Les dividendes sont réinvestis dans le fonds"
+        },
+        {
+          "id": "r4",
+          "label": "Les dividendes sont versés aux porteurs"
+        },
+        {
+          "id": "r5",
+          "label": "Frais annuels prélevés sur la valeur du fonds"
+        },
+        {
+          "id": "r1",
+          "label": "Le fonds détient les titres de l'indice"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4",
+        "l5": "r5"
+      }
+    },
+    "explanation": "Ce vocabulaire figure sur la fiche de tout ETF (le DIC). La réplication synthétique ajoute un risque de contrepartie encadré par la réglementation UCITS.",
+    "concepts": [
+      "replication-etf",
+      "etf-capitalisant",
+      "frais-courants"
+    ],
+    "source": "Varsity, module 1, chapitre 7 (transposé au CAC 40)"
+  },
+  {
+    "chapterSlug": "indices-etf",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un ETF qui réplique le MSCI World ne peut jamais perdre plus de 10 % sur une année grâce à la diversification.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Un ETF ne supprime pas le risque de marché : si l'indice perd 30 %, l'ETF perd environ 30 %. La diversification supprime seulement le risque propre à une entreprise.",
+    "concepts": [
+      "etf"
+    ],
+    "source": "Varsity, module 1, chapitre 7 (transposé au CAC 40)"
+  },
+  {
+    "chapterSlug": "indices-etf",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Deux fonds suivent le même indice. Le premier coûte 0,2 % par an, le second 1,8 %. Avec 20 000 € investis, combien le second coûte-t-il de plus la première année ?",
+    "payload": {
+      "unit": "€"
+    },
+    "solution": {
+      "value": 320,
+      "absTol": 1
+    },
+    "explanation": "Écart de frais : 1,8 − 0,2 = 1,6 % ; 1,6 % × 20 000 € = 320 €, chaque année, et l'écart se cumule avec les intérêts composés.",
+    "concepts": [
+      "frais-courants"
+    ],
+    "source": "Varsity, module 1, chapitre 7 (transposé au CAC 40)"
+  },
+  {
+    "chapterSlug": "indices-etf",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Pourquoi un ETF sur le MSCI World peut-il être logé dans un PEA alors que l'indice est mondial ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il détient des actions européennes éligibles et échange leur performance contre celle du MSCI World"
+        },
+        {
+          "id": "b",
+          "label": "Le PEA accepte toutes les actions du monde"
+        },
+        {
+          "id": "c",
+          "label": "Il utilise une réplication synthétique"
+        },
+        {
+          "id": "d",
+          "label": "Les ETF sont toujours éligibles au PEA"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "c"
+      ]
+    },
+    "explanation": "Le PEA exige majoritairement des actions européennes. Un ETF synthétique détient un panier éligible et reçoit la performance de l'indice mondial grâce à un swap.",
+    "concepts": [
+      "replication-etf",
+      "etf"
+    ],
+    "source": "Varsity, module 1, chapitre 7 (transposé au CAC 40)"
+  },
+  {
+    "chapterSlug": "acteurs-regulateurs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quel est le rôle de la chambre de compensation ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Conseiller les épargnants sur leurs placements"
+        },
+        {
+          "id": "b",
+          "label": "Collecter les impôts sur les plus-values"
+        },
+        {
+          "id": "c",
+          "label": "S'interposer entre acheteur et vendeur pour garantir la bonne fin des transactions"
+        },
+        {
+          "id": "d",
+          "label": "Fixer le cours des actions chaque matin"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "La chambre de compensation est « acheteur de tous les vendeurs et vendeur de tous les acheteurs » : elle couvre le risque de défaillance d'une des parties.",
+    "concepts": [
+      "chambre-de-compensation"
+    ],
+    "source": "Varsity, module 1, chapitres 2 et 3 ; AMF, « Comprendre le circuit d'un ordre de bourse »"
+  },
+  {
+    "chapterSlug": "acteurs-regulateurs",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "La chambre de compensation te protège contre la baisse du cours des actions que tu as achetées.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Elle protège contre le défaut d'une contrepartie (un vendeur qui ne livre pas, un acheteur qui ne paie pas), pas contre le risque de marché.",
+    "concepts": [
+      "chambre-de-compensation"
+    ],
+    "source": "Varsity, module 1, chapitres 2 et 3 ; AMF, « Comprendre le circuit d'un ordre de bourse »"
+  },
+  {
+    "chapterSlug": "acteurs-regulateurs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quel organisme est le régulateur français des marchés financiers et de la protection des épargnants ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Euroclear France"
+        },
+        {
+          "id": "b",
+          "label": "L'ESMA"
+        },
+        {
+          "id": "c",
+          "label": "L'AMF"
+        },
+        {
+          "id": "d",
+          "label": "Euronext"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "L'Autorité des marchés financiers régule les marchés français : protection de l'épargne, information des investisseurs, bon fonctionnement des marchés.",
+    "concepts": [
+      "amf"
+    ],
+    "source": "Varsity, module 1, chapitres 2 et 3 ; AMF, « Comprendre le circuit d'un ordre de bourse »"
+  },
+  {
+    "chapterSlug": "acteurs-regulateurs",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque acteur à son rôle.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Euronext"
+        },
+        {
+          "id": "l2",
+          "label": "Euroclear France"
+        },
+        {
+          "id": "l3",
+          "label": "LCH SA"
+        },
+        {
+          "id": "l4",
+          "label": "ESMA"
+        },
+        {
+          "id": "l5",
+          "label": "ACPR"
+        }
+      ],
+      "right": [
+        {
+          "id": "r2",
+          "label": "Dépositaire central : organise le règlement-livraison"
+        },
+        {
+          "id": "r3",
+          "label": "Chambre de compensation"
+        },
+        {
+          "id": "r4",
+          "label": "Harmonise la régulation des marchés dans l'UE"
+        },
+        {
+          "id": "r5",
+          "label": "Agrée et surveille la solidité des banques et assureurs"
+        },
+        {
+          "id": "r1",
+          "label": "Exploite le marché réglementé"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4",
+        "l5": "r5"
+      }
+    },
+    "explanation": "Chaque maillon de la chaîne a sa fonction : exploitation du marché, compensation, règlement-livraison, et régulation nationale (AMF, ACPR) ou européenne (ESMA).",
+    "concepts": [
+      "euronext",
+      "depositaire-central",
+      "chambre-de-compensation",
+      "esma"
+    ],
+    "source": "Varsity, module 1, chapitres 2 et 3 ; AMF, « Comprendre le circuit d'un ordre de bourse »"
+  },
+  {
+    "chapterSlug": "acteurs-regulateurs",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remets dans l'ordre le parcours d'un ordre d'achat d'actions, du clic à l'inscription des titres sur ton compte.",
+    "payload": {
+      "items": [
+        {
+          "id": "s1",
+          "label": "Tu transmets l'ordre à ton courtier"
+        },
+        {
+          "id": "s3",
+          "label": "L'ordre est exécuté dans le carnet d'ordres"
+        },
+        {
+          "id": "s5",
+          "label": "Le règlement-livraison échange titres et argent à J+2"
+        },
+        {
+          "id": "s2",
+          "label": "Le courtier l'achemine vers un lieu d'exécution"
+        },
+        {
+          "id": "s4",
+          "label": "La chambre de compensation s'interpose entre acheteur et vendeur"
+        },
+        {
+          "id": "s6",
+          "label": "Le teneur de compte inscrit les titres sur ton compte"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ]
+    },
+    "explanation": "Le circuit décrit par l'AMF va de l'intermédiaire au lieu d'exécution, puis à la compensation, au règlement-livraison et enfin à l'inscription en compte.",
+    "concepts": [
+      "psi",
+      "chambre-de-compensation",
+      "reglement-livraison",
+      "depositaire-central"
+    ],
+    "source": "Varsity, module 1, chapitres 2 et 3 ; AMF, « Comprendre le circuit d'un ordre de bourse »"
+  },
+  {
+    "chapterSlug": "acteurs-regulateurs",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi ces missions, lesquelles relèvent de l'AMF ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Proposer une médiation gratuite en cas de litige avec un intermédiaire"
+        },
+        {
+          "id": "b",
+          "label": "Publier des listes noires de sites non autorisés"
+        },
+        {
+          "id": "c",
+          "label": "Rembourser les pertes d'un épargnant mal conseillé"
+        },
+        {
+          "id": "d",
+          "label": "Sanctionner un délit d'initié"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "d"
+      ]
+    },
+    "explanation": "L'AMF surveille, sanctionne, informe et propose un médiateur. Elle ne rembourse pas les pertes : la médiation cherche une solution amiable avec l'intermédiaire.",
+    "concepts": [
+      "amf"
+    ],
+    "source": "Varsity, module 1, chapitres 2 et 3 ; AMF, « Comprendre le circuit d'un ordre de bourse »"
+  },
+  {
+    "chapterSlug": "acteurs-regulateurs",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "L'ESMA surveille directement ton courtier en ligne français au quotidien.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "La surveillance au quotidien relève des autorités nationales (AMF, ACPR). L'ESMA harmonise les règles, coordonne les régulateurs et tient certains registres européens.",
+    "concepts": [
+      "esma",
+      "amf"
+    ],
+    "source": "Varsity, module 1, chapitres 2 et 3 ; AMF, « Comprendre le circuit d'un ordre de bourse »"
+  },
+  {
+    "chapterSlug": "acteurs-regulateurs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quel statut doit avoir l'intermédiaire qui reçoit et transmet tes ordres de bourse ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Prestataire de services d'investissement agréé"
+        },
+        {
+          "id": "b",
+          "label": "Aucun statut particulier"
+        },
+        {
+          "id": "c",
+          "label": "Société cotée sur Euronext"
+        },
+        {
+          "id": "d",
+          "label": "Conseiller en gestion de patrimoine indépendant sans agrément"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Recevoir, transmettre et exécuter des ordres sont des services d'investissement réservés aux PSI agréés. On vérifie l'agrément sur le registre REGAFI.",
+    "concepts": [
+      "psi"
+    ],
+    "source": "Varsity, module 1, chapitres 2 et 3 ; AMF, « Comprendre le circuit d'un ordre de bourse »"
+  },
+  {
+    "chapterSlug": "euronext-cotation",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remets dans l'ordre les phases d'une séance de bourse pour une valeur liquide à Paris.",
+    "payload": {
+      "items": [
+        {
+          "id": "s1",
+          "label": "Préouverture (accumulation des ordres)"
+        },
+        {
+          "id": "s3",
+          "label": "Cotation continue"
+        },
+        {
+          "id": "s5",
+          "label": "Fixing de clôture"
+        },
+        {
+          "id": "s2",
+          "label": "Fixing d'ouverture"
+        },
+        {
+          "id": "s4",
+          "label": "Préclôture"
+        },
+        {
+          "id": "s6",
+          "label": "Négociation au dernier cours"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ]
+    },
+    "explanation": "7 h 15 préouverture, 9 h fixing d'ouverture, 9 h – 17 h 30 cotation continue, 17 h 30 – 17 h 35 préclôture, 17 h 35 fixing de clôture, puis 5 minutes de négociation au dernier cours.",
+    "concepts": [
+      "seance-de-bourse",
+      "fixing"
+    ],
+    "source": "Varsity, module 1, chapitres 9 et 10 ; AMF, « De l'achat à la vente de votre titre coté en bourse »"
+  },
+  {
+    "chapterSlug": "euronext-cotation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "À quelle heure commence la cotation continue sur Euronext Paris ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "10 h 00"
+        },
+        {
+          "id": "b",
+          "label": "9 h 00"
+        },
+        {
+          "id": "c",
+          "label": "7 h 15"
+        },
+        {
+          "id": "d",
+          "label": "8 h 30"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "La préouverture commence à 7 h 15 ; le fixing d'ouverture a lieu à 9 h 00, puis la cotation continue dure jusqu'à 17 h 30.",
+    "concepts": [
+      "seance-de-bourse"
+    ],
+    "source": "Varsity, module 1, chapitres 9 et 10 ; AMF, « De l'achat à la vente de votre titre coté en bourse »"
+  },
+  {
+    "chapterSlug": "euronext-cotation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Au fixing, quel prix le système retient-il ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le dernier cours de la veille"
+        },
+        {
+          "id": "b",
+          "label": "Le prix proposé par Euronext"
+        },
+        {
+          "id": "c",
+          "label": "La moyenne des ordres d'achat"
+        },
+        {
+          "id": "d",
+          "label": "Le prix qui permet d'échanger la plus grande quantité de titres"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "Tous les ordres sont confrontés en même temps et le prix d'équilibre est celui qui maximise le volume échangé.",
+    "concepts": [
+      "fixing"
+    ],
+    "source": "Varsity, module 1, chapitres 9 et 10 ; AMF, « De l'achat à la vente de votre titre coté en bourse »"
+  },
+  {
+    "chapterSlug": "euronext-cotation",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complète la phrase sur le règlement-livraison.",
+    "payload": {
+      "template": "Après l'exécution de ton ordre, le règlement-livraison intervient {{n}} jours de bourse plus tard ; c'est à ce moment que tu deviens {{statut}} des titres.",
+      "slots": [
+        {
+          "id": "n",
+          "placeholder": "nombre"
+        },
+        {
+          "id": "statut",
+          "placeholder": "mot"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "n": [
+          "2",
+          "deux"
+        ],
+        "statut": [
+          "propriétaire",
+          "proprietaire"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Depuis 2014, le délai est de J+2 en Europe. Le transfert de propriété intervient au règlement-livraison, ce qui fixe aussi la date fiscale de l'opération.",
+    "concepts": [
+      "reglement-livraison"
+    ],
+    "source": "Varsity, module 1, chapitres 9 et 10 ; AMF, « De l'achat à la vente de votre titre coté en bourse »"
+  },
+  {
+    "chapterSlug": "euronext-cotation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Ton ordre de vente est exécuté le jeudi 30 décembre. Le vendredi 31 décembre est un jour de bourse ; le 1er janvier ne l'est pas. Pour quelle année fiscale la cession compte-t-elle ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Aucune, les ventes de fin d'année ne sont pas imposées"
+        },
+        {
+          "id": "b",
+          "label": "L'année au choix de l'investisseur"
+        },
+        {
+          "id": "c",
+          "label": "L'année suivante, car le règlement-livraison a lieu en janvier"
+        },
+        {
+          "id": "d",
+          "label": "L'année en cours, car l'ordre est exécuté en décembre"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "J+2 en jours de bourse : vendredi 31 décembre (J+1), puis le 1er janvier est fermé, donc le règlement-livraison a lieu le lundi suivant, en janvier. C'est le transfert de propriété qui fixe l'année fiscale.",
+    "concepts": [
+      "reglement-livraison"
+    ],
+    "source": "Varsity, module 1, chapitres 9 et 10 ; AMF, « De l'achat à la vente de votre titre coté en bourse »"
+  },
+  {
+    "chapterSlug": "euronext-cotation",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une valeur peu liquide d'Euronext Growth peut n'être cotée qu'au fixing, une ou deux fois par jour.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Les valeurs peu échangées sont cotées au fixing pour regrouper les ordres et éviter des variations de prix excessives dues à un ordre isolé.",
+    "concepts": [
+      "fixing",
+      "euronext"
+    ],
+    "source": "Varsity, module 1, chapitres 9 et 10 ; AMF, « De l'achat à la vente de votre titre coté en bourse »"
+  },
+  {
+    "chapterSlug": "euronext-cotation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Que se passe-t-il si un ordre devait faire varier le cours au-delà du seuil fixé par Euronext ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La séance est annulée"
+        },
+        {
+          "id": "b",
+          "label": "L'ordre est exécuté quand même au prix demandé"
+        },
+        {
+          "id": "c",
+          "label": "La cotation est réservée (suspendue) quelques minutes"
+        },
+        {
+          "id": "d",
+          "label": "L'ordre est transmis à l'AMF pour enquête"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "Les seuils de réservation protègent contre les variations brutales : la cotation est suspendue le temps que de nouveaux ordres arrivent, puis elle reprend.",
+    "concepts": [
+      "seance-de-bourse"
+    ],
+    "source": "Varsity, module 1, chapitres 9 et 10 ; AMF, « De l'achat à la vente de votre titre coté en bourse »"
+  },
+  {
+    "chapterSlug": "euronext-cotation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "À quoi sert le code ISIN indiqué sur un ordre ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "À désigner le courtier"
+        },
+        {
+          "id": "b",
+          "label": "À préciser la durée de validité"
+        },
+        {
+          "id": "c",
+          "label": "À identifier sans ambiguïté le titre négocié"
+        },
+        {
+          "id": "d",
+          "label": "À indiquer le prix limite"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "Le code ISIN (12 caractères, commençant par FR pour un titre français) identifie un titre de façon unique, même quand plusieurs titres ont des noms proches.",
+    "concepts": [
+      "euronext"
+    ],
+    "source": "Varsity, module 1, chapitres 9 et 10 ; AMF, « De l'achat à la vente de votre titre coté en bourse »"
+  },
+  {
+    "chapterSlug": "euronext-cotation",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Parmi ces jours, lesquels ne sont pas des jours de bourse sur Euronext Paris ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le 14 juillet"
+        },
+        {
+          "id": "b",
+          "label": "Le 26 décembre"
+        },
+        {
+          "id": "c",
+          "label": "Le Vendredi saint"
+        },
+        {
+          "id": "d",
+          "label": "Le 1er mai"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Euronext ferme le 1er janvier, le Vendredi saint, le lundi de Pâques, le 1er mai, le 25 et le 26 décembre. Le 14 juillet, la bourse est ouverte.",
+    "concepts": [
+      "seance-de-bourse"
+    ],
+    "source": "Varsity, module 1, chapitres 9 et 10 ; AMF, « De l'achat à la vente de votre titre coté en bourse »"
+  }
+]

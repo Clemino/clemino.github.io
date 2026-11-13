@@ -1,0 +1,230 @@
+---
+title: "Le problème du voyageur de commerce"
+slug: voyageur-de-commerce
+order: 2
+estimatedReadMin: 14
+concepts: [probleme-du-voyageur-de-commerce, cycle-hamiltonien, optimisation-combinatoire, voisinage, operateur-2-opt, metaheuristique]
+source: "Voyageur de commerce TSP.pdf"
+---
+
+## L'énoncé du problème
+
+Le **problème du voyageur de commerce** — en anglais *Traveling Salesman Problem*,
+abrégé **TSP** — est l'un des problèmes d'**optimisation combinatoire** les plus
+célèbres. Son énoncé est d'une simplicité trompeuse :
+
+> *« Étant donné une liste de villes et les distances séparant chacune d'entre elles,
+> quelle est la plus courte tournée possible qui visite chaque ville une seule fois
+> et revient au point de départ ? »*
+
+Trois exigences se dégagent de cet énoncé, et il faut les retenir ensemble :
+
+1. **visiter chaque ville** — aucune ne doit être oubliée ;
+2. **une seule fois** — on ne repasse pas par une ville déjà visitée ;
+3. **revenir au point de départ** — la tournée est *bouclée*.
+
+Le TSP est un problème **combinatoire** : ses variables sont **discrètes** (un ordre
+de visite des villes), et l'ensemble des tournées possibles est *fini*. Mais, comme
+on va le voir, ce « fini » est gigantesque.
+
+> **À retenir** : le **TSP** cherche la **plus courte tournée** qui **visite chaque
+> ville une seule fois** et **revient au point de départ**. C'est un problème
+> d'**optimisation combinatoire**.
+
+## La formulation par les graphes : le cycle hamiltonien
+
+Pour traiter le TSP rigoureusement, on le reformule à l'aide d'un **graphe**. Les
+**villes** deviennent les **sommets** du graphe, et les **distances** entre villes
+deviennent les **valeurs des arêtes** (le graphe est dit *valué*).
+
+Avec ce vocabulaire, l'objectif du TSP s'énonce ainsi : trouver le **cycle
+hamiltonien de coût minimal** dans le **graphe complet** des villes.
+
+- Un **graphe complet** est un graphe où **chaque sommet est relié à tous les
+  autres** : depuis n'importe quelle ville, on peut rejoindre n'importe quelle autre.
+- Un **chemin (ou cycle) hamiltonien** est un chemin qui **passe une et une seule
+  fois par chaque sommet** et **revient à son point de départ**. C'est exactement la
+  traduction des trois exigences de l'énoncé.
+
+Le TSP existe en **deux variantes**, selon l'orientation du graphe :
+
+- le **TSP symétrique** : le graphe est **non orienté** — la distance pour aller de
+  la ville `A` à la ville `B` est la **même** que de `B` vers `A` ;
+- le **TSP non symétrique** : le graphe est **orienté** — la distance de `A` vers `B`
+  peut **différer** de celle de `B` vers `A`.
+
+| Variante | Graphe | Distance `A → B` vs `B → A` |
+| --- | --- | --- |
+| TSP **symétrique** | Non orienté | **Identiques** |
+| TSP **non symétrique** | Orienté | Peuvent **différer** |
+
+> **À retenir** : le TSP, c'est rechercher le **cycle hamiltonien de coût minimal**
+> dans le **graphe complet** des villes (sommets = villes, arêtes valuées =
+> distances). Le TSP est **symétrique** (graphe non orienté) ou **non symétrique**
+> (graphe orienté).
+
+## Une solution est une permutation des villes
+
+Comment **représenter une solution** du TSP ? Une tournée n'est rien d'autre qu'un
+**ordre de visite des villes** : on part d'une ville, on enchaîne les autres dans un
+certain ordre, puis on revient au départ. Une solution du TSP est donc une
+**permutation des villes**, que l'on peut noter comme une suite :
+
+```
+A - B - C - D - E - A
+```
+
+Cette tournée se lit : partir de `A`, aller à `B`, puis `C`, puis `D`, puis `E`, et
+**revenir à `A`**. La distance totale de la tournée est la **somme des distances des
+arêtes empruntées** — ici les arêtes `A-B`, `B-C`, `C-D`, `D-E` et `E-A`.
+
+Les distances entre villes sont rangées dans une **matrice de distances** : la case
+située à la ligne de la ville `i` et à la colonne de la ville `j` contient la
+distance de `i` à `j`. Dans le **TSP symétrique**, cette matrice est *symétrique* :
+la distance de `i` à `j` égale celle de `j` à `i` — autrement dit, en notation du
+cours, `D-C = C-D`.
+
+La fonction objectif `f` à **minimiser** est donc la **longueur totale de la
+tournée**, calculée en additionnant, le long de la permutation, les distances lues
+dans la matrice.
+
+> **À retenir** : une solution du TSP est une **permutation des villes** (l'ordre de
+> visite, bouclé sur le départ) ; la **fonction objectif** à minimiser est la
+> **longueur totale** de la tournée, somme des distances de ses arêtes lues dans la
+> **matrice de distances**.
+
+## Pourquoi le TSP est difficile : complexité et NP-complétude
+
+Le TSP semble simple à énoncer. Il est pourtant **redoutablement difficile** à
+résoudre de façon **exacte**.
+
+**L'algorithme naïf est exponentiel.** Pour résoudre le TSP « bêtement », on
+**énumère toutes les tournées possibles** et l'on retient la plus courte. Or le
+nombre de tournées explose avec le nombre de villes. Selon le cours, l'algorithme
+naïf a une complexité en **`(n−1)!`** pour `n` sommets. Et pour un **trajet
+symétrique**, où parcourir une tournée dans un sens ou dans l'autre revient au même,
+la complexité est de **`(n+1)! / 2`**.
+
+Les chiffres donnés par le cours rendent cette explosion concrète :
+
+| Nombre de villes | Nombre de tournées possibles |
+| --- | --- |
+| 22 villes | plus de **`51 · 10¹⁸`** |
+| 304 villes | plus de **`2 · 10⁶²⁴`** |
+
+Énumérer `2 · 10⁶²⁴` tournées est **totalement hors de portée** de toute machine. La
+**force brute est impraticable** dès que le nombre de villes dépasse une poignée.
+
+**Le TSP est NP-complet.** Le cours classe le TSP parmi les problèmes
+**NP-complets** : il n'existe **aucune solution optimale polynomiale connue**. Pour
+situer cette classe, le cours rappelle la hiérarchie de complexité :
+
+- **P** (complexité **polynomiale**) : il existe un algorithme polynomial qui
+  **trouve la solution exacte** du problème (tris, recherche, comptage) ;
+- **NP** (complexité **non déterministe polynomiale**) : il existe un algorithme
+  polynomial qui **vérifie** une solution proposée ;
+- **NP-difficile** : un problème **auquel on peut ramener tous les autres problèmes
+  NP** par réduction polynomiale ;
+- **NP-complet** : à la fois **NP et NP-difficile** — la classe des problèmes les
+  plus durs de NP. En font partie **SAT**, le **voyageur de commerce**, le **sac à
+  dos**, la **clique**, la **coloration de graphe**, la **couverture d'ensembles**.
+
+Point essentiel : **on ne sait pas si `P = NP`**. À ce jour, on **ne connaît AUCUN
+algorithme polynomial** pour résoudre les problèmes de la classe NP.
+
+> ⚠️ Le TSP est **NP-complet** : aucun algorithme **polynomial exact** n'est connu.
+> L'algorithme naïf est en **`(n−1)!`** — exponentiel —, donc inutilisable dès que le
+> nombre de villes grandit.
+
+## Comment résoudre le TSP : trois approches
+
+Puisque la force brute est impraticable, comment s'attaquer au TSP ? Le cours
+recense **trois approches**, de la plus exacte à la plus approchée.
+
+**1. L'algorithme naïf.** Énumérer toutes les `(n−1)!` tournées et garder la
+meilleure. Il donne la solution **optimale**, mais sa complexité **exponentielle** le
+rend inutilisable au-delà de quelques villes.
+
+**2. L'algorithme de Little.** Il met en œuvre la technique **SEP** (*Séparation
+Évaluation Progressive*, due à B. Roy, 1964-65). Cet algorithme est **optimal** et
+reste **utilisable pour plus de 1000 sommets** — mais il **demeure exponentiel** dans
+le pire des cas.
+
+**3. L'algorithme de recuit simulé.** C'est une **méthode approchée**,
+**polynomiale**, mais **non optimale** : elle renvoie une **bonne** tournée, sans
+garantir que ce soit la plus courte. C'est cette approche que le module développe.
+
+| Approche | Optimale ? | Coût |
+| --- | --- | --- |
+| Algorithme naïf | **Oui** | **Exponentiel** — `(n−1)!` |
+| Algorithme de Little (SEP) | **Oui** | Exponentiel, mais praticable au-delà de 1000 sommets |
+| **Recuit simulé** | **Non** (approché) | **Polynomial** |
+
+Plus généralement, pour de **grandes valeurs de `N`** (la taille du problème), la
+**seule solution actuelle** est de recourir à des **méthodes approchées**, dites
+**heuristiques**. Le cours les répartit en deux catégories :
+
+- **mono-agent** : **recuit simulé**, *hill-climbing*, **méthode taboue** ;
+- **multi-agent** : **algorithmes génétiques** (GA), **colonies de fourmis** (ACO),
+  *particle swarm optimization* (PSO), *artificial bee colony* (ABC)…
+
+> **À retenir** : trois approches pour le TSP — l'**algorithme naïf** (optimal,
+> exponentiel), l'**algorithme de Little / SEP** (optimal, exponentiel mais
+> praticable), et le **recuit simulé** (approché, **polynomial**, non optimal). Pour
+> les grandes tailles, seules les **méthodes approchées** restent envisageables.
+
+## Le voisinage pour le TSP
+
+Le recuit simulé, comme toute méthode de voisinage, a besoin de **générer un voisin**
+d'une solution. Pour le TSP, **une solution est un cycle hamiltonien**, et **un
+voisin est un cycle hamiltonien assez proche** de la solution courante. Reste à
+définir ce que veut dire « proche ».
+
+**Une première idée : permuter deux villes.** Partons de la tournée
+`A - B - C - D - E - A`. En **permutant `B` et `E`**, on obtient le voisin
+`A - E - C - D - B - A`. Mais cette permutation **modifie quatre arêtes** : `A-B`,
+`B-C`, `D-E` et `E-A` sont remplacées. Le voisin est donc **assez distant** de la
+solution de départ — la perturbation est trop brutale.
+
+**Une meilleure idée : l'inversion d'un sous-chemin (opérateur 2-opt).** Plutôt que
+de permuter deux villes, on **inverse le sous-chemin** situé entre elles. En inversant
+le sous-chemin entre `B` et `E`, la tournée `A - B - C - D - E - A` devient
+`A - E - D - C - B - A`. Cette fois, **seules deux arêtes** sont modifiées : `A-B` et
+`E-A`. En effet, **dans le TSP symétrique**, les arêtes internes du sous-chemin sont
+simplement parcourues en sens inverse — et, puisque `D-C = C-D`, leur longueur **ne
+change pas**.
+
+| Opération | Tournée obtenue | Arêtes modifiées |
+| --- | --- | --- |
+| Permuter `B` et `E` | `A - E - C - D - B - A` | **4** : `A-B`, `B-C`, `D-E`, `E-A` |
+| Inverser le sous-chemin `B…E` (**2-opt**) | `A - E - D - C - B - A` | **2** : `A-B`, `E-A` |
+
+L'**opérateur 2-opt** — l'inversion d'un sous-chemin, qui ne touche que **deux
+arêtes** — produit donc un voisin **bien plus proche** de la solution courante. C'est
+pourquoi on **lui préférera** la simple permutation : un voisinage *resserré* permet
+une recherche plus fine, en accord avec le compromis exploration / exploitation.
+
+> ⚠️ Permuter deux villes modifie **4 arêtes** : le voisin est **trop distant**.
+> L'opérateur **2-opt** (inversion d'un sous-chemin) ne modifie que **2 arêtes** : il
+> donne un voisin **proche**, à privilégier pour le TSP symétrique.
+
+## Synthèse de la section
+
+Le **problème du voyageur de commerce (TSP)** cherche la **plus courte tournée** qui
+**visite chaque ville une seule fois** et **revient au point de départ**. On le
+formule comme la recherche du **cycle hamiltonien de coût minimal** dans le **graphe
+complet** des villes — *symétrique* si le graphe est non orienté, *non symétrique*
+sinon. Une **solution est une permutation des villes** ; la **fonction objectif** à
+minimiser est la **longueur totale** de la tournée, lue dans la **matrice de
+distances**. Le TSP est **NP-complet** : aucun algorithme **polynomial exact** n'est
+connu, et l'algorithme naïf en **`(n−1)!`** explose (plus de `2 · 10⁶²⁴` tournées
+pour 304 villes). On le résout soit exactement (algorithme **naïf**, algorithme de
+**Little / SEP**), soit, pour les grandes tailles, par des **méthodes approchées**
+comme le **recuit simulé**. Pour ce dernier, un **voisin** d'une tournée s'obtient au
+mieux par l'**opérateur 2-opt** — l'inversion d'un sous-chemin, qui ne modifie que
+**2 arêtes**.
+
+> **À retenir** : TSP = **cycle hamiltonien de coût minimal** ; solution =
+> **permutation** des villes ; problème **NP-complet** (naïf en `(n−1)!`) ; on le
+> traite par **recuit simulé** ; voisin de qualité = **2-opt** (inversion d'un
+> sous-chemin, **2 arêtes** modifiées).

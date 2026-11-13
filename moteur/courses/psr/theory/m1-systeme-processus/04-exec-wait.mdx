@@ -1,0 +1,319 @@
+---
+title: "Recouvrement (exec) et attente (wait/waitpid)"
+slug: exec-wait
+order: 4
+estimatedReadMin: 16
+concepts: [exec, recouvrement, wait, waitpid, statut-terminaison, code-retour, exit, processus-enfant]
+source: "Cours 1 — Systèmes d'exploitation et processus"
+---
+
+`fork` sait créer un processus, mais le fils n'exécute pour l'instant que le même code que le père. Deux besoins restent à couvrir :
+
+- faire exécuter au fils un **autre programme** → c'est le rôle de la famille **`exec`** ;
+- permettre au père d'**attendre la fin** du fils et d'en récupérer le résultat → c'est le rôle de **`wait`** et **`waitpid`**.
+
+## Le recouvrement : la famille `exec`
+
+Le système UNIX offre une famille d'appels système **`exec`** qui permettent à un processus de **remplacer son code exécutable** par un autre programme, **sans changer de PID**. C'est ce qu'on appelle le **recouvrement** : le code, les données et la pile du processus sont écrasés et remplacés par ceux du nouveau programme.
+
+### Une valeur de retour très particulière
+
+> En cas de **succès**, `exec` **ne renvoie rien** — non pas parce qu'il renvoie `void`, mais parce que **le code qui a appelé `exec` n'existe plus** : il a été recouvert. L'instruction qui suit un `exec` réussi n'est **jamais exécutée**. En cas d'**échec**, `exec` renvoie **-1**, et l'exécution se poursuit normalement.
+
+Ce comportement est déroutant mais logique : si `exec` réussit, il n'y a plus de programme appelant vers lequel revenir. On en déduit une règle de codage :
+
+> ⚠️ Toute instruction placée **après** un `exec` ne s'exécute **que si l'`exec` a échoué**. C'est l'endroit naturel pour traiter l'erreur. Un programme bien écrit place donc systématiquement un `perror("exec")` puis un `exit(EXIT_FAILURE)` juste après l'appel — du code qui « ne doit jamais s'exécuter » si tout se passe bien.
+
+### Les six variantes
+
+La famille comporte **six fonctions** dont le nom encode le mode de fonctionnement :
+
+```c
+int execl (const char *path, const char *arg0, ..., (char *) NULL);
+int execv (const char *path, char *const argv[]);
+int execle(const char *path, const char *arg0, ..., (char *) NULL, char *const envp[]);
+int execve(const char *path, char *const argv[], char *const envp[]);
+int execlp(const char *file, const char *arg0, ..., (char *) NULL);
+int execvp(const char *file, char *const argv[]);
+```
+
+Les suffixes sont **mnémoniques** :
+
+- **`l`** (*list*) — les arguments sont passés en **liste**, un par un, terminée par `NULL` ;
+- **`v`** (*vector*) — les arguments sont passés dans un **tableau** (vecteur) de chaînes, terminé par `NULL` ;
+- **`p`** (*path*) — le fichier est cherché dans les répertoires de la variable d'environnement **`PATH`** (on peut alors donner juste `ls` au lieu de `/bin/ls`) ;
+- **`e`** (*environment*) — on **transmet manuellement** un environnement en dernier paramètre, qui remplace l'environnement courant.
+
+| Primitive | Format d'argument | Environnement | Recherche dans `PATH` |
+|---|---|---|---|
+| `execl`  | Liste   | Automatique | Non |
+| `execv`  | Tableau | Automatique | Non |
+| `execle` | Liste   | Manuel      | Non |
+| `execve` | Tableau | Manuel      | Non |
+| `execlp` | Liste   | Automatique | Oui |
+| `execvp` | Tableau | Automatique | Oui |
+
+> ⚠️ Dans **toutes** les variantes, la liste ou le tableau d'arguments doit se terminer par `NULL` : c'est **obligatoire**. Par convention, **`arg0` (le premier argument) est le nom du programme** lui-même. Oublier le `NULL` final, ou se tromper d'argument `arg0`, conduit à un comportement indéfini.
+
+### `execl` : arguments en liste
+
+`execl` prend en paramètre la **liste des arguments** à passer au programme, terminée par `NULL`. Le premier paramètre est une chaîne qui doit contenir le **chemin d'accès complet** au fichier exécutable.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main(void) {
+    /* dernier élément NULL : OBLIGATOIRE */
+    execl("/bin/ls", "ls", "-l", "/tmp", NULL);
+
+    /* on n'arrive ici QUE si execl a échoué */
+    perror("execl : cette partie ne doit jamais s'executer");
+    return EXIT_FAILURE;
+}
+```
+
+### `execv` : arguments en tableau
+
+Avec `execv`, on n'a **pas besoin de connaître à l'avance** la liste ni le nombre d'arguments : ils sont rassemblés dans un **tableau** terminé par `NULL`.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main(void) {
+    /* dernier élément NULL : obligatoire */
+    char *argv[] = { "ls", "-l", "/tmp", NULL };
+
+    execv("/bin/ls", argv);
+
+    perror("execv : cette partie ne doit jamais s'executer");
+    return EXIT_FAILURE;
+}
+```
+
+### Le motif fondamental : `fork` puis `exec`
+
+`exec` seul **remplace** le processus courant — utilisé tel quel dans un programme, il ferait disparaître ce programme. La technique réellement utile combine les deux appels : on **`fork`** d'abord pour créer un fils, puis **le fils fait un `exec`** pour lancer le nouveau programme, pendant que **le père continue** sa propre exécution.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main(void) {
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        /* le fils devient le programme "ls" */
+        execlp("ls", "ls", "-l", NULL);
+        perror("execlp");      /* uniquement si exec a échoué */
+        exit(EXIT_FAILURE);
+    } else {
+        /* le père continue, et attend la fin du fils */
+        wait(NULL);
+        printf("Le pere : mon fils a fini.\n");
+    }
+    return 0;
+}
+```
+
+C'est exactement ce que fait un **shell** pour chaque commande : il `fork` un fils, le fils `exec` la commande, et le shell `wait` la fin du fils avant d'afficher l'invite suivante.
+
+## La terminaison d'un processus : `exit`
+
+Un processus se termine **proprement** soit par le `return` de `main`, soit en appelant la fonction `exit` :
+
+```c
+#include <stdlib.h>
+
+void exit(int status);
+```
+
+L'entier `status` est le **code de retour** : il permet au processus de **signaler à son père si une erreur s'est produite**. La convention est universelle :
+
+- `status = 0` (ou la constante `EXIT_SUCCESS`) : **pas d'erreur**, terminaison réussie ;
+- `status` non nul (par exemple `EXIT_FAILURE`) : une **erreur** s'est produite.
+
+Ce code de retour n'est pas perdu : le système le **conserve** jusqu'à ce que le père vienne le récupérer avec `wait` ou `waitpid`.
+
+> ⚠️ Seul l'**octet de poids faible** du `status` est transmis : le code de retour est effectivement compris **entre 0 et 255**. Appeler `exit(256)` revient à `exit(0)` pour le père — et `WEXITSTATUS()` ne retourne en conséquence que ces 8 bits de poids faible. On reste donc dans cette plage.
+
+## Attendre la fin d'un fils : `wait`
+
+La primitive **`wait`** permet à un processus d'**attendre la fin d'un de ses fils** :
+
+```c
+#include <sys/wait.h>
+
+pid_t wait(int *status);
+```
+
+Son comportement :
+
+- `wait` **suspend l'exécution** du processus courant **jusqu'à ce que l'un de ses fils se termine** (ou jusqu'à la réception d'un signal) ;
+- si un fils est **déjà terminé** au moment de l'appel, `wait` **revient immédiatement** ;
+- s'il **n'y a pas de fils** (ou en cas d'erreur), `wait` renvoie **-1** ;
+- sinon, `wait` renvoie le **PID du fils qui s'est terminé** ;
+- au retour de `wait`, **toutes les ressources** utilisées par le fils sont **libérées**.
+
+Ce dernier point est essentiel : `wait` ne sert pas seulement à synchroniser, il **« nettoie »** le fils terminé. Un fils terminé non récupéré reste un **zombie** (voir le chapitre suivant).
+
+### Le statut de terminaison et ses macros
+
+Si l'argument `status` est différent de `NULL`, `wait` y **stocke des informations sur la terminaison du fils**. Cet entier est **encodé** : on ne le lit jamais directement, on l'analyse avec des **macros** définies dans `<sys/wait.h>`.
+
+| Macro | Signification |
+|---|---|
+| `WIFEXITED(status)` | vrai (≠ 0) si le fils s'est terminé **normalement** (par `exit` ou `return`) |
+| `WEXITSTATUS(status)` | le **code de retour** du fils — valide **uniquement si** `WIFEXITED` est vrai |
+| `WIFSIGNALED(status)` | vrai si le fils a été **tué par un signal** |
+| `WTERMSIG(status)` | le **numéro du signal** qui a tué le fils — valide si `WIFSIGNALED` est vrai |
+
+> ⚠️ `WEXITSTATUS(status)` n'a de sens que **si `WIFEXITED(status)` est vrai**. Lire `WEXITSTATUS` sans avoir d'abord vérifié `WIFEXITED` donne une valeur **dénuée de sens** : un fils tué par un signal n'a pas de code de retour. **Toujours tester `WIFEXITED` avant de lire `WEXITSTATUS`** (de même, `WTERMSIG` se lit après avoir vérifié `WIFSIGNALED`).
+
+Exemple complet d'analyse du statut :
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main(void) {
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        /* le fils se termine avec le code 7 */
+        printf("Fils : je me termine avec le code 7.\n");
+        exit(7);
+    } else {
+        int status;
+        pid_t fini = wait(&status);   /* le père attend */
+
+        printf("Le fils %d s'est termine.\n", (int) fini);
+
+        if (WIFEXITED(status)) {
+            /* OK : on a vérifié WIFEXITED avant de lire WEXITSTATUS */
+            printf("Terminaison normale, code de retour = %d\n",
+                   WEXITSTATUS(status));
+        } else if (WIFSIGNALED(status)) {
+            printf("Tue par le signal numero %d\n", WTERMSIG(status));
+        }
+    }
+    return 0;
+}
+```
+
+Ce programme affiche un code de retour de `7`, car le fils a appelé `exit(7)`.
+
+## Attendre un fils précis : `waitpid`
+
+`wait` attend **n'importe quel** fils. Quand un père a plusieurs fils et veut en attendre **un en particulier**, on utilise **`waitpid`** :
+
+```c
+#include <sys/wait.h>
+
+pid_t waitpid(pid_t pid, int *status, int options);
+```
+
+`waitpid` **suspend** le processus courant jusqu'à la terminaison du fils désigné par `pid`. La valeur de `pid` s'interprète ainsi :
+
+- `pid > 0` : attendre la fin du **processus de PID exactement `pid`** ;
+- `pid == -1` : attendre **n'importe quel fils** — c'est l'équivalent de `wait` ;
+- `pid == 0` : attendre n'importe quel fils du **même groupe** que le processus appelant ;
+- `pid < -1` : attendre n'importe quel fils appartenant au **groupe d'identifiant `|pid|`**.
+
+Le paramètre `options` est un OU binaire de drapeaux. Le plus utile est **`WNOHANG`** :
+
+> Avec l'option **`WNOHANG`**, `waitpid` **ne bloque pas** : si aucun fils attendu n'est encore terminé, l'appel **revient immédiatement** en renvoyant `0` (au lieu d'un PID). C'est l'**attente non bloquante** : elle permet à un père de vaquer à ses occupations tout en vérifiant de temps en temps si un fils s'est terminé.
+
+L'analyse du `status` se fait avec **les mêmes macros** que pour `wait` (`WIFEXITED`, `WEXITSTATUS`, etc.).
+
+```c
+/* Attendre un fils précis, dont on a gardé le PID */
+pid_t pid_fils = fork();
+/* ... */
+int status;
+waitpid(pid_fils, &status, 0);   /* attend CE fils, en bloquant */
+```
+
+## `wait` n'est pas `sleep`
+
+Il ne faut pas confondre l'**attente d'un fils** avec une simple **temporisation** :
+
+```c
+#include <unistd.h>
+
+unsigned int sleep(unsigned int seconds);
+```
+
+- **`sleep`** bloque le processus appelant pendant un **nombre de secondes fixé** — comme la commande shell `sleep`.
+- **`wait`** bloque le processus appelant **jusqu'à la fin d'un fils**, pour une durée **inconnue d'avance**.
+
+> ⚠️ Utiliser `sleep` pour « attendre que le fils ait fini » est une **erreur de conception**. On ne connaît pas la durée d'exécution du fils : un `sleep` trop court ne synchronise rien, un `sleep` trop long fait perdre du temps. La seule manière **correcte** de synchroniser un père sur la fin d'un fils est `wait` ou `waitpid`.
+
+Illustration de la différence (le père attend réellement la fin du fils) :
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main(void) {
+    pid_t pidfils = fork();
+
+    if (pidfils != 0) {                 /* --- le père --- */
+        printf("Je suis le pere.\n");
+        wait(NULL);                     /* attend la fin du fils */
+        printf("Mon fils a termine.\n");
+    } else {                            /* --- le fils --- */
+        printf("Je suis le fils.\n");
+        sleep(2);                       /* simule un travail de 2 s */
+        printf("Arret du fils.\n");
+        exit(0);
+    }
+    return 0;
+}
+```
+
+Grâce au `wait`, la ligne « Mon fils a terminé » s'affiche **toujours en dernier**, après « Arrêt du fils » — quelle que soit la durée du `sleep`.
+
+## Lancer une commande simplement : `system`
+
+Pour lancer une commande sans gérer soi-même `fork` et `exec`, la bibliothèque standard offre la fonction `system` (déclarée dans `<stdlib.h>`) :
+
+```c
+#include <stdlib.h>
+
+int system(const char *commande);
+```
+
+`system` permet de **lancer un programme depuis un programme C** sans utiliser explicitement `fork` ni `exec`. En interne, elle **crée un processus** qui exécute `/bin/sh -c commande`. Le processus appelant **reste bloqué jusqu'à la fin** de la commande.
+
+```c
+system("clear");          /* efface l'écran du terminal */
+system("ls -l /tmp");     /* exécute une commande */
+```
+
+`system` est **commode** mais **moins flexible** que le couple `fork` + `exec` : on ne contrôle ni les redirections, ni l'environnement précis, et le passage par un shell ouvre des risques de sécurité si la commande contient des données externes. Pour un contrôle fin, on revient à `fork` + `exec` + `wait`.
+
+> **À retenir**
+> - La famille **`exec`** **recouvre** un processus : elle remplace son code/données/pile par un autre programme **sans changer le PID**.
+> - `exec` réussi **ne revient pas** ; le code après `exec` ne s'exécute **que** si `exec` a échoué (`exec` renvoie alors `-1`). On y place le traitement d'erreur.
+> - Six variantes : suffixe **`l`** (liste) ou **`v`** (vecteur), **`p`** (recherche dans `PATH`), **`e`** (environnement fourni). La liste/le tableau finit **toujours par `NULL`**.
+> - Motif fondamental : **`fork` puis `exec` dans le fils** — le père continue son code. C'est le fonctionnement d'un shell.
+> - `exit(status)` transmet un **code de retour** (0 à 255 ; 0 = succès) au père.
+> - **`wait`** suspend le père jusqu'à la fin d'**un** fils, renvoie son PID (ou `-1` s'il n'y a pas de fils) et **libère ses ressources**. **`waitpid`** attend un fils **précis** ; l'option **`WNOHANG`** rend l'attente **non bloquante**.
+> - Le `status` s'analyse avec des **macros** : `WIFEXITED` puis `WEXITSTATUS` (terminaison normale), `WIFSIGNALED` puis `WTERMSIG` (tué par un signal). **Tester `WIFEXITED` avant de lire `WEXITSTATUS`.**
+> - `wait` synchronise sur la **fin d'un fils** ; `sleep` ne fait qu'attendre une **durée fixe** : ne jamais utiliser `sleep` pour synchroniser.

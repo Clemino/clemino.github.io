@@ -1,0 +1,246 @@
+---
+title: "Value iteration"
+slug: value-iteration
+order: 4
+estimatedReadMin: 23
+concepts: [value-iteration, policy-iteration, equation-de-bellman, valeur-optimale, politique-optimale, methodes-model-based, methodes-model-free, gridworld]
+source: "Apprentissage_renforcement.pdf"
+---
+
+## Le problème : résoudre les équations de Bellman
+
+La section précédente a établi que la **valeur optimale** `V*` est la solution
+des équations de Bellman d'optimalité, et que `V*` **détermine** la stratégie
+optimale `π*`. Le cours indique qu'**il faut maintenant résoudre ces équations
+pour déterminer, ou du moins approcher, la fonction `V*` et la stratégie `π*`**,
+et qu'il présente pour cela **deux algorithmes : Value Iteration et Policy
+Iteration**.
+
+Ces deux algorithmes ont un **point commun important**, sur lequel on
+reviendra : ils **supposent que l'on connaît déjà le modèle** du problème,
+c'est-à-dire la fonction de transition `T(s, a, s′)` et la fonction de
+récompense `R(s, a)`.
+
+> **À retenir** : pour obtenir la valeur optimale `V*` et la stratégie optimale
+> `π*`, il faut **résoudre les équations de Bellman**. Le cours présente deux
+> algorithmes : **Value Iteration** et **Policy Iteration** ; tous deux
+> **supposent le modèle connu** (`T` et `R`).
+
+## L'algorithme Value Iteration
+
+Le cours présente l'algorithme **Value Iteration**, qui trouve la stratégie
+optimale `π*` **en passant par la fonction valeur optimale `V*`**. Il s'énonce
+ainsi :
+
+```text
+Algorithme Value Iteration
+
+1. Initialiser V(s), s ∈ S, à des valeurs quelconques.
+2. Répéter (jusqu'à critère d'arrêt atteint) :
+     Pour chaque état s :
+       Pour chaque action a :
+         Q(s, a) = R(s, a) + γ · Σ T(s, a, s′) · V(s′)
+       V(s) = maxₐ Q(s, a)
+```
+
+Lisons l'algorithme pas à pas :
+
+- on **part de valeurs quelconques** pour `V(s)` : l'algorithme n'a pas besoin
+  d'une bonne initialisation ;
+- à chaque tour, pour **chaque état `s`** et **chaque action `a`**, on calcule
+  une quantité **`Q(s, a) = R(s, a) + γ · Σ T(s, a, s′) · V(s′)`**. C'est ce que
+  rapporterait l'action `a` depuis `s` : sa récompense immédiate plus `γ` fois
+  la valeur moyenne (selon les valeurs `V` **courantes**) de l'état d'arrivée ;
+- on **met alors à jour `V(s)`** par le **maximum** de ces `Q(s, a)` sur les
+  actions : `V(s) = maxₐ Q(s, a)`.
+
+Cette mise à jour est exactement l'**équation de Bellman d'optimalité**,
+`V*(s) = maxₐ (R(s, a) + γ · Σ T(s, a, s′) · V*(s′))`, **transformée en règle
+d'affectation** : on remplace, à chaque tour, l'ancienne estimation de `V` par
+celle que donne le membre de droite de l'équation.
+
+> **À retenir** : **Value Iteration** initialise `V` à des **valeurs
+> quelconques**, puis **répète** : pour chaque état `s` et chaque action `a` il
+> calcule `Q(s, a) = R(s, a) + γ · Σ T(s, a, s′) · V(s′)`, puis pose
+> `V(s) = maxₐ Q(s, a)`. C'est l'**équation de Bellman d'optimalité** appliquée
+> comme **règle de mise à jour**.
+
+## Convergence et critère d'arrêt
+
+Le cours donne plusieurs **garanties et précisions** sur l'algorithme.
+
+D'abord la **convergence** : **il a été démontré que cet algorithme converge
+vers la fonction `V*`**. Les estimations successives de `V` se rapprochent donc
+de la **vraie** valeur optimale.
+
+Ensuite le **critère d'arrêt** : **le maximum des différences entre deux valeurs
+successives de `V` est inférieur à `ε`, pour un paramètre `ε` donné**. Autrement
+dit : on arrête quand, d'un tour à l'autre, **plus aucune valeur d'état ne
+change de plus de `ε`** — l'estimation est alors considérée comme **stabilisée**.
+
+> **À retenir** : Value Iteration **converge vers `V*`** (résultat démontré). Le
+> **critère d'arrêt** est : le **maximum des différences** entre deux valeurs
+> successives de `V` est **inférieur à `ε`** (paramètre donné) — les valeurs ne
+> changent plus que de façon négligeable.
+
+## La complexité de l'algorithme
+
+Le cours analyse la **complexité de l'algorithme**, c'est-à-dire le coût d'une
+itération :
+
+- **au pire des cas, chaque itération est quadratique en `|S|` et linéaire en
+  `|A|`**. En effet, une itération parcourt **chaque état** (`|S|`), pour chacun
+  **chaque action** (`|A|`), et pour chacune une **somme sur les états
+  successeurs** (`|S|`) — d'où un coût de l'ordre de `|S| × |A| × |S|` ;
+- mais le cours précise une **amélioration en pratique** : **l'ensemble des
+  valeurs de `T(s, a, s′)` étant creux** (un **grand nombre de valeurs sont
+  nulles**), **dans la pratique chaque itération est aussi linéaire en `|S|`**.
+  La raison : depuis un couple `(s, a)`, l'agent n'atteint en général que
+  **quelques** états `s′` (les autres ont `T(s, a, s′) = 0` et ne contribuent
+  pas à la somme).
+
+| Cas | Coût d'une itération |
+| --- | --- |
+| **Pire des cas** | **Quadratique en `|S|`**, **linéaire en `|A|`** |
+| **En pratique** (`T` creuse) | **Linéaire en `|S|`** |
+
+> **À retenir** : une itération de Value Iteration est, **au pire**,
+> **quadratique en `|S|`** et **linéaire en `|A|`**. Mais comme la fonction de
+> transition `T` est **creuse** (beaucoup de zéros), **en pratique** une
+> itération est **linéaire en `|S|`**.
+
+## De la valeur optimale à la stratégie
+
+Value Iteration produit une **estimation `V` de `V*`**. Le cours indique comment
+en **déduire la stratégie** : **une fois obtenue l'estimation `V` de `V*`, on
+déduit une estimation `π` de la stratégie optimale `π*` en affectant à chaque
+état `s` l'action `π(s) = a` qui permet d'atteindre la valeur `V(s)`**.
+
+Concrètement, dans chaque état, on **regarde quelle action** réalise le
+**maximum** dans la mise à jour `V(s) = maxₐ Q(s, a)` : cette action devient
+`π(s)`. C'est, à nouveau, l'idée de la stratégie **gloutonne par rapport à `V`**
+(l'`argmax` de la section précédente).
+
+Le cours soulève alors une **question** : **peut-on modifier « légèrement » cet
+algorithme de manière qu'il retourne les deux estimations `V` et `π` ?** La
+réponse est oui : il suffit, pendant la boucle, de **mémoriser au passage**, pour
+chaque état, l'action qui réalise le maximum — on obtient ainsi `π` **en même
+temps** que `V`, sans calcul supplémentaire notable.
+
+> **À retenir** : de l'estimation `V` fournie par Value Iteration, on **déduit
+> la stratégie** en prenant, dans chaque état `s`, l'**action qui réalise**
+> `V(s)`. On peut **modifier légèrement** l'algorithme pour qu'il retourne
+> **directement** `V` **et** `π`, en mémorisant l'action du maximum.
+
+## L'algorithme Policy Iteration
+
+Le cours présente un **second algorithme**, **Policy Iteration**, qui
+**manipule directement la stratégie `π` plutôt que la fonction `V`**. Il
+s'énonce ainsi :
+
+```text
+Algorithme Policy Iteration
+
+1. Choisir une stratégie quelconque π′.
+2. Répéter :
+     a. π = π′
+     b. Calculer la fonction Vπ. Pour ce faire, résoudre le système :
+          Vπ(s) = R(s, π(s)) + γ · Σ T(s, π(s), s′) · Vπ(s′)
+     c. Mettre à jour la stratégie. Pour chaque état s :
+          π′(s) = argmaxₐ ( R(s, a) + γ · Σ T(s, a, s′) · Vπ(s′) )
+3. Jusqu'à π′ = π
+```
+
+L'algorithme **alterne deux phases** :
+
+- une phase d'**évaluation** (étape b) : pour la stratégie `π` courante, on
+  **calcule sa valeur `Vπ`** en résolvant le **système** d'équations de Bellman
+  associé à `π` ;
+- une phase d'**amélioration** (étape c) : on **construit une nouvelle
+  stratégie `π′`** en prenant, dans chaque état, l'action qui **maximise**
+  `R(s, a) + γ · Σ T(s, a, s′) · Vπ(s′)` — c'est-à-dire la stratégie gloutonne
+  par rapport à `Vπ`.
+
+On répète **jusqu'à ce que la stratégie ne change plus** (`π′ = π`).
+
+Comparons les deux algorithmes :
+
+| Algorithme | Objet manipulé | Boucle |
+| --- | --- | --- |
+| **Value Iteration** | La **fonction `V`** | Met à jour `V` par `maxₐ Q(s, a)` ; `π` se déduit à la fin |
+| **Policy Iteration** | La **stratégie `π`** | Alterne **évaluation** de `Vπ` et **amélioration** de `π`, jusqu'à `π′ = π` |
+
+> **À retenir** : **Policy Iteration** manipule directement la **stratégie**.
+> Il **alterne** : **évaluation** (résoudre le système pour obtenir `Vπ`) et
+> **amélioration** (`π′(s) = argmaxₐ (R(s, a) + γ · Σ T(s, a, s′) · Vπ(s′))`),
+> et s'arrête quand **`π′ = π`**.
+
+## La limite de ces algorithmes : le modèle doit être connu
+
+Le cours met en avant une **limite essentielle** des deux algorithmes : **les
+deux algorithmes que l'on vient de présenter supposent que l'on connaît déjà le
+« modèle » du problème**, c'est-à-dire **la fonction de transition `T(s, a, s′)`
+et la fonction de renforcement `R(s, a)`**.
+
+Or, **l'apprentissage par renforcement consiste à trouver (plus exactement à
+apprendre) la stratégie optimale lorsque ce modèle n'est pas connu à
+l'avance**. **L'agent doit interagir avec son environnement** pour obtenir des
+informations qui, à l'aide d'un algorithme approprié, permettront de
+**découvrir la stratégie optimale**.
+
+Il faut donc une **méthode qui ne suppose pas le modèle déjà connu**. Le cours
+distingue **deux catégories** de méthodes : les méthodes **model-based** et les
+méthodes **model-free**.
+
+- les méthodes **model-based** (apprentissage **indirect**) **commencent par
+  estimer un modèle, puis l'utilisent** pour calculer une stratégie optimale.
+  Elles procèdent de **deux façons** : soit on **construit d'abord le modèle**
+  (les fonctions `T()` et `R()`) puis on applique l'un des algorithmes
+  ci-dessus ; soit la **construction du modèle et son utilisation sont
+  imbriquées** — c'est le cas de la **méthode Dyna** ;
+- les méthodes **model-free** (apprentissage **direct**) **apprennent une
+  stratégie optimale sans passer par un modèle**. Le **Q-learning** est un
+  exemple de cette catégorie.
+
+| Catégorie | Autre nom | Principe |
+| --- | --- | --- |
+| **Model-based** | Apprentissage **indirect** | **Estimer un modèle**, puis l'utiliser pour la stratégie (ex. **Dyna**) |
+| **Model-free** | Apprentissage **direct** | Apprendre la stratégie **sans modèle** (ex. **Q-learning**) |
+
+Le cours décrit brièvement la **méthode Dyna** (model-based) : c'est une **boucle
+dont chaque itération utilise un quadruplet `(s, a, s′, r)`** ; à chaque
+itération, on **met à jour les valeurs du modèle `T̂` et `R̂`**, on **met à jour
+la stratégie en `s`** à l'aide de la dernière version du modèle
+(`Q(s, a) = R̂(s, a) + γ · Σ T̂(s, a, s′) · maxₐ′ Q(s′, a′)`), on met à jour
+`Q(sᵢ, aᵢ)` pour `k` autres couples choisis au hasard, puis on **choisit une
+action `a′` à exécuter en `s′`** et on recommence.
+
+> **À retenir** : Value Iteration et Policy Iteration **supposent le modèle
+> connu** (`T` et `R`). Mais l'apprentissage par renforcement vise le cas où **le
+> modèle est inconnu** : l'agent doit **interagir**. On distingue les méthodes
+> **model-based** (estimer le modèle puis l'utiliser — ex. **Dyna**) et
+> **model-free** (apprendre la stratégie **sans modèle** — ex. **Q-learning**).
+
+## Synthèse de la section
+
+Pour obtenir la valeur optimale `V*` et la stratégie optimale `π*`, il faut
+**résoudre les équations de Bellman**. **Value Iteration** part de valeurs `V`
+**quelconques** et **répète** la mise à jour `V(s) = maxₐ Q(s, a)`, avec
+`Q(s, a) = R(s, a) + γ · Σ T(s, a, s′) · V(s′)` : c'est l'**équation de Bellman
+d'optimalité** appliquée comme **règle d'affectation**. L'algorithme **converge
+vers `V*`** ; il s'arrête quand le **maximum des différences** entre deux valeurs
+successives de `V` passe **sous `ε`**. Une itération est, au pire, **quadratique
+en `|S|`** et **linéaire en `|A|`**, mais **linéaire en `|S|`** en pratique car
+`T` est **creuse**. De `V` on **déduit** la stratégie en prenant l'action qui
+réalise `V(s)`, et l'on peut **modifier légèrement** l'algorithme pour qu'il
+retourne `V` **et** `π`. **Policy Iteration** manipule directement la
+**stratégie** : il **alterne évaluation** de `Vπ` et **amélioration** de `π`,
+jusqu'à `π′ = π`. Ces deux algorithmes **supposent le modèle connu** ; or
+l'apprentissage par renforcement vise le cas du **modèle inconnu**, traité par
+les méthodes **model-based** (estimer le modèle — ex. **Dyna**) et **model-free**
+(sans modèle — ex. **Q-learning**).
+
+> **À retenir** : **Value Iteration** répète `V(s) = maxₐ Q(s, a)` et **converge
+> vers `V*`** ; **Policy Iteration** alterne **évaluation** et **amélioration**
+> de la stratégie. Les deux **supposent le modèle connu** — d'où le besoin de
+> méthodes **model-free** comme le **Q-learning** quand le modèle est inconnu.

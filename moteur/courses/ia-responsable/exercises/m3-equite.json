@@ -1,0 +1,606 @@
+[
+  {
+    "chapterSlug": "mesurer-ecarts",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "1 000 personnes sont bien classées à 96 % et 500 personnes à 48 %. Quelle est l'accuracy globale, en % ?",
+    "payload": {
+      "unit": "%"
+    },
+    "solution": {
+      "value": 80,
+      "absTol": 0.05
+    },
+    "explanation": "(960 + 240) / 1 500 = 1 200 / 1 500 = 80 %, alors que l'écart entre groupes est de 48 points.",
+    "hint": "Calcule le nombre de personnes bien classées dans chaque groupe, puis divise par l'effectif total.",
+    "concepts": [
+      "resultats-desagreges"
+    ],
+    "source": "Diapositives 13"
+  },
+  {
+    "chapterSlug": "mesurer-ecarts",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Que doit-on publier à côté des scores par groupe ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Les effectifs"
+        },
+        {
+          "id": "b",
+          "label": "Les intervalles"
+        },
+        {
+          "id": "c",
+          "label": "Les groupes croisés"
+        },
+        {
+          "id": "d",
+          "label": "Le nom des personnes concernées"
+        },
+        {
+          "id": "e",
+          "label": "Uniquement la moyenne pondérée"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Effectifs, intervalles et groupes croisés accompagnent les scores, pour juger de leur fiabilité.",
+    "hint": "Un pourcentage sur un tout petit groupe est très incertain.",
+    "concepts": [
+      "resultats-desagreges"
+    ],
+    "source": "Diapositives 13"
+  },
+  {
+    "chapterSlug": "mesurer-ecarts",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Un groupe est sélectionné à 22 %, le groupe de référence à 50 %. Quel est le ratio de sélection ?",
+    "payload": {},
+    "solution": {
+      "value": 0.44,
+      "absTol": 0.01
+    },
+    "explanation": "22 % ÷ 50 % = 0,44, bien en dessous du repère de 0,80.",
+    "hint": "Divise le taux du groupe par celui du groupe de référence.",
+    "concepts": [
+      "ratio-selection"
+    ],
+    "source": "Diapositives 14"
+  },
+  {
+    "chapterSlug": "mesurer-ecarts",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un ratio de sélection supérieur à 0,80 prouve que le système est équitable.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Le seuil de 0,80 est un repère de dépistage américain : le franchir ne prouve ni l'équité ni la conformité au droit européen.",
+    "hint": "Relis d'où vient le repère des quatre cinquièmes et à quoi il sert.",
+    "concepts": [
+      "ratio-selection"
+    ],
+    "source": "Diapositives 14"
+  },
+  {
+    "chapterSlug": "mesurer-ecarts",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "D'où vient la règle des quatre cinquièmes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Du contexte américain de l'emploi"
+        },
+        {
+          "id": "b",
+          "label": "Du RGPD européen"
+        },
+        {
+          "id": "c",
+          "label": "De l'AI Act, article 10"
+        },
+        {
+          "id": "d",
+          "label": "D'une norme ISO internationale sur la gestion de l'IA"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "C'est un repère de dépistage issu du contexte américain de l'emploi.",
+    "hint": "Ce n'est pas un texte européen.",
+    "concepts": [
+      "ratio-selection"
+    ],
+    "source": "Diapositives 14"
+  },
+  {
+    "chapterSlug": "mesurer-ecarts",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complète la phrase.",
+    "payload": {
+      "template": "La parité démographique demande que P(Ŷ = 1 ∣ A = a) soit égale à P(Ŷ = 1 ∣ A = {{a}}).",
+      "slots": [
+        {
+          "id": "a",
+          "width": "md"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "a": [
+          "b"
+        ]
+      }
+    },
+    "explanation": "Chaque groupe doit avoir le même taux de sélection.",
+    "hint": "On compare les deux groupes, notés par deux lettres.",
+    "concepts": [
+      "parite-demographique"
+    ],
+    "source": "Diapositives 15"
+  },
+  {
+    "chapterSlug": "mesurer-ecarts",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "La parité démographique tient compte de la qualification réelle des personnes.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "La métrique ignore Y : elle compare les décisions sans regarder qui est qualifié.",
+    "hint": "Regarde quelles variables apparaissent dans sa formule.",
+    "concepts": [
+      "parite-demographique"
+    ],
+    "source": "Diapositives 15"
+  },
+  {
+    "chapterSlug": "mesurer-ecarts",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Les femmes sont sélectionnées à 22 %, les hommes à 50 %. Quel est l'écart, en points ?",
+    "payload": {
+      "unit": "points"
+    },
+    "solution": {
+      "value": 28,
+      "absTol": 0
+    },
+    "explanation": "50 − 22 = 28 points d'écart de sélection.",
+    "hint": "Un écart en points est une différence, pas un rapport.",
+    "concepts": [
+      "parite-demographique"
+    ],
+    "source": "Diapositives 15"
+  },
+  {
+    "chapterSlug": "egalite-des-chances",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complète la phrase.",
+    "payload": {
+      "template": "Le TPR, ou rappel, vaut VP / (VP + {{a}}).",
+      "slots": [
+        {
+          "id": "a",
+          "width": "md"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "a": [
+          "FN"
+        ]
+      }
+    },
+    "explanation": "Le TPR rapporte les vrais positifs à toutes les personnes réellement positives.",
+    "hint": "Le dénominateur compte toutes les personnes réellement qualifiées.",
+    "concepts": [
+      "egalite-des-chances",
+      "matrice-de-confusion"
+    ],
+    "source": "Diapositives 16"
+  },
+  {
+    "chapterSlug": "egalite-des-chances",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Sur 600 personnes qualifiées du groupe G1, 480 sont sélectionnées. Quel est le TPR, en % ?",
+    "payload": {
+      "unit": "%"
+    },
+    "solution": {
+      "value": 80,
+      "absTol": 0.05
+    },
+    "explanation": "480 / 600 = 80 %.",
+    "hint": "Divise les sélectionnés qualifiés par le nombre de qualifiés.",
+    "concepts": [
+      "egalite-des-chances"
+    ],
+    "source": "Diapositives 16"
+  },
+  {
+    "chapterSlug": "egalite-des-chances",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Sur 200 personnes qualifiées du groupe G2, 120 sont sélectionnées. Quel est le TPR, en % ?",
+    "payload": {
+      "unit": "%"
+    },
+    "solution": {
+      "value": 60,
+      "absTol": 0.05
+    },
+    "explanation": "120 / 200 = 60 %.",
+    "hint": "Divise les sélectionnés qualifiés par le nombre de qualifiés.",
+    "concepts": [
+      "egalite-des-chances"
+    ],
+    "source": "Diapositives 16"
+  },
+  {
+    "chapterSlug": "egalite-des-chances",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Avec des TPR de 80 % et 60 %, l'égalité des chances est satisfaite.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Il y a 20 points d'écart : l'égalité des chances n'est pas satisfaite.",
+    "hint": "L'égalité des chances demande des rappels égaux.",
+    "concepts": [
+      "egalite-des-chances"
+    ],
+    "source": "Diapositives 16"
+  },
+  {
+    "chapterSlug": "egalite-des-chances",
+    "type": "MATCHING",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Associe chaque indicateur à sa formule.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "FPR"
+        },
+        {
+          "id": "l1",
+          "label": "FNR"
+        },
+        {
+          "id": "l2",
+          "label": "PPV"
+        },
+        {
+          "id": "l3",
+          "label": "Accuracy"
+        },
+        {
+          "id": "l4",
+          "label": "Taux de sélection"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "FP / (FP + VN)"
+        },
+        {
+          "id": "r1",
+          "label": "FN / (VP + FN)"
+        },
+        {
+          "id": "r2",
+          "label": "VP / (VP + FP)"
+        },
+        {
+          "id": "r3",
+          "label": "(VP + VN) / N"
+        },
+        {
+          "id": "r4",
+          "label": "(VP + FP) / N"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4"
+      }
+    },
+    "explanation": "Le dénominateur indique la population concernée par chaque taux.",
+    "hint": "Le taux de sélection compte tous ceux qui sont prédits à risque, à tort ou à raison.",
+    "concepts": [
+      "matrice-de-confusion"
+    ],
+    "source": "Diapositives 19"
+  },
+  {
+    "chapterSlug": "egalite-des-chances",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "VP = 40, FN = 10, FP = 20, VN = 30. Quel est le FPR ?",
+    "payload": {},
+    "solution": {
+      "value": 0.4,
+      "absTol": 0.01
+    },
+    "explanation": "FPR = FP / (FP + VN) = 20 / 50 = 0,4.",
+    "hint": "Le FPR se calcule parmi les personnes réellement négatives.",
+    "concepts": [
+      "matrice-de-confusion"
+    ],
+    "source": "Diapositives 19"
+  },
+  {
+    "chapterSlug": "egalite-des-chances",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Avec les mêmes effectifs (VP = 40, FN = 10, FP = 20, VN = 30), quelle est la précision positive (PPV) ? Arrondis à deux décimales.",
+    "payload": {},
+    "solution": {
+      "value": 0.67,
+      "absTol": 0.01
+    },
+    "explanation": "PPV = VP / (VP + FP) = 40 / 60 ≈ 0,67.",
+    "hint": "La PPV se calcule parmi les personnes prédites positives.",
+    "concepts": [
+      "matrice-de-confusion"
+    ],
+    "source": "Diapositives 19"
+  },
+  {
+    "chapterSlug": "egalite-des-chances",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Dans le TD sur COMPAS, quand une personne est-elle classée à risque (Ŷ = 1) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Quand son decile_score est supérieur ou égal à 5"
+        },
+        {
+          "id": "b",
+          "label": "Quand elle a récidivé dans les deux ans"
+        },
+        {
+          "id": "c",
+          "label": "Quand son decile_score est égal à 10"
+        },
+        {
+          "id": "d",
+          "label": "Quand son taux de faux positifs dépasse 0,5"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Ŷ = 1 si decile_score ≥ 5 ; Y est la récidive observée à deux ans.",
+    "hint": "Ne confonds pas la prédiction Ŷ avec l'observation Y.",
+    "concepts": [
+      "matrice-de-confusion"
+    ],
+    "source": "Diapositives 19"
+  },
+  {
+    "chapterSlug": "egalite-des-chances",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "FNR = 1 − TPR.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "FNR = FN / (VP + FN), donc FNR + TPR = 1.",
+    "hint": "Les deux taux partagent le même dénominateur.",
+    "concepts": [
+      "matrice-de-confusion"
+    ],
+    "source": "Diapositives 19"
+  },
+  {
+    "chapterSlug": "attenuer-biais",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque moment à une intervention possible.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Avant l'apprentissage"
+        },
+        {
+          "id": "l1",
+          "label": "Pendant l'apprentissage"
+        },
+        {
+          "id": "l2",
+          "label": "Après l'apprentissage"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Collecte ciblée, pondération, labels"
+        },
+        {
+          "id": "r1",
+          "label": "Contrainte ou pénalité d'équité"
+        },
+        {
+          "id": "r2",
+          "label": "Seuils, abstention, revue humaine"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2"
+      }
+    },
+    "explanation": "On peut agir sur les données, sur l'entraînement ou sur les décisions.",
+    "hint": "Une pénalité d'équité s'ajoute à ce que le modèle optimise.",
+    "concepts": [
+      "attenuation-biais"
+    ],
+    "source": "Diapositives 17"
+  },
+  {
+    "chapterSlug": "attenuer-biais",
+    "type": "MATCHING",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Associe chaque moment à la limite à tester.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Avant l'apprentissage"
+        },
+        {
+          "id": "l1",
+          "label": "Pendant l'apprentissage"
+        },
+        {
+          "id": "l2",
+          "label": "Après l'apprentissage"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Le rééquilibrage ne corrige pas une mauvaise cible"
+        },
+        {
+          "id": "r1",
+          "label": "Le critère choisi détermine l'arbitrage"
+        },
+        {
+          "id": "r2",
+          "label": "Coût, capacité et cadre juridique"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2"
+      }
+    },
+    "explanation": "Chaque intervention a une limite propre.",
+    "hint": "Une revue humaine a un coût et une capacité limitée.",
+    "concepts": [
+      "attenuation-biais"
+    ],
+    "source": "Diapositives 17"
+  },
+  {
+    "chapterSlug": "attenuer-biais",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "On peut choisir la correction d'un biais en regardant les résultats sur le jeu de test.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Le jeu de test reste indépendant des choix de correction.",
+    "hint": "Un test qui a servi à choisir n'est plus un test indépendant.",
+    "concepts": [
+      "attenuation-biais"
+    ],
+    "source": "Diapositives 17"
+  },
+  {
+    "chapterSlug": "attenuer-biais",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Que faut-il avant d'appliquer des seuils différents selon les groupes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une analyse juridique et une gestion adaptée des attributs protégés"
+        },
+        {
+          "id": "b",
+          "label": "Un accord écrit de chaque personne concernée"
+        },
+        {
+          "id": "c",
+          "label": "Un nouvel entraînement complet du modèle sur des données rééquilibrées par groupe"
+        },
+        {
+          "id": "d",
+          "label": "Une validation par le fournisseur du modèle"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Des seuils par groupe touchent aux attributs protégés : il faut une analyse juridique.",
+    "hint": "Traiter différemment des groupes pose une question de droit.",
+    "concepts": [
+      "attenuation-biais"
+    ],
+    "source": "Diapositives 17"
+  }
+]

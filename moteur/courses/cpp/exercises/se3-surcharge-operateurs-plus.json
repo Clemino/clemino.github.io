@@ -1,0 +1,607 @@
+[
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Pourquoi une fonction `operator==` écrite **non-membre** ne peut-elle pas, telle quelle, lire les attributs `private` d'une classe `Complexe` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Par principe d'encapsulation : une fonction extérieure à la classe ne voit pas ses membres privés." },
+        { "id": "b", "label": "Parce qu'une fonction non-membre ne peut pas avoir de paramètres." },
+        { "id": "c", "label": "Parce que operator== ne peut être que membre en C++." },
+        { "id": "d", "label": "Parce que les attributs privés n'existent pas à la compilation." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "L'**encapsulation** réserve les membres `private` à l'intérieur de la classe. Une fonction `operator==` non-membre est extérieure : elle n'a **pas accès** à `re` et `im` privés, et le code **ne compile pas**. Le cours présente quatre solutions : accesseurs publics, déléguer à une méthode, déclarer la fonction `friend`, ou faire de `operator==` une méthode membre.",
+    "concepts": ["operateur-comparaison", "fonction-amie"]
+  },
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le mot-clé `friend` placé devant `operator==` dans la classe fait de cette fonction une **méthode membre** de la classe.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. Une fonction `friend` reste une fonction **non-membre** : elle n'a **pas** de `this`, et ses deux opérandes sont des paramètres explicites. Le `friend` ne change pas sa nature — il lui donne seulement l'**accès** aux membres `private`, comme si elle était membre. La déclaration `friend` est dans la classe, mais la définition s'écrit **hors** de la classe, sans `Classe::` et sans le mot `friend`.",
+    "concepts": ["fonction-amie", "operateur-non-membre"]
+  },
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On veut écrire `2 * objet` (un `int` à gauche, un objet de classe à droite). Pourquoi `operator*` en **fonction membre** rend-il `2 * objet` impossible à compiler ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Parce que 2 * objet serait traduit en (2).operator*(objet), or 2 est un int et un int n'a pas de méthode operator*." },
+        { "id": "b", "label": "Parce que la multiplication n'est pas surchargeable en C++." },
+        { "id": "c", "label": "Parce qu'un opérateur membre ne peut pas renvoyer un objet." },
+        { "id": "d", "label": "Parce que objet * 2 fonctionne, donc 2 * objet aussi automatiquement." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "En forme **membre**, l'opérande de **gauche** porte l'appel de la méthode. `objet * 2` devient `objet.operator*(2)` — OK, `objet` a la méthode. Mais `2 * objet` devrait devenir `(2).operator*(objet)` : il faudrait appeler une **méthode sur l'entier `2`**, or `int` est un type fondamental sans méthode `operator*`. C'est le problème de l'**arithmétique mixte** : la solution est une fonction **non-membre** dont les deux opérandes sont des paramètres, sur un pied d'égalité.",
+    "concepts": ["arithmetique-mixte", "operateur-membre"]
+  },
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours présente **quatre solutions** au problème « une fonction non-membre `operator==` ne voit pas le `private` ». Lesquelles ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Passer par des accesseurs publics (getters)." },
+        { "id": "b", "label": "Déléguer la comparaison à une méthode membre de la classe." },
+        { "id": "c", "label": "Déclarer la fonction operator== friend de la classe." },
+        { "id": "d", "label": "Faire de operator== une méthode membre de la classe." },
+        { "id": "e", "label": "Rendre tous les attributs public." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c", "d"] },
+    "explanation": "Les **quatre** solutions du cours : (a) **accesseurs** publics — ça marche mais alourdit l'interface ; (b) **déléguer** à une méthode membre (`estEgal`) qui, étant membre, accède au `private` ; (c) déclarer la fonction **`friend`** ; (d) faire de `operator==` une **méthode membre**. Rendre les attributs `public` n'est **pas** une solution : cela détruit l'encapsulation de toute la classe.",
+    "concepts": ["operateur-comparaison", "fonction-amie", "operateur-membre"]
+  },
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète la déclaration, **dans** la classe `Duree`, d'un `operator<` surchargé en **fonction non-membre** mais autorisé à lire les attributs privés.",
+    "payload": {
+      "template": "class Duree {\n        int minutes;\n    public:\n        {{fr}} bool operator<(const Duree& a, const Duree& b);\n};",
+      "slots": [
+        { "id": "fr", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "fr": "friend" },
+      "caseSensitive": false
+    },
+    "explanation": "Une fonction **non-membre** (deux paramètres `Duree`) ne voit pas le `private`. Le mot-clé **`friend`**, placé devant la déclaration **dans** la classe, lui accorde cet accès. La fonction reste non-membre ; `friend` ne fait que lever la barrière de l'encapsulation. La définition s'écrira hors classe, sans `friend` et sans `Duree::`.",
+    "concepts": ["fonction-amie", "operateur-non-membre"]
+  },
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque forme d'opérateur binaire à la traduction que le compilateur génère pour `a < b`.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "operator< en fonction membre" },
+        { "id": "l2", "label": "operator< en fonction non-membre" },
+        { "id": "l3", "label": "Critère qui décide entre membre et non-membre" }
+      ],
+      "right": [
+        { "id": "r1", "label": "a.operator<(b)" },
+        { "id": "r2", "label": "operator<(a, b)" },
+        { "id": "r3", "label": "Le type de l'opérande de gauche" }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3" } },
+    "explanation": "En forme **membre**, `a < b` devient `a.operator<(b)` : `a` porte l'appel. En forme **non-membre**, `a < b` devient `operator<(a, b)` : les deux opérandes sont des arguments. Le **critère décisif** est le type de l'**opérande de gauche** : si elle est toujours un objet de la classe, la forme membre suffit ; si elle peut être d'un autre type, la forme non-membre est obligatoire.",
+    "concepts": ["operateur-membre", "operateur-non-membre"]
+  },
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? `operator<` est `friend`, les autres comparateurs en sont déduits.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Duree {\n        int minutes;\n    public:\n        Duree(int m = 0) : minutes(m) {}\n        friend bool operator<(const Duree& a, const Duree& b);\n};\n\nbool operator<(const Duree& a, const Duree& b) {\n    return a.minutes < b.minutes;\n}\nbool operator==(const Duree& a, const Duree& b) { return !(a < b) && !(b < a); }\nbool operator>(const Duree& a, const Duree& b)  { return b < a; }\nbool operator<=(const Duree& a, const Duree& b) { return !(b < a); }\n\nint main() {\n    Duree d1(90), d2(120), d3(90);\n    cout << (d1 < d2) << endl;\n    cout << (d1 == d3) << endl;\n    cout << (d2 > d1) << endl;\n    cout << (d1 <= d3) << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "1\n1\n1\n1" },
+    "explanation": "Les comparateurs renvoient un `bool` ; `cout` affiche `1` pour `true`. `d1 < d2` : 90 < 120 → `1`. `d1 == d3` : `!(90<90) && !(90<90)` = `true && true` → `1`. `d2 > d1` est défini comme `d1 < d2` : 90 < 120 → `1`. `d1 <= d3` est `!(d3 < d1)` = `!(90<90)` = `!false` → `1`. Tout le code repose sur le seul `operator<`.",
+    "concepts": ["operateur-comparaison", "fonction-amie"]
+  },
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? `operator*` est une fonction non-membre, utilisée dans les deux sens.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Fraction {\n        int num, den;\n    public:\n        Fraction(int n = 0, int d = 1) : num(n), den(d) {}\n        friend Fraction operator*(const Fraction& a, const Fraction& b);\n        void afficher() const { cout << num << \"/\" << den << endl; }\n};\n\nFraction operator*(const Fraction& a, const Fraction& b) {\n    return Fraction(a.num * b.num, a.den * b.den);\n}\n\nint main() {\n    Fraction f(3, 4);\n    Fraction r1 = f * 2;\n    Fraction r2 = 2 * f;\n    r1.afficher();\n    r2.afficher();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "6/4\n6/4" },
+    "explanation": "`operator*` étant **non-membre**, `f * 2` et `2 * f` sont tous deux traduits en `operator*(a, b)`. La **conversion implicite** `int → Fraction` transforme `2` en `Fraction(2)`, soit `2/1`, à gauche comme à droite. Les deux produits valent `(3*2)/(4*1) = 6/4`. La forme non-membre rend l'arithmétique mixte symétrique — un opérateur membre aurait rejeté `2 * f`.",
+    "concepts": ["arithmetique-mixte", "operateur-non-membre"]
+  },
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe l'effet de la conversion implicite dans la comparaison.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Argent {\n        int centimes;\n    public:\n        Argent(int c = 0) : centimes(c) {}\n        int get() const { return centimes; }\n};\n\nbool operator==(const Argent& a, const Argent& b) {\n    cout << \"compare\" << endl;\n    return a.get() == b.get();\n}\n\nint main() {\n    Argent prix(150);\n    if (prix == 150)\n        cout << \"egal\" << endl;\n    else\n        cout << \"different\" << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "compare\negal" },
+    "explanation": "`operator==` est **non-membre**, ses deux opérandes sont des paramètres `const Argent&`. Dans `prix == 150`, le `150` (un `int`) est converti implicitement en `Argent(150)` grâce au constructeur `Argent(int)`. La fonction s'exécute : elle affiche d'abord `compare`, puis compare `150 == 150` → `true`, donc le `if` affiche `egal`. Sortie : `compare` suivi de `egal`.",
+    "concepts": ["operateur-comparaison", "arithmetique-mixte"]
+  },
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "CODE_WRITE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complète la classe `Duree` (durée en minutes) avec `operator==` surchargé en **fonction membre**. Le `main` lit deux durées et indique si elles sont égales.",
+    "payload": {
+      "spec": "Definir la classe Duree avec un attribut prive int minutes et un constructeur Duree(int m = 0). Surcharger operator== en fonction MEMBRE : un seul parametre const Duree&, methode const, renvoie un bool (egalite des minutes). Le main lit deux entiers, construit deux Duree et affiche 'egales' ou 'differentes'. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Duree {\n    private:\n        int minutes;\n    public:\n        Duree(int m = 0) : minutes(m) {}\n        // a completer : operator== en fonction membre\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Duree d1(a), d2(b);\n    if (d1 == d2)\n        cout << \"egales\" << endl;\n    else\n        cout << \"differentes\" << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "egales", "stdin": "12 12", "expectedStdout": "egales" },
+        { "name": "differentes", "stdin": "8 15", "expectedStdout": "differentes" },
+        { "name": "cache zero", "stdin": "0 0", "expectedStdout": "egales", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Duree {\n    private:\n        int minutes;\n    public:\n        Duree(int m = 0) : minutes(m) {}\n        bool operator==(const Duree& autre) const {\n            return minutes == autre.minutes;\n        }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Duree d1(a), d2(b);\n    if (d1 == d2)\n        cout << \"egales\" << endl;\n    else\n        cout << \"differentes\" << endl;\n    return 0;\n}"
+    },
+    "explanation": "En forme **membre**, `operator==` prend **un seul** paramètre (l'opérande de droite), en `const Duree&`. La méthode est `const` (une comparaison ne modifie rien) et renvoie un `bool`. `d1 == d2` est interprété comme `d1.operator==(d2)`. Étant membre, elle accède directement à l'attribut `private` `minutes`.",
+    "concepts": ["operateur-comparaison", "operateur-membre"]
+  },
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris la classe `Duree` avec `operator<` surchargé en **fonction non-membre** déclarée `friend` pour lire l'attribut privé. Le `main` compare deux durées.",
+    "payload": {
+      "spec": "Definir la classe Duree avec un attribut prive int minutes et un constructeur Duree(int m = 0). Surcharger operator< comme fonction NON-MEMBRE prenant deux Duree en parametres const reference et renvoyant un bool. Declarer cette fonction friend dans la classe pour acceder a l'attribut prive minutes. Le main affiche 'd1 plus courte' si d1 < d2, sinon 'd1 pas plus courte'. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Duree {\n    private:\n        int minutes;\n    public:\n        Duree(int m = 0) : minutes(m) {}\n        // a completer : declaration friend de operator<\n};\n\n// a completer : definition de operator< (non-membre)\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Duree d1(a), d2(b);\n    if (d1 < d2)\n        cout << \"d1 plus courte\" << endl;\n    else\n        cout << \"d1 pas plus courte\" << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "d1 plus courte", "stdin": "30 45", "expectedStdout": "d1 plus courte" },
+        { "name": "d1 plus longue", "stdin": "60 20", "expectedStdout": "d1 pas plus courte" },
+        { "name": "cache egales", "stdin": "10 10", "expectedStdout": "d1 pas plus courte", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Duree {\n    private:\n        int minutes;\n    public:\n        Duree(int m = 0) : minutes(m) {}\n        friend bool operator<(const Duree& a, const Duree& b);\n};\n\nbool operator<(const Duree& a, const Duree& b) {\n    return a.minutes < b.minutes;\n}\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Duree d1(a), d2(b);\n    if (d1 < d2)\n        cout << \"d1 plus courte\" << endl;\n    else\n        cout << \"d1 pas plus courte\" << endl;\n    return 0;\n}"
+    },
+    "explanation": "`operator<` est ici **non-membre** : ses deux opérandes sont des paramètres `const Duree&`. Pour lire l'attribut `private` `minutes`, on déclare la fonction **`friend`** dans la classe. La définition s'écrit **hors** de la classe, sans `friend` ni `Duree::`. `d1 < d2` est interprété comme `operator<(d1, d2)`.",
+    "concepts": ["operateur-comparaison", "fonction-amie", "operateur-non-membre"]
+  },
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète la classe `Distance` : `operator==` **friend**, puis `operator!=` **déduit de `==`** (renvoyer `!(a == b)`). Le `main` affiche les deux résultats.",
+    "payload": {
+      "spec": "Definir la classe Distance avec un attribut prive int metres et un constructeur Distance(int m = 0). Surcharger operator== comme fonction non-membre friend (deux Distance en const reference, renvoie bool). Surcharger operator!= comme fonction non-membre friend IMPLEMENTEE a partir de operator== : renvoyer !(a == b). Le main lit deux entiers, construit deux Distance et affiche (d1 == d2) puis (d1 != d2). Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Distance {\n    private:\n        int metres;\n    public:\n        Distance(int m = 0) : metres(m) {}\n        // a completer : declarations friend de operator== et operator!=\n};\n\n// a completer : definitions de operator== et operator!= (non-membres)\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Distance d1(a), d2(b);\n    cout << (d1 == d2) << endl;\n    cout << (d1 != d2) << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "egales", "stdin": "100 100", "expectedStdout": "1\n0" },
+        { "name": "differentes", "stdin": "50 75", "expectedStdout": "0\n1" },
+        { "name": "cache zero", "stdin": "0 0", "expectedStdout": "1\n0", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Distance {\n    private:\n        int metres;\n    public:\n        Distance(int m = 0) : metres(m) {}\n        friend bool operator==(const Distance& a, const Distance& b);\n        friend bool operator!=(const Distance& a, const Distance& b);\n};\n\nbool operator==(const Distance& a, const Distance& b) {\n    return a.metres == b.metres;\n}\n\nbool operator!=(const Distance& a, const Distance& b) {\n    return !(a == b);\n}\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Distance d1(a), d2(b);\n    cout << (d1 == d2) << endl;\n    cout << (d1 != d2) << endl;\n    return 0;\n}"
+    },
+    "explanation": "On écrit **un seul** comparateur de fond, `operator==`, qui touche au `private` (donc `friend`). `operator!=` n'écrit aucune logique propre : il **réutilise** `==` via `!(a == b)`. C'est la bonne pratique du cours — la logique de comparaison vit à un seul endroit. Les deux fonctions sont `friend` car la définition de `==` lit `metres`.",
+    "concepts": ["operateur-comparaison", "fonction-amie"]
+  },
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris la classe `Prix` (montant en centimes) avec un `operator*` **non-membre** surchargé **dans les deux sens** : `Prix * int` ET `int * Prix`. Le `main` lit un montant et un facteur et affiche les deux produits.",
+    "payload": {
+      "spec": "Definir la classe Prix avec un attribut prive int centimes, un constructeur Prix(int c = 0) et un accesseur get() const. Surcharger operator* DEUX fois en fonctions NON-MEMBRES friend : une version operator*(const Prix&, int) et une version operator*(int, const Prix&), chacune renvoyant un nouveau Prix. C'est l'arithmetique mixte : il faut une fonction non-membre pour que int * Prix fonctionne. Le main lit deux entiers montant et facteur, construit un Prix, et affiche (prix * facteur).get() puis (facteur * prix).get(). Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Prix {\n    private:\n        int centimes;\n    public:\n        Prix(int c = 0) : centimes(c) {}\n        int get() const { return centimes; }\n        // a completer : declarations friend des deux operator*\n};\n\n// a completer : definitions des deux operator* (non-membres)\n\nint main() {\n    int montant, facteur;\n    cin >> montant >> facteur;\n    Prix p(montant);\n    Prix r1 = p * facteur;\n    Prix r2 = facteur * p;\n    cout << r1.get() << endl;\n    cout << r2.get() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "produit", "stdin": "150 3", "expectedStdout": "450\n450" },
+        { "name": "avec zero", "stdin": "0 5", "expectedStdout": "0\n0" },
+        { "name": "cache", "stdin": "99 2", "expectedStdout": "198\n198", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Prix {\n    private:\n        int centimes;\n    public:\n        Prix(int c = 0) : centimes(c) {}\n        int get() const { return centimes; }\n        friend Prix operator*(const Prix& p, int k);\n        friend Prix operator*(int k, const Prix& p);\n};\n\nPrix operator*(const Prix& p, int k) {\n    return Prix(p.centimes * k);\n}\n\nPrix operator*(int k, const Prix& p) {\n    return Prix(k * p.centimes);\n}\n\nint main() {\n    int montant, facteur;\n    cin >> montant >> facteur;\n    Prix p(montant);\n    Prix r1 = p * facteur;\n    Prix r2 = facteur * p;\n    cout << r1.get() << endl;\n    cout << r2.get() << endl;\n    return 0;\n}"
+    },
+    "explanation": "C'est le cœur de l'**arithmétique mixte**. `facteur * p` ne peut **pas** être un opérateur membre : la gauche est un `int`, qui n'a pas de méthode. Il faut une fonction **non-membre**. On en fournit deux surcharges — `Prix * int` et `int * Prix` — toutes deux `friend` pour lire `centimes`. Ainsi `p * facteur` et `facteur * p` compilent et donnent le même résultat.",
+    "concepts": ["arithmetique-mixte", "operateur-non-membre", "fonction-amie"]
+  },
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme ne compile pas. L'auteur a écrit `operator*` en **fonction membre**, et le `main` tente `k * f` (un `int` à gauche). Corrige le code pour que `k * f` fonctionne.",
+    "payload": {
+      "spec": "La classe Fraction a deux attributs prives int num et den et un constructeur Fraction(int n = 0, int d = 1). Le main veut calculer k * f ou k est un int et f une Fraction : c'est de l'arithmetique mixte, operator* DOIT donc etre une fonction NON-MEMBRE (declaree friend pour lire num et den). Elle prend deux Fraction en const reference et renvoie un nouveau Fraction (produit des numerateurs, produit des denominateurs). afficher() ecrit num/den suivi d'un retour a la ligne. Le main lit trois entiers n, d, k, construit f(n,d) et affiche le resultat de k * f.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Fraction {\n    private:\n        int num, den;\n    public:\n        Fraction(int n = 0, int d = 1) : num(n), den(d) {}\n        Fraction operator*(const Fraction& autre) const {\n            return Fraction(num * autre.num, den * autre.den);\n        }\n        void afficher() const { cout << num << \"/\" << den << endl; }\n};\n\nint main() {\n    int n, d, k;\n    cin >> n >> d >> k;\n    Fraction f(n, d);\n    Fraction r = k * f;\n    r.afficher();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois quarts fois deux", "stdin": "3 4 2", "expectedStdout": "6/4" },
+        { "name": "un cinquieme fois dix", "stdin": "1 5 10", "expectedStdout": "10/5" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Fraction {\n    private:\n        int num, den;\n    public:\n        Fraction(int n = 0, int d = 1) : num(n), den(d) {}\n        friend Fraction operator*(const Fraction& a, const Fraction& b);\n        void afficher() const { cout << num << \"/\" << den << endl; }\n};\n\nFraction operator*(const Fraction& a, const Fraction& b) {\n    return Fraction(a.num * b.num, a.den * b.den);\n}\n\nint main() {\n    int n, d, k;\n    cin >> n >> d >> k;\n    Fraction f(n, d);\n    Fraction r = k * f;\n    r.afficher();\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `operator*` est **membre**, donc `k * f` serait traduit `(k).operator*(f)` — impossible, `k` est un `int` sans méthode. g++ refuse : `no match for 'operator*' (operand types are 'int' and 'Fraction')`. La correction : faire de `operator*` une fonction **non-membre** (deux paramètres `Fraction`), déclarée `friend` pour lire `num`/`den`. Le `int` `k` est alors converti en `Fraction(k)` et `operator*(Fraction(k), f)` compile.",
+    "concepts": ["arithmetique-mixte", "operateur-non-membre", "fonction-amie"]
+  },
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas. `operator==` non-membre essaie de lire les attributs privés de `Complexe`. Corrige le code.",
+    "payload": {
+      "spec": "La classe Complexe a deux attributs prives int re et im et un constructeur Complexe(int r = 0, int i = 0). operator== est une fonction NON-MEMBRE qui lit re et im : pour cela elle doit etre declaree friend dans la classe. Elle prend deux Complexe en const reference et renvoie un bool. Le main lit quatre entiers, construit deux Complexe et affiche 'egaux' ou 'differents'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Complexe {\n    private:\n        int re, im;\n    public:\n        Complexe(int r = 0, int i = 0) : re(r), im(i) {}\n};\n\nbool operator==(const Complexe& a, const Complexe& b) {\n    return a.re == b.re && a.im == b.im;\n}\n\nint main() {\n    int a, b, c, d;\n    cin >> a >> b >> c >> d;\n    Complexe z1(a, b), z2(c, d);\n    if (z1 == z2)\n        cout << \"egaux\" << endl;\n    else\n        cout << \"differents\" << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "egaux", "stdin": "5 7 5 7", "expectedStdout": "egaux" },
+        { "name": "differents", "stdin": "1 2 3 4", "expectedStdout": "differents" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Complexe {\n    private:\n        int re, im;\n    public:\n        Complexe(int r = 0, int i = 0) : re(r), im(i) {}\n        friend bool operator==(const Complexe& a, const Complexe& b);\n};\n\nbool operator==(const Complexe& a, const Complexe& b) {\n    return a.re == b.re && a.im == b.im;\n}\n\nint main() {\n    int a, b, c, d;\n    cin >> a >> b >> c >> d;\n    Complexe z1(a, b), z2(c, d);\n    if (z1 == z2)\n        cout << \"egaux\" << endl;\n    else\n        cout << \"differents\" << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `operator==` est non-membre et lit `a.re`, `a.im` — des attributs `private`. Sans autorisation, g++ refuse : `'int Complexe::re' is private within this context`. La correction : ajouter la déclaration **`friend bool operator==(...)`** dans la classe. Le `friend` accorde à cette fonction non-membre l'accès aux membres privés, sans en faire une méthode.",
+    "concepts": ["operateur-comparaison", "fonction-amie", "operateur-non-membre"]
+  },
+  {
+    "chapterSlug": "comparaison-membre-amie",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas. `operator==` est déclaré en **fonction membre** mais avec deux paramètres. Corrige sa signature.",
+    "payload": {
+      "spec": "La classe Score a un attribut prive int points et un constructeur Score(int p = 0). operator== doit etre une fonction MEMBRE : l'operande de gauche est *this, il ne reste donc qu'UN parametre (l'operande de droite, const Score&). La methode est const et renvoie un bool comparant les points. Le main lit deux entiers, construit deux Score et affiche 'egalite' ou 'pas egalite'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Score {\n    private:\n        int points;\n    public:\n        Score(int p = 0) : points(p) {}\n        bool operator==(const Score& a, const Score& b) const {\n            return a.points == b.points;\n        }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Score s1(a), s2(b);\n    if (s1 == s2)\n        cout << \"egalite\" << endl;\n    else\n        cout << \"pas egalite\" << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "egalite", "stdin": "100 100", "expectedStdout": "egalite" },
+        { "name": "pas egalite", "stdin": "40 90", "expectedStdout": "pas egalite" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Score {\n    private:\n        int points;\n    public:\n        Score(int p = 0) : points(p) {}\n        bool operator==(const Score& a) const {\n            return points == a.points;\n        }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Score s1(a), s2(b);\n    if (s1 == s2)\n        cout << \"egalite\" << endl;\n    else\n        cout << \"pas egalite\" << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : en forme **membre**, l'opérande de gauche est déjà `*this` ; un `operator==` binaire ne peut donc avoir qu'**un seul** paramètre. Déclaré avec deux, g++ refuse : `'operator==' must have exactly one argument`. La signature correcte est `bool operator==(const Score& a) const`, où `points` désigne l'objet courant (l'opérande gauche) et `a.points` l'opérande de droite.",
+    "concepts": ["operateur-comparaison", "operateur-membre"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "En quel appel de fonction le compilateur traduit-il l'instruction `cout << f` (où `f` est un objet) ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "operator<<(cout, f)" },
+        { "id": "b", "label": "f.operator<<(cout)" },
+        { "id": "c", "label": "cout.afficher(f)" },
+        { "id": "d", "label": "operator<<(f, cout)" }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "`<<` est un **opérateur binaire** comme les autres. `cout << f` est traduit en l'appel `operator<<(cout, f)` : l'opérande de **gauche** (le flux `cout`) et l'opérande de **droite** (l'objet `f`) deviennent les deux arguments. C'est exactement pour cela que `operator<<` doit être une fonction **non-membre** à deux paramètres.",
+    "concepts": ["surcharge-flux-sortie"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi `operator<<` ne peut-il **pas** être surchargé comme méthode membre de la classe `Fraction` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Parce qu'une méthode membre de Fraction imposerait f << cout (le flux à droite), l'inverse de la syntaxe attendue ; et on ne peut pas modifier la classe ostream pour y ajouter la méthode." },
+        { "id": "b", "label": "Parce que << ne peut jamais être surchargé en C++." },
+        { "id": "c", "label": "Parce qu'une méthode membre ne peut pas renvoyer de référence." },
+        { "id": "d", "label": "Parce que cout n'est pas un objet." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Si `operator<<` était méthode membre de `Fraction`, l'opérande de gauche serait `*this` (une `Fraction`) : `cout << f` deviendrait `f.operator<<(cout)`, donc il faudrait écrire `f << cout` — flux à droite, **inverse** de la syntaxe usuelle. Pour avoir le flux à gauche, il faudrait que `operator<<` soit une méthode de `ostream` ; or `ostream` appartient à la bibliothèque standard et n'est **pas modifiable**. La seule issue : une fonction **non-membre**.",
+    "concepts": ["surcharge-flux-sortie", "fonction-amie"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans `ostream& operator<<(ostream& out, const Fraction& f)`, le paramètre `out` doit être déclaré `const`.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. Le flux `out` ne doit **jamais** être `const` : `operator<<` **écrit** dedans, donc le **modifie**. Un paramètre `const ostream&` interdirait toute écriture. En revanche, l'objet à afficher (`const Fraction& f`) est bien `const` : l'afficher ne doit pas l'altérer. Asymétrie clé : flux **non `const`** (on l'écrit), objet **`const`** (on le lit).",
+    "concepts": ["surcharge-flux-sortie"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelles affirmations sur la signature `ostream& operator<<(ostream& out, const Fraction& f)` sont **correctes** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "C'est une fonction non-membre : ses deux opérandes sont des paramètres." },
+        { "id": "b", "label": "out est passé par référence car un flux ne se copie pas." },
+        { "id": "c", "label": "Le type de retour ostream& permet le chaînage cout << f1 << f2." },
+        { "id": "d", "label": "f est const car l'afficher ne doit pas le modifier." },
+        { "id": "e", "label": "Pour lire les attributs privés de Fraction, il est typique de la déclarer friend." },
+        { "id": "f", "label": "L'opérateur doit ajouter endl à la fin pour bien terminer la ligne." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c", "d", "e"] },
+    "explanation": "(a) à (e) sont exactes : `operator<<` est **non-membre** (deux paramètres), le flux est passé et renvoyé **par référence** (`ostream&`, un flux ne se copie pas), le retour permet le **chaînage**, l'objet est `const` (on le lit), et on la déclare **`friend`** pour accéder au `private`. (f) est **fausse** : l'opérateur n'ajoute **pas** `endl` — c'est à l'**appelant** de décider du passage à la ligne.",
+    "concepts": ["surcharge-flux-sortie", "fonction-amie"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète le corps de `operator<<` : il faut écrire l'attribut dans le flux, puis **renvoyer le flux** pour permettre le chaînage.",
+    "payload": {
+      "template": "ostream& operator<<(ostream& out, const Temp& t) {\n    out << t.degres << \" deg\";\n    return {{ret}};\n}",
+      "slots": [
+        { "id": "ret", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "ret": "out" },
+      "caseSensitive": false
+    },
+    "explanation": "L'opérateur doit se terminer par `return out;` — il **renvoie le flux qu'il a reçu**. C'est indispensable au **chaînage** : dans `cout << t1 << t2`, le premier `<<` doit rendre le flux pour que le second l'ait à sa gauche. Sans `return out;`, le type de retour `ostream&` ne serait pas satisfait et le chaînage ne compilerait pas.",
+    "concepts": ["surcharge-flux-sortie"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le compilateur évalue `cout << f1 << f2;`. Remets dans l'ordre les étapes de cette évaluation.",
+    "payload": {
+      "items": [
+        { "id": "group", "label": "Grouper l'expression à gauche : (cout << f1) << f2" },
+        { "id": "first", "label": "Évaluer cout << f1, soit operator<<(cout, f1)" },
+        { "id": "return", "label": "Ce premier appel renvoie le flux cout (un ostream&)" },
+        { "id": "second", "label": "Le flux renvoyé devient l'opérande gauche du << suivant : operator<<(cout, f2)" }
+      ]
+    },
+    "solution": { "order": ["group", "first", "return", "second"] },
+    "explanation": "`<<` est **associatif à gauche** : l'expression se groupe d'abord `(cout << f1) << f2`. On évalue `cout << f1` = `operator<<(cout, f1)`, qui **renvoie le flux `cout`** (`ostream&`). Ce résultat devient l'opérande de gauche du `<<` suivant : `operator<<(cout, f2)`. Chaque appel renvoie le flux pour alimenter le suivant — voilà pourquoi `operator<<` renvoie `ostream&`.",
+    "concepts": ["surcharge-flux-sortie"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ? `operator<<` affiche une fraction, et l'on chaîne plusieurs `<<`.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Fraction {\n        int num, den;\n    public:\n        Fraction(int n = 0, int d = 1) : num(n), den(d) {}\n        friend ostream& operator<<(ostream& out, const Fraction& f);\n};\n\nostream& operator<<(ostream& out, const Fraction& f) {\n    out << f.num << \"/\" << f.den;\n    return out;\n}\n\nint main() {\n    Fraction f1(5, 7), f2(1, 2);\n    cout << f1 << \" et \" << f2 << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "5/7 et 1/2" },
+    "explanation": "`operator<<` écrit `num`, `/`, `den` dans le flux et renvoie ce flux. La ligne `cout << f1 << \" et \" << f2 << endl;` chaîne quatre `<<` : `f1` affiche `5/7`, puis le littéral `\" et \"`, puis `f2` affiche `1/2`, puis `endl` passe à la ligne. Sortie : `5/7 et 1/2`. Le chaînage marche parce que chaque `<<` renvoie le flux.",
+    "concepts": ["surcharge-flux-sortie"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme pour l'entrée `3 8` ? `operator>>` remplit l'objet, `operator<<` l'affiche.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Point {\n        int x, y;\n    public:\n        Point(int a = 0, int b = 0) : x(a), y(b) {}\n        friend ostream& operator<<(ostream& out, const Point& p);\n        friend istream& operator>>(istream& in, Point& p);\n};\n\nostream& operator<<(ostream& out, const Point& p) {\n    out << \"(\" << p.x << \", \" << p.y << \")\";\n    return out;\n}\n\nistream& operator>>(istream& in, Point& p) {\n    in >> p.x >> p.y;\n    return in;\n}\n\nint main() {\n    Point p;\n    cin >> p;\n    cout << p << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "(3, 8)" },
+    "explanation": "`cin >> p` appelle `operator>>(cin, p)` : il lit deux entiers de l'entrée `3 8` et remplit `p.x = 3`, `p.y = 8` (l'objet est passé en `Point&` non `const`, donc modifiable). Puis `cout << p` appelle `operator<<` qui affiche `(3, 8)`. La saisie remplit l'objet, l'affichage le lit.",
+    "concepts": ["surcharge-flux-entree", "surcharge-flux-sortie"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe précisément où se font les passages à la ligne.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Temp {\n        int degres;\n    public:\n        Temp(int d = 0) : degres(d) {}\n        friend ostream& operator<<(ostream& out, const Temp& t);\n};\n\nostream& operator<<(ostream& out, const Temp& t) {\n    out << t.degres << \" deg\";\n    return out;\n}\n\nint main() {\n    Temp t1(20), t2(25), t3(30);\n    cout << t1 << \"\\n\" << t2 << \"\\n\" << t3 << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "20 deg\n25 deg\n30 deg" },
+    "explanation": "`operator<<` écrit `degres` suivi de ` deg`, **sans** ajouter de retour à la ligne — c'est l'appelant qui gère les sauts. Ici le `main` insère un `\"\\n\"` entre `t1` et `t2`, un autre entre `t2` et `t3`, et `endl` à la fin. Résultat : trois lignes `20 deg`, `25 deg`, `30 deg`. C'est bien à l'appelant, et non à l'opérateur, de décider des passages à la ligne.",
+    "concepts": ["surcharge-flux-sortie"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "CODE_WRITE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complète la classe `Point` avec `operator<<` pour pouvoir écrire `cout << p`. L'affichage est de la forme `(x, y)`. Le `main` lit deux entiers et affiche le point.",
+    "payload": {
+      "spec": "Definir la classe Point avec deux attributs prives int x et y et un constructeur Point(int a = 0, int b = 0). Surcharger operator<< comme fonction NON-MEMBRE declaree friend : signature ostream& operator<<(ostream& out, const Point& p). Elle ecrit '(' puis x puis ', ' puis y puis ')' dans le flux, et renvoie le flux. Le main lit deux entiers, construit un Point et fait cout << p << endl. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Point {\n    private:\n        int x, y;\n    public:\n        Point(int a = 0, int b = 0) : x(a), y(b) {}\n        // a completer : declaration friend de operator<<\n};\n\n// a completer : definition de operator<< (non-membre)\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Point p(a, b);\n    cout << p << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "point positif", "stdin": "3 4", "expectedStdout": "(3, 4)" },
+        { "name": "avec negatif", "stdin": "-5 0", "expectedStdout": "(-5, 0)" },
+        { "name": "cache origine", "stdin": "0 0", "expectedStdout": "(0, 0)", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Point {\n    private:\n        int x, y;\n    public:\n        Point(int a = 0, int b = 0) : x(a), y(b) {}\n        friend ostream& operator<<(ostream& out, const Point& p);\n};\n\nostream& operator<<(ostream& out, const Point& p) {\n    out << \"(\" << p.x << \", \" << p.y << \")\";\n    return out;\n}\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Point p(a, b);\n    cout << p << endl;\n    return 0;\n}"
+    },
+    "explanation": "`operator<<` est **non-membre** : signature `ostream& operator<<(ostream& out, const Point& p)`. Elle est **`friend`** pour lire `x` et `y` privés. Le corps **écrit** dans `out` avec le `<<` déjà connu sur `const char*` et `int`, puis fait `return out;` pour permettre le chaînage. `cout << p` est traduit en `operator<<(cout, p)`.",
+    "concepts": ["surcharge-flux-sortie", "fonction-amie"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète la classe `Fraction` avec `operator<<`. L'affichage attendu est exactement `Fraction : num/den`. Le `main` lit `num` et `den` et affiche la fraction.",
+    "payload": {
+      "spec": "Definir la classe Fraction avec deux attributs prives int num et den et un constructeur Fraction(int n = 0, int d = 1). Surcharger operator<< comme fonction non-membre friend : ostream& operator<<(ostream& out, const Fraction& f). Elle ecrit la chaine 'Fraction : ' puis num puis '/' puis den, et renvoie le flux. Le main lit deux entiers et fait cout << f << endl. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Fraction {\n    private:\n        int num, den;\n    public:\n        Fraction(int n = 0, int d = 1) : num(n), den(d) {}\n        // a completer : declaration friend de operator<<\n};\n\n// a completer : definition de operator<< (non-membre)\n\nint main() {\n    int n, d;\n    cin >> n >> d;\n    Fraction f(n, d);\n    cout << f << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "cinq septiemes", "stdin": "5 7", "expectedStdout": "Fraction : 5/7" },
+        { "name": "entier", "stdin": "3 1", "expectedStdout": "Fraction : 3/1" },
+        { "name": "cache zero", "stdin": "0 4", "expectedStdout": "Fraction : 0/4", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Fraction {\n    private:\n        int num, den;\n    public:\n        Fraction(int n = 0, int d = 1) : num(n), den(d) {}\n        friend ostream& operator<<(ostream& out, const Fraction& f);\n};\n\nostream& operator<<(ostream& out, const Fraction& f) {\n    out << \"Fraction : \" << f.num << \"/\" << f.den;\n    return out;\n}\n\nint main() {\n    int n, d;\n    cin >> n >> d;\n    Fraction f(n, d);\n    cout << f << endl;\n    return 0;\n}"
+    },
+    "explanation": "`operator<<` est **non-membre** et **`friend`** (elle lit `num`/`den` privés). Le corps écrit dans `out` le littéral `\"Fraction : \"` puis les deux entiers séparés par `/`, et termine par `return out;`. On n'ajoute **pas** `endl` dans l'opérateur : c'est le `main` (`cout << f << endl`) qui décide du passage à la ligne.",
+    "concepts": ["surcharge-flux-sortie", "fonction-amie"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète la classe `Duree` avec `operator>>` (saisie) et `operator<<` (affichage). `operator>>` lit heures puis minutes ; `operator<<` affiche `h` entre les deux. Le `main` lit une durée et l'affiche.",
+    "payload": {
+      "spec": "Definir la classe Duree avec deux attributs prives int heures et minutes et un constructeur Duree(int h = 0, int m = 0). Surcharger operator>> comme fonction non-membre friend : istream& operator>>(istream& in, Duree& d) qui lit heures puis minutes et renvoie le flux. Surcharger operator<< comme fonction non-membre friend : ostream& operator<<(ostream& out, const Duree& d) qui ecrit heures puis 'h' puis minutes, et renvoie le flux. Le main fait cin >> d puis cout << d << endl. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Duree {\n    private:\n        int heures, minutes;\n    public:\n        Duree(int h = 0, int m = 0) : heures(h), minutes(m) {}\n        // a completer : declarations friend de operator>> et operator<<\n};\n\n// a completer : definitions de operator>> et operator<< (non-membres)\n\nint main() {\n    Duree d;\n    cin >> d;\n    cout << d << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "deux heures trente", "stdin": "2 30", "expectedStdout": "2h30" },
+        { "name": "cinq minutes", "stdin": "0 5", "expectedStdout": "0h5" },
+        { "name": "cache", "stdin": "12 0", "expectedStdout": "12h0", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Duree {\n    private:\n        int heures, minutes;\n    public:\n        Duree(int h = 0, int m = 0) : heures(h), minutes(m) {}\n        friend istream& operator>>(istream& in, Duree& d);\n        friend ostream& operator<<(ostream& out, const Duree& d);\n};\n\nistream& operator>>(istream& in, Duree& d) {\n    in >> d.heures >> d.minutes;\n    return in;\n}\n\nostream& operator<<(ostream& out, const Duree& d) {\n    out << d.heures << \"h\" << d.minutes;\n    return out;\n}\n\nint main() {\n    Duree d;\n    cin >> d;\n    cout << d << endl;\n    return 0;\n}"
+    },
+    "explanation": "`operator>>` reçoit l'objet en **`Duree&` non `const`** : il le **remplit** (`in >> d.heures >> d.minutes`). `operator<<` reçoit l'objet en **`const Duree&`** : il le **lit**. Les deux renvoient le flux (`istream&` / `ostream&`) pour le chaînage, et toutes deux sont **`friend`** car elles accèdent aux attributs privés `heures`/`minutes`.",
+    "concepts": ["surcharge-flux-entree", "surcharge-flux-sortie"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris la classe `Vecteur` complète (deux entiers `x`, `y`) avec `operator>>` ET `operator<<`. L'affichage est `x;y`. Le `main` lit **deux** vecteurs en chaînant `cin >> u >> v` et les affiche en chaînant `cout`.",
+    "payload": {
+      "spec": "Definir la classe Vecteur avec deux attributs prives int x et y et un constructeur Vecteur(int a = 0, int b = 0). Surcharger operator<< comme fonction non-membre friend : ostream& operator<<(ostream& out, const Vecteur& v) qui ecrit x puis ';' puis y et renvoie le flux. Surcharger operator>> comme fonction non-membre friend : istream& operator>>(istream& in, Vecteur& v) qui lit x puis y et renvoie le flux. Les deux DOIVENT renvoyer le flux pour permettre le chainage cin >> u >> v et cout << u << ' ' << v. Le main lit quatre entiers via cin >> u >> v et affiche cout << u << ' ' << v << endl. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Vecteur {\n    private:\n        int x, y;\n    public:\n        Vecteur(int a = 0, int b = 0) : x(a), y(b) {}\n        // a completer : declarations friend de operator<< et operator>>\n};\n\n// a completer : definitions de operator<< et operator>> (non-membres)\n\nint main() {\n    Vecteur u, v;\n    cin >> u >> v;\n    cout << u << \" \" << v << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "deux vecteurs", "stdin": "1 2 3 4", "expectedStdout": "1;2 3;4" },
+        { "name": "avec negatifs", "stdin": "-1 0 0 9", "expectedStdout": "-1;0 0;9" },
+        { "name": "cache", "stdin": "5 5 7 7", "expectedStdout": "5;5 7;7", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Vecteur {\n    private:\n        int x, y;\n    public:\n        Vecteur(int a = 0, int b = 0) : x(a), y(b) {}\n        friend ostream& operator<<(ostream& out, const Vecteur& v);\n        friend istream& operator>>(istream& in, Vecteur& v);\n};\n\nostream& operator<<(ostream& out, const Vecteur& v) {\n    out << v.x << \";\" << v.y;\n    return out;\n}\n\nistream& operator>>(istream& in, Vecteur& v) {\n    in >> v.x >> v.y;\n    return in;\n}\n\nint main() {\n    Vecteur u, v;\n    cin >> u >> v;\n    cout << u << \" \" << v << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le `return` du flux est ici **indispensable** : `cin >> u >> v` se groupe `(cin >> u) >> v` — `operator>>` doit renvoyer `istream&` pour que `>> v` ait un flux à gauche. De même `cout << u << \" \" << v` exige `ostream&` à chaque étape. `operator>>` prend l'objet en `Vecteur&` (il le remplit), `operator<<` en `const Vecteur&` (il le lit) ; les deux sont `friend`.",
+    "concepts": ["surcharge-flux-sortie", "surcharge-flux-entree", "fonction-amie"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme ne compile pas. L'auteur a surchargé `operator<<` en **méthode membre** de `Fraction`. Corrige le code pour que `cout << f` fonctionne.",
+    "payload": {
+      "spec": "La classe Fraction a deux attributs prives int num et den et un constructeur Fraction(int n = 0, int d = 1). operator<< ne peut PAS etre une methode membre : il doit etre une fonction NON-MEMBRE declaree friend, de signature ostream& operator<<(ostream& out, const Fraction& f), qui ecrit num puis '/' puis den dans le flux et renvoie le flux. Le main lit deux entiers, construit f et fait cout << f << endl.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Fraction {\n    private:\n        int num, den;\n    public:\n        Fraction(int n = 0, int d = 1) : num(n), den(d) {}\n        ostream& operator<<(ostream& out) const {\n            out << num << \"/\" << den;\n            return out;\n        }\n};\n\nint main() {\n    int n, d;\n    cin >> n >> d;\n    Fraction f(n, d);\n    cout << f << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "cinq septiemes", "stdin": "5 7", "expectedStdout": "5/7" },
+        { "name": "entier", "stdin": "9 1", "expectedStdout": "9/1" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Fraction {\n    private:\n        int num, den;\n    public:\n        Fraction(int n = 0, int d = 1) : num(n), den(d) {}\n        friend ostream& operator<<(ostream& out, const Fraction& f);\n};\n\nostream& operator<<(ostream& out, const Fraction& f) {\n    out << f.num << \"/\" << f.den;\n    return out;\n}\n\nint main() {\n    int n, d;\n    cin >> n >> d;\n    Fraction f(n, d);\n    cout << f << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `operator<<` est une **méthode membre** de `Fraction`. L'opérande de gauche serait alors `*this` (une `Fraction`), donc `cout << f` deviendrait `cout.operator<<(f)` — il n'existe aucun `ostream::operator<<` pour `Fraction`. g++ refuse : `no match for 'operator<<' (operand types are 'std::ostream' and 'Fraction')`. La correction : faire de `operator<<` une fonction **non-membre** `ostream& operator<<(ostream& out, const Fraction& f)`, déclarée `friend` pour lire `num`/`den`.",
+    "concepts": ["surcharge-flux-sortie", "fonction-amie"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas. `operator<<` a été déclaré avec le **mauvais type de retour** : il renvoie `Point` au lieu du flux, ce qui casse le chaînage. Corrige-le.",
+    "payload": {
+      "spec": "La classe Point a deux attributs prives int x et y et un constructeur Point(int a = 0, int b = 0). operator<< est une fonction non-membre friend : son type de retour doit etre ostream& (le flux par reference), PAS Point. Elle ecrit '(' x ', ' y ')' dans le flux et fait return out. Ce retour du flux est ce qui permet de chainer cout << p << ' ok'. Le main lit deux entiers, construit p et fait cout << p << ' ok' << endl.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Point {\n    private:\n        int x, y;\n    public:\n        Point(int a = 0, int b = 0) : x(a), y(b) {}\n        friend Point operator<<(ostream& out, const Point& p);\n};\n\nPoint operator<<(ostream& out, const Point& p) {\n    out << \"(\" << p.x << \", \" << p.y << \")\";\n    return p;\n}\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Point p(a, b);\n    cout << p << \" ok\" << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "point positif", "stdin": "3 4", "expectedStdout": "(3, 4) ok" },
+        { "name": "avec negatif", "stdin": "-2 7", "expectedStdout": "(-2, 7) ok" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Point {\n    private:\n        int x, y;\n    public:\n        Point(int a = 0, int b = 0) : x(a), y(b) {}\n        friend ostream& operator<<(ostream& out, const Point& p);\n};\n\nostream& operator<<(ostream& out, const Point& p) {\n    out << \"(\" << p.x << \", \" << p.y << \")\";\n    return out;\n}\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Point p(a, b);\n    cout << p << \" ok\" << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `operator<<` renvoie `Point` (et fait `return p;`). Du coup `cout << p` produit un `Point`, et `(... ) << \" ok\"` revient à `Point << const char*` — qui n'existe pas. g++ refuse : `no match for 'operator<<' (operand types are 'Point' and 'const char [4]')`. La correction : renvoyer le **flux par référence** — type `ostream&` et `return out;`. C'est uniquement ce retour du flux qui permet de **chaîner** les `<<`.",
+    "concepts": ["surcharge-flux-sortie"]
+  },
+  {
+    "chapterSlug": "surcharge-flux",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas. `operator>>` non-membre essaie de remplir un attribut `private`. Corrige le code.",
+    "payload": {
+      "spec": "La classe Mesure a un attribut prive int valeur, un constructeur Mesure(int v = 0) et un accesseur get() const. operator>> est une fonction NON-MEMBRE de signature istream& operator>>(istream& in, Mesure& m) qui lit dans m.valeur et renvoie le flux. Comme elle accede a l'attribut prive valeur, elle doit etre declaree friend dans la classe. Le main fait cin >> m puis affiche m.get().",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Mesure {\n    private:\n        int valeur;\n    public:\n        Mesure(int v = 0) : valeur(v) {}\n        int get() const { return valeur; }\n};\n\nistream& operator>>(istream& in, Mesure& m) {\n    in >> m.valeur;\n    return in;\n}\n\nint main() {\n    Mesure m;\n    cin >> m;\n    cout << m.get() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "saisie", "stdin": "99", "expectedStdout": "99" },
+        { "name": "zero", "stdin": "0", "expectedStdout": "0" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Mesure {\n    private:\n        int valeur;\n    public:\n        Mesure(int v = 0) : valeur(v) {}\n        friend istream& operator>>(istream& in, Mesure& m);\n        int get() const { return valeur; }\n};\n\nistream& operator>>(istream& in, Mesure& m) {\n    in >> m.valeur;\n    return in;\n}\n\nint main() {\n    Mesure m;\n    cin >> m;\n    cout << m.get() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `operator>>` est non-membre et écrit dans `m.valeur` — un attribut `private`. Sans autorisation, g++ refuse : `'int Mesure::valeur' is private within this context`. La correction : déclarer **`friend istream& operator>>(istream& in, Mesure& m);`** dans la classe. Comme `operator<<`, l'opérateur d'entrée a besoin d'accéder aux attributs privés, on le déclare donc `friend`.",
+    "concepts": ["surcharge-flux-entree", "fonction-amie"]
+  }
+]

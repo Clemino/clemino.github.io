@@ -1,0 +1,138 @@
+---
+title: Principe de la surcharge
+slug: principe-surcharge
+order: 1
+estimatedReadMin: 9
+concepts: [surcharge-operateur, operateur-membre, operateur-non-membre]
+source: "Cours 3 — Surcharge d'opérateurs"
+---
+
+## Le problème : opérer sur ses propres objets
+
+Sur les types fondamentaux, on écrit naturellement `a + b`, `x == y` ou `cout << n`. Mais sur une **classe** que l'on a définie soi-même, ces écritures n'ont, par défaut, **aucun sens** : le compilateur ne sait pas ce que veut dire « additionner deux complexes ».
+
+Supposons une classe `Complexe` et deux objets `z1`, `z2` que l'on veut additionner :
+
+```cpp
+Complexe z, z1, z2;
+z = additionner(z1, z2);   // ça marche... mais ce n'est pas lisible
+```
+
+On peut écrire une fonction `additionner`, mais le code reste **verbeux**. L'idéal serait d'écrire, comme pour des entiers :
+
+```cpp
+z = z1 + z2;               // lisible, naturel
+```
+
+C'est exactement ce que permet la **surcharge d'opérateurs**.
+
+## Qu'est-ce que la surcharge d'opérateurs ?
+
+> **Surcharger un opérateur**, c'est définir le comportement d'un opérateur du langage (`+`, `==`, `<<`...) lorsqu'il est appliqué à des objets d'une **classe** que l'on a écrite.
+
+C'est un cas particulier de la **surcharge de fonctions** vue au cours 1 : un même symbole désigne plusieurs traitements, choisis selon le **type des opérandes**. Le but n'est pas un gadget : c'est de rendre les classes aussi **expressives** que les types prédéfinis.
+
+En C++, un opérateur n'est, au fond, qu'une **fonction au nom spécial**. Le compilateur **traduit** toute expression utilisant un opérateur en un **appel de fonction** :
+
+```cpp
+z = z1 + z2;        // le compilateur lit  :  z = operator+(z1, z2);
+if (z1 == z2) ...   // le compilateur lit  :  if (operator==(z1, z2)) ...
+```
+
+Surcharger l'opérateur `+`, c'est donc simplement écrire une fonction dont le nom est `operator+`.
+
+## La syntaxe : `operator` suivi du symbole
+
+Le nom d'une fonction-opérateur se forme avec le mot-clé **`operator`** immédiatement suivi du **symbole** de l'opérateur :
+
+```cpp
+operator+      operator-      operator*      operator/
+operator==     operator!=     operator<      operator>
+operator+=     operator<<     operator>>     operator=
+```
+
+Cette fonction se déclare et se définit **comme n'importe quelle fonction** : type de retour, paramètres, corps. Sa seule particularité est son **nom**, qui autorise ensuite la notation **infixe** (`a + b` au lieu de `operator+(a, b)`).
+
+Les deux écritures suivantes sont d'ailleurs **strictement équivalentes** ; la seconde est juste la forme « explicite » que voit le compilateur. Comme `operator+` est ici une **fonction membre** (voir plus bas), le compilateur traduit la notation infixe `z1 + z2` en l'**appel de méthode** `z1.operator+(z2)` :
+
+```cpp
+Complexe z    = z1 + z2;               // notation infixe (à utiliser)
+Complexe zBis = z1.operator+(z2);      // appel explicite (légal mais inhabituel)
+```
+
+## Quels opérateurs peut-on surcharger ?
+
+La **grande majorité** des opérateurs sont surchargeables. Le cours en utilise quatre familles :
+
+| Famille | Opérateurs |
+|---|---|
+| Arithmétiques | `+`  `-`  `*`  `/` |
+| Comparaison | `==`  `!=`  `<`  `>`  `<=`  `>=` |
+| Affectation composée (raccourcis) | `+=`  `-=`  `*=`  `/=` |
+| Flux | `<<`  `>>` |
+
+S'y ajoutent notamment `=` (affectation, vue au cours 2), `[]` (indexation), `()` (appel) et `++`/`--`.
+
+Quelques opérateurs, en revanche, **ne peuvent pas** être surchargés. Il faut les connaître :
+
+```text
+.        accès à un membre
+.*       accès à un membre via pointeur
+::       résolution de portée
+?:       opérateur conditionnel (ternaire)
+sizeof   taille d'un type
+```
+
+> ⚠️ On ne peut **ni inventer un nouvel opérateur** (pas de `**` pour la puissance), **ni changer la priorité, l'associativité ou l'arité** (le nombre d'opérandes) d'un opérateur existant. `+` restera binaire et plus prioritaire que `==`, quoi qu'on en fasse.
+
+## Règle d'or : au moins un opérande de type classe
+
+C'est la limite fondamentale, qui protège les types prédéfinis :
+
+> Lors de la surcharge d'un opérateur, **au moins un des opérandes doit être d'un type classe** (ou énumération) défini par l'utilisateur.
+
+Autrement dit, on **ne peut pas redéfinir** `int + int` ou `double == double` : le comportement des opérateurs sur les types fondamentaux est **figé**. On ne peut surcharger un opérateur que parce que **notre classe** intervient dans l'expression — `Complexe + Complexe`, `Complexe + double`, voire `double + Complexe` sont permis ; `double + double`, jamais.
+
+## Deux formes possibles : membre ou non-membre
+
+Une fonction-opérateur peut s'écrire de **deux manières**. C'est un choix structurant, détaillé au chapitre 3 ; voici la vue d'ensemble.
+
+**Forme fonction membre** — l'opérateur est une **méthode** de la classe. L'opérande de **gauche** est l'objet courant (`*this`) ; il n'apparaît donc **pas** dans la liste des paramètres, qui ne contient que l'opérande de **droite** :
+
+```cpp
+class Complexe {
+        double re, im;
+    public:
+        // membre : un seul paramètre (l'opérande de droite)
+        Complexe operator+(const Complexe& c) const;
+};
+
+// z1 + z2  est interprété comme  z1.operator+(z2)
+```
+
+**Forme fonction non-membre (libre)** — l'opérateur est une fonction **extérieure** à la classe. Comme elle n'a pas d'objet courant, elle reçoit **tous** ses opérandes en paramètres : un opérateur binaire prend donc **deux** paramètres :
+
+```cpp
+// non-membre : deux paramètres (gauche ET droite)
+Complexe operator+(const Complexe& a, const Complexe& b);
+
+// z1 + z2  est interprété comme  operator+(z1, z2)
+```
+
+Le critère : la forme **membre** convient quand l'opérande gauche est **toujours** un objet de la classe ; la forme **non-membre** est nécessaire dès que l'opérande gauche peut être d'un **autre type** (par exemple `2 * objet`) — c'est l'**arithmétique mixte** du chapitre 3. Une fonction non-membre qui doit lire les attributs `private` sera déclarée **`friend`**.
+
+## Quand surcharger — et quand s'abstenir
+
+La surcharge est appropriée quand l'opérateur a une **signification naturelle et attendue** pour le type. Sur un `Complexe`, une `Fraction`, un `Vecteur`, une `Duree`, écrire `a + b` ou `a < b` est immédiatement compréhensible : la surcharge **améliore** la lisibilité.
+
+> ⚠️ La surcharge peut aussi **nuire** au code. Détourner un opérateur de son sens usuel — un `+` qui supprimerait des éléments, un `<` sans rapport avec un ordre — rend le programme **trompeur** : le lecteur croit lire une addition là où se cache autre chose. Règle de bon sens : **ne surcharger un opérateur que si son sens reste évident**. Dans le doute, une **méthode nommée** (`fusionner()`, `estEgal()`) est préférable.
+
+> **À retenir**
+> - **Surcharger un opérateur** = définir son comportement sur les objets d'une classe ; un opérateur n'est qu'une **fonction au nom spécial**.
+> - Le compilateur **traduit** `a + b` en l'appel `operator+(a, b)` : surcharger `+`, c'est écrire la fonction `operator+`.
+> - Syntaxe du nom : mot-clé **`operator`** suivi du **symbole** (`operator+`, `operator==`, `operator<<`...).
+> - On peut surcharger `+ - * /`, `== != < > <= >=`, `+= -= *= /=`, `<< >>`, `=`, `[]`... mais **pas** `.`, `.*`, `::`, `?:`, `sizeof`.
+> - On ne peut **ni créer un opérateur**, **ni changer sa priorité, son associativité ou son arité**.
+> - **Au moins un opérande doit être d'un type classe** : impossible de redéfinir `int + int`.
+> - Deux formes : **membre** (opérande gauche = `*this`, un seul paramètre) ou **non-membre** (tous les opérandes en paramètres).
+> - Ne surcharger un opérateur que si son **sens reste évident** ; sinon, préférer une **méthode nommée**.

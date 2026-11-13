@@ -1,0 +1,32 @@
+---
+title: "Invariants et modelisation"
+slug: invariants-modelisation
+order: 3
+estimatedReadMin: 15
+concepts: [p-invariant, t-invariant, modeling, boundedness, liveness]
+source: "Petri net/UP2-2-RdP-slides.pdf; Petri net/mcar_cours2_ReseauxDePetri.2x1.pdf"
+---
+## Invariants de places
+
+Un P-invariant est un vecteur `y` tel que `y^T C = 0`. Il exprime une quantite conservee, par exemple "un processus est soit dehors, soit dedans".
+
+## Invariants de transitions
+
+Un T-invariant est un vecteur `x` tel que `C x = 0`. Il decrit une combinaison de tirs qui ramene le marquage a sa valeur initiale.
+
+## Modeliser
+
+Les modeles classiques du cours et des exercices sont :
+
+- producteur-consommateur avec tampon borne ;
+- exclusion mutuelle via une place ressource ;
+- workflow avec synchronisation ;
+- client/serveur ou file d'attente ;
+- philosophes et risques d'interblocage.
+
+## Diagnostic
+
+Une ressource jamais rendue cree une perte de vivacite. Une synchronisation qui attend deux jetons incompatibles cree un blocage. Une capacite mal representee se voit par la bornitude.
+
+> **A retenir**  
+> Les invariants ne remplacent pas le graphe, mais donnent des preuves compactes de conservation et de cycles.

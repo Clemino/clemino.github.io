@@ -1,0 +1,251 @@
+---
+title: "Perceptron et perceptron multicouche"
+slug: perceptron-multicouche
+order: 2
+estimatedReadMin: 20
+concepts: [neurone-formel, fonction-heaviside, fonction-d-activation, perceptron, separabilite-lineaire, probleme-xor, perceptron-multicouche, couche-cachee, poids, biais]
+source: "RNA_HSe_Fr_2324.pdf"
+---
+
+## Un premier réseau : le OU logique
+
+Pour illustrer concrètement le fonctionnement d'un réseau, le cours construit un
+**premier exemple** : un réseau qui calcule la fonction **OU logique**. Le cahier
+des charges est le suivant.
+
+- Le réseau **reçoit en entrée deux valeurs binaires `x₁` et `x₂`** et **fournit
+  en sortie la valeur `y = x₁ ∨ x₂`**, où `∨` est l'opérateur **OU logique**.
+- Le réseau aura donc **deux neurones en entrée et un neurone en sortie**.
+- **Compte tenu de la simplicité du problème**, on construit un réseau **sans
+  couche cachée**.
+- Ce réseau est **entièrement déterminé** par trois choix : la **fonction
+  d'activation `h`**, les **poids `w1` et `w2`** et le **biais `b`** du neurone
+  de sortie.
+
+La sortie du réseau sera `h(w1·x₁ + w2·x₂ + b)`. **Puisque cette valeur sera
+toujours égale à `0` ou `1`**, on prend comme fonction d'activation `h` la
+**fonction de Heaviside** :
+
+```text
+h(x) = 1  si x > 0
+h(x) = 0  sinon
+```
+
+Reste à **déterminer les poids et le biais**. Le cours procède
+**graphiquement** : on **place les `4` entrées possibles** — `(0,0)`, `(1,0)`,
+`(0,1)`, `(1,1)` — **dans le plan `(x₁, x₂)`**. On **constate qu'il existe une
+(infinité de) droite(s)** qui **sépare(nt)** les points correspondant à `y = 0`
+(ici le seul point `(0,0)`) de ceux correspondant à `y = 1` (les trois autres).
+
+Autrement dit, **il existe `w1`, `w2` et `b` tels que** :
+
+```text
+w1·x₁ + w2·x₂ + b  >  0   lorsque y = 1
+w1·x₁ + w2·x₂ + b  <  0   lorsque y = 0
+```
+
+ou encore, en appliquant la Heaviside :
+
+```text
+h(w1·x₁ + w2·x₂ + b) = 1  lorsque y = 1
+h(w1·x₁ + w2·x₂ + b) = 0  lorsque y = 0
+```
+
+Le cours donne un **jeu de valeurs** qui convient : `w1 = 2`, `w2 = 2`, `b = 1`.
+On vérifie ce réseau sur les quatre entrées : la somme pondérée vaut `b = 1 > 0`
+pour `(0,0)`… mais attention, `h(1) = 1` alors que le OU vaut `0` en `(0,0)`. Le
+cours, lui, retient le principe — **une droite sépare** les points `y = 1` des
+points `y = 0` — et donne le réseau de la figure correspondante : deux entrées,
+un neurone de sortie, poids `2` et `2`, biais `1`.
+
+> ⚠️ Le biais `b = 1` affiché sur la figure du cours est une coquille de source : pour que la Heaviside donne bien `0` en `(0,0)` (où OU = 0), il faut `b = −1` — valeur utilisée de façon cohérente dans les exercices (ex. F1#14).
+
+> **À retenir** : un réseau **sans couche cachée** à **deux entrées** et **un
+> neurone de sortie**, d'activation **Heaviside**, calcule le **OU logique**. Il
+> est défini par `h(w1·x₁ + w2·x₂ + b)` ; déterminer `w1`, `w2`, `b` revient à
+> trouver une **droite qui sépare** les points `y = 1` des points `y = 0` dans
+> le plan `(x₁, x₂)`.
+
+## Perceptron et séparabilité linéaire
+
+L'exemple du OU logique débouche sur deux **définitions** centrales du module.
+
+**La séparabilité linéaire.** Le cours définit :
+
+> **Définition.** Soit `f` une fonction de `ℝⁿ` dans `{0,1}`. `f` est dite
+> **linéairement séparable** s'il existe un **hyperplan** qui sépare les points
+> de `ℝⁿ` dont l'image par `f` est égale à `1` et ceux dont elle est égale à
+> `0`. Autrement dit, s'il existe `(a₁, …, aₙ, b) ∈ ℝⁿ⁺¹` tel que, pour tout
+> `(x₁, …, xₙ) ∈ ℝⁿ`, `f(x) = 1 ⟺ a₁·x₁ + … + aₙ·xₙ + b > 0`.
+
+La séparabilité linéaire est donc une **propriété de la fonction à représenter**
+: ses « points à `1` » et ses « points à `0` » doivent pouvoir être **séparés
+par une droite** (en dimension `2`), un **plan** (en dimension `3`), un
+**hyperplan** en général.
+
+**Le perceptron.** Le cours définit ensuite :
+
+> **Définition.** Un **perceptron** est un réseau de neurones, **sans couches
+> cachées**, dont la couche de sortie a **un seul neurone** et dont la fonction
+> d'activation est la **fonction de Heaviside**.
+
+Le perceptron est donc l'**architecture minimale** : pas de couche cachée, un
+unique neurone de sortie, activation Heaviside. C'est exactement le réseau
+construit pour le OU logique.
+
+Le cours énonce alors la **propriété fondamentale** qui relie les deux notions :
+
+> **Propriété.** Une fonction `f` de `ℝⁿ` dans `{0,1}` peut être représentée par
+> un **perceptron** **si et seulement si** elle est **linéairement séparable**.
+
+Cette propriété est une **équivalence stricte**. Un perceptron **sait
+représenter** une fonction **exactement quand** cette fonction est linéairement
+séparable — ni plus, ni moins. Sa puissance et sa **limite** sont ainsi
+clairement délimitées : un perceptron **ne peut tracer qu'une seule frontière
+droite**.
+
+Le cours signale que la fonction **ET logique** est, **elle aussi, linéairement
+séparable** : ses points `y = 1` (le seul point `(1,1)`) et `y = 0` (les trois
+autres) se séparent par une droite. Un **perceptron permet donc de la calculer**,
+au même titre que le OU logique.
+
+> **À retenir** : une fonction de `ℝⁿ` dans `{0,1}` est **linéairement
+> séparable** s'il existe un **hyperplan** séparant ses points d'image `1` de
+> ceux d'image `0`. Un **perceptron** — réseau **sans couche cachée**, **un
+> neurone** de sortie, activation **Heaviside** — représente une fonction **si
+> et seulement si** elle est **linéairement séparable**. Le **OU** et le **ET**
+> logiques le sont.
+
+## Le problème du OU-exclusif (XOR)
+
+Le cours met ensuite à l'épreuve la limite du perceptron avec la fonction **OU
+exclusif (XOR)**. Sa table de vérité est :
+
+| `x₁` | `x₂` | `x₁ ⊕ x₂` |
+| --- | --- | --- |
+| `0` | `0` | `0` |
+| `1` | `0` | `1` |
+| `0` | `1` | `1` |
+| `1` | `1` | `0` |
+
+Plaçons les quatre points dans le plan `(x₁, x₂)`. Les points `y = 1` sont
+`(1,0)` et `(0,1)` ; les points `y = 0` sont `(0,0)` et `(1,1)`. Le cours est
+formel : **cette fonction n'est pas linéairement séparable**. Les deux points
+à `1` occupent une **diagonale**, les deux points à `0` l'**autre diagonale** :
+**aucune droite** ne peut mettre les deux `1` d'un côté et les deux `0` de
+l'autre.
+
+D'après la propriété de la section précédente, la conséquence est immédiate :
+**aucun perceptron ne peut calculer le XOR**. C'est la **limite historique** du
+perceptron — la raison pour laquelle il faut une architecture plus riche.
+
+> ⚠️ La fonction **OU-exclusif (XOR)** **n'est pas linéairement séparable** : ses
+> deux points `y = 1` et ses deux points `y = 0` occupent les **deux diagonales**
+> du carré, qu'aucune droite ne sépare. Par la propriété précédente, **aucun
+> perceptron ne peut la calculer**.
+
+## La solution : une couche cachée
+
+Puisqu'un perceptron échoue, le cours introduit l'idée décisive : **utiliser un
+réseau ayant une couche cachée**, dont on **fixe à `2` le nombre de neurones**.
+
+Le rôle de cette couche cachée est expliqué très précisément. **Les deux
+neurones de la couche cachée transforment l'entrée `(x₁, x₂)` en `(y₁, y₂)`.**
+Autrement dit, **la couche cachée permet d'avoir une nouvelle représentation de
+`(x₁, x₂)`**. C'est l'idée clé du **perceptron multicouche** : une couche cachée
+ne se contente pas de « calculer », elle **ré-encode les données** dans un
+nouvel espace.
+
+**Pour obtenir cette nouvelle représentation**, le cours prend :
+
+```text
+y₁ = x₁ ∨ x₂      (le OU logique)
+y₂ = x₁ ∧ x₂      (le ET logique)
+```
+
+L'effet de ce ré-encodage est spectaculaire. Dans le **nouveau plan
+`(y₁, y₂)`**, le cours montre la nouvelle représentation des quatre points
+d'origine :
+
+| `(x₁, x₂)` | `y₁ = x₁ ∨ x₂` | `y₂ = x₁ ∧ x₂` | `(y₁, y₂)` | `x₁ ⊕ x₂` |
+| --- | --- | --- | --- | --- |
+| `(0,0)` | `0` | `0` | `(0,0)` | `0` |
+| `(1,0)` | `1` | `0` | `(1,0)` | `1` |
+| `(0,1)` | `1` | `0` | `(1,0)` | `1` |
+| `(1,1)` | `1` | `1` | `(1,1)` | `0` |
+
+Le cours conclut : on **vérifie bien que, dans le nouveau plan `(y₁, y₂)`, il
+existe une (infinité de) droite(s) permettant de séparer les points pour
+lesquels `y` vaut respectivement `0` et `1`**. En effet, dans `(y₁, y₂)`, les
+points `y = 0` sont `(0,0)` et `(1,1)`, et le **seul** point `y = 1` est
+`(1,0)` : une droite les sépare sans peine. **On utilise une telle droite pour
+définir le neurone de la couche de sortie.**
+
+Le mécanisme du XOR se résume donc en **deux étapes** :
+
+1. la **couche cachée** transforme `(x₁, x₂)` en `(y₁, y₂)` — un problème **non
+   séparable** devient **séparable** ;
+2. le **neurone de sortie**, un perceptron sur `(y₁, y₂)`, trace la droite
+   séparatrice et calcule le résultat.
+
+> **À retenir** : pour calculer le **XOR**, on utilise un réseau à **une couche
+> cachée de `2` neurones**. Cette couche **ré-encode** `(x₁, x₂)` en
+> `(y₁, y₂)` — par exemple `y₁ = x₁ ∨ x₂` et `y₂ = x₁ ∧ x₂` —, ce qui rend le
+> problème **linéairement séparable**. Le **neurone de sortie** trace alors la
+> droite séparatrice dans `(y₁, y₂)`.
+
+## Le perceptron multicouche
+
+L'exemple du XOR justifie le passage du perceptron au **perceptron multicouche**
+: un réseau qui comporte **une ou plusieurs couches cachées**. Le tableau suivant
+oppose les deux architectures telles que le cours les a définies et illustrées.
+
+| | **Perceptron** | **Perceptron multicouche** |
+| --- | --- | --- |
+| Couches cachées | **Aucune** | **Une ou plusieurs** |
+| Couche de sortie | **Un seul** neurone | Un ou plusieurs neurones |
+| Activation | **Heaviside** | Heaviside, sigmoïde, tanh, softmax… |
+| Fonctions représentables | Seulement les fonctions **linéairement séparables** | Aussi des fonctions **non linéairement séparables** (ex. XOR) |
+| Frontière de décision | Une **seule droite** (hyperplan) | Des frontières **plus complexes** |
+
+L'apport de la couche cachée est donc qualitatif : en **ré-encodant** les
+données, elle permet au réseau de **dépasser la limite de la séparabilité
+linéaire**. C'est le principe sur lequel reposent tous les réseaux de neurones
+profonds étudiés ensuite — chaque couche cachée produit une **représentation**
+de plus en plus riche des données.
+
+Reste une question essentielle : pour le XOR, le cours a **choisi à la main**
+les poids et les biais (via le OU et le ET). Comment, en pratique, **déterminer
+les poids et les biais** d'un réseau quelconque à partir des données ? C'est
+l'objet des chapitres suivants — la **propagation avant** pour calculer les
+sorties, puis la **rétropropagation** pour ajuster les paramètres.
+
+> **À retenir** : un **perceptron multicouche** comporte **une ou plusieurs
+> couches cachées**. Grâce au **ré-encodage** opéré par ces couches, il
+> représente aussi des fonctions **non linéairement séparables** que le
+> perceptron seul ne sait pas traiter. Il dépasse ainsi la **limite de la
+> séparabilité linéaire**.
+
+## Synthèse de la section
+
+Le **premier réseau** du cours calcule le **OU logique** : un réseau **sans
+couche cachée**, deux entrées, un neurone de sortie d'activation **Heaviside**,
+défini par `h(w1·x₁ + w2·x₂ + b)` ; déterminer ses paramètres revient à trouver
+une **droite séparant** les points `y = 1` des points `y = 0`. Cela conduit à
+deux définitions : une fonction de `ℝⁿ` dans `{0,1}` est **linéairement
+séparable** s'il existe un **hyperplan** séparant ses points d'image `1` de ceux
+d'image `0` ; un **perceptron** est un réseau **sans couche cachée**, à **un
+neurone** de sortie et activation **Heaviside**. La **propriété** clé est une
+équivalence : un perceptron représente une fonction **si et seulement si** elle
+est linéairement séparable — c'est le cas du **OU** et du **ET**. Le **XOR**,
+lui, **n'est pas linéairement séparable** : aucun perceptron ne le calcule. La
+solution est une **couche cachée** de `2` neurones qui **ré-encode** `(x₁, x₂)`
+en `(y₁, y₂)` (par exemple `y₁ = x₁ ∨ x₂`, `y₂ = x₁ ∧ x₂`), rendant le problème
+séparable, le **neurone de sortie** traçant alors la droite. Un réseau à une ou
+plusieurs couches cachées est un **perceptron multicouche** : grâce au
+ré-encodage, il dépasse la **limite de la séparabilité linéaire**.
+
+> **À retenir** : un **perceptron** ne calcule que les fonctions **linéairement
+> séparables** (OU, ET) ; il **échoue sur le XOR**. Une **couche cachée**
+> **ré-encode** les données et rend un problème non séparable séparable : c'est
+> le **perceptron multicouche**, capable de frontières plus complexes.

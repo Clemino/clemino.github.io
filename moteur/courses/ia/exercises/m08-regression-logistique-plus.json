@@ -1,0 +1,983 @@
+[
+  {
+    "chapterSlug": "de-lineaire-a-logistique",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Selon la conclusion du cours, pour quelles raisons la régression logistique reste-t-elle très utilisée, notamment en épidémiologie et en marketing ? (cochez toutes les bonnes réponses)",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Elle est robuste"
+        },
+        {
+          "id": "b",
+          "label": "Elle est peu coûteuse en temps de calcul et passe bien à l'échelle des données massives"
+        },
+        {
+          "id": "c",
+          "label": "Elle est interprétable grâce au lien entre les coefficients et les odds"
+        },
+        {
+          "id": "d",
+          "label": "Elle exige toujours plus de calcul qu'un réseau de neurones profond"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Le cours conclut que la régression logistique reste très utilisée car elle est robuste, peu coûteuse en temps de calcul (passage à l'échelle des données massives), et interprétable grâce au lien entre les coefficients et les odds — qualité particulièrement appréciée par le métier. C'est un modèle relativement simple comparé à un réseau de neurones, pas l'inverse.",
+    "concepts": [
+      "regression-logistique"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "de-lineaire-a-logistique",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez le panorama des extensions de la régression logistique donné par le cours.",
+    "payload": {
+      "template": "Si Y admet plus de deux classes, on parle de modèle logistique {{t1}}. Si Y est une mesure de comptage, on parle de régression log-linéaire. Toutes ces méthodes font partie de la famille des modèles linéaires {{t2}} (GLM).",
+      "slots": [
+        {
+          "id": "t1",
+          "width": "md",
+          "placeholder": "type de modèle"
+        },
+        {
+          "id": "t2",
+          "width": "md",
+          "placeholder": "qualificatif"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "t1": [
+          "multinomial",
+          "multinomiale"
+        ],
+        "t2": [
+          "generalises",
+          "généralisés",
+          "generalise",
+          "généralisé"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Le cours indique les extensions : si Y admet plus de deux classes, on parle de modèle logistique multinomial ; si Y est une mesure de comptage (nombre d'accidents par jour…), de régression log-linéaire. De façon plus générale, ces modèles font partie des modèles linéaires généralisés (GLM).",
+    "concepts": [
+      "regression-logistique",
+      "classification"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "sigmoide-frontiere",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Calculez la valeur de la fonction sigmoïde σ(z) = 1 / (1 + e^(−z)) pour z = −1,5. Donnez le résultat arrondi au millième.",
+    "payload": {
+      "placeholder": "ex. 0.182",
+      "hint": "σ(−1,5) = 1 / (1 + e^(1,5)), avec e^(1,5) ≈ 4,482."
+    },
+    "solution": {
+      "value": 0.182,
+      "absTol": 0.003
+    },
+    "explanation": "σ(−1,5) = 1 / (1 + e^(−(−1,5))) = 1 / (1 + e^(1,5)) = 1 / (1 + 4,482) = 1 / 5,482 ≈ 0,182. Un z négatif donne une probabilité inférieure à 0,5.",
+    "concepts": [
+      "fonction-sigmoide"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "sigmoide-frontiere",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Calculez la valeur de la fonction sigmoïde σ(z) = 1 / (1 + e^(−z)) pour z = 2,5. Donnez le résultat arrondi au millième.",
+    "payload": {
+      "placeholder": "ex. 0.924",
+      "hint": "σ(2,5) = 1 / (1 + e^(−2,5)), avec e^(−2,5) ≈ 0,0821."
+    },
+    "solution": {
+      "value": 0.924,
+      "absTol": 0.003
+    },
+    "explanation": "σ(2,5) = 1 / (1 + e^(−2,5)) = 1 / (1 + 0,0821) = 1 / 1,0821 ≈ 0,924. Un z bien positif donne une probabilité proche de 1.",
+    "concepts": [
+      "fonction-sigmoide"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "sigmoide-frontiere",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pour une instance, un modèle de régression logistique calcule une probabilité p(x) = 0,52. Que conclut la frontière de décision, et avec quelle fiabilité ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Ŷ = 1, mais la décision est peu confortable car p(x) est très proche de 0,5"
+        },
+        {
+          "id": "b",
+          "label": "Ŷ = 0, car p(x) est inférieur à 1"
+        },
+        {
+          "id": "c",
+          "label": "Ŷ = 1, et la décision est très confortable car p(x) > 0,5"
+        },
+        {
+          "id": "d",
+          "label": "La classe est indécidable : p(x) = 0,52 n'est pas une probabilité valide"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Comme p(x) = 0,52 > 0,5, la frontière de décision donne Ŷ = 1. Mais le cours rappelle que plus p(x) est éloigné de 0,5, plus la décision est confortable : ici p(x) = 0,52 est tout près de la frontière, la décision est donc fragile — un faible changement de x la ferait basculer.",
+    "concepts": [
+      "frontiere-de-decision",
+      "prediction"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "sigmoide-frontiere",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un modèle s'écrit logit(p(x)) = −5 + 0,1·x. Pour une instance avec x = 80, calculez le logit, puis la probabilité prédite p(x). Donnez p(x) arrondie au millième.",
+    "payload": {
+      "placeholder": "ex. 0.953",
+      "hint": "logit = −5 + 0,1·80 = 3, puis p(x) = 1/(1 + e^(−3))."
+    },
+    "solution": {
+      "value": 0.953,
+      "absTol": 0.003
+    },
+    "explanation": "logit = −5 + 0,1·80 = −5 + 8 = 3. Puis p(x) = 1/(1 + e^(−3)) = 1/(1 + 0,0498) ≈ 0,953. Comme p(x) = 0,953 > 0,5, la classe prédite est Ŷ = 1.",
+    "concepts": [
+      "fonction-sigmoide",
+      "regression-logistique",
+      "prediction"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "sigmoide-frontiere",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un modèle de régression logistique s'écrit logit(p(x)) = 3 − 0,6·x. On veut prédire la classe Ŷ pour une instance d'abscisse x = 7. Calculez le logit, la probabilité p(x), puis donnez la classe prédite (0 ou 1).",
+    "payload": {
+      "description": "Étapes : (1) logit = 3 − 0,6·x ; (2) p(x) = 1/(1 + e^(−logit)) ; (3) Ŷ = 1 si p(x) ≥ 0,5, sinon Ŷ = 0. Attention au coefficient négatif.",
+      "cells": [
+        {
+          "id": "logit",
+          "label": "logit(p(x)) = 3 − 0,6·7",
+          "kind": "number",
+          "placeholder": "0.0"
+        },
+        {
+          "id": "prob",
+          "label": "p(x) = 1/(1 + e^(−logit)), arrondie au millième",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "classe",
+          "label": "Classe prédite Ŷ (0 ou 1)",
+          "kind": "text",
+          "placeholder": "?"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "logit",
+          "expected": -1.2,
+          "absTol": 0.02
+        },
+        {
+          "id": "prob",
+          "expected": 0.232,
+          "absTol": 0.005
+        },
+        {
+          "id": "classe",
+          "expected": "0",
+          "accepted": [
+            "0",
+            "Y=0",
+            "Ŷ=0",
+            "classe 0"
+          ]
+        }
+      ]
+    },
+    "explanation": "logit = 3 − 0,6·7 = 3 − 4,2 = −1,2. Puis p(x) = 1/(1 + e^(−(−1,2))) = 1/(1 + e^(1,2)) = 1/(1 + 3,320) ≈ 0,232. Comme p(x) = 0,232 < 0,5, la classe prédite est Ŷ = 0. Le coefficient négatif fait décroître p(x) quand x augmente.",
+    "concepts": [
+      "frontiere-de-decision",
+      "fonction-sigmoide",
+      "prediction"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "sigmoide-frontiere",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "La figure montre la probabilité prédite p(x) d'un modèle de régression logistique en fonction d'une variable explicative x. Lisez la courbe et répondez.",
+    "payload": {
+      "figure": {
+        "kind": "training-curve",
+        "series": [
+          {
+            "label": "p(x) — probabilité prédite",
+            "points": [
+              {
+                "x": 0,
+                "y": 0.05
+              },
+              {
+                "x": 2,
+                "y": 0.12
+              },
+              {
+                "x": 4,
+                "y": 0.27
+              },
+              {
+                "x": 5,
+                "y": 0.5
+              },
+              {
+                "x": 6,
+                "y": 0.73
+              },
+              {
+                "x": 8,
+                "y": 0.88
+              },
+              {
+                "x": 10,
+                "y": 0.97
+              }
+            ],
+            "tone": "accent"
+          }
+        ],
+        "xLabel": "x",
+        "yLabel": "p(x)",
+        "caption": "Probabilité prédite en fonction de x"
+      },
+      "caption": "Lecture de la courbe de probabilité",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "À partir de quelle valeur de x la courbe franchit-elle le seuil p(x) = 0,5 ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Cherchez l'abscisse où la courbe vaut 0,5 — c'est la frontière de décision."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Pour une instance d'abscisse x = 8, quelle classe Ŷ le modèle prédit-il ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Ŷ = 1, car p(8) ≈ 0,88 > 0,5"
+              },
+              {
+                "id": "b",
+                "label": "Ŷ = 0, car p(8) ≈ 0,12 < 0,5"
+              },
+              {
+                "id": "c",
+                "label": "Ŷ = 0, car x = 8 est à droite de la frontière"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Pour laquelle de ces instances la décision est-elle la moins confortable ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "x = 5, où p(x) ≈ 0,5 (juste sur la frontière)"
+              },
+              {
+                "id": "b",
+                "label": "x = 10, où p(x) ≈ 0,97"
+              },
+              {
+                "id": "c",
+                "label": "x = 0, où p(x) ≈ 0,05"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 5,
+            "absTol": 0.3
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "La courbe franchit p(x) = 0,5 en x = 5 : c'est la frontière de décision. Pour x = 8, p(8) ≈ 0,88 > 0,5, donc Ŷ = 1. La décision la moins confortable est en x = 5, où p(x) ≈ 0,5 — l'instance est juste sur la frontière, et un faible changement de x ferait basculer la classe.",
+    "concepts": [
+      "frontiere-de-decision",
+      "fonction-sigmoide",
+      "prediction"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "odds-coefficients",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une instance a une probabilité prédite p(x) = 0,9. Calculez l'odds de cette instance, odds = p(x) / (1 − p(x)).",
+    "payload": {
+      "placeholder": "ex. 9",
+      "hint": "odds = 0,9 / (1 − 0,9)."
+    },
+    "solution": {
+      "value": 9,
+      "absTol": 0.05
+    },
+    "explanation": "odds = p(x) / (1 − p(x)) = 0,9 / (1 − 0,9) = 0,9 / 0,1 = 9. L'individu a 9 fois plus de chance d'appartenir à la classe positive que de ne pas y appartenir. Comme odds = 9 > 1, on prédit Ŷ = 1.",
+    "concepts": [
+      "cote-odds"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "odds-coefficients",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Une instance a un odds de 0,25. Retrouvez la probabilité p(x) correspondante, en inversant la relation odds = p(x) / (1 − p(x)), soit p(x) = odds / (1 + odds).",
+    "payload": {
+      "placeholder": "ex. 0.2",
+      "hint": "p(x) = odds / (1 + odds) = 0,25 / (1 + 0,25)."
+    },
+    "solution": {
+      "value": 0.2,
+      "absTol": 0.005
+    },
+    "explanation": "En inversant odds = p/(1−p), on obtient p = odds/(1 + odds) = 0,25 / (1 + 0,25) = 0,25 / 1,25 = 0,2. Comme odds = 0,25 < 1 (donc p < 0,5), la classe prédite est Ŷ = 0.",
+    "concepts": [
+      "cote-odds"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "odds-coefficients",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un modèle de régression logistique a un coefficient a₁ = 0,4 pour une variable explicative x. Calculez l'odds-ratio associé à un accroissement d'une unité de x, OR = exp(a₁). Donnez le résultat arrondi au millième.",
+    "payload": {
+      "placeholder": "ex. 1.492",
+      "hint": "OR = exp(a₁) = exp(0,4)."
+    },
+    "solution": {
+      "value": 1.492,
+      "absTol": 0.005
+    },
+    "explanation": "L'odds-ratio d'un accroissement unitaire de x est exp(a₁) = exp(0,4) ≈ 1,492. Comme a₁ > 0, l'odds-ratio est supérieur à 1 : augmenter x d'une unité multiplie l'odds par environ 1,492 — la chance que Y = 1 augmente.",
+    "concepts": [
+      "rapport-de-cotes",
+      "interpretation-des-coefficients"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "odds-coefficients",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un modèle a un coefficient a₁ = −0,3 pour une variable explicative x. Calculez l'odds-ratio associé à un accroissement de 4 unités de x, OR = exp(a₁·4). Donnez le résultat arrondi au millième.",
+    "payload": {
+      "placeholder": "ex. 0.301",
+      "hint": "OR = exp(a₁·k) = exp(−0,3 × 4) = exp(−1,2)."
+    },
+    "solution": {
+      "value": 0.301,
+      "absTol": 0.005
+    },
+    "explanation": "Par ln(odds₁/odds₀) = a₁·(x₁ − x₀), l'odds-ratio d'un accroissement de k unités est exp(a₁·k) = exp(−0,3 × 4) = exp(−1,2) ≈ 0,301. Comme a₁ < 0, l'odds-ratio est inférieur à 1 : augmenter x de 4 unités divise l'odds par environ 3,3 — la chance que Y = 1 diminue fortement.",
+    "concepts": [
+      "rapport-de-cotes",
+      "interpretation-des-coefficients"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "odds-coefficients",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque signe du coefficient a₁ à l'effet, sur la chance que Y = 1, d'un accroissement de la variable x.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "a₁ > 0"
+        },
+        {
+          "id": "l2",
+          "label": "a₁ < 0"
+        },
+        {
+          "id": "l3",
+          "label": "a₁ = 0"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "La chance que Y = 1 augmente"
+        },
+        {
+          "id": "r2",
+          "label": "La chance que Y = 1 diminue"
+        },
+        {
+          "id": "r3",
+          "label": "Aucun effet sur la chance que Y = 1"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "Le cours résume l'interprétation : pour un accroissement de x, si a₁ > 0 la chance que Y = 1 augmente ; si a₁ < 0 elle diminue ; si a₁ = 0 il n'y a aucun effet. Le signe de a₁ donne le sens de l'effet, exp(a₁) en donne l'amplitude.",
+    "concepts": [
+      "interpretation-des-coefficients",
+      "log-odds"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "odds-coefficients",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un modèle s'écrit logit(p(x)) = −2 + 0,5·x. Pour une instance d'abscisse x = 8, calculez le logit, la probabilité p(x), puis l'odds de l'instance. Donnez p(x) et l'odds arrondis au millième.",
+    "payload": {
+      "description": "Étapes : (1) logit = −2 + 0,5·x ; (2) p(x) = 1/(1 + e^(−logit)) ; (3) odds = p(x) / (1 − p(x)).",
+      "cells": [
+        {
+          "id": "logit",
+          "label": "logit(p(x)) = −2 + 0,5·8",
+          "kind": "number",
+          "placeholder": "0.0"
+        },
+        {
+          "id": "prob",
+          "label": "p(x) = 1/(1 + e^(−logit)), arrondie au millième",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "odds",
+          "label": "odds = p(x) / (1 − p(x)), arrondi au millième",
+          "kind": "number",
+          "placeholder": "0.000"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "logit",
+          "expected": 2,
+          "absTol": 0.02
+        },
+        {
+          "id": "prob",
+          "expected": 0.881,
+          "absTol": 0.005
+        },
+        {
+          "id": "odds",
+          "expected": 7.389,
+          "absTol": 0.05
+        }
+      ]
+    },
+    "explanation": "logit = −2 + 0,5·8 = −2 + 4 = 2. Puis p(x) = 1/(1 + e^(−2)) ≈ 0,881. L'odds vaut p(x)/(1 − p(x)) = 0,881/0,119 ≈ 7,389. On remarque que odds = e^(logit) = e² ≈ 7,389 : l'odds est l'exponentielle du logit, puisque le logit est le logarithme de l'odds.",
+    "concepts": [
+      "cote-odds",
+      "log-odds",
+      "fonction-sigmoide"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "odds-coefficients",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Le cours note qu'on peut introduire des interactions de variables explicatives : logit(p(x)) = a₀ + a₁x₁ + a₂x₂ + a₁₂·x₁x₂. Que permet de modéliser le terme a₁₂·x₁x₂ ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un effet croisé : l'effet de x₁ peut alors dépendre de la valeur de x₂"
+        },
+        {
+          "id": "b",
+          "label": "La suppression pure et simple des variables x₁ et x₂"
+        },
+        {
+          "id": "c",
+          "label": "Le remplacement de la sigmoïde par une droite"
+        },
+        {
+          "id": "d",
+          "label": "La transformation de la variable cible en variable continue"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours indique que le terme a₁₂·x₁x₂, produit de deux variables, permet de modéliser un effet croisé : l'effet de x₁ peut alors dépendre de la valeur de x₂. C'est une interaction de variables explicatives.",
+    "concepts": [
+      "interpretation-des-coefficients",
+      "regression-logistique"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "odds-coefficients",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On reprend le modèle multivarié maladie du cours : logit(p(x)) = −39,0 + 0,4·Age + 0,14·Poids + 5,9·𝟙_Importante + 1,3·𝟙_Modérée. On considère un patient de 58 ans, de poids 92, à consommation d'alcool Modérée. Calculez le logit, la probabilité p(x), puis la classe prédite Ŷ.",
+    "payload": {
+      "description": "Pour une consommation Modérée : 𝟙_Importante = 0 et 𝟙_Modérée = 1. Étapes : (1) logit = −39,0 + 0,4·Age + 0,14·Poids + 5,9·𝟙_Importante + 1,3·𝟙_Modérée ; (2) p(x) = 1/(1 + e^(−logit)) ; (3) Ŷ = 1 si p(x) ≥ 0,5.",
+      "cells": [
+        {
+          "id": "logit",
+          "label": "logit(p(x)) pour ce patient",
+          "kind": "number",
+          "placeholder": "0.00"
+        },
+        {
+          "id": "prob",
+          "label": "p(x) = 1/(1 + e^(−logit)), arrondie au millième",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "classe",
+          "label": "Classe prédite Ŷ (0 ou 1)",
+          "kind": "text",
+          "placeholder": "?"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "logit",
+          "expected": -1.62,
+          "absTol": 0.02
+        },
+        {
+          "id": "prob",
+          "expected": 0.165,
+          "absTol": 0.005
+        },
+        {
+          "id": "classe",
+          "expected": "0",
+          "accepted": [
+            "0",
+            "Y=0",
+            "Ŷ=0",
+            "classe 0"
+          ]
+        }
+      ]
+    },
+    "explanation": "Consommation Modérée : 𝟙_Importante = 0, 𝟙_Modérée = 1. logit = −39,0 + 0,4·58 + 0,14·92 + 5,9·0 + 1,3·1 = −39,0 + 23,2 + 12,88 + 1,3 = −1,62. Puis p(x) = 1/(1 + e^(−(−1,62))) ≈ 0,165. Comme p(x) = 0,165 < 0,5, la classe prédite est Ŷ = 0.",
+    "concepts": [
+      "regression-logistique",
+      "fonction-sigmoide",
+      "frontiere-de-decision"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "odds-coefficients",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Le fait que le facteur exp(a₁) soit constant, quel que soit l'âge, est présenté par le cours comme une limitation de la régression logistique.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Le cours signale cette limite : l'augmentation est la même quel que soit l'âge ; c'est une limitation de la régression logistique. Le facteur exp(a₁) étant constant, le modèle suppose qu'une année de plus a le même effet multiplicatif sur l'odds à 30 ans qu'à 70 ans — ce qui n'est pas toujours réaliste.",
+    "concepts": [
+      "rapport-de-cotes",
+      "interpretation-des-coefficients"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "vraisemblance-selection",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On évalue l'entropie croisée sur 2 exemples. Exemple 1 : classe réelle y₁ = 1, probabilité prédite p₁ = 0,8. Exemple 2 : classe réelle y₂ = 0, probabilité prédite p₂ = 0,3. Calculez E(a) = − Σᵢ [ yᵢ·ln pᵢ + (1 − yᵢ)·ln(1 − pᵢ) ]. Arrondissez au millième.",
+    "payload": {
+      "placeholder": "ex. 0.580",
+      "hint": "Exemple 1 (y=1) : terme = ln(0,8). Exemple 2 (y=0) : terme = ln(1 − 0,3). Puis E(a) = −(ln 0,8 + ln 0,7)."
+    },
+    "solution": {
+      "value": 0.58,
+      "absTol": 0.005
+    },
+    "explanation": "Exemple 1 (y₁ = 1) : seul ln p₁ survit, soit ln(0,8) ≈ −0,223. Exemple 2 (y₂ = 0) : seul ln(1 − p₂) survit, soit ln(0,7) ≈ −0,357. Somme = −0,223 + (−0,357) = −0,580. Avec le signe « − » : E(a) = −(−0,580) ≈ 0,580.",
+    "concepts": [
+      "entropie-croisee",
+      "maximum-de-vraisemblance"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "vraisemblance-selection",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi le cours construit-il un intervalle de confiance pour chaque coefficient estimé âᵢ ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Parce que les paramètres estimés dépendent de l'échantillon d'apprentissage : ce sont des estimations entachées d'incertitude"
+        },
+        {
+          "id": "b",
+          "label": "Parce que les coefficients changent à chaque nouvelle instance à classer"
+        },
+        {
+          "id": "c",
+          "label": "Parce que l'intervalle de confiance remplace la fonction sigmoïde"
+        },
+        {
+          "id": "d",
+          "label": "Parce que la régression logistique n'a pas de coefficients fixes"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours pose le constat : comme pour tous les modèles de prévision, les paramètres estimés dépendent de l'échantillon considéré comme base d'apprentissage. Les âᵢ ne sont pas les vraies valeurs mais des estimations, qui auraient été légèrement différentes avec un autre échantillon. L'intervalle de confiance gère cette incertitude.",
+    "concepts": [
+      "test-de-significativite",
+      "maximum-de-vraisemblance"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "vraisemblance-selection",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la description de l'intervalle de confiance d'un coefficient, donnée par le cours.",
+    "payload": {
+      "template": "L'intervalle de confiance d'un coefficient s'écrit [ âᵢ − z₁₋α/2·σ̂ᵢ ; âᵢ + z₁₋α/2·σ̂ᵢ ], où z₁₋α/2 est le {{t1}} de la loi normale centrée réduite N(0,1) et σ̂ᵢ est l'estimation de l'{{t2}} de aᵢ.",
+      "slots": [
+        {
+          "id": "t1",
+          "width": "md",
+          "placeholder": "terme statistique"
+        },
+        {
+          "id": "t2",
+          "width": "md",
+          "placeholder": "grandeur estimée"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "t1": [
+          "quantile"
+        ],
+        "t2": [
+          "ecart-type",
+          "écart-type",
+          "ecart type",
+          "écart type"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Le cours écrit l'intervalle [ âᵢ − z₁₋α/2·σ̂ᵢ ; âᵢ + z₁₋α/2·σ̂ᵢ ], où z₁₋α/2 est le quantile de la loi N(0,1) et σ̂ᵢ l'estimation de l'écart-type de aᵢ. L'intervalle est centré sur âᵢ ; sa demi-largeur dépend de l'incertitude σ̂ᵢ et du niveau de confiance choisi.",
+    "concepts": [
+      "test-de-significativite"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "vraisemblance-selection",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le critère AIC (ou BIC) est utilisé pour la sélection du modèle. Sur quoi ce critère arbitre-t-il ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Entre l'ajustement aux données et le nombre de variables : il pénalise les modèles trop chargés"
+        },
+        {
+          "id": "b",
+          "label": "Entre la vitesse de calcul et la consommation de mémoire"
+        },
+        {
+          "id": "c",
+          "label": "Entre la taille de la base d'apprentissage et celle de la base test"
+        },
+        {
+          "id": "d",
+          "label": "Entre la valeur de l'intercept et celle des autres coefficients"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours présente l'AIC (et le BIC) comme un critère de qualité du modèle : la sélection cherche le modèle qui le minimise. Ce critère arbitre entre l'ajustement aux données et le nombre de variables — il pénalise les modèles trop chargés, évitant de conserver des variables inutiles.",
+    "concepts": [
+      "critere-aic-bic",
+      "selection-de-variables"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "vraisemblance-selection",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours présente le modèle de régression logistique vu comme un réseau de neurones. À quelle structure correspond-il exactement ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un unique neurone : une combinaison linéaire f(X) = a₀ + a₁x₁ + … + aₚxₚ, suivie d'une fonction de transfert sigmoïde"
+        },
+        {
+          "id": "b",
+          "label": "Un réseau profond à plusieurs couches cachées et des milliers de neurones"
+        },
+        {
+          "id": "c",
+          "label": "Une couche de convolution suivie d'une couche de pooling"
+        },
+        {
+          "id": "d",
+          "label": "Un réseau récurrent à état caché"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours écrit p(x) = 1/(1 + e^(−f(X))) avec f(X) = a₀ + a₁x₁ + … + aₚxₚ. On y reconnaît la structure d'un neurone formel : une combinaison linéaire des entrées suivie d'une fonction de transfert — ici le LOGIT inverse, la sigmoïde. Un neurone à activation sigmoïde est exactement une régression logistique.",
+    "concepts": [
+      "reseau-de-neurones",
+      "fonction-sigmoide",
+      "regression-logistique"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  },
+  {
+    "chapterSlug": "vraisemblance-selection",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Voici la sortie R de deux ajustements de régression logistique du ronflement, et leurs critères AIC. Lisez le code et la sortie, puis répondez sur la sélection de modèle.",
+    "payload": {
+      "code": "# Modele 1 : ronfle ~ age + poids + taille\nglm(ronfle ~ age + poids + taille, data = Mydata, family = \"binomial\")\n# Coefficients : age (Pr 0.054), poids (Pr 0.712), taille (Pr 0.721)\n# AIC: 124.8\n\n# Modele 2 : on retire taille (p-valeur la plus elevee)\nglm(ronfle ~ age + poids, data = Mydata, family = \"binomial\")\n# Coefficients : age (Pr 0.041), poids (Pr 0.690)\n# AIC: 122.9\n\n# La fonction step automatise cette selection pas a pas.\nstep(glm(ronfle ~ age + poids + taille, data = Mydata, family = \"binomial\"))",
+      "language": "r",
+      "caption": "Sélection de modèle pas à pas sur le jeu Ronfle",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "En passant du Modèle 1 au Modèle 2 (retrait de taille), comment évolue le critère AIC ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "L'AIC baisse (124,8 → 122,9) : le retrait de taille est donc retenu"
+              },
+              {
+                "id": "b",
+                "label": "L'AIC augmente (124,8 → 122,9) : le retrait de taille est rejeté"
+              },
+              {
+                "id": "c",
+                "label": "L'AIC reste identique : le retrait n'a aucun effet"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "TRUE_FALSE",
+          "prompt": "La procédure pas à pas continuerait ensuite en envisageant de retirer poids, dont la p-valeur (0,690) reste la plus élevée du Modèle 2.",
+          "weight": 1,
+          "payload": {}
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "À quoi sert la fonction step appelée à la fin du script ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "À automatiser la sélection pas à pas du meilleur modèle"
+              },
+              {
+                "id": "b",
+                "label": "À tracer la courbe sigmoïde du modèle"
+              },
+              {
+                "id": "c",
+                "label": "À calculer la matrice de confusion sur la base test"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": true
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "En retirant taille, l'AIC passe de 124,8 à 122,9 : il baisse, donc la procédure retient ce retrait. Elle se poursuit en envisageant de retirer poids, dont la p-valeur 0,690 est la plus élevée du Modèle 2 — on s'arrêterait lorsque l'AIC remonterait. La fonction step de R automatise précisément cette sélection pas à pas du meilleur modèle.",
+    "concepts": [
+      "selection-de-variables",
+      "critere-aic-bic",
+      "test-de-significativite"
+    ],
+    "source": "Ronfle.txt"
+  },
+  {
+    "chapterSlug": "vraisemblance-selection",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Dans la sortie d'un ajustement glm, une p-valeur Pr(>|z|) faible conduit à rejeter H₀ : le coefficient est alors jugé significatif.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. La colonne Pr(>|z|) est la p-valeur du test H₀ : aᵢ = 0. Une p-valeur faible conduit à rejeter H₀ (coefficient significatif) ; une p-valeur élevée ne permet pas de rejeter H₀ (coefficient non significatif). C'est la colonne décisive pour juger de la significativité.",
+    "concepts": [
+      "test-de-significativite"
+    ],
+    "source": "ING2_GI_IA_RegLog_Slides.pdf"
+  }
+]

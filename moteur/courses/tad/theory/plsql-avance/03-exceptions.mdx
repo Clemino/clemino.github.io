@@ -1,0 +1,148 @@
+---
+title: Gestion des exceptions
+slug: exceptions
+order: 3
+estimatedReadMin: 8
+concepts: [exception-bloc, exception-predefinie, exception-personnalisee, sqlcode-sqlerrm, raise-application-error]
+source: "CM6, slides 24-29"
+---
+
+## Structure d'un bloc avec exceptions
+
+Tout bloc PL/SQL peut comporter une section **`EXCEPTION`** placée avant le `END;` :
+
+```sql
+BEGIN
+   <traitements à réaliser>
+EXCEPTION
+   <traitements de gestion des erreurs>
+END;
+```
+
+La section `EXCEPTION` se compose d'une suite de clauses `WHEN ... THEN ...` :
+
+```sql
+BEGIN
+   <traitements>
+EXCEPTION
+   WHEN <ex1>   THEN ...
+   WHEN <ex2>   THEN ...
+   WHEN OTHERS  THEN ...    -- capture tout le reste
+END;
+```
+
+`WHEN OTHERS` capture toutes les exceptions non listées explicitement. Toujours **en dernier**.
+
+## Exceptions prédéfinies Oracle
+
+Quelques classiques à connaître :
+
+| Exception | Code Oracle | Situation |
+|---|---|---|
+| `DUP_VAL_ON_INDEX` | ORA-00001 | Doublon sur une clé primaire ou un index UNIQUE |
+| `NO_DATA_FOUND` | ORA-01403 | `SELECT INTO` n'a renvoyé aucune ligne |
+| `TOO_MANY_ROWS` | ORA-01422 | `SELECT INTO` a renvoyé plusieurs lignes |
+| `ZERO_DIVIDE` | ORA-01476 | Division par zéro |
+| `INVALID_NUMBER` | ORA-01722 | Conversion impossible en nombre |
+| `VALUE_ERROR` | ORA-06502 | Erreur de conversion ou de troncature |
+| `CURSOR_ALREADY_OPEN` | ORA-06511 | Tentative d'ouverture d'un curseur déjà ouvert |
+
+## Récupérer le code et le message d'erreur
+
+Deux fonctions standard :
+
+- **`SQLCODE`** : retourne le code numérique de l'erreur (`ORA-XXXXX` → -XXXXX).
+- **`SQLERRM`** : retourne le message d'erreur explicite.
+
+```sql
+BEGIN
+   INSERT INTO ...;
+EXCEPTION
+   WHEN DUP_VAL_ON_INDEX THEN
+      DBMS_OUTPUT.PUT_LINE('Erreur n° ' || SQLCODE || ' - ' || SQLERRM);
+      UPDATE ...;
+END;
+```
+
+## Exceptions personnalisées
+
+Créer une exception métier en trois étapes :
+
+1. **Déclarer** un identifiant d'exception (dans le bloc DECLARE).
+2. **Associer** un code et un message via `PRAGMA EXCEPTION_INIT`.
+3. **Lever** l'exception avec `RAISE` ou `RAISE_APPLICATION_ERROR`.
+
+```sql
+CREATE OR REPLACE PROCEDURE verifier_age(p_age NUMBER)
+IS
+   e_age_invalide EXCEPTION;
+   PRAGMA EXCEPTION_INIT(e_age_invalide, -20001);
+BEGIN
+   IF p_age < 18 THEN
+      RAISE e_age_invalide;
+   END IF;
+   DBMS_OUTPUT.PUT_LINE('Âge valide');
+EXCEPTION
+   WHEN e_age_invalide THEN
+      DBMS_OUTPUT.PUT_LINE('Erreur dans la procédure : âge invalide');
+END;
+```
+
+## RAISE_APPLICATION_ERROR
+
+Pour **lever une erreur ponctuelle** (sans déclarer d'exception nommée), utilisez :
+
+```sql
+RAISE_APPLICATION_ERROR(code, message);
+```
+
+- **`code`** : entier dans la plage `[-21000, -20000]` (réservée aux applications).
+- **`message`** : chaîne de description.
+
+Cette instruction **stoppe** le bloc et propage l'erreur à l'appelant comme une vraie erreur Oracle. C'est l'outil canonique des triggers pour faire échouer une opération invalide.
+
+```sql
+IF :new.nb_stock < 0 THEN
+   RAISE_APPLICATION_ERROR(-20012, 'Stock négatif interdit');
+END IF;
+```
+
+## Différence RAISE vs RAISE_APPLICATION_ERROR
+
+- **`RAISE`** : relance une exception déjà déclarée (utilisable seulement après `DECLARE e EXCEPTION;`).
+- **`RAISE_APPLICATION_ERROR(code, msg)`** : lève une erreur applicative immédiate avec un code arbitraire `[-21000, -20000]`. Pas besoin de la déclarer.
+
+## Exception relancée puis capturée par l'appelant
+
+```sql
+-- procédure levant notre exception
+CREATE PROCEDURE leveuse(p_id NUMBER)
+IS
+   c_num_monexc CONSTANT NUMBER := -20042;
+BEGIN
+   ...
+EXCEPTION
+   WHEN OTHERS THEN
+      RAISE_APPLICATION_ERROR(c_num_monexc, 'Erreur id :' || p_id);
+END;
+
+-- procédure appelante gérant notre exception
+CREATE PROCEDURE appelante
+IS
+   ex_monexception EXCEPTION;
+   PRAGMA EXCEPTION_INIT(ex_monexception, -20042);
+BEGIN
+   leveuse(123);
+EXCEPTION
+   WHEN ex_monexception THEN
+      DBMS_OUTPUT.PUT_LINE('Je gère...');
+END;
+```
+
+> **À retenir**
+> - `BEGIN ... EXCEPTION WHEN ... THEN ... [WHEN OTHERS] END;`
+> - Exceptions prédéfinies : `DUP_VAL_ON_INDEX`, `NO_DATA_FOUND`, `TOO_MANY_ROWS`, `ZERO_DIVIDE`…
+> - `SQLCODE` (numéro) et `SQLERRM` (message).
+> - Exception perso : déclarer + `PRAGMA EXCEPTION_INIT(nom, -20XXX)`.
+> - `RAISE_APPLICATION_ERROR(code, msg)` : code dans `[-21000, -20000]`. Outil canonique des triggers de validation.
+> - `WHEN OTHERS` toujours en dernier.

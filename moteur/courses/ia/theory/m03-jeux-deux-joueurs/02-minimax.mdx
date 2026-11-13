@@ -1,0 +1,237 @@
+---
+title: "L'algorithme minimax"
+slug: minimax
+order: 2
+estimatedReadMin: 14
+concepts: [algorithme-minimax, noeud-max, noeud-min, valeur-minimax, strategie-de-jeu, arbre-de-jeu, fonction-d-evaluation, facteur-de-branchement]
+source: "Jeux_IA_slides.pdf"
+---
+
+## Se placer du point de vue d'un joueur
+
+Pour décider d'un coup, il faut d'abord adopter un **point de vue**. **Nous nous
+plaçons du point de vue de l'un des deux joueurs**, et nous le **désignons par
+`Max`** : c'est **celui qui cherche à maximiser ses gains**. L'**autre joueur est
+désigné par `Min`**.
+
+Ce choix de noms n'est pas arbitraire. Dans un jeu à somme nulle, ce que `Max` gagne,
+`Min` le perd. Or `Min` joue, lui aussi, **du mieux qu'il peut** : faire au mieux,
+pour `Min`, revient à infliger à `Max` le résultat le **plus faible** possible.
+Autrement dit :
+
+- **`Max` cherche à maximiser** la valeur finale ;
+- **`Min` cherche à minimiser** cette même valeur.
+
+Les deux joueurs jouent donc **de manière optimale**, mais dans des directions
+**opposées** — d'où les noms `Max` et `Min`.
+
+> **À retenir** : on raisonne du point de vue de **`Max`**, qui **maximise** la valeur
+> de la partie ; l'adversaire **`Min`** joue, de son côté, pour la **minimiser**.
+
+## L'arbre de jeu, support du raisonnement
+
+La partie est représentée par un **arbre** (l'arbre de recherche, ou **arbre de
+jeu**) **dont la racine est l'état de départ**. Dans cet arbre, on **suppose que
+c'est à `Max` de jouer** : la racine est l'**état courant** à partir duquel `Max`
+cherche à **définir une stratégie**.
+
+Une **stratégie** est ici une **suite de coups dont l'objectif est de maximiser les
+gains** de `Max`. Comme dans la construction de tout arbre de jeu, **chaque nœud a
+pour fils les nœuds résultant de tous les coups possibles** à partir de l'état
+courant.
+
+Le joueur `Max` **utilise cet arbre pour jouer**, c'est-à-dire pour **choisir ses
+coups**. L'arbre n'est donc pas une simple représentation décorative : c'est
+l'**instrument de décision** du joueur.
+
+Puisque les deux joueurs jouent à tour de rôle, les **niveaux de l'arbre alternent**
+entre nœuds `Max` et nœuds `Min` :
+
+- la **racine est un nœud `Max`** (c'est à `Max` de jouer) ;
+- ses **fils sont des nœuds `Min`** (après le coup de `Max`, c'est à `Min`) ;
+- ses **petits-fils sont des nœuds `Max`**, et ainsi de suite.
+
+Cette alternance est le ressort de tout l'algorithme : selon qu'un nœud est `Max` ou
+`Min`, sa valeur se calculera **différemment**.
+
+> ⚠️ Le **type** d'un nœud (`Max` ou `Min`) ne dépend que de son **niveau** dans
+> l'arbre. La racine est `Max` ; ensuite les niveaux alternent `Min`, `Max`, `Min`…
+
+## Les quatre étapes de l'algorithme minimax
+
+L'**algorithme minimax** se compose des étapes suivantes.
+
+**Étape 1 — Générer l'arbre.** On construit l'arbre de jeu. Cet arbre comporte donc
+des **niveaux `Max`** et des **niveaux `Min`**, et **la racine est un nœud `Max`**.
+
+**Étape 2 — Donner des valeurs aux feuilles.** Pour cela, nous disposons de la
+**fonction d'utilité** — *si la construction de l'arbre est poussée jusqu'aux états
+finals*. Chaque feuille reçoit ainsi une valeur numérique.
+
+**Étape 3 — Calculer les valeurs des nœuds, des feuilles vers la racine.** En
+**allant des feuilles vers la racine**, on calcule la valeur de chaque nœud de la
+manière suivante :
+
+- la **valeur d'un nœud `Max` = maximum des valeurs de ses fils** ;
+- la **valeur d'un nœud `Min` = minimum des valeurs de ses fils**.
+
+**Étape 4 — Utiliser l'arbre.** `Max` **joue un coup conduisant à un fils dont la
+valeur est la plus grande du niveau**. C'est ce coup que `Max` jouera effectivement.
+
+| Étape | Action |
+| --- | --- |
+| 1 | Générer l'arbre de jeu (racine = nœud `Max`) |
+| 2 | Valuer les feuilles avec la **fonction d'utilité** |
+| 3 | Remonter les valeurs : nœud `Max` = max des fils, nœud `Min` = min des fils |
+| 4 | `Max` joue vers le fils de plus grande valeur |
+
+La logique des étapes 3 et 4 est cohérente : à un nœud `Max`, `Max` jouera vers le
+**meilleur** fils, d'où le **maximum** ; à un nœud `Min`, c'est `Min` qui choisit, et
+`Min` jouera vers le **pire** fils du point de vue de `Max`, d'où le **minimum**.
+
+> **À retenir** : minimax procède en **quatre étapes** — générer l'arbre, valuer les
+> feuilles, **remonter** les valeurs (max aux nœuds `Max`, min aux nœuds `Min`), puis
+> jouer vers le meilleur fils. Le calcul se fait **des feuilles vers la racine**.
+
+## Un exemple détaillé de calcul minimax
+
+Déroulons l'algorithme sur un arbre concret, celui du fichier d'exemple. L'arbre a
+**quatre niveaux** :
+
+- **niveau 1** : la racine `A`, un nœud **`Max`** ;
+- **niveau 2** : les nœuds `B` et `C`, des nœuds **`Min`** ;
+- **niveau 3** : les nœuds `D`, `E`, `F`, `G`, des nœuds **`Max`** ;
+- **niveau 4** : les nœuds `H` à `O`, des nœuds **`Min`**, dont les fils sont les
+  **feuilles**.
+
+Les **feuilles** portent, de gauche à droite, les valeurs suivantes :
+
+```
+H : 10 11      I : 9 12       J : 14 15      K : 13 14
+L : 5 2        M : 4 1        N : 3 22       O : 20 21
+```
+
+**Calcul du niveau 4 (nœuds `Min`).** Chaque nœud du niveau 4 prend le **minimum**
+de ses deux feuilles :
+
+| Nœud `Min` | Fils (feuilles) | Minimum |
+| --- | --- | --- |
+| `H` | `10`, `11` | **`10`** |
+| `I` | `9`, `12` | **`9`** |
+| `J` | `14`, `15` | **`14`** |
+| `K` | `13`, `14` | **`13`** |
+| `L` | `5`, `2` | **`2`** |
+| `M` | `4`, `1` | **`1`** |
+| `N` | `3`, `22` | **`3`** |
+| `O` | `20`, `21` | **`20`** |
+
+**Calcul du niveau 3 (nœuds `Max`).** Chaque nœud du niveau 3 prend le **maximum**
+de ses deux fils, dont les valeurs viennent d'être calculées :
+
+| Nœud `Max` | Fils | Maximum |
+| --- | --- | --- |
+| `D` | `H = 10`, `I = 9` | **`10`** |
+| `E` | `J = 14`, `K = 13` | **`14`** |
+| `F` | `L = 2`, `M = 1` | **`2`** |
+| `G` | `N = 3`, `O = 20` | **`20`** |
+
+**Calcul du niveau 2 (nœuds `Min`).** Chaque nœud du niveau 2 prend le **minimum**
+de ses deux fils :
+
+| Nœud `Min` | Fils | Minimum |
+| --- | --- | --- |
+| `B` | `D = 10`, `E = 14` | **`10`** |
+| `C` | `F = 2`, `G = 20` | **`2`** |
+
+**Calcul du niveau 1 (la racine `A`, nœud `Max`).** La racine prend le **maximum**
+de ses deux fils :
+
+```
+A = max( B = 10 , C = 2 ) = 10
+```
+
+La **valeur de la racine vaut donc `10`**.
+
+## La signification de la valeur de la racine
+
+La **valeur de la racine** a un sens précis : c'est le **nombre de points que `Max`
+peut s'assurer**, et il est **obtenu lorsque les deux joueurs jouent de manière
+optimale**. On l'appelle la **valeur minimax** de la position.
+
+Dans l'exemple, la valeur `10` signifie que, depuis l'état `A`, **`Max` peut
+garantir un résultat de `10`** quoi que fasse `Min` — et qu'il ne peut pas garantir
+mieux face à un `Min` qui joue parfaitement.
+
+L'**étape 4** indique alors comment `Max` doit jouer : il choisit le coup qui mène au
+fils de **plus grande valeur**. Ici, `A = max(B, C)` est réalisé par **`B`** (de
+valeur `10`) : `Max` joue donc le coup menant à `B`. Si `Min` répond ensuite de façon
+optimale, il choisira à son tour le **minimum**, et la partie suivra la branche
+**`A → B`**, puis **`B → D`** (car `D = 10` est le minimum de `B`), puis
+**`D → H`** (car `H = 10` est le maximum de `D`), aboutissant à la feuille de
+valeur `10`. La suite de coups ainsi déterminée est la **stratégie** de `Max`.
+
+> ⚠️ La valeur de la racine est un **résultat garanti**, pas un résultat « espéré ».
+> Elle suppose que **`Min` joue parfaitement**. Contre un `Min` qui jouerait mal,
+> `Max` pourrait obtenir davantage — mais minimax ne mise jamais sur l'erreur de
+> l'adversaire.
+
+## Le coût de l'algorithme
+
+L'algorithme minimax a un **coût** qu'il faut connaître. **Si la construction de
+l'arbre est poussée jusqu'à la profondeur `m` et que le facteur de branchement est
+`b`, la complexité temporelle de l'algorithme est en `O(bᵐ)`.**
+
+Cette complexité est **exponentielle** en la profondeur. Souvenez-vous des ordres de
+grandeur de `b` et de `m` : aux échecs, `b` vaut environ `35`, et une partie peut
+être longue. Le nombre `bᵐ` devient alors **astronomique**.
+
+Ce coût **rend l'algorithme inutilisable en l'état** pour des jeux comme les échecs,
+**si l'on pousse la construction jusqu'aux états finals**. Construire l'arbre complet
+reviendrait à énumérer toutes les parties — ce que la section précédente a montré
+impossible.
+
+## Arrêter la recherche : la nécessité d'une heuristique
+
+Puisqu'on ne peut pas pousser l'arbre jusqu'au bout, **au lieu de pousser jusqu'à la
+fin, nous nous contenterons d'une profondeur raisonnable** et nous utiliserons une
+**heuristique pour associer une valeur à chaque feuille** — feuille qui **représente
+alors un état non terminal**.
+
+Une **heuristique** est ici une **fonction qui associe à chaque état une valeur
+estimant sa qualité**. Cette qualité peut s'entendre, par exemple, comme :
+
+- une **moyenne des valeurs des états finals auxquels l'état conduit** ;
+- ou la **probabilité qu'il conduise à un état gagnant**.
+
+L'idée est donc la suivante : on construit l'arbre **jusqu'à une profondeur limitée
+seulement** ; les feuilles de cet arbre tronqué ne sont **pas** des états finals ;
+on ne peut donc pas leur appliquer la fonction d'utilité ; on leur applique à la
+place une **heuristique**. Le reste de l'algorithme — la remontée des valeurs par
+`max` et `min` — est **inchangé**.
+
+Cette heuristique porte un nom : on parle de **fonction d'évaluation**, et la
+quatrième section du module lui est entièrement consacrée. La troisième section, de
+son côté, montrera comment **réduire le travail de minimax** sans rien changer à son
+résultat, grâce à l'**élagage alpha-bêta**.
+
+> **À retenir** : minimax coûte `O(bᵐ)` — **exponentiel** —, donc inutilisable
+> jusqu'aux états finals. On **limite la profondeur** et l'on value les feuilles non
+> terminales par une **heuristique** (la **fonction d'évaluation**) ; la remontée par
+> `max`/`min` reste identique.
+
+## Synthèse de la section
+
+L'**algorithme minimax** se place du point de vue de **`Max`** (qui maximise) face à
+**`Min`** (qui minimise). Il procède en quatre étapes : **générer** l'arbre de jeu
+(racine = nœud `Max`, niveaux alternés `Max`/`Min`), **valuer les feuilles** avec la
+fonction d'utilité, **remonter** les valeurs des feuilles vers la racine
+(nœud `Max` = maximum des fils, nœud `Min` = minimum des fils), puis faire jouer
+`Max` vers le **fils de plus grande valeur**. La **valeur de la racine** est le gain
+que `Max` peut **garantir** si les deux joueurs jouent optimalement. La complexité
+est **`O(bᵐ)`**, exponentielle ; en pratique, on **limite la profondeur** et l'on
+remplace la fonction d'utilité par une **heuristique** sur les feuilles non
+terminales.
+
+> **À retenir** : nœud `Max` = **max des fils**, nœud `Min` = **min des fils** ; la
+> **valeur de la racine** est le résultat **garanti** pour `Max` ; le coût `O(bᵐ)`
+> impose de **limiter la profondeur** et de recourir à une **fonction d'évaluation**.

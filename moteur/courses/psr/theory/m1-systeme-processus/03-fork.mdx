@@ -1,0 +1,171 @@
+---
+title: "Création de processus : fork()"
+slug: fork
+order: 3
+estimatedReadMin: 14
+concepts: [fork, processus, processus-parent, processus-enfant, pid, ppid, espace-adressage]
+source: "Cours 1 — Systèmes d'exploitation et processus"
+---
+
+## L'appel système `fork`
+
+L'appel système **`fork`** est le **seul moyen de créer un processus à bas niveau** sous UNIX. Son prototype, déclaré dans `<unistd.h>`, est d'une simplicité trompeuse :
+
+```c
+#include <unistd.h>
+
+pid_t fork(void);
+```
+
+`fork` ne prend **aucun argument**. Son effet : il **crée un processus fils** du processus appelant, **et le lance**. À partir de cet instant, **deux processus existent** : le **père** (celui qui a appelé `fork`) et le **fils** (le nouveau processus).
+
+L'aspect le plus déroutant — et le plus important à comprendre — est le suivant : après un `fork` réussi, l'**exécution continue dans les deux processus**, à l'**instruction qui suit le `fork`**. Autrement dit, `fork` est appelé **une fois** mais **renvoie deux fois** : une fois dans le père, une fois dans le fils.
+
+## Le fils est une copie du père
+
+`fork` **duplique** (on dit aussi **clone**) le processus appelant. Le fils est une **recopie complète et indépendante** du père :
+
+- même **segment de code** ;
+- même **contenu des segments de données, du tas et de la pile** au moment du `fork` ;
+- mêmes **fichiers ouverts** ;
+- même **compteur d'instructions** — d'où la reprise à la même ligne.
+
+> ⚠️ « Indépendante » est le mot clé. Après le `fork`, les deux processus ont **chacun leur propre espace d'adressage**. Modifier une variable dans le fils **n'affecte pas** la même variable dans le père, et réciproquement. Les valeurs sont identiques **à l'instant du `fork`**, puis les deux copies évoluent séparément.
+
+Que distingue alors le fils du père ? **Très peu de choses.** Les **PID et PPID** sont les seules informations réellement différentes entre les deux processus :
+
+- le fils reçoit un **nouveau PID**, bien à lui ;
+- le **PPID du fils** est le **PID du père** ;
+- la valeur **renvoyée par `fork`** diffère dans les deux processus — c'est précisément ce qui permet de les distinguer dans le code.
+
+## La valeur de retour de `fork`
+
+C'est le point technique central de ce chapitre. La valeur renvoyée par `fork` dépend du processus dans lequel on l'observe :
+
+| Valeur renvoyée | Où ? | Signification |
+|---|---|---|
+| **un entier > 0** | dans le **père** | c'est le **PID du fils** créé |
+| **0** | dans le **fils** | indique qu'on est dans le fils |
+| **-1** | dans le **père** uniquement | le `fork` a **échoué** : aucun fils n'a été créé |
+
+Trois cas, donc :
+
+- **dans le père**, `fork` renvoie le **PID du fils** (une valeur strictement positive) ;
+- **dans le fils**, `fork` renvoie **0** ;
+- si le `fork` **échoue**, il renvoie **-1** ; dans ce cas **seul le père existe**, aucun fils n'a été créé.
+
+Le choix de ces valeurs est astucieux. Le fils peut retrouver son PID avec `getpid()` et celui de son père avec `getppid()` ; il n'a donc pas besoin que `fork` le lui renvoie — d'où la valeur `0`. Le père, lui, **a besoin** de connaître le PID de son fils (pour l'attendre plus tard), et `fork` le lui fournit directement.
+
+## Le schéma d'utilisation standard
+
+`fork` se teste donc avec une structure conditionnelle à **trois branches**, classées de la plus prioritaire à la moins prioritaire :
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main(void) {
+    pid_t n = fork();
+
+    if (n < 0) {
+        /* === gestion de l'erreur === */
+        perror("fork");
+        exit(EXIT_FAILURE);
+    } else if (n == 0) {
+        /* === code exécuté UNIQUEMENT par le fils === */
+        printf("Fils  : mon PID est %d, mon pere est %d\n",
+               (int) getpid(), (int) getppid());
+    } else {
+        /* === code exécuté UNIQUEMENT par le père === */
+        /* ici, n contient le PID du fils */
+        printf("Pere  : mon PID est %d, mon fils est %d\n",
+               (int) getpid(), (int) n);
+    }
+    return 0;
+}
+```
+
+Décortiquons la logique :
+
+- Si `n < 0`, le `fork` a échoué : on **traite l'erreur** et on s'arrête. **Seul le père exécute cette branche.**
+- Si `n == 0`, on est dans le **fils** : on exécute le **code du fils**.
+- Sinon (`n > 0`), on est dans le **père**, et `n` vaut le **PID du fils** : on exécute le **code du père**.
+
+> ⚠️ **Toujours tester le cas `n < 0` en premier.** Un `fork` peut échouer : le système limite le nombre de processus par utilisateur, et la mémoire n'est pas infinie. Un code qui ne teste pas l'échec de `fork` continuera comme si un fils existait, alors qu'il n'y en a pas — ce qui mène à des bogues très difficiles à diagnostiquer.
+
+## Une exécution concrète
+
+Reprenons un programme complet, fidèle à l'exemple du cours, où chaque processus modifie une variable locale `i` initialisée à 3 :
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+
+int main(void) {
+    pid_t pid;
+    int i = 3;
+
+    pid = fork();
+
+    if (pid < 0) {
+        printf("erreur de creation\n");
+        exit(EXIT_FAILURE);
+    } else {
+        if (pid == 0) {                 /* --- le fils --- */
+            printf("je suis le fils, mon PID est %d ; mon pere est %d\n",
+                   (int) getpid(), (int) getppid());
+            i += 9;
+        } else {                        /* --- le pere --- */
+            printf("je suis le pere, mon PID est %d\n", (int) getpid());
+            i += 4;
+        }
+        printf("pour le PID %d, i = %d\n", (int) getpid(), i);
+    }
+    return 0;
+}
+```
+
+Une exécution possible affiche :
+
+```text
+je suis le fils, mon PID est 10271 ; mon pere est 10270
+pour le PID 10271, i = 12
+je suis le pere, mon PID est 10270
+pour le PID 10270, i = 7
+```
+
+Deux observations capitales :
+
+- **`i` vaut 12 dans le fils et 7 dans le père.** Avant le `fork`, `i` valait 3 dans les deux copies. Le fils a fait `i += 9` (3 + 9 = 12), le père `i += 4` (3 + 4 = 7). Les deux variables `i` sont **distinctes** : chacune vit dans l'espace d'adressage de son processus. C'est l'illustration directe de l'**indépendance** des copies.
+- **L'ordre des lignes est imprévisible.** Ici le fils s'est exprimé avant le père, mais l'inverse est tout aussi possible. Après le `fork`, les deux processus sont **concurrents** : c'est l'**ordonnanceur** qui décide lequel s'exécute en premier.
+
+> ⚠️ **Ne jamais supposer un ordre d'exécution** entre le père et le fils. Le système n'offre **aucune garantie** sur lequel des deux processus s'exécute le premier après le `fork`. Si le code a besoin d'un ordre précis (par exemple « le père doit attendre le fils »), il faut le **forcer explicitement** avec un mécanisme de synchronisation comme `wait` — c'est l'objet du chapitre suivant.
+
+## Le fork bomb : un piège à connaître
+
+Que se passe-t-il si l'on place un `fork` dans une boucle infinie, ou si le fils refait lui-même un `fork` sans condition d'arrêt ?
+
+```c
+/* À NE JAMAIS EXÉCUTER : ceci est une "fork bomb" */
+int main(void) {
+    while (1) {
+        fork();   /* chaque processus en crée un autre, sans fin */
+    }
+    return 0;
+}
+```
+
+Le nombre de processus **double** à chaque tour : 1, 2, 4, 8, 16… La progression est **exponentielle**. En quelques secondes, la table des processus du système est saturée, et la machine devient inutilisable.
+
+> ⚠️ Un **fork bomb** est une faute classique, parfois involontaire. Règle de prudence : tout `fork` doit avoir une **condition d'arrêt claire**. Dans une boucle, on s'assure que **seul le père itère** (le fils, lui, doit faire `break`, `exit`, ou un `exec`). Sur un système réel, on se protège avec une limite de processus (`ulimit -u`).
+
+> **À retenir**
+> - `fork()` (dans `<unistd.h>`) est le **seul moyen** de créer un processus ; il **crée un fils** copie du père et le lance.
+> - `fork` est appelé **une fois** mais **renvoie deux fois** : l'exécution continue dans les **deux** processus à l'instruction suivante.
+> - Le fils est une **copie complète et indépendante** : mêmes code, données, pile et fichiers ouverts à l'instant du `fork`, mais **espaces d'adressage séparés** ensuite.
+> - **Valeur de retour** : **PID du fils** dans le père (> 0), **0** dans le fils, **-1** en cas d'échec (seul le père existe alors).
+> - On distingue père et fils avec un `if` à trois branches ; **toujours tester l'échec (`< 0`) en premier**.
+> - L'**ordre d'exécution** père/fils n'est **jamais garanti** ; un `fork` non maîtrisé dans une boucle produit une **fork bomb** qui sature le système.

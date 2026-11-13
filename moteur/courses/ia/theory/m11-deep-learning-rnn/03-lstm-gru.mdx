@@ -1,0 +1,260 @@
+---
+title: "Gradient évanescent, LSTM et GRU"
+slug: lstm-gru
+order: 3
+estimatedReadMin: 22
+concepts: [gradient-evanescent, retropropagation-dans-le-temps, lstm, gru, etat-de-cellule, porte-cellule, fonction-sigmoide]
+source: "Slides_RNN_2526.pdf"
+---
+
+## La faiblesse des RNN : une mémoire courte
+
+Le RNN conventionnel défini dans la section précédente possède une **faiblesse**
+importante, que le cours met en avant : sa **« mémoire courte »**.
+
+Le cours l'illustre par le cas du **traitement de phrases**. Lorsqu'un RNN reçoit
+en entrée une **phrase longue**, qu'il doit donc traiter **mot par mot**, **en
+arrivant à la fin de la phrase il a déjà « oublié » les premiers mots**. Cela
+peut **fausser le traitement** lorsque la phrase contient des **dépendances
+longues** — c'est-à-dire des liens entre des mots **éloignés**.
+
+L'exemple donné par le cours est le suivant :
+
+> *Elle m'a annoncé son intention de se présenter aux élections. Je n'y croyais
+> pas, mais, par amitié, je **lui** ai écrit pour **lui** souhaiter bonne
+> chance.*
+
+Pour traiter correctement les mots **« lui »**, le réseau doit se souvenir de
+**« Elle »**, apparu **bien plus tôt** : c'est une **dépendance longue**. Or un
+RNN à mémoire courte risque de l'avoir perdue.
+
+> **À retenir** : la **principale faiblesse** du RNN standard est sa **mémoire
+> courte** : sur une **séquence longue**, il a « **oublié** » les premiers
+> éléments en arrivant à la fin, ce qui **fausse** le traitement des
+> **dépendances longues**.
+
+## La cause : disparition et explosion du gradient
+
+D'où vient cette mémoire courte ? Le cours l'attribue à un phénomène précis :
+la **disparition du gradient / explosion du gradient** (*vanishing / exploding
+gradient*).
+
+> Pendant l'apprentissage, les valeurs du **gradient** tendent **vers zéro**
+> (disparition), ou à l'inverse prennent des **valeurs de plus en plus grandes**
+> (explosion), ce qui **empêche l'apprentissage des dépendances longues**.
+
+On peut relier ce phénomène à la **BPTT** de la section précédente : le gradient
+doit **remonter la chaîne** du RNN déplié, d'un instant vers le précédent. Plus
+la dépendance est **longue**, plus le gradient traverse de maillons :
+
+- s'il est **multiplié à chaque maillon par des facteurs petits**, il **tend
+  vers `0`** — il **disparaît**, et les premiers instants ne reçoivent plus de
+  signal d'apprentissage ;
+- s'il est multiplié par des **facteurs grands**, il **explose** — il prend des
+  valeurs démesurées.
+
+| Phénomène | Effet sur le gradient | Conséquence |
+| --- | --- | --- |
+| **Disparition** (*vanishing*) | Tend vers **`0`** | Les **dépendances longues** ne sont **plus apprises** |
+| **Explosion** (*exploding*) | Valeurs **de plus en plus grandes** | Apprentissage **instable** |
+
+> **À retenir** : la mémoire courte du RNN est due à la **disparition / explosion
+> du gradient** : durant l'apprentissage, le gradient **tend vers `0`** ou
+> **grandit démesurément**, ce qui **empêche** d'apprendre les **dépendances
+> longues**.
+
+## La solution : le LSTM
+
+Le cours indique que **plusieurs solutions ont été trouvées à ce problème**.
+**La plus connue est une variante de RNN appelée Long Short Term Memory
+(LSTM)**.
+
+L'idée du LSTM tient en une phrase :
+
+> Un **LSTM** est composé de **neurones plus sophistiqués**, capables
+> d'**oublier** certaines informations et d'en **renforcer** d'autres.
+
+Là où un neurone de RNN standard se contente de calculer un nouvel état caché,
+un neurone de LSTM **trie** l'information : il décide **ce qu'il garde**, **ce
+qu'il jette** et **ce qu'il ajoute**. C'est cette capacité de tri qui lui permet
+de **conserver longtemps** une information utile — et donc de gérer les
+**dépendances longues**.
+
+> **À retenir** : la solution la plus connue au gradient évanescent est le
+> **LSTM (Long Short Term Memory)**, une **variante de RNN** dont les **neurones
+> sophistiqués** savent **oublier** certaines informations et en **renforcer**
+> d'autres.
+
+## L'état de cellule et l'état candidat
+
+Une façon d'introduire le LSTM est de commencer par l'une de ses **nouveautés** :
+**chaque cellule (neurone) de la couche cachée possède un état `cₜ`**, qu'on
+appelle aussi **mémoire**, et qui **évolue avec le temps**.
+
+Cet **état de cellule `cₜ`** dépend de **deux** choses :
+
+- l'**état à l'instant précédent `cₜ₋₁`** ;
+- une **nouvelle valeur** qu'on peut voir comme un **nouvel état candidat**,
+  noté **`c̃ₜ`**.
+
+Cette dépendance s'exprime ainsi :
+
+```text
+cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ c̃ₜ
+```
+
+Le cours précise le rôle des coefficients **`fₜ`** et **`iₜ`** :
+
+- **`fₜ` et `iₜ` sont tous deux compris entre `0` et `1`** ;
+- lorsque **`fₜ` est proche de `0`**, tout se passe comme si la cellule
+  **oublie** son ancien état ; lorsque **`fₜ` est proche de `1`**, tout se passe
+  comme si elle **garde intégralement** son ancien état ;
+- ainsi, **`fₜ` détermine la part de l'ancienne information** que la cellule
+  **conserve**, tandis que **`iₜ` détermine la part de la nouvelle
+  information** que la cellule **prend en compte**.
+
+L'équation `cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ c̃ₜ` se lit donc comme un **mélange dosé** :
+une part `fₜ` de **mémoire ancienne** plus une part `iₜ` de **nouveauté**.
+
+> **À retenir** : chaque cellule LSTM a un **état (mémoire) `cₜ`** qui évolue
+> dans le temps : `cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ c̃ₜ`. Le coefficient **`fₜ`** (entre
+> `0` et `1`) dose l'**ancienne information conservée**, **`iₜ`** dose la
+> **nouvelle information prise en compte**, et **`c̃ₜ`** est le **nouvel état
+> candidat**.
+
+## La sortie de la cellule et les trois portes
+
+Reste à calculer la **sortie** de la cellule. Le cours donne, pour la sortie
+`hₜ` :
+
+```text
+hₜ = oₜ ∗ tanh(cₜ)
+```
+
+où **`oₜ` est lui aussi une valeur comprise entre `0` et `1`**, qui **contrôle
+la part de l'état qui « sortira » de la cellule**. La sortie est donc l'état de
+cellule, **passé par une tangente hyperbolique**, puis **filtré par `oₜ`**.
+
+Les **trois valeurs `fₜ`, `iₜ` et `oₜ`** correspondent à des éléments de la
+cellule qu'on appelle les **portes (gates)**. Le cours en donne le **rôle** :
+
+> Le rôle d'une **porte** est de **moduler (contrôler) les parts d'information**
+> qui **passent** (ouverture de la porte, valeur proche de `1`) ou qui sont
+> **bloquées** (fermeture de la porte, valeur proche de `0`).
+
+Ces trois portes portent un nom :
+
+| Porte | Notation | Rôle |
+| --- | --- | --- |
+| Porte d'**oubli** (*forget*) | `fₜ` | Quelle part de l'**ancien état `cₜ₋₁`** garder |
+| Porte d'**entrée** (*input*) | `iₜ` | Quelle part du **nouvel état candidat `c̃ₜ`** intégrer |
+| Porte de **sortie** (*output*) | `oₜ` | Quelle part de l'état **sortira** de la cellule |
+
+Une porte est ainsi un **robinet** sur un flux d'information : proche de `1`,
+elle **laisse passer** ; proche de `0`, elle **bloque**.
+
+> **À retenir** : la sortie d'une cellule LSTM est `hₜ = oₜ ∗ tanh(cₜ)`. Les
+> trois valeurs `fₜ`, `iₜ`, `oₜ` sont les **portes** — **oubli (forget)**,
+> **entrée (input)** et **sortie (output)** — qui, entre `0` et `1`,
+> **modulent** les parts d'information qui passent (`≈ 1`) ou sont bloquées
+> (`≈ 0`).
+
+## Les formules du LSTM
+
+Le cours donne enfin les **formules** des portes, **sous forme matricielle** —
+c'est-à-dire pour **l'ensemble des cellules de la couche** plutôt que pour une
+cellule individuelle.
+
+Les **trois portes** se calculent ainsi :
+
+```text
+Iₜ = σ( W_xi·Xₜ + W_hi·Hₜ₋₁ + B_i )
+Fₜ = σ( W_xf·Xₜ + W_hf·Hₜ₋₁ + B_f )
+Oₜ = σ( W_xo·Xₜ + W_ho·Hₜ₋₁ + B_o )
+```
+
+et le **nouvel état candidat** `C̃ₜ` est donné par :
+
+```text
+C̃ₜ = tanh( W_xc·Xₜ + W_hc·Hₜ₋₁ + B_c )
+```
+
+Plusieurs observations :
+
+- chaque porte est calculée par une **somme pondérée** de l'**entrée courante
+  `Xₜ`** et de l'**état caché précédent `Hₜ₋₁`**, suivie de la fonction
+  **sigmoïde `σ`**. C'est la sigmoïde qui **garantit une valeur entre `0` et
+  `1`**, exactement ce qu'exige le rôle d'une porte ;
+- le **candidat `C̃ₜ`** a la même forme, mais avec une **tangente hyperbolique**
+  comme activation ;
+- chaque équation a ses **propres matrices de poids** (`W_xi`, `W_hi`, `W_xf`,
+  `W_hf`, `W_xo`, `W_ho`, `W_xc`, `W_hc`) et son **propre biais** (`B_i`, `B_f`,
+  `B_o`, `B_c`). Une cellule LSTM a donc **bien plus de paramètres** qu'un
+  neurone de RNN standard — c'est le prix de sa sophistication.
+
+Le cours ajoute une **remarque** : **il existe plusieurs variantes de ces
+formules.** Il en existe notamment **une qui fait dépendre `iₜ`, `fₜ` et `oₜ` de
+`cₜ₋₁` aussi**.
+
+> **À retenir** : les portes du LSTM se calculent par
+> `Iₜ = σ(W_xi·Xₜ + W_hi·Hₜ₋₁ + B_i)` (et de même pour `Fₜ`, `Oₜ`), la
+> **sigmoïde** assurant une valeur entre `0` et `1` ; le candidat vaut
+> `C̃ₜ = tanh(W_xc·Xₜ + W_hc·Hₜ₋₁ + B_c)`. Il existe **plusieurs variantes** de
+> ces formules.
+
+## Le GRU, une variante à portes
+
+> **Complément au cours** : le GRU est une variante simplifiée du LSTM,
+> largement répandue dans la littérature et la pratique du deep learning. Il
+> n'est pas détaillé dans le support de cours `Slides_RNN_2526.pdf` mais est
+> présenté ici comme complément naturel à la section LSTM.
+
+Parmi les solutions au problème du gradient évanescent, on trouve plusieurs
+**variantes de RNN à portes**. À côté du LSTM, la plus connue est le **GRU
+(Gated Recurrent Unit)**.
+
+Le GRU repose sur le **même principe** que le LSTM : ce sont des **neurones à
+portes**, capables de **contrôler** la part d'information conservée et la part
+renouvelée de leur **mémoire interne**. Sa particularité est d'être une
+**variante plus simple** : il **combine certaines fonctions** assurées par des
+portes distinctes dans le LSTM, ce qui lui donne **moins de portes** — donc
+**moins de paramètres**.
+
+| Variante | Mémoire / portes |
+| --- | --- |
+| **LSTM** | Un **état de cellule `cₜ`** distinct de la sortie `hₜ` ; **trois portes** (oubli, entrée, sortie) |
+| **GRU** | Variante **plus simple** à portes, avec **moins de portes** et **moins de paramètres** |
+
+L'idée à retenir est commune aux deux : remplacer le neurone « brut » du RNN
+standard par un neurone **à portes**, capable de **gérer sa mémoire**, afin de
+**contourner le problème du gradient évanescent**.
+
+> **À retenir** : le **GRU (Gated Recurrent Unit)** est une autre **variante de
+> RNN à portes**, **plus simple** que le LSTM (**moins de portes**, **moins de
+> paramètres**). Comme le LSTM, il utilise des **portes** pour **gérer la
+> mémoire** et lutter contre le gradient évanescent.
+
+## Synthèse de la section
+
+Le RNN standard souffre d'une **mémoire courte** : sur une **séquence longue**,
+il a « **oublié** » les premiers éléments à la fin, ce qui **fausse** les
+**dépendances longues**. La cause est la **disparition / explosion du
+gradient** : durant la BPTT, le gradient qui remonte la chaîne **tend vers `0`**
+ou **explose**. La solution la plus connue est le **LSTM (Long Short Term
+Memory)**, une variante dont les **neurones sophistiqués** savent **oublier** et
+**renforcer** des informations. Chaque cellule LSTM possède un **état (mémoire)
+`cₜ`** qui évolue dans le temps : `cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ c̃ₜ`, mélange dosé
+d'**ancienne mémoire** (part `fₜ`) et de **nouveauté** (part `iₜ`, sur le
+candidat `c̃ₜ`). Sa sortie vaut `hₜ = oₜ ∗ tanh(cₜ)`. Les trois valeurs `fₜ`,
+`iₜ`, `oₜ` sont les **portes** — **oubli**, **entrée**, **sortie** —, comprises
+entre `0` et `1`, qui **modulent** les flux d'information. Elles se calculent
+par une somme pondérée de `Xₜ` et `Hₜ₋₁` suivie d'une **sigmoïde**
+(`Iₜ = σ(W_xi·Xₜ + W_hi·Hₜ₋₁ + B_i)`, etc.) ; le candidat utilise une
+**tangente hyperbolique**. Il existe **plusieurs variantes** de ces formules. Le
+**GRU (Gated Recurrent Unit)** est une autre variante à portes, **plus simple**
+que le LSTM.
+
+> **À retenir** : le **gradient évanescent** donne au RNN une **mémoire courte**.
+> Le **LSTM** y répond avec un **état de cellule `cₜ`** et **trois portes**
+> (`fₜ`, `iₜ`, `oₜ`) qui dosent l'information ; le **GRU** est une variante à
+> portes **plus simple**.

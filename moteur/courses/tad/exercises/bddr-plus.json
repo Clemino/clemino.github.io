@@ -1,0 +1,126 @@
+[
+  {
+    "chapterSlug": "introduction-bddr",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Une base de données répartie élimine totalement les risques d'interblocage.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. Au contraire, les bases réparties introduisent l'interblocage distribué, plus complexe à détecter qu'un deadlock local.",
+    "concepts": ["bdd-repartie", "deadlock"]
+  },
+  {
+    "chapterSlug": "introduction-bddr",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque approche de conception à sa direction.",
+    "payload": {
+      "left": [
+        { "id": "td", "label": "Top-down" },
+        { "id": "bu", "label": "Bottom-up" }
+      ],
+      "right": [
+        { "id": "1", "label": "Schéma global existant qu'on découpe vers des schémas locaux" },
+        { "id": "2", "label": "Schémas locaux existants qu'on intègre dans un schéma global" }
+      ]
+    },
+    "solution": { "pairs": { "td": "1", "bu": "2" } },
+    "explanation": "Top-down = du global vers le local (conception neuve). Bottom-up = du local vers le global (intégration).",
+    "concepts": ["top-down-design", "bottom-up-design"]
+  },
+  {
+    "chapterSlug": "fragmentation",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la définition formelle de la fragmentation horizontale :\nSur le site i on stocke {{kw1}}(R, Att = vAttᵢ). La relation R se reconstruit par {{kw2}} des fragments.",
+    "payload": {
+      "template": "Sur le site i on stocke {{kw1}}(R, Att = vAtt_i). La relation R se reconstruit par {{kw2}} des fragments.",
+      "slots": [{ "id": "kw1" }, { "id": "kw2" }]
+    },
+    "solution": { "answers": { "kw1": ["σ", "sigma", "selection", "sélection"], "kw2": ["UNION", "union", "∪"] }, "caseSensitive": false },
+    "explanation": "σ (sélection) sur le site. UNION pour reconstruire la relation totale.",
+    "concepts": ["fragmentation-horizontale"]
+  },
+  {
+    "chapterSlug": "fragmentation",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la fragmentation verticale :\nSur le site i on stocke {{kw1}}(R, attributs_i). Chaque fragment doit contenir une {{kw2}} de R pour reconstituer par {{kw3}}.",
+    "payload": {
+      "template": "Sur le site i on stocke {{kw1}}(R, attributs_i). Chaque fragment doit contenir une {{kw2}} de R pour reconstituer par {{kw3}}.",
+      "slots": [{ "id": "kw1" }, { "id": "kw2" }, { "id": "kw3" }]
+    },
+    "solution": { "answers": { "kw1": ["π", "pi", "projection"], "kw2": ["clé", "cle", "clef"], "kw3": ["jointure", "join"] }, "caseSensitive": false },
+    "explanation": "π (projection) + clé dans chaque fragment + reconstruction par jointure naturelle.",
+    "concepts": ["fragmentation-verticale"]
+  },
+  {
+    "chapterSlug": "database-link",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la création d'un database link :",
+    "payload": {
+      "template": "CREATE {{kw1}} DATABASE LINK db_paris\n  {{kw2}} TO admin {{kw3}} BY 'pwd'\n  {{kw4}} 'paris_service';",
+      "slots": [{ "id": "kw1" }, { "id": "kw2" }, { "id": "kw3" }, { "id": "kw4" }]
+    },
+    "solution": { "answers": { "kw1": "PUBLIC", "kw2": "CONNECT", "kw3": "IDENTIFIED", "kw4": "USING" }, "caseSensitive": false },
+    "explanation": "CREATE [PUBLIC] DATABASE LINK nom CONNECT TO user IDENTIFIED BY pwd USING 'service';",
+    "concepts": ["database-link"]
+  },
+  {
+    "chapterSlug": "database-link",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle commande ferme une connexion ouverte par un database link sur la session courante (sans le supprimer) ?",
+    "payload": { "options": [
+      { "id": "a", "label": "DROP DATABASE LINK nom_lien;" },
+      { "id": "b", "label": "ALTER SESSION CLOSE DATABASE LINK nom_lien;" },
+      { "id": "c", "label": "DISCONNECT FROM nom_lien;" },
+      { "id": "d", "label": "COMMIT;" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "ALTER SESSION CLOSE DATABASE LINK lien; libère la connexion réseau pour cette session. DROP supprime le lien entièrement.",
+    "concepts": ["database-link"]
+  },
+  {
+    "chapterSlug": "replication",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Quels sont les inconvénients de la cohérence forte (synchrone) en réplication ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Performance dégradée à chaque modification" },
+      { "id": "b", "label": "Disponibilité réduite (si une copie est inaccessible, la transaction échoue)" },
+      { "id": "c", "label": "Latence augmentée (attente de toutes les confirmations)" },
+      { "id": "d", "label": "Cohérence approximative entre les copies" }
+    ]},
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "Cohérence forte = synchronisation immédiate = plus lent et moins disponible. La cohérence est par contre parfaite (pas approximative).",
+    "concepts": ["replication"]
+  },
+  {
+    "chapterSlug": "replication",
+    "type": "RUBRIC_OPEN",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Expliquez la différence pratique entre `REFRESH ON COMMIT FAST` et `REFRESH START WITH ... NEXT ...` pour une vue matérialisée distante. Dans quel cas chacun est-il préférable ?",
+    "payload": {
+      "rubric": [
+        { "id": "commit", "description": "Décrit ON COMMIT FAST", "keywords": ["ON COMMIT", "FAST", "immédiat", "log", "journalisation"], "weight": 2 },
+        { "id": "next", "description": "Décrit START WITH ... NEXT ...", "keywords": ["START WITH", "NEXT", "périodique", "périodiquement", "intervalle"], "weight": 2 },
+        { "id": "trade-off", "description": "Mentionne le trade-off fraîcheur/coût", "keywords": ["fraîcheur", "coût", "couteux", "léger", "périodique"], "weight": 2 },
+        { "id": "cas", "description": "Cas d'usage concrets", "keywords": ["catalogue", "tarif", "nuit", "batch", "OLTP"], "weight": 1 }
+      ],
+      "minWords": 70
+    },
+    "solution": { "modelAnswer": "REFRESH ON COMMIT FAST : la VM est rafraîchie automatiquement à chaque commit qui modifie une table source. Le FAST ne propage que les changements via un MATERIALIZED VIEW LOG. Fraîcheur immédiate, coût à chaque transaction → adapté quand les données doivent être à jour en temps réel (par exemple un tableau de bord de stock).\n\nREFRESH START WITH ... NEXT ... : rafraîchissement périodique programmé (ex. tous les jours à 3h). Pas de coût pendant la journée, mais les données peuvent dater de plusieurs heures → adapté pour des catalogues, taux de change, ou tout référentiel à faible volatilité.\n\nTrade-off : ON COMMIT pour la fraîcheur instantanée au prix de la performance ; START WITH NEXT pour la performance au prix d'une fraîcheur différée." },
+    "explanation": "ON COMMIT = synchro instantanée (coût/commit) ; START WITH NEXT = batch périodique (économique mais différé).",
+    "concepts": ["vue-rafraichissement", "vue-materialisee", "replication"]
+  }
+]

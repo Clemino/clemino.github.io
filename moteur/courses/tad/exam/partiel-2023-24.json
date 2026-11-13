@@ -1,0 +1,141 @@
+{
+  "slug": "partiel-2023-24",
+  "title": "Examen TAD — ING2 GIA/DU CPI — 2023-2024",
+  "durationMinutes": 120,
+  "totalPoints": 20,
+  "description": "Examen 2023-2024, 3 exercices : mutualisation bibliothèques (BDDR), conducteurs/permis (PL/SQL), tour du monde récursif.",
+  "exercises": [
+    {
+      "chapterSlug": "fragmentation",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 4,
+      "points": 4,
+      "prompt": "**Exercice 1 (Bibliothèques) · 1.** L'université de Cergy mutualise les bibliothèques entre Cergy et Pau. Schéma global :\n- EMPLOYE(Id_pers, nom, adresse, statut, affectation)\n- ETUDIANT(Id_etu, nom, adresse, université, cursus, nb_emprunts)\n- OUVRAGES(Id_ouv, titre, éditeur, année, domaine, stock, site)\n- AUTEURS(Id_ouv, nom_auteur)\n- PRETS(Id_ouv, Id_etu, date_emprunt, date_retour)\n\n**Hypothèses :** un employé est affecté à un seul site ; un étudiant est inscrit dans une seule université mais peut emprunter dans toutes ; un ouvrage emprunté est rendu dans la même bibliothèque ; chaque université gère ses étudiants ; chaque bibliothèque gère son personnel et ses ouvrages.\n\nProposez un découpage de cette base sur les différents sites. Justifiez vos choix.",
+      "payload": {
+        "rubric": [
+          { "id": "employe-horiz", "description": "EMPLOYE fragmenté horizontalement par affectation/site", "keywords": ["EMPLOYE", "horizontale", "affectation", "site"], "weight": 2 },
+          { "id": "etudiant-horiz", "description": "ETUDIANT fragmenté horizontalement par université", "keywords": ["ETUDIANT", "horizontale", "université", "universite"], "weight": 2 },
+          { "id": "ouvrages-horiz", "description": "OUVRAGES (et AUTEURS) fragmentés par site", "keywords": ["OUVRAGES", "AUTEURS", "horizontale", "site", "bibliothèque"], "weight": 2 },
+          { "id": "prets-horiz", "description": "PRETS fragmentés par site d'emprunt", "keywords": ["PRETS", "horizontale", "site", "bibliothèque"], "weight": 2 },
+          { "id": "nb-emprunts", "description": "Gestion spécifique de nb_emprunts (mise à jour distante)", "keywords": ["nb_emprunts", "synchronisation", "global", "trigger"], "weight": 1 },
+          { "id": "justif", "description": "Justification claire", "keywords": ["80%", "local", "performance", "trafic"], "weight": 1 }
+        ],
+        "minWords": 150
+      },
+      "solution": { "modelAnswer": "Découpage avec 4 sites : Cergy-Université, Pau-Université, Cergy-Bibliothèque, Pau-Bibliothèque (ou 2 si chaque ville mutualise).\n\n**Fragmentation horizontale :**\n- EMPLOYE σ(affectation = site_local) : chaque bibliothèque a ses employés\n- ETUDIANT σ(université = univ_locale) : chaque université ses étudiants\n- OUVRAGES σ(site = bibliothèque_locale) : chaque bibliothèque ses ouvrages\n- AUTEURS jointe à OUVRAGES via Id_ouv : reste sur le site du ouvrage\n- PRETS σ(site_emprunt = local) : reste là où l'emprunt a été fait (un ouvrage est rendu dans la même bibliothèque)\n\n**Cas particulier nb_emprunts** : cette colonne doit être maintenue cohérente même si l'étudiant emprunte dans une autre bibliothèque. Un trigger AFTER INSERT/DELETE sur PRETS@site_etranger doit faire un UPDATE distant sur ETUDIANT@site_universite.\n\n**Justification :** 80% des requêtes sont locales (consultations dans la bibliothèque, étudiants vérifiant leur compte) ; on minimise le trafic réseau. Les requêtes globales (recherche d'un ouvrage par titre dans toutes les bibliothèques) passent par une vue UNION." },
+      "explanation": "Fragmentation horizontale sur toutes les tables principales selon le critère naturel (site/université). Synchronisation de nb_emprunts par trigger distant.",
+      "concepts": ["fragmentation-horizontale", "database-link", "trigger"]
+    },
+    {
+      "chapterSlug": "database-link",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 3,
+      "points": 3,
+      "prompt": "**Exercice 1 (Bibliothèques) · 2.** Écrivez les requêtes de création des vues que vous utilisez pour reconstruire les tables globales.",
+      "payload": {
+        "rubric": [
+          { "id": "create-view", "description": "Au moins une CREATE VIEW", "keywords": ["CREATE VIEW", "CREATE OR REPLACE VIEW"], "weight": 2 },
+          { "id": "union", "description": "Utilise UNION", "keywords": ["UNION"], "weight": 2 },
+          { "id": "links", "description": "Utilise database links (@nom_lien)", "keywords": ["@", "db_", "link"], "weight": 2 },
+          { "id": "multi-table", "description": "Plusieurs vues pour les différentes tables", "keywords": ["EMPLOYE", "ETUDIANT", "OUVRAGES", "PRETS"], "weight": 1 }
+        ],
+        "minWords": 80
+      },
+      "solution": { "modelAnswer": "```sql\nCREATE VIEW V_EMPLOYE AS\n  SELECT * FROM EMPLOYE@db_cergy\n  UNION ALL\n  SELECT * FROM EMPLOYE@db_pau;\n\nCREATE VIEW V_ETUDIANT AS\n  SELECT * FROM ETUDIANT@db_cergy\n  UNION ALL\n  SELECT * FROM ETUDIANT@db_pau;\n\nCREATE VIEW V_OUVRAGES AS\n  SELECT * FROM OUVRAGES@db_cergy\n  UNION ALL\n  SELECT * FROM OUVRAGES@db_pau;\n\nCREATE VIEW V_AUTEURS AS\n  SELECT * FROM AUTEURS@db_cergy\n  UNION ALL\n  SELECT * FROM AUTEURS@db_pau;\n\nCREATE VIEW V_PRETS AS\n  SELECT * FROM PRETS@db_cergy\n  UNION ALL\n  SELECT * FROM PRETS@db_pau;\n```\n\nCes vues globales permettent à la direction d'interroger comme si la base était centralisée.",
+      "explanation": "Reconstruction par UNION via database links. Une vue par table fragmentée." },
+      "explanation": "Vues globales par UNION sur fragments distants.",
+      "concepts": ["fragmentation-horizontale", "database-link", "vue-logique"]
+    },
+    {
+      "chapterSlug": "database-link",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 3,
+      "points": 3,
+      "prompt": "**Exercice 1 (Bibliothèques) · 3.** Écrivez les requêtes qui permettent la reconstruction du résultat total des tables afin que toutes les informations soient disponibles pour la direction.",
+      "payload": {
+        "rubric": [
+          { "id": "select", "description": "Requêtes SELECT sur les vues globales", "keywords": ["SELECT", "FROM"], "weight": 2 },
+          { "id": "exemple", "description": "Donne un exemple concret de requête métier", "keywords": ["JOIN", "WHERE", "COUNT", "GROUP BY"], "weight": 2 },
+          { "id": "vues", "description": "Référence les vues précédentes", "keywords": ["V_EMPLOYE", "V_OUVRAGES", "V_PRETS", "vue globale"], "weight": 2 }
+        ],
+        "minWords": 60
+      },
+      "solution": { "modelAnswer": "Une fois les vues globales (V_EMPLOYE, V_ETUDIANT, V_OUVRAGES, V_AUTEURS, V_PRETS) créées, la direction peut interroger librement. Exemples :\n\n```sql\n-- Nombre d'ouvrages par domaine\nSELECT domaine, SUM(stock) AS stock_total\nFROM V_OUVRAGES\nGROUP BY domaine;\n\n-- Étudiants ayant emprunté plus de 5 ouvrages cette année\nSELECT e.nom, e.prenom, COUNT(*) AS nb\nFROM V_ETUDIANT e\nJOIN V_PRETS p ON p.Id_etu = e.Id_etu\nWHERE p.date_emprunt >= TO_DATE('2024-01-01', 'YYYY-MM-DD')\nGROUP BY e.nom, e.prenom\nHAVING COUNT(*) > 5;\n```\n\nOracle gère le routage : chaque accès aux vues globales déclenche des requêtes distantes via les database links.",
+      "explanation": "Les vues globales rendent la BDD répartie transparente pour la direction. Requêtes SQL standards." },
+      "explanation": "Requêtes standard sur les vues globales — la fragmentation est transparente.",
+      "concepts": ["fragmentation-horizontale", "vue-logique"]
+    },
+    {
+      "chapterSlug": "procedures-fonctions",
+      "type": "PLSQL_PROCEDURE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "**Exercice 2 (Conducteurs) · 1.** Écrivez une fonction `inserer_conducteur` qui prend en entrée les données d'un conducteur (civilité, nom, prénom, et liste de permis) et insère ces informations dans les tables `Conducteur` et `Permis`. Vérifiez que la civilité est dans {'M', 'Mme', 'Mlle'}.\n\nTables : `Conducteur(N, civilité, nom, prenom)`, `Permis(N, type)` (type ∈ enum TypePermis : A/B/C/D), `titulaire(N_cond, N_permis)`.",
+      "payload": {
+        "required": {
+          "kind": "FUNCTION",
+          "name": "inserer_conducteur",
+          "requiredKeywords": ["INSERT", "Conducteur", "Permis", "RETURN", "RAISE"]
+        }
+      },
+      "solution": { "code": "CREATE OR REPLACE FUNCTION inserer_conducteur(\n  p_civilite IN VARCHAR2,\n  p_nom IN VARCHAR2,\n  p_prenom IN VARCHAR2,\n  p_permis_types IN SYS.ODCIVARCHAR2LIST  -- liste de types\n) RETURN NUMBER\nIS\n  v_id_cond NUMBER;\nBEGIN\n  IF p_civilite NOT IN ('M', 'Mme', 'Mlle') THEN\n    RAISE_APPLICATION_ERROR(-20010, 'Civilité invalide');\n  END IF;\n\n  INSERT INTO Conducteur(civilite, nom, prenom)\n  VALUES (p_civilite, p_nom, p_prenom)\n  RETURNING N INTO v_id_cond;\n\n  FOR i IN 1..p_permis_types.COUNT LOOP\n    INSERT INTO Permis(type) VALUES (p_permis_types(i));\n    INSERT INTO titulaire(N_cond, N_permis) VALUES (v_id_cond, Permis_seq.CURRVAL);\n  END LOOP;\n\n  RETURN v_id_cond;\nEND;" },
+      "explanation": "Fonction qui valide la civilité, insère le conducteur avec RETURNING pour récupérer la PK, puis insère chaque permis et son lien titulaire.",
+      "concepts": ["fonction", "exception-personnalisee"]
+    },
+    {
+      "chapterSlug": "triggers",
+      "type": "PLSQL_TRIGGER",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "**Exercice 2 (Conducteurs) · 2.** Écrivez le trigger qui vérifie qu'un véhicule est libre au moment de sa location.\n\nTable `louer(N_cond, N_vehic, debut, fin)`. Un véhicule est libre si aucune location existante ne couvre la période demandée.",
+      "payload": {
+        "required": {
+          "timing": "BEFORE",
+          "events": ["INSERT"],
+          "table": "louer",
+          "forEachRow": true,
+          "requiredKeywords": [":new", "SELECT", "COUNT", "RAISE_APPLICATION_ERROR"]
+        }
+      },
+      "solution": { "code": "CREATE OR REPLACE TRIGGER trig_vehicule_libre\nBEFORE INSERT ON louer\nFOR EACH ROW\nDECLARE\n  v_nb NUMBER;\nBEGIN\n  SELECT COUNT(*) INTO v_nb\n  FROM louer\n  WHERE N_vehic = :new.N_vehic\n    AND (debut <= :new.fin AND fin >= :new.debut);\n\n  IF v_nb > 0 THEN\n    RAISE_APPLICATION_ERROR(-20020, 'Véhicule déjà loué sur cette période');\n  END IF;\nEND;" },
+      "explanation": "Test de chevauchement de plages temporelles : (debut1 <= fin2 AND fin1 >= debut2). Si une location existe sur la même plage pour ce véhicule, on refuse.",
+      "concepts": ["trigger", "raise-application-error"]
+    },
+    {
+      "chapterSlug": "triggers",
+      "type": "PLSQL_TRIGGER",
+      "difficulty": 4,
+      "points": 2,
+      "prompt": "**Exercice 2 (Conducteurs) · 3.** Écrivez le trigger qui permet, à l'insertion et à la modification d'une Location, de vérifier que le conducteur spécifié correspond à un conducteur ayant parmi ses permis celui requis pour conduire le véhicule.\n\nTables : `louer(N_cond, N_vehic, debut, fin)`, `nécessiter(N_vehic, type_permis)`, `titulaire(N_cond, N_permis)`, `Permis(N, type)`.",
+      "payload": {
+        "required": {
+          "timing": "BEFORE",
+          "events": ["INSERT", "UPDATE"],
+          "table": "louer",
+          "forEachRow": true,
+          "requiredKeywords": [":new", "EXISTS", "necessiter", "RAISE_APPLICATION_ERROR"]
+        }
+      },
+      "solution": { "code": "CREATE OR REPLACE TRIGGER trig_permis_compatible\nBEFORE INSERT OR UPDATE ON louer\nFOR EACH ROW\nDECLARE\n  v_count NUMBER;\nBEGIN\n  SELECT COUNT(*) INTO v_count\n  FROM necessiter n\n  WHERE n.N_vehic = :new.N_vehic\n    AND NOT EXISTS (\n      SELECT 1\n      FROM titulaire t\n      JOIN Permis p ON p.N = t.N_permis\n      WHERE t.N_cond = :new.N_cond\n        AND p.type = n.type_permis\n    );\n\n  IF v_count > 0 THEN\n    RAISE_APPLICATION_ERROR(-20030, 'Le conducteur n''a pas tous les permis nécessaires');\n  END IF;\nEND;" },
+      "explanation": "Pour chaque permis requis par le véhicule, vérifier que le conducteur le possède. Si un permis requis manque, refuser. Trigger BEFORE INSERT OR UPDATE FOR EACH ROW.",
+      "concepts": ["trigger"]
+    },
+    {
+      "chapterSlug": "procedures-fonctions",
+      "type": "PLSQL_PROCEDURE",
+      "difficulty": 5,
+      "points": 5,
+      "prompt": "**Exercice 3 (Tour du Monde, récursif) · 1.** Écrivez une procédure PL/SQL `tour_du_monde` capable de proposer des tours du monde, prenant en entrée la ville de départ (qui est aussi la destination finale) et deux bornes (min, max) pour le nombre d'escales. Pas de liste prédéfinie d'escales, durée des escales ignorée. Affiche les vols pour chaque tour proposé. Utiliser de la récursion.\n\nTable : `VOL(Numvol, Heure_depart, Heure_arrivee, Ville_depart, Ville_arrivee)`.",
+      "payload": {
+        "required": {
+          "kind": "PROCEDURE",
+          "name": "tour_du_monde",
+          "requiredKeywords": ["DBMS_OUTPUT", "FOR", "VOL"]
+        }
+      },
+      "solution": { "code": "-- Procédure récursive : on construit la chaîne de vols via une procédure interne explore.\n-- Pour rester compatible PL/SQL (récursion sur procédure stockée), on déclare explore en avant.\n\nCREATE OR REPLACE PROCEDURE tour_du_monde(\n  p_depart  IN VOL.Ville_depart%TYPE,\n  p_min     IN NUMBER,\n  p_max     IN NUMBER\n)\nIS\n  TYPE t_chemin IS TABLE OF NUMBER INDEX BY PLS_INTEGER;\n\n  PROCEDURE explore(\n    p_current_city IN VOL.Ville_depart%TYPE,\n    p_depth        IN NUMBER,\n    p_path         IN OUT t_chemin\n  )\n  IS\n  BEGIN\n    -- Si on revient au départ et qu'on a fait assez d'escales : tour valide\n    IF p_current_city = p_depart AND p_depth BETWEEN p_min AND p_max AND p_depth > 0 THEN\n      DBMS_OUTPUT.PUT_LINE('--- Tour du monde proposé ---');\n      FOR i IN 1..p_path.COUNT LOOP\n        FOR v IN (SELECT Numvol, Ville_depart, Ville_arrivee\n                  FROM VOL WHERE Numvol = p_path(i)) LOOP\n          DBMS_OUTPUT.PUT_LINE('  Vol ' || v.Numvol || ' : ' || v.Ville_depart || ' -> ' || v.Ville_arrivee);\n        END LOOP;\n      END LOOP;\n      RETURN;\n    END IF;\n\n    -- Si on a dépassé le max d'escales, on arrête\n    IF p_depth >= p_max THEN RETURN; END IF;\n\n    -- Sinon, on explore chaque vol partant de la ville courante\n    FOR v IN (SELECT Numvol, Ville_arrivee FROM VOL WHERE Ville_depart = p_current_city) LOOP\n      p_path(p_path.COUNT + 1) := v.Numvol;\n      explore(v.Ville_arrivee, p_depth + 1, p_path);\n      p_path.DELETE(p_path.COUNT);  -- backtrack\n    END LOOP;\n  END;\n\n  v_path t_chemin;\nBEGIN\n  explore(p_depart, 0, v_path);\nEND;" },
+      "explanation": "Procédure récursive par exploration en profondeur (DFS) avec backtracking. À chaque profondeur, on tente tous les vols sortants ; si on revient au départ avec une profondeur valide, on affiche le chemin.",
+      "concepts": ["procedure", "curseur-for"]
+    }
+  ]
+}

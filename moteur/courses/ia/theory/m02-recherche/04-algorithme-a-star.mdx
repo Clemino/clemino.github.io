@@ -1,0 +1,245 @@
+---
+title: "L'algorithme A*"
+slug: algorithme-a-star
+order: 4
+estimatedReadMin: 13
+concepts: [algorithme-a-etoile, fonction-f, fonction-g, heuristique, heuristique-minorante, recherche-informee, arbre-de-recherche]
+source: "Intro_IA_slides2.pdf"
+---
+
+## L'aboutissement de la recherche informée
+
+Les sections précédentes ont posé tous les ingrédients : la **formulation** d'un
+problème en espace d'états, les limites de la **recherche aveugle**, et la notion
+d'**heuristique** pour guider la recherche. L'**algorithme A\*** rassemble ces
+ingrédients en une méthode complète de **recherche informée**.
+
+A\* est un algorithme qui construit un **arbre de recherche** — comme la recherche
+aveugle — mais qui **choisit ses feuilles intelligemment**, en s'appuyant sur les
+coûts `g` et l'heuristique `h`. Cette section présente l'**idée principale** de
+l'algorithme, sa **structure de données** (les listes d'états actifs et inactifs),
+puis son **pseudo-code** complet, à lire pas à pas.
+
+> **À retenir** : A\* est l'algorithme de référence de la recherche informée ; il
+> guide la construction de l'arbre de recherche grâce à la fonction `f = g + h`.
+
+## L'idée principale de A*
+
+L'**idée principale** de A\* est la suivante : **à chaque étape de la recherche,
+l'algorithme privilégie l'état — le nœud de l'arbre de recherche — qui minimise la
+grandeur** :
+
+```
+f(e) = g(e) + h(e)
+```
+
+Rappelons le sens de chacun des deux termes :
+
+- **`g(e)`** représente le **coût pour aller de l'état initial `e₀` à l'état `e`** —
+  le coût du chemin **déjà parcouru** ;
+- **`h(e)`** représente une **estimation du coût restant pour atteindre un état
+  final** — donnée par l'**heuristique**.
+
+La somme `f(e) = g(e) + h(e)` est donc une **estimation du coût total** d'une
+solution qui passerait par `e` : ce que l'on a déjà dépensé, plus ce que l'on
+s'attend à dépenser encore.
+
+À chaque étape, A\* développe **l'état de plus petite valeur `f`**. Ce choix réalise
+un **équilibre** :
+
+- privilégier un petit `g` revient à rester près de l'état initial — économe, mais
+  sans direction ;
+- privilégier un petit `h` revient à foncer vers le but — direct, mais sans tenir
+  compte de ce qui a déjà été payé ;
+- minimiser `f = g + h` **combine les deux** : on suit la branche qui promet la
+  **solution complète la moins chère**.
+
+C'est en cela que A\* est une recherche **guidée** : plutôt que de visiter tous les
+nœuds dans un ordre fixe, il **oriente** son effort vers les états les plus
+prometteurs.
+
+> ⚠️ Ne confondez pas `f` et `h`. L'heuristique `h` n'estime que le coût **restant** ;
+> `f` ajoute à cette estimation le coût `g` **déjà parcouru**. C'est bien `f`, et non
+> `h` seul, que A\* minimise à chaque étape.
+
+## La structure de données : deux files Actif et Inactif
+
+Pour mettre en œuvre ce choix, A\* utilise une **structure de données** : **deux
+files** appelées **`Actif`** et **`Inactif`**, dont les rôles respectifs sont les
+suivants.
+
+- **`Actif`** est la file **dans laquelle nous mettons les états « candidats » à
+  être considérés** par l'algorithme. En particulier, **le premier élément de la
+  file est celui qui a la meilleure valeur de `f`** — donc celui qui sera **considéré
+  en premier** par l'algorithme.
+- **`Inactif`** est la file **contenant les états déjà utilisés** : les états que
+  l'algorithme a déjà développés et qu'il n'a plus à reconsidérer.
+
+On retrouve ici une idée classique des algorithmes de recherche : `Actif` est la
+liste des états « à traiter » (souvent appelée *liste ouverte*), `Inactif` la liste
+des états « déjà traités » (souvent appelée *liste fermée*).
+
+Les **opérations sur les files** sont les suivantes :
+
+- **`FileVide`** : retourne un **booléen** indiquant si la file est vide ;
+- **`Ajouter`** : **ajoute un élément** à la file ;
+- **`Supprimer`** : **supprime le premier élément** de la file ;
+- **`AjouterTrier`** : **ajoute un élément et trie** l'ensemble des éléments (états)
+  de la file de manière à **mettre en première position celui qui a la meilleure
+  valeur de `f`**.
+
+| Opération | Effet |
+| --- | --- |
+| `FileVide(file)` | Renvoie vrai si la file est vide |
+| `Ajouter(file, e)` | Ajoute l'état `e` à la file |
+| `Supprimer(file)` | Retire le premier élément de la file |
+| `AjouterTrier(file, e)` | Ajoute `e` puis trie la file : meilleur `f` en tête |
+
+L'opération `AjouterTrier` est le cœur du caractère **informé** de A\* : c'est elle
+qui garantit que la file `Actif` présente toujours en tête l'état le plus prometteur.
+
+## Déclaration des variables et initialisation
+
+Avant la boucle principale, A\* déclare ses variables et les **initialise** :
+
+```
+Variables :
+    e, e' : État.
+    Actif, Inactif : File.
+
+Initialisation :
+    Actif   = [e₀].
+    Inactif = [].
+    g(e₀)   = 0.
+    e       = e₀.
+```
+
+Commentons cette initialisation :
+
+- `Actif` contient au départ le **seul état initial `e₀`** : c'est l'unique candidat
+  connu ;
+- `Inactif` est **vide** : aucun état n'a encore été utilisé ;
+- `g(e₀) = 0` : le coût pour aller de l'état initial **à lui-même** est nul ;
+- `e` est initialisé à `e₀` : l'état « courant » est l'état initial.
+
+## Le pseudo-code de l'algorithme A*
+
+Voici la **boucle principale** de A\*. Lisez-la attentivement, ligne par ligne :
+
+```
+Tant que ( FileVide(Actif) == Faux ) ET ( e ∉ F ) Faire
+    Supprimer(Actif).
+    Ajouter(Inactif, e).
+    Pour tout e' ∈ Succ(e) Faire
+        Si ( (e' ∉ Actif) ET (e' ∉ Inactif) )  OU  ( g(e') > g(e) + k(e, e') )  Alors
+            g(e') = g(e) + k(e, e').
+            f(e') = g(e') + h(e').
+            père(e') = e.
+            AjouterTrier(Actif, e').
+        Fin Si
+    Fin Pour
+    Si ( FileVide(Actif) == Faux ) Alors
+        e = premier(Actif).
+    Fin Si
+Fin Tant que
+```
+
+## Lecture commentée de l'algorithme
+
+Reprenons cet algorithme pas à pas.
+
+**La condition de boucle.** On continue **tant que** la file `Actif` **n'est pas
+vide** *et* que l'état courant `e` **n'est pas un état final** (`e ∉ F`). La boucle
+s'arrête donc dans deux cas : soit on a atteint un **état final** (succès), soit la
+file `Actif` est **vide** alors qu'aucun final n'a été atteint (échec).
+
+**Le traitement de l'état courant.** À chaque tour :
+
+1. `Supprimer(Actif)` retire `e` de la tête de la file des candidats — on s'apprête
+   à le traiter ;
+2. `Ajouter(Inactif, e)` place `e` parmi les états **déjà utilisés**.
+
+**L'examen des successeurs.** Pour **tout successeur `e'` de `e`**, l'algorithme
+décide s'il faut **(ré)insérer** `e'` dans `Actif`. La condition d'insertion comporte
+**deux cas** reliés par un **OU** :
+
+- **`(e' ∉ Actif) ET (e' ∉ Inactif)`** — le successeur `e'` est un état **jamais
+  rencontré** : c'est un nouveau candidat, il faut l'ajouter ;
+- **`g(e') > g(e) + k(e, e')`** — le successeur `e'` a déjà été rencontré, mais on
+  vient de découvrir, en passant par `e`, un **chemin moins cher** pour l'atteindre :
+  il faut **mettre à jour** son coût.
+
+Lorsque l'une de ces conditions est vraie, l'algorithme effectue quatre actions :
+
+1. **`g(e') = g(e) + k(e, e')`** : le coût pour atteindre `e'` devient le coût pour
+   atteindre `e`, augmenté du coût de l'action `e → e'` ;
+2. **`f(e') = g(e') + h(e')`** : on recalcule `f` pour `e'`, en ajoutant
+   l'estimation heuristique `h(e')` ;
+3. **`père(e') = e`** : on enregistre que l'on est arrivé à `e'` **en venant de
+   `e`** — c'est ce lien qui permettra, à la fin, de **reconstituer le chemin
+   solution** en remontant de père en père ;
+4. **`AjouterTrier(Actif, e')`** : on (ré)insère `e'` dans la file `Actif`, qui est
+   **triée** de sorte que le meilleur `f` soit toujours en tête.
+
+**La mise à jour de l'état courant.** Après avoir traité tous les successeurs, si la
+file `Actif` **n'est pas vide**, on prend pour nouvel état courant `e` le **premier
+élément de `Actif`** — c'est-à-dire, grâce au tri, **l'état de meilleure valeur
+`f`**. La boucle reprend alors avec ce nouvel `e`.
+
+## Pourquoi A* réalise une recherche guidée
+
+On peut maintenant expliquer **pourquoi la recherche effectuée par A\* est qualifiée
+de recherche guidée**. La fonction `f(e) = g(e) + h(e)` représente une **estimation
+du coût** d'une solution allant de l'état initial à un état final **en passant par
+`e`**. À chaque étape, A\* **privilégie les états pour lesquels `f` est faible** :
+il ne se contente pas de parcourir l'arbre dans un ordre figé, il **suit la branche
+la plus prometteuse**. C'est l'**heuristique** `h`, intégrée à `f`, qui fournit cette
+orientation — d'où le terme de recherche **guidée** (par opposition à la recherche
+aveugle).
+
+Le rôle des **propriétés de l'heuristique**, vues à la section précédente, apparaît
+ici pleinement. Si l'heuristique est **minorante (admissible)** — c'est-à-dire si
+`h(e) ≤ h*(e)`, l'estimation ne surestimant jamais le coût restant —, alors A\*
+trouve une solution de **coût minimal**. Une heuristique **coïncidente** garantit par
+ailleurs que les états finals sont correctement reconnus (`h = 0`). Le soin apporté
+au choix de l'heuristique conditionne donc directement la **qualité** de la solution
+trouvée par A\*.
+
+> ⚠️ La qualité de A\* dépend entièrement de l'**heuristique**. Avec une heuristique
+> mal choisie, A\* explore beaucoup d'états inutiles ; avec une heuristique
+> **minorante**, il garantit une solution de **coût minimal**.
+
+## A* à l'œuvre : l'exemple du taquin
+
+L'algorithme A\* s'applique typiquement au **jeu du taquin**. On part de l'**état
+initial** (la configuration de départ), placé comme **racine** de l'arbre de
+recherche, avec `g(e₀) = 0`. À chaque étape :
+
+- on retire de `Actif` l'état de meilleure valeur `f` ;
+- on l'ajoute à `Inactif` ;
+- on engendre ses successeurs (les configurations obtenues en déplaçant la case
+  vide), on calcule pour chacun `g`, puis `h` (par exemple le nombre de cases mal
+  placées), puis `f = g + h` ;
+- on insère ces successeurs dans `Actif`, triée par `f` croissant.
+
+L'algorithme poursuit ainsi jusqu'à ce que l'état courant soit la **configuration
+cible**. Comme A\* explore en priorité les états de petit `f`, il **développe
+nettement moins de nœuds** qu'une recherche aveugle, qui visiterait l'arbre niveau
+par niveau ou branche par branche sans distinguer les états prometteurs des autres.
+
+## Synthèse de la section
+
+L'**algorithme A\*** est l'aboutissement de la recherche informée. Son **idée
+principale** : à chaque étape, développer l'état qui **minimise `f(e) = g(e) +
+h(e)`**, où `g` est le coût déjà parcouru et `h` l'estimation heuristique du coût
+restant. A\* s'appuie sur **deux files**, `Actif` (candidats, le meilleur `f` en
+tête) et `Inactif` (états déjà utilisés), et sur les opérations `FileVide`,
+`Ajouter`, `Supprimer` et `AjouterTrier`. Sa boucle développe les successeurs de
+l'état courant, met à jour leurs coûts `g` et `f`, mémorise leur **père** pour
+reconstruire le chemin, et choisit toujours le candidat de meilleur `f`. Avec une
+heuristique **minorante**, A\* fournit une solution de **coût minimal**.
+
+> **À retenir** : A\* développe l'état de **`f = g + h` minimal**, géré via les
+> files **`Actif`** et **`Inactif`** ; il mémorise le **père** de chaque état pour
+> reconstruire la solution, et garantit une solution de **coût minimal** lorsque
+> l'heuristique est **minorante**.

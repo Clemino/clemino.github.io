@@ -1,0 +1,39 @@
+---
+title: "map, filter, flatMap et for"
+slug: transformations
+order: 2
+estimatedReadMin: 13
+concepts: [map-filter-flatmap, hof, lambda, option, collection]
+source: "Collection/Scala_04.pdf; Collection/Scala_04_TD (5).pdf"
+---
+## map
+
+`map` applique une fonction a chaque element et conserve la structure.
+
+```scala
+List(1, 2, 3).map(_ * 10) // List(10, 20, 30)
+```
+
+## filter
+
+`filter` conserve les elements qui satisfont un predicat.
+
+```scala
+List(1, 2, 3, 4).filter(_ % 2 == 0) // List(2, 4)
+```
+
+## flatMap et for
+
+`flatMap` applique une fonction qui renvoie une collection, puis aplatit un niveau. Une comprehension `for` avec generateurs et gardes se traduit en `map`, `flatMap` et `filter`.
+
+```scala
+for
+  x <- List(1, 2)
+  y <- List(10, 20)
+yield x + y
+```
+
+Le resultat est `List(11, 21, 12, 22)`.
+
+> **A retenir**  
+> Trace d'abord la collection intermediaire, puis applique l'aplatissement si `flatMap` intervient.

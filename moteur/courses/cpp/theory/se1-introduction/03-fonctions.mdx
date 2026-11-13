@@ -1,0 +1,146 @@
+---
+title: "Fonctions : surcharge et défauts"
+slug: fonctions
+order: 3
+estimatedReadMin: 8
+concepts: [surcharge-fonction, argument-defaut, inline]
+source: "Cours 1 — Introduction au C++"
+---
+
+## Les nouveautés du C++ sur les fonctions
+
+Au-delà des objets, le C++ enrichit la notion de fonction héritée du C avec quatre nouveautés **« hors objet »** :
+
+- le **contrôle de type** plus strict ;
+- les **arguments par défaut** ;
+- la **surcharge de fonctions** ;
+- les **fonctions `inline`**.
+
+Le contrôle de type a déjà été évoqué : le compilateur C++ refuse les conversions implicites douteuses. Ce chapitre détaille les trois autres.
+
+## Conventions de nommage des fonctions
+
+Un détour utile avant le cœur du chapitre. Un nom de fonction décrit une **action** : il s'écrit donc autour d'un **verbe**, en *camelCase* et en anglais. `CheckForError()` est préférable à `ErrorCheck()` ; `dumpDataToFile()` est plus clair que `dataFile()`.
+
+Comparez deux versions de la même fonction :
+
+```cpp
+int area_ftoi(float a, float b) { return (int) a * b / 2; }
+```
+
+```cpp
+int triangleArea(float base, float height) {
+    return (int) base * height / 2;
+}
+```
+
+Les deux fonctions font **exactement le même calcul** — l'expression castée est identique ; seuls les **noms** changent. La seconde est néanmoins bien plus lisible : noms parlants, indentation, accolades sur leur propre ligne. Les conventions de codage (≈ 25 lignes par fonction, 80 colonnes par ligne, indentation, commentaires) servent la **réutilisation**, la **maintenance**, la **portabilité** et l'**éviction des erreurs**.
+
+## La surcharge de fonctions
+
+En C, deux fonctions ne peuvent **pas** porter le même nom. Le C++ lève cette limite : c'est la **surcharge** (*overloading*).
+
+> **Surcharger** une fonction, c'est définir **plusieurs fonctions portant le même nom** mais avec des **listes de paramètres différentes**.
+
+L'ensemble `{nom + types et nombre des paramètres}` forme la **signature** de la fonction. Le compilateur, en voyant un appel, choisit **automatiquement** la version dont la signature correspond aux arguments fournis : c'est la **résolution de surcharge**.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+// Trois fonctions "afficher", trois signatures différentes
+void afficher(int n)         { cout << "entier : "  << n << endl; }
+void afficher(double d)      { cout << "reel : "    << d << endl; }
+void afficher(const string& s) { cout << "texte : " << s << endl; }
+
+int main() {
+    afficher(42);          // appelle afficher(int)
+    afficher(3.14);        // appelle afficher(double)
+    afficher(string("Bonjour")); // appelle afficher(const string&)
+    return 0;
+}
+```
+
+L'intérêt : un **nom unique** pour une **même opération conceptuelle**, déclinée selon les types. On évite les noms artificiels comme `afficherInt`, `afficherDouble`, `afficherString`.
+
+### Ce qui distingue — ou non — deux surcharges
+
+Deux surcharges doivent différer par le **nombre** ou le **type** de leurs paramètres.
+
+```cpp
+int maximum(int a, int b);             // (1)
+double maximum(double a, double b);    // (2) OK : types différents
+int maximum(int a, int b, int c);      // (3) OK : nombre différent
+```
+
+En revanche, le **type de retour ne fait pas partie de la signature** : on ne peut pas surcharger uniquement sur lui.
+
+```cpp
+int    valeur();
+double valeur();   // ERREUR : seul le type de retour change
+```
+
+> ⚠️ Un appel est **ambigu** quand aucune surcharge ne correspond exactement et que plusieurs sont accessibles par conversion. Exemple : avec `afficher(int)` et `afficher(double)`, l'appel `afficher(5L)` (un `long`) peut convenir aux deux par conversion — le compilateur refuse et signale une **ambiguïté**.
+
+## Les arguments par défaut
+
+Un paramètre peut recevoir une **valeur par défaut**. Si l'appelant **omet** l'argument correspondant, c'est cette valeur qui est utilisée.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+// taux a une valeur par défaut de 1.045
+double calculerCapital(double capital, int annees, double taux = 1.045) {
+    for (int i = 1; i <= annees; ++i)
+        capital = capital * taux;
+    return capital;
+}
+
+int main() {
+    cout << calculerCapital(1000, 10);        // taux = 1.045 (défaut)
+    cout << calculerCapital(1000, 10, 1.07);  // taux = 1.07 (fourni)
+    return 0;
+}
+```
+
+Une seule définition de fonction sert ainsi plusieurs cas d'usage, ce qui réduit le besoin de surcharges.
+
+### Règle d'ordre
+
+Les paramètres par défaut doivent occuper **la fin** de la liste : une fois qu'un paramètre a une valeur par défaut, **tous ceux qui le suivent** doivent en avoir une aussi.
+
+```cpp
+void f(int a, int b = 0, int c = 0);   // OK : les défauts sont à la fin
+void g(int a = 0, int b);              // ERREUR : b sans défaut suit a avec défaut
+```
+
+La raison est l'absence d'ambiguïté : les arguments fournis sont assignés **de gauche à droite**, on ne peut donc pas « sauter » un paramètre du milieu.
+
+> ⚠️ Si la fonction est **déclarée dans un `.h`** et **définie dans un `.cpp`**, la valeur par défaut s'écrit **une seule fois**, dans la **déclaration** (le `.h`). La répéter dans la définition est une erreur.
+
+## Les fonctions inline
+
+Un appel de fonction a un **coût** : sauvegarder le contexte, transmettre les arguments, sauter à un autre endroit du code, revenir. Pour une fonction **très courte** appelée **très souvent** (typiquement dans une boucle), ce coût peut dépasser le travail utile.
+
+Le mot-clé **`inline`** demande au compilateur de **remplacer l'appel par le corps de la fonction** directement à l'endroit de l'appel — comme un copier-coller. On supprime ainsi le coût de l'appel tout en gardant un code source lisible et factorisé.
+
+```cpp
+inline int maximum(int i, int j) {
+    if (i > j)
+        return i;
+    else
+        return j;
+}
+```
+
+`inline` convient aux **petites fonctions** dont on veut un **code rapide** (notamment dans les boucles). En contrepartie, comme le corps est recopié à chaque appel, une fonction `inline` longue ou appelée partout **gonfle** la taille de l'exécutable.
+
+> ⚠️ `inline` n'est qu'une **suggestion** : le compilateur reste libre de l'ignorer (par exemple s'il juge la fonction trop grosse) et peut aussi *inliner* de lui-même une fonction non marquée. Le cours retient deux limites pratiques : pas de **récursivité**, et on évite les **pointeurs** pour une fonction `inline`.
+
+> **À retenir**
+> - C++ enrichit les fonctions du C par : contrôle de type strict, arguments par défaut, **surcharge** et fonctions **`inline`**.
+> - **Surcharge** : plusieurs fonctions de **même nom** mais de **signatures différentes** (nombre/type de paramètres). Le compilateur choisit automatiquement la bonne.
+> - Le **type de retour ne fait pas partie de la signature** : impossible de surcharger uniquement dessus. Un appel ambigu est une erreur.
+> - **Arguments par défaut** : valeur utilisée si l'appelant omet l'argument ; ils doivent être **en fin de liste** ; à écrire dans le `.h` quand la déclaration y est séparée.
+> - **`inline`** : suggère de remplacer l'appel par le corps de la fonction — utile pour les **petites fonctions appelées souvent**, au prix d'un exécutable plus gros.

@@ -1,0 +1,1382 @@
+[
+  {
+    "chapterSlug": "donnees-sequentielles-rnn",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Selon le cours, pourquoi les réseaux standards et convolutifs sont-ils mal adaptés au traitement des séquences ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Ils traitent une entrée et une sortie de taille fixe et n'autorisent pas les cycles"
+        },
+        {
+          "id": "b",
+          "label": "Ils utilisent uniquement la fonction softmax en sortie"
+        },
+        {
+          "id": "c",
+          "label": "Ils ne possèdent aucune couche cachée"
+        },
+        {
+          "id": "d",
+          "label": "Ils ont un nombre de couches qui varie pendant l'apprentissage"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Les réseaux standards et convolutifs sont feedforward : ils acceptent une entrée de taille fixe, produisent une sortie de taille fixe et n'autorisent pas les cycles. Ces caractéristiques les rendent difficiles à utiliser lorsque l'entrée ou la sortie est une séquence, comme une série chronologique boursière.",
+    "concepts": [
+      "donnees-sequentielles",
+      "reseau-recurrent"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "donnees-sequentielles-rnn",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque caractéristique au type de réseau correspondant, d'après le tableau comparatif du cours.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Les cycles sont interdits"
+        },
+        {
+          "id": "l2",
+          "label": "La sortie revient vers l'entrée"
+        },
+        {
+          "id": "l3",
+          "label": "L'entrée et la sortie sont des vecteurs de taille fixe"
+        },
+        {
+          "id": "l4",
+          "label": "Un état est transmis dans le temps (mémoire)"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Réseau feedforward"
+        },
+        {
+          "id": "r2",
+          "label": "Réseau récurrent (RNN)"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r1",
+        "l4": "r2"
+      }
+    },
+    "explanation": "Réseau feedforward : cycles interdits, circulation dans une seule direction, entrée/sortie de taille fixe, aucune mémoire. Réseau récurrent : boucles autorisées, la sortie revient vers l'entrée, traite des séquences, possède un état transmis dans le temps.",
+    "concepts": [
+      "reseau-recurrent",
+      "etat-cache"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "donnees-sequentielles-rnn",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la description de l'état caché d'un RNN.",
+    "payload": {
+      "template": "À chaque instant t, la couche cachée calcule son nouvel état Hᵗ à partir de deux informations : l'entrée {{s1}} Xᵗ et l'état caché {{s2}} Hᵗ⁻¹. Comme Hᵗ⁻¹ a lui-même été calculé à partir de Hᵗ⁻², l'état caché porte la trace de toute la {{s3}} déjà traitée : il joue le rôle d'une {{s4}}.",
+      "slots": [
+        {
+          "id": "s1",
+          "width": "sm",
+          "placeholder": "mot"
+        },
+        {
+          "id": "s2",
+          "width": "sm",
+          "placeholder": "mot"
+        },
+        {
+          "id": "s3",
+          "width": "md",
+          "placeholder": "mot(s)"
+        },
+        {
+          "id": "s4",
+          "width": "sm",
+          "placeholder": "mot"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": [
+          "courante",
+          "actuelle"
+        ],
+        "s2": [
+          "précédent",
+          "precedent"
+        ],
+        "s3": [
+          "sous-séquence",
+          "sous-sequence",
+          "séquence",
+          "sequence"
+        ],
+        "s4": [
+          "mémoire",
+          "memoire"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "L'état caché Hᵗ se calcule à partir de l'entrée courante Xᵗ et de l'état caché précédent Hᵗ⁻¹. Par récurrence, il synthétise toute la sous-séquence déjà traitée et constitue la mémoire du réseau.",
+    "concepts": [
+      "etat-cache",
+      "recurrence"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "donnees-sequentielles-rnn",
+    "type": "ORDERING",
+    "difficulty": 1,
+    "points": 2,
+    "prompt": "Un RNN déplié traite la séquence d'entrée. Remettez dans l'ordre chronologique les états calculés lors du traitement.",
+    "payload": {
+      "items": [
+        {
+          "id": "a",
+          "label": "h₁ — calculé à partir de x₁ et de l'état initial h₀"
+        },
+        {
+          "id": "b",
+          "label": "h₂ — calculé à partir de x₂ et de h₁"
+        },
+        {
+          "id": "c",
+          "label": "h₃ — calculé à partir de x₃ et de h₂"
+        },
+        {
+          "id": "d",
+          "label": "h₄ — calculé à partir de x₄ et de h₃"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Le RNN traite la séquence dans l'ordre du temps : à chaque instant t, hₜ se calcule à partir de l'entrée courante xₜ et de l'état caché précédent hₜ₋₁. L'état hₜ est ensuite transmis au maillon suivant de la chaîne dépliée.",
+    "concepts": [
+      "depliage-temporel",
+      "etat-cache",
+      "recurrence"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "donnees-sequentielles-rnn",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On considère un neurone récurrent unique (1 entrée, 1 neurone caché). Son équation est hᵗ = tanh(u·xᵗ + v·hᵗ⁻¹ + b) avec u = 0,5, v = 0,8 et b = 0. L'état initial vaut h⁰ = 0. La première entrée est x¹ = 1. Calculez l'état caché h¹.",
+    "payload": {
+      "placeholder": "ex. 0,46",
+      "hint": "h¹ = tanh(0,5·1 + 0,8·0 + 0) = tanh(0,5)."
+    },
+    "solution": {
+      "value": 0.4621,
+      "absTol": 0.01
+    },
+    "explanation": "h¹ = tanh(u·x¹ + v·h⁰ + b) = tanh(0,5·1 + 0,8·0 + 0) = tanh(0,5) ≈ 0,4621. L'état initial nul annule le terme récurrent au premier instant.",
+    "concepts": [
+      "recurrence",
+      "etat-cache"
+    ],
+    "source": "Exo_RNN1.py"
+  },
+  {
+    "chapterSlug": "donnees-sequentielles-rnn",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un réseau de neurones convolutif (CNN) est un réseau récurrent, car il possède des connexions qui bouclent vers l'arrière.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Le cours classe les réseaux convolutifs parmi les réseaux feedforward : comme les réseaux standards, ils n'autorisent pas les cycles et font circuler l'information dans une seule direction. Ce sont les RNN, et eux seuls, qui autorisent les boucles.",
+    "concepts": [
+      "reseau-recurrent",
+      "donnees-sequentielles"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "donnees-sequentielles-rnn",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un neurone récurrent reçoit deux entrées : hᵗ = tanh(u₁·x₁ᵗ + u₂·x₂ᵗ + v·hᵗ⁻¹ + b). On donne u₁ = 0,5, u₂ = -0,5, v = 1, b = 0,2. À l'instant t : x₁ᵗ = 2, x₂ᵗ = 2 et l'état précédent hᵗ⁻¹ = 0,3. Calculez hᵗ (arrondir à 0,01).",
+    "payload": {
+      "placeholder": "ex. 0,46",
+      "hint": "Somme = 0,5·2 + (−0,5)·2 + 1·0,3 + 0,2, puis appliquer tanh."
+    },
+    "solution": {
+      "value": 0.4621,
+      "absTol": 0.02
+    },
+    "explanation": "Somme pondérée = 0,5·2 + (−0,5)·2 + 1·0,3 + 0,2 = 1 − 1 + 0,3 + 0,2 = 0,5. Donc hᵗ = tanh(0,5) ≈ 0,4621. Avec plusieurs entrées, chaque entrée a son propre poids ; le terme récurrent v·hᵗ⁻¹ s'ajoute comme toujours.",
+    "concepts": [
+      "recurrence",
+      "etat-cache"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "etat-cache-bptt",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez les deux équations qui définissent un RNN conventionnel.",
+    "payload": {
+      "template": "L'état caché vaut Hᵗ = σₕ(U·Xᵗ + {{s1}}·Hᵗ⁻¹ + Bʰ) et la sortie vaut Yᵗ = σ_o({{s2}}·Hᵗ + Bᵒ). La matrice {{s3}} est la nouveauté propre au RNN : elle pèse les connexions récurrentes. Pour l'activation σₕ de la couche cachée, on utilise habituellement la fonction sigmoïde ou la fonction {{s4}}.",
+      "slots": [
+        {
+          "id": "s1",
+          "width": "sm",
+          "placeholder": "matrice"
+        },
+        {
+          "id": "s2",
+          "width": "sm",
+          "placeholder": "matrice"
+        },
+        {
+          "id": "s3",
+          "width": "sm",
+          "placeholder": "matrice"
+        },
+        {
+          "id": "s4",
+          "width": "lg",
+          "placeholder": "fonction"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": "V",
+        "s2": "W",
+        "s3": "V",
+        "s4": [
+          "tangente hyperbolique",
+          "tanh",
+          "tangente-hyperbolique"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Hᵗ = σₕ(U·Xᵗ + V·Hᵗ⁻¹ + Bʰ) et Yᵗ = σ_o(W·Hᵗ + Bᵒ). La matrice V pèse les connexions récurrentes caché→caché ; elle est propre au RNN. Pour σₕ, on prend habituellement la sigmoïde ou la tangente hyperbolique.",
+    "concepts": [
+      "recurrence",
+      "etat-cache",
+      "reseau-recurrent"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "etat-cache-bptt",
+    "type": "ALGO_TRACE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "On déplie un neurone récurrent (1 entrée, 1 neurone caché) sur 3 instants. Son équation est hₜ = ReLU(u·xₜ + v·hₜ₋₁ + b) avec u = 1, v = 0,5 et b = -0,2. L'état initial est h₀ = 0. La séquence d'entrée est x₁ = 2, x₂ = 1, x₃ = 3. Calculez h₁, h₂ et h₃.",
+    "payload": {
+      "description": "À chaque instant : on calcule la somme pondérée a = u·xₜ + v·hₜ₋₁ + b, puis hₜ = ReLU(a) = max(0, a). Rappel ReLU : tout nombre négatif devient 0, tout nombre positif est conservé.",
+      "cells": [
+        {
+          "id": "h1",
+          "label": "h₁",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "h2",
+          "label": "h₂",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "h3",
+          "label": "h₃",
+          "kind": "number",
+          "placeholder": "0"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "h1",
+          "expected": 1.8,
+          "absTol": 0.001
+        },
+        {
+          "id": "h2",
+          "expected": 1.7,
+          "absTol": 0.001
+        },
+        {
+          "id": "h3",
+          "expected": 3.65,
+          "absTol": 0.001
+        }
+      ]
+    },
+    "explanation": "h₁ = ReLU(1·2 + 0,5·0 − 0,2) = ReLU(1,8) = 1,8. h₂ = ReLU(1·1 + 0,5·1,8 − 0,2) = ReLU(1,7) = 1,7. h₃ = ReLU(1·3 + 0,5·1,7 − 0,2) = ReLU(3,65) = 3,65. La somme pondérée comporte bien deux termes : l'entrée courante et l'état caché précédent.",
+    "concepts": [
+      "recurrence",
+      "etat-cache",
+      "depliage-temporel"
+    ],
+    "source": "Exo_RNN1.py"
+  },
+  {
+    "chapterSlug": "etat-cache-bptt",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un neurone récurrent calcule hᵗ = tanh(u·xᵗ + v·hᵗ⁻¹ + b) avec u = 0,5, v = -0,5, b = 0,1. À l'instant t, l'entrée est xᵗ = 2 et l'état caché précédent vaut hᵗ⁻¹ = 1. Calculez hᵗ (arrondir à 0,01).",
+    "payload": {
+      "placeholder": "ex. 0,54",
+      "hint": "Somme pondérée = 0,5·2 + (−0,5)·1 + 0,1, puis appliquer tanh."
+    },
+    "solution": {
+      "value": 0.537,
+      "absTol": 0.02
+    },
+    "explanation": "Somme pondérée = 0,5·2 + (−0,5)·1 + 0,1 = 1 − 0,5 + 0,1 = 0,6. Donc hᵗ = tanh(0,6) ≈ 0,537. Le poids récurrent négatif réduit la contribution de l'état précédent.",
+    "concepts": [
+      "recurrence",
+      "etat-cache"
+    ],
+    "source": "Exo_RNN1.py"
+  },
+  {
+    "chapterSlug": "etat-cache-bptt",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans la définition d'un RNN conventionnel, l'erreur totale d'apprentissage E(P) est définie comme :",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La somme, sur tous les instants t, des erreurs Eᵗ(P) = loss(Ŷᵗ, Yᵗ)"
+        },
+        {
+          "id": "b",
+          "label": "L'erreur calculée uniquement au dernier instant T"
+        },
+        {
+          "id": "c",
+          "label": "Le produit des erreurs commises à chaque instant"
+        },
+        {
+          "id": "d",
+          "label": "La moyenne des poids du réseau"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours définit E(P) = Σₜ Eᵗ(P) avec Eᵗ(P) = loss(Ŷᵗ, Yᵗ). On calcule une erreur à chaque étape t du traitement de la séquence, puis on les additionne. P désigne l'ensemble des paramètres (poids et biais).",
+    "concepts": [
+      "fonction-de-perte",
+      "descente-de-gradient"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "etat-cache-bptt",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "À chaque itération, la descente de gradient calcule une dérivée partielle de E par poids et par biais. Soit un RNN avec n = 2 neurones d'entrée, m = 3 neurones cachés et p = 1 neurone de sortie. Combien de dérivées partielles l'algorithme doit-il calculer à chaque itération (poids U, V, W et biais Bʰ, Bᵒ) ?",
+    "payload": {
+      "placeholder": "ex. 22",
+      "hint": "Compter : U a m·n poids, V a m·m, W a p·m, Bʰ a m biais, Bᵒ a p biais. Total = m·n + m·m + p·m + m + p."
+    },
+    "solution": {
+      "value": 22,
+      "absTol": 0.001
+    },
+    "explanation": "Il faut une dérivée partielle par paramètre. U : m·n = 3·2 = 6. V : m·m = 3·3 = 9. W : p·m = 1·3 = 3. Bʰ : m = 3. Bᵒ : p = 1. Total = 6 + 9 + 3 + 3 + 1 = 22 dérivées partielles.",
+    "concepts": [
+      "descente-de-gradient",
+      "retropropagation-dans-le-temps"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "etat-cache-bptt",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une couche SimpleRNN possède d_h·(d_in + d_h + 1) paramètres entraînables. Combien de paramètres a une couche SimpleRNN de 5 unités recevant une entrée de dimension 1 (d_in = 1, d_h = 5) ?",
+    "payload": {
+      "placeholder": "ex. 35",
+      "hint": "5·(1 + 5 + 1)."
+    },
+    "solution": {
+      "value": 35,
+      "absTol": 0.001
+    },
+    "explanation": "Nombre de paramètres = d_h·(d_in + d_h + 1) = 5·(1 + 5 + 1) = 5·7 = 35. Le terme d_in vient des poids entrée→caché, le terme d_h des poids récurrents caché→caché, et le + 1 du biais.",
+    "concepts": [
+      "reseau-recurrent"
+    ],
+    "source": "Exo_RNN2.py"
+  },
+  {
+    "chapterSlug": "etat-cache-bptt",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On déplie un neurone récurrent (1 entrée, 1 neurone caché) sur 3 instants, avec l'activation tanh : hₜ = tanh(u·xₜ + v·hₜ₋₁ + b). Les poids sont u = 1, v = 0,5, b = 0 ; l'état initial est h₀ = 0 et la séquence est x₁ = 1, x₂ = -2, x₃ = 1. Calculez h₁, h₂ et h₃ (arrondir à 0,01).",
+    "payload": {
+      "description": "À chaque instant : a = u·xₜ + v·hₜ₋₁ + b, puis hₜ = tanh(a). Calculer h₁, puis h₂ à partir de h₁, puis h₃ à partir de h₂. Arrondir chaque résultat à 0,01.",
+      "cells": [
+        {
+          "id": "h1",
+          "label": "h₁",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "h2",
+          "label": "h₂",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "h3",
+          "label": "h₃",
+          "kind": "number",
+          "placeholder": "0"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "h1",
+          "expected": 0.7616,
+          "absTol": 0.02
+        },
+        {
+          "id": "h2",
+          "expected": -0.9245,
+          "absTol": 0.02
+        },
+        {
+          "id": "h3",
+          "expected": 0.4913,
+          "absTol": 0.02
+        }
+      ]
+    },
+    "explanation": "h₁ = tanh(1·1 + 0,5·0 + 0) = tanh(1) ≈ 0,7616. h₂ = tanh(1·(−2) + 0,5·0,7616 + 0) = tanh(−1,6192) ≈ −0,9245. h₃ = tanh(1·1 + 0,5·(−0,9245) + 0) = tanh(0,5378) ≈ 0,4913. L'état caché évolue d'un instant à l'autre selon la récurrence.",
+    "concepts": [
+      "recurrence",
+      "etat-cache",
+      "depliage-temporel"
+    ],
+    "source": "Exo_RNN1.py"
+  },
+  {
+    "chapterSlug": "etat-cache-bptt",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le code Keras ci-dessous, du même type que celui des TP, construit un RNN pour la prédiction d'une série temporelle. Lisez-le et répondez.",
+    "payload": {
+      "code": "from keras.models import Sequential\nfrom keras.layers import Dense, SimpleRNN\n\n# input_shape = (time_steps - 1, 1)\nhidden_units = 8\noutput_units = 1\n\nrnn = Sequential()\nrnn.add(SimpleRNN(hidden_units, input_shape=(time_steps - 1, 1),\n                  activation='tanh'))\nrnn.add(Dense(units=output_units, activation='linear'))\n\nrnn.compile(loss='mean_squared_error', optimizer='adam')",
+      "language": "keras",
+      "caption": "Un RNN Keras pour une série temporelle",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Combien de paramètres entraînables contient la couche SimpleRNN ? L'entrée a 1 caractéristique (d_in = 1) et la couche a 8 unités (d_h = 8). Formule : d_h·(d_in + d_h + 1).",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 80",
+            "hint": "8·(1 + 8 + 1)."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quelle fonction d'activation la couche récurrente SimpleRNN utilise-t-elle ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "La tangente hyperbolique (tanh)"
+              },
+              {
+                "id": "b",
+                "label": "La fonction softmax"
+              },
+              {
+                "id": "c",
+                "label": "La fonction ReLU"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "La couche Dense de sortie a une activation linéaire, ce qui est cohérent avec une tâche de régression (prédiction d'une valeur réelle).",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 80,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": true
+          }
+        }
+      ]
+    },
+    "explanation": "La couche SimpleRNN a d_h·(d_in + d_h + 1) = 8·(1 + 8 + 1) = 8·10 = 80 paramètres. Le code fixe activation='tanh' pour la couche récurrente. La couche Dense de sortie a une activation 'linear' : on prédit une valeur réelle, donc une régression — la perte 'mean_squared_error' confirme ce choix.",
+    "concepts": [
+      "serie-temporelle",
+      "reseau-recurrent"
+    ],
+    "source": "Exo_RNN2.py"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la principale faiblesse du RNN conventionnel, mise en avant par le cours ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Sa mémoire courte : sur une séquence longue, il a oublié les premiers éléments en arrivant à la fin"
+        },
+        {
+          "id": "b",
+          "label": "Il ne peut traiter que des images"
+        },
+        {
+          "id": "c",
+          "label": "Il ne possède aucune fonction d'activation"
+        },
+        {
+          "id": "d",
+          "label": "Il a un nombre de couches fixe"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le RNN standard souffre d'une mémoire courte : en traitant une phrase longue mot par mot, il a déjà oublié les premiers mots en arrivant à la fin. Cela fausse le traitement des dépendances longues, des liens entre mots éloignés.",
+    "concepts": [
+      "gradient-evanescent",
+      "reseau-recurrent"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque porte du LSTM à son rôle, d'après le tableau du cours.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Porte d'oubli (forget), fₜ"
+        },
+        {
+          "id": "l2",
+          "label": "Porte d'entrée (input), iₜ"
+        },
+        {
+          "id": "l3",
+          "label": "Porte de sortie (output), oₜ"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Quelle part de l'ancien état cₜ₋₁ garder"
+        },
+        {
+          "id": "r2",
+          "label": "Quelle part du nouvel état candidat c̃ₜ intégrer"
+        },
+        {
+          "id": "r3",
+          "label": "Quelle part de l'état sortira de la cellule"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "La porte d'oubli fₜ contrôle la part de l'ancien état cₜ₋₁ conservée. La porte d'entrée iₜ contrôle la part du nouvel état candidat c̃ₜ intégrée. La porte de sortie oₜ contrôle la part de l'état qui sortira de la cellule, via hₜ = oₜ ∗ tanh(cₜ).",
+    "concepts": [
+      "lstm",
+      "porte-cellule"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une cellule LSTM met à jour son état par cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ c̃ₜ. À l'instant t : la porte d'oubli vaut fₜ = 0,8, l'état précédent cₜ₋₁ = 2, la porte d'entrée iₜ = 0,5 et l'état candidat c̃ₜ = 1. Calculez le nouvel état de cellule cₜ.",
+    "payload": {
+      "placeholder": "ex. 2,1",
+      "hint": "cₜ = 0,8·2 + 0,5·1."
+    },
+    "solution": {
+      "value": 2.1,
+      "absTol": 0.001
+    },
+    "explanation": "cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ c̃ₜ = 0,8·2 + 0,5·1 = 1,6 + 0,5 = 2,1. La cellule conserve 80 % de son ancienne mémoire et y ajoute la moitié du nouvel état candidat.",
+    "concepts": [
+      "lstm",
+      "etat-de-cellule",
+      "porte-cellule"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On déroule une cellule LSTM (scalaire) sur 2 instants. L'état de cellule suit cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ c̃ₜ et la sortie hₜ = oₜ ∗ tanh(cₜ). L'état initial est c₀ = 0. Les valeurs des portes et du candidat sont données. Instant 1 : f₁ = 0,5, i₁ = 1,0, c̃₁ = 2,0, o₁ = 1,0. Instant 2 : f₂ = 1,0, i₂ = 0,5, c̃₂ = 2,0, o₂ = 0,5. Calculez c₁, c₂ et h₂.",
+    "payload": {
+      "description": "À chaque instant : cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ c̃ₜ, puis hₜ = oₜ ∗ tanh(cₜ). Calculer d'abord c₁, puis c₂ à partir de c₁, puis h₂ à partir de c₂. Arrondir h₂ à 0,01.",
+      "cells": [
+        {
+          "id": "c1",
+          "label": "c₁ (état de cellule)",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "c2",
+          "label": "c₂ (état de cellule)",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "h2",
+          "label": "h₂ (sortie, arrondir à 0,01)",
+          "kind": "number",
+          "placeholder": "0"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "c1",
+          "expected": 2,
+          "absTol": 0.001
+        },
+        {
+          "id": "c2",
+          "expected": 3,
+          "absTol": 0.001
+        },
+        {
+          "id": "h2",
+          "expected": 0.4975,
+          "absTol": 0.02
+        }
+      ]
+    },
+    "explanation": "c₁ = 0,5·0 + 1,0·2,0 = 2,0. c₂ = 1,0·2,0 + 0,5·2,0 = 2,0 + 1,0 = 3,0 (la porte d'oubli f₂ = 1 conserve tout l'ancien état). h₂ = o₂ ∗ tanh(c₂) = 0,5 · tanh(3,0) ≈ 0,5 · 0,9951 ≈ 0,4975.",
+    "concepts": [
+      "lstm",
+      "etat-de-cellule",
+      "porte-cellule"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi les trois portes d'un LSTM utilisent-elles la fonction sigmoïde, et le candidat C̃ₜ la tangente hyperbolique ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La sigmoïde donne une valeur entre 0 et 1 (un dosage de porte) ; le candidat n'a pas cette contrainte"
+        },
+        {
+          "id": "b",
+          "label": "La sigmoïde est plus rapide à calculer que la tangente hyperbolique"
+        },
+        {
+          "id": "c",
+          "label": "C'est un choix purement historique, sans justification"
+        },
+        {
+          "id": "d",
+          "label": "La tangente hyperbolique donne toujours une valeur entre 0 et 1"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Une porte doit moduler une part d'information : sa valeur doit être comprise entre 0 (bloqué) et 1 (laissé passer). La sigmoïde produit exactement une valeur dans [0, 1]. Le candidat C̃ₜ représente une nouvelle valeur d'état, sans cette contrainte de dosage : il utilise donc une tangente hyperbolique.",
+    "concepts": [
+      "lstm",
+      "porte-cellule",
+      "fonction-sigmoide"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "En quoi le GRU (Gated Recurrent Unit) diffère-t-il du LSTM ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "C'est une variante à portes plus simple, avec moins de portes et moins de paramètres"
+        },
+        {
+          "id": "b",
+          "label": "Il n'utilise aucune porte"
+        },
+        {
+          "id": "c",
+          "label": "Il a strictement plus de portes que le LSTM"
+        },
+        {
+          "id": "d",
+          "label": "Il abandonne complètement l'idée de mémoire"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le GRU repose sur le même principe que le LSTM (des neurones à portes qui gèrent la mémoire), mais c'est une variante plus simple : il combine certaines fonctions assurées par des portes distinctes dans le LSTM, ce qui lui donne moins de portes et donc moins de paramètres.",
+    "concepts": [
+      "gru",
+      "lstm",
+      "porte-cellule"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "La figure montre la perte d'apprentissage d'un LSTM entraîné pour la génération de texte, époque après époque (categorical_crossentropy). Lisez la courbe et répondez.",
+    "payload": {
+      "figure": {
+        "kind": "training-curve",
+        "xLabel": "Époque",
+        "yLabel": "Perte (categorical_crossentropy)",
+        "series": [
+          {
+            "label": "Perte d'apprentissage",
+            "tone": "accent",
+            "points": [
+              {
+                "x": 1,
+                "y": 3.1
+              },
+              {
+                "x": 10,
+                "y": 2.3
+              },
+              {
+                "x": 20,
+                "y": 1.8
+              },
+              {
+                "x": 30,
+                "y": 1.5
+              },
+              {
+                "x": 40,
+                "y": 1.35
+              },
+              {
+                "x": 50,
+                "y": 1.3
+              }
+            ]
+          }
+        ],
+        "caption": "Perte d'apprentissage d'un LSTM au fil des époques"
+      },
+      "caption": "Apprentissage d'un LSTM",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Que montre l'évolution de la courbe de perte au fil des époques ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "La perte décroît : le réseau apprend, son erreur diminue"
+              },
+              {
+                "id": "b",
+                "label": "La perte augmente : l'apprentissage diverge"
+              },
+              {
+                "id": "c",
+                "label": "La perte reste constante : le réseau n'apprend rien"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "TRUE_FALSE",
+          "prompt": "Entre l'époque 40 et l'époque 50, la perte ne décroît presque plus : la courbe tend vers un palier.",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": true
+          }
+        }
+      ]
+    },
+    "explanation": "La perte passe de 3,1 à 1,3 : elle décroît nettement, signe que l'apprentissage minimise bien l'erreur. Entre l'époque 40 (1,35) et l'époque 50 (1,3), la baisse n'est plus que de 0,05 : la courbe tend vers un palier, l'apprentissage approche de la convergence.",
+    "concepts": [
+      "lstm",
+      "generation-de-texte",
+      "fonction-de-perte"
+    ],
+    "source": "forTextGen2.py"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Une couche GRU possède 3·d_h·(d_in + d_h + 1) paramètres (le GRU a moins de jeux de poids que le LSTM). Combien de paramètres a une couche GRU de 16 unités recevant une entrée de dimension 8 (d_in = 8, d_h = 16) ?",
+    "payload": {
+      "placeholder": "ex. 1200",
+      "hint": "3·16·(8 + 16 + 1)."
+    },
+    "solution": {
+      "value": 1200,
+      "absTol": 0.001
+    },
+    "explanation": "Nombre de paramètres = 3·d_h·(d_in + d_h + 1) = 3·16·(8 + 16 + 1) = 3·16·25 = 1200. Le GRU étant une variante plus simple que le LSTM, il a moins de portes : son facteur est 3, contre 4 pour le LSTM.",
+    "concepts": [
+      "gru",
+      "lstm"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "La sortie d'une cellule LSTM vaut hₜ = oₜ ∗ tanh(cₜ). À l'instant t, la porte de sortie vaut oₜ = 0,8 et l'état de cellule cₜ = -1. Calculez la sortie hₜ (arrondir à 0,01).",
+    "payload": {
+      "placeholder": "ex. -0,61",
+      "hint": "Calculer tanh(−1), puis multiplier par 0,8."
+    },
+    "solution": {
+      "value": -0.6093,
+      "absTol": 0.02
+    },
+    "explanation": "hₜ = oₜ ∗ tanh(cₜ) = 0,8 · tanh(−1) ≈ 0,8 · (−0,7616) ≈ −0,6093. Un état de cellule négatif donne, via la tangente hyperbolique, une sortie négative ; la porte de sortie en module l'amplitude.",
+    "concepts": [
+      "lstm",
+      "etat-de-cellule",
+      "porte-cellule"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque élément du LSTM à sa fonction d'activation et à son rôle, d'après les formules du cours.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Porte d'oubli Fₜ"
+        },
+        {
+          "id": "l2",
+          "label": "État candidat C̃ₜ"
+        },
+        {
+          "id": "l3",
+          "label": "Sortie de cellule hₜ"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Calculée par une sigmoïde : valeur dans [0, 1], dose l'ancien état conservé"
+        },
+        {
+          "id": "r2",
+          "label": "Calculé par une tangente hyperbolique : nouvelle valeur d'état proposée"
+        },
+        {
+          "id": "r3",
+          "label": "Vaut oₜ ∗ tanh(cₜ) : l'état filtré par la porte de sortie"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "La porte d'oubli Fₜ = σ(...) utilise la sigmoïde : sa valeur dans [0, 1] dose la part d'ancien état conservée. L'état candidat C̃ₜ = tanh(...) propose une nouvelle valeur d'état. La sortie hₜ = oₜ ∗ tanh(cₜ) est l'état de cellule passé par tanh puis filtré par la porte de sortie.",
+    "concepts": [
+      "lstm",
+      "porte-cellule",
+      "fonction-sigmoide"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Selon le cours, qu'est-ce qu'une séquence ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une collection de points de données avec un ordre défini, par exemple un ordre basé sur le temps"
+        },
+        {
+          "id": "b",
+          "label": "Un ensemble de données non ordonnées"
+        },
+        {
+          "id": "c",
+          "label": "Une image en niveaux de gris"
+        },
+        {
+          "id": "d",
+          "label": "Une matrice de poids d'un réseau de neurones"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours définit une séquence comme une collection de points de données avec un ordre défini, par exemple un ordre basé sur le temps. Exemples : séries temporelles (données financières), documents (séquences de mots), images dans les vidéos.",
+    "concepts": [
+      "donnees-sequentielles",
+      "serie-temporelle"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Dans un problème Seq2Seq, la taille T′ de la séquence de sortie est nécessairement égale à la taille T de la séquence d'entrée.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Le cours souligne que dans le cas général, T′ n'est pas nécessairement égal à T : l'entrée et la sortie peuvent avoir des longueurs différentes. Par exemple, une phrase traduite n'a pas forcément le même nombre de mots que la phrase d'origine.",
+    "concepts": [
+      "donnees-sequentielles",
+      "encodeur-decodeur"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans l'exemple du cours, on veut un RNN qui devine le mot suivant avec un vocabulaire de |A| = 10 000 mots. Combien de neurones doit avoir sa couche de sortie, et quelle activation utilise-t-elle ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "10 000 neurones, activation softmax"
+        },
+        {
+          "id": "b",
+          "label": "1 neurone, activation linéaire"
+        },
+        {
+          "id": "c",
+          "label": "50 neurones, activation sigmoïde"
+        },
+        {
+          "id": "d",
+          "label": "500 neurones, activation tanh"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Pour prédire le mot suivant, la couche de sortie a un neurone par mot du vocabulaire, soit |A| = 10 000 neurones, et utilise l'activation softmax. Chaque sortie Yᵗ[k] est alors la probabilité que le mot suivant soit le k-ème du vocabulaire. La couche cachée, elle, a 500 neurones et une activation sigmoïde.",
+    "concepts": [
+      "softmax",
+      "generation-de-texte",
+      "donnees-sequentielles"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Parmi ces affirmations sur le mécanisme d'attention, lesquelles sont correctes selon le cours ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il ajoute à l'encodeur-décodeur un réseau de neurones standard (pas besoin d'un RNN)"
+        },
+        {
+          "id": "b",
+          "label": "Il attribue des poids (une importance) aux sorties successives de l'encodeur"
+        },
+        {
+          "id": "c",
+          "label": "Ces poids sont fixés manuellement par le concepteur, sans apprentissage"
+        },
+        {
+          "id": "d",
+          "label": "Il vise à souligner, à chaque étape, les parties de la phrase les plus importantes"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "d"
+      ]
+    },
+    "explanation": "Le mécanisme d'attention ajoute un réseau de neurones standard (pas un RNN) qui pondère les sorties successives de l'encodeur, soulignant les mots les plus utiles à chaque étape. Ces poids ne sont pas fixés à la main : ils sont appris, le réseau étant entraîné conjointement avec le reste de l'encodeur-décodeur.",
+    "concepts": [
+      "mecanisme-d-attention",
+      "encodeur-decodeur"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quel changement de paradigme le transformeur représente-t-il par rapport aux RNN ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il garde l'attention mais abandonne la récurrence, ce qui permet un traitement parallèle"
+        },
+        {
+          "id": "b",
+          "label": "Il garde la récurrence mais abandonne l'attention"
+        },
+        {
+          "id": "c",
+          "label": "Il abandonne à la fois l'attention et la récurrence"
+        },
+        {
+          "id": "d",
+          "label": "Il revient aux réseaux feedforward de taille fixe"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le transformeur conserve l'idée la plus puissante des RNN avancés — l'attention — mais abandonne la récurrence elle-même. Là où un RNN traite une séquence élément après élément (intrinsèquement séquentiel), le transformeur fonctionne en parallèle, ce qui lui permet de monter à l'échelle.",
+    "concepts": [
+      "transformeur",
+      "mecanisme-d-attention",
+      "reseau-recurrent"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le softmax transforme un vecteur de logits en probabilités. Pour des logits tous égaux z = (0, 0, 0) sur un vocabulaire de 3 mots, la probabilité du mot k vaut exp(0) / (exp(0) + exp(0) + exp(0)). Quelle probabilité le softmax attribue-t-il à chacun des 3 mots (arrondir à 0,001) ?",
+    "payload": {
+      "placeholder": "ex. 0,333",
+      "hint": "exp(0) = 1 ; chaque probabilité vaut 1 / (1 + 1 + 1)."
+    },
+    "solution": {
+      "value": 0.3333,
+      "absTol": 0.005
+    },
+    "explanation": "Avec des logits tous égaux, le softmax produit une distribution uniforme : exp(0) / (3·exp(0)) = 1/3 ≈ 0,333. La somme des trois probabilités vaut bien 1. C'est le cas d'un modèle qui ne privilégie aucun mot.",
+    "concepts": [
+      "softmax",
+      "generation-de-texte"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Dans la prédiction du mot suivant, la couche de sortie produit, via softmax, des logits z = (z₁, z₂, z₃) = (1, 1, 2) sur un mini-vocabulaire de 3 mots. La probabilité du mot k vaut exp(zₖ) / Σ exp(z_k′). Calculez la probabilité du mot 1 (arrondir à 0,001). On donne e¹ ≈ 2,718, e² ≈ 7,389.",
+    "payload": {
+      "placeholder": "ex. 0,212",
+      "hint": "Probabilité = e¹ / (e¹ + e¹ + e²) = 2,718 / (2,718 + 2,718 + 7,389)."
+    },
+    "solution": {
+      "value": 0.2119,
+      "absTol": 0.01
+    },
+    "explanation": "Somme des exponentielles = e¹ + e¹ + e² ≈ 2,718 + 2,718 + 7,389 = 12,825. Probabilité du mot 1 = e¹ / 12,825 ≈ 2,718 / 12,825 ≈ 0,212. Les mots 1 et 2 ont le même logit, donc la même probabilité ; le mot 3, de logit plus élevé, est le plus probable.",
+    "concepts": [
+      "softmax",
+      "generation-de-texte"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "La figure montre la perte d'apprentissage d'un RNN entraîné pour prédire une série temporelle (erreur quadratique). Lisez la courbe et répondez.",
+    "payload": {
+      "figure": {
+        "kind": "training-curve",
+        "xLabel": "Époque",
+        "yLabel": "Perte (erreur quadratique)",
+        "series": [
+          {
+            "label": "Perte d'apprentissage",
+            "tone": "accent",
+            "points": [
+              {
+                "x": 1,
+                "y": 0.42
+              },
+              {
+                "x": 20,
+                "y": 0.15
+              },
+              {
+                "x": 40,
+                "y": 0.06
+              },
+              {
+                "x": 60,
+                "y": 0.03
+              },
+              {
+                "x": 80,
+                "y": 0.022
+              },
+              {
+                "x": 100,
+                "y": 0.02
+              }
+            ]
+          }
+        ],
+        "caption": "Perte d'apprentissage d'un RNN au fil des époques"
+      },
+      "caption": "Apprentissage d'un RNN de série temporelle",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Que montre l'évolution de la courbe de perte au fil des époques ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "La perte décroît : l'apprentissage minimise bien l'erreur"
+              },
+              {
+                "id": "b",
+                "label": "La perte augmente : l'apprentissage diverge"
+              },
+              {
+                "id": "c",
+                "label": "La perte oscille sans tendance"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "TRUE_FALSE",
+          "prompt": "Entre l'époque 80 et l'époque 100, la perte ne décroît presque plus : la courbe atteint un palier.",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": true
+          }
+        }
+      ]
+    },
+    "explanation": "La perte passe de 0,42 à 0,02 : elle décroît nettement, signe que la descente de gradient minimise l'erreur quadratique. Entre l'époque 80 (0,022) et l'époque 100 (0,02), la baisse n'est plus que de 0,002 : la courbe atteint un palier, l'apprentissage approche de la convergence.",
+    "concepts": [
+      "serie-temporelle",
+      "fonction-de-perte"
+    ],
+    "source": "Exo_RNN2.py"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le pseudo-code ci-dessous décrit la sélection du caractère suivant par un LSTM entraîné (comme dans forTextGen2.py, qui utilise np.argmax). Donnez la valeur affichée par la dernière instruction.",
+    "payload": {
+      "program": "# y_pred : distribution de probabilite predite par le LSTM\n# indices_char : index -> caractere\ny_pred = [0.12, 0.08, 0.25, 0.55]   # 4 caracteres\nindices_char = {0: 'r', 1: 'n', 2: 'a', 3: 'e'}\nnext_index = argmax(y_pred)         # index de la proba maximale\nnext_char = indices_char[next_index]\nprint(next_char)"
+    },
+    "solution": {
+      "expectedOutput": "e"
+    },
+    "explanation": "argmax(y_pred) renvoie l'index de la probabilité maximale. La plus grande valeur est 0,55, à l'index 3. indices_char[3] = 'e'. Le caractère prédit, et donc affiché, est 'e'. C'est la stratégie de génération du code forTextGen2.py.",
+    "concepts": [
+      "generation-de-texte",
+      "softmax"
+    ],
+    "source": "forTextGen2.py"
+  }
+]

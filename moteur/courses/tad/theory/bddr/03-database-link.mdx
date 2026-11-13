@@ -1,0 +1,92 @@
+---
+title: Database links Oracle
+slug: database-link
+order: 3
+estimatedReadMin: 5
+concepts: [database-link]
+source: "CM4, slides 14-17"
+---
+
+## Le mécanisme du Database Link
+
+Pour qu'un site Oracle puisse interroger une base distante de manière **transparente**, on crée un **database link** : un objet qui mémorise la connexion à la base distante.
+
+### Création
+
+```sql
+CREATE DATABASE LINK db_toulouse
+  CONNECT TO user_distant IDENTIFIED BY password
+  USING 'XE';
+```
+
+- `db_toulouse` : nom local du lien (utilisé dans les requêtes).
+- `CONNECT TO ... IDENTIFIED BY ...` : identifiants pour se connecter à la base distante.
+- `USING 'XE'` : nom du service Oracle Net (résolu via `tnsnames.ora`).
+
+### Lien public ou privé
+
+```sql
+CREATE PUBLIC DATABASE LINK db_toulouse ...
+```
+
+- Sans `PUBLIC` : utilisable uniquement par le créateur du lien.
+- Avec `PUBLIC` : utilisable par tous les utilisateurs.
+
+## Utilisation : requête locale vs distante
+
+Une fois le lien créé, on cible une table distante avec la notation `table@lien` :
+
+```sql
+-- Requête locale
+SELECT * FROM Client;
+
+-- Requête distante
+SELECT * FROM Client@db_toulouse;
+
+-- Jointure distribuée
+SELECT C.nom, F.montant
+FROM Client@db_toulouse C, Facture F
+WHERE C.id = F.id_client;
+```
+
+Oracle se charge de la mécanique réseau, de la traduction des requêtes, de la fusion des résultats.
+
+## Opérations sur les liens
+
+### Fermeture (utile en forte charge)
+
+```sql
+ALTER SESSION CLOSE DATABASE LINK db_toulouse;
+```
+
+Libère la connexion réseau ouverte par le lien dans la session courante.
+
+### Suppression
+
+```sql
+DROP DATABASE LINK db_toulouse;
+DROP PUBLIC DATABASE LINK db_toulouse;
+```
+
+## Cas typique : vue répartie
+
+Un fragment horizontal local + un fragment horizontal distant assemblés par une vue :
+
+```sql
+CREATE VIEW Client_global AS
+  SELECT * FROM Client_paris
+  UNION ALL
+  SELECT * FROM Client_marseille@db_marseille
+  UNION ALL
+  SELECT * FROM Client_lyon@db_lyon;
+```
+
+Les requêtes posées sur `Client_global` s'exécutent comme si la base était unique.
+
+> **À retenir**
+> - `CREATE DATABASE LINK nom CONNECT TO ... IDENTIFIED BY ... USING 'service';`
+> - Avec `PUBLIC` : usage par tous, sinon privé.
+> - Requête distante : `SELECT ... FROM table@nom_lien;`
+> - `ALTER SESSION CLOSE DATABASE LINK ...` ferme une connexion ouverte.
+> - `DROP DATABASE LINK ...` supprime le lien.
+> - Combiné avec les vues, le lien rend la fragmentation transparente.

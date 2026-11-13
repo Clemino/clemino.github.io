@@ -1,0 +1,82 @@
+---
+title: Réplication
+slug: replication
+order: 4
+estimatedReadMin: 6
+concepts: [replication, vue-materialisee]
+source: "CM4 (techniques de répartition)"
+---
+
+## Principe de la réplication
+
+La **réplication** consiste à stocker la **même donnée sur plusieurs sites**. C'est la deuxième grande technique de répartition, complémentaire de la fragmentation.
+
+### Pourquoi répliquer ?
+
+- **Disponibilité** : un site tombe, les autres peuvent continuer à servir les requêtes.
+- **Performance** : un utilisateur lit la copie la plus proche (latence réseau réduite).
+- **Tolérance aux pannes** : pas de point unique de défaillance pour les données critiques.
+
+### Le coût
+
+- **Cohérence à maintenir** : toute modification doit se propager aux autres copies.
+- **Volumétrie stockée** : multipliée par le nombre de copies.
+- **Latence de propagation** : pendant la propagation, les copies divergent.
+
+## Stratégies de cohérence
+
+### Cohérence forte (synchrone)
+
+Toute modification est propagée **immédiatement** à toutes les copies dans la transaction. Si une copie est indisponible, la transaction échoue.
+
+> **Garanti** : toutes les copies sont **toujours identiques**.
+> **Inconvénient** : performance et disponibilité dégradées (la transaction attend toutes les confirmations).
+
+Oracle implémente cela via le **two-phase commit (2PC)** pour les bases distribuées.
+
+### Cohérence faible (asynchrone)
+
+Les modifications sont propagées **plus tard**, en arrière-plan. Les copies peuvent **diverger temporairement** mais convergent à terme (*eventual consistency*).
+
+> **Avantage** : performance et disponibilité optimales.
+> **Inconvénient** : un lecteur peut lire une donnée obsolète.
+
+## Réplication via vues matérialisées
+
+Oracle implémente une forme courante de réplication asynchrone avec les **vues matérialisées** (cf. CM1) :
+
+```sql
+-- Sur le site distant : on suppose un lien db_paris
+CREATE MATERIALIZED VIEW MV_Client_local
+  REFRESH FAST ON COMMIT
+  AS SELECT * FROM Client@db_paris;
+```
+
+- `REFRESH FAST` : seules les modifications sont propagées (besoin d'un `MATERIALIZED VIEW LOG` côté source).
+- `ON COMMIT` : propagation à chaque commit de la transaction source.
+- `START WITH ... NEXT ...` permet de planifier des rafraîchissements périodiques (par exemple toutes les 5 minutes).
+
+C'est l'outil de prédilection pour répliquer des **données de référence** (taux, codes produits, paramètres globaux) sur tous les sites en lecture.
+
+## Combinaison fragmentation + réplication
+
+Cas d'usage classique : entreprise multi-sites avec :
+
+- **Fragmentation horizontale** sur les données « locales » (clients de chaque ville sur le site de cette ville),
+- **Réplication intégrale** des « données de référence » utiles partout (catalogue produits, taux de change).
+
+```
+Site Paris :
+  Client(Ville='Paris')      -- fragment horizontal local
+  Produit (réplique)         -- vue matérialisée du catalogue central
+
+Site Marseille :
+  Client(Ville='Marseille')
+  Produit (réplique)
+```
+
+> **À retenir**
+> - Réplication = même donnée sur plusieurs sites.
+> - 2 stratégies : cohérence forte (synchrone, 2PC) ou faible (asynchrone, *eventual consistency*).
+> - Oracle implémente la réplication asynchrone avec les **vues matérialisées** (FAST + ON COMMIT ou planifié).
+> - Fragmentation et réplication se combinent : fragmenter le local, répliquer les références.

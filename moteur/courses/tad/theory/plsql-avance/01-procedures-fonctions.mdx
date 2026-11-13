@@ -1,0 +1,137 @@
+---
+title: Procédures et fonctions
+slug: procedures-fonctions
+order: 1
+estimatedReadMin: 8
+concepts: [procedure, fonction, parametre-in-out]
+source: "CM6, slides 3-9"
+---
+
+## Différences entre procédure et fonction
+
+| | Procédure | Fonction |
+|---|---|---|
+| Renvoie une valeur | Non | Oui (clause `RETURN`) |
+| Appel | `EXEC nom(...)` ou dans un bloc | Dans une expression, un `SELECT`, etc. |
+| Paramètres OUT | Oui | Possible mais peu courant |
+| Cas d'usage | Action (modifier des données) | Calcul d'une valeur dérivée |
+
+Les deux sont **stockés** en base et offrent un **traitement identique et commun** à tous les applicatifs : c'est l'idée principale du PL/SQL.
+
+## Déclaration d'une procédure
+
+```sql
+CREATE [OR REPLACE] PROCEDURE nom_procedure (paramètres)
+IS
+   <bloc de variables>
+BEGIN
+   <bloc de traitements>
+END;
+```
+
+## Déclaration d'une fonction
+
+```sql
+CREATE [OR REPLACE] FUNCTION nom_fonction (paramètres)
+RETURN type
+IS
+   <bloc de variables>
+BEGIN
+   <bloc de traitements>
+   RETURN <résultat>;
+END;
+```
+
+> ⚠️ Une fonction **doit** retourner une valeur via `RETURN` (au moins une fois) sur tous les chemins d'exécution.
+
+## Les paramètres
+
+Trois modes de passage :
+
+- **`IN`** : entrée seulement. **Lecture seule** dans le corps. Mode par défaut.
+- **`OUT`** : sortie seulement. Le paramètre n'a pas de valeur à l'entrée ; on lui assigne une valeur dans le corps qui sera lue par l'appelant.
+- **`IN OUT`** : lecture et écriture.
+
+```sql
+CREATE [OR REPLACE] PROCEDURE nom_procedure (
+   p_1 IN     <type1> DEFAULT <valeur>,
+   p_2 OUT    <type2>,
+   p_3 IN OUT <type3>
+)
+IS
+   <bloc de variables>
+BEGIN
+   <bloc de traitements>
+END;
+```
+
+> ⚠️ **Les types des paramètres sont spécifiés sans leur taille.** On écrit `IN NUMBER`, jamais `IN NUMBER(8,2)`. Idem pour `IN VARCHAR2`, jamais `IN VARCHAR2(50)`. Si on veut tailler comme une colonne de table, on utilise `%TYPE` :
+>
+> ```sql
+> p_id IN client.id%TYPE
+> ```
+
+### Exemple
+
+```sql
+CREATE OR REPLACE PROCEDURE ma_proc (
+   p_1 IN NUMBER,
+   p_2 IN VARCHAR2
+)
+IS
+   ...
+```
+
+## Variables locales et typage
+
+```sql
+CREATE [OR REPLACE] PROCEDURE nom_procedure (<paramètres>)
+IS
+   v_1 NUMBER;
+   v_2 <table>.<colonne>%TYPE;
+   v_3 <table>%ROWTYPE;
+   TYPE t_rec_nom IS RECORD (
+       <att1> type1,
+       <att2> type2
+   );
+   v_rec_1 t_rec_nom;
+BEGIN
+   <bloc de traitements>
+END;
+```
+
+## Appel
+
+### Depuis un bloc PL/SQL
+
+```sql
+BEGIN
+   v_res := f_nom(<params>);
+   ma_proc(<params>);
+END;
+```
+
+### Depuis SQL\*Plus
+
+```sql
+SELECT f_nom(<params>) FROM DUAL;
+EXEC ma_proc(<params>);
+```
+
+> ⚠️ Une fonction utilisable dans un `SELECT` doit être **pure** : ne pas modifier la base ni dépendre du contexte de session (sinon les optimisations Oracle peuvent donner des résultats incohérents).
+
+## Fonctions natives utiles
+
+PL/SQL embarque de nombreuses fonctions communes (sans déclaration nécessaire) :
+
+- **Chaînes** : `||` (concat), `TRIM`, `LENGTH`, `SUBSTR`, `UPPER`, `LOWER`, `INSTR`, `REPLACE`…
+- **Numériques** : `CEIL`, `FLOOR`, `ROUND`, `TRUNC`, `SQRT`, `ABS`, `MOD`, `POWER`…
+- **Dates** : `TO_DATE`, `TO_CHAR`, `SYSDATE`, `NEXT_DAY`, `ADD_MONTHS`, `MONTHS_BETWEEN`, `EXTRACT`…
+- **Transformations** : `DECODE`, `COALESCE`, `NVL`, `NVL2`, `CASE WHEN`…
+
+> **À retenir**
+> - Procédure = action. Fonction = renvoie une valeur via `RETURN`.
+> - Modes paramètres : `IN` (défaut), `OUT`, `IN OUT`.
+> - **Types des paramètres : sans taille** (`IN NUMBER`, pas `IN NUMBER(8)`).
+> - `%TYPE` et `%ROWTYPE` pour dériver d'une table.
+> - Appel depuis bloc : `nom(...);` ; depuis SQL\*Plus : `EXEC nom(...);` ou `SELECT f(...) FROM DUAL;`.

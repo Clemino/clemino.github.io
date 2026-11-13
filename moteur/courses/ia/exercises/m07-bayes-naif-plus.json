@@ -1,0 +1,1106 @@
+[
+  {
+    "chapterSlug": "probabilites-bayes",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On donne Pr(A) = 0,3, Pr(B/A) = 0,5 et Pr(B/non A) = 0,2. Calculez Pr(B) par le théorème des probabilités totales.",
+    "payload": {
+      "placeholder": "ex. 0.29",
+      "hint": "Pr(B) = Pr(B/A)·Pr(A) + Pr(B/non A)·Pr(non A), avec Pr(non A) = 1 − Pr(A)."
+    },
+    "solution": {
+      "value": 0.29,
+      "absTol": 0.005
+    },
+    "explanation": "Pr(non A) = 1 − 0,3 = 0,7. Probabilités totales : Pr(B) = 0,5·0,3 + 0,2·0,7 = 0,15 + 0,14 = 0,29.",
+    "concepts": [
+      "theoreme-des-probabilites-totales",
+      "probabilite-conditionnelle"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "probabilites-bayes",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Dans un filtre anti-spam, Pr(spam) = 0,4. Le mot « offre » apparaît avec Pr(« offre »/spam) = 0,7 et Pr(« offre »/non spam) = 0,1. Un courriel contient le mot « offre ». Calculez la probabilité a posteriori Pr(spam/« offre »). Arrondissez au millième.",
+    "payload": {
+      "placeholder": "ex. 0.824",
+      "hint": "Pr(« offre ») = 0,7·0,4 + 0,1·0,6 (probabilités totales). Pr(spam/« offre ») = 0,7·0,4 / Pr(« offre »)."
+    },
+    "solution": {
+      "value": 0.824,
+      "absTol": 0.004
+    },
+    "explanation": "Probabilités totales : Pr(« offre ») = 0,7·0,4 + 0,1·0,6 = 0,28 + 0,06 = 0,34. Théorème de Bayes : Pr(spam/« offre ») = 0,28 / 0,34 ≈ 0,824.",
+    "concepts": [
+      "theoreme-de-bayes",
+      "theoreme-des-probabilites-totales"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "probabilites-bayes",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Connaître Y peut changer la probabilité que l'on accorde à X : en général, Pr(X/Y) n'est pas égale à Pr(X).",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Une probabilité conditionnelle réévalue une probabilité à la lumière d'une information : Pr(X/Y) n'est en général pas égale à Pr(X). C'est exactement ce dont le classifieur a besoin — connaître la probabilité d'une classe une fois les attributs observés.",
+    "concepts": [
+      "probabilite-conditionnelle"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "probabilites-bayes",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Deux classes C₁ et C₂ avec Pr(C₁) = 0,6 et Pr(C₂) = 0,4. Pour une instance d, on a Pr(d/C₁) = 0,1 et Pr(d/C₂) = 0,25. Calculez Pr(d) par le théorème des probabilités totales.",
+    "payload": {
+      "placeholder": "ex. 0.16",
+      "hint": "Pr(d) = Σⱼ Pr(d/Cⱼ)·Pr(Cⱼ) = Pr(d/C₁)·Pr(C₁) + Pr(d/C₂)·Pr(C₂)."
+    },
+    "solution": {
+      "value": 0.16,
+      "absTol": 0.005
+    },
+    "explanation": "Théorème des probabilités totales : Pr(d) = 0,1·0,6 + 0,25·0,4 = 0,06 + 0,10 = 0,16.",
+    "concepts": [
+      "theoreme-des-probabilites-totales",
+      "probabilite-a-posteriori"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "classifieur-bayesien-naif",
+    "type": "NUMERIC",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un ensemble d'apprentissage compte 500 exemples : 300 de classe C₁ et 200 de classe C₂. Estimez la probabilité a priori Pr(C₂).",
+    "payload": {
+      "placeholder": "ex. 0.4",
+      "hint": "Pr(C₂) ≃ (exemples de classe C₂) / (total)."
+    },
+    "solution": {
+      "value": 0.4,
+      "absTol": 0.001
+    },
+    "explanation": "Pr(C₂) ≃ 200/500 = 0,40. La probabilité a priori est la proportion d'exemples de la classe dans l'ensemble d'apprentissage.",
+    "concepts": [
+      "probabilite-a-priori",
+      "estimation-de-probabilite"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "classifieur-bayesien-naif",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une instance d a deux attributs. Pour la classe Cⱼ, on a estimé Pr(A₁=a₁/Cⱼ) = 0,5 et Pr(A₂=a₂/Cⱼ) = 0,3. En utilisant l'hypothèse d'indépendance, calculez la vraisemblance Pr(d/Cⱼ).",
+    "payload": {
+      "placeholder": "ex. 0.15",
+      "hint": "Hypothèse d'indépendance : Pr(d/Cⱼ) = Πᵢ Pr(Aᵢ=aᵢ/Cⱼ) = Pr(A₁=a₁/Cⱼ)·Pr(A₂=a₂/Cⱼ)."
+    },
+    "solution": {
+      "value": 0.15,
+      "absTol": 0.002
+    },
+    "explanation": "L'hypothèse d'indépendance factorise la vraisemblance en produit : Pr(d/Cⱼ) = 0,5 · 0,3 = 0,15.",
+    "concepts": [
+      "hypothese-d-independance",
+      "vraisemblance"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "classifieur-bayesien-naif",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Une instance d a trois attributs. Pour la classe Cⱼ : Pr(A₁=a₁/Cⱼ) = 0,4, Pr(A₂=a₂/Cⱼ) = 0,5, Pr(A₃=a₃/Cⱼ) = 0,2. Sachant Pr(Cⱼ) = 0,5, calculez le produit non normalisé Pr(Cⱼ)·Pr(d/Cⱼ).",
+    "payload": {
+      "placeholder": "ex. 0.02",
+      "hint": "Pr(d/Cⱼ) = 0,4·0,5·0,2 (hypothèse d'indépendance), puis multipliez par Pr(Cⱼ)."
+    },
+    "solution": {
+      "value": 0.02,
+      "absTol": 0.002
+    },
+    "explanation": "Pr(d/Cⱼ) = 0,4 · 0,5 · 0,2 = 0,04 (hypothèse d'indépendance). Produit non normalisé : Pr(Cⱼ)·Pr(d/Cⱼ) = 0,5 · 0,04 = 0,02.",
+    "concepts": [
+      "hypothese-d-independance",
+      "vraisemblance"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "classifieur-bayesien-naif",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Voici un ensemble d'apprentissage de 10 fruits décrits par deux attributs — « Couleur » (Jaune, Rouge, Vert) et « Forme » (Ronde, Allongée) — et une classe (Banane ou Pomme). Lisez le tableau et estimez les probabilités demandées.",
+    "payload": {
+      "figure": {
+        "kind": "data-table",
+        "columns": [
+          "Couleur",
+          "Forme",
+          "Classe"
+        ],
+        "rows": [
+          ["Jaune", "Allongee", "Banane"],
+          ["Jaune", "Allongee", "Banane"],
+          ["Vert", "Allongee", "Banane"],
+          ["Jaune", "Allongee", "Banane"],
+          ["Jaune", "Ronde", "Banane"],
+          ["Rouge", "Ronde", "Pomme"],
+          ["Vert", "Ronde", "Pomme"],
+          ["Rouge", "Ronde", "Pomme"],
+          ["Jaune", "Ronde", "Pomme"],
+          ["Rouge", "Ronde", "Pomme"]
+        ],
+        "caption": "Ensemble d'apprentissage : 10 fruits"
+      },
+      "caption": "Estimation des probabilités sur le jeu fruits",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la probabilité a priori Pr(Banane) ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Comptez les fruits de classe Banane sur 10."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la probabilité conditionnelle Pr(Couleur = Jaune / Banane) ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Parmi les 5 bananes, combien sont jaunes ?"
+          }
+        },
+        {
+          "id": "q3",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la probabilité conditionnelle Pr(Forme = Ronde / Pomme) ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Parmi les 5 pommes, combien sont rondes ?"
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 0.5,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 0.8,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": 1.0,
+            "absTol": 0.001
+          }
+        }
+      ]
+    },
+    "explanation": "5 bananes et 5 pommes sur 10 : Pr(Banane) = 5/10 = 0,5. Parmi les 5 bananes, 4 sont jaunes : Pr(Couleur=Jaune/Banane) = 4/5 = 0,8. Parmi les 5 pommes, les 5 sont rondes : Pr(Forme=Ronde/Pomme) = 5/5 = 1,0.",
+    "concepts": [
+      "estimation-de-probabilite",
+      "probabilite-a-priori",
+      "probabilite-conditionnelle"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "classifieur-bayesien-naif",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez l'énoncé du théorème des probabilités totales pour Pr(d).",
+    "payload": {
+      "template": "Pr(d) = Σⱼ Pr(d/Cⱼ)·Pr(Cⱼ) : c'est la {{t1}}, sur toutes les classes, des produits Pr(d/Cⱼ)·Pr(Cⱼ). Une instance appartient forcément à l'{{t2}} des m classes.",
+      "slots": [
+        {
+          "id": "t1",
+          "width": "sm",
+          "placeholder": "opération Σ"
+        },
+        {
+          "id": "t2",
+          "width": "sm",
+          "placeholder": "l'… des classes"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "t1": [
+          "somme"
+        ],
+        "t2": [
+          "une",
+          "l'une"
+        ]
+      },
+      "stripAccents": true
+    },
+    "explanation": "Pr(d) est la somme, sur toutes les classes, des produits Pr(d/Cⱼ)·Pr(Cⱼ). L'idée : une instance appartient forcément à l'une des m classes, qui recouvrent tous les cas possibles.",
+    "concepts": [
+      "theoreme-des-probabilites-totales",
+      "classe"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "classifieur-bayesien-naif",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Grâce à l'hypothèse d'indépendance, au lieu d'estimer une probabilité portant sur une combinaison de p valeurs, on n'a plus qu'à estimer p probabilités simples, une par attribut.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. C'est tout l'intérêt de l'hypothèse d'indépendance : elle remplace l'estimation d'une probabilité sur une combinaison rare de p valeurs par l'estimation de p probabilités simples Pr(Aᵢ=aᵢ/Cⱼ), chacune facile à estimer car portant sur un seul attribut.",
+    "concepts": [
+      "hypothese-d-independance",
+      "vraisemblance"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un attribut Aᵢ possède mᵢ = 4 valeurs possibles. Dans une classe Cⱼ de 6 exemples, la valeur a apparaît 2 fois. Calculez Pr(Aᵢ=a/Cⱼ) avec le lissage de Laplace et λ = 1.",
+    "payload": {
+      "placeholder": "ex. 0.3",
+      "hint": "Pr(Aᵢ=a/Cⱼ) = (1 + 2) / (4·1 + 6)."
+    },
+    "solution": {
+      "value": 0.3,
+      "absTol": 0.002
+    },
+    "explanation": "Lissage de Laplace : Pr(Aᵢ=a/Cⱼ) = (1 + 2) / (4·1 + 6) = 3/10 = 0,30.",
+    "concepts": [
+      "lissage-de-laplace",
+      "estimation-de-probabilite"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un attribut binaire Aᵢ (mᵢ = 2). Dans une classe Cⱼ de 5 exemples, la valeur a apparaît 4 fois. Calculez Pr(Aᵢ=a/Cⱼ) avec un lissage de paramètre λ = 2.",
+    "payload": {
+      "placeholder": "ex. 0.667",
+      "hint": "Pr(Aᵢ=a/Cⱼ) = (λ + comptage) / (mᵢ·λ + nb exemples de Cⱼ) = (2 + 4) / (2·2 + 5)."
+    },
+    "solution": {
+      "value": 0.667,
+      "absTol": 0.004
+    },
+    "explanation": "Lissage avec λ = 2 : Pr(Aᵢ=a/Cⱼ) = (2 + 4) / (2·2 + 5) = 6/9 ≈ 0,667. Avec un λ plus grand, l'estimation est davantage tirée vers la valeur uniforme (0,5 pour deux valeurs) que la fréquence brute 4/5 = 0,8.",
+    "concepts": [
+      "lissage-de-laplace",
+      "estimation-de-probabilite"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi un seul facteur nul dans le calcul de Pr(d/Cⱼ) annule-t-il toute la vraisemblance ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Parce que Pr(d/Cⱼ) est un produit Πᵢ Pr(Aᵢ=aᵢ/Cⱼ), et un produit avec un facteur nul vaut 0"
+        },
+        {
+          "id": "b",
+          "label": "Parce que Pr(d/Cⱼ) est une somme, et une somme avec un terme nul vaut 0"
+        },
+        {
+          "id": "c",
+          "label": "Parce qu'un facteur nul rend Pr(Cⱼ) négatif"
+        },
+        {
+          "id": "d",
+          "label": "Parce que le classifieur arrondit toujours à 0"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La vraisemblance est un produit : Pr(d/Cⱼ) = Πᵢ Pr(Aᵢ=aᵢ/Cⱼ). Or un seul facteur nul annule tout le produit. Il suffit donc qu'un seul attribut porte une valeur jamais vue avec Cⱼ pour que Pr(d/Cⱼ), et donc Pr(Cⱼ/d), s'effondre à 0.",
+    "concepts": [
+      "probleme-de-probabilite-nulle",
+      "vraisemblance"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Voici un ensemble d'apprentissage de 10 fruits (Couleur ∈ {Jaune, Rouge, Vert}, Forme ∈ {Ronde, Allongée}, classe Banane ou Pomme). Lisez le tableau et répondez : il s'agit de repérer le problème de la probabilité nulle et de le corriger par le lissage de Laplace (λ = 1).",
+    "payload": {
+      "figure": {
+        "kind": "data-table",
+        "columns": [
+          "Couleur",
+          "Forme",
+          "Classe"
+        ],
+        "rows": [
+          ["Jaune", "Allongee", "Banane"],
+          ["Jaune", "Allongee", "Banane"],
+          ["Vert", "Allongee", "Banane"],
+          ["Jaune", "Allongee", "Banane"],
+          ["Jaune", "Ronde", "Banane"],
+          ["Rouge", "Ronde", "Pomme"],
+          ["Vert", "Ronde", "Pomme"],
+          ["Rouge", "Ronde", "Pomme"],
+          ["Jaune", "Ronde", "Pomme"],
+          ["Rouge", "Ronde", "Pomme"]
+        ],
+        "caption": "Ensemble d'apprentissage : 10 fruits"
+      },
+      "caption": "Problème de la probabilité nulle et lissage de Laplace",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Estimation brute (sans lissage) : que vaut Pr(Couleur = Rouge / Banane) ?",
+          "weight": 1,
+          "payload": {
+            "hint": "Parmi les 5 bananes, combien sont rouges ?"
+          }
+        },
+        {
+          "id": "q2",
+          "type": "TRUE_FALSE",
+          "prompt": "Sans lissage, classer un fruit rouge dans la classe Banane donne une vraisemblance Pr(d/Banane) nulle.",
+          "weight": 1,
+          "payload": {}
+        },
+        {
+          "id": "q3",
+          "type": "NUMERIC",
+          "prompt": "Avec le lissage de Laplace (λ = 1, mᵢ = 3 valeurs de Couleur, classe Banane de 5 exemples), que vaut Pr(Couleur = Rouge / Banane) ? Arrondissez au millième.",
+          "weight": 1,
+          "payload": {
+            "hint": "Pr = (1 + 0) / (3·1 + 5)."
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 0.0,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": true
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": 0.125,
+            "absTol": 0.002
+          }
+        }
+      ]
+    },
+    "explanation": "Aucune des 5 bananes n'est rouge : l'estimation brute donne Pr(Couleur=Rouge/Banane) = 0/5 = 0. Comme la vraisemblance est un produit, classer un fruit rouge dans Banane donne Pr(d/Banane) = 0. Le lissage de Laplace corrige : Pr(Couleur=Rouge/Banane) = (1 + 0) / (3·1 + 5) = 1/8 = 0,125, strictement positive.",
+    "concepts": [
+      "probleme-de-probabilite-nulle",
+      "lissage-de-laplace",
+      "estimation-de-probabilite"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Sur le jeu de 10 fruits (5 bananes, 5 pommes), on classe le fruit d = (Couleur = Vert, Forme = Allongée) avec le lissage de Laplace (λ = 1). Couleur a mᵢ = 3 valeurs, Forme a mᵢ = 2 valeurs. Comptages chez la classe Pomme : Couleur=Vert apparaît 1 fois, Forme=Allongée apparaît 0 fois. Calculez les deux probabilités conditionnelles lissées de la classe Pomme, le produit Pr(Pomme)·Pr(d/Pomme), puis indiquez si le lissage évite une vraisemblance nulle.",
+    "payload": {
+      "description": "Lissage de Laplace : Pr(Aᵢ=a/C) = (λ + comptage) / (mᵢ·λ + nb exemples de C). Classe Pomme : 5 exemples, Pr(Pomme) = 0,5. Pr(d/Pomme) = Pr(Couleur=Vert/Pomme)·Pr(Forme=Allongée/Pomme).",
+      "cells": [
+        {
+          "id": "pVert",
+          "label": "Pr(Couleur=Vert / Pomme) lissée = (1+1)/(3·1+5)",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "pAll",
+          "label": "Pr(Forme=Allongée / Pomme) lissée = (1+0)/(2·1+5)",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "prod",
+          "label": "Produit Pr(Pomme)·Pr(Couleur=Vert/Pomme)·Pr(Forme=Allongée/Pomme), arrondi au millième",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "nul",
+          "label": "Le produit est-il nul ? (oui ou non)",
+          "kind": "text",
+          "placeholder": "?"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "pVert",
+          "expected": 0.25,
+          "absTol": 0.005
+        },
+        {
+          "id": "pAll",
+          "expected": 0.143,
+          "absTol": 0.005
+        },
+        {
+          "id": "prod",
+          "expected": 0.018,
+          "absTol": 0.004
+        },
+        {
+          "id": "nul",
+          "expected": "non",
+          "accepted": [
+            "non",
+            "Non",
+            "no"
+          ]
+        }
+      ]
+    },
+    "explanation": "Pr(Couleur=Vert/Pomme) = (1+1)/(3·1+5) = 2/8 = 0,25. Pr(Forme=Allongée/Pomme) = (1+0)/(2·1+5) = 1/7 ≈ 0,143. Produit = 0,5 · 0,25 · 0,143 = 1/56 ≈ 0,018. Le produit est strictement positif (non nul) : sans lissage, le comptage 0 de Forme=Allongée aurait annulé la vraisemblance ; le lissage l'évite.",
+    "concepts": [
+      "lissage-de-laplace",
+      "probleme-de-probabilite-nulle",
+      "estimation-de-probabilite"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque mode d'estimation de Pr(Aᵢ=a/Cⱼ) à sa formule, selon le cours.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Estimation sans lissage"
+        },
+        {
+          "id": "l2",
+          "label": "Estimation avec lissage de Laplace"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "(nb exemples Aᵢ=a et C=Cⱼ) / (nb exemples de Cⱼ)"
+        },
+        {
+          "id": "r2",
+          "label": "(λ + nb exemples Aᵢ=a et C=Cⱼ) / (mᵢ·λ + nb exemples de Cⱼ)"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2"
+      }
+    },
+    "explanation": "Sans lissage, Pr(Aᵢ=a/Cⱼ) = (nb exemples Aᵢ=a et C=Cⱼ) / (nb exemples de Cⱼ). Avec le lissage de Laplace, on ajoute λ au numérateur et mᵢ·λ au dénominateur : (λ + nb exemples Aᵢ=a et C=Cⱼ) / (mᵢ·λ + nb exemples de Cⱼ).",
+    "concepts": [
+      "lissage-de-laplace",
+      "estimation-de-probabilite"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Sans lissage, on a estimé Pr(A₁=a₁/Cⱼ) = 0,5, Pr(A₂=a₂/Cⱼ) = 0 et Pr(A₃=a₃/Cⱼ) = 0,4 pour une instance d à trois attributs. Calculez la vraisemblance Pr(d/Cⱼ) = Πᵢ Pr(Aᵢ=aᵢ/Cⱼ).",
+    "payload": {
+      "placeholder": "ex. 0",
+      "hint": "Pr(d/Cⱼ) est le produit des trois facteurs. Que vaut un produit dont l'un des facteurs est nul ?"
+    },
+    "solution": {
+      "value": 0,
+      "absTol": 0.0001
+    },
+    "explanation": "La vraisemblance est un produit : Pr(d/Cⱼ) = 0,5 · 0 · 0,4 = 0. Un seul facteur nul — ici Pr(A₂=a₂/Cⱼ) = 0, valeur jamais vue avec Cⱼ — annule tout le produit, et donc Pr(Cⱼ/d) = 0. C'est le problème de la probabilité nulle, que le lissage de Laplace corrige.",
+    "concepts": [
+      "probleme-de-probabilite-nulle",
+      "vraisemblance"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "estimation-lissage",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un attribut Aᵢ possède mᵢ = 3 valeurs possibles. Dans une classe Cⱼ de 7 exemples, la valeur a apparaît 5 fois. Comparez : calculez l'estimation lissée de Laplace de Pr(Aᵢ=a/Cⱼ) avec λ = 1, et donnez le résultat arrondi au millième.",
+    "payload": {
+      "placeholder": "ex. 0.600",
+      "hint": "Pr(Aᵢ=a/Cⱼ) = (1 + 5) / (3·1 + 7)."
+    },
+    "solution": {
+      "value": 0.6,
+      "absTol": 0.003
+    },
+    "explanation": "Lissage de Laplace : Pr(Aᵢ=a/Cⱼ) = (1 + 5) / (3·1 + 7) = 6/10 = 0,600. Ici l'estimation lissée coïncide avec la fréquence brute 5/7 ≈ 0,714 vue de loin, mais reste légèrement tirée vers l'uniforme : le lissage ne fait sentir son effet que là où les comptages sont faibles.",
+    "concepts": [
+      "lissage-de-laplace",
+      "estimation-de-probabilite"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Examen DM 2023-24, exercice 2. Un objet a deux attributs : Taille T ∈ {S, M, L} et Couleur C ∈ {R, B}. La classe Y vaut 0 ou 1. L'ensemble d'apprentissage compte 11 objets : 5 de classe Y=1, 6 de classe Y=0. On classe l'objet d = (T=S, C=R). On donne : Pr(T=S/Y=1)=2/5, Pr(C=R/Y=1)=2/5, Pr(T=S/Y=0)=3/6, Pr(C=R/Y=0)=3/6. Calculez les produits Pr(Y)·Pr(d/Y) par classe et la classe prédite.",
+    "payload": {
+      "description": "Priors : Pr(Y=1)=5/11, Pr(Y=0)=6/11. Pr(d/Y) = Pr(T=S/Y)·Pr(C=R/Y) (hypothèse d'indépendance). Produit par classe = Pr(Y)·Pr(d/Y) ; on compare, le dénominateur Pr(d) est commun.",
+      "cells": [
+        {
+          "id": "prod1",
+          "label": "Produit pour Y=1 : Pr(Y=1)·Pr(T=S/Y=1)·Pr(C=R/Y=1), arrondi au millième",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "prod0",
+          "label": "Produit pour Y=0 : Pr(Y=0)·Pr(T=S/Y=0)·Pr(C=R/Y=0), arrondi au millième",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "classe",
+          "label": "Classe prédite pour d (0 ou 1)",
+          "kind": "text",
+          "placeholder": "?"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "prod1",
+          "expected": 0.073,
+          "absTol": 0.004
+        },
+        {
+          "id": "prod0",
+          "expected": 0.136,
+          "absTol": 0.004
+        },
+        {
+          "id": "classe",
+          "expected": "0",
+          "accepted": [
+            "0",
+            "Y=0",
+            "classe 0"
+          ]
+        }
+      ]
+    },
+    "explanation": "Y=1 : Pr(Y=1)·Pr(T=S/Y=1)·Pr(C=R/Y=1) = (5/11)·(2/5)·(2/5) ≈ 0,4545·0,16 ≈ 0,073. Y=0 : Pr(Y=0)·Pr(T=S/Y=0)·Pr(C=R/Y=0) = (6/11)·(3/6)·(3/6) ≈ 0,5455·0,25 ≈ 0,136. Le produit est plus grand pour Y=0 (0,136 > 0,073) : le classifieur prédit Y=0 pour l'objet Small Rouge.",
+    "concepts": [
+      "prediction-bayesienne",
+      "classifieur-bayesien-naif",
+      "hypothese-d-independance"
+    ],
+    "source": "DM_MI_Exam2324.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Sur un jeu de 10 jours de météo (6 jours « oui » on joue, 4 jours « non » ; Pr(oui)=0,6, Pr(non)=0,4), on classe le jour d = (Ciel = Soleil, Vent = Fort). On donne : Pr(Ciel=Soleil/oui)=2/6, Pr(Vent=Fort/oui)=2/6, Pr(Ciel=Soleil/non)=2/4, Pr(Vent=Fort/non)=3/4. Calculez les produits par classe, Pr(d) (probabilités totales) et la classe prédite.",
+    "payload": {
+      "description": "Pr(d/C) = Pr(Ciel=Soleil/C)·Pr(Vent=Fort/C). Produit par classe = Pr(C)·Pr(d/C). Pr(d) = somme des produits.",
+      "cells": [
+        {
+          "id": "prodO",
+          "label": "Produit pour « oui » : Pr(oui)·Pr(Soleil/oui)·Pr(Fort/oui), arrondi au millième",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "prodN",
+          "label": "Produit pour « non » : Pr(non)·Pr(Soleil/non)·Pr(Fort/non), arrondi au millième",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "prD",
+          "label": "Pr(d) = produit(oui) + produit(non), arrondi au millième",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "classe",
+          "label": "Classe prédite pour d (oui ou non)",
+          "kind": "text",
+          "placeholder": "?"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "prodO",
+          "expected": 0.067,
+          "absTol": 0.004
+        },
+        {
+          "id": "prodN",
+          "expected": 0.15,
+          "absTol": 0.005
+        },
+        {
+          "id": "prD",
+          "expected": 0.217,
+          "absTol": 0.005
+        },
+        {
+          "id": "classe",
+          "expected": "non",
+          "accepted": [
+            "non",
+            "Non",
+            "no"
+          ]
+        }
+      ]
+    },
+    "explanation": "Produit « oui » = 0,6 · (2/6) · (2/6) = 0,6 · 0,1111 ≈ 0,067. Produit « non » = 0,4 · (2/4) · (3/4) = 0,4 · 0,375 = 0,15. Par les probabilités totales, Pr(d) = 0,067 + 0,15 ≈ 0,217. Le produit est plus grand pour « non » (0,15 > 0,067) : le classifieur prédit « non ».",
+    "concepts": [
+      "prediction-bayesienne",
+      "theoreme-des-probabilites-totales",
+      "classifieur-bayesien-naif"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pour une instance d, les produits non normalisés Pr(C)·Pr(d/C) valent 0,32 pour la classe spam et 0,02 pour la classe légitime. Calculez la probabilité a posteriori Pr(spam/d), normalisée. Arrondissez au millième.",
+    "payload": {
+      "placeholder": "ex. 0.941",
+      "hint": "Pr(d) = 0,32 + 0,02. Pr(spam/d) = 0,32 / Pr(d)."
+    },
+    "solution": {
+      "value": 0.941,
+      "absTol": 0.004
+    },
+    "explanation": "Pr(d) = 0,32 + 0,02 = 0,34 (probabilités totales). Pr(spam/d) = 0,32 / 0,34 ≈ 0,941. La classe spam est nettement la plus probable.",
+    "concepts": [
+      "probabilite-a-posteriori",
+      "theoreme-des-probabilites-totales"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Sur le jeu de 10 fruits (5 bananes, 5 pommes ; Pr(Banane)=Pr(Pomme)=0,5), on classe le fruit d = (Couleur = Jaune, Forme = Ronde). On donne : Pr(Couleur=Jaune/Banane)=4/5, Pr(Forme=Ronde/Banane)=1/5, Pr(Couleur=Jaune/Pomme)=1/5, Pr(Forme=Ronde/Pomme)=5/5. Calculez les produits par classe et la classe prédite.",
+    "payload": {
+      "description": "Pr(d/C) = Pr(Couleur=Jaune/C)·Pr(Forme=Ronde/C). Produit par classe = Pr(C)·Pr(d/C). On compare les produits ; le dénominateur Pr(d) est commun.",
+      "cells": [
+        {
+          "id": "prodB",
+          "label": "Produit pour Banane : Pr(Banane)·Pr(Jaune/Banane)·Pr(Ronde/Banane)",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "prodP",
+          "label": "Produit pour Pomme : Pr(Pomme)·Pr(Jaune/Pomme)·Pr(Ronde/Pomme)",
+          "kind": "number",
+          "placeholder": "0.000"
+        },
+        {
+          "id": "classe",
+          "label": "Classe prédite pour d (Banane ou Pomme)",
+          "kind": "text",
+          "placeholder": "?"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "prodB",
+          "expected": 0.08,
+          "absTol": 0.005
+        },
+        {
+          "id": "prodP",
+          "expected": 0.1,
+          "absTol": 0.005
+        },
+        {
+          "id": "classe",
+          "expected": "Pomme",
+          "accepted": [
+            "Pomme",
+            "pomme",
+            "classe Pomme"
+          ]
+        }
+      ]
+    },
+    "explanation": "Banane : 0,5 · (4/5) · (1/5) = 0,5 · 0,8 · 0,2 = 0,08. Pomme : 0,5 · (1/5) · (5/5) = 0,5 · 0,2 · 1,0 = 0,10. Le produit est plus grand pour Pomme (0,10 > 0,08) : le classifieur prédit Pomme.",
+    "concepts": [
+      "prediction-bayesienne",
+      "classifieur-bayesien-naif",
+      "hypothese-d-independance"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la forme la plus opérationnelle de la règle de prédiction donnée par le cours.",
+    "payload": {
+      "template": "En développant la vraisemblance par l'hypothèse d'indépendance, la règle devient C = arg {{t1}} ( Pr(Cⱼ) · Πᵢ Pr(Aᵢ=aᵢ/Cⱼ) ) : on retient la classe au plus {{t2}} résultat.",
+      "slots": [
+        {
+          "id": "t1",
+          "width": "sm",
+          "placeholder": "Max ou Min ?"
+        },
+        {
+          "id": "t2",
+          "width": "sm",
+          "placeholder": "grand ou petit ?"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "t1": [
+          "Max",
+          "max",
+          "Maximum",
+          "maximum"
+        ],
+        "t2": [
+          "grand",
+          "eleve",
+          "élevé"
+        ]
+      },
+      "stripAccents": true
+    },
+    "explanation": "La règle de prédiction, développée, s'écrit C = arg Max ( Pr(Cⱼ) · Πᵢ Pr(Aᵢ=aᵢ/Cⱼ) ) : pour chaque classe, on multiplie sa probabilité a priori par le produit des probabilités conditionnelles des valeurs d'attributs, et l'on retient la classe au plus grand résultat.",
+    "concepts": [
+      "prediction-bayesienne",
+      "hypothese-d-independance"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pour une variable numérique, le cours suppose généralement une distribution normale. Comment sa moyenne et son écart type sont-ils obtenus ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Ils sont estimés avec les exemples de l'ensemble d'apprentissage correspondant à la classe C"
+        },
+        {
+          "id": "b",
+          "label": "Ils sont fixés arbitrairement à 0 et 1"
+        },
+        {
+          "id": "c",
+          "label": "Ils sont estimés sur l'ensemble de test uniquement"
+        },
+        {
+          "id": "d",
+          "label": "Ils sont déduits du nombre de classes"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Pour une variable numérique supposée normale, la moyenne et l'écart type sont estimés avec les exemples de l'ensemble d'apprentissage correspondant à la classe C. Le mécanisme reste « estimer une quantité sur les seuls exemples de la classe », mais l'objet estimé devient les paramètres d'une loi normale.",
+    "concepts": [
+      "variable-numerique-bayes",
+      "prediction-bayesienne"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque type d'attribut à ce qui entre dans la vraisemblance Pr(d/Cⱼ), selon le cours.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Attribut catégoriel (discret)"
+        },
+        {
+          "id": "l2",
+          "label": "Attribut numérique (continu)"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Une probabilité Pr(Aᵢ=aᵢ/Cⱼ) estimée par une proportion (comptage)"
+        },
+        {
+          "id": "r2",
+          "label": "Une densité f_{Aᵢ|Cⱼ}(x) — une loi normale dont moyenne et écart type sont estimés sur les exemples de la classe"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2"
+      }
+    },
+    "explanation": "Les attributs catégoriels entrent dans la vraisemblance par une probabilité Pr(Aᵢ=aᵢ/Cⱼ) estimée par comptage. Les attributs numériques y entrent par une densité f_{Aᵢ|Cⱼ}(x) — une loi normale dont la moyenne et l'écart type sont estimés sur les exemples de la classe.",
+    "concepts": [
+      "variable-numerique-bayes",
+      "vraisemblance"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Voici un extrait du script R du TD : il construit un classifieur bayésien naïf sur le jeu Iris (package e1071) et prédit la classe de nouveaux iris. Lisez le code et répondez aux sous-questions.",
+    "payload": {
+      "code": "library(e1071)\n\n# Construction du classifieur bayesien naif sur Iris\nmodel <- naiveBayes(Species ~ Petal.Length + Petal.Width, data = iris)\n\n# Nouvel iris a classer\niris1 <- t(c(2, 0.2))\ncolnames(iris1) <- c(\"Petal.Length\", \"Petal.Width\")\n\n# Prediction de la classe\npredict(model, newdata = iris1)\n\n# Probabilite de chacune des classes\npredict(model, newdata = iris1, type = \"raw\")",
+      "language": "r",
+      "caption": "Classifieur bayésien naïf sur Iris (TD NaiveBayes, e1071)",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Combien de variables explicatives le classifieur model utilise-t-il ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Deux : Petal.Length et Petal.Width"
+              },
+              {
+                "id": "b",
+                "label": "Une seule : Species"
+              },
+              {
+                "id": "c",
+                "label": "Quatre, toutes les variables d'Iris"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Que renvoie predict(model, newdata = iris1, type = \"raw\") par rapport à predict(model, newdata = iris1) sans argument type ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "La probabilité de chacune des classes, au lieu de la seule classe prédite"
+              },
+              {
+                "id": "b",
+                "label": "Le code source du modèle"
+              },
+              {
+                "id": "c",
+                "label": "La matrice de confusion sur Iris"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "Les variables Petal.Length et Petal.Width sont numériques : le classifieur les traite via une densité, pas par comptage.",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": true
+          }
+        }
+      ]
+    },
+    "explanation": "La formule Species ~ Petal.Length + Petal.Width n'utilise que deux variables explicatives. L'argument type=\"raw\" demande la probabilité de chacune des classes, au lieu de la seule classe prédite. Petal.Length et Petal.Width sont des variables numériques (continues) : le classifieur les traite par une densité conditionnelle, pas par comptage de fréquences.",
+    "concepts": [
+      "classifieur-bayesien-naif",
+      "variable-numerique-bayes"
+    ],
+    "source": "ING2_MI_DM_TD_NaiveBayes_AJ.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remettez dans l'ordre les étapes pour prédire la classe d'une nouvelle instance d avec le classifieur bayésien naïf (en ignorant Pr(d)).",
+    "payload": {
+      "items": [
+        {
+          "id": "e2",
+          "label": "Pour chaque classe Cⱼ, former le produit Pr(Cⱼ)·Πᵢ Pr(Aᵢ=aᵢ/Cⱼ)"
+        },
+        {
+          "id": "e1",
+          "label": "Lire, pour chaque classe, la probabilité a priori et les probabilités conditionnelles des valeurs d'attributs de d"
+        },
+        {
+          "id": "e3",
+          "label": "Comparer les produits obtenus pour les m classes"
+        },
+        {
+          "id": "e4",
+          "label": "Retenir la classe au produit maximal : c'est la classe prédite"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "e1",
+        "e2",
+        "e3",
+        "e4"
+      ]
+    },
+    "explanation": "Pour prédire : (1) lire la probabilité a priori et les probabilités conditionnelles ; (2) former le produit Pr(Cⱼ)·Πᵢ Pr(Aᵢ=aᵢ/Cⱼ) pour chaque classe ; (3) comparer les produits ; (4) retenir la classe au produit maximal — la règle C = arg Max (Pr(Cⱼ)·Pr(d/Cⱼ)).",
+    "concepts": [
+      "prediction-bayesienne",
+      "classifieur-bayesien-naif"
+    ],
+    "source": "Slides_Bayes.pdf"
+  },
+  {
+    "chapterSlug": "prediction-instance",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Dans l'exemple du cours, l'instance d = (A=m, B=q) est classée dans la classe t parce que son produit (0,08) dépasse celui de la classe f (0,04).",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Le cours compare les produits Pr(C)·Pr(A=m/C)·Pr(B=q/C) : 0,08 pour t et 0,04 pour f. Par la règle C = arg Max (Pr(Cⱼ)·Pr(d/Cⱼ)), l'instance est classée t.",
+    "concepts": [
+      "prediction-bayesienne",
+      "classifieur-bayesien-naif"
+    ],
+    "source": "Slides_Bayes.pdf"
+  }
+]

@@ -1,0 +1,181 @@
+---
+title: Opérateurs arithmétiques
+slug: operateurs-arithmetiques
+order: 2
+estimatedReadMin: 11
+concepts: [operateur-arithmetique, operateur-affectation-compose, operateur-membre]
+source: "Cours 3 — Surcharge d'opérateurs"
+---
+
+## Donner du sens à `+ - * /`
+
+Les opérateurs **arithmétiques** `+`, `-`, `*`, `/` sont les premiers que l'on surcharge. Sur une classe `Fraction`, le but est d'écrire :
+
+```cpp
+Fraction f1(1, 8), f2(1, 2);
+Fraction res = f1 * f2;        // élégant, comme pour des nombres
+```
+
+plutôt qu'un verbeux `f1.multiplier(f2)`. Ce chapitre prend pour fil conducteur la classe `Fraction` (numérateur, dénominateur) et la classe `Complexe` du cours.
+
+## La forme membre de `operator*`
+
+Écrivons `operator*` comme **fonction membre**. L'opérande de gauche est l'objet courant ; le paramètre est l'opérande de **droite** :
+
+```cpp
+// fraction.h
+class Fraction {
+        int numerateur{0};
+        int denominateur{1};
+    public:
+        Fraction(int n = 0, int d = 1);
+        Fraction operator*(const Fraction& autre) const;   // membre
+};
+```
+
+```cpp
+// fraction.cpp
+Fraction Fraction::operator*(const Fraction& autre) const {
+    return Fraction(numerateur   * autre.numerateur,
+                    denominateur * autre.denominateur);
+}
+```
+
+Trois points de signature, tous **essentiels** :
+
+- **paramètre `const Fraction&`** — l'opérande de droite est passé par **référence** (pas de copie) et **`const`** (l'opération ne le modifie pas) ;
+- **`const` final** — la méthode ne modifie pas non plus l'objet de gauche ; `f1 * f2` doit pouvoir s'appliquer à des fractions `const` ;
+- **retour `Fraction` par valeur** — le produit est un **nouvel** objet, distinct des deux opérandes ; il ne faut donc **ni** renvoyer une référence vers un local (qui sera détruit), **ni** modifier un opérande.
+
+À l'usage, `f1 * f2` est interprété comme `f1.operator*(f2)` :
+
+```cpp
+Fraction f1(1, 8), f2(1, 2);
+Fraction res = f1 * f2;                 // res = f1.operator*(f2)
+Fraction bis = f1.operator*(f2);        // strictement équivalent
+```
+
+`operator+`, `operator-` et `operator/` se construisent **exactement** de la même façon. Pour un `Complexe` :
+
+```cpp
+Complexe Complexe::operator+(const Complexe& c) const {
+    return Complexe(re + c.re, im + c.im);
+}
+Complexe Complexe::operator-(const Complexe& c) const {
+    return Complexe(re - c.re, im - c.im);
+}
+Complexe Complexe::operator*(const Complexe& c) const {
+    return Complexe(re * c.re - im * c.im,   // partie réelle
+                    re * c.im + im * c.re);  // partie imaginaire
+}
+```
+
+> ⚠️ Renvoyer le résultat **par valeur**, jamais par référence. Le produit est un objet **local** à la fonction : renvoyer `Fraction&` vers ce local donnerait une **référence pendante** (l'objet est détruit au `return`). De même, **ne jamais modifier un opérande** dans un `operator+` : `a + b` doit laisser `a` et `b` intacts.
+
+## Les opérateurs d'affectation composée `+= -= *= /=`
+
+Les opérateurs **raccourcis** `+=`, `-=`, `*=`, `/=` (le cours les appelle *opérateurs raccourcis*) **modifient** l'opérande de gauche. Ils s'écrivent **naturellement en forme membre**, car l'objet de gauche *est* l'objet courant que l'on transforme.
+
+Forme du cours, telle qu'écrite pour `Fraction` (retour `void`) :
+
+```cpp
+// fraction.h
+void operator*=(const Fraction& autre);
+```
+
+```cpp
+// fraction.cpp
+void Fraction::operator*=(const Fraction& autre) {
+    numerateur   *= autre.numerateur;
+    denominateur *= autre.denominateur;
+}
+```
+
+```cpp
+// utilisation
+Fraction f1(4, 5), f2(3, 11);
+f1 *= f2;       // f1.operator*=(f2)  ->  f1 vaut 12/55
+f1 *= 2;        // f1.operator*=(2)   ->  2 est converti en Fraction(2)
+```
+
+Noter `f1 *= 2` : `2` est un `int`, mais le constructeur `Fraction(int)` autorise sa **conversion implicite** en `Fraction`, et le paramètre `const Fraction&` accepte ce temporaire.
+
+> Cette version renvoie `void` : suffisant pour `f1 *= f2;` isolé. La **forme canonique**, plus complète, renvoie une **référence** vers l'objet modifié (`Fraction&`) et se termine par `return *this;`. Cela autorise le chaînage `a *= b *= c;` — exactement comme pour `operator=` (cours 2). Pas obligatoire ici, mais c'est l'idiome standard.
+
+```cpp
+// forme canonique de +=  (renvoie une référence, permet le chaînage)
+Fraction& Fraction::operator+=(const Fraction& autre) {
+    numerateur   = numerateur * autre.denominateur
+                 + autre.numerateur * denominateur;
+    denominateur = denominateur * autre.denominateur;
+    return *this;                  // l'objet courant, modifié
+}
+```
+
+## Implémenter `+` à partir de `+=`
+
+`operator+` et `operator+=` font « le même calcul ». Les écrire **deux fois** est une source d'incohérence : corriger l'un en oubliant l'autre. L'idiome canonique consiste à **n'écrire le calcul qu'une fois**, dans `+=`, puis à **définir `+` en termes de `+=`** :
+
+```cpp
+Fraction Fraction::operator+(const Fraction& autre) const {
+    Fraction resultat(*this);   // 1. copie de l'opérande gauche
+    resultat += autre;          // 2. on réutilise operator+= sur la copie
+    return resultat;            // 3. on renvoie la copie par valeur
+}
+```
+
+La logique en trois temps :
+
+1. on **copie** l'opérande de gauche dans un objet local `resultat` (l'original ne doit pas bouger — d'où le `const` de `operator+`) ;
+2. on applique `+=` sur **la copie**, qui réutilise le calcul déjà écrit ;
+3. on renvoie la copie **par valeur**.
+
+Avantage décisif : la formule d'addition n'existe **qu'à un seul endroit**. Tout opérateur arithmétique se décline ainsi — `-` à partir de `-=`, `*` à partir de `*=`, `/` à partir de `/=`.
+
+## La const-correction, en résumé
+
+Sur les opérateurs arithmétiques, le placement des `const` n'est pas décoratif :
+
+```cpp
+Fraction operator*(const Fraction& autre) const;
+//                 \__________________/        \___/
+//                  opérande de droite           l'objet de gauche
+//                  non modifié, non copié       n'est pas modifié
+```
+
+- **paramètre `const&`** : l'opérande de droite est **lu**, pas modifié, et passé **sans copie** ;
+- **`const` final** : l'opérateur s'applique aussi aux objets `const` et garantit que `*this` reste intact ;
+- **retour par valeur non-`const`** : un **nouvel** objet, que l'appelant est libre d'utiliser.
+
+`operator+= / -= / *= / /=` font exception au `const` final : ils **modifient** `*this`, donc ne peuvent pas être `const`. C'est cohérent avec leur rôle.
+
+## Forme canonique : récapitulatif
+
+Pour une classe arithmétique, le schéma canonique est :
+
+```cpp
+class Fraction {
+    public:
+        // raccourcis : membres, modifient *this, renvoient une référence
+        Fraction& operator+=(const Fraction& a);
+        Fraction& operator-=(const Fraction& a);
+        Fraction& operator*=(const Fraction& a);
+        Fraction& operator/=(const Fraction& a);
+
+        // arithmétiques : const, renvoient un NOUVEL objet par valeur,
+        // implémentés à partir des raccourcis correspondants
+        Fraction operator+(const Fraction& a) const;
+        Fraction operator-(const Fraction& a) const;
+        Fraction operator*(const Fraction& a) const;
+        Fraction operator/(const Fraction& a) const;
+};
+```
+
+> **À retenir**
+> - Les opérateurs arithmétiques `+ - * /` rendent une classe aussi expressive qu'un type numérique : `f1 * f2` plutôt que `f1.multiplier(f2)`.
+> - En forme **membre**, l'opérande de gauche est `*this` et le **paramètre** est l'opérande de droite, en `const&`.
+> - Un opérateur arithmétique renvoie un **nouvel objet par valeur**, ne modifie **aucun** opérande, et la méthode est **`const`**.
+> - ⚠️ Jamais de retour par **référence** vers un local (référence pendante).
+> - Les raccourcis `+= -= *= /=` **modifient** l'opérande de gauche : forme **membre**, **non `const`**, terminée par `return *this;` (forme canonique → `Classe&`, autorise le chaînage).
+> - **Idiome canonique** : écrire le calcul **une seule fois** dans `+=`, puis définir `+` à partir de `+=` (copier l'opérande gauche, lui appliquer `+=`, renvoyer la copie).
+> - **Const-correction** : paramètre `const&`, méthode `const`, retour par valeur — sauf les raccourcis qui ne sont pas `const`.

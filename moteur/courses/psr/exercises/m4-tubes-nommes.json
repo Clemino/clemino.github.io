@@ -1,0 +1,1096 @@
+[
+  {
+    "chapterSlug": "fifo-mkfifo",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce qui distingue fondamentalement un tube nommé (FIFO) d'un tube anonyme ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le tube nommé possède un nom dans le système de fichiers (un chemin d'accès), ce qui permet à des processus quelconques de s'y raccorder."
+        },
+        {
+          "id": "b",
+          "label": "Le tube nommé stocke réellement ses données sur le disque, alors que le tube anonyme les garde en mémoire."
+        },
+        {
+          "id": "c",
+          "label": "Le tube nommé autorise une communication full-duplex, alors que le tube anonyme est half-duplex."
+        },
+        {
+          "id": "d",
+          "label": "Le tube nommé est créé par pipe(), alors que le tube anonyme est créé par mkfifo()."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Un **tube nommé** (FIFO) est un tube muni d'un **nom dans le système de fichiers** : un **chemin d'accès**. C'est cette identité publique qui change tout : **n'importe quel processus** connaissant ce chemin et disposant des droits peut s'y raccorder — y compris des processus **sans aucun lien de parenté**, ce que le tube anonyme ne sait pas faire. (b) est faux : comme tout tube, un FIFO **ne stocke rien sur disque**, c'est une file d'octets **en mémoire** (sa taille de fichier est toujours 0). (c) est faux : un FIFO reste **half-duplex**, exactement comme le tube anonyme. (d) inverse les primitives : c'est `pipe()` qui crée le tube **anonyme** et `mkfifo()` le tube **nommé**.",
+    "concepts": [
+      "tube-nomme",
+      "processus-non-apparentes",
+      "tube-anonyme"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-mkfifo",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "La taille de fichier d'un tube nommé, affichée par `ls -l`, est toujours 0, quelle que soit la quantité de données qui y transitent.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Un FIFO **ne stocke aucune donnée sur le disque** : comme tout tube, c'est une **file d'octets en mémoire** gérée par le noyau. Le « fichier » visible avec `ls -l` n'est qu'un **point de rendez-vous nommé** — une entrée dans le système de fichiers (un **i-nœud** de type *pipe*) qui sert uniquement à **désigner** le tube. Les octets transitent par le **tampon en mémoire**, jamais par des blocs disque. Écrire 1 Mo dans un FIFO ne fait donc **pas** grossir le fichier : sa taille affichée reste **0**.",
+    "concepts": [
+      "fifo-special",
+      "fichier-special-p",
+      "inode-fifo"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-mkfifo",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Parmi ces affirmations sur le tube nommé (FIFO), lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un FIFO apparaît avec `ls -l` comme un fichier spécial dont le type, en première colonne, est la lettre `p`."
+        },
+        {
+          "id": "b",
+          "label": "Un FIFO est full-duplex : un même descripteur permet de lire et d'écrire en même temps."
+        },
+        {
+          "id": "c",
+          "label": "Comme tout tube, un FIFO a une capacité bornée et sa lecture est destructrice."
+        },
+        {
+          "id": "d",
+          "label": "Le fichier d'un FIFO est persistant : il survit à la fin des processus qui l'ont utilisé, tant qu'on ne l'a pas supprimé."
+        },
+        {
+          "id": "e",
+          "label": "Un FIFO ne peut relier que des processus apparentés, au même titre qu'un tube anonyme."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "(a) Vrai : `ls -l` affiche le type **`p`** (comme *pipe*) en première colonne d'un FIFO — ce n'est ni un fichier ordinaire (`-`), ni un répertoire (`d`). (c) Vrai : un FIFO est un tube **ordinaire**, simplement muni d'un nom — il garde donc toutes les propriétés du tube : **capacité bornée**, **lecture destructrice**, **half-duplex**. (d) Vrai : le fichier d'un FIFO est **persistant** ; son i-nœud reste dans l'arborescence après la fin des processus, jusqu'à un `unlink` (ou `rm`) explicite. (b) est faux : un FIFO est **half-duplex** ; un descripteur sert à **un seul sens**. (e) est faux : c'est précisément l'inverse — le FIFO existe **pour** relier des processus **quelconques**, sans lien de parenté.",
+    "concepts": [
+      "fichier-special-p",
+      "fifo-special",
+      "lecture-destructrice",
+      "unlink-fifo",
+      "processus-non-apparentes"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-mkfifo",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque élément à la notion qu'il décrit le mieux, dans le contexte des tubes nommés.",
+    "payload": {
+      "left": [
+        {
+          "id": "mkfifo",
+          "label": "Appel système de <sys/stat.h> qui crée le fichier spécial d'un tube nommé"
+        },
+        {
+          "id": "pipe",
+          "label": "Appel système qui crée un tube anonyme et remplit un tableau de deux descripteurs"
+        },
+        {
+          "id": "unlink",
+          "label": "Appel qui supprime le nom d'un FIFO de l'arborescence (équivalent C de rm)"
+        },
+        {
+          "id": "close",
+          "label": "Appel qui ne libère qu'un descripteur ; le fichier FIFO reste visible avec ls"
+        },
+        {
+          "id": "eexist",
+          "label": "Code d'erreur fréquent de mkfifo signalant que le fichier existe déjà"
+        },
+        {
+          "id": "typep",
+          "label": "Caractère affiché par ls -l en première colonne pour un tube nommé"
+        }
+      ],
+      "right": [
+        {
+          "id": "r-mkfifo",
+          "label": "mkfifo()"
+        },
+        {
+          "id": "r-pipe",
+          "label": "pipe()"
+        },
+        {
+          "id": "r-unlink",
+          "label": "unlink()"
+        },
+        {
+          "id": "r-close",
+          "label": "close()"
+        },
+        {
+          "id": "r-eexist",
+          "label": "EEXIST"
+        },
+        {
+          "id": "r-typep",
+          "label": "Le type p"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "mkfifo": "r-mkfifo",
+        "pipe": "r-pipe",
+        "unlink": "r-unlink",
+        "close": "r-close",
+        "eexist": "r-eexist",
+        "typep": "r-typep"
+      }
+    },
+    "explanation": "**`mkfifo()`** (`<sys/stat.h>`) crée le fichier spécial d'un tube **nommé**. **`pipe()`** (`<unistd.h>`) crée un tube **anonyme** et remplit le tableau `fd[2]`. **`unlink()`** supprime le **nom** du FIFO de l'arborescence — c'est l'équivalent C de la commande `rm`. **`close()`**, lui, ne ferme **qu'un descripteur** : le fichier FIFO **demeure** visible avec `ls` ; il ne faut pas confondre les deux. **`EEXIST`** est le code d'erreur fréquent que `mkfifo` renvoie via `errno` quand un fichier de même nom **existe déjà** (l'i-nœud d'un FIFO est persistant). Enfin, **le type `p`** est le caractère que `ls -l` affiche en première colonne pour un tube nommé.",
+    "concepts": [
+      "mkfifo-primitive",
+      "pipe-primitive",
+      "unlink-fifo",
+      "fichier-special-p"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-mkfifo",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur la création d'un tube nommé en C.",
+    "payload": {
+      "template": "En C, un tube nommé se crée avec l'appel {{c1}}, dont le prototype est int {{c1}}(const char *pathname, mode_t mode). Son premier argument est le {{c2}} du fichier FIFO à créer ; son second argument fixe les {{c3}} d'accès accordés sur ce fichier. L'appel renvoie 0 en cas de succès et la valeur {{c4}} en cas d'échec, errno étant alors positionné.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm",
+          "placeholder": "appel"
+        },
+        {
+          "id": "c2",
+          "width": "md",
+          "hint": "le pathname, c'est-à-dire le..."
+        },
+        {
+          "id": "c3",
+          "width": "md",
+          "hint": "ce que fixe le mode (r, w, x...)"
+        },
+        {
+          "id": "c4",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "mkfifo",
+          "mkfifo()"
+        ],
+        "c2": [
+          "chemin",
+          "chemin d'acces",
+          "chemin d'accès",
+          "nom"
+        ],
+        "c3": [
+          "droits",
+          "droits d'acces",
+          "droits d'accès",
+          "permissions"
+        ],
+        "c4": "-1"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "L'appel **`mkfifo(const char *pathname, mode_t mode)`**, déclaré dans `<sys/stat.h>`, crée le fichier spécial d'un tube nommé. Son premier argument `pathname` est le **chemin d'accès** du FIFO à créer (par exemple `\"monTube\"` ou `\"/tmp/serveur\"`). Son second argument `mode` fixe les **droits d'accès** accordés sur le fichier — exprimés en octal (`0644`) ou par combinaison des constantes `S_IRUSR`, `S_IWUSR`, etc. La valeur de retour vaut **`0`** en cas de **succès** et **`-1`** en cas d'**échec** (avec `errno` positionné — souvent `EEXIST`).",
+    "concepts": [
+      "mkfifo-primitive",
+      "mode-fifo"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-mkfifo",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Un seul programme crée un tube nommé puis se dédouble par fork() : le fils écrit dans le FIFO, le père y lit. Remettez dans l'ordre les étapes de ce programme.",
+    "payload": {
+      "items": [
+        {
+          "id": "mkfifo",
+          "label": "Créer le fichier FIFO avec mkfifo(), en tolérant l'erreur EEXIST"
+        },
+        {
+          "id": "fork",
+          "label": "Appeler fork() pour créer un fils chargé d'écrire dans le tube"
+        },
+        {
+          "id": "open",
+          "label": "Dans chaque branche, ouvrir le FIFO avec open() (le fils en écriture, le père en lecture)"
+        },
+        {
+          "id": "echange",
+          "label": "Le fils écrit son message, le père le lit avec read()"
+        },
+        {
+          "id": "wait",
+          "label": "Le père ferme son descripteur et attend la fin du fils avec wait()"
+        },
+        {
+          "id": "unlink",
+          "label": "Supprimer le fichier FIFO de l'arborescence avec unlink()"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "mkfifo",
+        "fork",
+        "open",
+        "echange",
+        "wait",
+        "unlink"
+      ]
+    },
+    "explanation": "Le FIFO doit exister **avant** que quiconque l'ouvre : on appelle donc **`mkfifo`** en tout premier (en tolérant `EEXIST` au cas où un FIFO du même nom subsisterait). Puis **`fork`** crée le fils. Chaque branche **ouvre** ensuite le FIFO avec `open` — le fils en écriture, le père en lecture ; les deux `open` se synchronisent par le **rendez-vous** d'ouverture. Le fils **écrit**, le père **lit** (`read`). Le père **ferme** son descripteur et **`wait`** la fin du fils. Enfin, on **`unlink`** le fichier FIFO : son i-nœud étant persistant, il faut le supprimer explicitement pour ne pas laisser de fichier `p` orphelin.",
+    "concepts": [
+      "mkfifo-primitive",
+      "fork",
+      "open-fifo",
+      "unlink-fifo"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-mkfifo",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Ce programme crée un tube nommé puis se dédouble : le fils y écrit la chaîne de 10 caractères `0123456789`, le père la relit. Le père affiche ensuite, après wait(), le nombre d'octets lus et le contenu reçu. Quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\nint main(void) {\n    if (mkfifo(\"fictub\", 0644) == -1 && errno != EEXIST) {\n        perror(\"mkfifo\"); exit(EXIT_FAILURE);\n    }\n    pid_t pid = fork();\n    if (pid == 0) {\n        int fd = open(\"fictub\", O_WRONLY);\n        write(fd, \"0123456789\", 10);\n        close(fd);\n        _exit(EXIT_SUCCESS);\n    }\n    int fd = open(\"fictub\", O_RDONLY);\n    char buf[64];\n    ssize_t n = read(fd, buf, sizeof(buf) - 1);\n    buf[n] = '\\0';\n    close(fd);\n    wait(NULL);\n    printf(\"octets lus : %ld\\n\", (long) n);\n    printf(\"contenu : %s\\n\", buf);\n    unlink(\"fictub\");\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "octets lus : 10\ncontenu : 0123456789"
+    },
+    "explanation": "Le programme crée le FIFO `fictub`, puis `fork`. Le **fils** ouvre le FIFO en **écriture** : son `open` se débloque par **rendez-vous** quand le père ouvre en lecture ; il y dépose les **10 octets** de `\"0123456789\"`, puis ferme. Le **père** ouvre en **lecture**, fait un `read` qui rend les 10 octets disponibles, termine la chaîne par `'\\0'`, puis `wait` la fin du fils. Les deux `printf` finaux, **tous deux dans le père et exécutés après `wait`**, produisent une sortie **déterministe** : `octets lus : 10` puis `contenu : 0123456789`. Le `unlink` final efface le fichier FIFO de l'arborescence.",
+    "concepts": [
+      "mkfifo-primitive",
+      "open-fifo",
+      "rendez-vous-ouverture",
+      "unlink-fifo"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-mkfifo",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Écrivez un programme C qui crée un tube nommé, puis se dédouble par fork(). Le fils ouvre le FIFO en écriture et y dépose la chaîne de 4 caractères `FIFO`. Le père ouvre le FIFO en lecture, lit le contenu et l'affiche. La sortie doit être exactement la ligne `recu : FIFO`. Le père doit attendre le fils, puis le programme supprime le FIFO.",
+    "payload": {
+      "spec": "Le programme inclut les en-têtes nécessaires (<stdio.h>, <stdlib.h>, <unistd.h>, <errno.h>, <sys/types.h>, <sys/stat.h>, <sys/wait.h>, <fcntl.h>). Il crée le tube nommé avec mkfifo(\"tube_nomme\", 0644) en tolérant errno == EEXIST. Il appelle fork(). Dans le fils : ouvrir le FIFO avec open(\"tube_nomme\", O_WRONLY), écrire les 4 octets de \"FIFO\" avec write, fermer, et terminer le fils. Dans le père : ouvrir le FIFO avec open(\"tube_nomme\", O_RDONLY), lire le contenu avec read dans un tampon, terminer la chaîne lue par '\\0', afficher la ligne 'recu : FIFO', fermer le descripteur, attendre le fils avec wait(NULL), puis supprimer le FIFO avec unlink(\"tube_nomme\"). Le rendez-vous d'ouverture synchronise automatiquement les deux open : peu importe lequel s'exécute en premier.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <string.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\nint main(void) {\n    const char *chemin = \"tube_nomme\";\n\n    /* 1. creer le FIFO (tolerer EEXIST) */\n\n    /* 2. fork() : le fils ecrit \"FIFO\", le pere lit et affiche 'recu : FIFO' */\n\n    /* 3. le pere attend le fils, puis unlink le FIFO */\n\n    (void) chemin;\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le pere lit ce que le fils a ecrit",
+          "stdin": "",
+          "expectedStdout": "recu : FIFO",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <string.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\nint main(void) {\n    const char *chemin = \"tube_nomme\";\n\n    if (mkfifo(chemin, 0644) == -1 && errno != EEXIST) {\n        perror(\"mkfifo\"); exit(EXIT_FAILURE);\n    }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        int fd = open(chemin, O_WRONLY);\n        if (fd == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        write(fd, \"FIFO\", 4);\n        close(fd);\n        exit(EXIT_SUCCESS);\n    } else {\n        int fd = open(chemin, O_RDONLY);\n        if (fd == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        char buf[100];\n        ssize_t n = read(fd, buf, sizeof(buf) - 1);\n        buf[n] = '\\0';\n        printf(\"recu : %s\\n\", buf);\n        close(fd);\n        wait(NULL);\n        unlink(chemin);\n    }\n    return 0;\n}"
+    },
+    "explanation": "Comme un FIFO doit exister avant toute ouverture, on appelle **`mkfifo`** en premier — en tolérant `errno == EEXIST` au cas où un FIFO du même nom subsisterait. Après `fork`, chaque processus **ouvre** le FIFO : le fils en **écriture** (`O_WRONLY`), le père en **lecture** (`O_RDONLY`). Le **rendez-vous d'ouverture** synchronise les deux `open` — celui qui arrive le premier **attend** l'autre, donc l'ordre des deux processus est indifférent. Le fils dépose `\"FIFO\"` (4 octets) ; le père lit, termine la chaîne par `'\\0'` à l'indice rendu par `read`, et affiche `recu : FIFO`. Le père **`wait`** la fin du fils, puis **`unlink`** efface le fichier FIFO : son i-nœud étant persistant, c'est indispensable pour ne pas laisser de fichier `p` orphelin.",
+    "concepts": [
+      "mkfifo-primitive",
+      "open-fifo",
+      "rendez-vous-ouverture",
+      "unlink-fifo",
+      "fork"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-mkfifo",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme échange un message via un tube nommé, deux fois de suite (deux « tours »). Il devrait afficher `tour : un` puis `tour : deux`. En réalité il s'arrête après le premier tour. Trouvez et corrigez l'erreur.",
+    "payload": {
+      "spec": "La fonction echange() crée un FIFO, fork un fils écrivain qui y dépose un message, et le père le lit puis l'affiche sous la forme 'tour : <message>'. main() appelle echange() deux fois sur le MÊME chemin de FIFO, puis unlink ce FIFO. Le bug est dans le test de retour de mkfifo : la fonction echange rejette tout retour -1 (if (mkfifo(...) == -1)). Or au DEUXIÈME tour, le fichier FIFO créé au premier tour existe toujours — l'i-nœud d'un FIFO est persistant et n'est unlinké qu'à la toute fin de main. Au deuxième appel, mkfifo échoue donc avec errno == EEXIST, et le programme s'arrête par exit(EXIT_FAILURE) avant d'avoir affiché 'tour : deux'. La correction consiste à TOLÉRER EEXIST : un FIFO déjà présent est parfaitement réutilisable. Remplacez la condition par : if (mkfifo(chemin, 0644) == -1 && errno != EEXIST). La sortie attendue est les deux lignes 'tour : un' et 'tour : deux'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <string.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\n/* Echange un message via un FIFO, puis l'affiche sous la forme 'tour : <msg>'. */\nstatic void echange(const char *chemin, const char *msg) {\n    if (mkfifo(chemin, 0644) == -1) {\n        perror(\"mkfifo\"); exit(EXIT_FAILURE);\n    }\n    pid_t pid = fork();\n    if (pid == 0) {\n        int fd = open(chemin, O_WRONLY);\n        write(fd, msg, strlen(msg));\n        close(fd);\n        _exit(EXIT_SUCCESS);\n    }\n    int fd = open(chemin, O_RDONLY);\n    char buf[100];\n    ssize_t n = read(fd, buf, sizeof(buf) - 1);\n    buf[n] = '\\0';\n    close(fd);\n    wait(NULL);\n    printf(\"tour : %s\\n\", buf);\n}\n\nint main(void) {\n    echange(\"tube_persistant\", \"un\");\n    echange(\"tube_persistant\", \"deux\");\n    unlink(\"tube_persistant\");\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "les deux tours s'enchaînent",
+          "stdin": "",
+          "expectedStdout": "tour : un\ntour : deux",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <string.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\n/* Echange un message via un FIFO, puis l'affiche sous la forme 'tour : <msg>'. */\nstatic void echange(const char *chemin, const char *msg) {\n    if (mkfifo(chemin, 0644) == -1 && errno != EEXIST) {\n        perror(\"mkfifo\"); exit(EXIT_FAILURE);\n    }\n    pid_t pid = fork();\n    if (pid == 0) {\n        int fd = open(chemin, O_WRONLY);\n        write(fd, msg, strlen(msg));\n        close(fd);\n        _exit(EXIT_SUCCESS);\n    }\n    int fd = open(chemin, O_RDONLY);\n    char buf[100];\n    ssize_t n = read(fd, buf, sizeof(buf) - 1);\n    buf[n] = '\\0';\n    close(fd);\n    wait(NULL);\n    printf(\"tour : %s\\n\", buf);\n}\n\nint main(void) {\n    echange(\"tube_persistant\", \"un\");\n    echange(\"tube_persistant\", \"deux\");\n    unlink(\"tube_persistant\");\n    return 0;\n}"
+    },
+    "explanation": "Le bug est un test de retour **trop strict** : `if (mkfifo(...) == -1)` rejette **toute** valeur `-1`. Or le fichier FIFO créé au **premier** tour **persiste** : l'i-nœud d'un FIFO survit aux processus et n'est supprimé par `unlink` qu'à la **toute fin** de `main`. Au **deuxième** appel d'`echange`, `mkfifo` se heurte donc à un fichier **déjà présent** : il échoue avec **`errno == EEXIST`**, et le programme s'arrête par `exit(EXIT_FAILURE)` — avant d'afficher `tour : deux`. La correction : **tolérer `EEXIST`**, car un FIFO déjà là est parfaitement **réutilisable**. On teste `errno` au lieu de rejeter tout `-1` : `if (mkfifo(chemin, 0644) == -1 && errno != EEXIST)`. Seules les **autres** erreurs (droits, chemin invalide…) restent fatales. C'est exactement la robustesse qu'exige un programme serveur.",
+    "concepts": [
+      "mkfifo-primitive",
+      "unlink-fifo",
+      "fifo-special"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-ouverture",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Par défaut (sans O_NONBLOCK), que fait un appel `open(\"monFifo\", O_RDONLY)` sur un tube nommé lorsque aucun processus n'a encore ouvert ce FIFO en écriture ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il bloque tant qu'aucun processus n'a ouvert le FIFO en écriture."
+        },
+        {
+          "id": "b",
+          "label": "Il échoue immédiatement et renvoie -1 avec errno == ENXIO."
+        },
+        {
+          "id": "c",
+          "label": "Il réussit aussitôt et renvoie un descripteur ; le premier read renverra simplement 0."
+        },
+        {
+          "id": "d",
+          "label": "Il crée automatiquement le FIFO s'il n'existe pas, puis renvoie un descripteur."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Par défaut, l'`open` sur un FIFO est **bloquant** : un `open` en **lecture** (`O_RDONLY`) **bloque** tant qu'aucun processus n'a ouvert le FIFO en **écriture**. C'est le **rendez-vous d'ouverture** : `open` ne revient que lorsque la **paire** lecteur/écrivain est formée — les deux `open` se débloquent alors **ensemble**. (b) décrit le comportement de `open(O_WRONLY | O_NONBLOCK)` sans lecteur, pas celui-ci. (c) décrit l'effet de `O_RDONLY | O_NONBLOCK` (réussite immédiate), pas le comportement **bloquant par défaut**. (d) est faux : `open` ne crée jamais un FIFO — c'est le rôle de `mkfifo`.",
+    "concepts": [
+      "open-fifo",
+      "rendez-vous-ouverture"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-ouverture",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pour qu'un même processus puisse à la fois lire et écrire dans un FIFO, la solution recommandée et portable est de l'ouvrir une seule fois avec le mode O_RDWR.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Un FIFO est **half-duplex** : on l'ouvre **soit** en lecture, **soit** en écriture pour un sens donné. L'ouverture en lecture/écriture **`O_RDWR`** sur un FIFO **n'a pas de sémantique portable** définie par POSIX — son comportement dépend du système, il ne faut **pas** l'utiliser. Un processus qui doit à la fois lire **et** écrire ouvre le FIFO **deux fois** (un descripteur `O_RDONLY` et un descripteur `O_WRONLY`), ou bien utilise **deux FIFO distincts**, un par sens. C'est l'approche correcte et portable.",
+    "concepts": [
+      "open-fifo",
+      "communication-bidirectionnelle"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-ouverture",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le drapeau O_NONBLOCK modifie le comportement de open() sur un FIFO. Parmi ces affirmations, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "open(fifo, O_RDONLY | O_NONBLOCK) réussit immédiatement, même si aucun écrivain n'est présent."
+        },
+        {
+          "id": "b",
+          "label": "open(fifo, O_WRONLY | O_NONBLOCK) échoue avec errno == ENXIO si aucun lecteur n'a ouvert le FIFO."
+        },
+        {
+          "id": "c",
+          "label": "L'effet de O_NONBLOCK est symétrique : il agit de la même façon en lecture et en écriture."
+        },
+        {
+          "id": "d",
+          "label": "O_NONBLOCK reste attaché au descripteur et rend aussi les read/write ultérieurs non bloquants."
+        },
+        {
+          "id": "e",
+          "label": "Avec O_NONBLOCK, open() crée le FIFO s'il n'existe pas encore."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "d"
+      ]
+    },
+    "explanation": "(a) Vrai : `O_RDONLY | O_NONBLOCK` **réussit toujours aussitôt** — on obtient un descripteur de lecture valide, le tube sera simplement vide tant que personne n'écrit. (b) Vrai : `O_WRONLY | O_NONBLOCK` **échoue** avec **`errno == ENXIO`** s'il n'y a **aucun lecteur** (un écrivain sans lecteur écrirait « dans le vide » : le système le refuse plutôt que de le faire patienter). (d) Vrai : `O_NONBLOCK` **reste attaché** au descripteur et rend **aussi** les `read`/`write` suivants non bloquants. (c) est faux : l'effet est précisément **asymétrique** — réussite immédiate en lecture, échec `ENXIO` en écriture sans lecteur. (e) est faux : `open` ne crée **jamais** un FIFO, quel que soit le drapeau.",
+    "concepts": [
+      "o-nonblock",
+      "enxio-fifo",
+      "open-fifo"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-ouverture",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur l'ouverture d'un FIFO et son rendez-vous.",
+    "payload": {
+      "template": "Un FIFO s'utilise en l'ouvrant avec open(), déclaré dans l'en-tête {{c1}}. Par défaut, cet appel est {{c2}} : il établit un rendez-vous. Un open en lecture attend qu'un {{c3}} se présente, et réciproquement. On peut désactiver ce blocage en ajoutant le drapeau {{c4}} au mode d'ouverture ; un open en écriture devient alors un échec immédiat, avec errno positionné à ENXIO, lorsqu'aucun lecteur n'est présent.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm",
+          "placeholder": "<...>"
+        },
+        {
+          "id": "c2",
+          "width": "sm",
+          "hint": "il fait attendre l'appelant"
+        },
+        {
+          "id": "c3",
+          "width": "sm",
+          "hint": "celui qui ouvre le FIFO en écriture"
+        },
+        {
+          "id": "c4",
+          "width": "md"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "<fcntl.h>",
+          "fcntl.h"
+        ],
+        "c2": [
+          "bloquant",
+          "bloquante"
+        ],
+        "c3": [
+          "ecrivain",
+          "écrivain",
+          "processus ecrivain"
+        ],
+        "c4": [
+          "O_NONBLOCK"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Un FIFO s'ouvre avec **`open()`**, déclaré dans **`<fcntl.h>`**. Par défaut, cet appel est **bloquant** sur un FIFO : il établit un **rendez-vous**. Un `open` en **lecture** attend qu'un **écrivain** se présente (et un `open` en écriture attend qu'un **lecteur** se présente) ; les deux reviennent **ensemble**, synchronisant les processus. Le drapeau **`O_NONBLOCK`**, ajouté au mode par un OU binaire, désactive ce blocage : `O_RDONLY | O_NONBLOCK` réussit toujours aussitôt, tandis que `O_WRONLY | O_NONBLOCK` **échoue** immédiatement avec **`errno == ENXIO`** s'il n'y a aucun lecteur.",
+    "concepts": [
+      "open-fifo",
+      "rendez-vous-ouverture",
+      "o-nonblock",
+      "enxio-fifo"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-ouverture",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque ouverture d'un FIFO à son comportement exact.",
+    "payload": {
+      "left": [
+        {
+          "id": "rd-block",
+          "label": "open(fifo, O_RDONLY) — mode bloquant — alors qu'aucun écrivain n'est présent"
+        },
+        {
+          "id": "wr-block",
+          "label": "open(fifo, O_WRONLY) — mode bloquant — alors qu'aucun lecteur n'est présent"
+        },
+        {
+          "id": "rd-nb",
+          "label": "open(fifo, O_RDONLY | O_NONBLOCK) — alors qu'aucun écrivain n'est présent"
+        },
+        {
+          "id": "wr-nb",
+          "label": "open(fifo, O_WRONLY | O_NONBLOCK) — alors qu'aucun lecteur n'est présent"
+        }
+      ],
+      "right": [
+        {
+          "id": "r-att-ecr",
+          "label": "Bloque jusqu'à l'arrivée d'un écrivain"
+        },
+        {
+          "id": "r-att-lec",
+          "label": "Bloque jusqu'à l'arrivée d'un lecteur"
+        },
+        {
+          "id": "r-ok",
+          "label": "Réussit immédiatement et renvoie un descripteur valide"
+        },
+        {
+          "id": "r-enxio",
+          "label": "Échoue immédiatement : renvoie -1 avec errno == ENXIO"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "rd-block": "r-att-ecr",
+        "wr-block": "r-att-lec",
+        "rd-nb": "r-ok",
+        "wr-nb": "r-enxio"
+      }
+    },
+    "explanation": "En mode **bloquant** (par défaut), `open(O_RDONLY)` **bloque jusqu'à l'arrivée d'un écrivain** et `open(O_WRONLY)` **bloque jusqu'à l'arrivée d'un lecteur** : c'est le **rendez-vous** d'ouverture. Avec **`O_NONBLOCK`**, le comportement devient **asymétrique** : `O_RDONLY | O_NONBLOCK` **réussit immédiatement** (descripteur de lecture valide, tube simplement vide), tandis que `O_WRONLY | O_NONBLOCK` **échoue immédiatement** avec **`errno == ENXIO`** si aucun lecteur n'est présent — le système refuse un écrivain qui n'aurait personne à qui parler.",
+    "concepts": [
+      "open-fifo",
+      "rendez-vous-ouverture",
+      "o-nonblock",
+      "enxio-fifo"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-ouverture",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un programme crée un FIFO, puis fork() : le fils sera lecteur, le père écrivain. Le père démarre plus vite et atteint son open() en premier. Remettez dans l'ordre chronologique les événements du rendez-vous d'ouverture.",
+    "payload": {
+      "items": [
+        {
+          "id": "pere-open",
+          "label": "Le père appelle open(fifo, O_WRONLY) : aucun lecteur n'est présent, il bloque"
+        },
+        {
+          "id": "pere-attend",
+          "label": "Le père reste gelé dans son open(), en attente d'un lecteur"
+        },
+        {
+          "id": "fils-open",
+          "label": "Le fils appelle open(fifo, O_RDONLY) : la paire lecteur/écrivain est complète"
+        },
+        {
+          "id": "deblocage",
+          "label": "Les deux open() se débloquent au même instant et renvoient leurs descripteurs"
+        },
+        {
+          "id": "echange",
+          "label": "Synchronisés, le père écrit dans le FIFO et le fils y lit"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "pere-open",
+        "pere-attend",
+        "fils-open",
+        "deblocage",
+        "echange"
+      ]
+    },
+    "explanation": "Le père, plus rapide, atteint son `open(O_WRONLY)` en premier : comme **aucun lecteur** n'est encore là, cet `open` **bloque**. Le père reste alors **gelé** dans son `open`, sans rien faire d'autre — il **attend** un lecteur. Quand le fils atteint à son tour son `open(O_RDONLY)`, la **paire** lecteur/écrivain est enfin **complète** : les **deux** `open` se débloquent **au même instant** et renvoient leurs descripteurs. Désormais **synchronisés** par ce rendez-vous, le père **écrit** et le fils **lit**. C'est ce mécanisme qui rend l'ordre de démarrage des processus **indifférent** : le premier arrivé patiente jusqu'au second.",
+    "concepts": [
+      "rendez-vous-ouverture",
+      "open-fifo",
+      "fork"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-ouverture",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Ce programme crée un FIFO puis se dédouble. Le père ouvre le FIFO en lecture et y reste bloqué jusqu'au rendez-vous ; le fils ouvre en écriture, dépose la chaîne `PRET`, et le père la lit. Le père affiche ensuite son rapport, après wait(). Quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\nint main(void) {\n    if (mkfifo(\"rdv\", 0644) == -1 && errno != EEXIST) {\n        perror(\"mkfifo\"); exit(EXIT_FAILURE);\n    }\n    pid_t pid = fork();\n    if (pid == 0) {\n        int fd = open(\"rdv\", O_WRONLY);\n        write(fd, \"PRET\", 4);\n        close(fd);\n        _exit(EXIT_SUCCESS);\n    }\n    int fd = open(\"rdv\", O_RDONLY);\n    char buf[16];\n    ssize_t n = read(fd, buf, sizeof(buf) - 1);\n    buf[n] = '\\0';\n    close(fd);\n    wait(NULL);\n    printf(\"rendez-vous etabli\\n\");\n    printf(\"recu : %s\\n\", buf);\n    unlink(\"rdv\");\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "rendez-vous etabli\nrecu : PRET"
+    },
+    "explanation": "Le père ouvre le FIFO en **lecture** : son `open(O_RDONLY)` **bloque** car aucun écrivain n'est encore là. Le fils ouvre en **écriture** : son `open(O_WRONLY)` complète la **paire**, et les deux `open` se débloquent **ensemble** — c'est le **rendez-vous**. Le fils écrit les 4 octets de `\"PRET\"` puis ferme ; le père les lit, termine la chaîne par `'\\0'`, puis `wait` la fin du fils. Les deux `printf` finaux, **tous deux exécutés par le père après `wait`**, donnent une sortie **déterministe** : `rendez-vous etabli` puis `recu : PRET`. Le `unlink` final efface le fichier FIFO.",
+    "concepts": [
+      "rendez-vous-ouverture",
+      "open-fifo",
+      "fork"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-ouverture",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Écrivez un programme C qui crée le tube nommé `/tmp/canal_rdv`, puis se dédouble par fork(). Le fils ouvre le FIFO en lecture (O_RDONLY) et attend, par le rendez-vous d'ouverture, que le père ouvre en écriture ; le père ouvre en écriture (O_WRONLY) et dépose la chaîne de 7 caractères `bonjour`. Le fils lit le message et affiche exactement `lecteur : bonjour`. Le père attend le fils, puis le programme supprime le FIFO.",
+    "payload": {
+      "spec": "Le programme inclut les en-têtes nécessaires. Il crée le FIFO avec mkfifo(\"/tmp/canal_rdv\", 0644) en tolérant errno == EEXIST. Il appelle fork(). Dans le fils : ouvrir le FIFO avec open(\"/tmp/canal_rdv\", O_RDONLY) — cet open bloque jusqu'au rendez-vous avec le père —, lire le message avec read dans un tampon, terminer la chaîne lue par '\\0', afficher la ligne 'lecteur : bonjour', fermer le descripteur, terminer le fils. Dans le père : ouvrir le FIFO avec open(\"/tmp/canal_rdv\", O_WRONLY), écrire les 7 octets de \"bonjour\" avec write, fermer, attendre le fils avec wait(NULL), puis supprimer le FIFO avec unlink(\"/tmp/canal_rdv\"). Le rendez-vous d'ouverture synchronise automatiquement les deux open.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <string.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\nint main(void) {\n    const char *chemin = \"/tmp/canal_rdv\";\n\n    /* 1. creer le FIFO (tolerer EEXIST) */\n\n    /* 2. fork() : le fils ouvre en lecture (rendez-vous), le pere en ecriture */\n    /*    le fils lit le message et affiche 'lecteur : bonjour' */\n    /*    le pere ecrit \"bonjour\" */\n\n    /* 3. le pere attend le fils, puis unlink le FIFO */\n\n    (void) chemin;\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le rendez-vous permet l'échange",
+          "stdin": "",
+          "expectedStdout": "lecteur : bonjour",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <string.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\nint main(void) {\n    const char *chemin = \"/tmp/canal_rdv\";\n\n    if (mkfifo(chemin, 0644) == -1 && errno != EEXIST) {\n        perror(\"mkfifo\"); exit(EXIT_FAILURE);\n    }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        int fd = open(chemin, O_RDONLY);\n        if (fd == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        char buf[100];\n        ssize_t n = read(fd, buf, sizeof(buf) - 1);\n        buf[n] = '\\0';\n        printf(\"lecteur : %s\\n\", buf);\n        close(fd);\n        exit(EXIT_SUCCESS);\n    } else {\n        int fd = open(chemin, O_WRONLY);\n        if (fd == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        write(fd, \"bonjour\", 7);\n        close(fd);\n        wait(NULL);\n        unlink(chemin);\n    }\n    return 0;\n}"
+    },
+    "explanation": "Le FIFO est créé en premier par **`mkfifo`** (en tolérant `EEXIST`). Après `fork`, le fils ouvre en **lecture** : son `open(O_RDONLY)` **bloque** car aucun écrivain n'est encore présent. Le père ouvre en **écriture** : son `open(O_WRONLY)` complète la **paire**, et les deux `open` se débloquent **ensemble** — c'est le **rendez-vous d'ouverture**, qui synchronise les deux processus sans aucun code explicite. Le père dépose `\"bonjour\"` (7 octets) ; le fils lit, termine la chaîne par `'\\0'` à l'indice rendu par `read`, et affiche `lecteur : bonjour`. Le père **`wait`** la fin du fils, puis **`unlink`** efface le fichier FIFO de l'arborescence.",
+    "concepts": [
+      "open-fifo",
+      "rendez-vous-ouverture",
+      "mkfifo-primitive",
+      "unlink-fifo",
+      "fork"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-ouverture",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme devrait permettre au fils écrivain d'envoyer le message `salut` au père lecteur, qui afficherait `recu : salut`. Le fils démarre en premier. En réalité le programme se fige (ou s'interrompt) et le message n'arrive jamais. Trouvez et corrigez l'erreur d'ouverture.",
+    "payload": {
+      "spec": "Le programme crée le FIFO \"canal\", puis fork. Le fils, qui démarre en premier, doit y écrire \"salut\" ; le père attend 1 seconde (sleep(1)) avant d'ouvrir le FIFO en lecture et d'afficher 'recu : salut'. Le bug : le fils ouvre le FIFO en écriture avec open(\"canal\", O_WRONLY | O_NONBLOCK). Or O_WRONLY | O_NONBLOCK sur un FIFO échoue IMMÉDIATEMENT, avec errno == ENXIO, lorsque aucun lecteur n'est encore présent — et c'est exactement le cas, puisque le père dort encore. Le fils s'arrête donc sur exit(EXIT_FAILURE) sans rien écrire. Le père, lui, ouvrira ensuite le FIFO en lecture (mode bloquant) et restera bloqué pour toujours, car plus aucun écrivain ne se présentera. La correction consiste à RETIRER O_NONBLOCK : en mode bloquant, l'open en écriture du fils ATTEND simplement (rendez-vous) que le père ouvre en lecture. Remplacez open(\"canal\", O_WRONLY | O_NONBLOCK) par open(\"canal\", O_WRONLY). La sortie attendue est 'recu : salut'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <string.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\nint main(void) {\n    if (mkfifo(\"canal\", 0644) == -1 && errno != EEXIST) {\n        perror(\"mkfifo\"); exit(EXIT_FAILURE);\n    }\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* le fils ecrivain demarre en premier */\n        int fd = open(\"canal\", O_WRONLY | O_NONBLOCK);\n        if (fd == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        write(fd, \"salut\", 5);\n        close(fd);\n        exit(EXIT_SUCCESS);\n    } else {\n        sleep(1);                       /* le pere arrive plus tard */\n        int fd = open(\"canal\", O_RDONLY);\n        if (fd == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        char buf[100];\n        ssize_t n = read(fd, buf, sizeof(buf) - 1);\n        buf[n] = '\\0';\n        printf(\"recu : %s\\n\", buf);\n        close(fd);\n        wait(NULL);\n        unlink(\"canal\");\n    }\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le fils transmet salut malgré l'écart de démarrage",
+          "stdin": "",
+          "expectedStdout": "recu : salut",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <string.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\nint main(void) {\n    if (mkfifo(\"canal\", 0644) == -1 && errno != EEXIST) {\n        perror(\"mkfifo\"); exit(EXIT_FAILURE);\n    }\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* le fils ecrivain demarre en premier */\n        int fd = open(\"canal\", O_WRONLY);\n        if (fd == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        write(fd, \"salut\", 5);\n        close(fd);\n        exit(EXIT_SUCCESS);\n    } else {\n        sleep(1);                       /* le pere arrive plus tard */\n        int fd = open(\"canal\", O_RDONLY);\n        if (fd == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        char buf[100];\n        ssize_t n = read(fd, buf, sizeof(buf) - 1);\n        buf[n] = '\\0';\n        printf(\"recu : %s\\n\", buf);\n        close(fd);\n        wait(NULL);\n        unlink(\"canal\");\n    }\n    return 0;\n}"
+    },
+    "explanation": "Le bug est le drapeau **`O_NONBLOCK`** sur l'ouverture en **écriture** du fils. `O_WRONLY | O_NONBLOCK` sur un FIFO **échoue immédiatement**, avec **`errno == ENXIO`**, dès lors qu'aucun lecteur n'est encore présent — et c'est exactement la situation, puisque le père **dort encore** (`sleep(1)`). Le fils s'arrête donc aussitôt sur `exit(EXIT_FAILURE)`, **sans rien écrire**. Le père, réveillé, ouvre ensuite le FIFO en lecture (mode bloquant) et **bloque pour toujours** : plus aucun écrivain ne se présentera. La correction est de **retirer `O_NONBLOCK`** : en mode bloquant, l'`open(O_WRONLY)` du fils n'échoue pas — il **attend** simplement, par le **rendez-vous d'ouverture**, que le père ouvre en lecture. L'écart de démarrage est ainsi **absorbé** : peu importe qui arrive d'abord, ils s'attendent.",
+    "concepts": [
+      "o-nonblock",
+      "enxio-fifo",
+      "rendez-vous-ouverture",
+      "open-fifo"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-client-serveur",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Dans le schéma client/serveur par FIFO, quel processus est responsable de la création (mkfifo) du FIFO « bien connu » ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le serveur, et lui seul : le FIFO bien connu doit exister avant qu'un client se présente."
+        },
+        {
+          "id": "b",
+          "label": "Chaque client le crée au démarrage ; le premier qui réussit le mkfifo gagne."
+        },
+        {
+          "id": "c",
+          "label": "Le serveur et tous les clients doivent l'appeler ensemble pour que le FIFO existe."
+        },
+        {
+          "id": "d",
+          "label": "Aucun : le système crée automatiquement le FIFO bien connu au premier open()."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "C'est le **serveur**, et lui seul, qui appelle `mkfifo` pour le FIFO **bien connu**. Ce FIFO est une ressource **publique** : il doit exister **avant** qu'un client tente de s'y raccorder. Un client qui ferait lui aussi `mkfifo` se heurterait à `EEXIST` et, surtout, brouillerait la responsabilité de la **destruction** (`unlink`). La règle est nette : le **serveur crée** le FIFO bien connu au démarrage et le **détruit** à l'arrêt ; le **client se contente d'`open`**. (d) est faux : `open` ne crée **jamais** un FIFO.",
+    "concepts": [
+      "fifo-client-serveur",
+      "fifo-bien-connu",
+      "mkfifo-primitive"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-client-serveur",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pour recevoir une réponse individuelle, chaque client crée son propre FIFO de retour à un nom unique, typiquement dérivé de son PID, et transmet ce nom (via son PID) dans la requête envoyée au serveur.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. La **lecture est destructrice** et le FIFO bien connu est **partagé** : si le serveur y réécrivait la réponse, n'importe quel processus pourrait la récupérer. Il faut donc un **canal de retour privé** par client. Chaque client crée son **FIFO de retour** à un nom **unique** — le **PID** est le choix naturel, car unique à un instant donné sur la machine (motif `/tmp/rep_<PID>`). Le client place son **PID dans la requête** : le serveur peut alors **reconstituer** le nom du FIFO de retour, l'ouvrir en écriture et y déposer la réponse, qui parvient ainsi **au seul client concerné**.",
+    "concepts": [
+      "fifo-retour",
+      "fifo-client-serveur",
+      "pid"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-client-serveur",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Parmi ces affirmations sur le schéma client/serveur par FIFO, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Si le serveur ouvre lui-même le FIFO bien connu en écriture, en plus de la lecture, son read ne renverra jamais 0 et il ne s'arrêtera pas entre deux clients."
+        },
+        {
+          "id": "b",
+          "label": "Le serveur doit ignorer SIGPIPE, car un client peut disparaître avant que le serveur écrive sa réponse dans le FIFO de retour."
+        },
+        {
+          "id": "c",
+          "label": "Échanger une structure de taille fixe est plus sûr que du texte à analyser, mais le serveur doit tout de même vérifier le nombre d'octets rendus par read."
+        },
+        {
+          "id": "d",
+          "label": "Le client doit créer le FIFO bien connu si le serveur ne l'a pas encore fait."
+        },
+        {
+          "id": "e",
+          "label": "Un FIFO de retour partagé par tous les clients suffit, puisque chaque réponse porte le PID de son destinataire."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "(a) Vrai : si le serveur garde aussi un descripteur d'**écriture** ouvert sur le FIFO bien connu, il existe **toujours au moins un écrivain** ; le `read` ne rend donc **jamais `0`** — il se contente de **bloquer** en attendant le prochain client. (b) Vrai : entre l'envoi de sa requête et la lecture de sa réponse, un client peut **disparaître** ; le serveur, écrivant alors dans un FIFO de retour **sans lecteur**, recevrait `SIGPIPE` et serait **tué** — il doit donc l'**ignorer**. (c) Vrai : une **structure de taille fixe** rend le protocole robuste, mais un `read` peut toujours rendre **moins** que demandé : il faut **vérifier** la taille. (d) est faux : le client ne crée **jamais** le FIFO bien connu — c'est le rôle exclusif du serveur. (e) est faux : un FIFO de retour **unique** mélangerait les réponses (lecture destructrice) ; chaque client a besoin de **son** FIFO privé.",
+    "concepts": [
+      "fifo-client-serveur",
+      "eof-tube",
+      "sigpipe-epipe",
+      "fifo-retour"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-client-serveur",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Un client interroge un serveur via FIFO et attend une réponse individuelle. Remettez dans l'ordre les étapes exécutées côté client.",
+    "payload": {
+      "items": [
+        {
+          "id": "creer-retour",
+          "label": "Créer son FIFO de retour privé, à un nom unique dérivé de son PID"
+        },
+        {
+          "id": "ouvrir-bc",
+          "label": "Ouvrir le FIFO bien connu du serveur en écriture"
+        },
+        {
+          "id": "envoyer",
+          "label": "Y écrire la requête, qui contient son PID et les données de la demande"
+        },
+        {
+          "id": "lire-retour",
+          "label": "Ouvrir son FIFO de retour en lecture et y attendre la réponse du serveur"
+        },
+        {
+          "id": "menage",
+          "label": "Refermer le descripteur, puis unlink son FIFO de retour"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "creer-retour",
+        "ouvrir-bc",
+        "envoyer",
+        "lire-retour",
+        "menage"
+      ]
+    },
+    "explanation": "Le client commence par **créer son FIFO de retour** privé, à un nom **unique** dérivé de son **PID** (`/tmp/rep_<PID>`) — il doit exister avant que le serveur tente d'y répondre. Il **ouvre** ensuite le **FIFO bien connu** du serveur en **écriture**, et y **envoie sa requête**, laquelle contient son **PID** (pour que le serveur sache à quel FIFO de retour répondre) **et** les données de la demande. Puis il **ouvre son FIFO de retour en lecture** et y **attend** la réponse — le rendez-vous d'ouverture le synchronise avec l'écriture du serveur. Enfin, il fait le **ménage** : `close` du descripteur, puis **`unlink`** de son FIFO de retour, pour ne laisser aucun fichier `p` orphelin.",
+    "concepts": [
+      "fifo-client-serveur",
+      "fifo-bien-connu",
+      "fifo-retour",
+      "unlink-fifo"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-client-serveur",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Dans le patron client/serveur par FIFO, associez chaque opération à l'acteur qui en a la charge.",
+    "payload": {
+      "left": [
+        {
+          "id": "creer-bc",
+          "label": "Créer (mkfifo) le FIFO bien connu du service"
+        },
+        {
+          "id": "creer-retour",
+          "label": "Créer (mkfifo) un FIFO de retour à un nom unique dérivé du PID"
+        },
+        {
+          "id": "lire-requetes",
+          "label": "Lire les requêtes en boucle sur le FIFO bien connu"
+        },
+        {
+          "id": "ecrire-reponse",
+          "label": "Ouvrir le FIFO de retour d'un client et y écrire la réponse"
+        },
+        {
+          "id": "ignorer-sigpipe",
+          "label": "Ignorer SIGPIPE pour ne pas être tué par un client disparu"
+        },
+        {
+          "id": "unlink-retour",
+          "label": "Supprimer (unlink) le FIFO de retour une fois la réponse reçue"
+        }
+      ],
+      "right": [
+        {
+          "id": "r-serveur",
+          "label": "Le serveur"
+        },
+        {
+          "id": "r-client",
+          "label": "Le client"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "creer-bc": "r-serveur",
+        "creer-retour": "r-client",
+        "lire-requetes": "r-serveur",
+        "ecrire-reponse": "r-serveur",
+        "ignorer-sigpipe": "r-serveur",
+        "unlink-retour": "r-client"
+      }
+    },
+    "explanation": "Le **serveur** crée le **FIFO bien connu** (`mkfifo`, une fois), y **lit les requêtes en boucle**, **ouvre le FIFO de retour** de chaque client pour y **écrire la réponse**, et **ignore `SIGPIPE`** afin qu'un client disparu ne le fasse pas tomber. Le **client**, lui, crée **son propre FIFO de retour** à un nom **unique** dérivé de son **PID**, et le **`unlink`** une fois la réponse reçue. La règle est sans ambiguïté : le client ne crée **jamais** le FIFO bien connu, et le serveur ne crée **jamais** les FIFO de retour — chaque acteur crée et détruit ce qui lui appartient.",
+    "concepts": [
+      "fifo-client-serveur",
+      "fifo-bien-connu",
+      "fifo-retour",
+      "sigpipe-epipe"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-client-serveur",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé du patron client/serveur par tubes nommés.",
+    "payload": {
+      "template": "Le serveur crée un FIFO {{c1}}, dont le nom est fixé d'avance et connu de tous : c'est le point d'entrée public du service. Il y lit les requêtes en {{c2}}. Pour qu'une réponse parvienne au bon client, chaque client crée son propre FIFO de {{c3}}, à un nom unique construit à partir de son {{c4}}, et transmet cette information dans sa requête.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "md",
+          "hint": "adjectif : son nom est connu de tous"
+        },
+        {
+          "id": "c2",
+          "width": "sm",
+          "hint": "il lit sans fin, en..."
+        },
+        {
+          "id": "c3",
+          "width": "sm"
+        },
+        {
+          "id": "c4",
+          "width": "sm",
+          "hint": "identifiant unique du processus"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "bien connu",
+          "bien-connu"
+        ],
+        "c2": [
+          "boucle"
+        ],
+        "c3": [
+          "retour"
+        ],
+        "c4": [
+          "PID",
+          "pid"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Le serveur crée un FIFO **bien connu** : son nom est **fixé d'avance** et connu de tous, c'est le **point d'entrée public** du service. Le serveur y **lit les requêtes en boucle**. Comme la lecture est destructrice et le FIFO bien connu partagé, la réponse ne peut pas y transiter : chaque client crée donc son propre FIFO de **retour**, à un nom **unique** construit à partir de son **PID** (motif `/tmp/rep_<PID>`). Le client place son **PID** dans la requête ; le serveur peut alors reconstituer le nom du FIFO de retour et y déposer la réponse, qui parvient **au seul client concerné**.",
+    "concepts": [
+      "fifo-client-serveur",
+      "fifo-bien-connu",
+      "fifo-retour",
+      "pid"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-client-serveur",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme simule un dialogue client/serveur avec deux FIFO. Le fils joue le serveur (silencieux) : il lit un entier et renvoie son double. Le père joue le client : il envoie 21, lit la réponse, puis affiche son rapport après wait(). Quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\n#define FIFO_SERVICE \"/tmp/srv_m4\"\n#define FIFO_RETOUR  \"/tmp/rep_m4\"\n\nint main(void) {\n    if (mkfifo(FIFO_SERVICE, 0666) == -1 && errno != EEXIST) { perror(\"mkfifo\"); exit(1); }\n    if (mkfifo(FIFO_RETOUR,  0666) == -1 && errno != EEXIST) { perror(\"mkfifo\"); exit(1); }\n\n    pid_t pid = fork();\n    if (pid == 0) {\n        /* SERVEUR : lit un nombre, renvoie son double */\n        int fd = open(FIFO_SERVICE, O_RDONLY);\n        int n;\n        read(fd, &n, sizeof(n));\n        close(fd);\n        int fr = open(FIFO_RETOUR, O_WRONLY);\n        int doubl = n * 2;\n        write(fr, &doubl, sizeof(doubl));\n        close(fr);\n        _exit(0);\n    }\n    /* CLIENT : envoie 21, lit la reponse */\n    int fd = open(FIFO_SERVICE, O_WRONLY);\n    int requete = 21;\n    write(fd, &requete, sizeof(requete));\n    close(fd);\n    int fr = open(FIFO_RETOUR, O_RDONLY);\n    int reponse;\n    read(fr, &reponse, sizeof(reponse));\n    close(fr);\n    wait(NULL);\n    printf(\"requete envoyee : %d\\n\", requete);\n    printf(\"reponse recue : %d\\n\", reponse);\n    unlink(FIFO_SERVICE);\n    unlink(FIFO_RETOUR);\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "requete envoyee : 21\nreponse recue : 42"
+    },
+    "explanation": "Deux FIFO sont créés : le **FIFO de service** (requêtes) et le **FIFO de retour** (réponses). Le **fils-serveur** ouvre le FIFO de service en lecture, lit l'entier, puis ouvre le FIFO de retour en écriture et y dépose son **double**. Le **père-client** ouvre le FIFO de service en écriture et y envoie **21**, puis ouvre le FIFO de retour en lecture et y lit la réponse. Tous les **rendez-vous d'ouverture** synchronisent les deux processus sans code explicite. Le serveur calcule `21 * 2 = 42`. Les deux `printf` finaux, **tous deux dans le père et exécutés après `wait`**, donnent une sortie **déterministe** : `requete envoyee : 21` puis `reponse recue : 42`. Les deux FIFO sont ensuite supprimés par `unlink`.",
+    "concepts": [
+      "fifo-client-serveur",
+      "fifo-retour",
+      "rendez-vous-ouverture",
+      "communication-bidirectionnelle"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-client-serveur",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 5,
+    "prompt": "Écrivez un programme C qui simule un échange client/serveur avec DEUX tubes nommés : `/tmp/req_exo` pour la requête et `/tmp/rep_exo` pour la réponse. Le programme crée les deux FIFO puis se dédouble. Le fils joue le serveur : il lit un entier sur le FIFO de requête et renvoie cet entier augmenté de 1 sur le FIFO de réponse. Le père joue le client : il envoie l'entier 100, lit la réponse et affiche exactement `reponse : 101`. Le père attend le fils, puis le programme supprime les deux FIFO.",
+    "payload": {
+      "spec": "Le programme inclut les en-têtes nécessaires. Il crée DEUX FIFO avec mkfifo(\"/tmp/req_exo\", 0666) et mkfifo(\"/tmp/rep_exo\", 0666), en tolérant errno == EEXIST pour chacun. Il appelle fork(). Dans le fils (serveur) : ouvrir le FIFO de requête avec open(\"/tmp/req_exo\", O_RDONLY), lire un int avec read, fermer ; ouvrir le FIFO de réponse avec open(\"/tmp/rep_exo\", O_WRONLY), écrire avec write l'int reçu augmenté de 1, fermer, terminer le fils. Dans le père (client) : ouvrir le FIFO de requête avec open(\"/tmp/req_exo\", O_WRONLY), écrire l'int 100, fermer ; ouvrir le FIFO de réponse avec open(\"/tmp/rep_exo\", O_RDONLY), lire un int avec read, fermer ; afficher 'reponse : <valeur>' (soit 'reponse : 101'). Le père attend le fils avec wait(NULL), puis supprime les deux FIFO avec unlink. Les rendez-vous d'ouverture synchronisent automatiquement les open. On échange un int binaire (write/read sur &valeur, sizeof(int)), pas du texte.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\n#define FIFO_REQ \"/tmp/req_exo\"\n#define FIFO_REP \"/tmp/rep_exo\"\n\nint main(void) {\n    /* 1. creer les deux FIFO (tolerer EEXIST) */\n\n    /* 2. fork() */\n    /*    fils (serveur) : lit un int sur FIFO_REQ, renvoie int+1 sur FIFO_REP */\n    /*    pere (client)  : envoie 100 sur FIFO_REQ, lit la reponse sur FIFO_REP, */\n    /*                     affiche 'reponse : 101' */\n\n    /* 3. le pere attend le fils, puis unlink les deux FIFO */\n\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le client reçoit la réponse du serveur",
+          "stdin": "",
+          "expectedStdout": "reponse : 101",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\n#define FIFO_REQ \"/tmp/req_exo\"\n#define FIFO_REP \"/tmp/rep_exo\"\n\nint main(void) {\n    if (mkfifo(FIFO_REQ, 0666) == -1 && errno != EEXIST) { perror(\"mkfifo\"); exit(EXIT_FAILURE); }\n    if (mkfifo(FIFO_REP, 0666) == -1 && errno != EEXIST) { perror(\"mkfifo\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* SERVEUR */\n        int fd = open(FIFO_REQ, O_RDONLY);\n        if (fd == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        int valeur;\n        read(fd, &valeur, sizeof(valeur));\n        close(fd);\n        int fr = open(FIFO_REP, O_WRONLY);\n        if (fr == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        int resultat = valeur + 1;\n        write(fr, &resultat, sizeof(resultat));\n        close(fr);\n        exit(EXIT_SUCCESS);\n    } else {\n        /* CLIENT */\n        int fd = open(FIFO_REQ, O_WRONLY);\n        if (fd == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        int valeur = 100;\n        write(fd, &valeur, sizeof(valeur));\n        close(fd);\n        int fr = open(FIFO_REP, O_RDONLY);\n        if (fr == -1) { perror(\"open\"); exit(EXIT_FAILURE); }\n        int reponse;\n        read(fr, &reponse, sizeof(reponse));\n        close(fr);\n        printf(\"reponse : %d\\n\", reponse);\n        wait(NULL);\n        unlink(FIFO_REQ);\n        unlink(FIFO_REP);\n    }\n    return 0;\n}"
+    },
+    "explanation": "Un vrai service est un **dialogue** : il faut donc **deux FIFO**, un par sens — `/tmp/req_exo` pour la requête, `/tmp/rep_exo` pour la réponse —, car un FIFO est **half-duplex**. Le serveur ne peut pas répondre dans le FIFO de requête (lecture destructrice, canal partagé). Le programme crée les deux FIFO (en tolérant `EEXIST`), puis `fork`. Le **fils-serveur** lit l'entier sur le FIFO de requête, puis écrit `valeur + 1` sur le FIFO de réponse. Le **père-client** envoie `100`, puis lit la réponse et affiche `reponse : 101`. Les **rendez-vous d'ouverture** synchronisent les `open` des deux processus sans aucun code explicite. On échange un `int` **binaire** (`sizeof(int)` octets) plutôt que du texte : le récepteur sait exactement combien lire. Le père **`wait`** la fin du fils, puis **`unlink`** les deux fichiers FIFO.",
+    "concepts": [
+      "fifo-client-serveur",
+      "communication-bidirectionnelle",
+      "rendez-vous-ouverture",
+      "mkfifo-primitive",
+      "unlink-fifo"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  },
+  {
+    "chapterSlug": "fifo-client-serveur",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 5,
+    "prompt": "Ce programme simule un service « carré » : le client envoie l'entier 7, le serveur doit renvoyer 49 via le FIFO de retour du client, qui afficherait `carre recu : 49`. En réalité le programme se fige. Trouvez et corrigez l'erreur du serveur.",
+    "payload": {
+      "spec": "Le programme crée deux FIFO : FIFO_SERVICE (\"/tmp/svc_exo\", le FIFO bien connu pour les requêtes) et FIFO_RETOUR (\"/tmp/ret_exo\", le FIFO de retour du client). Il fork. Le fils joue le client : il écrit 7 sur FIFO_SERVICE, puis ouvre FIFO_RETOUR en lecture et y attend le carré. Le père joue le serveur : il lit l'entier sur FIFO_SERVICE et calcule son carré. Le bug est dans la façon dont le serveur RENVOIE la réponse : il ouvre de nouveau FIFO_SERVICE (le FIFO bien connu) en écriture et y écrit le carré — au lieu d'utiliser FIFO_RETOUR. Conséquence : la réponse est déposée dans le mauvais tube. Le client, lui, attend sa réponse sur FIFO_RETOUR : son open(FIFO_RETOUR, O_RDONLY) bloque pour toujours, car personne n'ouvrira jamais FIFO_RETOUR en écriture. Le serveur, de son côté, bloque sur open(FIFO_SERVICE, O_WRONLY) en attendant un lecteur qui ne viendra pas. Tout le programme se fige (interblocage). La correction : le serveur doit répondre dans le FIFO de RETOUR du client. Remplacez open(FIFO_SERVICE, O_WRONLY) par open(FIFO_RETOUR, O_WRONLY) dans la branche du serveur. La sortie attendue est 'carre recu : 49'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\n#define FIFO_SERVICE \"/tmp/svc_exo\"\n#define FIFO_RETOUR  \"/tmp/ret_exo\"\n\nint main(void) {\n    if (mkfifo(FIFO_SERVICE, 0666) == -1 && errno != EEXIST) { perror(\"mkfifo\"); exit(EXIT_FAILURE); }\n    if (mkfifo(FIFO_RETOUR,  0666) == -1 && errno != EEXIST) { perror(\"mkfifo\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* CLIENT : envoie 7, attend le carre sur SON FIFO de retour */\n        int fd = open(FIFO_SERVICE, O_WRONLY);\n        int n = 7;\n        write(fd, &n, sizeof(n));\n        close(fd);\n        int fr = open(FIFO_RETOUR, O_RDONLY);\n        int rep;\n        read(fr, &rep, sizeof(rep));\n        close(fr);\n        printf(\"carre recu : %d\\n\", rep);\n        exit(EXIT_SUCCESS);\n    } else {\n        /* SERVEUR */\n        int fd = open(FIFO_SERVICE, O_RDONLY);\n        int n;\n        read(fd, &n, sizeof(n));\n        int carre = n * n;\n        int fr = open(FIFO_SERVICE, O_WRONLY);\n        write(fr, &carre, sizeof(carre));\n        close(fr);\n        close(fd);\n        wait(NULL);\n        unlink(FIFO_SERVICE);\n        unlink(FIFO_RETOUR);\n    }\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le client reçoit son carré",
+          "stdin": "",
+          "expectedStdout": "carre recu : 49",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <errno.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <sys/wait.h>\n#include <fcntl.h>\n\n#define FIFO_SERVICE \"/tmp/svc_exo\"\n#define FIFO_RETOUR  \"/tmp/ret_exo\"\n\nint main(void) {\n    if (mkfifo(FIFO_SERVICE, 0666) == -1 && errno != EEXIST) { perror(\"mkfifo\"); exit(EXIT_FAILURE); }\n    if (mkfifo(FIFO_RETOUR,  0666) == -1 && errno != EEXIST) { perror(\"mkfifo\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* CLIENT : envoie 7, attend le carre sur SON FIFO de retour */\n        int fd = open(FIFO_SERVICE, O_WRONLY);\n        int n = 7;\n        write(fd, &n, sizeof(n));\n        close(fd);\n        int fr = open(FIFO_RETOUR, O_RDONLY);\n        int rep;\n        read(fr, &rep, sizeof(rep));\n        close(fr);\n        printf(\"carre recu : %d\\n\", rep);\n        exit(EXIT_SUCCESS);\n    } else {\n        /* SERVEUR */\n        int fd = open(FIFO_SERVICE, O_RDONLY);\n        int n;\n        read(fd, &n, sizeof(n));\n        int carre = n * n;\n        int fr = open(FIFO_RETOUR, O_WRONLY);\n        write(fr, &carre, sizeof(carre));\n        close(fr);\n        close(fd);\n        wait(NULL);\n        unlink(FIFO_SERVICE);\n        unlink(FIFO_RETOUR);\n    }\n    return 0;\n}"
+    },
+    "explanation": "Le bug est que le serveur **renvoie la réponse dans le mauvais tube** : il ouvre de nouveau `FIFO_SERVICE` (le FIFO **bien connu**) en écriture, au lieu d'utiliser `FIFO_RETOUR`, le FIFO de **retour** du client. Or l'idée naïve « réécrire la réponse dans le FIFO bien connu » **ne marche pas** : ce FIFO est partagé et la lecture est destructrice. Ici, le résultat est un **interblocage** : le client attend sa réponse sur `open(FIFO_RETOUR, O_RDONLY)`, qui **bloque pour toujours** car personne n'ouvre `FIFO_RETOUR` en écriture ; et le serveur **bloque** sur `open(FIFO_SERVICE, O_WRONLY)` en attendant un lecteur qui ne viendra jamais. La correction : le serveur répond dans le **FIFO de retour** du client. On remplace `open(FIFO_SERVICE, O_WRONLY)` par **`open(FIFO_RETOUR, O_WRONLY)`** dans la branche du serveur — son `open` rejoint alors, par **rendez-vous**, l'`open` en lecture du client, et la réponse `49` lui parvient.",
+    "concepts": [
+      "fifo-client-serveur",
+      "fifo-retour",
+      "fifo-bien-connu",
+      "rendez-vous-ouverture"
+    ],
+    "source": "Cours 3 — Les tubes nommés (FIFO)"
+  }
+]

@@ -1,0 +1,1262 @@
+[
+  {
+    "slug": "intelligence-artificielle",
+    "label": "Intelligence artificielle",
+    "summary": "Discipline visant à doter les programmes informatiques de facultés — apprendre, analyser, comprendre, anticiper, démontrer — habituellement considérées comme propres à l'intelligence humaine."
+  },
+  {
+    "slug": "programme-intelligent",
+    "label": "Programme intelligent",
+    "summary": "Programme qui exécute, avec autonomie, des tâches pour lesquelles il n'a pas été explicitement programmé, en faisant preuve de raisonnement et de généralisation."
+  },
+  {
+    "slug": "conference-de-dartmouth",
+    "label": "Conférence de Dartmouth",
+    "summary": "Conférence fondatrice de l'intelligence artificielle tenue au Dartmouth College en 1956, qui a fixé l'objectif de faire simuler l'apprentissage et l'intelligence par des machines."
+  },
+  {
+    "slug": "test-de-turing",
+    "label": "Test de Turing",
+    "summary": "Définition opérationnelle de l'intelligence proposée par Alan Turing : une machine est jugée intelligente si un interrogateur ne parvient pas à la distinguer d'un humain au cours d'une conversation."
+  },
+  {
+    "slug": "apprentissage-automatique",
+    "label": "Apprentissage automatique (machine learning)",
+    "summary": "Sous-domaine de l'IA regroupant les programmes dont la performance sur une tâche s'améliore avec l'expérience, c'est-à-dire qui apprennent à partir de données."
+  },
+  {
+    "slug": "apprentissage-supervise",
+    "label": "Apprentissage supervisé",
+    "summary": "Approche du machine learning où le système apprend à partir d'exemples étiquetés afin de généraliser à des cas nouveaux."
+  },
+  {
+    "slug": "reseau-de-neurones",
+    "label": "Réseau de neurones",
+    "summary": "Fonction mathématique de R^n dans R^m organisée en couches d'unités de calcul, dont l'apprentissage consiste à ajuster les paramètres."
+  },
+  {
+    "slug": "apprentissage-profond",
+    "label": "Apprentissage profond (deep learning)",
+    "summary": "Apprentissage fondé sur des réseaux de neurones comportant de nombreuses couches, qui représentent les données selon plusieurs niveaux d'abstraction."
+  },
+  {
+    "slug": "ia-generative",
+    "label": "IA générative",
+    "summary": "Tendance actuelle de l'IA dont les modèles produisent de nouveaux objets — texte, image, vidéo — à partir d'une description, par opposition à l'IA discriminative qui classe des objets existants."
+  },
+  {
+    "slug": "modele-de-langage",
+    "label": "Modèle de langage",
+    "summary": "Modèle statistique de la distribution des mots d'une langue, capable de prédire le mot suivant d'une séquence et donc de générer du texte."
+  },
+  {
+    "slug": "grand-modele-de-langage",
+    "label": "Grand modèle de langage (LLM)",
+    "summary": "Modèle de langage neuronal de très grande taille, généralement fondé sur l'architecture transformeur, principale réalisation de l'IA générative."
+  },
+  {
+    "slug": "transformeur",
+    "label": "Transformeur",
+    "summary": "Architecture neuronale fondée sur le mécanisme d'attention, à la base des grands modèles de langage comme BERT et GPT."
+  },
+  {
+    "slug": "applications-de-l-ia",
+    "label": "Applications de l'IA",
+    "summary": "Grands domaines de succès de l'IA : reconnaissance des formes et vision par ordinateur, traitement du langage naturel, et jeux."
+  },
+  {
+    "slug": "espace-d-etats",
+    "label": "Espace d'états",
+    "summary": "Ensemble S de toutes les configurations possibles d'un problème, sur lequel s'effectue la recherche d'une solution."
+  },
+  {
+    "slug": "etat-initial",
+    "label": "État initial",
+    "summary": "État e₀ ∈ S à partir duquel le problème commence et d'où part la recherche d'une suite d'actions."
+  },
+  {
+    "slug": "etats-finaux",
+    "label": "États finaux",
+    "summary": "Sous-ensemble F ⊂ S des états cibles : résoudre le problème consiste à atteindre l'un d'eux depuis l'état initial."
+  },
+  {
+    "slug": "action",
+    "label": "Action",
+    "summary": "Transition Aᵢⱼ qui fait passer le problème de l'état eᵢ à l'état eⱼ ; l'ensemble des actions définit la fonction de transition."
+  },
+  {
+    "slug": "cout-d-action",
+    "label": "Coût d'une action",
+    "summary": "Valeur numérique associée à une action ou à une séquence d'actions, que la résolution peut chercher à minimiser."
+  },
+  {
+    "slug": "arbre-de-recherche",
+    "label": "Arbre de recherche",
+    "summary": "Arbre dont la racine est l'état initial et dont les successeurs d'un nœud sont les états atteints par une action, construit pour explorer l'espace d'états."
+  },
+  {
+    "slug": "strategie-de-recherche",
+    "label": "Stratégie de recherche",
+    "summary": "Règle qui détermine l'ordre dans lequel les états de l'arbre de recherche sont considérés et développés."
+  },
+  {
+    "slug": "recherche-aveugle",
+    "label": "Recherche aveugle",
+    "summary": "Recherche qui parcourt l'arbre sans utiliser aucune information sur le problème, d'où des complexités spatiale et temporelle très élevées."
+  },
+  {
+    "slug": "parcours-en-largeur",
+    "label": "Parcours en largeur d'abord",
+    "summary": "Stratégie aveugle qui visite les nœuds de l'arbre niveau par niveau, en s'appuyant sur une file."
+  },
+  {
+    "slug": "parcours-en-profondeur",
+    "label": "Parcours en profondeur d'abord",
+    "summary": "Stratégie aveugle qui pousse une branche aussi loin que possible avant d'en explorer une autre, en s'appuyant sur une pile."
+  },
+  {
+    "slug": "recherche-informee",
+    "label": "Recherche informée (guidée)",
+    "summary": "Recherche qui exploite une information sur la qualité des états pour privilégier les bons états et éviter les autres."
+  },
+  {
+    "slug": "heuristique",
+    "label": "Heuristique",
+    "summary": "Fonction h : S → ℕ associant à chaque état une valeur d'autant plus faible que l'état est proche d'un état final."
+  },
+  {
+    "slug": "heuristique-coincidente",
+    "label": "Heuristique coïncidente",
+    "summary": "Heuristique qui reconnaît les états finaux, c'est-à-dire telle que h(e_f) = 0 pour tout état final e_f."
+  },
+  {
+    "slug": "heuristique-consistante",
+    "label": "Heuristique consistante",
+    "summary": "Heuristique vérifiant h(eᵢ) − h(eⱼ) ≤ k*(eᵢ, eⱼ) pour toute paire d'états."
+  },
+  {
+    "slug": "heuristique-monotone",
+    "label": "Heuristique monotone",
+    "summary": "Heuristique vérifiant h(eᵢ) − h(eⱼ) ≤ k(eᵢ, eⱼ) lorsque eⱼ est un successeur de eᵢ."
+  },
+  {
+    "slug": "heuristique-minorante",
+    "label": "Heuristique minorante (admissible)",
+    "summary": "Heuristique qui sous-estime systématiquement le coût restant, c'est-à-dire telle que h(e) ≤ h*(e)."
+  },
+  {
+    "slug": "fonction-g",
+    "label": "Fonction g",
+    "summary": "Coût g(e) de la séquence d'actions la moins chère conduisant de l'état initial à l'état e."
+  },
+  {
+    "slug": "fonction-h-etoile",
+    "label": "Fonction h*",
+    "summary": "Coût h*(e) de la séquence d'actions la moins chère conduisant de l'état e à un état final."
+  },
+  {
+    "slug": "fonction-f",
+    "label": "Fonction f",
+    "summary": "Somme f(e) = g(e) + h(e) estimant le coût d'une solution passant par l'état e."
+  },
+  {
+    "slug": "algorithme-a-etoile",
+    "label": "Algorithme A*",
+    "summary": "Algorithme de recherche informée qui développe à chaque étape l'état minimisant f(e) = g(e) + h(e), à l'aide d'une liste d'états actifs et d'une liste d'états inactifs."
+  },
+  {
+    "slug": "jeu-a-deux-joueurs",
+    "label": "Jeu à deux joueurs",
+    "summary": "Jeu opposant exactement deux joueurs qui jouent à tour de rôle, comme les échecs ou les dames."
+  },
+  {
+    "slug": "jeu-a-somme-nulle",
+    "label": "Jeu à somme nulle",
+    "summary": "Jeu où le gain d'un joueur est exactement la perte de l'autre : ce que l'un gagne, l'autre le perd."
+  },
+  {
+    "slug": "information-complete",
+    "label": "Information complète",
+    "summary": "Propriété d'un jeu dont chaque joueur connaît à tout instant l'état exact de la partie, sans aucune part de hasard ni d'information cachée."
+  },
+  {
+    "slug": "modelisation-d-un-jeu",
+    "label": "Modélisation d'un jeu",
+    "summary": "Description formelle d'un jeu par un ensemble d'états S, un état initial s₀, des états finals F ⊂ S, un ensemble d'actions et une fonction d'utilité."
+  },
+  {
+    "slug": "fonction-d-utilite",
+    "label": "Fonction d'utilité",
+    "summary": "Fonction associant une valeur numérique à chaque état final, mesurant le gain, la perte ou le nul obtenu à l'issue de la partie."
+  },
+  {
+    "slug": "facteur-de-branchement",
+    "label": "Facteur de branchement",
+    "summary": "Nombre moyen de coups valides offerts à un joueur à chaque étape de la partie, qui gouverne la taille de l'espace de recherche."
+  },
+  {
+    "slug": "arbre-de-jeu",
+    "label": "Arbre de jeu",
+    "summary": "Arbre de recherche dont la racine est l'état courant et dont les fils d'un nœud sont les états résultant de tous les coups possibles."
+  },
+  {
+    "slug": "noeud-max",
+    "label": "Nœud Max",
+    "summary": "Nœud de l'arbre de jeu où c'est au joueur Max de jouer, dont la valeur est le maximum des valeurs de ses fils."
+  },
+  {
+    "slug": "noeud-min",
+    "label": "Nœud Min",
+    "summary": "Nœud de l'arbre de jeu où c'est au joueur Min de jouer, dont la valeur est le minimum des valeurs de ses fils."
+  },
+  {
+    "slug": "algorithme-minimax",
+    "label": "Algorithme minimax",
+    "summary": "Algorithme qui calcule la valeur de chaque nœud de l'arbre de jeu, des feuilles vers la racine, en alternant maximum aux nœuds Max et minimum aux nœuds Min."
+  },
+  {
+    "slug": "valeur-minimax",
+    "label": "Valeur minimax",
+    "summary": "Valeur attribuée à la racine de l'arbre de jeu : le gain que Max peut s'assurer si les deux joueurs jouent de manière optimale."
+  },
+  {
+    "slug": "strategie-de-jeu",
+    "label": "Stratégie de jeu",
+    "summary": "Suite de coups choisie par Max à partir de l'arbre de jeu, en jouant à chaque niveau vers le fils dont la valeur réalise l'optimum du niveau."
+  },
+  {
+    "slug": "elagage-alpha-beta",
+    "label": "Élagage alpha-bêta",
+    "summary": "Optimisation de minimax qui supprime l'exploration de branches dont on sait déjà qu'elles ne pourront pas influencer la valeur de la racine."
+  },
+  {
+    "slug": "parametre-alpha",
+    "label": "Paramètre α",
+    "summary": "Borne inférieure de la valeur d'un nœud Max : meilleure valeur déjà garantie au joueur Max sur le chemin courant."
+  },
+  {
+    "slug": "parametre-beta",
+    "label": "Paramètre β",
+    "summary": "Borne supérieure de la valeur d'un nœud Min : meilleure valeur déjà garantie au joueur Min sur le chemin courant."
+  },
+  {
+    "slug": "coupure-alpha-beta",
+    "label": "Coupure alpha-bêta",
+    "summary": "Arrêt de l'exploration des fils restants d'un nœud lorsqu'un fils franchit la borne α ou β, rendant la branche inutile."
+  },
+  {
+    "slug": "ordre-des-coups",
+    "label": "Ordre des coups",
+    "summary": "Ordre dans lequel les fils d'un nœud sont explorés ; un bon ordre maximise le nombre de coupures de l'élagage alpha-bêta."
+  },
+  {
+    "slug": "fonction-d-evaluation",
+    "label": "Fonction d'évaluation",
+    "summary": "Heuristique qui estime la qualité d'un état non terminal afin de pouvoir arrêter la recherche avant les états finals."
+  },
+  {
+    "slug": "profondeur-de-recherche",
+    "label": "Profondeur de recherche",
+    "summary": "Niveau maximal jusqu'auquel l'arbre de jeu est construit avant que la fonction d'évaluation ne remplace la fonction d'utilité."
+  },
+  {
+    "slug": "optimisation-combinatoire",
+    "label": "Optimisation combinatoire",
+    "summary": "Branche de l'optimisation portant sur des problèmes à variables discrètes, dont l'ensemble des solutions est fini mais dont la taille interdit en pratique l'énumération exhaustive."
+  },
+  {
+    "slug": "optimisation-continue",
+    "label": "Optimisation continue",
+    "summary": "Branche de l'optimisation portant sur des problèmes à variables continues, qu'on cherche à minimiser ou maximiser sur un domaine de R^n."
+  },
+  {
+    "slug": "optimum-local",
+    "label": "Optimum local",
+    "summary": "Solution meilleure que toutes celles de son voisinage immédiat, mais pas nécessairement meilleure que toutes les solutions du problème."
+  },
+  {
+    "slug": "optimum-global",
+    "label": "Optimum global",
+    "summary": "Meilleure solution sur l'ensemble du domaine de recherche : la valeur x* qu'aucune autre solution ne surpasse."
+  },
+  {
+    "slug": "voisinage",
+    "label": "Voisinage",
+    "summary": "Ensemble des solutions proches d'une solution donnée : décalage de composantes pour des variables discrètes, hypersphère ou hypercube centré sur la donnée pour des variables continues."
+  },
+  {
+    "slug": "metaheuristique",
+    "label": "Métaheuristique",
+    "summary": "Méthode d'optimisation approchée, globale, stochastique et générique, souvent inspirée d'analogies avec la nature, qui ne garantit pas l'optimalité de la solution trouvée."
+  },
+  {
+    "slug": "exploration-exploitation",
+    "label": "Exploration et exploitation",
+    "summary": "Compromis fondamental d'une recherche : explorer largement l'espace pour découvrir de nouvelles régions, ou exploiter intensivement le voisinage d'une bonne solution déjà connue."
+  },
+  {
+    "slug": "probleme-du-voyageur-de-commerce",
+    "label": "Problème du voyageur de commerce (TSP)",
+    "summary": "Problème combinatoire NP-complet consistant à trouver la plus courte tournée qui visite chaque ville une seule fois et revient au point de départ."
+  },
+  {
+    "slug": "cycle-hamiltonien",
+    "label": "Cycle hamiltonien",
+    "summary": "Chemin d'un graphe qui passe une et une seule fois par chaque sommet et revient à son point de départ ; une solution du TSP est le cycle hamiltonien de coût minimal."
+  },
+  {
+    "slug": "operateur-2-opt",
+    "label": "Opérateur 2-opt",
+    "summary": "Opérateur de voisinage pour le TSP qui inverse un sous-chemin de la tournée et ne modifie ainsi que deux arêtes, produisant un voisin peu distant de la solution courante."
+  },
+  {
+    "slug": "recuit-simule",
+    "label": "Recuit simulé",
+    "summary": "Première métaheuristique proposée, variante de l'algorithme de Metropolis-Hastings, qui transpose le recuit physique des matériaux pour minimiser une fonction objectif."
+  },
+  {
+    "slug": "energie",
+    "label": "Énergie du système",
+    "summary": "Dans l'analogie du recuit simulé, nom donné à la fonction f à minimiser ; une solution représente un état du matériau dont on cherche l'énergie minimale."
+  },
+  {
+    "slug": "temperature",
+    "label": "Température",
+    "summary": "Paramètre de contrôle du recuit simulé : élevée, elle autorise l'acceptation de solutions dégradantes ; faible, elle la rend très improbable."
+  },
+  {
+    "slug": "schema-de-refroidissement",
+    "label": "Schéma de refroidissement",
+    "summary": "Règle de décroissance de la température au fil de l'algorithme : géométrique, logarithmique ou exponentielle, elle gouverne le passage de l'exploration à l'exploitation."
+  },
+  {
+    "slug": "perturbation",
+    "label": "Perturbation",
+    "summary": "Opération qui génère une nouvelle solution dans le voisinage de la solution courante ; elle est spécifique au problème et à sa nature discrète ou continue."
+  },
+  {
+    "slug": "critere-de-metropolis",
+    "label": "Critère de Metropolis",
+    "summary": "Règle d'acceptation probabiliste du recuit simulé : une solution dégradante est acceptée avec la probabilité exp(-ΔE/T), d'autant plus faible que la dégradation est forte ou la température basse."
+  },
+  {
+    "slug": "equilibre-thermodynamique",
+    "label": "Équilibre thermodynamique",
+    "summary": "Boucle interne du recuit simulé, exécutée à température constante, qui répète perturbations et acceptations afin de fouiller le voisinage d'une bonne solution en cours."
+  },
+  {
+    "slug": "fouille-de-donnees",
+    "label": "Fouille de données (Data Mining)",
+    "summary": "Recherche de régularités, de motifs ou de modèles dans de grandes quantités de données, vue comme l'extraction d'informations implicites, cachées et potentiellement utiles."
+  },
+  {
+    "slug": "processus-kdd",
+    "label": "Processus KDD",
+    "summary": "Processus global de découverte de connaissances dans les bases de données : prétraitement, transformation, extraction des régularités puis interprétation."
+  },
+  {
+    "slug": "modele",
+    "label": "Modèle",
+    "summary": "Forme prise par les régularités extraites des données par la fouille de données, par exemple un ensemble de règles ou un arbre de décision."
+  },
+  {
+    "slug": "motif",
+    "label": "Motif (pattern)",
+    "summary": "Régularité locale extraite des données par la fouille de données, désignée en anglais par le terme pattern."
+  },
+  {
+    "slug": "prediction",
+    "label": "Prédiction",
+    "summary": "Usage d'un modèle consistant à prévoir ce qui se passera dans de nouvelles situations ; on parle aussi, selon le contexte, de reconnaissance ou de décision."
+  },
+  {
+    "slug": "explication-comprehension",
+    "label": "Explication et compréhension",
+    "summary": "Usage d'un modèle consistant à expliquer les données et à aider à les comprendre, par opposition à la seule prédiction."
+  },
+  {
+    "slug": "apprentissage-non-supervise",
+    "label": "Apprentissage non supervisé",
+    "summary": "Approche du machine learning qui construit des groupes d'objets similaires sans classes prédéfinies, dont la tâche principale est le clustering."
+  },
+  {
+    "slug": "classification",
+    "label": "Classification",
+    "summary": "Tâche d'apprentissage supervisé consistant à apprendre à affecter des objets à des classes prédéfinies."
+  },
+  {
+    "slug": "regression",
+    "label": "Régression",
+    "summary": "Tâche d'apprentissage supervisé visant une variable cible numérique, par exemple la recherche d'une dépendance linéaire entre une grandeur Y et des grandeurs X₁, …, Xₙ."
+  },
+  {
+    "slug": "clustering",
+    "label": "Clustering",
+    "summary": "Tâche d'apprentissage non supervisé qui construit des groupes (clusters) d'objets similaires sans classes prédéfinies, par exemple à l'aide de l'algorithme K-Means."
+  },
+  {
+    "slug": "regles-d-association",
+    "label": "Règles d'association",
+    "summary": "Tâche de fouille de données extrayant des règles de la forme X → Y signifiant que si un panier contient X, alors il contient aussi Y ; obtenues par exemple avec l'algorithme Apriori."
+  },
+  {
+    "slug": "attribut",
+    "label": "Attribut",
+    "summary": "Variable (colonne) décrivant les exemples d'un jeu de données ; un attribut peut être quantitatif (numérique, continu ou discret) ou qualitatif (catégoriel, nominal, ordinal ou binaire)."
+  },
+  {
+    "slug": "classe",
+    "label": "Classe",
+    "summary": "Attribut spécial C, à m valeurs possibles, dont l'apprentissage supervisé cherche à prédire la valeur pour une instance quelconque."
+  },
+  {
+    "slug": "jeu-d-apprentissage",
+    "label": "Jeu d'apprentissage",
+    "summary": "Ensemble D d'exemples étiquetés à partir duquel un algorithme d'apprentissage construit le modèle (classifieur)."
+  },
+  {
+    "slug": "jeu-de-test",
+    "label": "Jeu de test",
+    "summary": "Ensemble d'exemples étiquetés, disjoint du jeu d'apprentissage, servant à évaluer le modèle en comparant les classes prédites aux classes réelles."
+  },
+  {
+    "slug": "jeu-de-validation",
+    "label": "Jeu de validation",
+    "summary": "Ensemble d'exemples servant à régler les hyperparamètres d'un modèle, par exemple le nombre de voisins k de l'algorithme kNN."
+  },
+  {
+    "slug": "sur-apprentissage",
+    "label": "Sur-apprentissage",
+    "summary": "Situation où un modèle colle trop aux exemples d'apprentissage et perd sa capacité à généraliser à des données nouvelles."
+  },
+  {
+    "slug": "generalisation",
+    "label": "Généralisation",
+    "summary": "Capacité d'un modèle appris sur des exemples à fournir de bonnes prédictions sur des données nouvelles, non rencontrées durant l'apprentissage."
+  },
+  {
+    "slug": "matrice-de-confusion",
+    "label": "Matrice de confusion",
+    "summary": "Matrice m × m dont la case Conf[i, j] compte les exemples de test de classe réelle cᵢ que le modèle affecte à la classe cⱼ."
+  },
+  {
+    "slug": "taux-de-bonne-classification",
+    "label": "Taux de bonne classification (accuracy)",
+    "summary": "Métrique d'évaluation égale à la somme de la diagonale de la matrice de confusion divisée par la somme de toute la matrice, soit la proportion d'exemples bien classés."
+  },
+  {
+    "slug": "precision",
+    "label": "Précision (precision)",
+    "summary": "Métrique de classification binaire valant TP / (TP + FP) : proportion d'exemples réellement positifs parmi ceux que le modèle a prédits positifs."
+  },
+  {
+    "slug": "rappel",
+    "label": "Rappel (recall)",
+    "summary": "Métrique de classification binaire valant TP / (TP + FN) : proportion d'exemples positifs correctement retrouvés par le modèle."
+  },
+  {
+    "slug": "f-mesure",
+    "label": "F-mesure (F-measure)",
+    "summary": "Métrique de classification binaire qui se déduit de la précision et du rappel afin de résumer les deux en une seule valeur."
+  },
+  {
+    "slug": "k-plus-proches-voisins",
+    "label": "k plus proches voisins (kNN)",
+    "summary": "Algorithme de classification paresseux qui affecte à une nouvelle instance la classe la plus fréquente parmi ses k exemples les plus proches au sens d'une mesure de similarité."
+  },
+  {
+    "slug": "arbre-de-decision",
+    "label": "Arbre de décision",
+    "summary": "Méthode d'apprentissage supervisé qui définit une décomposition hiérarchique de l'ensemble des instances : chaque nœud interne porte un test et chaque feuille une valeur de la classe cible."
+  },
+  {
+    "slug": "noeud-de-decision",
+    "label": "Nœud de décision",
+    "summary": "Nœud interne d'un arbre de décision étiqueté par un test sur les attributs, dont chaque branche correspond à une valeur du test et conduit à un sous-ensemble des instances."
+  },
+  {
+    "slug": "feuille",
+    "label": "Feuille",
+    "summary": "Nœud terminal d'un arbre de décision : il correspond à une région des instances et porte la valeur de la classe (classification) ou la valeur réelle (régression) qui y sera prédite."
+  },
+  {
+    "slug": "critere-de-decoupage",
+    "label": "Critère de découpage",
+    "summary": "Mesure de l'impureté d'un sous-ensemble — entropie ou indice de Gini — utilisée pour choisir, à chaque nœud, l'attribut qui partage l'ensemble d'apprentissage de la façon la plus pure."
+  },
+  {
+    "slug": "entropie",
+    "label": "Entropie",
+    "summary": "Mesure de l'impureté d'un ensemble D définie par Ent(D) = −Σ pᵢ log pᵢ ; nulle quand tous les exemples sont d'une même classe, maximale quand les classes sont équiréparties."
+  },
+  {
+    "slug": "gain-d-information",
+    "label": "Gain d'information",
+    "summary": "Différence entre l'impureté avant partitionnement et l'impureté moyenne après partitionnement ; l'attribut retenu à un nœud est celui qui maximise ce gain (stratégie gloutonne)."
+  },
+  {
+    "slug": "indice-de-gini",
+    "label": "Indice de Gini",
+    "summary": "Mesure d'impureté d'un ensemble D définie par Gini(D) = Σ pᵢ(1 − pᵢ) = 1 − Σ pᵢ² ; critère de découpage de l'algorithme CART."
+  },
+  {
+    "slug": "construction-d-arbre",
+    "label": "Construction d'un arbre",
+    "summary": "Procédé récursif de partitionnement qui divise l'ensemble d'apprentissage par des tests jusqu'à obtenir des sous-ensembles purs ou jusqu'à satisfaire un critère d'arrêt."
+  },
+  {
+    "slug": "algorithme-cart",
+    "label": "Algorithme CART",
+    "summary": "Algorithme de construction d'arbres binaires (Classification And Regression Trees) acceptant tous les types d'attributs et fondé sur l'indice de Gini."
+  },
+  {
+    "slug": "attribut-continu",
+    "label": "Attribut continu",
+    "summary": "Attribut numérique ou ordinal pour lequel le partage d'un nœud se fait par un test de seuil X < a, en testant les valeurs intermédiaires entre les valeurs observées."
+  },
+  {
+    "slug": "critere-d-arret",
+    "label": "Critère d'arrêt",
+    "summary": "Condition qui interrompt le partitionnement d'un nœud — pureté totale, profondeur maximale de l'arbre ou taille minimale d'un nœud — fixée par des hyperparamètres."
+  },
+  {
+    "slug": "elagage",
+    "label": "Élagage (pruning)",
+    "summary": "Réduction de la taille d'un arbre par suppression de sous-arbres trop spécifiques, afin de limiter le sur-apprentissage et d'améliorer la généralisation."
+  },
+  {
+    "slug": "variable-de-substitution",
+    "label": "Variable de substitution (surrogate split)",
+    "summary": "Attribut qui aboutit aux mêmes sous-ensembles qu'un autre lors d'un partage et qui le remplace, pour la prévision, lorsqu'une valeur est manquante."
+  },
+  {
+    "slug": "methode-d-ensemble",
+    "label": "Méthode d'ensemble",
+    "summary": "Technique d'apprentissage qui agrège les prédictions de plusieurs modèles afin d'obtenir un classifieur plus robuste qu'aucun des modèles pris isolément."
+  },
+  {
+    "slug": "bagging",
+    "label": "Bagging (bootstrap aggregating)",
+    "summary": "Méthode d'ensemble qui construit chaque modèle sur un échantillon bootstrap de l'ensemble d'apprentissage, puis agrège les prédictions par vote majoritaire ou par moyenne."
+  },
+  {
+    "slug": "echantillon-bootstrap",
+    "label": "Échantillon bootstrap",
+    "summary": "Échantillon obtenu par tirage aléatoire avec remise de n éléments (ou de k < n éléments) parmi les n observations de l'ensemble d'apprentissage."
+  },
+  {
+    "slug": "foret-aleatoire",
+    "label": "Forêt aléatoire (random forest)",
+    "summary": "Classifieur de Breiman constitué d'une collection d'arbres de décision construits sur des échantillons bootstrap, dont la prédiction est obtenue par vote majoritaire (classification) ou moyenne (régression)."
+  },
+  {
+    "slug": "selection-aleatoire-de-variables",
+    "label": "Sélection aléatoire de variables",
+    "summary": "Mécanisme des forêts aléatoires qui, à chaque nœud, restreint le choix du test à un petit sous-ensemble d'attributs tirés au hasard (mtry, de l'ordre de √p), afin de décorréler les arbres."
+  },
+  {
+    "slug": "agregation",
+    "label": "Agrégation",
+    "summary": "Combinaison des prédictions des arbres d'une forêt : vote majoritaire pour la classification, moyenne des prédictions pour la régression."
+  },
+  {
+    "slug": "echantillon-out-of-bag",
+    "label": "Échantillon out-of-bag",
+    "summary": "Ensemble des observations de l'ensemble d'apprentissage qui ne figurent pas dans un échantillon bootstrap donné et qui n'ont donc pas servi à construire l'arbre correspondant."
+  },
+  {
+    "slug": "erreur-oob",
+    "label": "Erreur OOB",
+    "summary": "Erreur de prévision d'une forêt aléatoire estimée, pour chaque observation, par les seuls arbres dont l'échantillon bootstrap ne la contient pas : 1/n Σ 1[ŷᵢ ≠ yᵢ]."
+  },
+  {
+    "slug": "importance-des-variables",
+    "label": "Importance des variables",
+    "summary": "Mesure du rôle de chaque attribut dans une forêt aléatoire : importance par permutation, fondée sur la diminution moyenne de précision OOB lorsque les valeurs de l'attribut sont permutées au hasard."
+  },
+  {
+    "slug": "classifieur-bayesien",
+    "label": "Classifieur bayésien",
+    "summary": "Méthode d'apprentissage supervisé qui adopte un point de vue probabiliste : elle estime la probabilité qu'une instance donnée appartienne à une classe C afin de la classer."
+  },
+  {
+    "slug": "probabilite-conditionnelle",
+    "label": "Probabilité conditionnelle",
+    "summary": "Probabilité Pr(X/Y) d'un événement X sachant qu'un événement Y est réalisé, qui réévalue la chance de X à la lumière de l'information apportée par Y."
+  },
+  {
+    "slug": "theoreme-de-bayes",
+    "label": "Théorème de Bayes",
+    "summary": "Première formule de Bayes : pour deux événements A et B, Pr(A/B) = Pr(B/A)·Pr(A) / Pr(B) ; elle inverse le conditionnement entre A et B."
+  },
+  {
+    "slug": "theoreme-des-probabilites-totales",
+    "label": "Théorème des probabilités totales",
+    "summary": "Décomposition Pr(d) = Σⱼ Pr(d/Cⱼ)·Pr(Cⱼ) qui exprime la probabilité d'observer une instance comme somme, sur toutes les classes, des probabilités conditionnelles pondérées par les priors."
+  },
+  {
+    "slug": "probabilite-a-priori",
+    "label": "Probabilité a priori",
+    "summary": "Probabilité Pr(Cⱼ) qu'une instance quelconque appartienne à la classe Cⱼ, estimée par la proportion d'exemples de cette classe dans l'ensemble d'apprentissage."
+  },
+  {
+    "slug": "probabilite-a-posteriori",
+    "label": "Probabilité a posteriori",
+    "summary": "Probabilité Pr(Cⱼ/d) qu'une instance d appartienne à la classe Cⱼ, calculée par le théorème de Bayes une fois les valeurs des attributs de d observées."
+  },
+  {
+    "slug": "vraisemblance",
+    "label": "Vraisemblance",
+    "summary": "Probabilité Pr(d/Cⱼ) d'observer l'instance d lorsqu'on sait qu'elle appartient à la classe Cⱼ ; le classifieur naïf la factorise en un produit de probabilités conditionnelles d'attributs."
+  },
+  {
+    "slug": "classifieur-bayesien-naif",
+    "label": "Classifieur bayésien naïf",
+    "summary": "Classifieur probabiliste appliquant le théorème de Bayes sous l'hypothèse que les attributs sont indépendants, ce qui permet d'écrire Pr(d/Cⱼ) comme un produit de probabilités conditionnelles."
+  },
+  {
+    "slug": "hypothese-d-independance",
+    "label": "Hypothèse d'indépendance",
+    "summary": "Hypothèse « naïve » du classifieur bayésien selon laquelle les attributs sont indépendants : Pr(A₁=a₁, …, Aₚ=aₚ/Cⱼ) = Πᵢ Pr(Aᵢ=aᵢ/Cⱼ)."
+  },
+  {
+    "slug": "estimation-de-probabilite",
+    "label": "Estimation des probabilités",
+    "summary": "Calcul des probabilités a priori Pr(Cⱼ) et des probabilités conditionnelles Pr(Aᵢ=aᵢ/Cⱼ) du classifieur bayésien naïf à partir des proportions observées dans l'ensemble d'apprentissage."
+  },
+  {
+    "slug": "probleme-de-probabilite-nulle",
+    "label": "Problème de la probabilité nulle",
+    "summary": "Difficulté du classifieur bayésien naïf : si une valeur d'attribut n'apparaît jamais avec une classe, la probabilité conditionnelle estimée vaut 0 et annule le produit Pr(Cⱼ/d)."
+  },
+  {
+    "slug": "lissage-de-laplace",
+    "label": "Lissage de Laplace",
+    "summary": "Correction de l'estimation des probabilités conditionnelles consistant à ajouter un petit nombre λ au numérateur (et λ·mᵢ au dénominateur, mᵢ = nombre de valeurs de l'attribut) pour éviter toute probabilité nulle."
+  },
+  {
+    "slug": "prediction-bayesienne",
+    "label": "Prédiction bayésienne",
+    "summary": "Affectation d'une nouvelle instance d à la classe la plus probable : C = arg max Pr(Cⱼ/d) = arg max Pr(Cⱼ)·Pr(d/Cⱼ), le dénominateur commun Pr(d) pouvant être ignoré."
+  },
+  {
+    "slug": "variable-numerique-bayes",
+    "label": "Variable numérique (classifieur bayésien)",
+    "summary": "Attribut continu pour lequel la probabilité conditionnelle est remplacée par une densité conditionnelle f(x), généralement supposée gaussienne, dont moyenne et écart type sont estimés sur les exemples de la classe."
+  },
+  {
+    "slug": "regression-logistique",
+    "label": "Régression logistique",
+    "summary": "Méthode d'apprentissage supervisé de classification à variable cible binaire qui modélise la probabilité p(x) = P(Y=1|X=x) en appliquant une régression linéaire au logit de cette probabilité."
+  },
+  {
+    "slug": "variable-cible-binaire",
+    "label": "Variable cible binaire",
+    "summary": "Variable à prédire Y ne prenant que deux valeurs (0 ou 1), modélisée comme une variable de Bernoulli de paramètre p(x) : décès ou survie, présence ou absence d'une pathologie, bon ou mauvais client."
+  },
+  {
+    "slug": "fonction-sigmoide",
+    "label": "Fonction sigmoïde",
+    "summary": "Fonction en forme de S à valeurs dans ]0,1[, ici la fonction LOGIT inverse σ(z) = exp(z)/(1+exp(z)) = 1/(1+exp(−z)), employée comme fonction de transfert pour contraindre p(x) dans [0,1]."
+  },
+  {
+    "slug": "fonction-logit",
+    "label": "Fonction logit",
+    "summary": "Fonction logit(p) = ln(p/(1−p)) de ]0,1[ vers ℝ ; la régression logistique modélise par une régression linéaire le logit de p(x), c'est-à-dire logit(p(x)) = a₀ + a₁x₁ + … + aₚxₚ."
+  },
+  {
+    "slug": "frontiere-de-decision",
+    "label": "Frontière de décision",
+    "summary": "Règle qui transforme la probabilité p(x) en classe prédite Ŷ : Ŷ=1 si p(x) > 0,5 et Ŷ=0 si p(x) < 0,5, la décision étant d'autant plus confortable que p(x) est éloigné de 0,5."
+  },
+  {
+    "slug": "cote-odds",
+    "label": "Cote (odds)",
+    "summary": "Rapport de chance odds = p(x)/(1−p(x)) = P(Y=1|x)/P(Y=0|x) ; odds > 1 conduit à prédire Ŷ=1 et odds < 1 à prédire Ŷ=0, un odds de 2 signifiant deux fois plus de chance d'avoir la caractéristique que de ne pas l'avoir."
+  },
+  {
+    "slug": "log-odds",
+    "label": "Log-odds",
+    "summary": "Logarithme de la cote ln(odds) ; par définition du logit, modéliser le logit de p(x) revient à modéliser le log-odds par une régression linéaire : logit(p(x)) = ln(odds) = a₀ + a₁x₁ + … + aₚxₚ."
+  },
+  {
+    "slug": "rapport-de-cotes",
+    "label": "Rapport de cotes (odds-ratio)",
+    "summary": "Rapport odds₁/odds₀ des cotes obtenues pour deux valeurs d'une variable explicative ; pour un accroissement d'une unité de xᵢ, il vaut exp(aᵢ) et mesure la multiplication de la chance d'avoir Y=1."
+  },
+  {
+    "slug": "interpretation-des-coefficients",
+    "label": "Interprétation des coefficients",
+    "summary": "Lecture des coefficients aᵢ d'une régression logistique : aᵢ n'est plus une pente mais traduit une augmentation ou une diminution de chance quand xᵢ varie ; les chances que Y=1 augmentent si et seulement si aᵢ > 0, et exp(aᵢ) en donne le facteur multiplicatif."
+  },
+  {
+    "slug": "maximum-de-vraisemblance",
+    "label": "Maximum de vraisemblance",
+    "summary": "Principe d'estimation des paramètres a = (a₀, …, aₚ) du modèle logistique : on optimise le logarithme de la vraisemblance par un algorithme d'optimisation simple et rapide, la fonction à optimiser étant convexe."
+  },
+  {
+    "slug": "entropie-croisee",
+    "label": "Entropie croisée",
+    "summary": "Fonction de coût E(a) = −Σ yᵢ ln p(xᵢ,a) + (1−yᵢ) ln(1−p(xᵢ,a)) à minimiser pour estimer les paramètres ; elle est l'opposé du logarithme de la vraisemblance et est convexe."
+  },
+  {
+    "slug": "test-de-significativite",
+    "label": "Test de significativité des coefficients",
+    "summary": "Test d'hypothèses H₀ : aᵢ = 0 contre H₁ : aᵢ ≠ 0, déduit d'un intervalle de confiance [âᵢ − z₁₋α/2·σ̂ᵢ ; âᵢ + z₁₋α/2·σ̂ᵢ] construit pour chaque coefficient, sur le même principe que la régression linéaire."
+  },
+  {
+    "slug": "selection-de-variables",
+    "label": "Sélection de variables",
+    "summary": "Procédure pas à pas qui élimine successivement du modèle les variables non significatives (p-valeur élevée) afin de minimiser le critère AIC (ou BIC), le processus s'arrêtant lorsque le critère remonte."
+  },
+  {
+    "slug": "critere-aic-bic",
+    "label": "Critère AIC / BIC",
+    "summary": "Critères de qualité d'un modèle utilisés pour la sélection : on cherche le modèle qui minimise l'AIC (ou le BIC), arbitrant entre l'ajustement aux données et le nombre de variables retenues."
+  },
+  {
+    "slug": "reseau-feedforward",
+    "label": "Réseau feedforward",
+    "summary": "Réseau de neurones où les données circulent dans un sens unique, de la couche d'entrée vers la couche de sortie en traversant les couches cachées."
+  },
+  {
+    "slug": "couche-de-neurones",
+    "label": "Couche de neurones",
+    "summary": "Tableau de neurones d'un réseau ; on distingue la couche d'entrée, les couches cachées et la couche de sortie, indexées de l = 1 à L."
+  },
+  {
+    "slug": "couche-cachee",
+    "label": "Couche cachée",
+    "summary": "Couche intermédiaire d'un réseau (1 < l < L) qui reçoit ses entrées de la couche précédente, fait des calculs et transmet ses résultats à la couche suivante."
+  },
+  {
+    "slug": "reseau-totalement-connecte",
+    "label": "Réseau totalement connecté",
+    "summary": "Réseau (fully connected) où chaque neurone d'une couche est connecté en entrée à chaque neurone de la couche précédente et en sortie à chaque neurone de la couche suivante."
+  },
+  {
+    "slug": "neurone-formel",
+    "label": "Neurone formel",
+    "summary": "Unité de calcul d'un réseau qui reçoit des entrées, calcule la somme pondérée z = Σ wᵢ·xᵢ + b puis sa sortie y = g(z) par une fonction d'activation."
+  },
+  {
+    "slug": "somme-ponderee",
+    "label": "Somme pondérée",
+    "summary": "Quantité z = Σₖ wⱼₖ·xₖ + b (weighted input) calculée par un neurone à partir de ses entrées, de ses poids et de son biais, avant l'application de la fonction d'activation."
+  },
+  {
+    "slug": "fonction-d-activation",
+    "label": "Fonction d'activation",
+    "summary": "Fonction g appliquée par un neurone à sa somme pondérée pour produire sa sortie y = g(z) ; tous les neurones d'une même couche partagent la même fonction d'activation."
+  },
+  {
+    "slug": "fonction-heaviside",
+    "label": "Fonction de Heaviside",
+    "summary": "Première fonction d'activation utilisée, à sortie binaire (h(x) = 1 si x > 0, 0 sinon) ; elle modélise un neurone à deux états mais n'est pas continue en 0."
+  },
+  {
+    "slug": "fonction-activation-lineaire",
+    "label": "Fonction d'activation linéaire",
+    "summary": "Fonction d'activation f(x) = λ·x, dont la fonction identité est un cas particulier ; simple, mais réservée à la couche de sortie d'un problème de régression."
+  },
+  {
+    "slug": "fonction-tangente-hyperbolique",
+    "label": "Fonction tangente hyperbolique",
+    "summary": "Fonction d'activation th(x) = (eˣ − e⁻ˣ)/(eˣ + e⁻ˣ), de mêmes propriétés que la sigmoïde mais à valeurs négatives et centrée autour de 0 ; utilisée dans les couches cachées."
+  },
+  {
+    "slug": "softmax",
+    "label": "Fonction softmax",
+    "summary": "Fonction d'activation de la couche de sortie en multi-classification : ŷⱼ = exp(zⱼ)/Σ exp(zᵢ), dont les m sorties, positives et de somme 1, s'interprètent comme des probabilités de classes."
+  },
+  {
+    "slug": "perceptron",
+    "label": "Perceptron",
+    "summary": "Réseau de neurones sans couche cachée, dont la couche de sortie a un seul neurone et la fonction d'activation est la fonction de Heaviside."
+  },
+  {
+    "slug": "separabilite-lineaire",
+    "label": "Séparabilité linéaire",
+    "summary": "Propriété d'une fonction f de ℝⁿ dans {0,1} pour laquelle il existe un hyperplan séparant les points d'image 1 des points d'image 0 ; une fonction est représentable par un perceptron si et seulement si elle est linéairement séparable."
+  },
+  {
+    "slug": "probleme-xor",
+    "label": "Problème du OU-exclusif (XOR)",
+    "summary": "Fonction logique OU-exclusif, non linéairement séparable, donc impossible à calculer par un perceptron : il faut un réseau à couche cachée qui en construit une nouvelle représentation."
+  },
+  {
+    "slug": "perceptron-multicouche",
+    "label": "Perceptron multicouche",
+    "summary": "Réseau de neurones comportant une ou plusieurs couches cachées, capable de représenter des fonctions non linéairement séparables comme le OU-exclusif."
+  },
+  {
+    "slug": "propagation-avant",
+    "label": "Propagation avant",
+    "summary": "Calcul des sorties d'un réseau feedforward (feedforward) couche par couche, de la couche d'entrée vers la couche de sortie : xⱼ⁽ˡ⁾ = gₗ(Σₖ wⱼₖˡ·xₖ⁽ˡ⁻¹⁾)."
+  },
+  {
+    "slug": "apprentissage-par-correction-des-erreurs",
+    "label": "Apprentissage par correction des erreurs",
+    "summary": "Schéma général d'apprentissage d'un réseau : initialiser les paramètres au hasard, puis répéter — calculer la sortie, mesurer l'erreur, ajuster les poids et les biais pour la réduire."
+  },
+  {
+    "slug": "regle-du-delta",
+    "label": "Règle du Delta",
+    "summary": "Algorithme d'apprentissage simple pour un réseau sans couche cachée à activation linéaire : descente du gradient sur l'erreur quadratique, mise à jour Δwⱼᵢ = η·Σₖ xₖᵢ(yₖⱼ − ŷₖⱼ)."
+  },
+  {
+    "slug": "fonction-de-perte",
+    "label": "Fonction de perte",
+    "summary": "Fonction (loss) qui mesure l'écart entre les sorties prédites par le réseau et les sorties voulues : erreur quadratique, entropie croisée binaire ou catégorielle ; l'apprentissage la minimise."
+  },
+  {
+    "slug": "entropie-croisee-binaire",
+    "label": "Entropie croisée binaire",
+    "summary": "Fonction de perte des problèmes de classification binaire : BCE(ŷ, y) = −(y·log(ŷ) + (1 − y)·log(1 − ŷ))."
+  },
+  {
+    "slug": "entropie-croisee-categorielle",
+    "label": "Entropie croisée catégorielle",
+    "summary": "Fonction de perte des problèmes de multi-classification, avec un encodage one-hot de Y : CCE(ŷ, y) = −Σⱼ yⱼ·log(ŷⱼ)."
+  },
+  {
+    "slug": "retropropagation",
+    "label": "Rétropropagation",
+    "summary": "Algorithme d'apprentissage général d'un réseau quelconque : descente du gradient appliquée couche par couche, de droite à gauche, en propageant les valeurs δ vers les couches précédentes."
+  },
+  {
+    "slug": "descente-de-gradient",
+    "label": "Descente du gradient",
+    "summary": "Méthode itérative de minimisation d'une fonction : Wₜ₊₁ = Wₜ − η·∇E(Wₜ), où chaque pas déplace les paramètres dans le sens opposé au gradient de l'erreur."
+  },
+  {
+    "slug": "taux-d-apprentissage",
+    "label": "Taux d'apprentissage",
+    "summary": "Constante réelle η (learning rate) qui règle l'amplitude du pas de la descente du gradient à chaque itération."
+  },
+  {
+    "slug": "terme-delta",
+    "label": "Terme δ",
+    "summary": "Valeur δⱼ propre à chaque neurone, commune aux mises à jour de ses poids et de son biais ; en sortie δⱼ = (yⱼ − ŷⱼ), et dans une couche cachée elle dépend des δ de la couche suivante."
+  },
+  {
+    "slug": "versions-retropropagation",
+    "label": "Versions de la rétropropagation",
+    "summary": "Trois variantes selon le moment de la mise à jour : batch (erreur globale sur tous les exemples), descente du gradient stochastique (un exemple tiré au hasard) et mini-batch (par paquets de mb exemples)."
+  },
+  {
+    "slug": "parametre-reseau",
+    "label": "Paramètre d'un réseau",
+    "summary": "Poids ou biais d'un neurone, déterminé par l'algorithme d'apprentissage sur le jeu d'apprentissage, par opposition aux hyperparamètres fixés par le concepteur."
+  },
+  {
+    "slug": "hyperparametre-reseau",
+    "label": "Hyperparamètre d'un réseau",
+    "summary": "Paramètre fixé par le concepteur du réseau — nombre de couches cachées, nombre de neurones par couche cachée, fonctions d'activation — par essais successifs, et non appris."
+  },
+  {
+    "slug": "poids",
+    "label": "Poids",
+    "summary": "Paramètre wⱼₖˡ associé à une connexion entre deux neurones ; le nombre de poids d'un neurone d'une couche égale le nombre de neurones de la couche précédente."
+  },
+  {
+    "slug": "biais",
+    "label": "Biais",
+    "summary": "Paramètre bⱼˡ propre à un neurone, ajouté à la somme pondérée de ses entrées avant la fonction d'activation."
+  },
+  {
+    "slug": "nombre-de-parametres",
+    "label": "Nombre de paramètres",
+    "summary": "Total des poids et des biais d'un réseau ; pour une couche, (nombre d'entrées + 1) × (nombre de neurones de la couche), le « + 1 » comptant le biais."
+  },
+  {
+    "slug": "reseau-convolutif",
+    "label": "Réseau convolutif (ConvNet)",
+    "summary": "Réseau de neurones profond qui prend en compte la structure spatiale des données, dont l'opération principale reliant deux couches est la convolution par un filtre."
+  },
+  {
+    "slug": "couche-de-convolution",
+    "label": "Couche de convolution",
+    "summary": "Couche d'un ConvNet définie par la convolution de la couche précédente avec un ou plusieurs filtres, dont chaque neurone n'est connecté qu'à un carré t × t de la couche précédente."
+  },
+  {
+    "slug": "filtre-noyau",
+    "label": "Filtre (noyau)",
+    "summary": "Petit tableau de poids — aussi appelé noyau ou template — qu'une couche de convolution fait glisser sur ses entrées pour y détecter un motif particulier."
+  },
+  {
+    "slug": "carte-de-caracteristiques",
+    "label": "Carte de caractéristiques",
+    "summary": "Tableau de neurones produit par la convolution d'une entrée avec un filtre donné ; une couche de convolution en contient une par filtre."
+  },
+  {
+    "slug": "padding",
+    "label": "Padding (remplissage)",
+    "summary": "Ajout de bordures (en général de zéros) autour de l'entrée d'une convolution, qui permet notamment de contrôler la taille du tableau de sortie."
+  },
+  {
+    "slug": "stride",
+    "label": "Stride (pas)",
+    "summary": "Pas de déplacement du filtre sur l'entrée d'une convolution ; un pas supérieur à 1 sous-échantillonne le tableau de sortie."
+  },
+  {
+    "slug": "dimension-de-sortie-convolution",
+    "label": "Dimension de sortie d'une convolution",
+    "summary": "Taille du tableau produit par une convolution, donnée par (W − F + 2P)/S + 1 à partir de la taille d'entrée W, du filtre F, du padding P et du stride S."
+  },
+  {
+    "slug": "pooling",
+    "label": "Pooling (sous-échantillonnage)",
+    "summary": "Couche qui simplifie une couche de convolution en regroupant ses neurones par carrés p × p et en résumant chaque carré par une fonction (max, moyenne, L2)."
+  },
+  {
+    "slug": "max-pooling",
+    "label": "Max-pooling",
+    "summary": "Variante de pooling qui résume chaque carré de neurones par la valeur maximale qu'il contient."
+  },
+  {
+    "slug": "couche-dense",
+    "label": "Couche entièrement connectée (dense)",
+    "summary": "Couche dont chaque neurone est connecté à tous les neurones de la couche précédente, utilisée notamment comme couche de sortie d'un ConvNet."
+  },
+  {
+    "slug": "architecture-cnn",
+    "label": "Architecture d'un CNN",
+    "summary": "Organisation d'un réseau convolutif en une couche d'entrée, une succession de blocs convolution-pooling, puis une couche de sortie entièrement connectée."
+  },
+  {
+    "slug": "fonction-relu",
+    "label": "Fonction ReLU",
+    "summary": "Fonction d'activation des ConvNet qui « corrige » la sortie d'un neurone en prenant le maximum entre 0 et cette sortie, introduite pour accélérer l'apprentissage."
+  },
+  {
+    "slug": "dropout",
+    "label": "Dropout",
+    "summary": "Couche de régularisation qui met à 0 les sorties de la couche précédente avec une probabilité p, afin de réduire le sur-apprentissage et la complexité de l'apprentissage."
+  },
+  {
+    "slug": "optimiseur",
+    "label": "Optimiseur",
+    "summary": "Outil (par exemple Adam) destiné à réduire le coût de la rétropropagation lors de l'apprentissage d'un réseau profond."
+  },
+  {
+    "slug": "epoch-batch-size",
+    "label": "Epoch et batch size",
+    "summary": "Hyperparamètres d'entraînement : la taille de lot (batch size) est le nombre d'exemples traités avant chaque mise à jour des paramètres, et le nombre d'epochs est lié au nombre d'itérations de la descente du gradient stochastique."
+  },
+  {
+    "slug": "donnees-sequentielles",
+    "label": "Données séquentielles",
+    "summary": "Collections de points de données munis d'un ordre défini, par exemple temporel : séries temporelles, documents (suites de mots) ou images d'une vidéo."
+  },
+  {
+    "slug": "reseau-recurrent",
+    "label": "Réseau de neurones récurrent (RNN)",
+    "summary": "Réseau de neurones comportant des boucles : la sortie d'une ou de plusieurs couches peut être renvoyée vers leur entrée afin de calculer la sortie suivante, ce qui le rend adapté au traitement des séquences."
+  },
+  {
+    "slug": "etat-cache",
+    "label": "État caché (hidden state)",
+    "summary": "Vecteur Hᵗ produit par la couche cachée d'un RNN à chaque instant t, qui synthétise la sous-séquence déjà traitée et joue le rôle de mémoire du réseau."
+  },
+  {
+    "slug": "recurrence",
+    "label": "Relation de récurrence d'un RNN",
+    "summary": "Équation Hᵗ = σₕ(U·Xᵗ + V·Hᵗ⁻¹ + Bʰ) qui calcule l'état caché courant à partir de l'entrée courante et de l'état caché précédent."
+  },
+  {
+    "slug": "depliage-temporel",
+    "label": "Dépliage temporel d'un RNN",
+    "summary": "Représentation explicite du flux d'information d'un RNN sous la forme d'une séquence de copies du même réseau, une copie par instant t."
+  },
+  {
+    "slug": "retropropagation-dans-le-temps",
+    "label": "Rétropropagation dans le temps (BPTT)",
+    "summary": "Version de la rétropropagation adaptée aux RNN : les dérivées partielles sont calculées de la couche de sortie vers la couche cachée et des instants t vers les instants t − 1."
+  },
+  {
+    "slug": "gradient-evanescent",
+    "label": "Gradient évanescent et explosif",
+    "summary": "Phénomène par lequel, durant l'apprentissage d'un RNN, les valeurs du gradient tendent vers zéro ou prennent des valeurs de plus en plus grandes, ce qui empêche l'apprentissage des dépendances longues."
+  },
+  {
+    "slug": "lstm",
+    "label": "LSTM (Long Short Term Memory)",
+    "summary": "Variante de RNN composée de cellules sophistiquées dotées d'un état de cellule et de portes, capables d'oublier certaines informations et d'en renforcer d'autres pour gérer les dépendances longues."
+  },
+  {
+    "slug": "gru",
+    "label": "GRU (Gated Recurrent Unit)",
+    "summary": "Variante de RNN à portes, plus simple que le LSTM, qui contrôle elle aussi par des portes la mise à jour de sa mémoire interne."
+  },
+  {
+    "slug": "porte-cellule",
+    "label": "Porte (gate)",
+    "summary": "Élément d'une cellule LSTM — porte d'oubli, d'entrée ou de sortie — dont la valeur comprise entre 0 et 1 module la part d'information qui passe ou qui est bloquée."
+  },
+  {
+    "slug": "etat-de-cellule",
+    "label": "État de cellule",
+    "summary": "Mémoire interne cₜ d'une cellule LSTM, qui évolue avec le temps et combine, via les portes, l'ancien état et un nouvel état candidat."
+  },
+  {
+    "slug": "generation-de-texte",
+    "label": "Génération de texte",
+    "summary": "Application des RNN qui produit un texte caractère par caractère ou mot par mot, chaque élément engendré étant réinjecté à l'entrée du réseau."
+  },
+  {
+    "slug": "serie-temporelle",
+    "label": "Prédiction de série temporelle",
+    "summary": "Application des RNN consistant à prédire la valeur suivante d'une suite chronologique, par exemple le cours d'une action à partir de son historique."
+  },
+  {
+    "slug": "encodeur-decodeur",
+    "label": "Architecture encodeur-décodeur",
+    "summary": "Structure à deux RNN pour les problèmes séquence à séquence : un encodeur synthétise la séquence d'entrée en un vecteur-contexte, qu'un décodeur transforme en séquence de sortie."
+  },
+  {
+    "slug": "mecanisme-d-attention",
+    "label": "Mécanisme d'attention",
+    "summary": "Mécanisme qui, ajouté à un encodeur-décodeur, attribue un poids — une importance — différent aux sorties successives de l'encodeur afin de souligner les parties les plus utiles de la séquence."
+  },
+  {
+    "slug": "apprentissage-par-renforcement",
+    "label": "Apprentissage par renforcement",
+    "summary": "Problème auquel est confronté un agent qui apprend à se comporter à l'aide de ses interactions avec son environnement, fondées sur le principe Essai-Erreur."
+  },
+  {
+    "slug": "agent-environnement",
+    "label": "Agent et environnement",
+    "summary": "Modèle de l'apprentissage par renforcement où un agent est connecté à son environnement par sa perception et son action, et reçoit après chaque action un retour de ce dernier."
+  },
+  {
+    "slug": "essai-erreur",
+    "label": "Essai-Erreur",
+    "summary": "Principe de l'apprentissage par renforcement : l'agent affine ses choix d'action en renouvelant les essais et en tenant compte des retours de l'environnement."
+  },
+  {
+    "slug": "signal-de-renforcement",
+    "label": "Signal de renforcement",
+    "summary": "Retour scalaire r obtenu après chaque action — récompense ou punition — déterminé par la fonction reward et que l'agent cherche à maximiser à long terme."
+  },
+  {
+    "slug": "modeles-d-optimalite",
+    "label": "Modèles d'optimalité",
+    "summary": "Façons de prendre en compte le futur dans la prise de décision : modèle à horizon fini, modèle à horizon infini actualisé et modèle à récompense moyenne."
+  },
+  {
+    "slug": "processus-de-decision-markovien",
+    "label": "Processus de décision markovien (MDP)",
+    "summary": "Modèle d'un problème d'apprentissage par renforcement défini par un ensemble d'états S, un ensemble d'actions A, une fonction de transition T, une fonction de récompense R et un facteur d'actualisation γ."
+  },
+  {
+    "slug": "propriete-de-markov",
+    "label": "Propriété de Markov",
+    "summary": "Propriété d'un processus stochastique selon laquelle la prédiction de l'avenir à partir du présent n'est pas rendue plus précise par la connaissance du passé : le futur ne dépend que de l'état présent."
+  },
+  {
+    "slug": "chaine-de-markov",
+    "label": "Chaîne de Markov",
+    "summary": "Suite discrète de variables aléatoires Xₜ à valeurs dans un espace d'états S vérifiant la propriété de Markov : P(Xₜ₊₁ = y | Xₜ = x, …, X₀ = x₀) = P(Xₜ₊₁ = y | Xₜ = x)."
+  },
+  {
+    "slug": "matrice-de-transition",
+    "label": "Matrice de transition",
+    "summary": "Matrice carrée dont l'élément Pᵢⱼ est la probabilité de passer de l'état sᵢ à l'état sⱼ ; la somme des éléments de chaque ligne vaut 1."
+  },
+  {
+    "slug": "etat-renforcement",
+    "label": "État (apprentissage par renforcement)",
+    "summary": "Configuration de l'environnement perçue par l'agent à chaque étape ; sous l'hypothèse d'observabilité totale, l'agent perçoit l'environnement tel qu'il est."
+  },
+  {
+    "slug": "recompense",
+    "label": "Récompense",
+    "summary": "Valeur Rₛ associée à un état, définie comme la récompense moyenne reçue à l'instant t+1 lorsque l'agent est dans l'état s à l'instant t : Rₛ = E(Rₜ₊₁ | Sₜ = s)."
+  },
+  {
+    "slug": "fonction-de-transition",
+    "label": "Fonction de transition",
+    "summary": "Fonction T : S × A × S → [0,1] d'un MDP où T(s, a, s′) est la probabilité de passer de l'état s à l'état s′ en utilisant l'action a."
+  },
+  {
+    "slug": "fonction-de-recompense",
+    "label": "Fonction de récompense",
+    "summary": "Fonction R : S × A → ℝ d'un MDP donnant la récompense moyenne R(s, a) = E(Rₜ₊₁ | Sₜ = s, Aₜ = a) obtenue lorsque l'action a est exécutée à partir de l'état s."
+  },
+  {
+    "slug": "facteur-d-actualisation",
+    "label": "Facteur d'actualisation",
+    "summary": "Paramètre γ ∈ [0,1[ qui pondère les récompenses futures : l'agent prend en compte la totalité des récompenses, mais leur importance décroît lorsqu'on s'éloigne de l'étape courante."
+  },
+  {
+    "slug": "gain-actualise",
+    "label": "Gain actualisé",
+    "summary": "Quantité à maximiser dans le modèle à horizon infini actualisé : la somme Σ γᵗ rₜ des récompenses futures pondérées par le facteur d'actualisation γ."
+  },
+  {
+    "slug": "politique",
+    "label": "Politique (stratégie)",
+    "summary": "Comportement de l'agent qui associe une action à chaque état ; déterministe c'est une fonction π : S → A, dans le cas général une distribution de probabilités π(s, a) = P(Aₜ = a | Sₜ = s)."
+  },
+  {
+    "slug": "fonction-de-valeur",
+    "label": "Fonction de valeur",
+    "summary": "Fonction Vπ(s) donnant la valeur moyenne de la somme actualisée des récompenses que l'agent va gagner s'il commence dans l'état s et suit la politique π."
+  },
+  {
+    "slug": "valeur-optimale",
+    "label": "Valeur optimale",
+    "summary": "Valeur V*(s) = maxπ E(Σ γᵗ rₜ) d'un état atteignable en suivant la politique optimale ; elle est unique et solution des équations de Bellman."
+  },
+  {
+    "slug": "equation-de-bellman",
+    "label": "Équation de Bellman",
+    "summary": "Équation reliant la valeur d'un état à celles de ses successeurs : V(s) = Rₛ + γ Σ Pₛₛ′ V(s′), et pour la valeur optimale V*(s) = maxₐ (R(s,a) + γ Σ T(s,a,s′) V*(s′))."
+  },
+  {
+    "slug": "politique-optimale",
+    "label": "Politique optimale",
+    "summary": "Politique déterministe π* qui, dans chaque état, choisit l'action menant au plus grand gain à long terme : π*(s) = argmaxₐ (R(s,a) + γ Σ T(s,a,s′) V*(s′))."
+  },
+  {
+    "slug": "value-iteration",
+    "label": "Value iteration",
+    "summary": "Algorithme qui, par mises à jour répétées V(s) = maxₐ Q(s,a), converge vers la fonction de valeur optimale V*, dont on déduit ensuite une estimation de la politique optimale."
+  },
+  {
+    "slug": "policy-iteration",
+    "label": "Policy iteration",
+    "summary": "Algorithme qui manipule directement la politique π : il alterne l'évaluation de Vπ et l'amélioration de π jusqu'à ce que la politique ne change plus."
+  },
+  {
+    "slug": "methodes-model-based",
+    "label": "Méthodes model-based",
+    "summary": "Méthodes d'apprentissage indirect qui estiment d'abord un modèle (fonctions T et R), puis l'utilisent pour calculer une politique optimale, comme l'algorithme Dyna."
+  },
+  {
+    "slug": "methodes-model-free",
+    "label": "Méthodes model-free",
+    "summary": "Méthodes d'apprentissage direct qui apprennent une politique optimale sans passer par un modèle de l'environnement, comme le Q-learning."
+  },
+  {
+    "slug": "q-learning",
+    "label": "Q-learning",
+    "summary": "Algorithme d'apprentissage par renforcement model-free qui apprend la fonction Q* en mettant à jour, à chaque interaction, la valeur Q du couple état-action visité."
+  },
+  {
+    "slug": "q-valeur",
+    "label": "Q-valeur",
+    "summary": "Valeur Q*(s, a) représentant la moyenne de la récompense cumulée obtenue lorsque l'agent, dans l'état s, exécute l'action a puis se comporte de manière optimale : Q*(s,a) = R(s,a) + γ Σ T(s,a,s′) maxₐ′ Q*(s′,a′)."
+  },
+  {
+    "slug": "regle-de-mise-a-jour-q",
+    "label": "Règle de mise à jour du Q-learning",
+    "summary": "Règle Q(s,a) = Q(s,a) + α(r + γ maxₐ′ Q(s′,a′) − Q(s,a)) qui affine la Q-valeur d'un couple état-action après chaque interaction avec l'environnement."
+  },
+  {
+    "slug": "facteur-d-apprentissage",
+    "label": "Facteur d'apprentissage",
+    "summary": "Paramètre α ∈ [0,1] (learning rate) qui règle l'amplitude de la correction apportée à la Q-valeur lors de chaque mise à jour du Q-learning."
+  },
+  {
+    "slug": "exploration-exploitation-rl",
+    "label": "Exploration / exploitation (renforcement)",
+    "summary": "Compromis du choix de l'action en Q-learning : exploiter l'action de plus grande Q-valeur selon l'évaluation actuelle, ou explorer une action choisie au hasard."
+  },
+  {
+    "slug": "epsilon-greedy",
+    "label": "Stratégie ε-greedy",
+    "summary": "Règle de choix d'action gérant le compromis exploration/exploitation : avec la probabilité ε l'agent choisit une action au hasard, sinon il choisit l'action de plus grande Q-valeur."
+  },
+  {
+    "slug": "convergence-q-learning",
+    "label": "Convergence du Q-learning",
+    "summary": "Résultat assurant que Qₙ(s,a) tend vers Q*(s,a) : dans le cas déterministe si chaque couple (s,a) est visité infiniment souvent, dans le cas stochastique sous des conditions sur les facteurs d'apprentissage αₙ."
+  },
+  {
+    "slug": "gridworld",
+    "label": "Gridworld",
+    "summary": "Environnement-jouet où un agent se déplace dans une grille de cases (états), avec des cases objectif récompensées et des cases interdites pénalisées, utilisé pour illustrer les algorithmes d'apprentissage par renforcement."
+  },
+  {
+    "slug": "traitement-du-langage-naturel",
+    "label": "Traitement automatique du langage naturel (NLP)",
+    "summary": "Branche de l'intelligence artificielle consacrée à la communication avec les machines à l'aide d'une langue naturelle : ensemble de techniques d'analyse et de représentation de textes visant un traitement du langage proche de celui des humains."
+  },
+  {
+    "slug": "niveaux-d-analyse-linguistique",
+    "label": "Niveaux d'analyse linguistique",
+    "summary": "Étapes du traitement du langage allant du plus bas au plus haut : phonologie, morphologie, lexique, syntaxe, sémantique, discours et pragmatique."
+  },
+  {
+    "slug": "ambiguite-linguistique",
+    "label": "Ambiguïté linguistique",
+    "summary": "Propriété d'une phrase ouverte à plusieurs interprétations : un système de NLP doit la résoudre, qu'elle soit lexicale, syntaxique ou référentielle."
+  },
+  {
+    "slug": "tokenisation",
+    "label": "Tokenisation",
+    "summary": "Première opération du traitement d'un texte qui le découpe en tokens : mots, signes de ponctuation, nombres et autres unités discrètes."
+  },
+  {
+    "slug": "etiquetage-morphosyntaxique",
+    "label": "Étiquetage morphosyntaxique (POS tagging)",
+    "summary": "Attribution à chaque mot d'une catégorie grammaticale (part-of-speech), la plus probable étant choisie selon le contexte lorsque le mot est ambigu."
+  },
+  {
+    "slug": "racinisation",
+    "label": "Racinisation (stemming)",
+    "summary": "Opération qui décompose les mots morphologiquement complexes en une racine invariante et des affixes, puis supprime les affixes ; la racine obtenue n'est pas toujours un mot valide."
+  },
+  {
+    "slug": "lemmatisation",
+    "label": "Lemmatisation",
+    "summary": "Réduction des mots à leur forme de dictionnaire (lemme), à l'aide de l'étiquette morphosyntaxique du mot et d'un ensemble de règles de flexion."
+  },
+  {
+    "slug": "sac-de-mots",
+    "label": "Sac de mots (bag-of-words)",
+    "summary": "Représentation vectorielle d'un texte par les occurrences de ses mots, sans tenir compte de leur ordre, chaque document devenant un vecteur sur le vocabulaire."
+  },
+  {
+    "slug": "tf-idf",
+    "label": "TF-IDF",
+    "summary": "Pondération d'un terme dans un document combinant sa fréquence dans le document (TF) et la rareté du terme dans le corpus (IDF), afin de valoriser les termes discriminants."
+  },
+  {
+    "slug": "n-gramme",
+    "label": "N-gramme",
+    "summary": "Séquence de n unités consécutives (mots ou caractères) d'un texte, qui réintroduit une part de contexte local dans la représentation."
+  },
+  {
+    "slug": "grammaire-hors-contexte",
+    "label": "Grammaire hors-contexte (CFG)",
+    "summary": "Grammaire formelle dont chaque règle de production possède un unique symbole non terminal en partie gauche ; classe minimale jugée nécessaire pour décrire les langues naturelles."
+  },
+  {
+    "slug": "analyse-syntaxique",
+    "label": "Analyse syntaxique (parsing)",
+    "summary": "Étape qui identifie et analyse la structure des phrases à l'aide d'une grammaire, en appliquant ses règles de production au moyen d'un analyseur (parser)."
+  },
+  {
+    "slug": "arbre-syntaxique",
+    "label": "Arbre syntaxique (parse tree)",
+    "summary": "Arbre représentant le résultat de l'analyse syntaxique : la racine est la phrase, les nœuds internes des syntagmes et les feuilles les mots."
+  },
+  {
+    "slug": "semantique-lexicale",
+    "label": "Sémantique lexicale",
+    "summary": "Étude du sens des mots et des unités lexicales, de leur structure interne et de leurs relations (synonymie, antonymie, hyponymie, méronymie)."
+  },
+  {
+    "slug": "plongement-lexical",
+    "label": "Plongement lexical (word embedding)",
+    "summary": "Représentation d'un mot par un vecteur réel dense de faible dimension, dont la proximité géométrique reflète la proximité de sens et d'usage des mots."
+  },
+  {
+    "slug": "application-nlp",
+    "label": "Applications du NLP",
+    "summary": "Tâches concrètes du traitement du langage : traduction automatique, question-réponse, résumé de texte, extraction d'information et agents conversationnels."
+  }
+]

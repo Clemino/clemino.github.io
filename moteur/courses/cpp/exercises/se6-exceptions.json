@@ -1,0 +1,630 @@
+[
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce qu'une **exception** en C++ ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Une erreur de syntaxe détectée par le compilateur avant l'exécution." },
+        { "id": "b", "label": "Un événement signalant une erreur survenue pendant l'exécution du programme." },
+        { "id": "c", "label": "Un avertissement (warning) affiché par g++ lors de la compilation." },
+        { "id": "d", "label": "Une instruction qui met le programme en pause jusqu'à l'appui sur une touche." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Une **exception** est un événement qui signale une **erreur survenue pendant l'exécution** : division par zéro, racine d'un nombre négatif, fichier introuvable, saisie hors bornes. Ce ne sont pas des fautes de syntaxe — le compilateur ne peut pas les voir. Quand une exception est levée, l'instruction en cours est **interrompue définitivement** et un gestionnaire prend le relais.",
+    "concepts": ["exception"]
+  },
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une fois l'instruction `throw` exécutée, les instructions qui la suivent dans la même fonction ne sont **jamais** exécutées.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. `throw` provoque une **rupture de séquence** : l'exécution normale s'arrête sur place et part chercher un gestionnaire. **Aucune instruction qui suit le `throw`** dans la fonction n'est exécutée — le contrôle quitte immédiatement la fonction. Un `throw` ne revient jamais en arrière.",
+    "concepts": ["throw"]
+  },
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Pourquoi un simple **code d'erreur retourné** est-il une mauvaise solution pour signaler l'échec d'une fonction comme `int division(int a, int b)` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Parce que retourner un entier est trop lent à l'exécution." },
+        { "id": "b", "label": "Parce que toute valeur de int est un résultat de division légitime : aucune ne peut être réservée pour « erreur », et l'appelant n'est pas obligé de tester le code." },
+        { "id": "c", "label": "Parce que le compilateur interdit de retourner une valeur depuis une fonction qui peut échouer." },
+        { "id": "d", "label": "Parce qu'un code d'erreur oblige toujours le programme à s'arrêter." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Le code d'erreur **mélange** la valeur de retour et le signalement d'erreur. Pour `division`, **toute** valeur de `int` est un résultat légitime : il n'existe aucun `int` qui veuille dire « erreur ». De plus, l'appelant n'est **pas obligé** de tester le code retourné — une erreur peut passer inaperçue et le programme continuer avec des données erronées. Les exceptions **séparent** le chemin normal du chemin d'erreur.",
+    "concepts": ["exception"]
+  },
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "MATCHING",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Associe chaque mot-clé du mécanisme d'exceptions à son rôle.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "throw" },
+        { "id": "l2", "label": "try" },
+        { "id": "l3", "label": "catch" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Lève une exception transportant une valeur, et interrompt l'exécution normale." },
+        { "id": "r2", "label": "Délimite un bloc de code mis sous surveillance pour détecter une exception." },
+        { "id": "r3", "label": "Gestionnaire typé qui traite une exception levée dans le bloc surveillé." }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3" } },
+    "explanation": "**`throw valeur;`** lève une exception et provoque une rupture de séquence. **`try { ... }`** met un morceau de programme **sous surveillance**. **`catch (Type e) { ... }`** est le **gestionnaire** : il annonce le type d'exception qu'il sait traiter et reçoit la valeur transportée. Le `try` est toujours suivi d'au moins un `catch`.",
+    "concepts": ["throw", "try-catch"]
+  },
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe le déroulement quand un `throw` survient dans un `try`.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"avant\\n\";\n    try {\n        cout << \"dans le try\\n\";\n        throw 42;\n        cout << \"apres le throw\\n\";\n    }\n    catch (int e) {\n        cout << \"rattrape : \" << e << \"\\n\";\n    }\n    cout << \"la suite\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "avant\ndans le try\nrattrape : 42\nla suite" },
+    "explanation": "Le `throw 42` provoque une rupture de séquence : la ligne `apres le throw` est **sautée** (elle suit le `throw` dans le `try`). Le contrôle saute dans le `catch (int e)` qui affiche `rattrape : 42`. Après le `catch`, l'exécution **reprend juste après** le groupe `try`/`catch` — d'où `la suite`. Elle ne reprend **pas** au point du `throw`.",
+    "concepts": ["throw", "try-catch"]
+  },
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ? On lance ici un **objet** transportant des données.",
+    "payload": {
+      "program": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Erreur {\n    string msg;\n    int code;\npublic:\n    Erreur(const string& m, int c) : msg(m), code(c) {}\n    string getMsg() const { return msg; }\n    int getCode() const { return code; }\n};\n\nint main() {\n    try {\n        cout << \"etape 1\\n\";\n        throw Erreur(\"acces refuse\", 403);\n        cout << \"etape 2\\n\";\n    }\n    catch (const Erreur& e) {\n        cout << \"code \" << e.getCode() << \" : \" << e.getMsg() << \"\\n\";\n    }\n    cout << \"etape 3\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "etape 1\ncode 403 : acces refuse\netape 3" },
+    "explanation": "`throw` peut lancer un **objet** d'une classe, ici un `Erreur` transportant un message et un code. Le `throw` interrompt le `try` : `etape 2` est sautée. Le `catch (const Erreur& e)` rattrape l'objet **par référence constante** et lit ses données via `getCode()` et `getMsg()`. Après le `catch`, l'exécution reprend après le groupe → `etape 3`.",
+    "concepts": ["throw", "try-catch"]
+  },
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Le `throw` a lieu **au milieu** d'une expression d'affichage.",
+    "payload": {
+      "program": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint division(int a, int b) {\n    if (b == 0)\n        throw string(\"division par zero\");\n    return a / b;\n}\n\nint main() {\n    try {\n        cout << \"10 / 2 = \" << division(10, 2) << \"\\n\";\n        cout << \"10 / 0 = \" << division(10, 0) << \"\\n\";\n        cout << \"jamais affiche\\n\";\n    }\n    catch (const string& msg) {\n        cout << \"ERREUR : \" << msg << \"\\n\";\n    }\n    cout << \"fin\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "10 / 2 = 5\n10 / 0 = ERREUR : division par zero\nfin" },
+    "explanation": "La première ligne s'affiche entièrement : `division(10, 2)` renvoie `5`. Sur la deuxième ligne, `cout << \"10 / 0 = \"` est exécuté **d'abord** (d'où le texte `10 / 0 = ` qui apparaît), **puis** `division(10, 0)` lève l'exception : l'expression `cout << ... << division(...)` est **abandonnée** en plein milieu. Le contrôle saute dans le `catch`, qui affiche `ERREUR : division par zero` sur la même ligne. La ligne `jamais affiche` est sautée. Reste `fin`.",
+    "concepts": ["throw", "try-catch"]
+  },
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Un `try`/`catch` est placé dans une boucle.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nint main() {\n    for (int i = 0; i < 4; i++) {\n        try {\n            cout << \"i=\" << i;\n            if (i == 2) throw i;\n            cout << \" ok\\n\";\n        }\n        catch (int e) {\n            cout << \" rattrape \" << e << \"\\n\";\n        }\n    }\n    cout << \"termine\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "i=0 ok\ni=1 ok\ni=2 rattrape 2\ni=3 ok\ntermine" },
+    "explanation": "À chaque tour, `cout << \"i=\" << i` s'affiche. Pour `i` valant 0, 1 et 3, aucun `throw` : la ligne ` ok` suit. Pour `i == 2`, `throw i` interrompt le `try` **avant** ` ok` : le `catch` affiche ` rattrape 2`. Comme le `catch` termine normalement, la boucle **continue** ses tours suivants — `i=3` ne lève rien et affiche ` ok`. Après la boucle : `termine`. Le `try`/`catch` placé **dans** la boucle isole chaque tour : une exception sur un tour n'arrête pas les autres.",
+    "concepts": ["throw", "try-catch"]
+  },
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles affirmations sur la capture d'un **objet** d'exception sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Une capture par valeur (catch (MaClasse e)) effectue une copie de l'objet lancé." },
+        { "id": "b", "label": "Capturer un objet par const MaClasse& évite à la fois la copie et le slicing." },
+        { "id": "c", "label": "Une capture par valeur d'un type de base tronque (slicing) un objet réellement d'un type dérivé." },
+        { "id": "d", "label": "Pour un type fondamental comme int, capturer par référence apporte un gain par rapport à la capture par valeur." },
+        { "id": "e", "label": "Le mot-clé throw ne peut lancer qu'un objet de classe, jamais un type fondamental." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "**a, b, c sont vraies.** Une capture **par valeur** copie l'objet et expose au **slicing** si l'exception réelle est d'un type dérivé : la partie dérivée est tronquée. La capture **`const MaClasse&`** est la parade : pas de copie, pas de slicing. **d est faux** : pour un type fondamental (`catch (int e)`), la référence n'apporte rien. **e est faux** : `throw` peut lancer **n'importe quel type** — un `int`, une `std::string`, un objet.",
+    "concepts": ["try-catch", "throw"]
+  },
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète ce programme pour qu'il lève une exception de type `std::string` si le diviseur est nul, et la rattrape par **référence constante**.",
+    "payload": {
+      "template": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint division(int a, int b) {\n    if (b == 0)\n        {{kw}} string(\"division par zero\");\n    return a / b;\n}\n\nint main() {\n    {{bloc}} {\n        int r = division(10, 0);\n        cout << r << \"\\n\";\n    }\n    catch (const string& {{var}}) {\n        cerr << msg << \"\\n\";\n    }\n    return 0;\n}",
+      "slots": [
+        { "id": "kw", "width": "sm" },
+        { "id": "bloc", "width": "sm" },
+        { "id": "var", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "kw": "throw", "bloc": "try", "var": "msg" },
+      "caseSensitive": false
+    },
+    "explanation": "L'instruction **`throw`** lève l'exception transportant la `std::string`. Le code susceptible d'échouer est placé sous surveillance dans un bloc **`try`**. Le `catch` rattrape par **`const string&`** ; le nom de la variable doit correspondre à celui utilisé dans le corps du gestionnaire — ici `msg`, puisqu'on écrit `cerr << msg`.",
+    "concepts": ["throw", "try-catch"]
+  },
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "CODE_WRITE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Écris un programme qui lit deux entiers `a` et `b`, calcule `a / b` via une fonction `division` qui **lève une `std::string`** si `b` vaut 0, et affiche le résultat ou le message d'erreur. Le programme doit toujours se terminer normalement.",
+    "payload": {
+      "spec": "Definir une fonction int division(int a, int b) : si b vaut 0, faire throw string(\"division par zero\"); sinon retourner a / b. Dans main : lire a puis b avec cin >> a >> b. Dans un bloc try, calculer r = division(a, b) et afficher 'resultat = ' suivi de r et d'un retour a la ligne. Dans un catch (const string& msg), afficher 'ERREUR : ' suivi du message et d'un retour a la ligne. Le programme se termine normalement (return 0).",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint division(int a, int b) {\n    // a completer : lever une exception si b == 0\n    return a / b;\n}\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    // a completer : try / catch autour de l'appel a division\n    return 0;\n}\n",
+      "tests": [
+        { "name": "division exacte", "stdin": "20 4", "expectedStdout": "resultat = 5" },
+        { "name": "division par zero", "stdin": "7 0", "expectedStdout": "ERREUR : division par zero" },
+        { "name": "quotient tronque", "stdin": "9 3", "expectedStdout": "resultat = 3" },
+        { "name": "cache negatif", "stdin": "-15 5", "expectedStdout": "resultat = -3", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint division(int a, int b) {\n    if (b == 0)\n        throw string(\"division par zero\");\n    return a / b;\n}\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    try {\n        int r = division(a, b);\n        cout << \"resultat = \" << r << \"\\n\";\n    }\n    catch (const string& msg) {\n        cout << \"ERREUR : \" << msg << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "`division` teste son diviseur : si `b == 0`, elle fait `throw string(...)` et **ne retourne rien** (le `return a / b` est sauté). L'appel `division(a, b)` est placé dans un `try`. En cas d'exception, le contrôle saute dans `catch (const string& msg)`. On calcule d'abord `r` dans une variable **avant** d'afficher, pour qu'aucun texte partiel ne sorte si l'exception est levée. Le programme se termine toujours par `return 0` (sortie normale).",
+    "concepts": ["throw", "try-catch"]
+  },
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit un âge entier et le valide. S'il est hors de l'intervalle 0–130, le programme **lève cet entier** comme exception et l'affiche comme âge invalide.",
+    "payload": {
+      "spec": "Dans main : lire un entier age avec cin >> age. Dans un bloc try : si age est strictement inferieur a 0 ou strictement superieur a 130, faire throw age; sinon afficher 'age valide : ' suivi de age et d'un retour a la ligne. Dans un catch (int mauvais), afficher 'age invalide : ' suivi de la valeur et d'un retour a la ligne. Le programme se termine normalement.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int age;\n    cin >> age;\n    // a completer : try / catch, lever age si hors bornes\n    return 0;\n}\n",
+      "tests": [
+        { "name": "age courant", "stdin": "25", "expectedStdout": "age valide : 25" },
+        { "name": "age negatif", "stdin": "-3", "expectedStdout": "age invalide : -3" },
+        { "name": "age trop grand", "stdin": "200", "expectedStdout": "age invalide : 200" },
+        { "name": "borne basse", "stdin": "0", "expectedStdout": "age valide : 0" },
+        { "name": "cache borne haute", "stdin": "130", "expectedStdout": "age valide : 130", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int age;\n    cin >> age;\n    try {\n        if (age < 0 || age > 130)\n            throw age;\n        cout << \"age valide : \" << age << \"\\n\";\n    }\n    catch (int mauvais) {\n        cout << \"age invalide : \" << mauvais << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "On peut lancer un **type fondamental** : ici `throw age;` lance un `int`. Le `catch (int mauvais)` le rattrape — pour un type fondamental, on capture **par valeur** (la référence n'apporte rien). Les bornes `0` et `130` sont **incluses** : la condition d'erreur est `age < 0 || age > 130`. Quand `throw` s'exécute, l'affichage `age valide` est sauté ; sinon c'est le `catch` qui ne s'exécute pas.",
+    "concepts": ["throw", "try-catch"]
+  },
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit un réel `x` et calcule sa racine carrée via une fonction `racine` qui **lève une `std::string`** si `x` est négatif (la racine n'existe pas dans les réels).",
+    "payload": {
+      "spec": "Inclure <cmath>. Definir double racine(double x) : si x est strictement negatif, faire throw string(\"nombre negatif\"); sinon retourner sqrt(x). Dans main : lire x avec cin >> x. Dans un try, calculer r = racine(x) et afficher 'racine = ' suivi de r et d'un retour a la ligne. Dans un catch (const string& e), afficher 'impossible : ' suivi du message et d'un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <cmath>\n#include <string>\nusing namespace std;\n\ndouble racine(double x) {\n    // a completer : lever une exception si x < 0\n    return sqrt(x);\n}\n\nint main() {\n    double x;\n    cin >> x;\n    // a completer : try / catch autour de l'appel a racine\n    return 0;\n}\n",
+      "tests": [
+        { "name": "carre parfait", "stdin": "16", "expectedStdout": "racine = 4" },
+        { "name": "nombre negatif", "stdin": "-4", "expectedStdout": "impossible : nombre negatif" },
+        { "name": "racine de zero", "stdin": "0", "expectedStdout": "racine = 0" },
+        { "name": "cache decimal", "stdin": "2.25", "expectedStdout": "racine = 1.5", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <cmath>\n#include <string>\nusing namespace std;\n\ndouble racine(double x) {\n    if (x < 0.0)\n        throw string(\"nombre negatif\");\n    return sqrt(x);\n}\n\nint main() {\n    double x;\n    cin >> x;\n    try {\n        double r = racine(x);\n        cout << \"racine = \" << r << \"\\n\";\n    }\n    catch (const string& e) {\n        cout << \"impossible : \" << e << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "La racine carrée d'un nombre négatif n'a pas de sens dans les réels : c'est une **erreur d'exécution** typique. `racine` teste `x < 0.0` et lève une `std::string` décrivant l'erreur. L'appel est sous `try` ; le `catch (const string& e)` capture par **référence constante**. Quand `x` est positif ou nul, aucune exception : `sqrt(x)` est retourné et `racine = ...` s'affiche.",
+    "concepts": ["throw", "try-catch"]
+  },
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris un programme qui lit un entier `n` puis `n` paires d'entiers. Pour chaque paire `a b`, il calcule `a / b` via une fonction qui **lève une exception** si `b` vaut 0. Le programme additionne les quotients valides et compte les erreurs, sans jamais s'arrêter.",
+    "payload": {
+      "spec": "Definir int diviser(int a, int b) : si b vaut 0, faire throw string(\"/0\"); sinon retourner a / b. Dans main : lire n avec cin >> n. Initialiser somme = 0 et erreurs = 0. Repeter n fois : lire a puis b ; dans un try, faire somme += diviser(a, b) ; dans un catch (const string&), faire erreurs++. Apres la boucle, afficher 'somme = ' suivi de somme et d'un retour a la ligne, puis 'erreurs = ' suivi de erreurs et d'un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint diviser(int a, int b) {\n    // a completer : lever une exception si b == 0\n    return a / b;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    // a completer : boucle avec try / catch par iteration\n    return 0;\n}\n",
+      "tests": [
+        { "name": "une erreur sur trois", "stdin": "3\n10 2\n9 0\n20 4", "expectedStdout": "somme = 10\nerreurs = 1" },
+        { "name": "aucune erreur", "stdin": "2\n6 3\n8 2", "expectedStdout": "somme = 6\nerreurs = 0" },
+        { "name": "cache une seule paire fautive", "stdin": "1\n5 0", "expectedStdout": "somme = 0\nerreurs = 1", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint diviser(int a, int b) {\n    if (b == 0)\n        throw string(\"/0\");\n    return a / b;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    int somme = 0;\n    int erreurs = 0;\n    for (int i = 0; i < n; i++) {\n        int a, b;\n        cin >> a >> b;\n        try {\n            somme += diviser(a, b);\n        }\n        catch (const string& e) {\n            erreurs++;\n        }\n    }\n    cout << \"somme = \" << somme << \"\\n\";\n    cout << \"erreurs = \" << erreurs << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Le `try`/`catch` est placé **à l'intérieur** de la boucle : ainsi, une exception sur une paire fautive n'interrompt **pas** la boucle. Quand `diviser` lève l'exception, `somme += ...` est abandonné (la somme n'est pas modifiée pour cette paire), le `catch` incrémente `erreurs`, puis la boucle **continue** au tour suivant. C'est l'idiome pour traiter un lot de données dont certaines sont invalides : on isole chaque traitement dans son propre `try`.",
+    "concepts": ["throw", "try-catch"]
+  },
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme doit afficher le résultat d'une division, ou un message d'erreur si le diviseur est nul. Mais sur le test `12 0`, il **s'arrête anormalement** au lieu d'afficher l'erreur. Corrige-le.",
+    "payload": {
+      "spec": "Le programme lit deux entiers a et b, et appelle division(a, b) qui leve une std::string si b vaut 0. Probleme : l'appel a division n'est entoure d'AUCUN bloc try/catch. Quand b vaut 0, l'exception remonte jusqu'a sortir de main, ce qui appelle std::terminate et arrete le programme anormalement (code de sortie non nul). Corriger en placant l'appel dans un bloc try suivi d'un catch (const string& msg) qui affiche 'ERREUR : ' suivi du message. Sortie attendue pour une division valide : 'resultat = ' suivi du quotient. Pour b == 0 : 'ERREUR : division par zero'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint division(int a, int b) {\n    if (b == 0)\n        throw string(\"division par zero\");\n    return a / b;\n}\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    int r = division(a, b);\n    cout << \"resultat = \" << r << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "division valide", "stdin": "12 3", "expectedStdout": "resultat = 4" },
+        { "name": "division par zero", "stdin": "12 0", "expectedStdout": "ERREUR : division par zero" },
+        { "name": "cache valide", "stdin": "100 25", "expectedStdout": "resultat = 4", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint division(int a, int b) {\n    if (b == 0)\n        throw string(\"division par zero\");\n    return a / b;\n}\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    try {\n        int r = division(a, b);\n        cout << \"resultat = \" << r << \"\\n\";\n    }\n    catch (const string& msg) {\n        cout << \"ERREUR : \" << msg << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "Le starter lève bien une exception, mais **aucun `try`/`catch`** ne la rattrape. Une exception non rattrapée remonte la pile, **sort de `main`** et provoque l'appel de `std::terminate()` : le programme s'arrête **anormalement** (code de sortie non nul) — le juge échoue. La correction : entourer l'appel à `division` d'un bloc `try`, suivi d'un `catch (const string& msg)`. Le programme rattrape alors l'exception, affiche le message et se termine **normalement**.",
+    "concepts": ["throw", "try-catch"]
+  },
+  {
+    "chapterSlug": "try-catch-throw",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme lance un objet `TimeoutReseau` (dérivé de `ErreurReseau`) et doit afficher `ERREUR : delai depasse`. Mais il affiche `ERREUR : erreur generique`. Corrige la capture pour obtenir le bon message.",
+    "payload": {
+      "spec": "Le programme leve un objet TimeoutReseau (classe derivee de ErreurReseau). La methode virtuelle description() renvoie 'delai depasse' pour TimeoutReseau et 'erreur generique' pour ErreurReseau. Probleme : le catch capture l'exception PAR VALEUR (catch (ErreurReseau e)). Comme l'exception reelle est d'un type derive, l'objet est tronque (slicing) : la partie TimeoutReseau est perdue et e.description() renvoie le message de la classe de base. Corriger en capturant PAR REFERENCE CONSTANTE (catch (const ErreurReseau& e)) pour eviter le slicing. Sortie attendue : 'ERREUR : delai depasse'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass ErreurReseau {\npublic:\n    virtual string description() const { return \"erreur generique\"; }\n    virtual ~ErreurReseau() {}\n};\n\nclass TimeoutReseau : public ErreurReseau {\npublic:\n    string description() const override { return \"delai depasse\"; }\n};\n\nint main() {\n    try {\n        throw TimeoutReseau();\n    }\n    catch (ErreurReseau e) {\n        cout << \"ERREUR : \" << e.description() << \"\\n\";\n    }\n    return 0;\n}\n",
+      "tests": [
+        { "name": "message du type reel", "expectedStdout": "ERREUR : delai depasse" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass ErreurReseau {\npublic:\n    virtual string description() const { return \"erreur generique\"; }\n    virtual ~ErreurReseau() {}\n};\n\nclass TimeoutReseau : public ErreurReseau {\npublic:\n    string description() const override { return \"delai depasse\"; }\n};\n\nint main() {\n    try {\n        throw TimeoutReseau();\n    }\n    catch (const ErreurReseau& e) {\n        cout << \"ERREUR : \" << e.description() << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "Le starter capture **par valeur** : `catch (ErreurReseau e)`. L'exception réelle est un `TimeoutReseau`, mais la capture par valeur **copie** l'objet dans une variable de type `ErreurReseau` — la partie dérivée est **tronquée** (*slicing*). `e.description()` appelle alors la version de la classe de base → `erreur generique`. La parade est de capturer **par référence constante** : `catch (const ErreurReseau& e)`. La référence ne copie rien, l'objet reste un `TimeoutReseau`, et l'appel virtuel `description()` livre `delai depasse`.",
+    "concepts": ["try-catch", "throw"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Lorsqu'un `try` est suivi de plusieurs `catch`, sur quel critère le gestionnaire exécuté est-il choisi ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Le nom de la variable du catch doit être identique à celui passé au throw." },
+        { "id": "b", "label": "Le type du catch doit correspondre au type de la valeur lancée par le throw." },
+        { "id": "c", "label": "C'est toujours le dernier catch écrit qui est exécuté." },
+        { "id": "d", "label": "Tous les catch compatibles sont exécutés l'un après l'autre." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Le `catch` est choisi par le **type** de l'exception lancée. Le nom de la variable n'a **aucun rôle** dans ce choix : seul le type compte. Un seul gestionnaire traite l'exception — les autres sont ignorés. Le programme est dérouté vers le `catch` dont le type correspond à la valeur transportée par le `throw`.",
+    "concepts": ["selection-catch-par-type"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le **déroulement de pile** (*stack unwinding*) appelle `delete` sur la mémoire allouée par `new` dans les fonctions quittées par l'exception.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. Le déroulement de pile appelle les **destructeurs des objets locaux automatiques** (ceux placés sur la **pile**) des fonctions quittées. Mais il ne fait **pas** les `delete` de la mémoire du **tas** : un objet créé par `new` et non libéré reste une **fuite mémoire** malgré le déroulement. Les exceptions ne protègent que les ressources des objets automatiques.",
+    "concepts": ["deroulement-pile"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Que se passe-t-il si une exception remonte toute la pile d'appels **sans rencontrer aucun `catch` compatible**, pas même un `catch(...)` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Le programme ignore l'exception et continue son exécution normalement." },
+        { "id": "b", "label": "L'exception est automatiquement transformée en code de retour 0." },
+        { "id": "c", "label": "std::terminate() est appelée : le programme s'arrête immédiatement, souvent avec un message abscons." },
+        { "id": "d", "label": "Le compilateur refuse de compiler un tel programme." }
+      ]
+    },
+    "solution": { "correct": ["c"] },
+    "explanation": "Une exception rattrapée par **aucun** gestionnaire finit par sortir de `main`. Le programme ne peut plus continuer : il provoque l'appel automatique de **`std::terminate()`**, qui **interrompt immédiatement** le programme — souvent avec un message abscons et un arrêt anormal (code de sortie non nul). C'est le comportement à éviter : une application robuste enveloppe `main` dans un `try` avec des `catch` typés et un `catch(...)` final.",
+    "concepts": ["propagation-pile", "catch-tous"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la différence entre `throw;` (sans argument) et `throw e;` à l'intérieur d'un `catch (Base& e)` qui a rattrapé un objet d'un type dérivé ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "throw; relance l'objet d'origine intact ; throw e; lance une copie du type statique Base (perte du type dérivé)." },
+        { "id": "b", "label": "Les deux sont strictement équivalents." },
+        { "id": "c", "label": "throw; arrête le programme, throw e; le relance." },
+        { "id": "d", "label": "throw e; relance l'objet d'origine, throw; en crée une copie." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "**`throw;`** seul **retransmet l'exception courante** intacte : son type **dynamique** et sa valeur sont conservés à l'identique. **`throw e;`** lance une **copie** construite d'après le **type statique** de `e` — si `e` est déclarée `Base&` mais référence un objet dérivé, la copie est un simple `Base` : on **perd** l'information du type dérivé. Pour relancer fidèlement une exception, on écrit toujours **`throw;`** seul.",
+    "concepts": ["relancer-exception"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles affirmations sur le gestionnaire `catch(...)` sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Il intercepte n'importe quelle exception, quel que soit son type." },
+        { "id": "b", "label": "Il ne donne aucun accès à l'objet lancé : il n'a pas de variable." },
+        { "id": "c", "label": "Il doit être placé en dernier, après tous les catch typés." },
+        { "id": "d", "label": "Placé en premier, il rend tous les catch suivants inatteignables." },
+        { "id": "e", "label": "Il permet de récupérer le numéro et le message d'une exception personnalisée." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c", "d"] },
+    "explanation": "**a, b, c, d sont vraies.** `catch(...)` — les trois points sont littéraux — intercepte **toute** exception. Mais il n'a **pas de variable** : aucun accès à l'objet lancé ni à son contenu (**e est donc faux**). Étant compatible avec tout, il rendrait inatteignable tout `catch` placé après lui : il se place **toujours en dernier**. C'est l'ultime filet de sécurité.",
+    "concepts": ["catch-tous"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une exception est levée dans `F3`. `main` appelle `F1`, `F1` appelle `F2`, `F2` appelle `F3`. Aucune de ces fonctions sauf `main` ne contient de `try`/`catch`. Remets dans l'ordre chronologique les étapes de la propagation.",
+    "payload": {
+      "items": [
+        { "id": "i1", "label": "F3 lève l'exception ; n'y trouvant pas de gestionnaire, elle est interrompue." },
+        { "id": "i2", "label": "L'exception remonte dans F2, qui n'a pas de gestionnaire : F2 est interrompue à son tour." },
+        { "id": "i3", "label": "L'exception remonte dans F1, qui n'a pas de gestionnaire : F1 est interrompue." },
+        { "id": "i4", "label": "L'exception atteint main, dont le catch correspond : le gestionnaire s'exécute." }
+      ]
+    },
+    "solution": { "order": ["i1", "i2", "i3", "i4"] },
+    "explanation": "Une exception non rattrapée **se propage** : elle remonte la **pile d'appels**, fonction par fonction. Levée dans `F3`, elle ne trouve pas de gestionnaire et quitte `F3` ; puis `F2`, puis `F1` — toutes **interrompues** sans avoir terminé. Elle n'est finalement traitée que dans `main`, le **premier niveau** qui possède un `try`/`catch` adapté.",
+    "concepts": ["propagation-pile"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On veut rattraper proprement `std::out_of_range` et `std::exception`. Remets les `catch` dans l'**ordre correct**, du premier écrit au dernier.",
+    "payload": {
+      "items": [
+        { "id": "i1", "label": "catch (const std::out_of_range& e)" },
+        { "id": "i2", "label": "catch (const std::exception& e)" },
+        { "id": "i3", "label": "catch (...)" }
+      ]
+    },
+    "solution": { "order": ["i1", "i2", "i3"] },
+    "explanation": "On ordonne les `catch` du type **le plus dérivé** au type **le plus général**. `std::out_of_range` dérive de `std::exception` : un `catch` sur la base **intercepte aussi** les dérivées. Si `catch (const std::exception&)` venait en premier, il capturerait tout — y compris `out_of_range` — et le `catch` plus précis deviendrait du **code mort**. Le `catch(...)`, compatible avec tout, vient toujours **en dernier**.",
+    "concepts": ["selection-catch-par-type", "catch-tous"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète ce gestionnaire pour qu'il **journalise** l'erreur puis **relance** l'exception courante intacte vers le niveau supérieur.",
+    "payload": {
+      "template": "void intermediaire() {\n    try {\n        traitement();\n    }\n    catch (const string& e) {\n        cout << \"[journal] \" << e << \"\\n\";\n        {{relance}}\n    }\n}",
+      "slots": [
+        { "id": "relance", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "relance": "throw;" },
+      "caseSensitive": false
+    },
+    "explanation": "Un `throw` **sans argument** dans un `catch` **retransmet l'exception courante** au niveau `try`/`catch` immédiatement supérieur. Le gestionnaire fait ici un traitement **partiel** (journaliser), puis laisse un niveau supérieur finir le travail. On écrit **`throw;`** seul — et non `throw e;` — pour propager l'objet d'origine intact, sans en faire une copie.",
+    "concepts": ["relancer-exception"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe quel `catch` est choisi selon le type lancé.",
+    "payload": {
+      "program": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    for (int i = 0; i < 3; i++) {\n        try {\n            if (i == 0) throw 99;\n            if (i == 1) throw string(\"oups\");\n            if (i == 2) throw 3.5;\n        }\n        catch (int e) {\n            cout << \"entier : \" << e << \"\\n\";\n        }\n        catch (const string& e) {\n            cout << \"chaine : \" << e << \"\\n\";\n        }\n        catch (double e) {\n            cout << \"reel : \" << e << \"\\n\";\n        }\n    }\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "entier : 99\nchaine : oups\nreel : 3.5" },
+    "explanation": "Le `catch` exécuté est celui dont le **type** correspond à la valeur lancée. Au tour `i==0`, `throw 99` lance un `int` → premier `catch`. Au tour `i==1`, `throw string(\"oups\")` lance une `std::string` → deuxième `catch`. Au tour `i==2`, `throw 3.5` lance un `double` → troisième `catch`. Les types `int`, `string` et `double` ne sont liés par aucun héritage : chaque exception ne déclenche qu'un seul gestionnaire, et l'ordre des `catch` est ici sans importance.",
+    "concepts": ["selection-catch-par-type"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe quand les destructeurs s'exécutent pendant le déroulement de pile.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Ressource {\n    int id;\npublic:\n    Ressource(int n) : id(n) { cout << \"ouvre ressource \" << id << \"\\n\"; }\n    ~Ressource() { cout << \"ferme ressource \" << id << \"\\n\"; }\n};\n\nvoid travail() {\n    Ressource a(1);\n    Ressource b(2);\n    throw 7;\n    cout << \"jamais affiche\\n\";\n}\n\nint main() {\n    try {\n        travail();\n    }\n    catch (int e) {\n        cout << \"rattrape numero \" << e << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "ouvre ressource 1\nouvre ressource 2\nferme ressource 2\nferme ressource 1\nrattrape numero 7" },
+    "explanation": "`travail` construit `a` puis `b` (d'où `ouvre ressource 1` puis `2`). Le `throw 7` interrompt la fonction : la ligne `jamais affiche` est sautée. Avant que l'exception ne quitte `travail`, le **déroulement de pile** détruit les objets locaux automatiques, dans l'**ordre inverse** de leur construction : `b` puis `a` (`ferme ressource 2` puis `1`). **Ensuite seulement** le `catch` de `main` s'exécute → `rattrape numero 7`.",
+    "concepts": ["deroulement-pile"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe l'effet du `throw;` placé dans le `catch` intermédiaire.",
+    "payload": {
+      "program": "#include <iostream>\n#include <string>\nusing namespace std;\n\nvoid niveauBas() {\n    throw string(\"panne capteur\");\n}\n\nvoid niveauIntermediaire() {\n    try {\n        niveauBas();\n    }\n    catch (const string& e) {\n        cout << \"intermediaire journalise : \" << e << \"\\n\";\n        throw;\n    }\n}\n\nint main() {\n    try {\n        niveauIntermediaire();\n    }\n    catch (const string& e) {\n        cout << \"main traite : \" << e << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "intermediaire journalise : panne capteur\nmain traite : panne capteur" },
+    "explanation": "`niveauBas` lève la `std::string`. Le `catch` de `niveauIntermediaire` la rattrape, affiche `intermediaire journalise : panne capteur`, puis `throw;` **relance** l'exception courante intacte. Elle remonte alors au niveau supérieur : le `catch` de `main` la rattrape à son tour et affiche `main traite : panne capteur`. Le `throw;` permet un traitement **partagé** : un niveau journalise, un autre traite définitivement.",
+    "concepts": ["relancer-exception", "propagation-pile"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Attention : aucun `try`/`catch` ne rattrape l'exception.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Trace {\n    const char* nom;\npublic:\n    Trace(const char* n) : nom(n) { cout << \"+\" << nom << \"\\n\"; }\n    ~Trace() { cout << \"-\" << nom << \"\\n\"; }\n};\n\nint main() {\n    Trace global(\"global\");\n    cout << \"debut\\n\";\n    throw 5;\n    cout << \"fin\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "+global\ndebut" },
+    "explanation": "`Trace global` est construit → `+global`. Puis `debut` s'affiche. Le `throw 5` lève une exception qu'**aucun `catch`** ne rattrape : la ligne `fin` est sautée. L'exception sort de `main` et provoque l'appel de `std::terminate()`. Sur g++, le destructeur de `global` n'est **pas** appelé (pas de déroulement de pile garanti pour une exception non rattrapée) : `-global` n'apparaît **pas**. Le message `terminate called...` part sur la **sortie d'erreur**, pas sur la sortie standard. La sortie standard se limite donc à `+global` et `debut`.",
+    "concepts": ["propagation-pile", "deroulement-pile"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit une note entière et la valide via une fonction `verifier`. La fonction **lève une `std::string`** si la note est négative, et **lève l'entier** si la note dépasse 20. Le programme rattrape les deux cas avec des `catch` distincts.",
+    "payload": {
+      "spec": "Definir void verifier(int note) : si note est strictement negative, faire throw string(\"note negative\") ; si note est strictement superieure a 20, faire throw note;. Dans main : lire note avec cin >> note. Dans un try, appeler verifier(note) puis afficher 'note acceptee : ' suivi de note et d'un retour a la ligne. Ajouter un catch (const string& e) qui affiche 'refus : ' suivi du message ; et un catch (int e) qui affiche 'refus : note ' suivi de la valeur et de ' superieure a 20'. Chaque ligne se termine par un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nvoid verifier(int note) {\n    // a completer : lever une string si note < 0, lever l'int si note > 20\n}\n\nint main() {\n    int note;\n    cin >> note;\n    // a completer : try avec deux catch (const string&) et (int)\n    return 0;\n}\n",
+      "tests": [
+        { "name": "note valide", "stdin": "15", "expectedStdout": "note acceptee : 15" },
+        { "name": "note negative", "stdin": "-2", "expectedStdout": "refus : note negative" },
+        { "name": "note trop haute", "stdin": "25", "expectedStdout": "refus : note 25 superieure a 20" },
+        { "name": "borne basse", "stdin": "0", "expectedStdout": "note acceptee : 0" },
+        { "name": "cache borne haute", "stdin": "20", "expectedStdout": "note acceptee : 20", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nvoid verifier(int note) {\n    if (note < 0)\n        throw string(\"note negative\");\n    if (note > 20)\n        throw note;\n}\n\nint main() {\n    int note;\n    cin >> note;\n    try {\n        verifier(note);\n        cout << \"note acceptee : \" << note << \"\\n\";\n    }\n    catch (const string& e) {\n        cout << \"refus : \" << e << \"\\n\";\n    }\n    catch (int e) {\n        cout << \"refus : note \" << e << \" superieure a 20\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "`verifier` peut lever **deux types** d'exception différents selon l'erreur : une `std::string` pour une note négative, un `int` pour une note trop haute. Le `try` est suivi de **deux `catch`**, un par type. Le mécanisme choisit le gestionnaire dont le **type correspond** à la valeur lancée : `string` → premier `catch`, `int` → deuxième. Comme `string` et `int` ne sont liés par aucun héritage, leur ordre n'a pas d'importance ici.",
+    "concepts": ["selection-catch-par-type"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme avec une fonction intermédiaire qui rattrape une exception, la **journalise**, puis la **relance** intacte vers `main`. La valeur 0 en entrée provoque l'erreur.",
+    "payload": {
+      "spec": "Definir int lireValeur(int v) : si v vaut 0, faire throw string(\"valeur nulle interdite\") ; sinon retourner 100 / v. Definir int intermediaire(int v) : dans un try, retourner lireValeur(v) ; dans un catch (const string& e), afficher '[journal] ' suivi du message et d'un retour a la ligne, puis relancer l'exception avec throw;. Dans main : lire v avec cin >> v ; dans un try, calculer r = intermediaire(v) et afficher 'resultat = ' suivi de r ; dans un catch (const string& e), afficher 'abandon : ' suivi du message. Chaque ligne se termine par un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint lireValeur(int v) {\n    // a completer : lever une exception si v == 0\n    return 100 / v;\n}\n\nint intermediaire(int v) {\n    // a completer : try / catch qui journalise puis relance\n}\n\nint main() {\n    int v;\n    cin >> v;\n    // a completer : try / catch autour de intermediaire\n    return 0;\n}\n",
+      "tests": [
+        { "name": "valeur valide", "stdin": "4", "expectedStdout": "resultat = 25" },
+        { "name": "valeur nulle journalisee puis abandonnee", "stdin": "0", "expectedStdout": "[journal] valeur nulle interdite\nabandon : valeur nulle interdite" },
+        { "name": "cache autre valeur", "stdin": "5", "expectedStdout": "resultat = 20", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint lireValeur(int v) {\n    if (v == 0)\n        throw string(\"valeur nulle interdite\");\n    return 100 / v;\n}\n\nint intermediaire(int v) {\n    try {\n        return lireValeur(v);\n    }\n    catch (const string& e) {\n        cout << \"[journal] \" << e << \"\\n\";\n        throw;\n    }\n}\n\nint main() {\n    int v;\n    cin >> v;\n    try {\n        int r = intermediaire(v);\n        cout << \"resultat = \" << r << \"\\n\";\n    }\n    catch (const string& e) {\n        cout << \"abandon : \" << e << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "La fonction `intermediaire` fait un traitement **partiel** : son `catch` journalise l'erreur (`[journal] ...`), puis **`throw;`** relance l'exception courante intacte. Elle remonte alors jusqu'au `catch` de `main`, qui la traite définitivement (`abandon : ...`). Quand `v` est valide, aucune exception : `intermediaire` renvoie le quotient et `resultat = ...` s'affiche. C'est le partage d'un traitement entre plusieurs niveaux.",
+    "concepts": ["relancer-exception", "propagation-pile"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit un entier `code` et appelle une fonction `traiter` pouvant lancer **plusieurs types** d'exception. Le programme rattrape la `std::string` avec un `catch` typé, et **tout le reste** avec un `catch(...)`.",
+    "payload": {
+      "spec": "Definir void traiter(int code) : si code vaut 1, faire throw string(\"erreur connue\") ; si code vaut 2, faire throw 42; ; si code vaut 3, faire throw 'Z';. Dans main : lire code avec cin >> code. Dans un try, appeler traiter(code) puis afficher 'aucune erreur' et un retour a la ligne. Ajouter un catch (const string& e) qui affiche 'texte : ' suivi du message ; puis un catch (...) qui affiche 'erreur de type inconnu'. Chaque ligne se termine par un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nvoid traiter(int code) {\n    // a completer : lever string / int / char selon code\n}\n\nint main() {\n    int code;\n    cin >> code;\n    // a completer : try, catch (const string&), catch (...)\n    return 0;\n}\n",
+      "tests": [
+        { "name": "aucune erreur", "stdin": "0", "expectedStdout": "aucune erreur" },
+        { "name": "exception string typee", "stdin": "1", "expectedStdout": "texte : erreur connue" },
+        { "name": "exception int via catch tous", "stdin": "2", "expectedStdout": "erreur de type inconnu" },
+        { "name": "cache exception char via catch tous", "stdin": "3", "expectedStdout": "erreur de type inconnu", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nvoid traiter(int code) {\n    if (code == 1) throw string(\"erreur connue\");\n    if (code == 2) throw 42;\n    if (code == 3) throw 'Z';\n}\n\nint main() {\n    int code;\n    cin >> code;\n    try {\n        traiter(code);\n        cout << \"aucune erreur\\n\";\n    }\n    catch (const string& e) {\n        cout << \"texte : \" << e << \"\\n\";\n    }\n    catch (...) {\n        cout << \"erreur de type inconnu\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "Le `catch (const string& e)` typé rattrape **uniquement** les `std::string`. Le `catch(...)` rattrape **tout le reste** : ici un `int` (`code == 2`) et un `char` (`code == 3`) — mais sans aucun accès à la valeur lancée, puisqu'il n'a pas de variable. Le `catch(...)` doit être placé **en dernier** : sinon, étant compatible avec tout, il rendrait le `catch` typé inatteignable. Quand `code` ne déclenche aucun `throw`, `aucune erreur` s'affiche.",
+    "concepts": ["catch-tous", "selection-catch-par-type"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris un programme où une fonction `requete` ouvre une `Connexion` (objet local) puis **lève une exception** si le numéro est négatif. Le programme doit montrer que la connexion est **fermée** (destructeur appelé) même quand l'exception est levée.",
+    "payload": {
+      "spec": "Definir une classe Connexion : son constructeur Connexion(const string& nom) affiche 'connexion ' + nom + ' ouverte' ; son destructeur affiche 'connexion ' + nom + ' fermee'. Definir void requete(int n) : creer un objet local Connexion c(\"db\") ; si n est strictement negatif, faire throw string(\"numero invalide\") ; sinon afficher 'requete ' suivi de n et de ' executee'. Dans main : lire n avec cin >> n ; dans un try, appeler requete(n) ; dans un catch (const string& e), afficher 'echec : ' suivi du message. Chaque ligne se termine par un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Connexion {\n    string nom;\npublic:\n    // a completer : constructeur et destructeur qui affichent\n};\n\nvoid requete(int n) {\n    // a completer : objet local Connexion, throw si n < 0\n}\n\nint main() {\n    int n;\n    cin >> n;\n    // a completer : try / catch autour de requete\n    return 0;\n}\n",
+      "tests": [
+        { "name": "requete valide", "stdin": "5", "expectedStdout": "connexion db ouverte\nrequete 5 executee\nconnexion db fermee" },
+        { "name": "requete invalide : connexion quand meme fermee", "stdin": "-1", "expectedStdout": "connexion db ouverte\nconnexion db fermee\nechec : numero invalide" },
+        { "name": "cache requete valide", "stdin": "12", "expectedStdout": "connexion db ouverte\nrequete 12 executee\nconnexion db fermee", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Connexion {\n    string nom;\npublic:\n    Connexion(const string& n) : nom(n) { cout << \"connexion \" << nom << \" ouverte\\n\"; }\n    ~Connexion() { cout << \"connexion \" << nom << \" fermee\\n\"; }\n};\n\nvoid requete(int n) {\n    Connexion c(\"db\");\n    if (n < 0)\n        throw string(\"numero invalide\");\n    cout << \"requete \" << n << \" executee\\n\";\n}\n\nint main() {\n    int n;\n    cin >> n;\n    try {\n        requete(n);\n    }\n    catch (const string& e) {\n        cout << \"echec : \" << e << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "`Connexion c(\"db\")` est un objet **local automatique** (sur la pile). Quand `n >= 0`, la fonction se termine normalement : `c` est détruit en sortie → `connexion db fermee`. Quand `n < 0`, le `throw` interrompt `requete` : le **déroulement de pile** détruit `c` **avant** que l'exception ne quitte la fonction — d'où `connexion db fermee` qui apparaît **avant** `echec : ...`. C'est la garantie majeure du langage : une exception ne fuit **pas** les ressources des objets locaux automatiques.",
+    "concepts": ["deroulement-pile", "propagation-pile"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme lance une `ErreurFichier` (dérivée de `ErreurAppli`) et devrait afficher `precis : fichier introuvable`. Mais il affiche `general : fichier introuvable`. Corrige l'**ordre des `catch`**.",
+    "payload": {
+      "spec": "Le programme leve un objet ErreurFichier, classe derivee de ErreurAppli. Probleme : les deux catch sont dans le mauvais ordre. catch (const ErreurAppli&) — la classe de BASE — est ecrit en PREMIER ; or un catch sur la base intercepte aussi les exceptions des classes derivees. Il capture donc l'ErreurFichier, et le catch (const ErreurFichier&) qui suit devient du code mort. Corriger en placant le catch du type le plus DERIVE (ErreurFichier) AVANT le catch du type de base (ErreurAppli). Sortie attendue : 'precis : fichier introuvable'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass ErreurAppli {\npublic:\n    virtual string message() const { return \"erreur applicative\"; }\n    virtual ~ErreurAppli() {}\n};\n\nclass ErreurFichier : public ErreurAppli {\npublic:\n    string message() const override { return \"fichier introuvable\"; }\n};\n\nint main() {\n    try {\n        throw ErreurFichier();\n    }\n    catch (const ErreurAppli& e) {\n        cout << \"general : \" << e.message() << \"\\n\";\n    }\n    catch (const ErreurFichier& e) {\n        cout << \"precis : \" << e.message() << \"\\n\";\n    }\n    return 0;\n}\n",
+      "tests": [
+        { "name": "le catch precis doit gagner", "expectedStdout": "precis : fichier introuvable" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass ErreurAppli {\npublic:\n    virtual string message() const { return \"erreur applicative\"; }\n    virtual ~ErreurAppli() {}\n};\n\nclass ErreurFichier : public ErreurAppli {\npublic:\n    string message() const override { return \"fichier introuvable\"; }\n};\n\nint main() {\n    try {\n        throw ErreurFichier();\n    }\n    catch (const ErreurFichier& e) {\n        cout << \"precis : \" << e.message() << \"\\n\";\n    }\n    catch (const ErreurAppli& e) {\n        cout << \"general : \" << e.message() << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "Le mécanisme essaie les `catch` **dans l'ordre écrit** et retient le **premier compatible**. Un `catch` sur la **classe de base** `ErreurAppli` est compatible avec une exception d'une **classe dérivée** `ErreurFichier` (un dérivé *est-un* base). Écrit en premier, il capture tout, et `catch (const ErreurFichier&)` devient du **code mort**. La règle : ordonner les `catch` du type **le plus dérivé** vers le **plus général**. Ici, `ErreurFichier` doit passer **avant** `ErreurAppli`.",
+    "concepts": ["selection-catch-par-type"]
+  },
+  {
+    "chapterSlug": "propagation",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme propage une `PanneGrave` (dérivée de `Probleme`). La couche 2 voit `panne grave` mais `main` n'affiche que `probleme` : le type dérivé est **perdu** en chemin. Corrige la relance.",
+    "payload": {
+      "spec": "Le programme leve une PanneGrave (classe derivee de Probleme). La methode virtuelle nom() renvoie 'panne grave' pour PanneGrave et 'probleme' pour Probleme. La fonction couche2 rattrape l'exception par catch (const Probleme& e), affiche '[couche2] vu : ' suivi de e.nom(), puis veut relancer l'exception. Probleme : elle ecrit 'throw e;' — ce qui lance une COPIE construite d'apres le type STATIQUE de e (Probleme), perdant la partie PanneGrave. main affiche alors 'probleme' au lieu de 'panne grave'. Corriger en remplacant 'throw e;' par 'throw;' (sans argument), qui relance l'objet d'origine intact. Sortie attendue : '[couche2] vu : panne grave' puis '[main] traite : panne grave'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Probleme {\npublic:\n    virtual string nom() const { return \"probleme\"; }\n    virtual ~Probleme() {}\n};\n\nclass PanneGrave : public Probleme {\npublic:\n    string nom() const override { return \"panne grave\"; }\n};\n\nvoid couche1() {\n    throw PanneGrave();\n}\n\nvoid couche2() {\n    try {\n        couche1();\n    }\n    catch (const Probleme& e) {\n        cout << \"[couche2] vu : \" << e.nom() << \"\\n\";\n        throw e;\n    }\n}\n\nint main() {\n    try {\n        couche2();\n    }\n    catch (const Probleme& e) {\n        cout << \"[main] traite : \" << e.nom() << \"\\n\";\n    }\n    return 0;\n}\n",
+      "tests": [
+        { "name": "le type derive doit etre conserve", "expectedStdout": "[couche2] vu : panne grave\n[main] traite : panne grave" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Probleme {\npublic:\n    virtual string nom() const { return \"probleme\"; }\n    virtual ~Probleme() {}\n};\n\nclass PanneGrave : public Probleme {\npublic:\n    string nom() const override { return \"panne grave\"; }\n};\n\nvoid couche1() {\n    throw PanneGrave();\n}\n\nvoid couche2() {\n    try {\n        couche1();\n    }\n    catch (const Probleme& e) {\n        cout << \"[couche2] vu : \" << e.nom() << \"\\n\";\n        throw;\n    }\n}\n\nint main() {\n    try {\n        couche2();\n    }\n    catch (const Probleme& e) {\n        cout << \"[main] traite : \" << e.nom() << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "Dans le `catch (const Probleme& e)` de `couche2`, la variable `e` a pour **type statique** `Probleme` mais référence un objet **dynamique** `PanneGrave`. `throw e;` lance une **copie** construite d'après le type **statique** → un simple `Probleme` : la partie `PanneGrave` est perdue. `main` reçoit alors un `Probleme` et `nom()` renvoie `probleme`. La correction est **`throw;`** seul : il **retransmet l'exception d'origine** intacte, en conservant son type dynamique `PanneGrave`. `main` voit alors le bon objet et `nom()` renvoie `panne grave`.",
+    "concepts": ["relancer-exception", "selection-catch-par-type"]
+  }
+]

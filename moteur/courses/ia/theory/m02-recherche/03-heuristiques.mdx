@@ -1,0 +1,233 @@
+---
+title: "Recherche informée et heuristiques"
+slug: heuristiques
+order: 3
+estimatedReadMin: 14
+concepts: [recherche-informee, heuristique, cout-d-action, fonction-g, fonction-h-etoile, fonction-f, heuristique-coincidente, heuristique-consistante, heuristique-monotone, heuristique-minorante]
+source: "Intro_IA_slides2.pdf"
+---
+
+## D'une recherche aveugle à une recherche guidée
+
+La section précédente a mis en évidence les **faiblesses de la recherche aveugle** :
+elle n'utilise aucune information sur le problème, revisite les mêmes états et
+souffre de complexités spatiale et temporelle très élevées. Compte tenu de ces
+faiblesses, **nous avons besoin d'un nouveau type de recherche, qui utilise les
+informations disponibles au sujet des états** : une telle recherche est dite
+**informée** ou **guidée**.
+
+L'idée centrale est la suivante : plutôt que de parcourir l'arbre dans un ordre fixé
+d'avance, on va **évaluer** les états et **privilégier les bons**. Cette section
+introduit l'outil qui permet cette évaluation — l'**heuristique** —, puis le
+**vocabulaire des coûts** (`k`, `k*`, `g`, `h*`, `f`), et enfin les **propriétés**
+qui distinguent une bonne heuristique.
+
+> **À retenir** : la recherche **informée (guidée)** exploite une information sur les
+> états pour privilégier les bons et éviter les autres, là où la recherche aveugle
+> n'en utilisait aucune.
+
+## La qualité d'un état et la fonction h
+
+Pour guider la recherche, **nous associons à chaque état `e` une valeur `h(e)` qui
+caractérise sa qualité**. La **qualité d'un état traduit sa proximité avec un état
+final**. La recherche utilisera cette information pour **privilégier les « bons »
+états et éviter les autres**.
+
+La qualité des états est donc définie par une **fonction** :
+
+```
+h : S → ℕ
+```
+
+Une telle fonction s'appelle une **heuristique**. À chaque état de l'espace `S`,
+elle associe un entier naturel.
+
+Puisqu'une heuristique doit **caractériser la proximité d'un état final**, elle doit
+vérifier la propriété fondamentale suivante :
+
+> **Plus l'état `e` est proche d'un état final, plus `h(e)` est faible.**
+
+Ainsi, un état dont la valeur `h` est petite est jugé « proche du but » et sera
+exploré en priorité ; un état dont la valeur `h` est grande est jugé « éloigné » et
+sera laissé de côté. L'heuristique est donc une **estimation** du chemin qu'il reste
+à parcourir : ce n'est pas une mesure exacte, mais une indication qui *oriente* la
+recherche.
+
+> ⚠️ Attention au sens de variation : une **bonne** valeur d'heuristique est une
+> **petite** valeur. `h(e) = 0` correspond à un état idéal — un état final —, et
+> plus `h(e)` augmente, plus l'état est jugé loin du but.
+
+## Les notations liées au coût des actions
+
+Avant d'étudier les **propriétés des heuristiques**, il faut introduire quelques
+**notations en rapport avec le coût des actions `Aᵢⱼ`**. Ces notations sont la
+charpente de toute la suite ; lisez-les avec soin.
+
+- **`k(eᵢ, eⱼ)`** est le **coût de l'action la moins chère** conduisant de `eᵢ` à
+  `eⱼ`, où `eⱼ` est un **successeur** de `eᵢ`. Plusieurs actions peuvent relier `eᵢ`
+  et `eⱼ` ; `k` retient la **moins coûteuse**.
+- **`k*(eᵢ, eⱼ)`** est le **coût de la séquence d'actions la moins chère**
+  conduisant de `eᵢ` à `eⱼ`. Ici `eⱼ` n'est plus nécessairement un successeur
+  direct : on considère un **chemin** entier, et `k*` en retient le coût minimal.
+- **`g(eᵢ) = k*(e₀, eᵢ)`** est le **coût de la séquence d'actions la moins chère
+  conduisant de l'état initial `e₀` à `eᵢ`**. C'est, en somme, le coût du
+  **meilleur chemin déjà parcouru** pour atteindre `eᵢ`.
+- **`h*(eᵢ) = min k*(eᵢ, e_f)`** pour `e_f ∈ F` est le **coût de la séquence
+  d'actions la moins chère conduisant de `eᵢ` à un état final**. C'est le coût du
+  **meilleur chemin restant** pour finir le problème depuis `eᵢ`.
+- **`f(eᵢ) = g(eᵢ) + h*(eᵢ)`** est le **coût de la séquence la moins chère allant
+  de l'état initial à un état final en passant par `eᵢ`**.
+
+| Notation | Signification | Ce qu'elle mesure |
+| --- | --- | --- |
+| `k(eᵢ, eⱼ)` | Coût de l'action la moins chère `eᵢ → eⱼ` (successeur direct) | Un **pas** |
+| `k*(eᵢ, eⱼ)` | Coût de la séquence la moins chère `eᵢ → eⱼ` | Un **chemin** |
+| `g(eᵢ) = k*(e₀, eᵢ)` | Coût optimal de `e₀` à `eᵢ` | Chemin **déjà parcouru** |
+| `h*(eᵢ) = min k*(eᵢ, e_f)` | Coût optimal de `eᵢ` à un état final | Chemin **restant** |
+| `f(eᵢ) = g(eᵢ) + h*(eᵢ)` | Coût optimal d'une solution passant par `eᵢ` | Solution **complète** |
+
+Une remarque essentielle : les fonctions `k*`, `g`, `h*` et `f` font intervenir des
+coûts **optimaux** (« la moins chère »). En pratique, on **ne connaît pas** la valeur
+exacte de `h*` — sinon le problème serait déjà résolu. C'est précisément pour cela
+qu'on a besoin d'une **heuristique `h`**, qui en fournit une **estimation** : `h` est
+une *approximation accessible* du coût restant idéal `h*`.
+
+## Les propriétés d'une « bonne » heuristique
+
+Toutes les fonctions `h : S → ℕ` ne se valent pas. Les **principales propriétés
+d'une « bonne » heuristique** sont les suivantes.
+
+### Heuristique coïncidente
+
+Une heuristique est **coïncidente** si **elle reconnaît les états finals**.
+Autrement dit :
+
+```
+∀ e_f ∈ F,   h(e_f) = 0
+```
+
+Une heuristique coïncidente attribue donc une valeur **nulle** à tout état final.
+C'est la traduction formelle de l'idée « `h` reconnaît le but » : sur un état final,
+l'estimation du chemin restant doit être zéro, puisqu'il n'y a plus rien à parcourir.
+
+### Heuristique consistante
+
+Une heuristique est **consistante** si, **pour toute paire d'états `eᵢ`, `eⱼ`**, on
+a :
+
+```
+h(eᵢ) − h(eⱼ) ≤ k*(eᵢ, eⱼ)
+```
+
+La consistance relie l'heuristique au coût des **chemins** : la baisse d'estimation
+entre deux états ne peut pas dépasser le coût optimal du chemin qui les relie.
+
+### Heuristique monotone
+
+Une heuristique est **monotone** si, **pour toute paire d'états `eᵢ`, `eⱼ` telle que
+`eⱼ` est un successeur de `eᵢ`**, on a :
+
+```
+h(eᵢ) − h(eⱼ) ≤ k(eᵢ, eⱼ)
+```
+
+La monotonie est l'analogue de la consistance, mais formulée sur un **seul pas** :
+en franchissant une action de `eᵢ` vers son successeur `eⱼ`, l'heuristique ne peut
+pas diminuer de plus que le coût de cette action.
+
+### Heuristique minorante (admissible)
+
+Une heuristique est **minorante** si elle **sous-estime systématiquement le coût du
+chemin restant à parcourir** :
+
+```
+h(e) ≤ h*(e)
+```
+
+Une heuristique minorante ne **surestime jamais** le coût qu'il reste à payer. On dit
+aussi qu'une telle heuristique est **admissible** : les deux termes — *minorante* et
+*admissible* — désignent la même propriété `h(e) ≤ h*(e)`.
+
+| Propriété | Condition | Idée |
+| --- | --- | --- |
+| Coïncidente | `h(e_f) = 0` pour tout `e_f ∈ F` | `h` reconnaît les états finals |
+| Consistante | `h(eᵢ) − h(eⱼ) ≤ k*(eᵢ, eⱼ)` (toute paire) | Cohérence le long des chemins |
+| Monotone | `h(eᵢ) − h(eⱼ) ≤ k(eᵢ, eⱼ)` (`eⱼ` successeur) | Cohérence à chaque pas |
+| Minorante (admissible) | `h(e) ≤ h*(e)` | `h` ne surestime jamais le coût restant |
+
+## Liens entre les propriétés
+
+Ces quatre propriétés ne sont pas indépendantes ; elles s'articulent entre elles.
+Deux résultats, que l'on peut **démontrer**, méritent d'être retenus :
+
+- **Une heuristique `h` est monotone si et seulement si elle est consistante.**
+  La monotonie (cohérence pas à pas) et la consistance (cohérence chemin par chemin)
+  sont en réalité **deux formulations équivalentes** de la même exigence.
+- **Si une heuristique est monotone et coïncidente, alors elle est minorante.**
+  Une heuristique cohérente à chaque pas et qui reconnaît les états finals
+  **sous-estime nécessairement** le coût restant : elle est donc admissible.
+
+Ces liens sont précieux en pratique : pour montrer qu'une heuristique est
+**minorante**, il suffit souvent de vérifier qu'elle est **coïncidente** et
+**monotone**, ce qui se fait pas par pas et peut être plus simple que de comparer
+directement `h` à `h*`.
+
+## Deux heuristiques classiques : le jeu du taquin
+
+Le **jeu du taquin** offre une illustration concrète de ces notions. Le taquin
+`3 × 3` est une grille de 3 lignes et 3 colonnes : une case est **vide**, les huit
+autres portent des nombres ; un mouvement échange la case vide avec une case voisine.
+Le but est de passer d'une configuration de départ à une configuration cible.
+
+Sur ce problème, on étudie souvent deux heuristiques :
+
+- **`h₁(eᵢ)` = le nombre de cases pleines mal placées** par rapport à l'objectif.
+  C'est la **distance de Hamming** entre l'état courant et l'état final : on compte
+  simplement combien de cases ne sont pas à leur place définitive.
+- **`h₂(eᵢ)` = la somme des distances entre les cases pleines mal placées et leurs
+  positions dans l'objectif.** C'est la **distance de Manhattan** : pour chaque case
+  mal placée, on additionne le nombre de déplacements horizontaux et verticaux
+  nécessaires pour la ramener à sa position cible.
+
+Ces deux fonctions valent **0** sur l'état final (aucune case mal placée) : elles
+sont donc **coïncidentes**. On peut également montrer qu'elles sont **monotones**, et
+donc — par les liens vus plus haut — **minorantes**. Elles constituent ainsi de
+bonnes heuristiques pour guider la recherche. On peut aussi définir une heuristique
+proche en comptant *le nombre de cases pleines qui ne sont pas sur la bonne colonne
+plus le nombre de cases pleines qui ne sont pas sur la bonne ligne* — la « bonne »
+ligne ou colonne étant celle de la case dans l'état final ; cette heuristique est,
+elle aussi, coïncidente, monotone et minorante.
+
+> ⚠️ Une heuristique n'est utile que si elle est **rapide à calculer** : compter des
+> cases mal placées est immédiat, alors que calculer le coût exact `h*` reviendrait
+> à résoudre le problème. C'est tout l'intérêt d'une heuristique : une estimation
+> *bon marché* d'une quantité *coûteuse*.
+
+## Pourquoi ces propriétés comptent
+
+À ce stade, on peut se demander à quoi servent ces propriétés. La réponse complète
+viendra avec l'algorithme **A\***, étudié dans la section suivante. Retenons
+simplement, pour l'instant, l'intuition :
+
+- une heuristique **coïncidente** garantit que les **états finals** sont bien
+  reconnus comme « parfaits » (`h = 0`) ;
+- une heuristique **monotone / consistante** garantit que les valeurs `h` varient de
+  façon **cohérente** d'un état au suivant, sans à-coups injustifiés ;
+- une heuristique **minorante** garantit que l'on ne **surestime jamais** le coût
+  restant — c'est cette propriété qui permettra à A\* de trouver une solution de
+  **coût minimal**.
+
+## Synthèse de la section
+
+La **recherche informée (guidée)** corrige le défaut de la recherche aveugle en
+**évaluant la qualité des états**. Cette évaluation repose sur une **heuristique**
+`h : S → ℕ` telle que *plus un état est proche d'un état final, plus `h(e)` est
+faible*. Le coût des actions se formalise par les notations `k`, `k*`, `g`, `h*` et
+`f = g + h*`. Une **bonne** heuristique possède des propriétés : **coïncidente**
+(`h(e_f) = 0`), **consistante**, **monotone**, et **minorante / admissible**
+(`h ≤ h*`) ; *monotone ⇔ consistante*, et *monotone + coïncidente ⇒ minorante*.
+
+> **À retenir** : une **heuristique** estime le coût restant — petite valeur = état
+> proche du but. Maîtrisez les coûts **`g`** (parcouru), **`h*`** (restant idéal),
+> **`f = g + h*`**, et les propriétés **coïncidente / consistante / monotone /
+> minorante** d'une bonne heuristique.

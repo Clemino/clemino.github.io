@@ -1,0 +1,320 @@
+[
+  {
+    "chapterSlug": "procedures-fonctions",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Une procédure PL/SQL peut renvoyer une valeur via une clause RETURN.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. Seule une FUNCTION a une clause RETURN. Une procédure peut renvoyer des valeurs via des paramètres OUT.",
+    "concepts": ["procedure", "fonction"]
+  },
+  {
+    "chapterSlug": "procedures-fonctions",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez l'en-tête d'une fonction qui calcule la TVA :",
+    "payload": {
+      "template": "CREATE OR {{kw1}} FUNCTION calcul_tva(p_ht IN NUMBER)\n{{kw2}} NUMBER\n{{kw3}}\n  v_tva NUMBER;\nBEGIN\n  v_tva := p_ht * 0.20;\n  {{kw4}} v_tva;\nEND;",
+      "slots": [
+        { "id": "kw1" },
+        { "id": "kw2" },
+        { "id": "kw3" },
+        { "id": "kw4" }
+      ]
+    },
+    "solution": { "answers": { "kw1": "REPLACE", "kw2": "RETURN", "kw3": ["IS", "AS"], "kw4": "RETURN" }, "caseSensitive": false },
+    "explanation": "Pattern : CREATE OR REPLACE FUNCTION ... RETURN type IS|AS ... BEGIN ... RETURN x; END;",
+    "concepts": ["fonction"]
+  },
+  {
+    "chapterSlug": "procedures-fonctions",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque mode de paramètre à son comportement.",
+    "payload": {
+      "left": [
+        { "id": "in", "label": "IN (par défaut)" },
+        { "id": "out", "label": "OUT" },
+        { "id": "inout", "label": "IN OUT" }
+      ],
+      "right": [
+        { "id": "ro", "label": "Lecture seule dans le corps, valeur fournie par l'appelant" },
+        { "id": "wo", "label": "Assignée dans le corps, lue par l'appelant après retour" },
+        { "id": "rw", "label": "Lecture et écriture, valeur fournie ET modifiable" }
+      ]
+    },
+    "solution": { "pairs": { "in": "ro", "out": "wo", "inout": "rw" } },
+    "explanation": "IN = read-only entrée. OUT = write-only sortie. IN OUT = bidirectionnel.",
+    "concepts": ["parametre-in-out"]
+  },
+  {
+    "chapterSlug": "procedures-fonctions",
+    "type": "PLSQL_PROCEDURE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Écris une procédure `appliquer_remise` qui prend un id de produit (`p_id IN NUMBER`) et un pourcentage (`p_pct IN NUMBER`), et met à jour le prix unitaire du produit avec une remise. Lève une exception si le pourcentage n'est pas dans [0, 50].",
+    "payload": {
+      "required": {
+        "kind": "PROCEDURE",
+        "name": "appliquer_remise",
+        "requiredKeywords": ["UPDATE", "Produit", "RAISE_APPLICATION_ERROR"]
+      }
+    },
+    "solution": { "code": "CREATE OR REPLACE PROCEDURE appliquer_remise(p_id IN NUMBER, p_pct IN NUMBER)\nIS\nBEGIN\n  IF p_pct < 0 OR p_pct > 50 THEN\n    RAISE_APPLICATION_ERROR(-20050, 'Remise hors plage [0, 50]');\n  END IF;\n  UPDATE Produit\n  SET prixUnitaire = prixUnitaire * (1 - p_pct / 100)\n  WHERE id = p_id;\nEND;" },
+    "explanation": "Validation du paramètre puis UPDATE avec la formule de remise.",
+    "concepts": ["procedure", "raise-application-error"]
+  },
+  {
+    "chapterSlug": "curseurs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle exception est levée si un SELECT INTO renvoie plus d'une ligne ?",
+    "payload": { "options": [
+      { "id": "a", "label": "NO_DATA_FOUND" },
+      { "id": "b", "label": "TOO_MANY_ROWS" },
+      { "id": "c", "label": "DUP_VAL_ON_INDEX" },
+      { "id": "d", "label": "INVALID_CURSOR" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "TOO_MANY_ROWS quand > 1 ligne. NO_DATA_FOUND quand 0 ligne.",
+    "concepts": ["curseur-implicite", "exception-predefinie"]
+  },
+  {
+    "chapterSlug": "curseurs",
+    "type": "PLSQL_BLOCK",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Écris un bloc anonyme qui parcourt tous les films de la table `film` (colonnes : `num_film`, `titre`, `annee`) et affiche chaque titre avec son année via `DBMS_OUTPUT.PUT_LINE`. Utilise une boucle FOR sur curseur.",
+    "payload": {
+      "required": {
+        "kind": "BLOCK",
+        "requiredKeywords": ["FOR", "IN", "film", "DBMS_OUTPUT"]
+      }
+    },
+    "solution": { "code": "BEGIN\n  FOR f IN (SELECT titre, annee FROM film) LOOP\n    DBMS_OUTPUT.PUT_LINE(f.titre || ' (' || f.annee || ')');\n  END LOOP;\nEND;" },
+    "explanation": "FOR ... IN (SELECT ...) LOOP : ouverture/fermeture automatiques. Accès aux colonnes via f.colonne.",
+    "concepts": ["curseur-for", "plsql-bloc"]
+  },
+  {
+    "chapterSlug": "curseurs",
+    "type": "PLSQL_PROCEDURE",
+    "difficulty": 4,
+    "points": 3,
+    "prompt": "Écris une procédure `top_n_clients` qui prend un `p_n IN NUMBER` et affiche les `n` clients ayant le plus grand chiffre d'affaires cumulé. Utilise un curseur explicite avec OPEN/FETCH/CLOSE manuels.",
+    "payload": {
+      "required": {
+        "kind": "PROCEDURE",
+        "name": "top_n_clients",
+        "requiredKeywords": ["CURSOR", "OPEN", "FETCH", "CLOSE", "EXIT WHEN", "%NOTFOUND"]
+      }
+    },
+    "solution": { "code": "CREATE OR REPLACE PROCEDURE top_n_clients(p_n IN NUMBER)\nIS\n  CURSOR c_top IS\n    SELECT id, nom, prenom, caCumule\n    FROM Client\n    ORDER BY caCumule DESC;\n  v_c c_top%ROWTYPE;\n  v_count NUMBER := 0;\nBEGIN\n  OPEN c_top;\n  LOOP\n    FETCH c_top INTO v_c;\n    EXIT WHEN c_top%NOTFOUND OR v_count >= p_n;\n    v_count := v_count + 1;\n    DBMS_OUTPUT.PUT_LINE(v_count || '. ' || v_c.nom || ' ' || v_c.prenom || ' : ' || v_c.caCumule);\n  END LOOP;\n  CLOSE c_top;\nEND;" },
+    "explanation": "Cycle complet curseur explicite : déclaration, ouverture, boucle FETCH avec %NOTFOUND, sortie, fermeture.",
+    "concepts": ["curseur-explicite", "curseur-attributs"]
+  },
+  {
+    "chapterSlug": "curseurs",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Mets dans l'ordre les attributs de curseur dans cet ordre d'utilisation typique :",
+    "payload": {
+      "items": [
+        { "id": "isopen", "label": "%ISOPEN — vérifier qu'il est ouvert avant FETCH" },
+        { "id": "found", "label": "%FOUND — vrai si la dernière FETCH a ramené une ligne" },
+        { "id": "rowcount", "label": "%ROWCOUNT — nombre de FETCH réalisés" },
+        { "id": "notfound", "label": "%NOTFOUND — vrai pour sortir de la boucle" }
+      ]
+    },
+    "solution": { "order": ["isopen", "found", "rowcount", "notfound"] },
+    "explanation": "Ordre logique : on vérifie l'état, puis on lit, on compte au fur et à mesure, et on sort.",
+    "concepts": ["curseur-attributs"]
+  },
+  {
+    "chapterSlug": "exceptions",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "WHEN OTHERS doit toujours être placé en dernier dans la section EXCEPTION.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "OTHERS attrape tout ce qui n'a pas matché les WHEN précédents. Mis en premier, il bloquerait les WHEN suivants.",
+    "concepts": ["exception-bloc"]
+  },
+  {
+    "chapterSlug": "exceptions",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la déclaration d'une exception personnalisée associée au code -20100 :",
+    "payload": {
+      "template": "DECLARE\n  e_stock EXCEPTION;\n  {{kw1}} EXCEPTION_INIT(e_stock, {{kw2}});",
+      "slots": [{ "id": "kw1" }, { "id": "kw2" }]
+    },
+    "solution": { "answers": { "kw1": "PRAGMA", "kw2": "-20100" }, "caseSensitive": false },
+    "explanation": "PRAGMA EXCEPTION_INIT(nom_exception, code_oracle) lie une exception nommée à un code SQLCODE.",
+    "concepts": ["exception-personnalisee"]
+  },
+  {
+    "chapterSlug": "exceptions",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle est la différence entre `RAISE` et `RAISE_APPLICATION_ERROR` ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Aucune, ce sont des alias" },
+      { "id": "b", "label": "RAISE relance une exception déjà déclarée, RAISE_APPLICATION_ERROR lève une erreur avec code/message arbitraire dans [-21000, -20000]" },
+      { "id": "c", "label": "RAISE termine la transaction, RAISE_APPLICATION_ERROR fait un rollback" },
+      { "id": "d", "label": "RAISE_APPLICATION_ERROR est obsolète" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "RAISE = lever une exception nommée (déclarée localement ou prédéfinie). RAISE_APPLICATION_ERROR(code, msg) = lever une erreur applicative ad-hoc.",
+    "concepts": ["raise-application-error", "exception-personnalisee"]
+  },
+  {
+    "chapterSlug": "exceptions",
+    "type": "PLSQL_BLOCK",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Écris un bloc anonyme qui insère un client (id 42, nom 'Dupont'). Si la PK est déjà prise (`DUP_VAL_ON_INDEX`), affiche 'Doublon ignoré' au lieu d'échouer.",
+    "payload": {
+      "required": {
+        "kind": "BLOCK",
+        "requiredKeywords": ["INSERT", "EXCEPTION", "DUP_VAL_ON_INDEX", "DBMS_OUTPUT"]
+      }
+    },
+    "solution": { "code": "BEGIN\n  INSERT INTO Client(id, nom) VALUES (42, 'Dupont');\nEXCEPTION\n  WHEN DUP_VAL_ON_INDEX THEN\n    DBMS_OUTPUT.PUT_LINE('Doublon ignoré');\nEND;" },
+    "explanation": "Capture l'exception prédéfinie DUP_VAL_ON_INDEX dans la section EXCEPTION du bloc.",
+    "concepts": ["exception-predefinie", "exception-bloc"]
+  },
+  {
+    "chapterSlug": "exceptions",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Quelles fonctions peut-on appeler dans un bloc EXCEPTION pour identifier l'erreur ?",
+    "payload": { "options": [
+      { "id": "a", "label": "SQLCODE — code numérique" },
+      { "id": "b", "label": "SQLERRM — message" },
+      { "id": "c", "label": "RAISE_APPLICATION_ERROR — sans paramètre" },
+      { "id": "d", "label": "DBMS_UTILITY.FORMAT_ERROR_STACK — pile d'erreurs détaillée" }
+    ]},
+    "solution": { "correct": ["a", "b", "d"] },
+    "explanation": "SQLCODE/SQLERRM donnent code et message ; FORMAT_ERROR_STACK donne la pile complète. RAISE_APPLICATION_ERROR sans paramètre n'a pas de sens.",
+    "concepts": ["sqlcode-sqlerrm"]
+  },
+  {
+    "chapterSlug": "packages",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Une variable globale déclarée dans la spec d'un package est :",
+    "payload": { "options": [
+      { "id": "a", "label": "Partagée entre toutes les sessions" },
+      { "id": "b", "label": "Persistante pour la durée de la session, et accessible depuis l'extérieur du package" },
+      { "id": "c", "label": "Locale au body, invisible depuis l'extérieur" },
+      { "id": "d", "label": "Stockée dans la base, comme une colonne" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "État de session : vit durant la session, accessible publiquement via package.var.",
+    "concepts": ["package"]
+  },
+  {
+    "chapterSlug": "packages",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Mets dans l'ordre les étapes de création d'un package PL/SQL :",
+    "payload": {
+      "items": [
+        { "id": "1", "label": "Concevoir l'interface publique (spec)" },
+        { "id": "2", "label": "Écrire CREATE PACKAGE nom IS ... END nom;" },
+        { "id": "3", "label": "Écrire CREATE PACKAGE BODY nom IS ... END nom;" },
+        { "id": "4", "label": "Tester via package.element(...)" }
+      ]
+    },
+    "solution": { "order": ["1", "2", "3", "4"] },
+    "explanation": "Concevoir l'interface → spec → body → test.",
+    "concepts": ["package", "package-body"]
+  },
+  {
+    "chapterSlug": "packages",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Une procédure déclarée dans le body mais pas dans la spec est inaccessible depuis l'extérieur du package.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Seuls les éléments déclarés dans la spec sont publics. Le reste du body est privé.",
+    "concepts": ["package", "package-body"]
+  },
+  {
+    "chapterSlug": "procedures-fonctions",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Quelle est la bonne pratique pour une procédure stockée concernant les transactions ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Toujours commiter à la fin pour garantir la persistance" },
+      { "id": "b", "label": "Ne pas faire de COMMIT/ROLLBACK : laisser l'appelant gérer la transaction" },
+      { "id": "c", "label": "Faire un ROLLBACK systématique en début" },
+      { "id": "d", "label": "Utiliser SET TRANSACTION READ ONLY au début" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Une procédure stockée doit déléguer la gestion de transaction à l'appelant, sauf via PRAGMA AUTONOMOUS_TRANSACTION pour les logs/audits.",
+    "concepts": ["procedure", "commit", "pragma-autonomous"]
+  },
+  {
+    "chapterSlug": "procedures-fonctions",
+    "type": "FILL_BLANK",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Complétez : déclare une procédure de log autonome qui valide indépendamment.",
+    "payload": {
+      "template": "CREATE OR REPLACE PROCEDURE log_event(p_msg VARCHAR2)\nIS\n  {{kw1}} AUTONOMOUS_TRANSACTION;\nBEGIN\n  INSERT INTO Log_Table VALUES (SYSDATE, p_msg);\n  {{kw2}};\nEND;",
+      "slots": [{ "id": "kw1" }, { "id": "kw2" }]
+    },
+    "solution": { "answers": { "kw1": "PRAGMA", "kw2": "COMMIT" }, "caseSensitive": false },
+    "explanation": "PRAGMA AUTONOMOUS_TRANSACTION déclare que la procédure exécute sa propre transaction indépendante.",
+    "concepts": ["pragma-autonomous", "commit"]
+  },
+  {
+    "chapterSlug": "curseurs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "L'instruction `EXECUTE IMMEDIATE` sert à :",
+    "payload": { "options": [
+      { "id": "a", "label": "Forcer un rafraîchissement de vue matérialisée" },
+      { "id": "b", "label": "Exécuter une requête SQL construite dynamiquement (chaîne)" },
+      { "id": "c", "label": "Lancer une procédure en mode autonome" },
+      { "id": "d", "label": "Optimiser une requête par EXPLAIN PLAN" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "EXECUTE IMMEDIATE r_req [INTO ...] [USING ...] = SQL dynamique en PL/SQL.",
+    "concepts": ["curseur-implicite"]
+  },
+  {
+    "chapterSlug": "exceptions",
+    "type": "PLSQL_PROCEDURE",
+    "difficulty": 4,
+    "points": 3,
+    "prompt": "Écris une fonction `safe_divide(a, b)` qui retourne `a / b`. Si `b = 0`, attrape `ZERO_DIVIDE` et retourne NULL au lieu d'échouer. Utilise un bloc EXCEPTION.",
+    "payload": {
+      "required": {
+        "kind": "FUNCTION",
+        "name": "safe_divide",
+        "returnType": "NUMBER",
+        "requiredKeywords": ["EXCEPTION", "ZERO_DIVIDE", "RETURN"]
+      }
+    },
+    "solution": { "code": "CREATE OR REPLACE FUNCTION safe_divide(a IN NUMBER, b IN NUMBER) RETURN NUMBER\nIS\nBEGIN\n  RETURN a / b;\nEXCEPTION\n  WHEN ZERO_DIVIDE THEN\n    RETURN NULL;\nEND;" },
+    "explanation": "Bloc EXCEPTION dans une fonction : on capture ZERO_DIVIDE et on retourne NULL au lieu de propager l'erreur.",
+    "concepts": ["fonction", "exception-predefinie", "exception-bloc"]
+  }
+]

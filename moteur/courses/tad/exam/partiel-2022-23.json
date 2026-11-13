@@ -1,0 +1,272 @@
+{
+  "slug": "partiel-2022-23",
+  "title": "Examen TAD — ING2 SIE — 12 mai 2023",
+  "durationMinutes": 120,
+  "totalPoints": 20,
+  "description": "Examen 2022-2023 : administration BDD (rôles, vues, salariés), PL/SQL (Cumul/Trigger/Procédure), BDD répartie (Data University 3 sites).",
+  "exercises": [
+    {
+      "chapterSlug": "utilisateurs-roles",
+      "type": "SQL_DDL",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "**I. Admin BDD · 1.a.** Créez deux utilisateurs Oracle : Dirk Projet (schéma `dproje`) et Gérard Reen (schéma `green`). Ils ont comme mot de passe leur nom de schéma.",
+      "payload": {
+        "requiredElements": [
+          { "kind": "keyword", "keyword": "CREATE USER", "description": "CREATE USER (×2)" },
+          { "kind": "keyword", "keyword": "dproje", "description": "Utilisateur dproje" },
+          { "kind": "keyword", "keyword": "green", "description": "Utilisateur green" },
+          { "kind": "keyword", "keyword": "IDENTIFIED BY", "description": "IDENTIFIED BY (×2)" }
+        ]
+      },
+      "solution": { "ddl": "CREATE USER dproje IDENTIFIED BY dproje;\nCREATE USER green IDENTIFIED BY green;" },
+      "explanation": "Deux CREATE USER avec IDENTIFIED BY = nom du schéma.",
+      "concepts": ["create-user"]
+    },
+    {
+      "chapterSlug": "utilisateurs-roles",
+      "type": "SQL_DDL",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "**I. Admin BDD · 1.b.** Créez les rôles : `ChefDivision` (tous les accès à toutes les tables Division, Projet, Service, Salarie, TravailleSur) et `ChefProjet` (consultation de toutes les tables + ajout/suppression de salariés à un projet via TravailleSur).",
+      "payload": {
+        "requiredElements": [
+          { "kind": "keyword", "keyword": "CREATE ROLE", "description": "CREATE ROLE (×2)" },
+          { "kind": "keyword", "keyword": "ChefDivision", "description": "Rôle ChefDivision" },
+          { "kind": "keyword", "keyword": "ChefProjet", "description": "Rôle ChefProjet" },
+          { "kind": "keyword", "keyword": "GRANT", "description": "Plusieurs GRANT" },
+          { "kind": "keyword", "keyword": "TravailleSur", "description": "Table TravailleSur" }
+        ]
+      },
+      "solution": { "ddl": "CREATE ROLE ChefDivision;\nGRANT SELECT, INSERT, UPDATE, DELETE ON DIVISION TO ChefDivision;\nGRANT SELECT, INSERT, UPDATE, DELETE ON PROJET TO ChefDivision;\nGRANT SELECT, INSERT, UPDATE, DELETE ON SERVICE TO ChefDivision;\nGRANT SELECT, INSERT, UPDATE, DELETE ON SALARIE TO ChefDivision;\nGRANT SELECT, INSERT, UPDATE, DELETE ON TravailleSur TO ChefDivision;\n\nCREATE ROLE ChefProjet;\nGRANT SELECT ON DIVISION TO ChefProjet;\nGRANT SELECT ON PROJET TO ChefProjet;\nGRANT SELECT ON SERVICE TO ChefProjet;\nGRANT SELECT ON SALARIE TO ChefProjet;\nGRANT SELECT, INSERT, DELETE ON TravailleSur TO ChefProjet;" },
+      "explanation": "ChefDivision = tous droits CRUD sur toutes tables. ChefProjet = SELECT partout + INSERT/DELETE sur TravailleSur (association salarié-projet).",
+      "concepts": ["role-oracle", "grant-revoke", "privilege-objet"]
+    },
+    {
+      "chapterSlug": "utilisateurs-roles",
+      "type": "SQL_DDL",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "**I. Admin BDD · 1.c.** Affectez les rôles aux utilisateurs : `green` reçoit `ChefDivision`, `dproje` reçoit `ChefProjet`.",
+      "payload": {
+        "requiredElements": [
+          { "kind": "keyword", "keyword": "GRANT", "description": "GRANT (×2)" },
+          { "kind": "keyword", "keyword": "ChefDivision", "description": "Rôle ChefDivision" },
+          { "kind": "keyword", "keyword": "green", "description": "Utilisateur green" },
+          { "kind": "keyword", "keyword": "ChefProjet", "description": "Rôle ChefProjet" },
+          { "kind": "keyword", "keyword": "dproje", "description": "Utilisateur dproje" }
+        ]
+      },
+      "solution": { "ddl": "GRANT ChefDivision TO green;\nGRANT ChefProjet TO dproje;" },
+      "explanation": "GRANT role TO user pour attribuer.",
+      "concepts": ["grant-revoke", "role-oracle"]
+    },
+    {
+      "chapterSlug": "utilisateurs-roles",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "**I. Admin BDD · 1.d.** Dirk Proje peut-il affecter des salariés de son projet à un service ?",
+      "payload": {
+        "rubric": [
+          { "id": "non", "description": "Répond NON", "keywords": ["non", "ne peut pas", "impossible", "interdit"], "weight": 2 },
+          { "id": "raison", "description": "Justifie par les privilèges du rôle ChefProjet", "keywords": ["ChefProjet", "UPDATE", "SELECT", "INSERT", "DELETE", "Salarie", "service"], "weight": 2 },
+          { "id": "trav", "description": "Mentionne TravailleSur vs Salarie/Service", "keywords": ["TravailleSur", "Salarie", "Service", "codeserv"], "weight": 1 }
+        ],
+        "minWords": 30
+      },
+      "solution": { "modelAnswer": "Non. Le rôle ChefProjet ne donne que SELECT sur la table Salarie et SELECT sur la table Service. Affecter un salarié à un service nécessite un UPDATE sur Salarie.codeserv, ce que ChefProjet ne permet pas. ChefProjet peut uniquement ajouter/supprimer des entrées dans TravailleSur (associations salarié↔projet)." },
+      "explanation": "ChefProjet n'a pas UPDATE sur Salarie, donc ne peut pas changer Salarie.codeserv.",
+      "concepts": ["privilege-objet", "role-oracle"]
+    },
+    {
+      "chapterSlug": "concurrence",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "**I. Admin BDD · 1.d (suite).** Dans une session, Dirk Proje est en train d'associer des salariés aux services. Dans une autre session, il vérifie que tous ces salariés travaillent sur le même projet. Peut-il voir, dans la 2e session, les affectations qu'il réalise dans la 1re session ?",
+      "payload": {
+        "rubric": [
+          { "id": "non", "description": "Répond NON", "keywords": ["non", "ne peut pas", "impossible"], "weight": 2 },
+          { "id": "isolation", "description": "Invoque l'isolation des transactions", "keywords": ["isolation", "ACID", "session", "transaction"], "weight": 2 },
+          { "id": "commit", "description": "Précise qu'il faut un COMMIT pour les voir", "keywords": ["COMMIT", "validation", "validée"], "weight": 1 }
+        ],
+        "minWords": 30
+      },
+      "solution": { "modelAnswer": "Non. Par la propriété d'isolation (le 'I' d'ACID), les transactions en cours d'une session ne sont pas visibles dans les autres sessions tant qu'elles ne sont pas validées par COMMIT. Dirk Proje devra donc commiter sa transaction de la 1re session pour que les nouvelles affectations apparaissent dans la 2e session." },
+      "explanation": "Isolation ACID : une transaction non commitée n'est pas visible des autres sessions.",
+      "concepts": ["acid-isolation", "commit"]
+    },
+    {
+      "chapterSlug": "vues",
+      "type": "SQL_DDL",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "**I. Admin BDD · 2.** Écrivez la vue `sal_Drag_MandMs` permettant de ne montrer que les salariés travaillant sur le projet de nom 'MandMs', appartenant à la division de nom 'Dragées' et installés dans le service '27'.",
+      "payload": {
+        "requiredElements": [
+          { "kind": "keyword", "keyword": "CREATE", "description": "CREATE" },
+          { "kind": "keyword", "keyword": "VIEW", "description": "VIEW" },
+          { "kind": "keyword", "keyword": "sal_Drag_MandMs", "description": "Nom de la vue" },
+          { "kind": "keyword", "keyword": "SALARIE", "description": "Table SALARIE" },
+          { "kind": "keyword", "keyword": "TRAVAILLESUR", "description": "Jointure via TRAVAILLESUR" },
+          { "kind": "keyword", "keyword": "PROJET", "description": "Table PROJET" },
+          { "kind": "keyword", "keyword": "DIVISION", "description": "Table DIVISION" },
+          { "kind": "keyword", "keyword": "SERVICE", "description": "Table SERVICE" },
+          { "kind": "keyword", "keyword": "MandMs", "description": "Filtre nom projet" },
+          { "kind": "keyword", "keyword": "Dragées", "description": "Filtre nom division" }
+        ]
+      },
+      "solution": { "ddl": "CREATE VIEW sal_Drag_MandMs AS\nSELECT S.*\nFROM SALARIE S\nJOIN TRAVAILLESUR T ON T.numsal = S.numsal\nJOIN PROJET P ON P.numproj = T.numproj\nJOIN DIVISION D ON D.codediv = P.codediv\nJOIN SERVICE SE ON SE.codeserv = S.codeserv\nWHERE P.nomproj = 'MandMs'\n  AND D.nomdiv = 'Dragées'\n  AND SE.codeserv = 27;" },
+      "explanation": "Jointure 5 tables : SALARIE-TRAVAILLESUR-PROJET-DIVISION-SERVICE. Filtres sur nom projet, nom division et code service.",
+      "concepts": ["vue-logique", "privilege-objet"]
+    },
+    {
+      "chapterSlug": "sequences",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "**II. PL/SQL · 1.** Rappeler comment les clés de certaines tables peuvent être générées automatiquement.",
+      "payload": {
+        "rubric": [
+          { "id": "seq", "description": "Mentionne la création d'une séquence", "keywords": ["CREATE SEQUENCE", "sequence", "NEXTVAL"], "weight": 2 },
+          { "id": "trig", "description": "Mentionne un trigger BEFORE INSERT", "keywords": ["trigger", "BEFORE INSERT", "FOR EACH ROW", ":new"], "weight": 2 },
+          { "id": "identity", "description": "Mentionne GENERATED AS IDENTITY (option moderne)", "keywords": ["GENERATED AS IDENTITY", "IDENTITY"], "weight": 1 }
+        ],
+        "minWords": 40
+      },
+      "solution": { "modelAnswer": "Pattern classique : on crée une séquence Oracle, puis un trigger BEFORE INSERT FOR EACH ROW qui assigne sequence.NEXTVAL à la PK de la nouvelle ligne.\n\n```sql\nCREATE SEQUENCE seq_salarie START WITH 1 INCREMENT BY 1;\n\nCREATE OR REPLACE TRIGGER trig_salarie_pk\nBEFORE INSERT ON SALARIE\nFOR EACH ROW\nBEGIN\n  :new.numsal := seq_salarie.NEXTVAL;\nEND;\n```\n\nDepuis Oracle 12c, on peut aussi utiliser GENERATED AS IDENTITY dans le CREATE TABLE pour avoir la même mécanique sans trigger explicite." },
+      "explanation": "Séquence + trigger BEFORE INSERT FOR EACH ROW, ou GENERATED AS IDENTITY (Oracle 12c+).",
+      "concepts": ["sequence", "trigger-row"]
+    },
+    {
+      "chapterSlug": "procedures-fonctions",
+      "type": "PLSQL_PROCEDURE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "**II. PL/SQL · 2.** Écrire une fonction `NbProjets` avec le numéro de matricule du salarié en paramètre, qui renvoie le nombre de projets sur lequel travaille ce salarié.",
+      "payload": {
+        "required": {
+          "kind": "FUNCTION",
+          "name": "NbProjets",
+          "returnType": "NUMBER",
+          "requiredKeywords": ["COUNT", "TRAVAILLESUR", "RETURN"]
+        }
+      },
+      "solution": { "code": "CREATE OR REPLACE FUNCTION NbProjets(p_numsal IN NUMBER) RETURN NUMBER\nIS\n  v_nb NUMBER;\nBEGIN\n  SELECT COUNT(*) INTO v_nb\n  FROM TRAVAILLESUR\n  WHERE numsal = p_numsal;\n  RETURN v_nb;\nEND;" },
+      "explanation": "Fonction simple : COUNT(*) sur TRAVAILLESUR filtré sur numsal, retour du compte.",
+      "concepts": ["fonction"]
+    },
+    {
+      "chapterSlug": "triggers",
+      "type": "PLSQL_TRIGGER",
+      "difficulty": 4,
+      "points": 2,
+      "prompt": "**II. PL/SQL · 3.** Écrire un trigger qui, lorsqu'on affecte un salarié à un projet (INSERT dans TRAVAILLESUR), vérifie que le projet est bien affecté à la division à laquelle appartient le salarié et remonte une erreur sinon.\n\nLe salarié est dans un service (SALARIE.codeserv → SERVICE.codediv) qui est dans une division. Le projet a son propre codediv (PROJET.codediv).",
+      "payload": {
+        "required": {
+          "timing": "BEFORE",
+          "events": ["INSERT"],
+          "table": "TRAVAILLESUR",
+          "forEachRow": true,
+          "requiredKeywords": [":new", "SELECT", "SALARIE", "PROJET", "SERVICE", "RAISE_APPLICATION_ERROR"]
+        }
+      },
+      "solution": { "code": "CREATE OR REPLACE TRIGGER trig_check_division\nBEFORE INSERT ON TRAVAILLESUR\nFOR EACH ROW\nDECLARE\n  v_div_sal NUMBER;\n  v_div_proj NUMBER;\nBEGIN\n  SELECT SE.codediv INTO v_div_sal\n  FROM SALARIE S\n  JOIN SERVICE SE ON SE.codeserv = S.codeserv\n  WHERE S.numsal = :new.numsal;\n\n  SELECT codediv INTO v_div_proj\n  FROM PROJET\n  WHERE numproj = :new.numproj;\n\n  IF v_div_sal != v_div_proj THEN\n    RAISE_APPLICATION_ERROR(-20040, 'Le projet n''appartient pas à la division du salarié');\n  END IF;\nEND;" },
+      "explanation": "Récupérer la division du salarié (via son service) et la division du projet. Si différentes, refuser l'affectation.",
+      "concepts": ["trigger", "raise-application-error"]
+    },
+    {
+      "chapterSlug": "procedures-fonctions",
+      "type": "PLSQL_PROCEDURE",
+      "difficulty": 4,
+      "points": 3,
+      "prompt": "**II. PL/SQL · 4.** Écrire une procédure `infoDivision` qui prend en entrée un code division et liste les projets qui lui sont soumis et, pour chacun, les salariés qui travaillent dessus.",
+      "payload": {
+        "required": {
+          "kind": "PROCEDURE",
+          "name": "infoDivision",
+          "params": [{ "mode": "IN" }],
+          "requiredKeywords": ["LOOP", "PROJET", "TRAVAILLESUR", "SALARIE", "DBMS_OUTPUT"]
+        }
+      },
+      "solution": { "code": "CREATE OR REPLACE PROCEDURE infoDivision(p_codediv IN NUMBER)\nIS\nBEGIN\n  FOR p IN (SELECT numproj, nomproj FROM PROJET WHERE codediv = p_codediv) LOOP\n    DBMS_OUTPUT.PUT_LINE('Projet ' || p.numproj || ' - ' || p.nomproj);\n    FOR s IN (\n      SELECT S.numsal, S.nomsal\n      FROM SALARIE S\n      JOIN TRAVAILLESUR T ON T.numsal = S.numsal\n      WHERE T.numproj = p.numproj\n    ) LOOP\n      DBMS_OUTPUT.PUT_LINE('  - ' || s.numsal || ' ' || s.nomsal);\n    END LOOP;\n  END LOOP;\nEND;" },
+      "explanation": "Double boucle FOR sur curseur : externe sur les projets de la division, interne sur les salariés affectés à chaque projet.",
+      "concepts": ["procedure", "curseur-for", "dbms-output"]
+    },
+    {
+      "chapterSlug": "fragmentation",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 4,
+      "points": 3,
+      "prompt": "**III. BDDR · 1.** Data University est présent sur 3 sites (Paris, Bordeaux, Lille). MLD : Formateur, Site, Inscrit, Formation, Module, FormationModule, FormationSession, InscriptionSession, Enseigne, Evaluation. Sur un site particulier, certains formateurs définissent et font évoluer les formations.\n\nProposez un modèle de bases de données réparties et justifiez.",
+      "payload": {
+        "rubric": [
+          { "id": "horiz-form", "description": "Fragmentation horizontale par site pour Formateur, Inscrit, FormationSession", "keywords": ["horizontale", "Formateur", "Inscrit", "FormationSession", "site", "idSite"], "weight": 3 },
+          { "id": "central-cat", "description": "Catalogue central (Formation/Module/FormationModule) sur un site", "keywords": ["central", "catalogue", "Formation", "Module", "site", "Paris"], "weight": 2 },
+          { "id": "replic", "description": "Réplication catalogue sur autres sites", "keywords": ["réplication", "replication", "matérialisée", "vue", "copie"], "weight": 2 },
+          { "id": "justif", "description": "Justification des choix", "keywords": ["80%", "local", "performance", "trafic"], "weight": 2 }
+        ],
+        "minWords": 100
+      },
+      "solution": { "modelAnswer": "**Architecture : 3 sites (Paris, Bordeaux, Lille), Paris servant de site maître pour le catalogue.**\n\n- **Formateur** : fragmentation horizontale par idSite (chaque formateur attaché à un site).\n- **Inscrit** : fragmentation horizontale par idSite.\n- **FormationSession** : fragmentation horizontale (chaque session est rattachée à un site via son idFS qui peut indiquer le site organisateur).\n- **InscriptionSession, Enseigne, Evaluation** : fragmentation horizontale, suivent la session (sur le site où la session a lieu).\n- **Site** : table de référence répliquée partout.\n\n**Catalogue central (Paris)** : Formation, Module, FormationModule sont définis/modifiés à Paris (les formateurs du site Paris ont les droits d'évolution). Sur Bordeaux et Lille, **vue matérialisée FAST ON COMMIT** depuis Paris pour avoir une copie locale en lecture.\n\n**Justification :** ~80% des requêtes sont locales (inscriptions, évaluations, gestion des formateurs du site). Le catalogue, surtout consulté en lecture, est répliqué pour éviter le trafic réseau. Les mises à jour rares (formations) restent centralisées à Paris pour la cohérence." },
+      "explanation": "Fragmentation horizontale sur les données locales + catalogue central répliqué par MV sur les autres sites.",
+      "concepts": ["fragmentation-horizontale", "replication", "vue-materialisee"]
+    },
+    {
+      "chapterSlug": "database-link",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "**III. BDDR · 2.** Que faut-il faire pour qu'un apprenant ou un formateur d'un site puisse accéder à la base de données sur un autre site ?",
+      "payload": {
+        "rubric": [
+          { "id": "link", "description": "Mentionne CREATE DATABASE LINK", "keywords": ["CREATE DATABASE LINK", "DATABASE LINK", "link"], "weight": 2 },
+          { "id": "usage", "description": "Mentionne l'usage table@lien", "keywords": ["@", "table@", "notation"], "weight": 2 },
+          { "id": "service", "description": "Mentionne le service Oracle Net", "keywords": ["USING", "service", "tnsnames"], "weight": 1 }
+        ],
+        "minWords": 30
+      },
+      "solution": { "modelAnswer": "Créer un database link sur le site demandeur, pointant vers la base du site cible :\n\n```sql\nCREATE DATABASE LINK db_paris\n  CONNECT TO user_distant IDENTIFIED BY pwd\n  USING 'paris_service';  -- nom du service défini dans tnsnames.ora\n```\n\nUne fois le lien créé, on requête la table distante avec la notation `table@nom_lien` :\n\n```sql\nSELECT * FROM Formateur@db_paris;\n```\n\nOracle gère la communication réseau de façon transparente." },
+      "explanation": "CREATE DATABASE LINK + usage table@lien.",
+      "concepts": ["database-link"]
+    },
+    {
+      "chapterSlug": "vues",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "**III. BDDR · 3.** Sur un site quelconque, les formateurs seront souvent amenés à afficher le catalogue de formation. Que préconisez-vous pour optimiser cette requête ?",
+      "payload": {
+        "rubric": [
+          { "id": "mv", "description": "Recommande une vue matérialisée locale", "keywords": ["matérialisée", "materialisée", "MATERIALIZED", "vue locale"], "weight": 3 },
+          { "id": "refresh", "description": "Précise le mode de rafraîchissement", "keywords": ["REFRESH", "FAST", "COMMIT", "périodique"], "weight": 2 },
+          { "id": "perf", "description": "Argument performance", "keywords": ["local", "performance", "trafic", "rapide"], "weight": 1 }
+        ],
+        "minWords": 40
+      },
+      "solution": { "modelAnswer": "Créer une vue matérialisée locale pour le catalogue sur chaque site, alimentée depuis le site maître Paris :\n\n```sql\nCREATE MATERIALIZED VIEW MV_Catalogue\n  REFRESH FAST ON COMMIT\n  AS SELECT * FROM Formation@db_paris;\n```\n\nAvec un MATERIALIZED VIEW LOG côté Paris, le rafraîchissement FAST ne propage que les changements. Le catalogue local est consulté sans aucun trafic réseau, ce qui rend l'affichage instantané. Si la fraîcheur immédiate n'est pas critique, on peut basculer sur un REFRESH START WITH ... NEXT ... pour rafraîchir une fois par nuit." },
+      "explanation": "Vue matérialisée locale rafraîchie depuis le site maître → accès local rapide.",
+      "concepts": ["vue-materialisee", "vue-rafraichissement", "replication"]
+    },
+    {
+      "chapterSlug": "creation-indexs",
+      "type": "RUBRIC_OPEN",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "**III. BDDR · 4.** Pourquoi n'indexe-t-on pas tous les champs d'une base de données ?",
+      "payload": {
+        "rubric": [
+          { "id": "ecriture", "description": "Coût en écriture (INSERT/UPDATE/DELETE plus lents)", "keywords": ["écriture", "ecriture", "INSERT", "UPDATE", "DELETE", "lent"], "weight": 2 },
+          { "id": "espace", "description": "Coût en espace disque", "keywords": ["espace", "disque", "stockage", "volume"], "weight": 1 },
+          { "id": "selectivite", "description": "Sélectivité faible inutile en B-tree", "keywords": ["sélectivité", "selectivite", "faible", "rentable"], "weight": 2 },
+          { "id": "lecture-rare", "description": "Colonnes rarement filtrées inutiles", "keywords": ["rarement", "rare", "WHERE", "filtrée"], "weight": 1 }
+        ],
+        "minWords": 50
+      },
+      "solution": { "modelAnswer": "Trois raisons principales. **(1) Coût en écriture** : chaque INSERT, UPDATE et DELETE doit aussi maintenir l'index — plus il y a d'index, plus les modifications sont lentes. Sur une base transactionnelle, c'est rédhibitoire. **(2) Coût en espace disque** : chaque index occupe son propre segment ; multiplier les index = doubler/tripler la volumétrie. **(3) Bénéfice nul sur certaines colonnes** : un B-tree sur une colonne à faible sélectivité (par exemple un booléen) n'apporte rien, et indexer une colonne jamais utilisée dans un WHERE ne sert à rien. On indexe donc sélectivement : clés primaires/étrangères, colonnes filtrées fréquemment, et seulement quand la sélectivité ou le type d'index (Bitmap) le justifie." },
+      "explanation": "Coût en écriture, espace disque, et bénéfice nul si sélectivité faible ou colonne jamais filtrée.",
+      "concepts": ["index-btree", "selectivite-index"]
+    }
+  ]
+}

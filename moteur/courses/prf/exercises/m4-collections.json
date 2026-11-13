@@ -1,0 +1,253 @@
+[
+  {
+    "chapterSlug": "hierarchie-collections",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle collection elimine naturellement les doublons ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Set"
+        },
+        {
+          "id": "b",
+          "label": "List"
+        },
+        {
+          "id": "c",
+          "label": "Vector"
+        },
+        {
+          "id": "d",
+          "label": "Tuple2"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "`Set` represente un ensemble sans doublons.",
+    "concepts": [
+      "set",
+      "collection"
+    ]
+  },
+  {
+    "chapterSlug": "hierarchie-collections",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "`Map.get(k)` renvoie une `Option`, ce qui oblige a traiter l'absence de cle.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "`get` renvoie `Some(v)` si la cle existe, sinon `None`.",
+    "concepts": [
+      "map-collection",
+      "option"
+    ]
+  },
+  {
+    "chapterSlug": "hierarchie-collections",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle structure immutable est generalement adaptee a l'acces indexe efficace ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Vector"
+        },
+        {
+          "id": "b",
+          "label": "List en acces au dernier element"
+        },
+        {
+          "id": "c",
+          "label": "Set non ordonne"
+        },
+        {
+          "id": "d",
+          "label": "Option"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "`Vector` est concu pour un acces indexe efficace en immutable.",
+    "concepts": [
+      "vector"
+    ]
+  },
+  {
+    "chapterSlug": "transformations",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle valeur est produite ?",
+    "payload": {
+      "program": "List(1, 2, 3, 4).filter(_ % 2 == 0).map(_ * 10)",
+      "language": "scala"
+    },
+    "solution": {
+      "expectedOutput": "List(20, 40)"
+    },
+    "explanation": "`filter` garde 2 et 4, puis `map` multiplie par 10.",
+    "concepts": [
+      "map-filter-flatmap"
+    ]
+  },
+  {
+    "chapterSlug": "transformations",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle valeur est produite ?",
+    "payload": {
+      "program": "List(1, 2).flatMap(x => List(x, x + 10))",
+      "language": "scala"
+    },
+    "solution": {
+      "expectedOutput": "List(1, 11, 2, 12)"
+    },
+    "explanation": "Chaque element donne une liste de deux elements, puis `flatMap` aplatit un niveau.",
+    "concepts": [
+      "map-filter-flatmap"
+    ]
+  },
+  {
+    "chapterSlug": "transformations",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle expression est equivalente a `xs.filter(p).map(f)` dans une comprehension `for` ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "`for x <- xs if p(x) yield f(x)`"
+        },
+        {
+          "id": "b",
+          "label": "`for x <- f if xs(x) yield p`"
+        },
+        {
+          "id": "c",
+          "label": "`xs.map(p).filter(f)`"
+        },
+        {
+          "id": "d",
+          "label": "`xs.reduce(f)`"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La garde `if` correspond a `filter`, et `yield` correspond a `map`.",
+    "concepts": [
+      "map-filter-flatmap"
+    ]
+  },
+  {
+    "chapterSlug": "folds-requetes-parallelisme",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle valeur est produite ?",
+    "payload": {
+      "program": "List(1, 2, 3).foldLeft(10)((acc, x) => acc - x)",
+      "language": "scala"
+    },
+    "solution": {
+      "expectedOutput": "4"
+    },
+    "explanation": "((10 - 1) - 2) - 3 = 4.",
+    "concepts": [
+      "fold"
+    ]
+  },
+  {
+    "chapterSlug": "folds-requetes-parallelisme",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quel risque porte `reduce` par rapport a `fold` ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il echoue sur une collection vide."
+        },
+        {
+          "id": "b",
+          "label": "Il ignore toujours le premier element."
+        },
+        {
+          "id": "c",
+          "label": "Il transforme en `Option` automatiquement."
+        },
+        {
+          "id": "d",
+          "label": "Il trie la collection."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "`reduce` n'a pas de valeur initiale.",
+    "concepts": [
+      "reduce"
+    ]
+  },
+  {
+    "chapterSlug": "folds-requetes-parallelisme",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quand `.par` est-il le plus defendable ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Travail independant, operation associative, collection assez grande."
+        },
+        {
+          "id": "b",
+          "label": "Effets de bord partages et ordre d'affichage important."
+        },
+        {
+          "id": "c",
+          "label": "Collection minuscule et operation constante."
+        },
+        {
+          "id": "d",
+          "label": "Calcul qui depend de chaque mutation precedente."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le parallelisme a un cout de coordination et exige des operations independantes.",
+    "concepts": [
+      "parallelism"
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+---
+title: "Invariants, terminaison et correction"
+slug: invariants-correction
+order: 3
+estimatedReadMin: 12
+concepts: [invariant-loop, termination, correction, complexity]
+source: "Complexite/cours_theorique-2-15.pdf; Complexite/serie1 (1) (1) (2).pdf"
+---
+## Prouver une boucle
+
+Un invariant est vrai avant la boucle, preserve par une iteration, et utile a la sortie. Il permet de relier le programme a la specification.
+
+## Terminaison
+
+Un variant decroit strictement dans un ensemble bien fonde, souvent les entiers naturels. Pour une boucle `while (i < n)`, `n - i` est un variant classique si `i` augmente.
+
+## Correction
+
+La correction partielle dit : si le programme termine, le resultat est bon. La terminaison dit : le programme termine. Ensemble, elles donnent la correction totale.
+
+## Application aux algorithmes du cours
+
+Selection, insertion, fusion, recherche sequentielle et dichotomique se prouvent par invariants sur les zones deja traitees.
+
+> **A retenir**  
+> Une preuve de correction est structuree : initialisation, preservation, utilisation finale, terminaison.

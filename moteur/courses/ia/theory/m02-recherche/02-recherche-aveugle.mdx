@@ -1,0 +1,214 @@
+---
+title: "Recherche aveugle : largeur et profondeur"
+slug: recherche-aveugle
+order: 2
+estimatedReadMin: 12
+concepts: [recherche-aveugle, parcours-en-largeur, parcours-en-profondeur, strategie-de-recherche, arbre-de-recherche]
+source: "Intro_IA_slides2.pdf"
+---
+
+## Parcourir l'arbre de recherche : la question de la stratégie
+
+La section précédente a montré que résoudre un problème revient à **construire un
+arbre de recherche**, et que l'algorithme général de construction laisse une
+question ouverte : *comment choisir, à chaque étape, la feuille que l'on va
+développer ?* La réponse à cette question est la **stratégie de recherche**.
+
+**Plusieurs stratégies existent pour parcourir l'arbre de recherche.** Cette section
+présente les **deux principales** stratégies dites *aveugles* — la recherche en
+**largeur d'abord** et la recherche en **profondeur d'abord** — puis explique
+pourquoi on les qualifie d'aveugles et quelles en sont les limites.
+
+> **À retenir** : la stratégie de recherche fixe l'**ordre** dans lequel les feuilles
+> de l'arbre sont développées ; les deux stratégies aveugles principales sont la
+> recherche en **largeur d'abord** et la recherche en **profondeur d'abord**.
+
+## La recherche en largeur d'abord
+
+La première stratégie est la **recherche en largeur d'abord**.
+
+Le principe est le suivant : **on visite d'abord la racine, ensuite tous ses
+successeurs, ensuite les successeurs de ses successeurs**, et ainsi de suite.
+Autrement dit, **les nœuds sont visités par « niveau »** : on n'attaque un niveau
+de l'arbre que lorsque le niveau précédent a été entièrement visité.
+
+Concrètement, pour l'arbre de recherche :
+
+- on visite la **racine** (niveau 0) ;
+- puis on visite **tous les nœuds du niveau 1** ;
+- puis **tous les nœuds du niveau 2** ;
+- etc.
+
+La recherche en largeur explore donc l'arbre **« en éventail »**, en élargissant
+progressivement la zone explorée autour de la racine. Tant qu'un niveau n'est pas
+épuisé, on ne descend pas au niveau suivant.
+
+## La recherche en profondeur d'abord
+
+La seconde stratégie est la **recherche en profondeur d'abord**.
+
+Le principe est différent : **après un nœud, on visite l'un de ses fils** (par
+exemple le plus à gauche) **avant de passer aux autres**. Il en résulte que l'on
+**pousse aussi loin que possible une branche**, et **on ne la quitte que lorsqu'elle
+s'arrête**.
+
+Concrètement :
+
+- depuis la racine, on descend dans un fils ;
+- depuis ce fils, on descend encore dans l'un de ses fils ;
+- on continue de descendre tant que c'est possible ;
+- lorsque la branche s'arrête (plus de successeurs), on **revient en arrière** vers
+  le dernier nœud ayant encore un fils non exploré, et on repart de là.
+
+La recherche en profondeur explore donc l'arbre **« en plongée »** : elle privilégie
+la descente le long d'une branche, quitte à revenir sur ses pas une fois cette
+branche épuisée.
+
+## Largeur ou profondeur : deux ordres de visite opposés
+
+Les deux stratégies parcourent **le même arbre**, mais dans un **ordre
+radicalement différent**. Considérons un petit arbre dont la racine `a₁` a trois
+fils `b₁, b₂, b₃`, et où chacun de ces fils a lui-même trois fils
+(`b₁ → c₁, c₂, c₃` ; `b₂ → c₄, c₅, c₆` ; `b₃ → c₇, c₈, c₉`).
+
+- En **profondeur d'abord**, les nœuds sont visités dans l'ordre :
+  `a₁, b₁, c₁, c₂, c₃, b₂, c₄, c₅, c₆, b₃, c₇, c₈, c₉` — on épuise toute la
+  descendance de `b₁` avant de toucher à `b₂`.
+- En **largeur d'abord**, les nœuds sont visités dans l'ordre :
+  `a₁, b₁, b₂, b₃, c₁, c₂, c₃, c₄, c₅, c₆, c₇, c₈, c₉` — on visite tout le niveau
+  des `b` avant tout nœud du niveau des `c`.
+
+| Aspect | Largeur d'abord | Profondeur d'abord |
+| --- | --- | --- |
+| Ordre de visite | Niveau par niveau | Branche par branche |
+| Façon d'explorer | « En éventail » autour de la racine | « En plongée » le long d'une branche |
+| Quand passe-t-on à autre chose ? | Quand le niveau courant est épuisé | Quand la branche courante s'arrête |
+| Structure de données associée | Une **file** | Une **pile** |
+
+## File et pile : traduire chaque parcours
+
+Chaque parcours peut s'**implémenter** très naturellement à l'aide d'une **structure
+de données** : une **file** pour la largeur d'abord, une **pile** pour la profondeur
+d'abord. La logique est, dans les deux cas, la même — on stocke les nœuds **à
+visiter** — mais l'ordre de sortie diffère.
+
+**Parcours en largeur d'abord — avec une file.** Une file fonctionne en
+**« premier entré, premier sorti »**.
+
+```
+Utilisation d'une file F.
+Ajouter la racine de l'arbre à la file.
+Tant que la file n'est pas vide
+    Visiter le nœud situé en tête de la file.
+    Supprimer la tête de la file.
+    Ajouter à la file les fils du nœud que l'on vient de visiter.
+```
+
+Comme les fils ajoutés passent **derrière** les nœuds déjà présents, ils ne seront
+visités qu'après eux : on obtient bien une visite **par niveau**.
+
+**Parcours en profondeur d'abord — avec une pile.** Une pile fonctionne en
+**« dernier entré, premier sorti »**.
+
+```
+Utilisation d'une pile P.
+Empiler la racine de l'arbre.
+Tant que la pile n'est pas vide
+    Visiter le nœud situé au sommet de la pile.
+    Dépiler.
+    Empiler les fils du nœud que l'on vient de visiter.
+```
+
+Comme les fils empilés passent **au-dessus** des autres, ils seront visités
+**immédiatement** : on plonge ainsi dans la branche courante avant de revenir aux
+nœuds plus anciens.
+
+## Pourquoi parle-t-on de recherche « aveugle » ?
+
+Ces deux types de recherche sont qualifiés d'**aveugles** car ils **n'utilisent
+aucune information concernant le problème** et **visitent tous les nœuds de
+l'arbre**. La stratégie ne tient compte ni de la proximité d'un état final, ni du
+coût des actions : elle se contente d'un ordre de parcours fixé d'avance (par niveau,
+ou par branche).
+
+Cette absence d'information a des **conséquences fâcheuses** :
+
+- **on visite les mêmes états plusieurs fois** : un même état du graphe, atteignable
+  par plusieurs chemins, réapparaît dans plusieurs branches de l'arbre ;
+- **il y a des boucles, des retours en arrière**, etc. : faute de détecter qu'un état
+  a déjà été rencontré, la recherche peut tourner en rond ;
+- **il en résulte des complexités spatiales et temporelles très élevées** : l'arbre
+  développé devient gigantesque.
+
+> ⚠️ Le mot **aveugle** n'est pas péjoratif au sens de « mauvais algorithme » : il
+> décrit le **manque d'information**. Une recherche aveugle finit par trouver une
+> solution si elle existe, mais elle peut développer un nombre d'états énorme avant
+> d'y parvenir.
+
+## L'explosion combinatoire : un coût qui devient inabordable
+
+Pour comprendre l'ampleur du problème, considérons un arbre **régulier** : il a `nb`
+**niveaux** et chaque nœud qui n'est pas une feuille a exactement `nf` **fils**. Le
+nombre total de nœuds de cet arbre est :
+
+```
+1 + nf + nf² + ... + nf^(nb-1) = (nf^nb − 1) / (nf − 1)
+```
+
+Ce nombre croît de façon **exponentielle** avec la profondeur `nb`. On peut alors
+caractériser le coût des deux parcours.
+
+**Recherche en profondeur d'abord :**
+
+- *complexité temporelle* — dans le **meilleur des cas**, le but est sur la
+  **première branche** visitée et la recherche s'arrête après avoir visité `nb`
+  nœuds (un par niveau) ; dans le **pire des cas**, le but est sur la **dernière
+  branche** et il faut visiter la **totalité** des nœuds, soit de l'ordre de
+  `O(nf^(nb−1))` ;
+- *complexité spatiale* — la pile ne contient que les nœuds **non encore visités
+  dont le père a déjà été visité** ; ce nombre est, au pire, de l'ordre de
+  `O(nb × nf)`.
+
+**Recherche en largeur d'abord :**
+
+- *complexité temporelle* — dans le **meilleur des cas**, le but est le **premier
+  nœud visité de son niveau**, et il faut visiter tous les nœuds des `nb − 1`
+  premiers niveaux plus un seul du dernier ; dans le **pire des cas**, il faut
+  visiter la totalité des nœuds, soit de l'ordre de `O(nf^(nb−1))` ;
+- *complexité spatiale* — la file peut contenir jusqu'à un **niveau entier** de
+  l'arbre, ce qui est de l'ordre de `O(nf^nb)`.
+
+| Stratégie | Complexité temporelle (pire cas) | Complexité spatiale |
+| --- | --- | --- |
+| Profondeur d'abord | `O(nf^(nb−1))` | `O(nb × nf)` |
+| Largeur d'abord | `O(nf^(nb−1))` | `O(nf^nb)` |
+
+La leçon est claire : les deux parcours ont une **complexité temporelle
+exponentielle** dans le pire des cas. La profondeur d'abord est en revanche
+**beaucoup plus économe en mémoire** que la largeur d'abord, qui doit conserver un
+niveau entier de l'arbre. Cette **explosion combinatoire** rend la recherche aveugle
+**inabordable** dès que le problème devient un peu grand.
+
+## Vers la recherche informée
+
+Le constat de cette section motive la suite du module. Puisque la recherche aveugle
+souffre de **complexités spatiales et temporelles très élevées**, faute d'utiliser
+la moindre information sur le problème, il faut un **nouveau type de recherche** —
+une recherche qui **exploite une information** sur la qualité des états pour
+**privilégier les bons états et éviter les autres**. C'est l'objet de la section
+suivante, consacrée à la **recherche informée** et aux **heuristiques**.
+
+## Synthèse de la section
+
+La **stratégie de recherche** fixe l'ordre dans lequel l'arbre est exploré. Les deux
+stratégies **aveugles** principales sont la recherche en **largeur d'abord** (visite
+par niveau, implémentée avec une **file**) et la recherche en **profondeur d'abord**
+(plongée le long d'une branche, implémentée avec une **pile**). On les dit
+**aveugles** parce qu'elles n'utilisent **aucune information** sur le problème :
+elles revisitent les mêmes états, bouclent, et souffrent de **complexités spatiale
+et temporelle très élevées** — une **explosion combinatoire** exponentielle.
+
+> **À retenir** : **largeur d'abord = file, par niveau** ; **profondeur d'abord =
+> pile, par branche**. Les deux sont **aveugles** (aucune information sur le
+> problème) et subissent une **explosion combinatoire** — d'où la nécessité d'une
+> recherche **informée**.

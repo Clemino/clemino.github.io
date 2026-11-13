@@ -1,0 +1,265 @@
+---
+title: "Variables de condition : pthread_cond"
+slug: conditions
+order: 4
+estimatedReadMin: 19
+concepts: [variable-condition, attente-active, cond-init, pthread-cond-wait, pthread-cond-signal, pthread-cond-broadcast, predicat-while, reveil-parasite, mutex-condition-couple, producteur-consommateur]
+source: "Cours 4 — Les threads POSIX (complété par TP5)"
+---
+
+Le mutex du chapitre 3 répond à une question : *« comment empêcher deux threads d'accéder en même temps à une donnée ? »*. Mais il ne répond **pas** à une autre question, tout aussi fréquente : *« comment faire **attendre** un thread qu'une **condition** devienne vraie ? »* — par exemple, attendre qu'une file **non vide** contienne un élément. La **variable de condition** est l'outil POSIX conçu exactement pour cela.
+
+## Le problème : attendre une condition
+
+Imaginons un thread « consommateur » qui doit retirer un élément d'une file partagée. Si la file est **vide**, il doit **attendre** qu'un thread « producteur » y dépose quelque chose. Comment programmer cette attente ?
+
+La **mauvaise** solution, qui vient spontanément à l'esprit, est l'**attente active** (*busy waiting*) — boucler en testant la condition :
+
+```c
+/* MAUVAIS : attente active, gaspille le processeur */
+while (file_est_vide()) {
+    /* on ne fait rien... mais on boucle a pleine vitesse ! */
+}
+```
+
+C'est une faute. Ce thread **consomme 100 % d'un cœur** du processeur à ne **rien faire d'utile** : il interroge la condition des millions de fois par seconde. Sur une machine multi-cœurs, il **vole** du temps de calcul aux autres threads — y compris au producteur dont il attend justement le travail.
+
+Ce qu'il faudrait, c'est **endormir** le thread (lui retirer tout temps processeur) tant que la condition est fausse, et le **réveiller** précisément quand un autre thread l'a rendue vraie. C'est exactement le service de la **variable de condition**.
+
+## Qu'est-ce qu'une variable de condition ?
+
+> Une **variable de condition** est un objet de synchronisation permettant à un ou plusieurs threads de **s'endormir** en attendant qu'une **condition** (un prédicat sur des données partagées) devienne vraie, et à un autre thread de les **réveiller** lorsqu'il a modifié ces données.
+
+Le type est **`pthread_cond_t`**, déclaré dans `<pthread.h>`. Une variable de condition est **toujours associée à un mutex** : c'est une règle fondamentale, on y revient en détail plus bas. Le couple **(mutex + variable de condition)** protège **et** synchronise la même donnée partagée.
+
+Une variable de condition **ne contient aucune valeur** et **ne mémorise rien**. Ce n'est ni un compteur, ni un drapeau. C'est uniquement un **point de rendez-vous** où des threads peuvent attendre et être réveillés. La « condition » réelle (file vide ? file pleine ?) est, elle, exprimée par **vos propres variables partagées** — la variable de condition ne fait que **gérer l'attente** autour de ce prédicat.
+
+## Créer une variable de condition
+
+Comme un mutex, une variable de condition s'initialise de **deux façons**.
+
+### Initialisation statique
+
+Pour une variable de condition globale :
+
+```c
+#include <pthread.h>
+
+pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+```
+
+`PTHREAD_COND_INITIALIZER` initialise la variable de condition avec les attributs par défaut, dès la compilation.
+
+### Initialisation dynamique et destruction
+
+```c
+#include <pthread.h>
+
+int pthread_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr);
+int pthread_cond_destroy(pthread_cond_t *cond);
+```
+
+- `pthread_cond_init` initialise une variable de condition ; `attr` vaut `NULL` pour les attributs par défaut.
+- `pthread_cond_destroy` libère ses ressources ; aucun thread ne doit être en attente dessus au moment de la destruction.
+
+Les deux renvoient **`0`** en cas de succès, un **code d'erreur** sinon.
+
+## Les trois opérations
+
+Une variable de condition se manipule par **trois fonctions** : une pour **attendre**, deux pour **réveiller**.
+
+### Attendre : `pthread_cond_wait`
+
+```c
+#include <pthread.h>
+
+int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex);
+```
+
+C'est la fonction la plus importante — et la plus subtile — de tout le chapitre. Le thread appelant **doit déjà tenir le mutex** `mutex` au moment de l'appel. `pthread_cond_wait` effectue alors **trois actions, dont les deux premières sont indissociables (atomiques)** :
+
+1. elle **libère le mutex** `mutex` ;
+2. elle **endort** le thread appelant sur la variable de condition `cond` ;
+
+ces deux actions ont lieu **de façon atomique** — c'est le point capital, expliqué juste après. Puis, **plus tard**, quand le thread est réveillé :
+
+3. elle **re-verrouille le mutex** `mutex` **avant** de revenir.
+
+Autrement dit : `pthread_cond_wait` **rend** le mutex pendant qu'elle dort, et le **reprend** avant de rendre la main. Quand `pthread_cond_wait` revient, le thread **tient de nouveau le mutex**, exactement comme avant l'appel.
+
+> ⚠️ **Pourquoi la libération du mutex et l'endormissement doivent être atomiques.** Supposons qu'ils ne le soient pas : le thread déverrouille le mutex, puis — *avant* d'avoir eu le temps de s'endormir — l'ordonnanceur donne la main au producteur. Le producteur rend la condition vraie et appelle `pthread_cond_signal` pour réveiller… un thread qui **n'est pas encore endormi**. Le signal de réveil est **perdu**. Le consommateur s'endort **ensuite**, et **personne ne le réveillera jamais** : le thread est figé. En réalisant la libération du mutex **et** l'endormissement **en un seul geste indivisible**, `pthread_cond_wait` ferme cette fenêtre de course : il est **impossible** qu'un réveil arrive « entre » les deux.
+
+### Réveiller : `pthread_cond_signal` et `pthread_cond_broadcast`
+
+```c
+#include <pthread.h>
+
+int pthread_cond_signal(pthread_cond_t *cond);     /* reveille UN thread     */
+int pthread_cond_broadcast(pthread_cond_t *cond);  /* reveille TOUS les threads */
+```
+
+- **`pthread_cond_signal`** réveille **au moins un** thread parmi ceux qui sont endormis sur `cond`. S'il y en a plusieurs, **on ne sait pas lequel** sera réveillé ; s'il n'y en a aucun, l'appel n'a **aucun effet** (le « signal » n'est pas mémorisé).
+- **`pthread_cond_broadcast`** réveille **tous** les threads endormis sur `cond`.
+
+On utilise `signal` quand **un seul** thread en attente peut traiter l'événement (par exemple : un seul élément a été produit, un seul consommateur suffit). On utilise `broadcast` quand **plusieurs** threads peuvent ou doivent réagir (par exemple : un changement d'état global, ou un doute sur le nombre de threads à réveiller). En cas d'hésitation, `broadcast` est le **choix sûr** : réveiller un thread de trop n'est pas grave (il re-testera le prédicat et se rendormira), alors que **ne pas réveiller** un thread qui aurait dû l'être provoque un blocage.
+
+Les trois fonctions renvoient **`0`** en cas de succès, un **code d'erreur** sinon.
+
+## La règle absolue : tester le prédicat dans un `while`
+
+Voici le **point d'examen** par excellence du chapitre. `pthread_cond_wait` doit **toujours** être appelée à l'intérieur d'une **boucle `while`** qui teste le **prédicat** :
+
+```c
+pthread_mutex_lock(&mutex);
+while (! condition_attendue) {       /* WHILE, jamais if */
+    pthread_cond_wait(&cond, &mutex);
+}
+/* ici : on tient le mutex ET la condition est VRAIE */
+/* ... traitement ... */
+pthread_mutex_unlock(&mutex);
+```
+
+Il y a **deux raisons** distinctes — toutes deux impératives — d'utiliser `while` et **non** `if`.
+
+### Raison 1 : les réveils parasites
+
+> ⚠️ **Les réveils parasites** (*spurious wakeups*). La norme POSIX autorise explicitement `pthread_cond_wait` à **revenir spontanément**, **sans** qu'aucun `signal` ni `broadcast` n'ait été émis. C'est un comportement **permis et imprévisible** des implémentations. Si l'on utilisait `if`, un réveil parasite ferait sortir le thread de l'attente alors que la condition est **toujours fausse** — et le code traiterait une situation invalide (par exemple, retirer un élément d'une file vide). Avec **`while`**, après tout réveil le prédicat est **re-testé** : s'il est encore faux, le thread **se rendort** simplement. Le `while` rend le code **immunisé** contre les réveils parasites.
+
+### Raison 2 : la condition peut redevenir fausse
+
+Même sans réveil parasite, `while` reste nécessaire. Entre le moment où un thread est **réveillé** par `signal` et le moment où il **re-verrouille le mutex** et reprend la main, **un autre thread** réveillé en même temps a pu **s'emparer** de la ressource. Exemple : le producteur dépose **un** élément et fait `broadcast` ; **trois** consommateurs se réveillent ; le premier prend l'élément, mais les **deux autres** trouvent la file de nouveau **vide**. Avec `while`, ces deux-là re-testent le prédicat, le voient faux, et se **rendorment** — correct. Avec `if`, ils tenteraient de consommer un élément **inexistant**.
+
+> ⚠️ **Retenez la règle sans exception : `pthread_cond_wait` se place TOUJOURS dans une boucle `while (! prédicat)`, jamais dans un simple `if`.** C'est l'erreur n°1 des débutants avec les variables de condition, et un piège classique des sujets d'examen.
+
+## Pourquoi un mutex est indispensable
+
+La variable de condition est **toujours** couplée à un mutex. Ce n'est pas une lourdeur arbitraire : c'est ce qui rend le mécanisme **correct**.
+
+Le prédicat (« la file est vide ») porte sur des **données partagées**. Or, comme on l'a vu au chapitre 2, **lire ou modifier** une donnée partagée est une **section critique** : il faut un mutex. Le **même** mutex doit donc protéger :
+
+- le **test** du prédicat (`while (! condition)`) côté thread en attente ;
+- la **modification** des données qui rend le prédicat vrai côté thread qui réveille.
+
+Le schéma symétrique complet est le suivant :
+
+```text
+  THREAD EN ATTENTE                      THREAD QUI REVEILLE
+  ------------------                     -------------------
+  lock(mutex)                            lock(mutex)
+  while (! predicat)                     /* modifie les donnees partagees */
+      cond_wait(cond, mutex)             /*    -> le predicat devient vrai */
+  /* predicat vrai : on agit */          cond_signal(cond)   (ou broadcast)
+  unlock(mutex)                          unlock(mutex)
+```
+
+Côté thread qui réveille, on **modifie la donnée** puis on **émet le signal**, le tout **sous le mutex**. (Émettre le `signal` sous le mutex tenu est le schéma le plus sûr et le plus simple à raisonner.) Côté thread en attente, `pthread_cond_wait` s'occupe de **libérer** le mutex pendant le sommeil et de le **reprendre** au réveil — c'est pourquoi le test `while` et le traitement encadrent un `cond_wait` qui, lui, « rend puis reprend » le verrou de façon transparente.
+
+## L'exemple de référence : producteur / consommateur
+
+Le motif **producteur / consommateur** est l'application canonique des variables de condition (il figure aussi au TP5). Un thread **producteur** dépose des éléments dans une **file partagée** ; un thread **consommateur** les retire. Deux conditions doivent être respectées :
+
+- le consommateur ne retire **pas** d'élément si la file est **vide** → il **attend** ;
+- (si la file est bornée) le producteur n'ajoute **pas** d'élément si la file est **pleine** → il attend.
+
+Voici une version complète et correcte, avec un tampon **circulaire borné** protégé par **un mutex** et synchronisé par **deux variables de condition** — l'une pour « non vide », l'autre pour « non plein » :
+
+```c
+#include <pthread.h>
+#include <stdio.h>
+#include <unistd.h>
+
+#define TAILLE 8           /* capacite du tampon circulaire */
+#define N      20          /* nombre d'elements a produire   */
+
+int  tampon[TAILLE];
+int  nb = 0;               /* nombre d'elements presents     */
+int  tete = 0, queue = 0;  /* indices de lecture / ecriture  */
+
+pthread_mutex_t mutex     = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t  non_plein = PTHREAD_COND_INITIALIZER;   /* il reste de la place */
+pthread_cond_t  non_vide  = PTHREAD_COND_INITIALIZER;   /* il y a un element    */
+
+void *producteur(void *arg) {
+    (void) arg;
+    for (int i = 0; i < N; i++) {
+        pthread_mutex_lock(&mutex);
+        while (nb == TAILLE)                    /* WHILE : tampon plein   */
+            pthread_cond_wait(&non_plein, &mutex);
+
+        tampon[queue] = i;                      /* depot dans le tampon   */
+        queue = (queue + 1) % TAILLE;
+        nb++;
+        printf("Produit %d (tampon : %d/%d)\n", i, nb, TAILLE);
+
+        pthread_cond_signal(&non_vide);         /* reveille un consommateur */
+        pthread_mutex_unlock(&mutex);
+    }
+    return NULL;
+}
+
+void *consommateur(void *arg) {
+    (void) arg;
+    for (int i = 0; i < N; i++) {
+        pthread_mutex_lock(&mutex);
+        while (nb == 0)                         /* WHILE : tampon vide    */
+            pthread_cond_wait(&non_vide, &mutex);
+
+        int valeur = tampon[tete];              /* retrait du tampon      */
+        tete = (tete + 1) % TAILLE;
+        nb--;
+        printf("        Consomme %d (tampon : %d/%d)\n", valeur, nb, TAILLE);
+
+        pthread_cond_signal(&non_plein);        /* reveille le producteur */
+        pthread_mutex_unlock(&mutex);
+    }
+    return NULL;
+}
+
+int main(void) {
+    pthread_t prod, cons;
+
+    pthread_create(&prod, NULL, producteur, NULL);
+    pthread_create(&cons, NULL, consommateur, NULL);
+
+    pthread_join(prod, NULL);
+    pthread_join(cons, NULL);
+
+    pthread_mutex_destroy(&mutex);
+    pthread_cond_destroy(&non_plein);
+    pthread_cond_destroy(&non_vide);
+    return 0;
+}
+```
+
+Analysons ce code, qui contient **tous** les points clés du chapitre :
+
+- **un seul mutex** protège **toutes** les données partagées (`tampon`, `nb`, `tete`, `queue`) ;
+- **deux variables de condition**, une par attente : `non_vide` (le consommateur attend un élément), `non_plein` (le producteur attend de la place) ;
+- chaque `pthread_cond_wait` est dans une boucle **`while`** qui teste le prédicat (`nb == TAILLE` pour « plein », `nb == 0` pour « vide ») ;
+- celui qui **modifie** la donnée **réveille** ensuite l'autre : le producteur, ayant ajouté un élément, signale `non_vide` ; le consommateur, ayant libéré une place, signale `non_plein` ;
+- toute la séquence — test, modification, signal — se déroule **sous le mutex**, et `pthread_cond_wait` libère puis reprend ce mutex de façon atomique pendant l'attente.
+
+Ce programme ne fait **aucune attente active** : un thread bloqué sur `pthread_cond_wait` est **réellement endormi** et ne consomme **aucun temps processeur** tant qu'il n'est pas réveillé. C'est tout l'avantage de la variable de condition sur la boucle `while` à vide du début du chapitre.
+
+## Variable de condition ou sémaphore ?
+
+La variable de condition n'est pas le seul outil pour faire attendre un thread : le **sémaphore** (chapitre 5) le permet aussi. Les deux mécanismes se recoupent en partie ; les distinguer aide à choisir le bon outil :
+
+| Aspect | Variable de condition | Sémaphore |
+|---|---|---|
+| Mémorise-t-elle l'événement ? | **non** — un `signal` sans attendeur est perdu | **oui** — `sem_post` incrémente un compteur durable |
+| Mutex associé | **obligatoire** (couple mutex + cond) | **non**, le sémaphore se suffit à lui-même |
+| Test du prédicat | explicite, par le programmeur (`while`) | implicite, encodé dans la valeur du compteur |
+| Usage typique | attendre une condition **arbitraire** sur des données partagées | compter des **ressources** disponibles, jalons de synchronisation |
+
+En première approche : la variable de condition convient quand la **condition est complexe** et porte sur **vos** structures de données ; le sémaphore convient quand on **compte** des unités d'une ressource. Le chapitre suivant développe le sémaphore.
+
+> **À retenir**
+> - L'**attente active** (boucler en testant une condition) est une **faute** : elle gaspille un cœur du processeur. Il faut **endormir** le thread et le **réveiller** au bon moment.
+> - Une **variable de condition** (`pthread_cond_t`) permet à des threads de **s'endormir** en attendant qu'un **prédicat** devienne vrai, et à un autre thread de les **réveiller**. Elle **ne mémorise rien** : c'est un simple point de rendez-vous.
+> - Elle s'initialise par `PTHREAD_COND_INITIALIZER` (statique) ou `pthread_cond_init` (dynamique) ; elle est **toujours couplée à un mutex**.
+> - **`pthread_cond_wait(&cond, &mutex)`** : le thread doit **tenir le mutex** ; la fonction **libère le mutex** et **endort** le thread **de façon atomique**, puis **re-verrouille le mutex** avant de revenir.
+> - Cette atomicité « libérer + s'endormir » est essentielle : sans elle, un réveil émis entre les deux serait **perdu** et le thread dormirait pour toujours.
+> - **`pthread_cond_signal`** réveille **un** thread en attente, **`pthread_cond_broadcast`** les réveille **tous** ; un réveil émis sans attendeur est **perdu** (non mémorisé).
+> - **Règle absolue** : `pthread_cond_wait` se place **toujours** dans une boucle **`while (! prédicat)`**, jamais dans un `if` — à cause des **réveils parasites** (autorisés par POSIX) **et** parce que la condition peut redevenir fausse avant le réveil effectif.
+> - Le motif **producteur / consommateur** est l'application de référence : **un mutex** protège la file, des **variables de condition** synchronisent « non vide » et « non plein ».

@@ -1,0 +1,30 @@
+---
+title: "Franchissement et sequences"
+slug: franchissement-sequences
+order: 2
+estimatedReadMin: 14
+concepts: [firing, firing-sequence, marking, deadlock]
+source: "Petri net/UP2-2-RdP-slides.pdf; Petri net/mcar_cours2_ReseauxDePetri.2x1.pdf"
+---
+## Transition franchissable
+
+Une transition `t` est franchissable si chaque place d'entree `p` contient au moins `Pre(p,t)` jetons.
+
+## Franchir
+
+Le tir de `t` consomme les jetons des places d'entree puis produit les jetons des places de sortie.
+
+```text
+M'(p) = M(p) - Pre(p,t) + Post(p,t)
+```
+
+## Sequence de tir
+
+Une sequence `t1 t2 t3` est valide seulement si chaque transition est franchissable dans le marquage obtenu apres les tirs precedents.
+
+## Blocage
+
+Un marquage bloque est un marquage ou aucune transition n'est franchissable. Un blocage atteignable signale souvent une erreur de synchronisation.
+
+> **A retenir**  
+> Verifie les transitions une par une sur le marquage courant, jamais seulement sur le marquage initial.

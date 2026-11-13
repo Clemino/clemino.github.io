@@ -1,0 +1,224 @@
+---
+title: "Processus zombies et orphelins"
+slug: zombies-orphelins
+order: 5
+estimatedReadMin: 13
+concepts: [zombie, orphelin, processus-init, wait, waitpid, statut-terminaison, processus-parent, processus-enfant]
+source: "Cours 1 — Systèmes d'exploitation et processus"
+---
+
+Le chapitre précédent a présenté `wait` : le père récupère son fils terminé et libère ses ressources. Mais que se passe-t-il quand cette récupération **n'a pas lieu**, ou quand le **père disparaît avant le fils** ? Deux situations apparaissent : les processus **zombies** et les processus **orphelins**. Les comprendre est indispensable pour écrire des programmes système corrects.
+
+## Le cycle de vie : terminaison et récupération
+
+La terminaison d'un processus UNIX se fait en **deux temps**, et non en un seul :
+
+1. **Le processus se termine** — il appelle `exit` (ou exécute le `return` de `main`, ou est tué par un signal). Il rend alors ses ressources « lourdes » : sa mémoire (segments de code, données, tas, pile), ses fichiers ouverts. Il **cesse de s'exécuter**.
+2. **Le père récupère le fils** — par un appel à `wait` ou `waitpid`. Le système remet alors au père le **statut de terminaison** du fils, puis **efface définitivement** le fils de la **table des processus**.
+
+Entre ces deux étapes, le fils est dans un état particulier. Le système doit en effet **conserver** son statut de terminaison (code de retour, signal éventuel) **jusqu'à ce que le père vienne le lire** — sinon cette information serait perdue. Le processus terminé mais non encore récupéré occupe donc une **entrée résiduelle** dans la table des processus : c'est un **zombie**.
+
+## Le processus zombie
+
+> Un **processus zombie** est un processus qui **s'est terminé** mais dont le **père n'a pas encore appelé `wait`** (ou `waitpid`) pour récupérer son statut de terminaison.
+
+Le terme est imagé : le processus est « mort » (il n'exécute plus aucune instruction, sa mémoire est libérée) mais il n'est pas encore « enterré » (son entrée subsiste dans la table des processus). Sur la sortie de la commande `ps`, un zombie apparaît à l'état **`Z`**, souvent accompagné de la mention `<defunct>`.
+
+### Que consomme un zombie ?
+
+C'est un point souvent mal compris. Un zombie :
+
+- **ne consomme aucune mémoire** — ses segments ont été libérés à la terminaison ;
+- **ne consomme aucun temps processeur** — il ne s'exécute plus ;
+- **occupe seulement une entrée dans la table des processus**, et conserve son **PID** ainsi que son **statut de terminaison**.
+
+Un zombie est donc « léger » individuellement. Le danger n'est pas un zombie isolé et bref, mais leur **accumulation**.
+
+> ⚠️ La table des processus a une **taille finie**. Un programme qui crée beaucoup de fils **sans jamais les attendre** accumule les zombies. Lorsque la table est pleine, **plus aucun processus ne peut être créé** sur le système — `fork` échoue partout, y compris pour les autres utilisateurs. Une fuite de zombies est donc un véritable **bogue système**, au même titre qu'une fuite de mémoire.
+
+### Reproduire un zombie
+
+Le programme suivant **crée volontairement** un zombie : le fils se termine immédiatement, mais le père ne l'attend pas — il s'endort.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main(void) {
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        /* le fils se termine tout de suite */
+        printf("Fils : je me termine.\n");
+        exit(0);
+    } else {
+        /* le père NE FAIT PAS wait : pendant ces 30 s, le fils
+           terminé est un ZOMBIE (visible avec : ps -el | grep Z) */
+        printf("Pere : je n'attends pas mon fils...\n");
+        sleep(30);
+        printf("Pere : je me termine.\n");
+    }
+    return 0;
+}
+```
+
+Pendant les 30 secondes de `sleep`, le fils est terminé mais non récupéré : c'est un zombie. La commande `ps -el | grep Z` le montre à l'état `Z`.
+
+### Éviter les zombies
+
+La solution est simple et systématique : **tout père doit récupérer chacun de ses fils** avec `wait` ou `waitpid`.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main(void) {
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        printf("Fils : je me termine.\n");
+        exit(0);
+    } else {
+        wait(NULL);     /* le père récupère le fils : AUCUN zombie */
+        printf("Pere : mon fils a ete recupere proprement.\n");
+    }
+    return 0;
+}
+```
+
+Quand un père crée **plusieurs fils**, il doit faire **autant de `wait`** qu'il a créé de fils. Une boucle de `wait` convient parfaitement :
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+#define NB_FILS 5
+
+int main(void) {
+    for (int i = 0; i < NB_FILS; i++) {
+        pid_t pid = fork();
+        if (pid < 0) {
+            perror("fork");
+            exit(EXIT_FAILURE);
+        }
+        if (pid == 0) {
+            /* chaque fils fait son travail puis se termine.
+               IMPORTANT : le fils sort de la boucle, sinon il
+               créerait lui aussi des fils (fork bomb). */
+            printf("Fils %d (PID %d)\n", i, (int) getpid());
+            exit(0);
+        }
+        /* seul le père continue la boucle */
+    }
+
+    /* le père attend ses 5 fils : un wait par fils créé */
+    for (int i = 0; i < NB_FILS; i++) {
+        int status;
+        pid_t fini = wait(&status);
+        if (fini > 0 && WIFEXITED(status)) {
+            printf("Pere : fils %d recupere (code %d)\n",
+                   (int) fini, WEXITSTATUS(status));
+        }
+    }
+    printf("Pere : tous les fils ont ete recuperes.\n");
+    return 0;
+}
+```
+
+> ⚠️ Dans une boucle de `fork`, **veillez à ce que le fils sorte de la boucle** (ici par `exit`). Sans cette précaution, chaque fils continuerait la boucle et créerait ses propres fils : on retombe sur une **fork bomb**. Le `wait` se place **après** la boucle, et il y en a **autant que de fils créés**.
+
+## Le processus orphelin
+
+La situation **symétrique** du zombie est l'**orphelin**.
+
+> Un **processus orphelin** est un processus **encore en cours d'exécution** dont le **père s'est terminé** avant lui.
+
+Le zombie est un **fils mort** que le père vivant n'a pas encore récupéré. L'orphelin est l'inverse : un **fils vivant** dont le **père est mort**.
+
+### L'adoption par `init`
+
+Que devient un orphelin ? Le modèle UNIX ne laisse jamais un processus sans père. Lorsqu'un processus se termine, le système **réattribue immédiatement tous ses fils encore vivants** à un nouveau père : le processus **`init`**, de **PID 1** (ou `systemd` sur Linux moderne). On dit que `init` **adopte** les orphelins.
+
+Concrètement, lorsqu'un processus devient orphelin, son **PPID change** : il prend la valeur **1**. C'est un moyen simple de détecter une adoption — observer la valeur renvoyée par `getppid()`.
+
+> ⚠️ Sur les systèmes Linux modernes avec `systemd`, un orphelin peut être reparenté non pas à PID 1 directement, mais au plus proche ancêtre ayant déclaré être un « subreaper » via `prctl(PR_SET_CHILD_SUBREAPER)`. Dans ce cas, `getppid()` retourne le PID de ce subreaper plutôt que 1. Pour les examens, le modèle canonique reste : **l'orphelin est adopté par `init` (PID 1)** et `getppid()` retourne 1.
+
+### Pourquoi l'adoption est essentielle
+
+L'adoption par `init` n'est pas un détail cosmétique : elle **garantit qu'aucun zombie ne reste éternellement** sur le système.
+
+En effet, quand un orphelin (adopté par `init`) se termine à son tour, il devient un zombie — mais cette fois son père est `init`. Or **`init` appelle `wait` en permanence** : son rôle, entre autres, est de **récupérer tous ses fils adoptés** dès qu'ils se terminent. Le zombie est donc **immédiatement nettoyé**.
+
+> Un orphelin **n'est pas un problème** : il est aussitôt adopté par `init`, et `init` se charge de le récupérer quand il se terminera. Un **zombie de longue durée**, lui, **est un problème** : il signale un père vivant et négligent qui n'a pas fait son `wait`.
+
+### Reproduire un orphelin
+
+Ici, c'est le **père** qui se termine en premier ; le fils, encore vivant, est adopté par `init`.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main(void) {
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        /* le fils affiche son père, dort, puis l'affiche à nouveau */
+        printf("Fils : mon pere est %d\n", (int) getppid());
+        sleep(3);              /* pendant ce temps, le père meurt */
+        printf("Fils : mon pere est maintenant %d (adopte par init)\n",
+               (int) getppid());
+        exit(0);
+    } else {
+        /* le père se termine TOUT DE SUITE : le fils devient orphelin */
+        printf("Pere : je me termine, mon fils devient orphelin.\n");
+        exit(0);
+    }
+}
+```
+
+À l'exécution, le fils affiche d'abord le PID réel de son père, puis — après le `sleep`, son père ayant disparu — un PPID **égal à 1** : il a été **adopté par `init`**.
+
+## Synthèse : zombie vs orphelin
+
+Les deux notions sont **symétriques**. Il faut savoir les distinguer sans hésitation :
+
+| | Processus **zombie** | Processus **orphelin** |
+|---|---|---|
+| **État du fils** | terminé (mort) | en cours d'exécution (vivant) |
+| **État du père** | encore vivant | terminé (mort) |
+| **Cause** | le père n'a pas (encore) fait `wait` | le père s'est terminé avant le fils |
+| **Conséquence** | entrée résiduelle dans la table des processus | le fils est adopté, son PPID devient 1 |
+| **Nouveau père** | inchangé (le père d'origine) | `init` (PID 1) |
+| **Est-ce un problème ?** | **oui** s'il s'accumule (table saturée) | **non**, `init` le récupérera |
+| **Comment l'éviter / le résoudre** | le père doit appeler `wait`/`waitpid` | rien à faire : `init` s'en charge |
+
+Une formule pour ne plus les confondre :
+
+- **zombie** = *fils mort, père vivant qui ne le récupère pas* ;
+- **orphelin** = *fils vivant, père mort*.
+
+> ⚠️ Le vrai danger pour un système est l'**accumulation de zombies** due à un père vivant qui oublie ses `wait`. La règle de programmation système est donc absolue : **pour chaque `fork`, il doit exister un `wait` (ou un `waitpid`) correspondant** dans le père. Un programme qui crée des processus sans jamais les attendre est un programme **incorrect**.
+
+> **À retenir**
+> - La terminaison d'un processus se fait en **deux temps** : le fils se **termine** (et libère sa mémoire), puis le père le **récupère** par `wait`/`waitpid` (le système efface alors son entrée).
+> - Un **zombie** est un processus **terminé** dont le père **n'a pas encore fait `wait`** : il ne consomme **ni mémoire ni CPU**, seulement une **entrée dans la table des processus**.
+> - Une **accumulation de zombies** sature la table des processus et **empêche toute création de processus** sur la machine : c'est un bogue système.
+> - Un **orphelin** est un processus **vivant** dont le **père est mort** ; il est **immédiatement adopté par `init`** (PID 1) — ou un processus ancêtre `init`-like (subreaper) sur les systèmes Linux modernes type systemd — et son **PPID devient 1** (référence canonique pour les examens).
+> - Un orphelin **n'est pas un problème** : `init` appelle `wait` en permanence et récupérera l'orphelin à sa terminaison.
+> - Règle absolue : **à chaque `fork` doit correspondre un `wait`/`waitpid`** dans le père, sinon le programme laisse des zombies.

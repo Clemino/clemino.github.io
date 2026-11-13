@@ -1,0 +1,86 @@
+---
+title: Les propriétés ACID
+slug: acid
+order: 2
+estimatedReadMin: 8
+concepts: [acid-atomicite, acid-coherence, acid-isolation, acid-durabilite]
+source: "CM3, slides 5, 8-11"
+---
+
+## ACID : les quatre garanties
+
+Une transaction vérifie **quatre propriétés fondamentales**, dont les initiales forment l'acronyme **ACID**. Tous les SGBD relationnels dignes de ce nom (Oracle, PostgreSQL, MySQL/InnoDB, SQL Server, etc.) les implémentent **nativement**.
+
+### A — Atomicité
+
+> Une transaction doit être **complètement validée** ou **complètement annulée**.
+
+Aucun état intermédiaire n'est observable de l'extérieur. Si la transaction échoue ou est annulée explicitement (`ROLLBACK`), c'est comme si elle n'avait jamais existé.
+
+Implémentation Oracle : segments d'annulation (rollback segments), qui stockent l'image avant modification jusqu'à validation.
+
+### C — Cohérence
+
+> Une transaction ne peut pas laisser la base dans un état **incohérent**.
+
+Toute contrainte d'intégrité (clé primaire, clé étrangère, NOT NULL, CHECK, contrainte applicative définie par trigger…) doit être vérifiée à la fin de la transaction.
+
+Le SGBD garantit la cohérence **même en cas de panne du serveur** : si la panne survient pendant la validation ou l'annulation d'une transaction, au redémarrage la transaction est soit menée à terme, soit la base est ramenée à son état antérieur.
+
+### I — Isolation
+
+> Une transaction en cours ne peut pas **voir** une autre transaction en cours.
+
+Lors de l'exécution d'un `SELECT` dans une transaction, le SGBD **affiche** :
+
+- toutes les données déjà **validées** par des transactions précédentes,
+- les données **créées ou mises à jour** dans la transaction courante,
+- les données **détruites** lors d'autres transactions **en cours** (qui n'ont pas encore commit, donc encore présentes).
+
+Le SGBD **n'affiche pas** :
+
+- les données détruites définitivement par des transactions précédentes (logique),
+- les données détruites par la transaction courante (logique),
+- les données créées ou mises à jour dans **d'autres transactions en cours** : c'est la *garantie d'isolation*.
+
+C'est le principe **« je ne vois que ce qui est validé, plus mes propres modifications »**.
+
+### Isolation renforcée : lecture seule cohérente
+
+On peut créer une transaction **en lecture seule cohérente** :
+
+```sql
+SET TRANSACTION READ ONLY;
+-- ... uniquement des SELECT ici ...
+COMMIT;   -- ou ROLLBACK
+```
+
+Cela signifie deux choses :
+
+1. La transaction ne peut faire **que des lectures**.
+2. Toute validation par une autre transaction pendant celle-ci **n'a aucun effet** sur les lectures faites : la vue de la base est gelée au moment du `SET TRANSACTION READ ONLY`.
+
+Utile pour produire un rapport cohérent sur des données qui pourraient sinon changer en cours d'exécution.
+
+### D — Durabilité
+
+> Après que le client a été informé du succès de la transaction (réponse au `COMMIT`), **les résultats ne disparaissent pas**.
+
+Cette garantie tient même en cas de panne matérielle. Implémentation Oracle : avant de répondre au `COMMIT`, les modifications sont écrites dans les **fichiers Redo Log** (et donc persistées sur disque). Si le serveur tombe juste après, les Redo Logs permettent au redémarrage de **rejouer** la transaction.
+
+## Récapitulatif
+
+| Propriété | En une phrase | Mécanisme Oracle |
+|---|---|---|
+| **A**tomicité | Tout ou rien | Segments d'annulation (rollback) |
+| **C**ohérence | Pas d'état invalide | Contraintes + recovery au démarrage |
+| **I**solation | Pas de fuite entre transactions | Lecture des seuls états validés ; SET TRANSACTION READ ONLY |
+| **D**urabilité | Validé = persistant | Fichiers Redo Log écrits avant ack |
+
+> **À retenir**
+> - **ACID** : Atomicité, Cohérence, Isolation, Durabilité.
+> - Atomicité = tout ou rien.
+> - Cohérence = invariants respectés, garantis même après panne.
+> - Isolation = on ne voit pas les autres transactions en cours.
+> - Durabilité = commit = persistance définitive.
+> - `SET TRANSACTION READ ONLY` : isolation maximale en lecture seule.

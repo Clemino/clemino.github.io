@@ -1,0 +1,115 @@
+---
+title: COMMIT, ROLLBACK, SAVEPOINT
+slug: commit-rollback-savepoint
+order: 3
+estimatedReadMin: 6
+concepts: [commit, rollback, savepoint, set-transaction-readonly]
+source: "CM3, slides 7, 11-12 ; CM6, slides 21-23"
+---
+
+## Validation et annulation
+
+Toute transaction se termine **explicitement** ou **implicitement** par `COMMIT` ou `ROLLBACK`.
+
+### COMMIT
+
+```sql
+COMMIT;
+```
+
+- Valide définitivement toutes les opérations de la transaction.
+- Libère tous les verrous posés.
+- Écrit dans le Redo Log avant de répondre (durabilité).
+- Démarre implicitement une nouvelle transaction si la session continue.
+
+### ROLLBACK
+
+```sql
+ROLLBACK;
+```
+
+- Annule toutes les opérations de la transaction (revient à l'état avant son début).
+- Libère tous les verrous.
+
+### COMMIT implicite
+
+Certaines instructions provoquent un **`COMMIT` automatique**, en particulier :
+
+- toute instruction **LDD** : `CREATE TABLE`, `ALTER TABLE`, `DROP`, `TRUNCATE`, `CREATE INDEX`, etc.
+- les commandes de contrôle de session ou de privilège : `GRANT`, `REVOKE`.
+
+> ⚠️ Conséquence : on ne peut pas annuler un `CREATE TABLE` par un `ROLLBACK` — le LDD a déjà committé la transaction.
+
+## Savepoints : annulations partielles
+
+`SAVEPOINT` permet de **poser un jalon** au milieu d'une transaction :
+
+```sql
+SAVEPOINT nom_jalon;
+```
+
+Puis d'**annuler un sous-ensemble d'opérations** sans tout perdre :
+
+```sql
+ROLLBACK TO SAVEPOINT nom_jalon;
+```
+
+Toutes les opérations **postérieures au jalon** sont annulées. Les opérations antérieures **et le jalon lui-même** restent en place.
+
+Un jalon ne disparaît qu'à la fin de la transaction (par `COMMIT` ou `ROLLBACK` complet).
+
+### Exemple
+
+```sql
+BEGIN
+   INSERT INTO ...;   -- A
+   INSERT INTO ...;   -- B
+   INSERT INTO ...;   -- C
+   INSERT INTO ...;   -- D
+   ROLLBACK;          -- annule A, B, C, D
+   INSERT INTO ...;   -- E
+   INSERT INTO ...;   -- F
+   SAVEPOINT iciOnSauve;
+   INSERT INTO ...;   -- G
+   INSERT INTO ...;   -- H
+   ROLLBACK TO iciOnSauve;   -- annule G et H ; E et F restent
+END;
+```
+
+## Nommer une transaction
+
+```sql
+SET TRANSACTION NAME 'tr_facturation';
+```
+
+Sert au monitoring (apparaît dans les outils d'administration) et à la lisibilité.
+
+Combinée à `READ ONLY` ou `READ WRITE` :
+
+```sql
+SET TRANSACTION READ ONLY NAME 'export_journalier';
+```
+
+## Procédures et transactions
+
+> ⚠️ Une procédure stockée ou une fonction **ne devrait pas** réaliser de `COMMIT` ou `ROLLBACK` : la validation est à la charge du **code appelant**.
+
+Exception : la **transaction autonome**, qui ouvre sa propre transaction séparée de celle de l'appelant :
+
+```sql
+CREATE OR REPLACE PROCEDURE log_event(p_msg VARCHAR2)
+IS
+   PRAGMA AUTONOMOUS_TRANSACTION;
+BEGIN
+   INSERT INTO Log_Table VALUES (SYSDATE, p_msg);
+   COMMIT;        -- valide la transaction autonome uniquement
+END;
+```
+
+Typiquement utilisée pour des **logs d'audit** qu'on souhaite persister même si la transaction principale est annulée.
+
+> **À retenir**
+> - `COMMIT` valide tout, `ROLLBACK` annule tout.
+> - Tout `CREATE`, `ALTER`, `DROP`, `TRUNCATE`, `GRANT`, `REVOKE` fait un `COMMIT` implicite.
+> - `SAVEPOINT nom; ... ROLLBACK TO nom;` annule uniquement ce qui suit le jalon.
+> - Une procédure stockée **ne valide pas** sauf `PRAGMA AUTONOMOUS_TRANSACTION`.

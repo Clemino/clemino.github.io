@@ -1,0 +1,558 @@
+[
+  {
+    "chapterSlug": "dossier-de-confiance",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelles sont les cinq pièces du dossier de confiance ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Risques, équité, explicabilité, conformité, décision"
+        },
+        {
+          "id": "b",
+          "label": "Données, modèle, métriques, déploiement, usage et suivi"
+        },
+        {
+          "id": "c",
+          "label": "Risques, performance, sécurité, coût, décision"
+        },
+        {
+          "id": "d",
+          "label": "Objectif, proxy, seuil, données, usage"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours les résume par R, E, E, C, D : risques, équité, explicabilité, conformité, décision.",
+    "hint": "Le cours les retient avec cinq initiales : R, E, E, C, D.",
+    "concepts": [
+      "dossier-de-confiance"
+    ],
+    "source": "Diapositives 2"
+  },
+  {
+    "chapterSlug": "dossier-de-confiance",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quels éléments chaque pièce du dossier doit-elle porter ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un identifiant de preuve"
+        },
+        {
+          "id": "b",
+          "label": "Une version"
+        },
+        {
+          "id": "c",
+          "label": "Un responsable"
+        },
+        {
+          "id": "d",
+          "label": "Une date"
+        },
+        {
+          "id": "e",
+          "label": "Une signature du fournisseur du modèle"
+        },
+        {
+          "id": "f",
+          "label": "Un score de performance global"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Identifiant de preuve, version, responsable et date rendent chaque affirmation vérifiable.",
+    "hint": "Pense à ce qui permet de retrouver une preuve, de savoir à quelle version elle correspond, qui en répond et quand.",
+    "concepts": [
+      "dossier-de-confiance"
+    ],
+    "source": "Diapositives 2"
+  },
+  {
+    "chapterSlug": "dossier-de-confiance",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque pièce à son contenu.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Risques"
+        },
+        {
+          "id": "l1",
+          "label": "Équité"
+        },
+        {
+          "id": "l2",
+          "label": "Explicabilité"
+        },
+        {
+          "id": "l3",
+          "label": "Conformité"
+        },
+        {
+          "id": "l4",
+          "label": "Décision"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Scénarios de préjudice et mesures de réduction"
+        },
+        {
+          "id": "r1",
+          "label": "Métriques, populations et arbitrages documentés"
+        },
+        {
+          "id": "r2",
+          "label": "Explications testées et recours accessible"
+        },
+        {
+          "id": "r3",
+          "label": "Qualification du système et obligations applicables"
+        },
+        {
+          "id": "r4",
+          "label": "Avis motivé, responsables et conditions d'arrêt"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4"
+      }
+    },
+    "explanation": "Chaque pièce répond à une question différente du dossier de confiance.",
+    "hint": "La pièce Décision ne se limite pas à un avis : elle fixe aussi qui répond et quand on arrête.",
+    "concepts": [
+      "dossier-de-confiance"
+    ],
+    "source": "Diapositives 2"
+  },
+  {
+    "chapterSlug": "dossier-de-confiance",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "La pièce Explicabilité contient seulement des explications techniques du modèle.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Elle réunit des explications testées et un recours accessible pour les personnes concernées.",
+    "hint": "Relis ce que la pièce doit offrir aux personnes visées par une décision.",
+    "concepts": [
+      "dossier-de-confiance"
+    ],
+    "source": "Diapositives 2"
+  },
+  {
+    "chapterSlug": "dossier-de-confiance",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "La pièce Décision précise les conditions dans lesquelles on arrête le système.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "La décision comprend un avis motivé, des responsables et des conditions d'arrêt.",
+    "hint": "Une décision responsable prévoit aussi sa propre remise en cause.",
+    "concepts": [
+      "dossier-de-confiance"
+    ],
+    "source": "Diapositives 2"
+  },
+  {
+    "chapterSlug": "choix-de-valeurs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Dans TalentScore, quel est le proxy utilisé ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le score à un test de code"
+        },
+        {
+          "id": "b",
+          "label": "L'historique des recrutements"
+        },
+        {
+          "id": "c",
+          "label": "Le seuil d'entretien à 0,70"
+        },
+        {
+          "id": "d",
+          "label": "L'objectif de recruter un bon candidat"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le test de code remplace ce qu'on veut vraiment évaluer : la compétence d'un candidat.",
+    "hint": "Un proxy est une grandeur mesurable utilisée à la place de ce qu'on veut vraiment évaluer.",
+    "concepts": [
+      "choix-de-valeurs"
+    ],
+    "source": "Diapositives 3"
+  },
+  {
+    "chapterSlug": "choix-de-valeurs",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque choix de TalentScore à sa question d'audit.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Objectif"
+        },
+        {
+          "id": "l1",
+          "label": "Proxy"
+        },
+        {
+          "id": "l2",
+          "label": "Seuil"
+        },
+        {
+          "id": "l3",
+          "label": "Données"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Bon selon quels critères ?"
+        },
+        {
+          "id": "r1",
+          "label": "Quelle compétence reste invisible ?"
+        },
+        {
+          "id": "r2",
+          "label": "Quel coût pour les faux négatifs ?"
+        },
+        {
+          "id": "r3",
+          "label": "Qui manque dans cet historique ?"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "Chaque choix technique cache une question de valeurs qu'un audit doit poser.",
+    "hint": "Le seuil décide qui est écarté ; l'historique ne contient que les recrutements passés.",
+    "concepts": [
+      "choix-de-valeurs"
+    ],
+    "source": "Diapositives 3"
+  },
+  {
+    "chapterSlug": "choix-de-valeurs",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un choix purement technique ne peut pas distribuer de préjudice entre les personnes.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Le cours affirme l'inverse : un choix technique peut distribuer les bénéfices et les préjudices.",
+    "hint": "Repense au seuil de TalentScore : qui est écarté quand on le monte ?",
+    "concepts": [
+      "choix-de-valeurs"
+    ],
+    "source": "Diapositives 3"
+  },
+  {
+    "chapterSlug": "choix-de-valeurs",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complète la phrase.",
+    "payload": {
+      "template": "Dans TalentScore, un candidat passe en entretien si son score est supérieur ou égal à {{a}}.",
+      "slots": [
+        {
+          "id": "a",
+          "width": "md"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "a": [
+          "0,70",
+          "0.70",
+          "0,7",
+          "0.7"
+        ]
+      }
+    },
+    "explanation": "Le seuil est fixé à 0,70 ; la question d'audit associée porte sur le coût des faux négatifs.",
+    "hint": "C'est un seuil sur un score compris entre 0 et 1.",
+    "concepts": [
+      "choix-de-valeurs"
+    ],
+    "source": "Diapositives 3"
+  },
+  {
+    "chapterSlug": "prejudice-cycle-de-vie",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Remets les étapes du cycle de vie dans l'ordre.",
+    "payload": {
+      "items": [
+        {
+          "id": "i1",
+          "label": "Données"
+        },
+        {
+          "id": "i3",
+          "label": "Métriques"
+        },
+        {
+          "id": "i5",
+          "label": "Usage"
+        },
+        {
+          "id": "i0",
+          "label": "Besoin"
+        },
+        {
+          "id": "i2",
+          "label": "Étiquettes"
+        },
+        {
+          "id": "i4",
+          "label": "Déploiement"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "i0",
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ]
+    },
+    "explanation": "Besoin, données, étiquettes, métriques, déploiement, usage : un préjudice peut naître à chaque étape.",
+    "hint": "On part de la raison d'être du système et on finit par son utilisation réelle.",
+    "concepts": [
+      "cycle-de-vie"
+    ],
+    "source": "Diapositives 4"
+  },
+  {
+    "chapterSlug": "prejudice-cycle-de-vie",
+    "type": "MATCHING",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Associe chaque étape à la preuve attendue.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Besoin"
+        },
+        {
+          "id": "l1",
+          "label": "Données"
+        },
+        {
+          "id": "l2",
+          "label": "Étiquettes"
+        },
+        {
+          "id": "l3",
+          "label": "Métriques"
+        },
+        {
+          "id": "l4",
+          "label": "Déploiement"
+        },
+        {
+          "id": "l5",
+          "label": "Usage"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Périmètre et alternatives"
+        },
+        {
+          "id": "r1",
+          "label": "Couverture des populations"
+        },
+        {
+          "id": "r2",
+          "label": "Audit du protocole d'annotation"
+        },
+        {
+          "id": "r3",
+          "label": "Résultats désagrégés"
+        },
+        {
+          "id": "r4",
+          "label": "Validation en situation"
+        },
+        {
+          "id": "r5",
+          "label": "Observation et suivi des incidents"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4",
+        "l5": "r5"
+      }
+    },
+    "explanation": "Chaque étape a sa défaillance typique et sa preuve attendue.",
+    "hint": "Une moyenne qui masque un sous-groupe appelle des résultats par groupe.",
+    "concepts": [
+      "cycle-de-vie"
+    ],
+    "source": "Diapositives 4"
+  },
+  {
+    "chapterSlug": "prejudice-cycle-de-vie",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "À quelle étape rattacher la défaillance « le passé sert de vérité terrain » ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Étiquettes"
+        },
+        {
+          "id": "b",
+          "label": "Données"
+        },
+        {
+          "id": "c",
+          "label": "Déploiement"
+        },
+        {
+          "id": "d",
+          "label": "Usage"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Utiliser des décisions passées comme étiquettes reproduit leurs biais : on audite le protocole d'annotation.",
+    "hint": "Cherche l'étape où l'on définit la bonne réponse que le modèle doit apprendre.",
+    "concepts": [
+      "cycle-de-vie"
+    ],
+    "source": "Diapositives 4"
+  },
+  {
+    "chapterSlug": "prejudice-cycle-de-vie",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un système est testé dans un contexte puis utilisé dans un autre. Quelle preuve faut-il ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une validation en situation"
+        },
+        {
+          "id": "b",
+          "label": "Un audit du protocole d'annotation"
+        },
+        {
+          "id": "c",
+          "label": "Une analyse des alternatives au besoin"
+        },
+        {
+          "id": "d",
+          "label": "Une couverture des populations à l'entraînement"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Un contexte de déploiement différent du test appelle une validation en situation réelle.",
+    "hint": "Le problème apparaît au moment de la mise en service, pas pendant l'entraînement.",
+    "concepts": [
+      "cycle-de-vie"
+    ],
+    "source": "Diapositives 4"
+  },
+  {
+    "chapterSlug": "prejudice-cycle-de-vie",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "La confiance excessive des utilisateurs est une défaillance qui relève de l'étape Usage.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "À l'étape Usage, contournement ou confiance excessive se surveillent par l'observation et le suivi des incidents.",
+    "hint": "Pense à ce qui se passe une fois le système entre les mains de ses utilisateurs.",
+    "concepts": [
+      "cycle-de-vie"
+    ],
+    "source": "Diapositives 4"
+  }
+]

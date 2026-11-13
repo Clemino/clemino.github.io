@@ -1,0 +1,98 @@
+---
+title: Concurrence, verrouillage, deadlock
+slug: concurrence
+order: 4
+estimatedReadMin: 8
+concepts: [verrouillage-ligne, blocage, deadlock, oltp]
+source: "CM3, slides 13-18"
+---
+
+## Le problème de la concurrence
+
+Le principe même de la transaction crée un problème :
+
+> **Comment gérer la mise à jour d'une donnée par deux transactions en cours simultanément ?**
+
+Tant qu'une transaction n'est pas terminée, l'instance Oracle **ne sait pas** si elle sera validée ou annulée. Elle doit donc protéger les autres transactions contre des lectures ou écritures incohérentes.
+
+### Exemple
+
+```sql
+CREATE TABLE nombre (n NUMBER);
+INSERT INTO nombre VALUES (1);
+COMMIT;
+```
+
+Au temps t1 :
+```sql
+-- Transaction 1
+UPDATE nombre SET n = 2 WHERE n = 1;
+```
+
+Au temps t2 :
+```sql
+-- Transaction 2
+UPDATE nombre SET n = 4 WHERE n = 1;
+```
+
+Si T1 est validée, T2 ne trouve aucune ligne à modifier (la valeur n'est plus 1). Si T1 est annulée, T2 modifie bien la ligne (la valeur est encore 1). **L'ordre des transactions et le résultat de la première décident du sort de la seconde.**
+
+## Verrouillage de ligne
+
+Oracle résout le problème par le **verrouillage automatique** :
+
+1. Chaque mise à jour d'une ligne **pose un verrou** sur cette ligne.
+2. Le verrou est **annulé à la fin de la transaction** qui l'a posé (par `COMMIT` ou `ROLLBACK`).
+3. Toute mise à jour d'une ligne verrouillée **bloque temporairement** la transaction qui tente la modification.
+4. Le blocage est levé quand la transaction propriétaire du verrou se termine.
+
+Dans l'exemple précédent, T2 sera **bloquée** jusqu'à la fin de T1.
+
+## L'interblocage (deadlock)
+
+Le verrouillage ne suffit pas. Considérons :
+
+```
+T1 met à jour L1 : L1 est verrouillée
+T2 met à jour L2 : L2 est verrouillée
+T1 met à jour L2 : T1 est bloquée   (L2 verrouillée par T2)
+T2 met à jour L1 : T2 est bloquée   (L1 verrouillée par T1)
+```
+
+Nous sommes en présence d'un **deadlock** (étreinte fatale) : T1 attend T2 et T2 attend T1. Sans intervention, le système est bloqué pour toujours.
+
+## La solution Oracle : annulation forcée
+
+Oracle détecte automatiquement les deadlocks et **annule l'une des opérations** :
+
+```
+T1 met à jour L1 : L1 verrouillée
+T2 met à jour L2 : L2 verrouillée
+T1 met à jour L2 : T1 bloquée
+T2 met à jour L1 :
+    1. T2 reste bloquée
+    2. La mise à jour de L2 par T1 est annulée
+       T1 est débloquée et peut continuer
+```
+
+Le problème est résolu, au prix d'une **annulation d'opération** dans la transaction T1. L'application reçoit alors l'erreur Oracle **`ORA-00060`** ("resource busy" / "deadlock detected") et doit décider quoi faire (réessayer, abandonner...).
+
+## OLTP : Online Transaction Processing
+
+L'architecture **OLTP** est l'ensemble des techniques (transactions, verrouillage, isolation, durabilité) qui permettent de gérer des **transactions en temps réel** par grand nombre simultanément.
+
+Cas d'usage typiques :
+
+- réservation de billets de train ou d'avion,
+- transactions bancaires,
+- bourse,
+- e-commerce.
+
+Tous les SGBD relationnels dignes de ce nom ont une architecture OLTP.
+
+> **À retenir**
+> - Toute mise à jour d'une ligne pose un **verrou** sur cette ligne jusqu'à fin de transaction.
+> - Une mise à jour d'une ligne verrouillée **bloque** la transaction qui tente.
+> - **Deadlock** = blocage circulaire entre deux transactions.
+> - Oracle détecte les deadlocks et annule une opération (erreur `ORA-00060`).
+> - **OLTP** = architecture transactionnelle pour temps réel intensif.

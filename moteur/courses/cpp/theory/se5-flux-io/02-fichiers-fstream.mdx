@@ -1,0 +1,207 @@
+---
+title: "Fichiers : fstream"
+slug: fichiers-fstream
+order: 2
+estimatedReadMin: 11
+concepts: [ifstream-ofstream-fstream, mode-ouverture, getline]
+source: "Cours 5 — Gestion des entrées/sorties"
+---
+
+## Fichier physique et fichier logique
+
+Avant d'écrire du code, il faut distinguer deux notions souvent confondues :
+
+> Le **fichier physique** est la collection d'octets réellement stockée sur un support (disque, clé USB...). Le **fichier logique** est une **variable du programme**, liée à ce fichier physique, par laquelle le code manipule son contenu — autrement dit un **flux**.
+
+Le fichier logique est l'objet C++ que l'on déclare ; le fichier physique est le `.txt` sur le disque. Toute lecture ou écriture passe par le fichier **logique**, et deux règles encadrent son emploi :
+
+> Avant toute manipulation, un fichier doit être **ouvert**. À la fin des traitements, il doit être **fermé**.
+
+## L'en-tête `<fstream>`
+
+Les flux vers les fichiers vivent dans un en-tête dédié :
+
+```cpp
+#include <fstream>
+```
+
+> ⚠️ `<fstream>` ne garantit **pas** d'inclure `<iostream>`. Un programme qui manipule **à la fois** des flux de fichier **et** les flux de la console (`std::cout`, `std::cin`, `std::cerr`) doit inclure **les deux** en-têtes : `<fstream>` **et** `<iostream>`. N'inclure que `<fstream>` puis utiliser `std::cerr` provoque une **erreur de compilation** (`'cerr' is not a member of 'std'`).
+
+```cpp
+#include <fstream>    // ifstream, ofstream, fstream
+#include <iostream>   // cout, cin, cerr  -> indispensable dès qu'on les utilise
+```
+
+> D'anciens supports de cours affirmaient que `<fstream>` incluait `<iostream>` : ce n'est pas fiable selon le compilateur. La bonne pratique est d'**inclure explicitement chaque en-tête dont on utilise les symboles**.
+
+Cet en-tête fournit **trois** classes de flux de fichier :
+
+| Classe | Rôle | Hérite de |
+|---|---|---|
+| **`std::ifstream`** | **lire** depuis un fichier (*input file stream*) | `istream` |
+| **`std::ofstream`** | **écrire** dans un fichier (*output file stream*) | `ostream` |
+| **`std::fstream`** | **lire et écrire** le même fichier | `iostream` |
+
+Le point essentiel : `ifstream` dérive d'`istream`, `ofstream` dérive d'`ostream`. **Un flux de fichier est un flux comme un autre.** Tout ce qu'on a appris sur `cout` et `cin` — les opérateurs `<<` et `>>`, le chaînage, le comportement de `>>` sur les espaces — s'applique **à l'identique** aux fichiers.
+
+## Ouvrir un fichier
+
+Il y a deux façons d'ouvrir un fichier.
+
+**Première façon — à la construction.** On passe le chemin du fichier physique au **constructeur** du flux :
+
+```cpp
+std::ifstream entree("donnees.txt");   // ouvre donnees.txt en lecture
+std::ofstream sortie("resultat.txt");  // ouvre (ou crée) resultat.txt en écriture
+```
+
+Le chemin est le **nom du fichier suivi de son extension**. Si le fichier ne se trouve pas dans le même répertoire que l'exécutable, on indique son chemin complet (`"C:/travail/donnees.txt"`).
+
+**Seconde façon — avec `open()`.** On déclare d'abord le flux, puis on l'ouvre ensuite :
+
+```cpp
+std::ifstream entree;
+entree.open("donnees.txt");
+```
+
+C'est utile lorsqu'on ne connaît le nom du fichier qu'au cours de l'exécution.
+
+> ⚠️ Vérifier **toujours** que l'ouverture a réussi avant de lire ou d'écrire. Un fichier en lecture peut être **introuvable** ; un fichier en écriture peut être **non autorisé**. La méthode **`is_open()`** renvoie `true` si le flux est bien ouvert. Tester un flux qui n'est pas ouvert ne provoque pas de plantage, mais **toutes les opérations échouent silencieusement**.
+
+```cpp
+#include <fstream>
+#include <iostream>   // requis pour std::cerr
+
+std::ifstream entree("donnees.txt");
+if (!entree.is_open()) {
+    std::cerr << "Impossible d'ouvrir le fichier\n";
+    return 1;
+}
+// ... le fichier est ouvert, on peut lire
+```
+
+## Les modes d'ouverture
+
+L'ouverture en écriture accepte un **second argument** : le **mode d'ouverture**, qui précise *comment* le fichier est ouvert. Les modes sont des constantes de l'espace de noms `std::ios` :
+
+| Mode | Effet |
+|---|---|
+| `std::ios::in` | ouvre en **lecture** (*input*) |
+| `std::ios::out` | ouvre en **écriture** (*output*) |
+| `std::ios::app` | écrit **à la fin** du fichier existant (*append*) |
+| `std::ios::ate` | place le curseur **à la fin** à l'ouverture (*at end*) |
+| `std::ios::trunc` | **vide** le fichier à l'ouverture (*truncate*) |
+| `std::ios::binary` | ouvre en mode **binaire** (et non texte) |
+
+Chaque classe possède un **mode par défaut**, appliqué si l'on ne précise rien :
+
+- `ifstream` ouvre par défaut en `std::ios::in` ;
+- `ofstream` ouvre par défaut en `std::ios::out | std::ios::trunc` — d'où un point capital :
+
+> Ouvrir un fichier **existant** avec un `ofstream` simple **efface tout son contenu** (`trunc` est implicite). Pour **ajouter** à la fin sans effacer, il faut le mode `std::ios::app`.
+
+On **combine** plusieurs modes avec l'opérateur `|` (OU binaire) :
+
+```cpp
+// écriture en AJOUT : le contenu existant est conservé
+std::ofstream journal("journal.txt", std::ios::out | std::ios::app);
+
+// lecture ET écriture sur le même fichier
+std::fstream f("donnees.txt", std::ios::in | std::ios::out);
+
+// écriture binaire
+std::ofstream bin("image.dat", std::ios::out | std::ios::binary);
+```
+
+## Fermer un fichier
+
+Une fois les traitements terminés, on **ferme** le flux avec **`close()`** :
+
+```cpp
+std::ofstream sortie("resultat.txt");
+sortie << "Hello\n";
+sortie.close();        // le fichier est fermé, le tampon vidé sur le disque
+```
+
+Fermer un fichier **vide son tampon** (les écritures bufferisées sont effectivement transmises au disque) et **libère** le fichier physique pour les autres programmes.
+
+> Le **destructeur** du flux appelle `close()` automatiquement. C'est l'application du principe **RAII** (cours 2) : la fermeture est garantie dès que le flux sort de sa portée, **même en cas d'exception**. Appeler `close()` explicitement reste utile pour libérer le fichier **plus tôt**, ou pour le **rouvrir** ensuite dans un autre mode.
+
+## Écrire dans un fichier
+
+L'écriture dans un fichier est **identique** à l'affichage à l'écran : on utilise l'opérateur **`<<`**. Toute variable ou constante d'un type simple (`bool`, `char`, `int`, `double`, `std::string`...) peut être écrite.
+
+```cpp
+std::ofstream sortie("mesures.txt");
+double temperature = 21.5;
+sortie << "temperature " << temperature << "\n";   // une ligne dans le fichier
+sortie.close();
+```
+
+> ⚠️ Le fichier ne contient **que ce qu'on y écrit**. À la différence de l'affichage console, il faut insérer **soi-même** les séparateurs — espaces ou sauts de ligne — entre les données, sans quoi tout sera collé et impossible à relire.
+
+```cpp
+std::ofstream f("contacts.txt");
+f << "Dupont" << " " << "0612345678" << "\n";   // séparateurs explicites
+f << "Martin" << " " << "0698765432" << "\n";
+f.close();
+// contacts.txt :
+//   Dupont 0612345678
+//   Martin 0698765432
+```
+
+## Lire depuis un fichier
+
+La lecture utilise l'opérateur **`>>`**, exactement comme `cin`. La lecture s'arrête au premier **séparateur** (espace, tabulation, saut de ligne) ou au premier caractère incompatible avec le type lu.
+
+```cpp
+std::ifstream entree("contacts.txt");
+std::string nom, tel;
+entree >> nom >> tel;     // lit "Dupont" puis "0612345678"
+entree.close();
+```
+
+`>>` lit donc **mot par mot**. Pour le fichier `contacts.txt` ci-dessus, `entree >> nom` lit `Dupont`, puis `entree >> tel` lit `0612345678` — l'espace et le saut de ligne servent de frontières.
+
+## `std::getline` : lire une ligne entière
+
+`>>` ne lit qu'un mot ; pour lire une **ligne complète**, espaces inclus, on utilise **`std::getline`** :
+
+```cpp
+std::string ligne;
+std::getline(entree, ligne);   // lit toute la ligne, jusqu'au saut de ligne (exclu)
+```
+
+`std::getline` prend le flux et une `std::string` à remplir. Elle lit tous les caractères **jusqu'au saut de ligne**, qu'elle consomme mais ne stocke pas. Surtout, **elle renvoie le flux** : on peut donc la tester directement dans une boucle, ce qui est l'**idiome standard** pour parcourir un fichier texte ligne par ligne :
+
+```cpp
+std::ifstream entree("poeme.txt");
+if (!entree.is_open()) {
+    std::cerr << "Fichier introuvable\n";
+    return 1;
+}
+
+std::string ligne;
+while (std::getline(entree, ligne)) {   // tant qu'une ligne a pu être lue
+    std::cout << ligne << "\n";
+}
+entree.close();
+```
+
+La boucle s'arrête d'elle-même à la fin du fichier : quand `getline` ne peut plus lire, le flux passe dans un état d'échec et la condition `while` devient fausse. Ce mécanisme — **tester le flux dans la condition** — fait l'objet du chapitre suivant.
+
+## Mettre à jour un fichier : charger, modifier, réécrire
+
+Modifier ou supprimer un enregistrement **en place**, au milieu d'un fichier, est délicat en C++ : les lignes n'ont pas toutes la même longueur, et déplacer le curseur ne « pousse » pas le reste du contenu. La méthode recommandée évite complètement ce problème :
+
+> Pour mettre à jour un fichier, on le **charge entièrement en mémoire** (typiquement dans un `std::vector`), on effectue les **modifications ou suppressions sur cette structure en mémoire**, puis on **réécrit le fichier complet** à partir du `vector` mis à jour.
+
+Le fichier sur le disque n'est ainsi jamais modifié partiellement : on le relit en bloc, on le transforme librement en mémoire (où ajouter, modifier ou retirer un élément est trivial), et on le récrit d'un seul tenant en écrasant l'ancienne version. C'est l'approche employée pour toute opération de mise à jour des chapitres suivants.
+
+> **À retenir**
+> - **Fichier physique** = octets sur le disque ; **fichier logique** = la variable-flux du programme. On ouvre avant de manipuler, on ferme après.
+> - L'en-tête **`<fstream>`** fournit **`ifstream`** (lecture), **`ofstream`** (écriture) et **`fstream`** (les deux) ; ce sont des flux ordinaires, dérivés d'`istream`/`ostream`. Il **n'inclut pas** `<iostream>` : un programme qui utilise aussi `cout`/`cin`/`cerr` doit inclure **les deux** en-têtes.
+> - On ouvre un fichier via le **constructeur** ou via **`open()`** ; on vérifie **toujours** le succès avec **`is_open()`**.
+> - Les **modes** (`std::ios::in/out/app/ate/trunc/binary`) se combinent avec `|`. Un `ofstream` simple **écrase** le fichier (`trunc` implicite) ; `std::ios::app` ajoute à la fin sans effacer.
+> - `close()` vide le tampon et libère le fichier ; le **destructeur** le fait automatiquement (RAII).
+> - On écrit avec **`<<`** (séparateurs à insérer soi-même) et on lit avec **`>>`** (mot par mot) ; **`std::getline(flux, ligne)`** lit une **ligne entière** et constitue l'idiome de parcours d'un fichier texte.

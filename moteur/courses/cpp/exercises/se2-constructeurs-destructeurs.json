@@ -1,0 +1,573 @@
+[
+  {
+    "chapterSlug": "constructeurs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quel est le rôle d'un constructeur ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Détruire un objet en fin de vie." },
+        { "id": "b", "label": "Initialiser un objet en donnant des valeurs à ses données membres." },
+        { "id": "c", "label": "Comparer deux objets entre eux." },
+        { "id": "d", "label": "Afficher l'état d'un objet sur la sortie standard." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Le constructeur est une fonction membre particulière dont le rôle est d'**initialiser un objet** : il donne des valeurs initiales cohérentes aux données membres de chaque objet de la classe. Laisser un objet naître avec des attributs non initialisés est une source classique de bugs.",
+    "concepts": ["constructeur-defaut"]
+  },
+  {
+    "chapterSlug": "constructeurs",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles affirmations caractérisent correctement un constructeur ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Il porte exactement le nom de la classe." },
+        { "id": "b", "label": "Il a obligatoirement le type de retour void." },
+        { "id": "c", "label": "Il n'a aucun type de retour, pas même void." },
+        { "id": "d", "label": "Il est appelé automatiquement à la création d'un objet." },
+        { "id": "e", "label": "On l'appelle explicitement comme une fonction ordinaire." }
+      ]
+    },
+    "solution": { "correct": ["a", "c", "d"] },
+    "explanation": "Trois traits distinguent un constructeur d'une méthode ordinaire : il **porte le nom de la classe**, il **n'a aucun type de retour** (pas même `void`), et il est **appelé automatiquement** à chaque création d'objet. On ne l'appelle donc jamais « à la main ».",
+    "concepts": ["constructeur-defaut"]
+  },
+  {
+    "chapterSlug": "constructeurs",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pour créer un objet `Fraction` avec le constructeur par défaut, on écrit `Fraction f();`.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux : le constructeur par défaut s'appelle **sans parenthèses** — `Fraction f;`. La forme `Fraction f();` ne crée aucun objet : le compilateur la lit comme la **déclaration d'une fonction** `f` sans paramètre renvoyant une `Fraction`. C'est un piège classique du C++.",
+    "concepts": ["constructeur-defaut"]
+  },
+  {
+    "chapterSlug": "constructeurs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une classe `Point` déclare uniquement le constructeur `Point(int x, int y)`. Que vaut la ligne `Point p;` dans un `main` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Elle compile et initialise x et y à 0." },
+        { "id": "b", "label": "Elle ne compile pas : aucun constructeur par défaut n'est disponible." },
+        { "id": "c", "label": "Elle compile mais x et y restent non initialisés." },
+        { "id": "d", "label": "Elle déclare une fonction nommée p." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Dès qu'on déclare **un seul** constructeur, le compilateur **cesse** de synthétiser le constructeur par défaut. Comme `Point(int, int)` exige deux arguments, la ligne `Point p;` ne compile plus. Pour la rendre valide, il faudrait déclarer explicitement `Point();`.",
+    "concepts": ["constructeur-defaut", "constructeur-parametre"]
+  },
+  {
+    "chapterSlug": "constructeurs",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complète la définition du constructeur par défaut de `Fraction` : il utilise une **liste d'initialisation** pour fixer le numérateur à 0 et le dénominateur à 1.",
+    "payload": {
+      "template": "Fraction::Fraction() {{sep}} numerateur(0), denominateur(1) {}",
+      "slots": [
+        { "id": "sep", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "sep": ":" },
+      "caseSensitive": false
+    },
+    "explanation": "Le **deux-points** `:` introduit la **liste d'initialisation des membres**. Tout ce qui le suit, entre l'en-tête et le corps `{}`, initialise directement chaque attribut par sa valeur entre parenthèses : `: numerateur(0), denominateur(1)`.",
+    "concepts": ["liste-initialisation", "constructeur-defaut"]
+  },
+  {
+    "chapterSlug": "constructeurs",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Dans le constructeur `Reservoir(int litres)`, le paramètre porte le même nom que l'attribut `litres`. Comment affecter le paramètre à l'attribut sans ambiguïté ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "litres = litres;" },
+        { "id": "b", "label": "this->litres = litres;" },
+        { "id": "c", "label": "this.litres = litres;" },
+        { "id": "d", "label": "Reservoir::litres = this;" }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Quand un paramètre masque un attribut homonyme, le mot-clé **`this`** lève l'ambiguïté. `this` est un **pointeur** vers l'objet courant ; on accède donc à l'attribut avec la flèche : `this->litres`. À gauche c'est l'attribut, à droite le paramètre. La forme `this.litres` est fausse (`this` est un pointeur, pas un objet).",
+    "concepts": ["constructeur-parametre"]
+  },
+  {
+    "chapterSlug": "constructeurs",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Fraction {\n    private:\n        int numerateur;\n        int denominateur;\n    public:\n        Fraction() : numerateur(0), denominateur(1) {}\n        Fraction(int n, int d) : numerateur(n), denominateur(d) {}\n        void affiche() { cout << numerateur << \"/\" << denominateur << endl; }\n};\n\nint main() {\n    Fraction f1;\n    Fraction f2(3, 4);\n    f1.affiche();\n    f2.affiche();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "0/1\n3/4" },
+    "explanation": "`Fraction f1;` appelle le **constructeur par défaut** : `numerateur` vaut 0, `denominateur` vaut 1, d'où `0/1`. `Fraction f2(3, 4);` appelle le **constructeur à deux paramètres** : `3/4`. Le compilateur choisit le constructeur selon les arguments fournis.",
+    "concepts": ["constructeur-defaut", "constructeur-parametre"]
+  },
+  {
+    "chapterSlug": "constructeurs",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe à quel moment le constructeur s'exécute.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Compteur {\n    private:\n        int valeur;\n    public:\n        Compteur() {\n            cout << \"constructeur appele\" << endl;\n            valeur = 0;\n        }\n        int lire() { return valeur; }\n};\n\nint main() {\n    cout << \"avant\" << endl;\n    Compteur c;\n    cout << \"valeur = \" << c.lire() << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "avant\nconstructeur appele\nvaleur = 0" },
+    "explanation": "Le constructeur est **appelé automatiquement** au moment exact où l'objet `c` est créé — entre l'affichage de `avant` et celui de `valeur = ...`. Il affiche son message puis met `valeur` à 0, ce que confirme `c.lire()`.",
+    "concepts": ["constructeur-defaut"]
+  },
+  {
+    "chapterSlug": "constructeurs",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme utilisant des arguments par défaut ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Point {\n    private:\n        int x;\n        int y;\n    public:\n        Point(int x = 1, int y = 2) : x(x), y(y) {}\n        void affiche() { cout << \"(\" << x << \", \" << y << \")\" << endl; }\n};\n\nint main() {\n    Point a;\n    Point b(7);\n    Point c(7, 9);\n    a.affiche();\n    b.affiche();\n    c.affiche();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "(1, 2)\n(7, 2)\n(7, 9)" },
+    "explanation": "Le constructeur `Point(int x = 1, int y = 2)` couvre trois cas grâce à ses arguments par défaut : `Point a;` → (1, 2) ; `Point b(7);` → `x` vaut 7, `y` reste par défaut → (7, 2) ; `Point c(7, 9);` → (7, 9).",
+    "concepts": ["constructeur-parametre", "constructeur-defaut"]
+  },
+  {
+    "chapterSlug": "constructeurs",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Le paramètre porte le même nom que l'attribut.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Reservoir {\n    private:\n        int litres;\n    public:\n        Reservoir(int litres) {\n            this->litres = litres;\n        }\n        void ajouter(int litres) {\n            this->litres = this->litres + litres;\n        }\n        int contenu() { return litres; }\n};\n\nint main() {\n    Reservoir r(50);\n    r.ajouter(30);\n    cout << r.contenu() << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "80" },
+    "explanation": "Dans le constructeur, `this->litres = litres` affecte le paramètre (50) à l'attribut. Dans `ajouter`, `this->litres = this->litres + litres` ajoute le paramètre (30) à l'attribut : 50 + 30 = 80. Le `this->` distingue partout l'**attribut** du **paramètre** homonyme.",
+    "concepts": ["constructeur-parametre"]
+  },
+  {
+    "chapterSlug": "constructeurs",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète la classe `Point3D` : un constructeur par défaut qui met `x`, `y`, `z` à 0, et un constructeur à trois paramètres. Le `main` est fourni.",
+    "payload": {
+      "spec": "Definir la classe Point3D avec trois attributs prives x, y, z. Constructeur par defaut: x=y=z=0. Constructeur a trois parametres (px, py, pz). Methode affiche() qui ecrit le point sous la forme (x, y, z) suivie d'un retour a la ligne. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Point3D {\n    private:\n        int x, y, z;\n    public:\n        // a completer : constructeur par defaut\n        // a completer : constructeur a 3 parametres\n        void affiche() { cout << \"(\" << x << \", \" << y << \", \" << z << \")\" << endl; }\n};\n\nint main() {\n    int a, b, c;\n    cin >> a >> b >> c;\n    Point3D origine;\n    Point3D p(a, b, c);\n    origine.affiche();\n    p.affiche();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "positifs", "stdin": "4 5 6", "expectedStdout": "(0, 0, 0)\n(4, 5, 6)" },
+        { "name": "avec negatif", "stdin": "-1 0 9", "expectedStdout": "(0, 0, 0)\n(-1, 0, 9)" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Point3D {\n    private:\n        int x, y, z;\n    public:\n        Point3D() : x(0), y(0), z(0) {}\n        Point3D(int px, int py, int pz) : x(px), y(py), z(pz) {}\n        void affiche() { cout << \"(\" << x << \", \" << y << \", \" << z << \")\" << endl; }\n};\n\nint main() {\n    int a, b, c;\n    cin >> a >> b >> c;\n    Point3D origine;\n    Point3D p(a, b, c);\n    origine.affiche();\n    p.affiche();\n    return 0;\n}"
+    },
+    "explanation": "Deux constructeurs surchargés cohabitent : `Point3D() : x(0), y(0), z(0) {}` (par défaut) et `Point3D(int px, int py, int pz) : x(px), y(py), z(pz) {}` (à trois paramètres). Chacun utilise la **liste d'initialisation** pour fixer les attributs. `Point3D origine;` choisit le premier, `Point3D p(a, b, c);` le second.",
+    "concepts": ["constructeur-defaut", "constructeur-parametre", "liste-initialisation"]
+  },
+  {
+    "chapterSlug": "constructeurs",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Écris la classe `Fraction` avec **un seul** constructeur à arguments par défaut `Fraction(int n = 0, int d = 1)`. Le `main` crée trois fractions et les affiche.",
+    "payload": {
+      "spec": "Definir la classe Fraction avec deux attributs prives numerateur et denominateur. Un unique constructeur Fraction(int n = 0, int d = 1) utilisant la liste d'initialisation. Une methode affiche() qui ecrit numerateur/denominateur suivi d'un retour a la ligne. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// definis la classe Fraction ici\n\nint main() {\n    int n, d;\n    cin >> n >> d;\n    Fraction f1;\n    Fraction f2(n);\n    Fraction f3(n, d);\n    f1.affiche();\n    f2.affiche();\n    f3.affiche();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "sept tiers", "stdin": "7 3", "expectedStdout": "0/1\n7/1\n7/3" },
+        { "name": "cinq cinq", "stdin": "5 5", "expectedStdout": "0/1\n5/1\n5/5" },
+        { "name": "cache", "stdin": "2 8", "expectedStdout": "0/1\n2/1\n2/8", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Fraction {\n    private:\n        int numerateur;\n        int denominateur;\n    public:\n        Fraction(int n = 0, int d = 1) : numerateur(n), denominateur(d) {}\n        void affiche() { cout << numerateur << \"/\" << denominateur << endl; }\n};\n\nint main() {\n    int n, d;\n    cin >> n >> d;\n    Fraction f1;\n    Fraction f2(n);\n    Fraction f3(n, d);\n    f1.affiche();\n    f2.affiche();\n    f3.affiche();\n    return 0;\n}"
+    },
+    "explanation": "Un **unique** constructeur à arguments par défaut remplace trois constructeurs surchargés : `Fraction f1;` → (0, 1) ; `Fraction f2(n);` → (n, 1) ; `Fraction f3(n, d);` → (n, d). Les valeurs par défaut s'écrivent **une seule fois**, dans la déclaration du constructeur.",
+    "concepts": ["constructeur-parametre", "constructeur-defaut", "liste-initialisation"]
+  },
+  {
+    "chapterSlug": "constructeurs",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris la classe `CompteBancaire` : son constructeur reçoit le solde initial dans un paramètre **nommé `solde`** (homonyme de l'attribut). Utilise `this`. Le `main` lit le solde initial et un dépôt.",
+    "payload": {
+      "spec": "Definir la classe CompteBancaire avec un attribut prive int solde. Le constructeur CompteBancaire(int solde) doit utiliser this pour affecter le parametre a l'attribut. Une methode deposer(int solde) ajoute le parametre au solde courant en utilisant this. Une methode getSolde() renvoie le solde. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// definis la classe CompteBancaire ici\n\nint main() {\n    int initial, depot;\n    cin >> initial >> depot;\n    CompteBancaire compte(initial);\n    compte.deposer(depot);\n    cout << compte.getSolde() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "depot simple", "stdin": "100 50", "expectedStdout": "150" },
+        { "name": "depart a zero", "stdin": "0 200", "expectedStdout": "200" },
+        { "name": "cache", "stdin": "75 25", "expectedStdout": "100", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass CompteBancaire {\n    private:\n        int solde;\n    public:\n        CompteBancaire(int solde) {\n            this->solde = solde;\n        }\n        void deposer(int solde) {\n            this->solde = this->solde + solde;\n        }\n        int getSolde() { return solde; }\n};\n\nint main() {\n    int initial, depot;\n    cin >> initial >> depot;\n    CompteBancaire compte(initial);\n    compte.deposer(depot);\n    cout << compte.getSolde() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le paramètre `solde` masque l'attribut homonyme. `this->solde` désigne sans ambiguïté l'**attribut** de l'objet courant, `solde` seul désigne le **paramètre**. Dans `deposer`, `this->solde = this->solde + solde` ajoute le dépôt au solde courant.",
+    "concepts": ["constructeur-parametre"]
+  },
+  {
+    "chapterSlug": "constructeurs",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas. La classe `Temperature` doit lire un entier et l'afficher. Corrige l'erreur du constructeur.",
+    "payload": {
+      "spec": "La classe Temperature a un attribut prive int degres. Son constructeur recoit un entier et le stocke. La methode lire() le renvoie. Le main lit un entier et l'affiche.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Temperature {\n    private:\n        int degres;\n    public:\n        void Temperature(int d) {\n            degres = d;\n        }\n        int lire() { return degres; }\n};\n\nint main() {\n    int t;\n    cin >> t;\n    Temperature temp(t);\n    cout << temp.lire() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "positif", "stdin": "20", "expectedStdout": "20" },
+        { "name": "negatif", "stdin": "-5", "expectedStdout": "-5" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Temperature {\n    private:\n        int degres;\n    public:\n        Temperature(int d) {\n            degres = d;\n        }\n        int lire() { return degres; }\n};\n\nint main() {\n    int t;\n    cin >> t;\n    Temperature temp(t);\n    cout << temp.lire() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : le constructeur était déclaré `void Temperature(int d)`. Or un constructeur **n'a aucun type de retour**, pas même `void` — g++ refuse de compiler (`return type specification for constructor invalid`). Il fallait écrire simplement `Temperature(int d)`.",
+    "concepts": ["constructeur-parametre"]
+  },
+  {
+    "chapterSlug": "constructeurs",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme compile, mais affiche une valeur aberrante au lieu du rayon lu. Le paramètre et l'attribut s'appellent tous deux `rayon`. Corrige le constructeur.",
+    "payload": {
+      "spec": "La classe Cercle a un attribut prive int rayon. Le constructeur Cercle(int rayon) doit affecter le parametre a l'attribut. La methode getRayon() renvoie le rayon. Le main lit un entier et l'affiche.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Cercle {\n    private:\n        int rayon;\n    public:\n        Cercle(int rayon) {\n            rayon = rayon;\n        }\n        int getRayon() { return rayon; }\n};\n\nint main() {\n    int r;\n    cin >> r;\n    Cercle c(r);\n    cout << c.getRayon() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "cinq", "stdin": "5", "expectedStdout": "5" },
+        { "name": "douze", "stdin": "12", "expectedStdout": "12" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Cercle {\n    private:\n        int rayon;\n    public:\n        Cercle(int rayon) {\n            this->rayon = rayon;\n        }\n        int getRayon() { return rayon; }\n};\n\nint main() {\n    int r;\n    cin >> r;\n    Cercle c(r);\n    cout << c.getRayon() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `rayon = rayon;` affecte le **paramètre à lui-même** — le nom `rayon` désigne le paramètre, qui masque l'attribut. L'attribut reste donc non initialisé (valeur aberrante). Il faut `this->rayon = rayon;` : `this->rayon` est l'attribut, `rayon` le paramètre.",
+    "concepts": ["constructeur-parametre"]
+  },
+  {
+    "chapterSlug": "constructeurs",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "La classe `Joueur` doit afficher `score = 100` puis `vies = 3`, mais elle affiche des valeurs échangées. Corrige la liste d'initialisation.",
+    "payload": {
+      "spec": "La classe Joueur a deux attributs prives score et vies. Le constructeur Joueur(int s, int v) doit initialiser score avec s et vies avec v. getScore() et getVies() renvoient les attributs.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Joueur {\n    private:\n        int score;\n        int vies;\n    public:\n        Joueur(int s, int v) : score(v), vies(s) {}\n        int getScore() { return score; }\n        int getVies() { return vies; }\n};\n\nint main() {\n    Joueur j(100, 3);\n    cout << \"score = \" << j.getScore() << endl;\n    cout << \"vies = \" << j.getVies() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "valeurs fixes", "stdin": "", "expectedStdout": "score = 100\nvies = 3" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Joueur {\n    private:\n        int score;\n        int vies;\n    public:\n        Joueur(int s, int v) : score(s), vies(v) {}\n        int getScore() { return score; }\n        int getVies() { return vies; }\n};\n\nint main() {\n    Joueur j(100, 3);\n    cout << \"score = \" << j.getScore() << endl;\n    cout << \"vies = \" << j.getVies() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : la liste d'initialisation `: score(v), vies(s)` croise les paramètres — `score` reçoit `v` (3) et `vies` reçoit `s` (100). Il fallait `: score(s), vies(v)` pour que chaque attribut reçoive le bon paramètre.",
+    "concepts": ["liste-initialisation", "constructeur-parametre"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Comment se nomme le destructeur d'une classe nommée `Fichier` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Fichier()" },
+        { "id": "b", "label": "!Fichier()" },
+        { "id": "c", "label": "~Fichier()" },
+        { "id": "d", "label": "delete Fichier()" }
+      ]
+    },
+    "solution": { "correct": ["c"] },
+    "explanation": "Le destructeur porte le **nom de la classe précédé du signe `~`** (tilde) : `~Fichier()`. Comme le constructeur, il n'a aucun type de retour ; et contrairement à lui, il ne prend **aucun argument**.",
+    "concepts": ["destructeur"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "ORDERING",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Remets dans l'ordre les trois étapes du cycle de vie d'un objet.",
+    "payload": {
+      "items": [
+        { "id": "use", "label": "Utilisation : on appelle les méthodes de l'objet" },
+        { "id": "destr", "label": "Destruction : le destructeur est appelé, les ressources sont libérées" },
+        { "id": "constr", "label": "Construction : le constructeur est appelé, les attributs sont initialisés" }
+      ]
+    },
+    "solution": { "order": ["constr", "use", "destr"] },
+    "explanation": "Le cycle de vie d'un objet comporte trois étapes : **construction** (le constructeur initialise), **utilisation** (on manipule l'objet), **destruction** (le destructeur libère les ressources). Le constructeur ouvre la vie de l'objet, le destructeur la referme.",
+    "concepts": ["cycle-de-vie-objet"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans quelles situations le destructeur d'un objet s'exécute-t-il automatiquement ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Quand un objet local sort du bloc { } où il a été déclaré." },
+        { "id": "b", "label": "Quand on appelle delete sur un objet créé avec new." },
+        { "id": "c", "label": "À chaque fois qu'on appelle une méthode de l'objet." },
+        { "id": "d", "label": "Quand on déclare l'objet pour la première fois." },
+        { "id": "e", "label": "À la fin du programme, pour les objets locaux encore en vie." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "e"] },
+    "explanation": "Le destructeur se déclenche en **fin de portée** (sortie du bloc `{ }` pour un objet local), lors d'un **`delete`** (pour un objet créé avec `new`), et à la fin du programme pour les objets locaux encore vivants (ex. ceux du `main`). Appeler une méthode ne détruit rien ; déclarer un objet le **construit**, ne le détruit pas.",
+    "concepts": ["destructeur", "cycle-de-vie-objet"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Trois objets locaux `a`, `b`, `c` sont construits dans cet ordre dans un même bloc. Dans quel ordre leurs destructeurs sont-ils appelés à la fin du bloc ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "a, puis b, puis c (même ordre que la construction)" },
+        { "id": "b", "label": "c, puis b, puis a (ordre inverse de la construction)" },
+        { "id": "c", "label": "Un ordre indéterminé, choisi par le compilateur" },
+        { "id": "d", "label": "Tous en même temps" }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Les objets locaux sont détruits dans l'**ordre inverse** de leur construction : le **dernier construit est le premier détruit**. La pile fonctionne en « dernier entré, premier sorti ». Cet ordre garantit qu'un objet n'est jamais détruit avant ceux construits en s'appuyant sur lui.",
+    "concepts": ["destructeur", "cycle-de-vie-objet"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète le compteur d'instances : le constructeur **incrémente** le compteur global, le destructeur le **décrémente**.",
+    "payload": {
+      "template": "long counter = 0;\nclass Rectangle {\n    public:\n        Rectangle() { {{inc}}counter; }\n        ~Rectangle() { {{dec}}counter; }\n};",
+      "slots": [
+        { "id": "inc", "width": "sm" },
+        { "id": "dec", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "inc": "++", "dec": "--" },
+      "caseSensitive": false
+    },
+    "explanation": "Pour compter les instances vivantes d'une classe, on utilise une variable globale : le **constructeur l'incrémente** (`++counter`) à chaque création, le **destructeur la décrémente** (`--counter`) à chaque destruction. Construction et destruction se répondent exactement.",
+    "concepts": ["destructeur", "cycle-de-vie-objet"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "TRUE_FALSE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Pour une classe `Fraction` qui ne contient que deux `int`, le destructeur synthétisé par le compilateur suffit ; il n'est pas nécessaire d'en écrire un.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai : `Fraction` ne gère que des `int`, qui ne réclament **aucune libération** particulière. Le destructeur synthétisé (corps vide) suffit. Un destructeur écrit à la main devient indispensable seulement quand la classe détient des **ressources** — mémoire allouée avec `new`, fichier ouvert, etc.",
+    "concepts": ["destructeur"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Trace {\n    public:\n        Trace() { cout << \"construction\" << endl; }\n        ~Trace() { cout << \"destruction\" << endl; }\n};\n\nint main() {\n    cout << \"debut\" << endl;\n    Trace t;\n    cout << \"fin\" << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "debut\nconstruction\nfin\ndestruction" },
+    "explanation": "Le constructeur de `t` s'exécute à sa création (après `debut`). L'objet `t` est local au `main` : son destructeur s'exécute en **fin de portée**, à l'accolade fermante du `main` — donc **après** `fin`.",
+    "concepts": ["destructeur", "cycle-de-vie-objet"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Attention à l'ordre de destruction.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Objet {\n    private:\n        int id;\n    public:\n        Objet(int id) : id(id) { cout << \"construit \" << id << endl; }\n        ~Objet() { cout << \"detruit \" << id << endl; }\n};\n\nint main() {\n    Objet a(1);\n    Objet b(2);\n    Objet c(3);\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "construit 1\nconstruit 2\nconstruit 3\ndetruit 3\ndetruit 2\ndetruit 1" },
+    "explanation": "Les trois objets sont construits dans l'ordre `1, 2, 3`. À la fin du `main`, ils sont détruits dans l'**ordre inverse** : `3, 2, 1`. Le dernier construit est le premier détruit.",
+    "concepts": ["destructeur", "cycle-de-vie-objet"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Un objet est créé avec `new`, l'autre sur la pile.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Ressource {\n    private:\n        int id;\n    public:\n        Ressource(int id) : id(id) { cout << \"ouvre \" << id << endl; }\n        ~Ressource() { cout << \"ferme \" << id << endl; }\n};\n\nint main() {\n    Ressource* p = new Ressource(1);\n    Ressource locale(2);\n    delete p;\n    cout << \"suite du main\" << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "ouvre 1\nouvre 2\nferme 1\nsuite du main\nferme 2" },
+    "explanation": "`new Ressource(1)` construit l'objet 1 sur le tas (`ouvre 1`). `locale(2)` est construit sur la pile (`ouvre 2`). `delete p` détruit **immédiatement** l'objet 1 (`ferme 1`). L'objet `locale`, lui, n'est détruit qu'à la fin du `main` — donc **après** `suite du main`.",
+    "concepts": ["destructeur", "cycle-de-vie-objet"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Un objet est créé à chaque tour de boucle.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Suivi {\n    private:\n        int id;\n    public:\n        Suivi(int id) : id(id) { cout << \"C\" << id << \" \"; }\n        ~Suivi() { cout << \"D\" << id << \" \"; }\n};\n\nint main() {\n    Suivi a(1);\n    for (int i = 2; i <= 3; i++) {\n        Suivi temp(i);\n    }\n    Suivi b(4);\n    cout << \"| \";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "C1 C2 D2 C3 D3 C4 | D4 D1" },
+    "explanation": "`a` est construit (`C1`). À chaque tour de boucle, `temp` est construit puis **détruit à la fin du tour** : `C2 D2`, puis `C3 D3`. `b` est construit (`C4`). Après `|`, la fin du `main` détruit `b` puis `a` dans l'ordre inverse : `D4 D1`.",
+    "concepts": ["destructeur", "cycle-de-vie-objet"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris la classe `Journal` : son constructeur affiche `ouverture N`, son destructeur affiche `fermeture N`, où `N` est l'identifiant reçu. Le `main` lit `N`.",
+    "payload": {
+      "spec": "Definir la classe Journal avec un attribut prive int id. Le constructeur Journal(int id) affiche 'ouverture ' suivi de id et d'un retour a la ligne. Le destructeur affiche 'fermeture ' suivi de id et d'un retour a la ligne. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// definis la classe Journal ici\n\nint main() {\n    int n;\n    cin >> n;\n    Journal j(n);\n    return 0;\n}\n",
+      "tests": [
+        { "name": "sept", "stdin": "7", "expectedStdout": "ouverture 7\nfermeture 7" },
+        { "name": "quarante-deux", "stdin": "42", "expectedStdout": "ouverture 42\nfermeture 42" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Journal {\n    private:\n        int id;\n    public:\n        Journal(int id) : id(id) {\n            cout << \"ouverture \" << id << endl;\n        }\n        ~Journal() {\n            cout << \"fermeture \" << id << endl;\n        }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    Journal j(n);\n    return 0;\n}"
+    },
+    "explanation": "Le constructeur `Journal(int id)` initialise l'attribut et affiche `ouverture N`. Le destructeur `~Journal()` (sans paramètre, sans type de retour) affiche `fermeture N`. L'objet `j` étant local au `main`, son destructeur s'exécute à la fin du `main`.",
+    "concepts": ["destructeur", "cycle-de-vie-objet"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris la classe `Widget` avec un **compteur d'instances** : un `long counter` global, incrémenté par le constructeur et décrémenté par le destructeur. Le `main` est fourni.",
+    "payload": {
+      "spec": "Declarer une variable globale long counter initialisee a 0. Definir la classe Widget dont le constructeur par defaut fait ++counter et le destructeur fait --counter. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// declare counter et la classe Widget ici\n\nint main() {\n    Widget a;\n    Widget b;\n    {\n        Widget c;\n        cout << counter << endl;\n    }\n    cout << counter << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "comptage", "stdin": "", "expectedStdout": "3\n2" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nlong counter = 0;\n\nclass Widget {\n    public:\n        Widget() { ++counter; }\n        ~Widget() { --counter; }\n};\n\nint main() {\n    Widget a;\n    Widget b;\n    {\n        Widget c;\n        cout << counter << endl;\n    }\n    cout << counter << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le constructeur incrémente `counter`, le destructeur le décrémente. `a` et `b` portent le compteur à 2, puis `c` à 3 (premier affichage). À la sortie du bloc interne, `c` est détruit : le compteur retombe à 2 (3 − 1 = 2 ; seul `c` est détruit, `a` et `b` sont toujours en vie).",
+    "concepts": ["destructeur", "cycle-de-vie-objet"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris la classe `Connexion` (constructeur `connecte N`, destructeur `deconnecte N`). Le `main` crée la connexion avec `new`, fait un `delete`, et observe le moment de la destruction.",
+    "payload": {
+      "spec": "Definir la classe Connexion avec un attribut prive int id. Le constructeur Connexion(int id) affiche 'connecte ' suivi de id et d'un retour a la ligne. Le destructeur affiche 'deconnecte ' suivi de id et d'un retour a la ligne. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\n// definis la classe Connexion ici\n\nint main() {\n    int n;\n    cin >> n;\n    Connexion* c = new Connexion(n);\n    cout << \"transfert\" << endl;\n    delete c;\n    cout << \"termine\" << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois", "stdin": "3", "expectedStdout": "connecte 3\ntransfert\ndeconnecte 3\ntermine" },
+        { "name": "quatre-vingt-dix-neuf", "stdin": "99", "expectedStdout": "connecte 99\ntransfert\ndeconnecte 99\ntermine" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Connexion {\n    private:\n        int id;\n    public:\n        Connexion(int id) : id(id) {\n            cout << \"connecte \" << id << endl;\n        }\n        ~Connexion() {\n            cout << \"deconnecte \" << id << endl;\n        }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    Connexion* c = new Connexion(n);\n    cout << \"transfert\" << endl;\n    delete c;\n    cout << \"termine\" << endl;\n    return 0;\n}"
+    },
+    "explanation": "Un objet créé avec `new` n'est **pas** détruit en fin de portée : son destructeur ne s'exécute qu'au moment du **`delete`**. D'où l'ordre : `connecte` (new), `transfert`, `deconnecte` (delete), `termine`.",
+    "concepts": ["destructeur", "cycle-de-vie-objet"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas. La classe `Fichier` doit afficher `ouvre 7` puis `ferme 7`. Corrige la déclaration du destructeur.",
+    "payload": {
+      "spec": "La classe Fichier a un attribut prive int id. Le constructeur affiche 'ouvre ' suivi de id. Le destructeur affiche 'ferme ' suivi de id. Le main cree un Fichier d'identifiant 7.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Fichier {\n    private:\n        int id;\n    public:\n        Fichier(int id) : id(id) {\n            cout << \"ouvre \" << id << endl;\n        }\n        void ~Fichier() {\n            cout << \"ferme \" << id << endl;\n        }\n};\n\nint main() {\n    Fichier f(7);\n    return 0;\n}\n",
+      "tests": [
+        { "name": "fichier sept", "stdin": "", "expectedStdout": "ouvre 7\nferme 7" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Fichier {\n    private:\n        int id;\n    public:\n        Fichier(int id) : id(id) {\n            cout << \"ouvre \" << id << endl;\n        }\n        ~Fichier() {\n            cout << \"ferme \" << id << endl;\n        }\n};\n\nint main() {\n    Fichier f(7);\n    return 0;\n}"
+    },
+    "explanation": "Le bug : le destructeur était déclaré `void ~Fichier()`. Or un destructeur **n'a aucun type de retour**, pas même `void` — g++ refuse de compiler (`return type specification for destructor invalid`). Il fallait écrire simplement `~Fichier()`.",
+    "concepts": ["destructeur"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce compteur d'instances compile, mais affiche `4` au lieu de `0` après la destruction des deux sessions. Corrige le destructeur.",
+    "payload": {
+      "spec": "Une variable globale long counter compte les instances vivantes de Session. Le constructeur l'incremente, le destructeur doit la decrementer. Le main cree deux sessions dans un bloc, puis affiche counter apres le bloc.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nlong counter = 0;\n\nclass Session {\n    public:\n        Session() { ++counter; }\n        ~Session() { ++counter; }\n};\n\nint main() {\n    {\n        Session s1;\n        Session s2;\n    }\n    cout << \"sessions actives : \" << counter << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "compteur a zero", "stdin": "", "expectedStdout": "sessions actives : 0" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nlong counter = 0;\n\nclass Session {\n    public:\n        Session() { ++counter; }\n        ~Session() { --counter; }\n};\n\nint main() {\n    {\n        Session s1;\n        Session s2;\n    }\n    cout << \"sessions actives : \" << counter << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : le destructeur faisait `++counter` au lieu de `--counter`. Du coup chaque création ET chaque destruction incrémentaient le compteur (2 + 2 = 4). Le destructeur doit **décrémenter** (`--counter`) pour annuler l'incrément du constructeur : le compteur retombe alors à 0.",
+    "concepts": ["destructeur", "cycle-de-vie-objet"]
+  },
+  {
+    "chapterSlug": "destructeur",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas. La classe `Tampon` doit afficher `alloue 4`, `utilisation`, `libere 4`. Corrige la signature du destructeur.",
+    "payload": {
+      "spec": "La classe Tampon a un attribut prive int id. Le constructeur affiche 'alloue ' suivi de id. Le destructeur affiche 'libere ' suivi de id. Le main cree un Tampon d'identifiant 4.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Tampon {\n    private:\n        int id;\n    public:\n        Tampon(int id) : id(id) {\n            cout << \"alloue \" << id << endl;\n        }\n        ~Tampon(int id) {\n            cout << \"libere \" << id << endl;\n        }\n};\n\nint main() {\n    Tampon t(4);\n    cout << \"utilisation\" << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "tampon quatre", "stdin": "", "expectedStdout": "alloue 4\nutilisation\nlibere 4" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Tampon {\n    private:\n        int id;\n    public:\n        Tampon(int id) : id(id) {\n            cout << \"alloue \" << id << endl;\n        }\n        ~Tampon() {\n            cout << \"libere \" << id << endl;\n        }\n};\n\nint main() {\n    Tampon t(4);\n    cout << \"utilisation\" << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : le destructeur était déclaré `~Tampon(int id)` avec un paramètre. Or un destructeur **ne prend aucun argument** — g++ refuse de compiler (`destructors may not have parameters`). Il fallait `~Tampon()`. L'attribut `id` reste accessible dans le destructeur sans qu'on ait à le passer.",
+    "concepts": ["destructeur"]
+  }
+]

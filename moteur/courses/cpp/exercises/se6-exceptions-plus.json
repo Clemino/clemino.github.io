@@ -1,0 +1,619 @@
+[
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce qui distingue une **classe d'exception** d'une classe C++ ordinaire ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Elle doit être déclarée avec le mot-clé spécial exception devant class." },
+        { "id": "b", "label": "Rien dans sa définition : c'est une classe ordinaire ; c'est son usage avec throw qui en fait une exception." },
+        { "id": "c", "label": "Elle ne peut contenir aucun attribut, seulement des méthodes." },
+        { "id": "d", "label": "Elle doit obligatoirement hériter d'une classe fournie par le compilateur." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Une classe d'exception est une **classe parfaitement ordinaire** : aucun mot-clé spécial, aucune obligation d'héritage. Elle a un constructeur, des attributs, des accesseurs comme n'importe quelle classe. Ce qui en fait une « exception », c'est uniquement son **usage** : on en lance une instance avec `throw`. Le rôle qu'on lui donne — transporter le diagnostic d'une erreur — est une convention, pas une contrainte du langage.",
+    "concepts": ["classe-exception-personnalisee"]
+  },
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "L'expression `throw Erreur(10)` **construit** d'abord un objet `Erreur` initialisé à `10`, puis le **lance**.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. `throw Erreur(10)` fait **deux choses** : elle **construit** une instance de la classe `Erreur` en appelant son constructeur avec l'argument `10`, puis elle **lance** cet objet. C'est la forme habituelle pour lever une exception personnalisée — on construit l'objet directement dans le `throw`.",
+    "concepts": ["classe-exception-personnalisee", "throw"]
+  },
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "MATCHING",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "La classe `Erreur` du cours transporte trois attributs. Associe chaque attribut à ce qu'il représente.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "m_numero" },
+        { "id": "l2", "label": "m_phrase" },
+        { "id": "l3", "label": "m_niveau" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Le numéro identifiant l'erreur." },
+        { "id": "r2", "label": "Une phrase décrivant l'erreur." },
+        { "id": "r3", "label": "Le niveau de gravité (erreur fatale, erreur mineure...)." }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3" } },
+    "explanation": "La classe `Erreur` enrichie du cours regroupe tout le **diagnostic** d'une erreur : `m_numero` est le **numéro** qui l'identifie, `m_phrase` la **description** textuelle, et `m_niveau` le **niveau de gravité**. Une seule exception transmet ainsi trois renseignements d'un coup — c'est tout l'intérêt de l'objet sur la valeur brute.",
+    "concepts": ["classe-exception-personnalisee"]
+  },
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi une classe d'exception doit-elle rester **copiable** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Parce que le compilateur refuse de compiler une classe non copiable." },
+        { "id": "b", "label": "Parce que le mécanisme des exceptions peut avoir besoin de copier l'objet lancé (par exemple lors d'une capture par valeur)." },
+        { "id": "c", "label": "Parce qu'une exception est toujours lancée deux fois de suite." },
+        { "id": "d", "label": "Parce que throw refuse les objets dont le constructeur de copie est implicite." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Le mécanisme des exceptions peut avoir besoin de **copier** l'objet lancé — notamment lorsqu'un `catch` le capture **par valeur**. Une classe d'exception doit donc rester **copiable**. Pour des attributs simples (`int`, `std::string`), le **constructeur de copie synthétisé** par le compilateur suffit. Si la classe gère une ressource (pointeur, `new`), elle doit respecter la **règle des trois**.",
+    "concepts": ["classe-exception-personnalisee", "constructeur-copie"]
+  },
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une application définit **plusieurs** classes d'exception. Quelles affirmations sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "On peut dédier un catch à chaque type d'exception, car le catch choisit par type." },
+        { "id": "b", "label": "Si deux classes d'exception sont liées par héritage, le catch de la classe dérivée doit précéder celui de la classe de base." },
+        { "id": "c", "label": "Le catch(...) doit toujours être placé en dernier." },
+        { "id": "d", "label": "Le type d'une exception fait partie du diagnostic : une classe par catégorie d'erreur rend le code lisible." },
+        { "id": "e", "label": "Un seul catch peut traiter à la fois deux classes d'exception sans aucun lien d'héritage." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c", "d"] },
+    "explanation": "**a, b, c, d sont vraies.** Le `catch` sélectionne par **type** : on dédie donc un gestionnaire à chaque classe. Si deux classes sont liées par héritage, on place la **dérivée avant la base** (sinon le `catch` de base intercepte tout). Le `catch(...)`, compatible avec tout, va **en dernier**. Définir une **classe par catégorie** d'erreur rend le code lisible. **e est faux** : un `catch` typé ne capture qu'**un seul type** (et ses dérivés) ; deux types sans lien d'héritage exigent deux `catch` distincts.",
+    "concepts": ["classe-exception-personnalisee", "selection-catch-par-type"]
+  },
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète cette classe d'exception `Erreur` qui transporte un numéro et un message, ainsi que le `throw` qui en construit une instance.",
+    "payload": {
+      "template": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Erreur {\n    int numero;\n    string message;\npublic:\n    Erreur(int n, const string& m) : numero(n), {{init}}(m) {}\n    int getNumero() const { return numero; }\n    string getMessage() const { return message; }\n};\n\nvoid verifier(int x) {\n    if (x < 0)\n        {{kw}} Erreur(1, \"valeur negative\");\n}\n\nint main() {\n    try {\n        verifier(-4);\n    }\n    catch (const Erreur& {{var}}) {\n        cout << e.getNumero() << \" : \" << e.getMessage() << \"\\n\";\n    }\n    return 0;\n}",
+      "slots": [
+        { "id": "init", "width": "sm" },
+        { "id": "kw", "width": "sm" },
+        { "id": "var", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "init": "message", "kw": "throw", "var": "e" },
+      "caseSensitive": false
+    },
+    "explanation": "Dans la liste d'initialisation, l'attribut **`message`** reçoit le paramètre `m`. L'instruction **`throw`** construit un objet `Erreur` et le lance. Le `catch` capture l'objet par `const Erreur&` ; le nom de la variable doit correspondre à celui utilisé dans le corps — ici **`e`**, puisqu'on écrit `e.getNumero()`.",
+    "concepts": ["classe-exception-personnalisee", "throw"]
+  },
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une fonction `f1()` exécute `throw Erreur(10)`. Un objet local `Essai e1` existe dans le `try`. Remets dans l'ordre chronologique les étapes observées.",
+    "payload": {
+      "items": [
+        { "id": "i1", "label": "L'objet Essai e1 est construit (son constructeur s'affiche)." },
+        { "id": "i2", "label": "f1() exécute throw Erreur(10) : un objet Erreur initialisé à 10 est construit et lancé." },
+        { "id": "i3", "label": "Le déroulement de pile détruit e1 (son destructeur s'affiche)." },
+        { "id": "i4", "label": "Le catch (const Erreur&) s'exécute et lit le numéro via get_val()." }
+      ]
+    },
+    "solution": { "order": ["i1", "i2", "i3", "i4"] },
+    "explanation": "L'objet local `e1` est d'abord **construit**. Puis `f1()` exécute `throw Erreur(10)`, qui **construit et lance** l'objet `Erreur`. Avant que l'exception n'atteigne le `catch`, le **déroulement de pile** détruit les objets locaux automatiques quittés : `e1` est détruit (son destructeur s'affiche). **Ensuite seulement** le `catch` s'exécute. Le destructeur de `e1` apparaît donc **avant** l'entrée dans le gestionnaire.",
+    "concepts": ["classe-exception-personnalisee", "deroulement-pile"]
+  },
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? C'est l'exemple `Erreur` / `Essai` du cours, instrumenté.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Erreur {\n    int val;\npublic:\n    Erreur(int n = 0) : val(n) { cout << \"construction Erreur \" << val << \"\\n\"; }\n    int get_val() const { return val; }\n};\n\nclass Essai {\npublic:\n    Essai()  { cout << \"constructeur Essai\\n\"; }\n    ~Essai() { cout << \"destructeur Essai\\n\"; }\n    void f1() { throw Erreur(10); }\n};\n\nint main() {\n    try {\n        Essai e1;\n        e1.f1();\n        cout << \"bla bla bla\\n\";\n    }\n    catch (const Erreur& e) {\n        cout << \"Erreur numero : \" << e.get_val() << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "constructeur Essai\nconstruction Erreur 10\ndestructeur Essai\nErreur numero : 10" },
+    "explanation": "`Essai e1` est construit → `constructeur Essai`. `e1.f1()` exécute `throw Erreur(10)` : l'objet `Erreur` est construit → `construction Erreur 10`. Le `throw` interrompt le `try` : `bla bla bla` est **sauté**. Avant que l'exception n'atteigne le `catch`, le **déroulement de pile** détruit `e1` → `destructeur Essai`. **Ensuite** le `catch` lit le numéro → `Erreur numero : 10`.",
+    "concepts": ["classe-exception-personnalisee", "deroulement-pile"]
+  },
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? L'objet `Erreur` transporte trois informations.",
+    "payload": {
+      "program": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Erreur {\n    int numero;\n    string phrase;\n    int niveau;\npublic:\n    Erreur(int n, string p, int niv) : numero(n), phrase(p), niveau(niv) {}\n    int getNumero() const { return numero; }\n    string getPhrase() const { return phrase; }\n    int getNiveau() const { return niveau; }\n};\n\nint division(int a, int b) {\n    if (b == 0)\n        throw Erreur(1, \"Division par zero\", 2);\n    return a / b;\n}\n\nint main() {\n    try {\n        cout << \"12 / 3 = \" << division(12, 3) << \"\\n\";\n        cout << \"12 / 0 = \" << division(12, 0) << \"\\n\";\n        cout << \"jamais\\n\";\n    }\n    catch (const Erreur& e) {\n        cout << \"phrase : \" << e.getPhrase() << \"\\n\";\n        cout << \"numero : \" << e.getNumero() << \"\\n\";\n        cout << \"niveau : \" << e.getNiveau() << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "12 / 3 = 4\n12 / 0 = phrase : Division par zero\nnumero : 1\nniveau : 2" },
+    "explanation": "La première ligne s'affiche entièrement : `division(12, 3)` renvoie `4`. Sur la deuxième ligne, `cout << \"12 / 0 = \"` s'exécute **d'abord** (d'où le texte `12 / 0 = `), **puis** `division(12, 0)` lève l'exception : l'expression d'affichage est abandonnée en plein milieu. La ligne `jamais` est sautée. Le `catch` interroge les trois accesseurs et affiche la phrase, le numéro et le niveau — sur la même ligne que le `12 / 0 = ` déjà sorti.",
+    "concepts": ["classe-exception-personnalisee"]
+  },
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Attention : l'exception personnalisée n'est rattrapée par **aucun** `catch`.",
+    "payload": {
+      "program": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Compte {\n    string nom;\npublic:\n    Compte(const string& n) : nom(n) { cout << \"ouverture \" << nom << \"\\n\"; }\n    ~Compte() { cout << \"fermeture \" << nom << \"\\n\"; }\n};\n\nclass Erreur {\n    string msg;\npublic:\n    Erreur(const string& m) : msg(m) {}\n    string getMsg() const { return msg; }\n};\n\nvoid transferer(int montant) {\n    Compte source(\"source\");\n    if (montant > 100)\n        throw Erreur(\"plafond depasse\");\n    cout << \"transfert de \" << montant << \"\\n\";\n}\n\nint main() {\n    cout << \"debut\\n\";\n    transferer(250);\n    cout << \"fin\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "debut\nouverture source" },
+    "explanation": "`debut` s'affiche, puis `transferer(250)` construit l'objet local `source` → `ouverture source`. Comme `250 > 100`, `throw Erreur(...)` lève une exception qu'**aucun `catch`** ne rattrape : la ligne `transfert de ...` est sautée. L'exception sort de `main` et provoque l'appel de `std::terminate()`. Sur g++, le destructeur de `source` n'est **pas** garanti pour une exception non rattrapée : `fermeture source` n'apparaît **pas**. Le message `terminate called...` part sur la **sortie d'erreur**. La sortie standard se limite à `debut` et `ouverture source`.",
+    "concepts": ["classe-exception-personnalisee", "deroulement-pile"]
+  },
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "CODE_WRITE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Écris un programme qui lit deux entiers `a` et `b`, calcule `a / b` via une fonction `division`. Cette fonction **lève un objet `Erreur`** (classe personnalisée portant un numéro et un message) si `b` vaut 0. Le programme se termine toujours normalement.",
+    "payload": {
+      "spec": "Definir une classe Erreur avec deux attributs prives : un int numero et une string message. Constructeur Erreur(int n, const string& m). Accesseurs getNumero() const et getMessage() const. Definir int division(int a, int b) : si b vaut 0, faire throw Erreur(1, \"division par zero\") ; sinon retourner a / b. Dans main : lire a puis b avec cin >> a >> b. Dans un bloc try, calculer r = division(a, b) et afficher 'resultat = ' suivi de r et d'un retour a la ligne. Dans un catch (const Erreur& e), afficher 'Erreur ' suivi du numero, de ' : ', du message et d'un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Erreur {\n    // a completer : attributs prives numero et message\npublic:\n    // a completer : constructeur et accesseurs\n};\n\nint division(int a, int b) {\n    // a completer : lever un objet Erreur si b == 0\n    return a / b;\n}\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    // a completer : try / catch autour de l'appel a division\n    return 0;\n}\n",
+      "tests": [
+        { "name": "division exacte", "stdin": "20 4", "expectedStdout": "resultat = 5" },
+        { "name": "division par zero", "stdin": "9 0", "expectedStdout": "Erreur 1 : division par zero" },
+        { "name": "quotient tronque", "stdin": "100 25", "expectedStdout": "resultat = 4" },
+        { "name": "cache negatif", "stdin": "-30 6", "expectedStdout": "resultat = -5", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Erreur {\n    int numero;\n    string message;\npublic:\n    Erreur(int n, const string& m) : numero(n), message(m) {}\n    int getNumero() const { return numero; }\n    string getMessage() const { return message; }\n};\n\nint division(int a, int b) {\n    if (b == 0)\n        throw Erreur(1, \"division par zero\");\n    return a / b;\n}\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    try {\n        int r = division(a, b);\n        cout << \"resultat = \" << r << \"\\n\";\n    }\n    catch (const Erreur& e) {\n        cout << \"Erreur \" << e.getNumero() << \" : \" << e.getMessage() << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "`Erreur` est une **classe ordinaire** : deux attributs privés (`numero`, `message`), un constructeur et deux accesseurs `const`. La fonction `division` lève une **instance** de cette classe avec `throw Erreur(1, ...)` quand `b == 0`. Le `catch (const Erreur& e)` la rattrape **par référence constante** et interroge ses accesseurs. On calcule `r` dans une variable **avant** d'afficher, pour qu'aucun texte partiel ne sorte si l'exception est levée. Le programme se termine toujours par `return 0`.",
+    "concepts": ["classe-exception-personnalisee", "throw"]
+  },
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit un âge entier et le valide via une fonction `verifierAge`. Cette fonction **lève un objet `ErreurSaisie`** (portant un code et un libellé) selon le problème : code 1 si l'âge est négatif, code 2 s'il dépasse 130.",
+    "payload": {
+      "spec": "Definir une classe ErreurSaisie avec deux attributs prives : un int code et une string libelle. Constructeur ErreurSaisie(int c, const string& l). Accesseurs getCode() const et getLibelle() const. Definir void verifierAge(int age) : si age est strictement negatif, faire throw ErreurSaisie(1, \"age negatif\") ; si age est strictement superieur a 130, faire throw ErreurSaisie(2, \"age trop grand\"). Dans main : lire age avec cin >> age. Dans un try, appeler verifierAge(age) puis afficher 'age accepte : ' suivi de age et d'un retour a la ligne. Dans un catch (const ErreurSaisie& e), afficher 'refus code ' suivi du code, de ' : ', du libelle et d'un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass ErreurSaisie {\n    // a completer : attributs prives code et libelle\npublic:\n    // a completer : constructeur et accesseurs\n};\n\nvoid verifierAge(int age) {\n    // a completer : lever ErreurSaisie selon le probleme\n}\n\nint main() {\n    int age;\n    cin >> age;\n    // a completer : try / catch autour de verifierAge\n    return 0;\n}\n",
+      "tests": [
+        { "name": "age courant", "stdin": "40", "expectedStdout": "age accepte : 40" },
+        { "name": "age negatif", "stdin": "-5", "expectedStdout": "refus code 1 : age negatif" },
+        { "name": "age trop grand", "stdin": "200", "expectedStdout": "refus code 2 : age trop grand" },
+        { "name": "borne basse", "stdin": "0", "expectedStdout": "age accepte : 0" },
+        { "name": "cache borne haute", "stdin": "130", "expectedStdout": "age accepte : 130", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass ErreurSaisie {\n    int code;\n    string libelle;\npublic:\n    ErreurSaisie(int c, const string& l) : code(c), libelle(l) {}\n    int getCode() const { return code; }\n    string getLibelle() const { return libelle; }\n};\n\nvoid verifierAge(int age) {\n    if (age < 0)\n        throw ErreurSaisie(1, \"age negatif\");\n    if (age > 130)\n        throw ErreurSaisie(2, \"age trop grand\");\n}\n\nint main() {\n    int age;\n    cin >> age;\n    try {\n        verifierAge(age);\n        cout << \"age accepte : \" << age << \"\\n\";\n    }\n    catch (const ErreurSaisie& e) {\n        cout << \"refus code \" << e.getCode() << \" : \" << e.getLibelle() << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "Une même classe d'exception peut transporter **différents codes** : `verifierAge` lève un `ErreurSaisie` portant le code `1` ou `2` selon le problème détecté. Le `catch` unique rattrape l'objet et lit son code et son libellé via les accesseurs — un **seul gestionnaire** suffit puisque les deux cas partagent le même type. Les bornes `0` et `130` sont **incluses** : la condition d'erreur est `age < 0` ou `age > 130`.",
+    "concepts": ["classe-exception-personnalisee", "throw"]
+  },
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme bancaire : une fonction `retrait` calcule le nouveau solde après un retrait, et **lève un objet `Erreur`** (portant un numéro, une phrase et un niveau de gravité) si le montant dépasse le solde.",
+    "payload": {
+      "spec": "Definir une classe Erreur avec trois attributs prives : un int numero, une string phrase, un int niveau. Constructeur Erreur(int n, const string& p, int niv). Accesseurs getNumero() const, getPhrase() const, getNiveau() const. Definir int retrait(int solde, int montant) : si montant est strictement superieur a solde, faire throw Erreur(7, \"solde insuffisant\", 3) ; sinon retourner solde - montant. Dans main : lire solde puis montant avec cin >> solde >> montant. Dans un try, calculer reste = retrait(solde, montant) et afficher 'nouveau solde : ' suivi de reste et d'un retour a la ligne. Dans un catch (const Erreur& e), afficher trois lignes : 'ERREUR numero : ' suivi du numero, 'ERREUR phrase : ' suivi de la phrase, 'ERREUR niveau : ' suivi du niveau, chacune terminee par un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Erreur {\n    // a completer : attributs prives numero, phrase, niveau\npublic:\n    // a completer : constructeur et accesseurs\n};\n\nint retrait(int solde, int montant) {\n    // a completer : lever un objet Erreur si montant > solde\n    return solde - montant;\n}\n\nint main() {\n    int solde, montant;\n    cin >> solde >> montant;\n    // a completer : try / catch autour de retrait\n    return 0;\n}\n",
+      "tests": [
+        { "name": "retrait possible", "stdin": "100 30", "expectedStdout": "nouveau solde : 70" },
+        { "name": "solde insuffisant", "stdin": "50 80", "expectedStdout": "ERREUR numero : 7\nERREUR phrase : solde insuffisant\nERREUR niveau : 3" },
+        { "name": "retrait du solde entier", "stdin": "200 200", "expectedStdout": "nouveau solde : 0" },
+        { "name": "cache un euro de trop", "stdin": "10 11", "expectedStdout": "ERREUR numero : 7\nERREUR phrase : solde insuffisant\nERREUR niveau : 3", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Erreur {\n    int numero;\n    string phrase;\n    int niveau;\npublic:\n    Erreur(int n, const string& p, int niv) : numero(n), phrase(p), niveau(niv) {}\n    int getNumero() const { return numero; }\n    string getPhrase() const { return phrase; }\n    int getNiveau() const { return niveau; }\n};\n\nint retrait(int solde, int montant) {\n    if (montant > solde)\n        throw Erreur(7, \"solde insuffisant\", 3);\n    return solde - montant;\n}\n\nint main() {\n    int solde, montant;\n    cin >> solde >> montant;\n    try {\n        int reste = retrait(solde, montant);\n        cout << \"nouveau solde : \" << reste << \"\\n\";\n    }\n    catch (const Erreur& e) {\n        cout << \"ERREUR numero : \" << e.getNumero() << \"\\n\";\n        cout << \"ERREUR phrase : \" << e.getPhrase() << \"\\n\";\n        cout << \"ERREUR niveau : \" << e.getNiveau() << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "C'est la classe `Erreur` enrichie du cours : trois attributs (`numero`, `phrase`, `niveau`) qui transportent un **diagnostic complet**. À la levée, `retrait` **remplit** ces champs avec `throw Erreur(7, ..., 3)` ; au rattrapage, le `catch` les **interroge** un par un via les accesseurs. Une seule exception transmet trois renseignements — le `catch` peut alors réagir finement (afficher le message, journaliser le numéro, décider selon le niveau).",
+    "concepts": ["classe-exception-personnalisee", "throw"]
+  },
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris un programme qui lit `n` puis `n` notes. Une fonction `evaluer` **lève un objet `Erreur`** (numéro, phrase, niveau de gravité 3) si une note est négative ou dépasse 20. Le programme additionne les notes valides et **compte les erreurs de gravité 3**, sans jamais s'arrêter.",
+    "payload": {
+      "spec": "Definir une classe Erreur avec trois attributs prives : int numero, string phrase, int niveau. Constructeur Erreur(int n, const string& p, int niv). Accesseurs getNumero() const, getPhrase() const, getNiveau() const. Definir int evaluer(int note) : si note est strictement negative, faire throw Erreur(1, \"note negative\", 3) ; si note est strictement superieure a 20, faire throw Erreur(2, \"note hors bareme\", 3) ; sinon retourner note. Dans main : lire n avec cin >> n. Initialiser total = 0 et graves = 0. Repeter n fois : lire une note ; dans un try, faire total += evaluer(note) ; dans un catch (const Erreur& e), afficher '[rejet] ' suivi de la phrase et d'un retour a la ligne, puis si e.getNiveau() est superieur ou egal a 3, incrementer graves. Apres la boucle, afficher 'total = ' suivi de total et d'un retour a la ligne, puis 'erreurs graves = ' suivi de graves et d'un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Erreur {\n    // a completer : attributs numero, phrase, niveau\npublic:\n    // a completer : constructeur et accesseurs\n};\n\nint evaluer(int note) {\n    // a completer : lever un objet Erreur selon le probleme\n    return note;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    // a completer : boucle avec try / catch par iteration\n    return 0;\n}\n",
+      "tests": [
+        { "name": "deux notes fautives sur quatre", "stdin": "4\n12\n-3\n25\n8", "expectedStdout": "[rejet] note negative\n[rejet] note hors bareme\ntotal = 20\nerreurs graves = 2" },
+        { "name": "aucune erreur", "stdin": "2\n10\n10", "expectedStdout": "total = 20\nerreurs graves = 0" },
+        { "name": "cache une seule note hors bareme", "stdin": "1\n30", "expectedStdout": "[rejet] note hors bareme\ntotal = 0\nerreurs graves = 1", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Erreur {\n    int numero;\n    string phrase;\n    int niveau;\npublic:\n    Erreur(int n, const string& p, int niv) : numero(n), phrase(p), niveau(niv) {}\n    int getNumero() const { return numero; }\n    string getPhrase() const { return phrase; }\n    int getNiveau() const { return niveau; }\n};\n\nint evaluer(int note) {\n    if (note < 0)\n        throw Erreur(1, \"note negative\", 3);\n    if (note > 20)\n        throw Erreur(2, \"note hors bareme\", 3);\n    return note;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    int total = 0;\n    int graves = 0;\n    for (int i = 0; i < n; i++) {\n        int note;\n        cin >> note;\n        try {\n            total += evaluer(note);\n        }\n        catch (const Erreur& e) {\n            cout << \"[rejet] \" << e.getPhrase() << \"\\n\";\n            if (e.getNiveau() >= 3)\n                graves++;\n        }\n    }\n    cout << \"total = \" << total << \"\\n\";\n    cout << \"erreurs graves = \" << graves << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "Le `try`/`catch` est placé **à l'intérieur** de la boucle : une note fautive n'interrompt pas le traitement des suivantes. Quand `evaluer` lève l'objet `Erreur`, `total += ...` est abandonné (le total ne change pas pour cette note), puis le `catch` exploite le **niveau de gravité** transporté par l'objet : on n'incrémente `graves` que si `getNiveau() >= 3`. C'est tout l'intérêt d'une exception **riche** : le gestionnaire prend une décision en fonction d'un attribut de l'objet, pas seulement de son type.",
+    "concepts": ["classe-exception-personnalisee", "exception"]
+  },
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme calcule une facture et doit afficher un message si la quantité est invalide. Mais sur le test `10 0`, il **s'arrête anormalement**. Corrige-le.",
+    "payload": {
+      "spec": "Le programme lit un prix et une quantite, et appelle facture(prix, quantite) qui leve un objet Erreur si la quantite est inferieure ou egale a 0. Probleme : l'appel a facture dans main n'est entoure d'AUCUN bloc try/catch. Quand la quantite est invalide, l'objet Erreur lance remonte jusqu'a sortir de main, ce qui appelle std::terminate et arrete le programme anormalement (code de sortie non nul). Corriger en placant l'appel a facture dans un bloc try suivi d'un catch (const Erreur& e) qui affiche 'ERREUR ' suivi du numero, de ' : ' et du message. Sortie attendue pour une quantite valide : 'total = ' suivi du produit. Pour une quantite invalide : 'ERREUR 4 : quantite invalide'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Erreur {\n    int numero;\n    string message;\npublic:\n    Erreur(int n, const string& m) : numero(n), message(m) {}\n    int getNumero() const { return numero; }\n    string getMessage() const { return message; }\n};\n\nint facture(int prix, int quantite) {\n    if (quantite <= 0)\n        throw Erreur(4, \"quantite invalide\");\n    return prix * quantite;\n}\n\nint main() {\n    int prix, quantite;\n    cin >> prix >> quantite;\n    int total = facture(prix, quantite);\n    cout << \"total = \" << total << \"\\n\";\n    return 0;\n}\n",
+      "tests": [
+        { "name": "facture valide", "stdin": "10 3", "expectedStdout": "total = 30" },
+        { "name": "quantite invalide", "stdin": "10 0", "expectedStdout": "ERREUR 4 : quantite invalide" },
+        { "name": "cache quantite negative", "stdin": "5 -1", "expectedStdout": "ERREUR 4 : quantite invalide", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Erreur {\n    int numero;\n    string message;\npublic:\n    Erreur(int n, const string& m) : numero(n), message(m) {}\n    int getNumero() const { return numero; }\n    string getMessage() const { return message; }\n};\n\nint facture(int prix, int quantite) {\n    if (quantite <= 0)\n        throw Erreur(4, \"quantite invalide\");\n    return prix * quantite;\n}\n\nint main() {\n    int prix, quantite;\n    cin >> prix >> quantite;\n    try {\n        int total = facture(prix, quantite);\n        cout << \"total = \" << total << \"\\n\";\n    }\n    catch (const Erreur& e) {\n        cout << \"ERREUR \" << e.getNumero() << \" : \" << e.getMessage() << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "La classe `Erreur` et le `throw` dans `facture` sont corrects, mais **aucun `try`/`catch`** ne rattrape l'objet lancé. Une exception non rattrapée remonte la pile, **sort de `main`** et provoque l'appel de `std::terminate()` : le programme s'arrête **anormalement** (code de sortie non nul) — le juge échoue. La correction : entourer l'appel à `facture` d'un bloc `try`, suivi d'un `catch (const Erreur& e)`. Le programme rattrape alors l'objet, lit ses accesseurs et se termine **normalement**.",
+    "concepts": ["classe-exception-personnalisee", "throw"]
+  },
+  {
+    "chapterSlug": "exceptions-personnalisees",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme calcule une racine carrée entière et doit afficher un message si le nombre est négatif. Mais sur le test `-9`, il **s'arrête anormalement** au lieu d'afficher l'erreur. Corrige le `catch`.",
+    "payload": {
+      "spec": "Le programme lit un entier n et appelle racineEntiere(n), qui leve un OBJET Erreur (classe personnalisee, attributs numero et phrase) si n est strictement negatif. Probleme : le catch est typé sur le mauvais type. Il est ecrit catch (int e) alors que la fonction lance un OBJET de type Erreur, pas un int. Le catch (int e) ne correspond donc PAS au type lance : l'exception n'est rattrapee par personne, remonte hors de main et provoque std::terminate (arret anormal, code de sortie non nul). Corriger en remplacant catch (int e) par catch (const Erreur& e), et en affichant 'ERREUR code ' suivi de getNumero(), de ' : ' et de getPhrase(). Sortie attendue pour n positif : 'racine entiere = ' suivi de la racine. Pour n negatif : 'ERREUR code 2 : nombre negatif'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Erreur {\n    int numero;\n    string phrase;\npublic:\n    Erreur(int n, const string& p) : numero(n), phrase(p) {}\n    int getNumero() const { return numero; }\n    string getPhrase() const { return phrase; }\n};\n\nint racineEntiere(int n) {\n    if (n < 0)\n        throw Erreur(2, \"nombre negatif\");\n    int r = 0;\n    while ((r + 1) * (r + 1) <= n)\n        r++;\n    return r;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    try {\n        int r = racineEntiere(n);\n        cout << \"racine entiere = \" << r << \"\\n\";\n    }\n    catch (int e) {\n        cout << \"ERREUR code \" << e << \"\\n\";\n    }\n    return 0;\n}\n",
+      "tests": [
+        { "name": "carre parfait", "stdin": "16", "expectedStdout": "racine entiere = 4" },
+        { "name": "nombre negatif", "stdin": "-9", "expectedStdout": "ERREUR code 2 : nombre negatif" },
+        { "name": "racine tronquee", "stdin": "20", "expectedStdout": "racine entiere = 4" },
+        { "name": "cache racine de zero", "stdin": "0", "expectedStdout": "racine entiere = 0", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Erreur {\n    int numero;\n    string phrase;\npublic:\n    Erreur(int n, const string& p) : numero(n), phrase(p) {}\n    int getNumero() const { return numero; }\n    string getPhrase() const { return phrase; }\n};\n\nint racineEntiere(int n) {\n    if (n < 0)\n        throw Erreur(2, \"nombre negatif\");\n    int r = 0;\n    while ((r + 1) * (r + 1) <= n)\n        r++;\n    return r;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    try {\n        int r = racineEntiere(n);\n        cout << \"racine entiere = \" << r << \"\\n\";\n    }\n    catch (const Erreur& e) {\n        cout << \"ERREUR code \" << e.getNumero() << \" : \" << e.getPhrase() << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "Le `catch` est choisi par le **type** de l'exception. La fonction lance un **objet `Erreur`**, mais le `catch (int e)` n'attrape que les `int` : aucune correspondance de type. Le `try` est bien là, mais son seul `catch` est **inadapté** — l'exception n'est rattrapée par personne, sort de `main` et provoque `std::terminate()` (arrêt anormal). La correction : un `catch (const Erreur& e)` du **bon type**, qui capture l'objet par référence constante et lit ses accesseurs. Le type du `catch` doit toujours correspondre au type réellement lancé.",
+    "concepts": ["classe-exception-personnalisee", "selection-catch-par-type"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce que **`std::exception`** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Une fonction qui lance automatiquement une exception en cas d'erreur." },
+        { "id": "b", "label": "La classe de base de toutes les exceptions lancées par la bibliothèque standard." },
+        { "id": "c", "label": "Un mot-clé du langage équivalent à throw." },
+        { "id": "d", "label": "Un bloc spécial qui remplace try et catch." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "**`std::exception`**, déclarée dans l'en-tête `<exception>`, est la **classe de base de toutes les exceptions** lancées par la bibliothèque standard — accès hors bornes, échec de `new`, conversion impossible... Pour intégrer ses propres exceptions à cet écosystème, on **dérive** sa classe de `std::exception`. C'est une classe, pas un mot-clé ni un bloc.",
+    "concepts": ["std-exception"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Comme `what()` est **virtuelle**, un `catch (const std::exception& e)` qui appelle `e.what()` obtient le message du **type réel** de l'exception, même si elle est d'une classe dérivée.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. `what()` est **virtuelle** : un appel `e.what()` à travers une référence à la base `std::exception` est résolu par **liaison dynamique** d'après le **type réel** de l'objet. Une seule ligne de code affiche donc correctement le message de **n'importe quelle** exception — standard ou personnalisée dérivée de `std::exception`.",
+    "concepts": ["methode-what", "std-exception"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète cette classe d'exception personnalisée dérivée de `std::exception` avec une redéfinition correcte de `what()`.",
+    "payload": {
+      "template": "#include <exception>\n#include <string>\n\nclass Erreur : public std::{{base}} {\n    std::string m_phrase;\npublic:\n    Erreur(const std::string& p) : m_phrase(p) {}\n    const char* {{methode}}() const noexcept override {\n        return m_phrase.{{conv}}();\n    }\n};",
+      "slots": [
+        { "id": "base", "width": "md" },
+        { "id": "methode", "width": "sm" },
+        { "id": "conv", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "base": "exception", "methode": "what", "conv": "c_str" },
+      "caseSensitive": false
+    },
+    "explanation": "La classe dérive de **`std::exception`** : `public std::exception`. La méthode redéfinie est **`what()`** ; sa signature reproduit exactement celle de la base — `const char*`, `const`, `noexcept` — et le mot-clé `override` fait vérifier la redéfinition. Comme `m_phrase` est une `std::string` mais que `what()` doit renvoyer un `const char*`, on en extrait la chaîne C avec **`c_str()`**.",
+    "concepts": ["std-exception", "methode-what"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles affirmations sur la **hiérarchie des exceptions standard** sont **vraies** ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "std::logic_error regroupe les erreurs de logique du programme, évitables en relisant le code." },
+        { "id": "b", "label": "std::runtime_error regroupe les erreurs détectables seulement à l'exécution." },
+        { "id": "c", "label": "std::out_of_range dérive de std::logic_error." },
+        { "id": "d", "label": "Toutes ces classes héritent, directement ou indirectement, de std::exception." },
+        { "id": "e", "label": "std::out_of_range dérive de std::runtime_error." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c", "d"] },
+    "explanation": "**a, b, c, d sont vraies.** La hiérarchie de `<stdexcept>` distingue deux familles : **`std::logic_error`** (fautes de logique évitables : `invalid_argument`, `out_of_range`, `length_error`...) et **`std::runtime_error`** (erreurs d'exécution : `overflow_error`...). `std::out_of_range` appartient à la famille **logique** : elle dérive de `std::logic_error`, donc **e est faux**. Toutes ces classes descendent de `std::exception` et répondent donc à `what()`.",
+    "concepts": ["std-exception"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque classe d'exception standard à ce qu'elle signale.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "std::out_of_range" },
+        { "id": "l2", "label": "std::invalid_argument" },
+        { "id": "l3", "label": "std::overflow_error" },
+        { "id": "l4", "label": "std::bad_alloc" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Un index ou une position hors bornes." },
+        { "id": "r2", "label": "Un argument invalide passé à une fonction." },
+        { "id": "r3", "label": "Un dépassement de capacité arithmétique." },
+        { "id": "r4", "label": "L'échec d'une allocation new." }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3", "l4": "r4" } },
+    "explanation": "Chaque classe standard a un rôle précis : **`std::out_of_range`** signale un **index hors bornes** (levée par `at()` d'un `vector` ou d'une `string`) ; **`std::invalid_argument`** un **argument invalide** ; **`std::overflow_error`** un **dépassement arithmétique** ; **`std::bad_alloc`** l'**échec d'un `new`**. Les trois premières sont dans `<stdexcept>`, `bad_alloc` dans `<new>` — toutes dérivent de `std::exception`.",
+    "concepts": ["std-exception"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On veut un gestionnaire complet : un cas précis pour `std::out_of_range`, un filet pour toute la hiérarchie standard, et un ultime filet. Remets les `catch` dans le **bon ordre**, du premier au dernier.",
+    "payload": {
+      "items": [
+        { "id": "i1", "label": "catch (const std::out_of_range& e)" },
+        { "id": "i2", "label": "catch (const std::exception& e)" },
+        { "id": "i3", "label": "catch (...)" }
+      ]
+    },
+    "solution": { "order": ["i1", "i2", "i3"] },
+    "explanation": "On ordonne les `catch` du type **le plus dérivé** au **plus général**. `std::out_of_range` dérive de `std::exception` : le `catch` **précis** vient donc en premier, sinon `catch (const std::exception&)` capturerait tout — y compris `out_of_range` — et le cas précis deviendrait du code mort. Le `catch (const std::exception&)` sert ensuite de **filet pour toute la hiérarchie standard**. Le `catch(...)`, compatible avec tout (même ce qui ne dérive pas de `std::exception`), vient **en dernier**.",
+    "concepts": ["std-exception", "catch-tous"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi recommande-t-on de capturer une exception par **`const std::exception&`** plutôt que par valeur (`std::exception e`) ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Parce que la capture par valeur est interdite par le compilateur pour std::exception." },
+        { "id": "b", "label": "Parce que la référence évite la copie et le slicing : l'objet reste de son type réel, et what() virtuel livre le bon message." },
+        { "id": "c", "label": "Parce que la capture par valeur ne compile que pour les types fondamentaux." },
+        { "id": "d", "label": "Parce que la référence transforme automatiquement l'exception en code de retour." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "La capture **par valeur** d'un type de base **copie** l'objet et le **tronque** (*slicing*) si l'exception réelle est d'un type dérivé : la partie dérivée est perdue. La capture **`const std::exception&`** est la parade — **pas de copie, pas de slicing**. L'objet reste de son **type réel**, et l'appel `what()`, étant **virtuel**, livre le message correct par liaison dynamique.",
+    "concepts": ["std-exception", "methode-what"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? La classe `Erreur` dérive de `std::exception` et redéfinit `what()`.",
+    "payload": {
+      "program": "#include <iostream>\n#include <exception>\n#include <string>\nusing namespace std;\n\nclass Erreur : public exception {\n    string phrase;\npublic:\n    Erreur(const string& p) : phrase(p) {}\n    const char* what() const noexcept override { return phrase.c_str(); }\n};\n\nint division(int a, int b) {\n    if (b == 0)\n        throw Erreur(\"Division par zero\");\n    return a / b;\n}\n\nint main() {\n    try {\n        cout << \"resultat : \" << division(10, 0) << \"\\n\";\n    }\n    catch (const exception& e) {\n        cout << \"ERREUR : \" << e.what() << \"\\n\";\n    }\n    cout << \"fin\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "resultat : ERREUR : Division par zero\nfin" },
+    "explanation": "Dans l'expression `cout << \"resultat : \" << division(10, 0)`, le texte `resultat : ` est inséré **d'abord**, **puis** `division(10, 0)` lève un objet `Erreur`. Le `catch` est typé sur la **classe de base** `const exception&` : il attrape l'`Erreur` puisqu'elle en dérive. L'appel `e.what()`, **virtuel**, livre la version redéfinie → `Division par zero`, affiché sur la même ligne que le `resultat : ` déjà sorti. Après le `catch`, l'exécution reprend → `fin`.",
+    "concepts": ["std-exception", "methode-what"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe quel `catch` capture une `std::out_of_range`.",
+    "payload": {
+      "program": "#include <iostream>\n#include <stdexcept>\nusing namespace std;\n\nint main() {\n    try {\n        cout << \"avant\\n\";\n        throw out_of_range(\"position 5 invalide\");\n    }\n    catch (const logic_error& e) {\n        cout << \"logique : \" << e.what() << \"\\n\";\n    }\n    catch (const exception& e) {\n        cout << \"generale : \" << e.what() << \"\\n\";\n    }\n    cout << \"apres\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "avant\nlogique : position 5 invalide\napres" },
+    "explanation": "`avant` s'affiche, puis `throw out_of_range(...)` lève l'exception. Le mécanisme essaie les `catch` dans l'ordre. `std::out_of_range` dérive de **`std::logic_error`** : le **premier** `catch (const logic_error&)` est donc compatible et l'attrape — le `catch (const exception&)` n'est jamais atteint. `what()` restitue le message passé au constructeur → `position 5 invalide`. Après le `catch`, l'exécution reprend → `apres`.",
+    "concepts": ["std-exception", "methode-what"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Le `catch` journalise puis **relance** l'exception, qui n'est ensuite rattrapée par personne.",
+    "payload": {
+      "program": "#include <iostream>\n#include <stdexcept>\n#include <string>\nusing namespace std;\n\nclass ErreurReseau : public runtime_error {\npublic:\n    ErreurReseau(const string& m) : runtime_error(m) {}\n};\n\nvoid connecter(int essai) {\n    if (essai == 0)\n        throw ErreurReseau(\"hote injoignable\");\n}\n\nint main() {\n    cout << \"connexion...\\n\";\n    try {\n        connecter(0);\n        cout << \"connecte\\n\";\n    }\n    catch (const runtime_error& e) {\n        cout << \"runtime : \" << e.what() << \"\\n\";\n        throw;\n    }\n    cout << \"fin\\n\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "connexion...\nruntime : hote injoignable" },
+    "explanation": "`connexion...` s'affiche. `connecter(0)` lève une `ErreurReseau`, qui **dérive de `runtime_error`** : la ligne `connecte` est sautée, et le `catch (const runtime_error&)` l'attrape → `runtime : hote injoignable` (le message passé à `runtime_error` est restitué par `what()`). Puis `throw;` **relance** l'exception courante. Elle remonte mais **aucun `catch`** ne l'attrape : `fin` est sautée, l'exception sort de `main` et provoque `std::terminate()`. Le message d'erreur de `terminate` part sur la **sortie d'erreur**. La sortie standard se limite donc à `connexion...` et `runtime : hote injoignable`.",
+    "concepts": ["std-exception", "methode-what"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme avec une classe d'exception `ErreurAge` **dérivée de `std::exception`** qui redéfinit `what()`. Une fonction `valider` la lance si l'âge est hors de l'intervalle 0–130 ; `main` la rattrape par `const std::exception&`.",
+    "payload": {
+      "spec": "Inclure <exception>. Definir une classe ErreurAge qui herite publiquement de std::exception. Elle a un attribut prive std::string message, un constructeur ErreurAge(const std::string& m), et redefinit const char* what() const noexcept override pour retourner message.c_str(). Definir int valider(int age) : si age est strictement negatif OU strictement superieur a 130, faire throw ErreurAge(\"age invalide\") ; sinon retourner age. Dans main : lire age avec cin >> age. Dans un try, calculer a = valider(age) et afficher 'age : ' suivi de a et d'un retour a la ligne. Dans un catch (const std::exception& e), afficher 'erreur : ' suivi de e.what() et d'un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <exception>\n#include <string>\nusing namespace std;\n\nclass ErreurAge : public exception {\n    // a completer : attribut message, constructeur, redefinition de what()\n};\n\nint valider(int age) {\n    // a completer : lever ErreurAge si age hors de 0..130\n    return age;\n}\n\nint main() {\n    int age;\n    cin >> age;\n    // a completer : try / catch (const exception&)\n    return 0;\n}\n",
+      "tests": [
+        { "name": "age courant", "stdin": "30", "expectedStdout": "age : 30" },
+        { "name": "age negatif", "stdin": "-5", "expectedStdout": "erreur : age invalide" },
+        { "name": "age trop grand", "stdin": "200", "expectedStdout": "erreur : age invalide" },
+        { "name": "borne basse", "stdin": "0", "expectedStdout": "age : 0" },
+        { "name": "cache borne haute", "stdin": "130", "expectedStdout": "age : 130", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <exception>\n#include <string>\nusing namespace std;\n\nclass ErreurAge : public exception {\n    string message;\npublic:\n    ErreurAge(const string& m) : message(m) {}\n    const char* what() const noexcept override {\n        return message.c_str();\n    }\n};\n\nint valider(int age) {\n    if (age < 0 || age > 130)\n        throw ErreurAge(\"age invalide\");\n    return age;\n}\n\nint main() {\n    int age;\n    cin >> age;\n    try {\n        int a = valider(age);\n        cout << \"age : \" << a << \"\\n\";\n    }\n    catch (const exception& e) {\n        cout << \"erreur : \" << e.what() << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "`ErreurAge` *est-une* `std::exception` grâce à `public exception`. Elle **redéfinit `what()`** en reproduisant exactement la signature de la base — `const char*`, `const`, `noexcept` — et le mot-clé `override` fait vérifier la redéfinition par le compilateur. Comme `message` est une `std::string`, on en extrait la chaîne C avec `c_str()`. Le `catch` est typé sur la **base** `const exception&` : il attrape l'`ErreurAge` puisqu'elle en dérive, et `what()` virtuel livre le message. On calcule `a` avant d'afficher pour éviter toute sortie partielle.",
+    "concepts": ["std-exception", "methode-what"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui lit un indice `i` et lit l'élément correspondant d'un `std::vector<int>` via une fonction `element`. La fonction **lève une `std::out_of_range`** si l'indice est invalide.",
+    "payload": {
+      "spec": "Inclure <stdexcept> et <vector>. Definir int element(const vector<int>& v, int i) : si i est strictement negatif ou superieur ou egal a la taille de v, faire throw out_of_range(\"indice hors bornes\") ; sinon retourner v[i]. Dans main : lire i avec cin >> i. Creer un vector<int> v contenant 10, 20, 30, 40. Dans un try, calculer e = element(v, i) et afficher 'element = ' suivi de e et d'un retour a la ligne. Dans un catch (const out_of_range& e), afficher 'hors bornes : ' suivi de e.what() et d'un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <stdexcept>\n#include <vector>\nusing namespace std;\n\nint element(const vector<int>& v, int i) {\n    // a completer : lever out_of_range si i est invalide\n    return v[i];\n}\n\nint main() {\n    int i;\n    cin >> i;\n    vector<int> v{10, 20, 30, 40};\n    // a completer : try / catch (const out_of_range&)\n    return 0;\n}\n",
+      "tests": [
+        { "name": "indice valide", "stdin": "2", "expectedStdout": "element = 30" },
+        { "name": "indice trop grand", "stdin": "10", "expectedStdout": "hors bornes : indice hors bornes" },
+        { "name": "premier element", "stdin": "0", "expectedStdout": "element = 10" },
+        { "name": "cache indice negatif", "stdin": "-1", "expectedStdout": "hors bornes : indice hors bornes", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <stdexcept>\n#include <vector>\nusing namespace std;\n\nint element(const vector<int>& v, int i) {\n    if (i < 0 || i >= (int)v.size())\n        throw out_of_range(\"indice hors bornes\");\n    return v[i];\n}\n\nint main() {\n    int i;\n    cin >> i;\n    vector<int> v{10, 20, 30, 40};\n    try {\n        int e = element(v, i);\n        cout << \"element = \" << e << \"\\n\";\n    }\n    catch (const out_of_range& e) {\n        cout << \"hors bornes : \" << e.what() << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "`std::out_of_range` est une exception **standard** de `<stdexcept>` : on n'a pas à l'écrire, on la construit directement avec un **message** que `what()` restituera. Elle signale un index hors bornes — exactement le rôle voulu ici. Le `catch (const out_of_range& e)` la rattrape précisément et affiche son message. La comparaison `i >= (int)v.size()` convertit la taille (un type non signé) en `int` pour comparer sans avertissement à l'indice signé.",
+    "concepts": ["std-exception", "methode-what"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris un programme qui calcule un pourcentage via une fonction `pourcentage(valeur, total)`. La fonction **lève une `std::invalid_argument`** si `total` vaut 0 (le pourcentage n'aurait pas de sens).",
+    "payload": {
+      "spec": "Inclure <stdexcept>. Definir int pourcentage(int valeur, int total) : si total vaut 0, faire throw invalid_argument(\"total nul\") ; sinon retourner valeur * 100 / total. Dans main : lire valeur puis total avec cin >> valeur >> total. Dans un try, calculer p = pourcentage(valeur, total) et afficher 'pourcentage = ' suivi de p et d'un retour a la ligne. Dans un catch (const invalid_argument& e), afficher 'argument invalide : ' suivi de e.what() et d'un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <stdexcept>\n#include <string>\nusing namespace std;\n\nint pourcentage(int valeur, int total) {\n    // a completer : lever invalid_argument si total == 0\n    return valeur * 100 / total;\n}\n\nint main() {\n    int valeur, total;\n    cin >> valeur >> total;\n    // a completer : try / catch (const invalid_argument&)\n    return 0;\n}\n",
+      "tests": [
+        { "name": "pourcentage normal", "stdin": "30 120", "expectedStdout": "pourcentage = 25" },
+        { "name": "total nul", "stdin": "5 0", "expectedStdout": "argument invalide : total nul" },
+        { "name": "totalite", "stdin": "50 50", "expectedStdout": "pourcentage = 100" },
+        { "name": "cache valeur nulle", "stdin": "0 10", "expectedStdout": "pourcentage = 0", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <stdexcept>\n#include <string>\nusing namespace std;\n\nint pourcentage(int valeur, int total) {\n    if (total == 0)\n        throw invalid_argument(\"total nul\");\n    return valeur * 100 / total;\n}\n\nint main() {\n    int valeur, total;\n    cin >> valeur >> total;\n    try {\n        int p = pourcentage(valeur, total);\n        cout << \"pourcentage = \" << p << \"\\n\";\n    }\n    catch (const invalid_argument& e) {\n        cout << \"argument invalide : \" << e.what() << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "Un `total` nul est un **argument invalide** passé à la fonction : `std::invalid_argument` (famille `logic_error`) est la classe standard exactement adaptée. On la construit avec un message, et le `catch (const invalid_argument& e)` la rattrape précisément. Réutiliser une classe standard plutôt que d'en écrire une évite du code, et son nom même documente la nature de l'erreur.",
+    "concepts": ["std-exception", "methode-what"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris un programme bancaire : une classe `ErreurCompte` **dérivée de `std::exception`** porte un numéro et un message, et redéfinit `what()`. Une fonction `retirer` la lance (numéro 1 si montant invalide, numéro 2 si solde insuffisant). Le programme traite `n` retraits successifs sans jamais s'arrêter.",
+    "payload": {
+      "spec": "Inclure <exception>. Definir une classe ErreurCompte qui herite publiquement de std::exception, avec deux attributs prives : un int numero et une std::string message. Constructeur ErreurCompte(int n, const std::string& m). Redefinir const char* what() const noexcept override pour retourner message.c_str(). Ajouter un accesseur int getNumero() const noexcept. Definir int retirer(int solde, int montant) : si montant est inferieur ou egal a 0, faire throw ErreurCompte(1, \"montant invalide\") ; si montant est strictement superieur a solde, faire throw ErreurCompte(2, \"solde insuffisant\") ; sinon retourner solde - montant. Dans main : lire n avec cin >> n. Initialiser solde a 100. Repeter n fois : lire un montant ; dans un try, faire solde = retirer(solde, montant) puis afficher 'retrait ok, solde = ' suivi de solde et d'un retour a la ligne ; dans un catch (const std::exception& e), afficher 'refus : ' suivi de e.what() et d'un retour a la ligne. Apres la boucle, afficher 'solde final = ' suivi de solde et d'un retour a la ligne.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <exception>\n#include <string>\nusing namespace std;\n\nclass ErreurCompte : public exception {\n    // a completer : attributs numero et message, constructeur, what(), getNumero()\n};\n\nint retirer(int solde, int montant) {\n    // a completer : lever ErreurCompte selon le probleme\n    return solde - montant;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    int solde = 100;\n    // a completer : boucle de n retraits avec try / catch par iteration\n    return 0;\n}\n",
+      "tests": [
+        { "name": "deux refus sur quatre retraits", "stdin": "4\n30\n200\n-5\n20", "expectedStdout": "retrait ok, solde = 70\nrefus : solde insuffisant\nrefus : montant invalide\nretrait ok, solde = 50\nsolde final = 50" },
+        { "name": "deux retraits valides", "stdin": "2\n40\n40", "expectedStdout": "retrait ok, solde = 60\nretrait ok, solde = 20\nsolde final = 20" },
+        { "name": "cache un seul retrait trop grand", "stdin": "1\n500", "expectedStdout": "refus : solde insuffisant\nsolde final = 100", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <exception>\n#include <string>\nusing namespace std;\n\nclass ErreurCompte : public exception {\n    int numero;\n    string message;\npublic:\n    ErreurCompte(int n, const string& m) : numero(n), message(m) {}\n    const char* what() const noexcept override { return message.c_str(); }\n    int getNumero() const noexcept { return numero; }\n};\n\nint retirer(int solde, int montant) {\n    if (montant <= 0)\n        throw ErreurCompte(1, \"montant invalide\");\n    if (montant > solde)\n        throw ErreurCompte(2, \"solde insuffisant\");\n    return solde - montant;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    int solde = 100;\n    for (int i = 0; i < n; i++) {\n        int montant;\n        cin >> montant;\n        try {\n            solde = retirer(solde, montant);\n            cout << \"retrait ok, solde = \" << solde << \"\\n\";\n        }\n        catch (const exception& e) {\n            cout << \"refus : \" << e.what() << \"\\n\";\n        }\n    }\n    cout << \"solde final = \" << solde << \"\\n\";\n    return 0;\n}"
+    },
+    "explanation": "`ErreurCompte` combine deux idées du module : c'est une **classe d'exception personnalisée** (attributs `numero` et `message`) **et** elle dérive de `std::exception`, donc s'intègre à l'écosystème standard. La redéfinition de `what()` reproduit la signature `const char* ... const noexcept` et renvoie `message.c_str()`. Le `try`/`catch` est **dans** la boucle : un retrait refusé n'interrompt pas les suivants — quand `retirer` lève, l'affectation `solde = ...` est abandonnée, le solde reste inchangé. Le `catch` typé sur la **base** `const exception&` capture toutes les `ErreurCompte` et lit le message via `what()` virtuel.",
+    "concepts": ["std-exception", "classe-exception-personnalisee"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Cette classe `ErreurFichier` dérive de `std::exception` et doit afficher `erreur : fichier introuvable`. Mais le programme affiche `erreur : std::exception`. Corrige la redéfinition de `what()`.",
+    "payload": {
+      "spec": "Le programme definit ErreurFichier, derivee de std::exception, qui doit redefinir what() pour renvoyer son message. Probleme : la methode what() est declaree const char* what() — sans le qualificateur const ni noexcept. Sa signature ne correspond donc PAS exactement a celle de std::exception::what() (qui est const char* what() const noexcept). Resultat : ce n'est PAS une redefinition, juste une nouvelle methode independante. Quand on capture l'exception par const std::exception& et qu'on appelle e.what(), c'est la version de la classe de base qui est appelee (liaison sur le type std::exception), et elle renvoie le texte generique 'std::exception'. Corriger en ecrivant la signature exacte : const char* what() const noexcept override. Le mot-cle override fait verifier la redefinition par le compilateur. Sortie attendue : 'erreur : fichier introuvable'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <exception>\n#include <string>\nusing namespace std;\n\nclass ErreurFichier : public exception {\n    string message;\npublic:\n    ErreurFichier(const string& m) : message(m) {}\n    const char* what() { return message.c_str(); }\n};\n\nint main() {\n    try {\n        throw ErreurFichier(\"fichier introuvable\");\n    }\n    catch (const exception& e) {\n        cout << \"erreur : \" << e.what() << \"\\n\";\n    }\n    return 0;\n}\n",
+      "tests": [
+        { "name": "what redefini correctement", "expectedStdout": "erreur : fichier introuvable" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <exception>\n#include <string>\nusing namespace std;\n\nclass ErreurFichier : public exception {\n    string message;\npublic:\n    ErreurFichier(const string& m) : message(m) {}\n    const char* what() const noexcept override { return message.c_str(); }\n};\n\nint main() {\n    try {\n        throw ErreurFichier(\"fichier introuvable\");\n    }\n    catch (const exception& e) {\n        cout << \"erreur : \" << e.what() << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "Pour **redéfinir** une méthode virtuelle, la signature de la classe dérivée doit reproduire **exactement** celle de la base. `std::exception::what()` est `const char* what() const noexcept`. Le starter écrit `const char* what()` — sans `const` ni `noexcept` : la signature **diffère**, donc ce n'est **pas** une redéfinition, mais une méthode distincte qui *masque* sans rien remplacer. Le `catch (const exception& e)` appelle `e.what()` résolu sur le type `std::exception` → la version de base, qui renvoie un texte générique. La correction : la signature exacte `const char* what() const noexcept override`. Le mot-clé **`override`** aurait d'ailleurs fait **échouer la compilation** du starter en signalant l'absence de redéfinition — c'est sa raison d'être.",
+    "concepts": ["std-exception", "methode-what"]
+  },
+  {
+    "chapterSlug": "std-exception",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme lit un indice et lit l'élément d'un tableau. Il lance une `std::out_of_range` quand l'indice est invalide, mais sur le test `9` il **s'arrête anormalement**. Corrige le type du `catch`.",
+    "payload": {
+      "spec": "Le programme lit un entier i et appelle element(i), qui leve une std::out_of_range si l'indice est hors du tableau. Probleme : le catch est typé catch (const runtime_error& e). Or std::out_of_range NE DERIVE PAS de std::runtime_error : elle appartient a la famille std::logic_error. Le catch (const runtime_error&) ne correspond donc PAS a l'exception lancee : elle n'est rattrapee par personne, remonte hors de main et provoque std::terminate (arret anormal, code de sortie non nul). Corriger en remplacant runtime_error par out_of_range : catch (const out_of_range& e). Sortie attendue pour un indice valide : 'valeur = ' suivi de l'element. Pour un indice invalide : 'erreur : indice invalide'.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\n#include <stdexcept>\n#include <string>\nusing namespace std;\n\nint element(int i) {\n    int tab[3] = {100, 200, 300};\n    if (i < 0 || i >= 3)\n        throw out_of_range(\"indice invalide\");\n    return tab[i];\n}\n\nint main() {\n    int i;\n    cin >> i;\n    try {\n        int v = element(i);\n        cout << \"valeur = \" << v << \"\\n\";\n    }\n    catch (const runtime_error& e) {\n        cout << \"erreur : \" << e.what() << \"\\n\";\n    }\n    return 0;\n}\n",
+      "tests": [
+        { "name": "indice valide", "stdin": "1", "expectedStdout": "valeur = 200" },
+        { "name": "indice trop grand", "stdin": "9", "expectedStdout": "erreur : indice invalide" },
+        { "name": "premier element", "stdin": "0", "expectedStdout": "valeur = 100" },
+        { "name": "cache indice negatif", "stdin": "-2", "expectedStdout": "erreur : indice invalide", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\n#include <stdexcept>\n#include <string>\nusing namespace std;\n\nint element(int i) {\n    int tab[3] = {100, 200, 300};\n    if (i < 0 || i >= 3)\n        throw out_of_range(\"indice invalide\");\n    return tab[i];\n}\n\nint main() {\n    int i;\n    cin >> i;\n    try {\n        int v = element(i);\n        cout << \"valeur = \" << v << \"\\n\";\n    }\n    catch (const out_of_range& e) {\n        cout << \"erreur : \" << e.what() << \"\\n\";\n    }\n    return 0;\n}"
+    },
+    "explanation": "La hiérarchie standard a **deux familles distinctes**. `std::out_of_range` appartient à la famille **`std::logic_error`** (fautes de logique évitables) — elle ne dérive **pas** de `std::runtime_error`. Un `catch (const runtime_error&)` n'est donc **pas** compatible avec une `out_of_range` : l'exception échappe au gestionnaire, sort de `main` et provoque `std::terminate()`. La correction la plus précise : `catch (const out_of_range& e)`. On aurait aussi pu écrire `catch (const logic_error&)` (la base de `out_of_range`) ou `catch (const exception&)` (la racine) — mais surtout **pas** `runtime_error`, qui est dans l'autre branche de la hiérarchie.",
+    "concepts": ["std-exception", "selection-catch-par-type"]
+  }
+]

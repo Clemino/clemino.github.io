@@ -1,0 +1,217 @@
+---
+title: Allocation dynamique
+slug: allocation-dynamique
+order: 3
+estimatedReadMin: 11
+concepts: [tas-vs-pile, new-delete, cycle-de-vie-objet]
+source: "Cours 2 — Constructeurs & Destructeurs"
+---
+
+## La mémoire d'un programme
+
+À l'exécution, la mémoire d'un programme C++ se répartit en **quatre zones** :
+
+- **Code** — le code binaire des fonctions du programme. Zone de **taille fixe**.
+- **Données statiques** — les variables globales et les variables locales `static`. Zone de **taille fixe**.
+- **Pile d'exécution** (*stack*) — gère les appels de fonction et les **variables locales automatiques**. Zone de **taille variable**.
+- **Tas** (*heap*) — la zone des **données allouées dynamiquement**. Zone de **taille variable**.
+
+Un **pointeur** peut pointer sur l'une quelconque de ces quatre zones. Deux d'entre elles nous intéressent ici : la **pile** et le **tas**.
+
+## Pile contre tas
+
+La distinction **pile / tas** est fondamentale pour comprendre la durée de vie des objets.
+
+| | **Pile** (*stack*) | **Tas** (*heap*) |
+|---|---|---|
+| Création | déclaration ordinaire `Fraction f;` | opérateur `new` |
+| Durée de vie | **fin du bloc `{ }`** | jusqu'au `delete` explicite |
+| Destruction | **automatique** | **à la charge du programmeur** |
+| Géré par | le compilateur | le programmeur |
+
+Un objet **sur la pile** est créé par une simple déclaration et détruit automatiquement à la sortie de sa portée :
+
+```cpp
+void test() {
+    Fraction f3(5, 6);
+    // 1) allouer la mémoire d'un objet Fraction (2 entiers) sur la pile
+    // 2) affecter 5 au numérateur et 6 au dénominateur (constructeur)
+}
+// 3) détruire f3 (destructeur)
+// 4) libérer l'espace mémoire de f3 sur la pile
+```
+
+Tout est automatique : ni allocation ni libération à écrire. Mais cette commodité a un revers — la durée de vie de l'objet est **rigidement liée** au bloc. Pour qu'un objet **survive** à la fonction qui l'a créé, ou pour décider de sa taille **à l'exécution**, il faut le placer sur le **tas**.
+
+## `new` et `delete`
+
+L'opérateur **`new`** alloue de la mémoire **sur le tas** et y construit un objet ; il renvoie un **pointeur** vers cet objet. L'opérateur **`delete`** détruit l'objet et **rend** la mémoire au tas.
+
+```cpp
+void test() {
+    Fraction* pf;
+    // 1) créer un espace mémoire pour le pointeur pf sur la pile
+    pf = new Fraction(5, 6);
+    // 2) allouer la mémoire d'un objet Fraction (2 entiers) sur le tas
+    // 3) affecter 5 au numérateur et 6 au dénominateur (constructeur)
+    delete pf;
+    // 4) détruire la fraction pointée par pf (destructeur)
+    // 5) libérer l'espace mémoire de l'objet Fraction sur le tas
+}
+// 6) libérer l'espace mémoire de pf sur la pile
+```
+
+Observez le partage des rôles :
+
+- le **pointeur `pf`** est lui-même une variable **locale**, donc **sur la pile** ;
+- l'**objet `Fraction`** qu'il désigne est **sur le tas**.
+
+`new` déclenche le **constructeur** de l'objet ; `delete` déclenche son **destructeur**. À chaque `new` doit répondre **exactement un** `delete`.
+
+## Manipuler un objet par pointeur : l'opérateur `->`
+
+Quand on tient un objet par un **pointeur**, on n'utilise plus l'opérateur point `.` mais l'opérateur flèche **`->`** pour accéder à ses membres.
+
+```cpp
+Fraction* pf = new Fraction(5, 6);
+
+pf->affiche();          // appel d'une méthode via le pointeur
+(*pf).affiche();        // forme équivalente, plus lourde
+
+delete pf;              // ne pas oublier
+```
+
+`pf->affiche()` est un raccourci pour `(*pf).affiche()` : déréférencer le pointeur, puis appliquer le point. L'écriture `->` est la forme idiomatique.
+
+## Tableaux dynamiques : `new[]` et `delete[]`
+
+Pour allouer un **tableau** d'objets sur le tas, on utilise **`new[]`** ; pour le libérer, **`delete[]`** — avec ses crochets.
+
+```cpp
+void test() {
+    int n;
+    cout << "Nombre de fractions a creer : ";
+    cin >> n;
+
+    Fraction* pf = new Fraction[n];   // tableau dynamique de n fractions
+    // n constructeurs par défaut sont appelés
+
+    for (int i = 0; i < n; ++i) {
+        pf[i] = Fraction(i, i + 1);
+    }
+
+    delete[] pf;   // les n fractions sont détruites, puis le tableau libéré
+}
+```
+
+Deux faits essentiels sur `new[]` :
+
+- l'allocation appelle **`n` fois le constructeur par défaut** — le **constructeur par défaut de `Fraction` doit donc exister et être accessible** ;
+- `delete[]` appelle le **destructeur de chaque élément** avant de libérer le bloc.
+
+> ⚠️ La symétrie est **stricte** : un tableau alloué par `new[]` se libère par `delete[]`, jamais par `delete` seul. Inversement, un objet seul alloué par `new` se libère par `delete`, jamais par `delete[]`. Mélanger les deux est un **comportement indéfini**.
+
+On peut aussi construire un **tableau de pointeurs** vers des objets, chacun alloué individuellement :
+
+```cpp
+void test() {
+    int n;
+    cin >> n;
+
+    // un tableau de n pointeurs de Fraction, alloué sur le tas
+    Fraction** ppf = new Fraction*[n];
+
+    for (int i = 0; i < n; ++i) {
+        ppf[i] = new Fraction(i, i + 1);   // un new par fraction
+    }
+
+    // ... utilisation ...
+
+    for (int i = 0; i < n; ++i) {
+        delete ppf[i];     // un delete par fraction
+    }
+    delete[] ppf;          // puis le tableau de pointeurs
+}
+```
+
+Ici chaque `new` individuel exige son `delete`, et le `new[]` du tableau de pointeurs exige son `delete[]`. Chaque allocation a sa libération correspondante.
+
+## Tableaux et pointeurs : rappels du C
+
+Un **tableau** est une zone mémoire contenant `N` éléments consécutifs de même type. Le **nom d'un tableau est un pointeur constant** : c'est l'**adresse du premier élément** (d'indice 0).
+
+```cpp
+Fraction tab[20];        // un tableau de 20 fractions
+Fraction* pf;            // un pointeur de fraction
+
+pf = &tab[0];            // pf reçoit l'adresse du 1er élément
+pf = tab;                // équivalent : tab est déjà cette adresse
+
+pf++;                    // OK : pf pointe désormais le 2e élément
+tab++;                   // ERREUR : tab est un pointeur constant
+```
+
+`tab` est une **lvalue non modifiable** : on ne peut ni l'affecter, ni l'incrémenter, ni le décrémenter. Un pointeur `pf`, lui, est une **lvalue modifiable** : `pf++`, `pf = ...` sont permis. C'est toute la différence entre un tableau et un pointeur.
+
+## Les pièges de l'allocation dynamique
+
+L'allocation dynamique offre la liberté, mais elle reporte sur le programmeur la responsabilité de la libération. Trois erreurs reviennent constamment.
+
+### La fuite de mémoire
+
+Une **fuite de mémoire** (*memory leak*) survient quand on alloue avec `new` sans jamais appeler le `delete` correspondant. La mémoire reste réservée mais devient **inaccessible** : elle est perdue jusqu'à la fin du programme.
+
+```cpp
+void fuite() {
+    Fraction* pf = new Fraction(1, 2);
+    // ... aucun delete ...
+}   // pf disparaît ; l'objet Fraction reste sur le tas, à jamais inaccessible
+```
+
+À la fin de la fonction, le pointeur `pf` (sur la pile) est détruit, mais l'objet `Fraction` (sur le tas) ne l'est pas : plus aucun pointeur ne le désigne, on ne pourra **jamais** le libérer.
+
+### Le pointeur pendouillant
+
+Un **pointeur pendouillant** (*dangling pointer*) désigne une zone mémoire **déjà libérée**. L'utiliser est un comportement indéfini.
+
+```cpp
+Fraction* pf = new Fraction(1, 2);
+delete pf;             // l'objet est détruit
+pf->affiche();         // ERREUR : pf pointe une zone libérée
+```
+
+Après `delete pf`, le pointeur `pf` contient encore l'ancienne adresse, mais l'objet n'existe plus. Toute utilisation de `pf` est dangereuse.
+
+### La double libération
+
+Appeler `delete` **deux fois** sur le même pointeur est également un comportement indéfini :
+
+```cpp
+delete pf;
+delete pf;             // ERREUR : double libération
+```
+
+## `nullptr` : le pointeur vers rien
+
+Le mot-clé **`nullptr`** représente le **pointeur nul** — un pointeur qui ne désigne **aucun** objet. C'est la valeur sûre à donner à un pointeur tant qu'il ne pointe rien de valide.
+
+Bonne habitude : **remettre un pointeur à `nullptr` après l'avoir libéré**.
+
+```cpp
+Fraction* pf = new Fraction(1, 2);
+delete pf;
+pf = nullptr;          // pf ne pointe plus une zone libérée
+```
+
+Cela neutralise le pointeur pendouillant : un pointeur à `nullptr` est repérable par un test (`if (pf != nullptr)`), et le `delete` d'un pointeur déjà à `nullptr` est **sans effet** — ce qui désamorce aussi le risque de double libération.
+
+> ⚠️ `nullptr` (C++) remplace l'ancien `NULL` et le littéral `0` du C : il est **typé** comme un pointeur, ce qui évite des confusions avec les entiers. Préférez toujours `nullptr`.
+
+> **À retenir**
+> - La mémoire d'un programme comporte quatre zones ; les deux clés sont la **pile** (locale, automatique) et le **tas** (dynamique, manuelle).
+> - **`new`** alloue un objet sur le **tas** (et appelle son **constructeur**) ; **`delete`** le détruit (et appelle son **destructeur**). Un `new` ⇄ un `delete`.
+> - On accède aux membres d'un objet pointé avec **`->`** ; `pf->m` est l'équivalent de `(*pf).m`.
+> - **`new[]`** alloue un tableau (en appelant le **constructeur par défaut** de chaque élément, qui doit exister) ; **`delete[]`** le libère. Ne jamais mélanger `delete` et `delete[]`.
+> - Le **nom d'un tableau** est un pointeur **constant** (lvalue non modifiable) ; un pointeur ordinaire est modifiable.
+> - Pièges : **fuite de mémoire** (`new` sans `delete`), **pointeur pendouillant** (utiliser un pointeur après `delete`), **double libération**.
+> - **`nullptr`** est le pointeur nul typé ; remettre un pointeur à `nullptr` après `delete` neutralise les pointeurs pendouillants.

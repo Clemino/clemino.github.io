@@ -1,0 +1,224 @@
+---
+title: "L'élagage alpha-bêta"
+slug: elagage-alpha-beta
+order: 3
+estimatedReadMin: 15
+concepts: [elagage-alpha-beta, parametre-alpha, parametre-beta, coupure-alpha-beta, ordre-des-coups, algorithme-minimax, noeud-max, noeud-min]
+source: "Jeux_IA_slides.pdf"
+---
+
+## Minimax fait du travail inutile
+
+L'algorithme minimax, vu à la section précédente, calcule correctement la valeur de
+chaque nœud. Mais **en plus d'avoir une complexité temporelle élevée, minimax
+s'avère « non optimisé »** : **en remontant des feuilles vers la racine, certains
+calculs qu'il fait sont inutiles**.
+
+L'idée est la suivante. Pendant la remontée, on dispose à tout moment d'**informations
+partielles** sur la valeur d'un nœud — on sait, par exemple, qu'elle ne pourra plus
+descendre en dessous d'un certain seuil, ou monter au-dessus d'un autre. Ces
+informations suffisent parfois à conclure qu'**explorer les fils restants d'un nœud
+ne changera plus rien** à la valeur de la racine. Continuer à les explorer est alors
+du **temps perdu**.
+
+L'**élagage alpha-bêta** consiste précisément à **repérer ces branches inutiles et à
+les couper**, c'est-à-dire à **ne pas les explorer**. Le résultat final est
+**exactement le même** que celui de minimax : l'élagage ne change pas la valeur
+calculée, il **évite seulement des calculs**.
+
+> **À retenir** : l'**élagage alpha-bêta** est une **optimisation** de minimax. Il
+> **coupe** les branches dont on sait déjà qu'elles n'influenceront pas le résultat —
+> **sans modifier** la valeur finale calculée.
+
+## Les deux cas de coupure
+
+Pour comprendre l'élagage, considérons les **deux cas** suivants. Dans les deux,
+l'idée est la même : on dispose d'une **borne** sur la valeur du nœud, et un fils
+**dépasse cette borne** d'une manière qui rend les fils suivants inutiles.
+
+### Cas 1 — Coupure à un nœud Max
+
+**En calculant la valeur `v` d'un nœud `Max`, nous savons que `v` est supérieure ou
+égale à une certaine valeur `α`.** En effet, un nœud `Max` prend le maximum de ses
+fils : dès qu'un premier fils a été évalué, la valeur du nœud `Max` ne pourra plus
+être **inférieure** à cette valeur déjà rencontrée. Cette borne inférieure est
+**`α`**.
+
+**Dans ce cas, si nous avons des fils dont la valeur est strictement inférieure à
+`α`, la branche correspondante est à couper.**
+
+*Pourquoi ?* La valeur du nœud `Max` vaut **au moins `α`**. Un fils dont la valeur
+serait inférieure à `α` ne pourra donc **jamais** être retenu par ce nœud `Max` : le
+`max` choisira `α` (ou mieux), pas ce fils. Inutile, dès lors, de continuer à
+explorer ce fils plus en profondeur.
+
+### Cas 2 — Coupure à un nœud Min
+
+**En calculant la valeur `v` d'un nœud `Min`, nous savons que `v` est inférieure ou
+égale à une certaine valeur `β`.** En effet, un nœud `Min` prend le minimum de ses
+fils : dès qu'un premier fils a été évalué, la valeur du nœud `Min` ne pourra plus
+être **supérieure** à cette valeur déjà rencontrée. Cette borne supérieure est
+**`β`**.
+
+**Dans ce cas, si nous avons des fils dont la valeur est strictement supérieure à
+`β`, la branche correspondante est à couper.**
+
+*Pourquoi ?* La valeur du nœud `Min` vaut **au plus `β`**. Un fils dont la valeur
+serait supérieure à `β` ne pourra donc **jamais** être retenu par ce nœud `Min` : le
+`min` choisira `β` (ou pire), pas ce fils. Inutile, là encore, de l'explorer
+davantage.
+
+| Type de nœud | Borne connue | Provenance de la borne | Couper un fils si… |
+| --- | --- | --- | --- |
+| Nœud `Max` | `v ≥ α` | `α` = meilleure valeur déjà garantie à `Max` | sa valeur est `< α` |
+| Nœud `Min` | `v ≤ β` | `β` = meilleure valeur déjà garantie à `Min` | sa valeur est `> β` |
+
+> ⚠️ Les rôles de `α` et `β` sont **symétriques** mais **opposés**. `α` est une
+> **borne inférieure** attachée aux nœuds `Max` ; `β` est une **borne supérieure**
+> attachée aux nœuds `Min`. Ne les intervertissez pas.
+
+## Comment α et β circulent dans l'arbre
+
+Les bornes `α` et `β` ne sont pas figées : elles **se transmettent et se mettent à
+jour** au fil de l'exploration. On peut résumer leur comportement ainsi.
+
+- L'exploration part de la racine avec `α = −∞` et `β = +∞` : au départ, on ne
+  garantit **rien** à aucun des deux joueurs.
+- À un **nœud `Max`**, chaque fils évalué peut **relever `α`** : si la valeur `r`
+  d'un fils est telle que `α < r < β`, alors `α` devient `r` — `Max` vient de
+  s'assurer un meilleur résultat.
+- À un **nœud `Min`**, chaque fils évalué peut **abaisser `β`** : si la valeur `r`
+  d'un fils est telle que `α < r < β`, alors `β` devient `r` — `Min` vient de
+  s'assurer un meilleur résultat (de son point de vue).
+- Quand on **descend** dans un fils, on lui **transmet le couple `(α, β)`** courant ;
+  les coupures décrites plus haut se produisent dès qu'un fils **sort** de
+  l'intervalle `(α, β)`.
+
+On peut présenter ce mécanisme sous forme de pseudo-code, à lire attentivement :
+
+```
+ValeurAlphaBeta(nœud, α, β) :
+    Si nœud est une feuille
+        Retourner la valeur de la feuille.
+
+    Si nœud est un nœud Max
+        Pour chaque fils du nœud
+            r = ValeurAlphaBeta(fils, α, β).
+            Si r ≥ β              -> couper : retourner β.
+            Si r > α              -> α = r.
+        Retourner α.
+
+    Si nœud est un nœud Min
+        Pour chaque fils du nœud
+            r = ValeurAlphaBeta(fils, α, β).
+            Si r ≤ α              -> couper : retourner α.
+            Si r < β              -> β = r.
+        Retourner β.
+```
+
+Ce pseudo-code traduit exactement les **deux cas de coupure** : à un nœud `Max`, un
+fils qui atteint ou dépasse `β` déclenche la coupure (les fils suivants ne servent
+plus à rien, car le nœud `Min` parent ne retiendra jamais une valeur `≥ β`) ; à un
+nœud `Min`, un fils qui atteint ou descend sous `α` déclenche la coupure
+symétrique.
+
+## L'élagage alpha-bêta à l'œuvre : exemple détaillé
+
+Reprenons l'arbre de l'exemple de la section précédente : racine `A` (`Max`), nœuds
+`B`, `C` au niveau `Min`, nœuds `D`, `E`, `F`, `G` au niveau `Max`, nœuds `H` à `O`
+au niveau `Min`, et les mêmes feuilles, de gauche à droite :
+
+```
+H : 10 11      I : 9 12       J : 14 15      K : 13 14
+L : 5 2        M : 4 1        N : 3 22       O : 20 21
+```
+
+Suivons l'exploration de **gauche à droite**.
+
+**Branche de `D`.** On descend `A → B → D → H`. Le nœud `H` (`Min`) évalue ses
+feuilles `10` et `11` : `H = 10`. Le nœud `D` (`Max`) reçoit `10`, donc **`D = 10`**
+pour l'instant. On descend ensuite dans `I` (`Min`) : sa **première feuille vaut
+`9`**. Comme `I` est un nœud `Min`, sa valeur sera **`≤ 9`**, donc strictement
+**inférieure à `10`**. Or `D` est un nœud `Max` qui a déjà `10` : un fils valant
+`< 10` ne sera jamais retenu par `D`. **On coupe** : la **seconde feuille de `I`
+(valeur `12`) n'est pas explorée**. Bilan : **`D = 10`**.
+
+**Le nœud `B`.** `B` (`Min`) reçoit `D = 10` : sa valeur sera donc **`≤ 10`**. On
+descend dans `E` (`Max`) : on explore `J` (`Min`), de feuilles `14` et `15`, d'où
+**`J = 14`**. `E` est un nœud `Max` qui a déjà `14`, donc `E` sera **`≥ 14`**, donc
+strictement **supérieur à `10`**. Or `B` est un nœud `Min` qui a déjà `10` : un fils
+valant `> 10` ne sera jamais retenu par `B`. **On coupe** : le nœud **`K` (feuilles
+`13`, `14`) n'est pas exploré du tout**. Bilan : **`B = 10`**.
+
+**Le nœud `A` et la branche de `C`.** `A` (`Max`) reçoit `B = 10` : `A` sera donc
+**`≥ 10`** — voilà la borne `α = 10` transmise à la suite. On descend dans `C`
+(`Min`). `C` explore `F` (`Max`) ; `F` explore `L` (`Min`), de feuilles `5` et `2`,
+d'où **`L = 2`**. `F` est un nœud `Max` ; il a pour l'instant `2`. On poursuit dans
+`M` (`Min`) : sa première feuille vaut `4`, donc `M` sera `≤ 4` ; le nœud `Max` `F`
+en tire `F ≤ 4` au mieux pour cette branche, et **`F` ne dépassera pas `4`**. Quoi
+qu'il en soit, `F` reste **inférieur à `10`**, donc `C` (`Min`), qui prendra le
+minimum, sera **`≤ F < 10`**. Or `A` (`Max`) a déjà `10` : un fils `C` valant
+`< 10` ne sera jamais retenu. **On coupe** la branche de `C` : le nœud **`G`
+(et toutes ses feuilles) n'est pas exploré**.
+
+**Conclusion.** La racine garde la valeur **`A = 10`**, **identique à celle calculée
+par minimax** à la section précédente. Mais l'élagage a permis d'**économiser**
+l'exploration de plusieurs feuilles et de plusieurs nœuds entiers — ici la seconde
+feuille de `I`, le nœud `K` complet, et le nœud `G` complet — sans jamais fausser le
+résultat.
+
+> ⚠️ L'élagage **ne change jamais** la valeur de la racine. Les nœuds coupés sont,
+> par construction, ceux qui **ne pouvaient pas** la modifier. Minimax et alpha-bêta
+> donnent **toujours le même résultat** ; seul le **nombre de nœuds visités** diffère.
+
+## L'ordre des coups : pourquoi il est décisif
+
+L'efficacité de l'élagage **dépend fortement de l'ordre dans lequel les fils d'un
+nœud sont explorés**. Ce point est essentiel.
+
+Reprenons l'intuition. Une coupure à un nœud `Max` se produit lorsqu'un fils
+**atteint déjà une valeur élevée** : plus on rencontre **tôt** un bon fils, plus la
+borne `α` monte vite, et plus les fils suivants ont de chances d'être coupés.
+Symétriquement, à un nœud `Min`, rencontrer tôt un fils de **petite valeur** fait
+chuter `β` rapidement et provoque davantage de coupures.
+
+On peut donc dégager deux situations extrêmes :
+
+- **ordre favorable** — les bons coups sont explorés en premier : `α` et `β` se
+  resserrent vite, **beaucoup de branches sont coupées**, l'élagage est très
+  efficace ;
+- **ordre défavorable** — les bons coups sont explorés en dernier : les bornes
+  évoluent lentement, **peu de branches ou aucune ne sont coupées**, et l'élagage
+  peut se réduire à **rien du tout**. Dans ce cas, alpha-bêta explore autant de
+  nœuds que minimax.
+
+| Ordre d'exploration des fils | Évolution de `α` / `β` | Effet sur l'élagage |
+| --- | --- | --- |
+| Favorable (bons coups d'abord) | Bornes resserrées rapidement | Nombreuses coupures, gain maximal |
+| Défavorable (bons coups en dernier) | Bornes resserrées lentement | Peu de coupures, voire aucune |
+
+C'est pourquoi, en pratique, on cherche à **ordonner les coups** — souvent à l'aide
+d'une **heuristique** — pour examiner d'abord les coups les plus prometteurs.
+**L'élagage et l'ordre des coups sont donc indissociables** : le second conditionne
+le rendement du premier.
+
+> **À retenir** : l'élagage **dépend de l'ordre des coups**. Explorer **les bons
+> coups d'abord** resserre vite `α` et `β` et **multiplie les coupures** ; un mauvais
+> ordre peut **annuler** tout gain et ramener alpha-bêta au coût de minimax.
+
+## Synthèse de la section
+
+L'**élagage alpha-bêta** optimise minimax en **coupant les branches inutiles**, sans
+modifier la valeur calculée. Deux cas fondent ces coupures. À un **nœud `Max`**, la
+valeur est connue **`≥ α`** ; tout fils de valeur **`< α`** est inutile et sa branche
+est coupée. À un **nœud `Min`**, la valeur est connue **`≤ β`** ; tout fils de valeur
+**`> β`** est inutile et sa branche est coupée. Les bornes `α` (inférieure, nœuds
+`Max`) et `β` (supérieure, nœuds `Min`) **se transmettent** le long de l'arbre et se
+**resserrent** à chaque fils évalué. Le résultat est **toujours identique** à celui
+de minimax ; seul le nombre de nœuds visités change. L'efficacité de l'élagage
+**dépend de l'ordre des coups** : explorer les bons coups en premier maximise les
+coupures, un mauvais ordre les supprime.
+
+> **À retenir** : nœud `Max` → couper si un fils est **`< α`** ; nœud `Min` → couper
+> si un fils est **`> β`**. L'élagage **ne change pas** le résultat de minimax, mais
+> son **rendement dépend de l'ordre des coups**.

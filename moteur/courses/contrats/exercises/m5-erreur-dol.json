@@ -1,0 +1,1018 @@
+[
+ {
+  "chapterSlug": "vices-consentement",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quelles sont les conditions de validité du contrat selon l'article 1128 ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Une cause licite"
+    },
+    {
+     "id": "b",
+     "label": "Le consentement des parties"
+    },
+    {
+     "id": "c",
+     "label": "Leur capacité de contracter"
+    },
+    {
+     "id": "d",
+     "label": "La forme écrite"
+    },
+    {
+     "id": "e",
+     "label": "Un contenu licite et certain"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b",
+    "c",
+    "e"
+   ]
+  },
+  "explanation": "La réforme a remplacé l'objet et la cause par le contenu licite et certain. La forme écrite n'est exigée que pour les contrats solennels.",
+  "hint": "La réforme a supprimé l'une des quatre conditions de l'ancien code.",
+  "concepts": [
+   "vices-consentement",
+   "capacite",
+   "contenu-licite"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1 (p. 10)"
+ },
+ {
+  "chapterSlug": "vices-consentement",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quelle est la sanction des vices du consentement ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La nullité relative"
+    },
+    {
+     "id": "b",
+     "label": "La nullité absolue"
+    },
+    {
+     "id": "c",
+     "label": "La caducité du contrat"
+    },
+    {
+     "id": "d",
+     "label": "La résolution du contrat"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Article 1131 : les vices du consentement sont une cause de nullité relative du contrat.",
+  "hint": "La nullité protège ici un intérêt privé.",
+  "concepts": [
+   "nullite-relative"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1 (p. 10)"
+ },
+ {
+  "chapterSlug": "vices-consentement",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Le cocontractant de la victime d'un dol peut lui-même invoquer la nullité du contrat.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "La nullité est relative : seule la partie protégée, la victime, peut la demander.",
+  "hint": "Qui la nullité relative protège-t-elle ?",
+  "concepts": [
+   "nullite-relative"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1 (p. 10)"
+ },
+ {
+  "chapterSlug": "vices-consentement",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel vice laisse le consentement éclairé, mais pas libre ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La lésion"
+    },
+    {
+     "id": "b",
+     "label": "La violence"
+    },
+    {
+     "id": "c",
+     "label": "L'erreur"
+    },
+    {
+     "id": "d",
+     "label": "Le dol"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "Avec l'erreur et le dol, la victime se trompe ; avec la violence, elle sait ce qu'elle signe, mais sous la contrainte.",
+  "hint": "La victime sait ce qu'elle signe.",
+  "concepts": [
+   "vices-consentement",
+   "violence"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1 (p. 10)"
+ },
+ {
+  "chapterSlug": "erreur-nullite",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Selon l'article 1133, qu'est-ce qu'une qualité essentielle de la prestation ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La qualité qui détermine le prix du bien"
+    },
+    {
+     "id": "b",
+     "label": "Toute qualité à laquelle l'acheteur tenait personnellement, même sans l'avoir jamais exprimée au vendeur"
+    },
+    {
+     "id": "c",
+     "label": "Une qualité que la loi déclare essentielle"
+    },
+    {
+     "id": "d",
+     "label": "Une qualité convenue, en considération de laquelle les parties ont contracté"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Les qualités essentielles sont celles qui ont été expressément ou tacitement convenues : elles doivent être entrées dans le champ contractuel.",
+  "hint": "La qualité doit être connue de l'autre partie.",
+  "concepts": [
+   "erreur-qualites-essentielles"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §1 (p. 10-11) ; TD n° 4, doc. 1 à 4"
+ },
+ {
+  "chapterSlug": "erreur-nullite",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Le vendeur peut obtenir la nullité pour une erreur sur sa propre prestation.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Article 1133, alinéa 2 : l'erreur est une cause de nullité qu'elle porte sur la prestation de l'une ou de l'autre partie. C'est l'affaire Poussin.",
+  "hint": "Pense aux vendeurs du tableau attribué à l'École des Carrache.",
+  "concepts": [
+   "erreur-qualites-essentielles",
+   "affaire-poussin"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §1 (p. 10-11) ; TD n° 4, doc. 1 à 4"
+ },
+ {
+  "chapterSlug": "erreur-nullite",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Que juge la Cour de cassation dans l'arrêt Poussin du 13 décembre 1983 ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La préemption par le musée exclut toute erreur"
+    },
+    {
+     "id": "b",
+     "label": "L'erreur s'apprécie au jour du procès"
+    },
+    {
+     "id": "c",
+     "label": "L'erreur est exclue tant que l'authenticité du tableau n'est pas établie avec certitude"
+    },
+    {
+     "id": "d",
+     "label": "Les vendeurs peuvent prouver leur erreur par des éléments postérieurs à la vente"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "L'erreur s'apprécie au moment de la vente, mais sa preuve peut résulter d'éléments postérieurs, comme l'exposition du tableau au Louvre sous le nom de Poussin.",
+  "hint": "La cour d'appel refusait de tenir compte de ce qui s'était passé après la vente.",
+  "concepts": [
+   "affaire-poussin"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §1 (p. 10-11) ; TD n° 4, doc. 1 à 4"
+ },
+ {
+  "chapterSlug": "erreur-nullite",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Pourquoi l'erreur est-elle écartée pour le Verrou de Fragonard (Civ. 1re, 24 mars 1987) ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le vendeur n'a pas prouvé l'authenticité du tableau"
+    },
+    {
+     "id": "b",
+     "label": "L'erreur du vendeur était inexcusable"
+    },
+    {
+     "id": "c",
+     "label": "L'erreur portait sur la seule valeur du tableau"
+    },
+    {
+     "id": "d",
+     "label": "Les parties avaient accepté un aléa sur l'authenticité"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Vendu comme « attribué à » Fragonard, le tableau faisait l'objet d'un aléa accepté par les deux parties et entré dans le champ contractuel.",
+  "hint": "Relis la mention du catalogue de la vente de 1933.",
+  "concepts": [
+   "alea-erreur"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §1 (p. 10-11) ; TD n° 4, doc. 1 à 4"
+ },
+ {
+  "chapterSlug": "erreur-nullite",
+  "type": "FILL_BLANK",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Complète l'article 1133, alinéa 3.",
+  "payload": {
+   "template": "L'acceptation d'un {{a}} sur une qualité de la prestation exclut l'erreur relative à cette qualité.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "md"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "aléa",
+     "alea"
+    ]
+   }
+  },
+  "explanation": "C'est la règle de l'arrêt Fragonard, consacrée par la réforme.",
+  "hint": "Ce qu'on a accepté comme incertain ne peut fonder une erreur.",
+  "concepts": [
+   "alea-erreur"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §1 (p. 10-11) ; TD n° 4, doc. 1 à 4"
+ },
+ {
+  "chapterSlug": "erreur-nullite",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "L'erreur sur les qualités essentielles du cocontractant est une cause de nullité de tout contrat.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Article 1134 : seulement dans les contrats conclus en considération de la personne.",
+  "hint": "Dans une vente au comptant, l'identité de l'acheteur compte-t-elle ?",
+  "concepts": [
+   "erreur-cocontractant"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §1 (p. 10-11) ; TD n° 4, doc. 1 à 4"
+ },
+ {
+  "chapterSlug": "erreur-nullite",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quand une erreur est-elle inexcusable ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Quand son auteur a négligé des vérifications élémentaires"
+    },
+    {
+     "id": "b",
+     "label": "Quand elle porte sur le droit applicable plutôt que sur les faits"
+    },
+    {
+     "id": "c",
+     "label": "Quand elle a été provoquée par un dol"
+    },
+    {
+     "id": "d",
+     "label": "Quand elle porte sur la valeur"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "L'erreur inexcusable vient d'une négligence de celui qui se trompe. Celle qui est provoquée par un dol est, au contraire, toujours excusable.",
+  "hint": "Le reproche vise celui qui s'est trompé.",
+  "concepts": [
+   "erreur-inexcusable"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §1 (p. 10-11) ; TD n° 4, doc. 1 à 4"
+ },
+ {
+  "chapterSlug": "erreur-nullite",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque arrêt à son apport.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Civ. 1re, 22 février 1978 (Poussin)"
+    },
+    {
+     "id": "l1",
+     "label": "Civ. 1re, 13 décembre 1983 (Poussin)"
+    },
+    {
+     "id": "l2",
+     "label": "Civ. 1re, 24 mars 1987 (Fragonard)"
+    }
+   ],
+   "right": [
+    {
+     "id": "r2",
+     "label": "L'aléa accepté exclut l'erreur"
+    },
+    {
+     "id": "r1",
+     "label": "La preuve par des éléments postérieurs est admise"
+    },
+    {
+     "id": "r0",
+     "label": "L'erreur du vendeur s'apprécie au moment de la vente"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2"
+   }
+  },
+  "explanation": "Les trois arrêts sur la vente d'œuvres d'art du TD n° 4.",
+  "hint": "Deux arrêts sur le même tableau, puis un troisième sur une attribution douteuse.",
+  "concepts": [
+   "affaire-poussin",
+   "alea-erreur"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §1 (p. 10-11) ; TD n° 4, doc. 1 à 4"
+ },
+ {
+  "chapterSlug": "erreurs-indifferentes",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Une infirmière loue du matériel médical qui ne convient pas à son activité. Quelle erreur invoque-t-elle, selon Com., 11 avril 2012 ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Une erreur sur les qualités essentielles"
+    },
+    {
+     "id": "b",
+     "label": "Une erreur sur le motif"
+    },
+    {
+     "id": "c",
+     "label": "Une erreur sur la valeur"
+    },
+    {
+     "id": "d",
+     "label": "Une erreur sur la personne"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "Les matériels n'étaient pas défectueux : ils étaient inadaptés à son activité. L'erreur portait sur les raisons de leur acquisition.",
+  "hint": "Les matériels avaient-ils un défaut, ou ne servaient-ils pas son projet ?",
+  "concepts": [
+   "erreur-motif"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §1, II (p. 11) ; TD n° 4, doc. 1, 5 et 6"
+ },
+ {
+  "chapterSlug": "erreurs-indifferentes",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "L'erreur sur un simple motif annule le contrat dès lors que ce motif a été déterminant pour celui qui s'est trompé.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Article 1135 : seulement si les parties en ont expressément fait un élément déterminant de leur consentement. L'arrêt de 2012 le dit : « quand bien même ce motif aurait été déterminant ».",
+  "hint": "Que faut-il pour qu'un motif entre dans le contrat ?",
+  "concepts": [
+   "erreur-motif"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §1, II (p. 11) ; TD n° 4, doc. 1, 5 et 6"
+ },
+ {
+  "chapterSlug": "erreurs-indifferentes",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "L'erreur sur le motif d'une libéralité peut être une cause de nullité.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Article 1135, alinéa 2 : si, sans ce motif, l'auteur de la libéralité n'aurait pas disposé.",
+  "hint": "L'article 1135 prévoit une exception pour les actes à titre gratuit.",
+  "concepts": [
+   "erreur-motif"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §1, II (p. 11) ; TD n° 4, doc. 1, 5 et 6"
+ },
+ {
+  "chapterSlug": "erreurs-indifferentes",
+  "type": "MCQ_SINGLE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Pourquoi la nullité est-elle admise dans Com., 10 novembre 2015 (retrait d'un associé de GAEC) ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'erreur portait sur une donnée objective : la situation financière"
+    },
+    {
+     "id": "b",
+     "label": "L'erreur sur la valeur est désormais une cause de nullité depuis la réforme"
+    },
+    {
+     "id": "c",
+     "label": "Le cédant avait été victime d'un dol"
+    },
+    {
+     "id": "d",
+     "label": "Le prix fixé était dérisoire"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Le bilan erroné faussait les données objectives de la cession ; l'erreur sur la valeur des parts n'en était que la conséquence.",
+  "hint": "L'erreur sur le prix venait d'ailleurs.",
+  "concepts": [
+   "erreur-valeur",
+   "erreur-qualites-essentielles"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §1, II (p. 11) ; TD n° 4, doc. 1, 5 et 6"
+ },
+ {
+  "chapterSlug": "erreurs-indifferentes",
+  "type": "FILL_BLANK",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Complète l'article 1136.",
+  "payload": {
+   "template": "L'erreur sur la valeur, par laquelle un contractant fait seulement de la prestation une appréciation {{a}} inexacte, n'est pas une cause de nullité.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "md"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "économique",
+     "economique"
+    ]
+   }
+  },
+  "explanation": "Chacun est libre de fixer son prix : une mauvaise affaire n'est pas une erreur.",
+  "hint": "L'appréciation porte sur l'argent, pas sur les qualités.",
+  "concepts": [
+   "erreur-valeur"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §1, II (p. 11) ; TD n° 4, doc. 1, 5 et 6"
+ },
+ {
+  "chapterSlug": "dol",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Qu'est-ce que la réticence dolosive ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Refuser de négocier le prix"
+    },
+    {
+     "id": "b",
+     "label": "Mentir sur les qualités du bien vendu"
+    },
+    {
+     "id": "c",
+     "label": "Taire sciemment une information déterminante"
+    },
+    {
+     "id": "d",
+     "label": "Exagérer les qualités d'un produit pour le vendre"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Article 1137, alinéa 2 : la dissimulation intentionnelle d'une information dont on sait le caractère déterminant.",
+  "hint": "Le dol peut naître d'un silence.",
+  "concepts": [
+   "reticence-dolosive"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §2 (p. 11-13) ; TD n° 4, doc. 7 et 8"
+ },
+ {
+  "chapterSlug": "dol",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Le dolus bonus, qui embellit une offre pour la rendre attractive, est une cause de nullité.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Le « bon dol » n'est pas reproché ; seul le dolus malus l'est.",
+  "hint": "Toute publicité valorise ce qu'elle vend.",
+  "concepts": [
+   "dol"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §2 (p. 11-13) ; TD n° 4, doc. 7 et 8"
+ },
+ {
+  "chapterSlug": "dol",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Dans l'arrêt Baldus (Civ. 1re, 3 mai 2000), pourquoi la réticence dolosive est-elle écartée ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La lésion n'est pas une cause de nullité"
+    },
+    {
+     "id": "b",
+     "label": "La venderesse n'avait pas porté plainte à temps"
+    },
+    {
+     "id": "c",
+     "label": "Aucune obligation d'information ne pesait sur l'acheteur"
+    },
+    {
+     "id": "d",
+     "label": "L'acheteur n'était pas un professionnel"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "L'acheteur connaissait la valeur des photographies, mais il n'avait pas à la révéler. La réforme l'a confirmé (art. 1112-1, al. 2 ; art. 1137, al. 3).",
+  "hint": "Le visa est l'ancien article 1116, mais la Cour raisonne sur un devoir préalable.",
+  "concepts": [
+   "dol-valeur"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §2 (p. 11-13) ; TD n° 4, doc. 7 et 8"
+ },
+ {
+  "chapterSlug": "dol",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Ne pas révéler à son cocontractant son estimation de la valeur de la prestation n'est pas un dol.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Article 1137, alinéa 3, ajouté par la loi de ratification de 2018.",
+  "hint": "Pense à l'arrêt Baldus et à sa consécration.",
+  "concepts": [
+   "dol-valeur"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §2 (p. 11-13) ; TD n° 4, doc. 7 et 8"
+ },
+ {
+  "chapterSlug": "dol",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Le dol d'un tiers permet-il d'annuler le contrat ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Toujours, comme pour la violence"
+    },
+    {
+     "id": "b",
+     "label": "Seulement s'il a provoqué une erreur sur la valeur de la prestation promise"
+    },
+    {
+     "id": "c",
+     "label": "Seulement s'il vient du représentant du cocontractant ou d'un tiers complice"
+    },
+    {
+     "id": "d",
+     "label": "Jamais, quelles que soient les circonstances"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Le dol doit venir du cocontractant ; le cours admet deux exceptions (art. 1138).",
+  "hint": "Le dol doit pouvoir être reproché au cocontractant.",
+  "concepts": [
+   "auteur-dol"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §2 (p. 11-13) ; TD n° 4, doc. 7 et 8"
+ },
+ {
+  "chapterSlug": "dol",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "L'erreur provoquée par un dol peut être jugée inexcusable.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Article 1139 : l'erreur qui résulte d'un dol est toujours excusable.",
+  "hint": "Celui qui trompe peut-il reprocher à sa victime de s'être laissé tromper ?",
+  "concepts": [
+   "erreur-provoquee"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §2 (p. 11-13) ; TD n° 4, doc. 7 et 8"
+ },
+ {
+  "chapterSlug": "dol",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Selon l'article 1139, l'erreur provoquée par un dol est une cause de nullité…",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "seulement si elle porte sur une qualité essentielle"
+    },
+    {
+     "id": "b",
+     "label": "seulement si elle est excusable par elle-même"
+    },
+    {
+     "id": "c",
+     "label": "seulement si le dol vient d'un tiers"
+    },
+    {
+     "id": "d",
+     "label": "même si elle porte sur la valeur ou un simple motif"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Le dol élargit les cas de nullité : même les erreurs normalement indifférentes deviennent une cause de nullité.",
+  "hint": "Le dol permet de dépasser les limites de l'erreur spontanée.",
+  "concepts": [
+   "erreur-provoquee"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §2 (p. 11-13) ; TD n° 4, doc. 7 et 8"
+ },
+ {
+  "chapterSlug": "dol",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Selon 3e civ., 21 février 2001, l'acquéreur professionnel qui ne s'est pas renseigné commet une erreur inexcusable, même provoquée par une réticence dolosive.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Cassation : une réticence dolosive, à la supposer établie, rend toujours excusable l'erreur provoquée.",
+  "hint": "Le TD n° 4 en fait le pendant de l'arrêt de 2024.",
+  "concepts": [
+   "erreur-provoquee",
+   "reticence-dolosive"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 1, section 1, §2 (p. 11-13) ; TD n° 4, doc. 7 et 8"
+ },
+ {
+  "chapterSlug": "td-seance-4",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Dans Com., 18 septembre 2024, pourquoi la Cour casse-t-elle l'arrêt d'appel ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le devoir de se renseigner ne suffit pas à exclure la réticence dolosive"
+    },
+    {
+     "id": "b",
+     "label": "Le cédant n'avait aucune obligation d'information sur le passif de la société"
+    },
+    {
+     "id": "c",
+     "label": "La cession était nulle pour erreur sur la valeur"
+    },
+    {
+     "id": "d",
+     "label": "Le cessionnaire était un dirigeant expérimenté"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Les motifs tirés de ce que le cessionnaire aurait dû se renseigner sont impropres à exclure la réticence dolosive, qui rend toujours excusable l'erreur provoquée.",
+  "hint": "La cour d'appel s'était placée du côté de la victime, pas de l'auteur du silence.",
+  "concepts": [
+   "reticence-dolosive",
+   "erreur-provoquee"
+  ],
+  "source": "TD n° 4, doc. 9"
+ },
+ {
+  "chapterSlug": "td-seance-4",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quel cas d'ouverture la Cour retient-elle le 18 septembre 2024 ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La dénaturation"
+    },
+    {
+     "id": "b",
+     "label": "Le défaut de réponse à conclusions"
+    },
+    {
+     "id": "c",
+     "label": "La violation de la loi"
+    },
+    {
+     "id": "d",
+     "label": "Le défaut de base légale"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "La cour d'appel « n'a pas donné de base légale à sa décision » : ses motifs ne permettaient pas d'exclure le dol.",
+  "hint": "Relis la dernière phrase des motifs.",
+  "concepts": [
+   "cas-ouverture",
+   "reticence-dolosive"
+  ],
+  "source": "TD n° 4, doc. 9"
+ },
+ {
+  "chapterSlug": "td-seance-4",
+  "type": "CASE_STUDY",
+  "difficulty": 3,
+  "points": 3,
+  "prompt": "Cas d'entraînement : erreur ou dol ?",
+  "payload": {
+   "scenario": "Paul vend 300 euros à Nina, antiquaire, une commode qu'il croit être une copie. Nina sait qu'il s'agit d'un meuble d'époque, qui vaut 20 000 euros, et ne dit rien.\n\nNina vend ensuite à Marc un tableau présenté au catalogue comme « attribué à » un peintre célèbre. Une expertise établit plus tard qu'il est authentique, et Nina voudrait récupérer le tableau.\n\nEnfin, Marc achète un local pour y ouvrir une boulangerie. La rue se révèle peu passante et le commerce n'est pas rentable. Le contrat ne dit rien de ce projet.",
+   "subQuestions": [
+    {
+     "id": "q1",
+     "type": "MCQ_SINGLE",
+     "prompt": "Paul peut-il obtenir la nullité pour erreur ?",
+     "payload": {
+      "options": [
+       {
+        "id": "a",
+        "label": "Oui, s'il prouve sa conviction erronée sur l'authenticité"
+       },
+       {
+        "id": "b",
+        "label": "Non, le vendeur ne peut se tromper sur sa propre prestation"
+       },
+       {
+        "id": "c",
+        "label": "Non, c'est une simple erreur sur la valeur"
+       }
+      ]
+     }
+    },
+    {
+     "id": "q2",
+     "type": "TRUE_FALSE",
+     "prompt": "Paul peut invoquer une réticence dolosive au seul motif que Nina connaissait la valeur de la commode.",
+     "payload": {}
+    },
+    {
+     "id": "q3",
+     "type": "MCQ_SINGLE",
+     "prompt": "Nina peut-elle faire annuler la vente du tableau ?",
+     "payload": {
+      "options": [
+       {
+        "id": "a",
+        "label": "Oui, elle s'est trompée sur l'authenticité"
+       },
+       {
+        "id": "b",
+        "label": "Oui, parce qu'elle est professionnelle"
+       },
+       {
+        "id": "c",
+        "label": "Non, l'aléa accepté exclut l'erreur"
+       }
+      ]
+     }
+    },
+    {
+     "id": "q4",
+     "type": "MCQ_SINGLE",
+     "prompt": "Marc peut-il faire annuler l'achat du local ?",
+     "payload": {
+      "options": [
+       {
+        "id": "a",
+        "label": "Oui, c'est une erreur sur une qualité essentielle"
+       },
+       {
+        "id": "b",
+        "label": "Non, il s'est trompé sur un simple motif"
+       },
+       {
+        "id": "c",
+        "label": "Oui, c'est une erreur sur la valeur"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  "solution": {
+   "subSolutions": [
+    {
+     "id": "q1",
+     "solution": {
+      "correct": [
+       "a"
+      ]
+     }
+    },
+    {
+     "id": "q2",
+     "solution": {
+      "value": false
+     }
+    },
+    {
+     "id": "q3",
+     "solution": {
+      "correct": [
+       "c"
+      ]
+     }
+    },
+    {
+     "id": "q4",
+     "solution": {
+      "correct": [
+       "b"
+      ]
+     }
+    }
+   ]
+  },
+  "explanation": "Commode : comme dans l'affaire Poussin, le vendeur peut se tromper sur sa propre prestation (art. 1133, al. 2) s'il était convaincu que le meuble n'était pas d'époque. Le silence de Nina sur la seule valeur n'est pas un dol (art. 1137, al. 3, et Baldus).\n\nTableau : « attribué à » signale un aléa accepté par les parties ; il exclut l'erreur (art. 1133, al. 3, et Fragonard).\n\nLocal : la rentabilité est un motif qui n'a pas été stipulé ; l'erreur est indifférente (art. 1135 ; Com., 11 avril 2012).",
+  "hint": "Pour chaque vente, demande-toi sur quoi porte l'erreur, et si elle était entrée dans le champ contractuel.",
+  "concepts": [
+   "affaire-poussin",
+   "alea-erreur",
+   "erreur-motif",
+   "dol-valeur"
+  ],
+  "source": "TD n° 4, doc. 1 à 7"
+ },
+ {
+  "chapterSlug": "td-seance-4",
+  "type": "WRITING",
+  "difficulty": 3,
+  "points": 4,
+  "prompt": "Commentaire d'entraînement : Com., 18 septembre 2024 (TD n° 4, doc. 9). Rédige l'introduction et le plan détaillé.",
+  "payload": {
+   "modelAnswer": "Accroche : « Celui qui se tait consent-il à tromper ? » Le silence d'un contractant n'est pas toujours fautif, mais il devient un dol quand il est intentionnel.\n\nFaits et procédure : le cédant de la totalité des parts d'une société ne révèle pas au cessionnaire le passif de la société (dettes, contrats en cours, prêt bancaire). Le cessionnaire demande l'annulation de la cession pour réticence dolosive. La cour d'appel de Douai rejette : ancien gérant de société, le cessionnaire avait une obligation renforcée de se renseigner et n'a fait aucune démarche ; le silence du cédant n'était donc pas une dissimulation volontaire.\n\nQuestion de droit : le manquement du cessionnaire à son devoir de se renseigner suffit-il à exclure la réticence dolosive du cédant ?\n\nSolution : cassation pour défaut de base légale, au visa des articles 1137 et 1139. Constitue un dol la dissimulation intentionnelle d'une information dont on sait le caractère déterminant ; l'erreur provoquée par un dol est toujours excusable. Les motifs tirés du devoir de se renseigner sont impropres à exclure la réticence dolosive.\n\nI. La réticence dolosive, appréciée du côté de son auteur. A. Les éléments du dol : dissimulation intentionnelle d'une information déterminante (art. 1137). B. L'indifférence de la passivité de la victime.\n\nII. L'erreur provoquée, toujours excusable. A. La consécration par l'article 1139 d'une solution ancienne (3e civ., 21 février 2001). B. Une solution protectrice de la loyauté, publiée au Bulletin, qui limite le devoir de se renseigner.",
+   "rubric": [
+    {
+     "id": "c0",
+     "label": "Les parties sont qualifiées : cédant et cessionnaire"
+    },
+    {
+     "id": "c1",
+     "label": "Les motifs de la cour d'appel sont résumés, puisqu'il s'agit d'une cassation"
+    },
+    {
+     "id": "c2",
+     "label": "La question de droit oppose devoir de se renseigner et réticence dolosive"
+    },
+    {
+     "id": "c3",
+     "label": "Le cas d'ouverture (défaut de base légale) est identifié"
+    },
+    {
+     "id": "c4",
+     "label": "Les articles 1137 et 1139 et l'arrêt de 2001 sont exploités"
+    },
+    {
+     "id": "c5",
+     "label": "Le plan est tiré de l'arrêt et les titres sont rédigés"
+    }
+   ]
+  },
+  "solution": {},
+  "explanation": "Ce corrigé n'est qu'un exemple d'entraînement : d'autres plans sont possibles.",
+  "concepts": [
+   "reticence-dolosive",
+   "erreur-provoquee",
+   "plan-commentaire"
+  ],
+  "source": "TD n° 4, doc. 8 et 9 ; fascicule de méthodologie, p. 18-26"
+ }
+]

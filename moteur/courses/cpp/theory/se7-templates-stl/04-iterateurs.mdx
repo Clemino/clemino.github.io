@@ -1,0 +1,144 @@
+---
+title: Itérateurs
+slug: iterateurs
+order: 4
+estimatedReadMin: 10
+concepts: [iterateur, conteneur-stl, vector-list-map]
+source: "Cours 7 — Templates & STL"
+---
+
+## Parcourir n'importe quel conteneur de la même façon
+
+Un `vector` se parcourt par indice (`v[0]`, `v[1]`…). Mais une `list` n'a pas d'indice, et une `map` non plus. Faudrait-il une technique de parcours différente par conteneur ? La STL répond par un mécanisme **unique** : l'**itérateur**.
+
+> Un **itérateur** est un objet capable de **pointer sur un élément** d'un conteneur et de **parcourir** ses éléments à l'aide d'un jeu d'opérateurs : incrémentation `++` (passer à l'élément suivant), déréférencement `*` (accéder à l'élément pointé), comparaison `==` / `!=`. C'est une **généralisation du pointeur**.
+
+L'intérêt est l'**uniformité** : pas besoin de distinguer `vector`, `list` ou `map`. Quel que soit le conteneur, l'itérateur se déclare **de la même manière** et s'utilise avec **les mêmes opérateurs**. Chaque conteneur fournit son propre type d'itérateur, mais l'interface est identique.
+
+## Déclarer un itérateur
+
+Le type d'un itérateur est imbriqué dans le conteneur : `Conteneur::iterator`.
+
+```cpp
+std::vector<int>             tableau(5, 4);  // 5 entiers valant 4
+std::vector<int>::iterator   it;             // itérateur sur un vector<int>
+
+std::map<std::string, int>::iterator   it1;  // itérateur sur une map string->int
+std::deque<char>::iterator             it2;  // itérateur sur une deque<char>
+std::list<double>::iterator            it3;  // itérateur sur une list<double>
+```
+
+La structure est toujours la même : on prend le type du conteneur complet (`std::vector<int>`) et on y ajoute `::iterator`.
+
+## `begin()` et `end()` : les bornes du parcours
+
+Tout conteneur offre deux méthodes qui délimitent un parcours :
+
+- **`begin()`** renvoie un itérateur sur le **premier élément** ;
+- **`end()`** renvoie un itérateur sur la position **juste après le dernier** élément.
+
+> ⚠️ `end()` ne pointe **pas** sur le dernier élément, mais **après** lui. C'est une sentinelle « au-delà de la fin ». Déréférencer `end()` avec `*` est une **erreur** : il n'y a pas d'élément à cet emplacement. `end()` ne sert qu'à **détecter la fin** du parcours.
+
+## Parcourir un conteneur avec un itérateur
+
+La boucle de parcours combine ces trois éléments — `begin()`, `end()`, `++` et `*` :
+
+```cpp
+#include <deque>
+#include <iostream>
+
+int main() {
+    std::deque<int> d(5, 6);              // une deque de 5 éléments valant 6
+    std::deque<int>::iterator it;
+
+    for (it = d.begin(); it != d.end(); ++it) {
+        std::cout << *it << '\n';         // *it : l'élément pointé
+    }
+    return 0;
+}
+```
+
+Le schéma à retenir :
+
+1. **initialisation** — `it = d.begin()` : on se place sur le premier élément ;
+2. **condition** — `it != d.end()` : on continue tant qu'on n'a pas atteint la sentinelle de fin ;
+3. **avance** — `++it` : on passe à l'élément suivant ;
+4. **accès** — `*it` : à l'intérieur, on lit (ou modifie) l'élément pointé.
+
+Ce même schéma fonctionne **à l'identique** sur un `vector`, une `list`, une `map`… Seul le type de l'itérateur change ; la boucle, elle, ne change pas. C'est tout l'intérêt des itérateurs.
+
+## Les catégories d'itérateurs
+
+Tous les itérateurs ne sont pas aussi puissants. Le cours en distingue notamment les **itérateurs à accès direct** (*random access iterators*). Ceux-ci, en plus de `++`, proposent les opérateurs **`+`** et **`-`** : ils permettent d'**avancer de plusieurs éléments d'un coup**.
+
+```cpp
+std::vector<int> tab(100, 2);                 // 100 entiers valant 2
+
+std::vector<int>::iterator it = tab.begin() + 7;   // itérateur sur le 8e élément
+```
+
+`tab.begin() + 7` saute directement au huitième élément, sans passer un par un. Cette possibilité dépend du conteneur :
+
+- `vector` et `deque` fournissent des itérateurs à **accès direct** (`it + n` est permis) ;
+- `list`, `map`, `set` fournissent des itérateurs plus limités : on ne peut avancer **que** d'un cran à la fois (`++it`), car ces structures ne permettent pas le saut direct.
+
+> Une `list` étant chaînée, sauter au n-ième élément reviendrait à suivre n maillons : l'opérateur `+ n` n'est donc **pas** offert pour ses itérateurs. La catégorie de l'itérateur reflète ce que la structure de données sait faire efficacement.
+
+## `auto` : laisser le compilateur écrire le type
+
+Écrire `std::vector<int>::iterator` est long et, sur une `map`, vite illisible. Le mot-clé **`auto`** demande au compilateur de **déduire le type** d'une variable à partir de son initialisation :
+
+```cpp
+std::vector<int> v {1, 5, 2, 4, 3};
+
+for (auto it = v.begin(); it != v.end(); ++it) {   // it : std::vector<int>::iterator, déduit
+    std::cout << *it << '\n';
+}
+```
+
+`auto it = v.begin()` donne exactement le même type que `std::vector<int>::iterator it`, mais sans l'écrire. C'est le réflexe moderne avec les itérateurs : plus court, et inchangé si le type du conteneur évolue.
+
+## La boucle `for` sur intervalle
+
+Quand on veut simplement **parcourir tous les éléments** sans gérer soi-même les itérateurs, C++ propose la boucle **`for` sur intervalle** (*range-based for*) :
+
+```cpp
+std::vector<int> v {1, 5, 2, 4, 3};
+
+for (auto value : v) {           // value reçoit une copie de chaque élément
+    std::cout << value << '\n';
+}
+```
+
+Le compilateur traduit cette boucle en un parcours `begin()` → `end()` ; on n'a plus à écrire `it`, `++it` ni `*it`. Trois variantes selon le besoin :
+
+```cpp
+for (auto value : v)        { /* copie : lecture, l'original n'est pas touché */ }
+for (auto& value : v)       { value *= 2; }   // référence : modifie les éléments
+for (const auto& value : v) { /* référence constante : lecture sans copie */ }
+```
+
+> Bon choix par défaut : **`const auto&`** pour parcourir en lecture sans copier — utile si les éléments sont lourds. `auto&` quand on veut **modifier** les éléments. `auto` (copie) convient pour des types légers comme `int`.
+
+## `const_iterator` : parcourir sans modifier
+
+Si le conteneur est `const`, ou si l'on veut s'**interdire** de modifier ses éléments pendant le parcours, on utilise un **`const_iterator`**. À travers lui, `*it` donne un accès en **lecture seule** : toute tentative d'écriture est refusée par le compilateur.
+
+```cpp
+const std::vector<int> v {1, 2, 3};
+
+for (std::vector<int>::const_iterator it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << '\n';     // lecture autorisée
+    // *it = 99;                  // INTERDIT : it est un const_iterator
+}
+```
+
+Sur un conteneur `const`, `begin()` et `end()` renvoient **automatiquement** des `const_iterator`. Les méthodes `cbegin()` / `cend()` fournissent explicitement des `const_iterator` même sur un conteneur non `const`. Avec `auto`, le bon type est de toute façon déduit tout seul.
+
+> **À retenir**
+> - Un **itérateur** est une **généralisation du pointeur** : il pointe sur un élément d'un conteneur et le parcourt via `++` (suivant), `*` (accès), `==`/`!=`.
+> - Il offre un parcours **uniforme** : même déclaration, mêmes opérateurs quel que soit le conteneur ; le type s'écrit `Conteneur::iterator`.
+> - **`begin()`** pointe sur le premier élément, **`end()`** **après** le dernier ; la boucle type est `for (it = c.begin(); it != c.end(); ++it)` et l'on accède à l'élément par `*it`.
+> - Les **itérateurs à accès direct** (`vector`, `deque`) ajoutent `+`/`-` pour avancer de plusieurs crans (`begin() + 7`) ; ceux de `list`/`map` ne font que `++`.
+> - **`auto`** déduit le type d'un itérateur et évite d'écrire `std::vector<int>::iterator` ; la **boucle `for` sur intervalle** (`for (auto x : v)`) parcourt tous les éléments sans gérer l'itérateur.
+> - Un **`const_iterator`** parcourt en **lecture seule** ; il est obligatoire — et automatique — sur un conteneur `const`.

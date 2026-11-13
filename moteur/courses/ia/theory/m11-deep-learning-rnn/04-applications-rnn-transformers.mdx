@@ -1,0 +1,312 @@
+---
+title: "Applications et ouverture vers les transformers"
+slug: applications-rnn-transformers
+order: 4
+estimatedReadMin: 23
+concepts: [donnees-sequentielles, generation-de-texte, serie-temporelle, encodeur-decodeur, mecanisme-d-attention, transformeur, softmax]
+source: "Slides_RNN_2526.pdf"
+---
+
+## Le traitement des données séquentielles
+
+La **principale raison** pour laquelle on a besoin des RNN, rappelle le cours,
+est qu'**ils sont « bons pour » le traitement des séquences** — ce que les
+réseaux *feedforward* ne sont **pas**.
+
+> Les **séquences** sont des **collections de points de données avec un ordre
+> défini**, par exemple un **ordre basé sur le temps**.
+
+Le cours donne trois **exemples de données séquentielles** :
+
+- les **séries temporelles** — par exemple des **données financières** ;
+- les **documents** — un document est une **séquence de mots** ;
+- les **images dans les vidéos** — une vidéo est une **séquence d'images**.
+
+Et il redit pourquoi un RNN convient : **grâce à ses boucles, un RNN « garde en
+mémoire » une synthèse des éléments de données (la sous-séquence) déjà traités et
+l'utilise lors du traitement de l'élément suivant.** C'est l'**état caché** qui
+joue ce rôle de **mémoire de la sous-séquence**.
+
+> **À retenir** : un RNN est fait pour les **séquences** — des **collections
+> ordonnées** de points de données (**séries temporelles**, **documents**,
+> **images de vidéos**). Ses **boucles** lui permettent de **garder en mémoire**
+> une synthèse de la sous-séquence déjà traitée.
+
+## Les problèmes séquence à séquence (Seq2Seq)
+
+Le cours formalise une classe importante de problèmes : les problèmes **séquence
+à séquence (Seq2Seq)**.
+
+> Dans un problème **Seq2Seq**, une **séquence source `X₁ … X_T`** est **mappée**
+> à une **séquence cible `Y₁ … Y_T′`**.
+
+Le cours souligne un point : **dans le cas général, la taille `T′` de la
+séquence de sortie n'est pas nécessairement égale à la taille `T` de la séquence
+d'entrée**. Entrée et sortie peuvent donc avoir des **longueurs différentes**.
+
+Chaque **élément de la séquence d'entrée** est représenté par un **vecteur de
+dimension `n`**, où `n` est le **nombre de neurones de la couche d'entrée**. Le
+cours donne un exemple de représentation : **les mots peuvent être représentés
+en utilisant une méthode de *word embedding*** (plongement lexical).
+
+Un **problème Seq2Seq bien connu** dans lequel les RNN sont utilisés est la
+**traduction automatique** : la séquence d'entrée est un **document dans une
+langue donnée** et la séquence de sortie un **document dans une autre langue**.
+Le cours illustre cela par une phrase : *« Ils | ne | peuvent | plus | … »* en
+entrée d'un RNN qui produit *« They | can | no | longer | … »* en sortie.
+
+> **À retenir** : un problème **Seq2Seq** **mappe** une séquence source
+> `X₁ … X_T` à une séquence cible `Y₁ … Y_T′`, **sans que `T′` soit
+> nécessairement égal à `T`**. Chaque élément d'entrée est un **vecteur de
+> dimension `n`** (par exemple un **word embedding**). Exemple type : la
+> **traduction automatique**.
+
+## Les trois types de problèmes Seq2Seq
+
+Le cours distingue **trois types de problèmes Seq2Seq**, **selon les tailles `T`
+et `T′`** des séquences d'entrée et de sortie.
+
+| Type | Entrée → sortie | Exemple |
+| --- | --- | --- |
+| **Plusieurs-à-plusieurs** (*many-to-many*) | une **séquence** → une **séquence** | **Traduction automatique** |
+| **Plusieurs-à-un** (*many-to-one*) | une **séquence** → **un seul élément** | **Analyse des sentiments** |
+| **Un-à-plusieurs** (*one-to-many*) | **une seule entrée** → une **séquence** | *Image captioning* |
+
+Le cours détaille ces trois cas.
+
+- **Plusieurs-à-plusieurs (many-to-many)** : on a une **séquence en entrée et
+  une séquence en sortie**. La **traduction automatique** appartient à cette
+  catégorie.
+- **Plusieurs-à-un (many-to-one)** : la **sortie ne contient qu'un seul
+  élément**. Exemple : dans l'**analyse des sentiments**, le RNN ne doit générer
+  **qu'une seule valeur** (par exemple **positive** ou **négative**) résumant le
+  document d'entrée.
+- **Un-à-plusieurs (one-to-many)** : recevant **une seule entrée**, le RNN
+  **génère une séquence**. L'**image captioning** en est un exemple : son
+  **entrée est une image** et sa **sortie une séquence de mots**.
+
+> **À retenir** : selon `T` et `T′`, un problème Seq2Seq est **plusieurs-à-
+> plusieurs** (séquence → séquence, ex. traduction), **plusieurs-à-un**
+> (séquence → un élément, ex. analyse des sentiments) ou **un-à-plusieurs** (un
+> élément → séquence, ex. *image captioning*).
+
+## Un exemple : prédire le mot suivant
+
+Le cours développe un **exemple** complet. On suppose un **vocabulaire
+`A = {a₁, …, a_|A|}`** contenant **`|A| = 10 000` mots**, chaque mot étant
+représenté par un **vecteur réel de dimension `n` avec `n = 50`**.
+
+On veut un RNN capable de **« deviner » le mot suivant** dans une séquence de
+mots. Un tel RNN est défini ainsi :
+
+- il a **`n` neurones dans la couche d'entrée**, **`500` neurones dans la couche
+  cachée** et **`|A|` neurones dans la couche de sortie** ;
+- la **fonction d'activation de la couche cachée est sigmoïde** ;
+- la **couche de sortie a `|A|` neurones** et **softmax** comme fonction
+  d'activation.
+
+Le vecteur de sortie `Yᵗ` est alors défini, pour `k = 1, …, |A|`, par :
+
+```text
+            exp( (W·Hᵗ + Bᵒ)[k] )
+Yᵗ[k] = ─────────────────────────────
+          Σ_{k′=1}^{|A|} exp( (W·Hᵗ + Bᵒ)[k′] )
+```
+
+C'est la formule du **softmax** : chaque sortie est une **probabilité**, et la
+somme des sorties vaut `1`. Pour chaque valeur de `j`, `Yᵗ[j]` est la
+**probabilité que le mot suivant après la séquence `X₁ … Xₜ` soit `wⱼ`** :
+
+```text
+                            exp( (W_o·Hₜ + B_o)[j] )
+p(Xₜ = wⱼ | X₁, …, Xₜ) = ────────────────────────────────
+                          Σ_{i=1}^{|V|} exp( (W_o·Hₜ + B_o)[i] )
+```
+
+Le cours conclut : cette application **constitue la base d'un sous-domaine
+important du traitement du langage naturel, la modélisation du langage**, dans
+lequel **le but est d'apprendre une distribution de probabilité sur des
+séquences de mots**.
+
+> **À retenir** : pour **prédire le mot suivant**, la couche de sortie a
+> **`|A|` neurones** et une activation **softmax** : `Yᵗ[k]` est la
+> **probabilité** que le mot suivant soit le `k`-ème du vocabulaire. C'est la
+> base de la **modélisation du langage** — apprendre une **distribution de
+> probabilité sur des séquences de mots**.
+
+## Lire un RNN en Keras
+
+Les RNN s'utilisent en pratique avec la bibliothèque **Keras**. Le code suivant,
+inspiré des travaux pratiques, est à **lire** : il construit un RNN simple pour
+la **prédiction d'une série temporelle** (le cours et le TD prennent l'exemple
+du **cours d'une action**, fichier `MSFT.csv`).
+
+```python
+from keras.models import Sequential
+from keras.layers import Dense, SimpleRNN
+
+# RNN : une couche récurrente + une couche de sortie dense
+rnn = Sequential()
+rnn.add(SimpleRNN(hidden_units, input_shape=(time_steps - 1, 1),
+                  activation='tanh'))
+rnn.add(Dense(units=1, activation='linear'))
+
+rnn.compile(loss='mean_squared_error', optimizer='adam')
+rnn.fit(X_train, Y_train, epochs=100, batch_size=5, verbose=2)
+```
+
+On y retrouve les notions du module : une couche **`SimpleRNN`** — la **couche
+récurrente** — avec son activation **`tanh`** (la tangente hyperbolique
+habituelle pour `σₕ`), suivie d'une couche **`Dense`** de sortie. Pour une
+**génération de texte**, on remplacerait `SimpleRNN` par une couche **`LSTM`**
+et la couche de sortie utiliserait une activation **`softmax`**.
+
+> **À retenir** : en **Keras**, une couche récurrente se déclare avec
+> **`SimpleRNN`** (ou **`LSTM`** pour un LSTM) ; on l'assemble avec une couche
+> **`Dense`** de sortie, puis on **compile** (perte, optimiseur) et on
+> **entraîne** (`fit`) — comme pour tout réseau Keras.
+
+## L'architecture encodeur-décodeur
+
+Le cours ouvre maintenant la dernière partie : **des RNN aux transformers**.
+
+Un RNN et ses variantes **peuvent être utilisés directement** dans les problèmes
+Seq2Seq. Mais le cours signale **une façon plus efficace** de les utiliser : en
+mettre **deux**, dans une structure appelée **encodeur-décodeur**.
+
+> Dans un **encodeur-décodeur**, la **séquence d'entrée** (par exemple la phrase
+> à traduire) est mise à l'entrée de l'**encodeur** (premier RNN), qui traite
+> cette séquence et la **synthétise** sous la forme d'un **vecteur-contexte**.
+> Ce vecteur-contexte est envoyé à l'entrée du **décodeur** (deuxième RNN), qui
+> produit la **séquence de sortie** (par exemple la traduction de la phrase).
+
+Le mécanisme se résume donc en deux étapes :
+
+| Composant | Rôle |
+| --- | --- |
+| **Encodeur** (1ᵉʳ RNN) | Lit la séquence d'entrée et la **synthétise** en un **vecteur-contexte** |
+| **Vecteur-contexte** | **Synthèse** de la séquence d'entrée, transmise au décodeur |
+| **Décodeur** (2ᵉ RNN) | Reçoit le vecteur-contexte et **produit la séquence de sortie** |
+
+L'encodeur-décodeur sépare ainsi clairement la **compréhension** de la séquence
+d'entrée (faite par l'encodeur) et la **production** de la séquence de sortie
+(faite par le décodeur).
+
+> **À retenir** : un **encodeur-décodeur** met **deux RNN** bout à bout :
+> l'**encodeur** synthétise la séquence d'entrée en un **vecteur-contexte**, que
+> le **décodeur** transforme en **séquence de sortie**. C'est une façon **plus
+> efficace** de traiter les problèmes Seq2Seq.
+
+## Le mécanisme d'attention
+
+Le cours présente ensuite le **mécanisme d'attention**, dont il souligne que le
+principe est **assez intuitif** (et finalement assez simple) :
+
+> Pour **traduire un mot** dans une phrase, on n'a **pas besoin de la totalité**
+> de la phrase, mais de **quelques mots**. De même, pour **reconnaître une
+> personne** dans une image, on n'a pas besoin de la totalité de l'image, mais
+> de **certaines parties** — par exemple celles qui semblent correspondre à des
+> visages.
+
+L'encodeur-décodeur, lui, s'appuie sur **une seule synthèse** de la phrase (le
+vecteur-contexte). Le mécanisme d'attention vise **deux objectifs** :
+
+1. ne **pas se contenter d'une synthèse de la totalité** de la phrase, mais
+   **utiliser plus d'informations** issues de l'encodeur ;
+2. **souligner**, à chaque moment du traitement (par exemple de la traduction),
+   les **parties de la phrase les plus importantes** pour le traitement en cours
+   (par exemple pour la traduction du mot courant).
+
+Comment cela fonctionne-t-il concrètement ? Le cours détaille :
+
+- le mécanisme nécessite l'**ajout, à l'encodeur-décodeur, d'un autre réseau de
+  neurones** — un **RN standard, pas besoin d'un RNN** ;
+- ce réseau utilise les **sorties successives de l'encodeur** (une sortie
+  correspond au traitement d'un mot) ;
+- il leur donne des **poids différents**, c'est-à-dire une **importance
+  différente**, donc aux **mots correspondants** ;
+- ces poids sont **calculés par le nouveau réseau de neurones**, qui **apprend à
+  le faire** en étant **entraîné en même temps que le reste de
+  l'encodeur-décodeur**.
+
+> **À retenir** : le **mécanisme d'attention** ajoute à l'encodeur-décodeur un
+> **réseau de neurones standard** qui attribue des **poids** — une
+> **importance** — aux **sorties successives de l'encodeur**, afin de
+> **souligner** les mots les plus utiles à chaque étape. Ces poids sont
+> **appris** conjointement avec l'encodeur-décodeur.
+
+## Du RNN au transformeur
+
+Le cours conclut le module sur le **transformeur**.
+
+> Le **transformeur** est une **architecture** (complexe) servant à **traiter
+> des données séquentielles**.
+
+Le cours en donne quatre caractéristiques :
+
+- il est **basé sur le mécanisme d'attention**, qu'il **utilise sans passer par
+  les RNN** ;
+- **plusieurs composantes du transformeur utilisent l'attention** ;
+- il est **conçu pour le passage à l'échelle** : autrement dit, **avoir plus de
+  données le rend plus efficace** ;
+- ceci est notamment dû à son **fonctionnement parallèle**.
+
+Le transformeur représente donc un **changement de paradigme** : il **conserve**
+l'idée la plus puissante des RNN avancés — l'**attention** — mais **abandonne la
+récurrence** elle-même. Là où un RNN traite une séquence **élément après
+élément** (ce qui est intrinsèquement séquentiel), le transformeur fonctionne
+**en parallèle**, ce qui lui permet d'**exploiter de très grandes quantités de
+données** et de **monter à l'échelle**. C'est cette architecture qui est à la
+base des **grands modèles de langage** actuels.
+
+> **À retenir** : le **transformeur** est une architecture de traitement des
+> **données séquentielles** fondée sur l'**attention** mais **sans RNN**.
+> Conçu pour le **passage à l'échelle** grâce à son **fonctionnement
+> parallèle**, il abandonne la **récurrence** tout en gardant l'**attention**.
+
+## Conclusion du module
+
+Le cours conclut en récapitulant les trois grands thèmes parcourus :
+
+- les **réseaux de neurones récurrents** : leurs **définitions** et leur
+  **utilisation** ;
+- le **traitement des données séquentielles** ;
+- des **RNN aux transformers**.
+
+Le fil conducteur est clair. Les réseaux *feedforward* ne savent pas traiter les
+**séquences** ; les **RNN** y parviennent grâce à leurs **boucles** et à leur
+**état caché**, mais souffrent du **gradient évanescent** ; le **LSTM** (et le
+**GRU**) y répond par des **portes** ; l'**encodeur-décodeur** et l'**attention**
+améliorent le traitement Seq2Seq ; et le **transformeur**, en gardant
+l'attention **sans la récurrence**, ouvre la voie aux architectures actuelles.
+
+> **À retenir** : le module a parcouru les **RNN** (définitions et usage), le
+> **traitement des données séquentielles**, puis l'ouverture **des RNN aux
+> transformers** — un fil allant de la **boucle** récurrente jusqu'à
+> l'**attention** parallèle.
+
+## Synthèse de la section
+
+Les RNN sont faits pour les **séquences** — collections **ordonnées** de
+données : **séries temporelles**, **documents**, **images de vidéos** —, qu'ils
+traitent grâce à la **mémoire** de leur état caché. Un problème **Seq2Seq**
+**mappe** une séquence source `X₁ … X_T` à une séquence cible `Y₁ … Y_T′` (sans
+que `T′ = T`) ; selon les tailles, il est **plusieurs-à-plusieurs** (traduction),
+**plusieurs-à-un** (analyse des sentiments) ou **un-à-plusieurs** (*image
+captioning*). L'exemple de la **prédiction du mot suivant** — couche de sortie à
+`|A|` neurones et **softmax** — fonde la **modélisation du langage**, qui
+apprend une **distribution de probabilité sur des séquences de mots**. Pour
+traiter efficacement les problèmes Seq2Seq, l'**encodeur-décodeur** met **deux
+RNN** bout à bout : l'**encodeur** synthétise l'entrée en un **vecteur-contexte**
+que le **décodeur** transforme en sortie. Le **mécanisme d'attention** ajoute un
+**réseau standard** qui pondère les **sorties de l'encodeur** pour **souligner**
+les éléments importants, poids **appris** conjointement. Enfin, le
+**transformeur** est une architecture de traitement des **séquences** fondée sur
+l'**attention** mais **sans RNN**, **parallèle** et conçue pour le **passage à
+l'échelle**.
+
+> **À retenir** : un RNN traite des **séquences** et des problèmes **Seq2Seq**
+> (many-to-many, many-to-one, one-to-many) ; l'**encodeur-décodeur** et
+> l'**attention** en améliorent l'usage ; le **transformeur** garde
+> l'**attention** **sans la récurrence** et passe à l'**échelle** grâce au
+> calcul **parallèle**.

@@ -1,0 +1,74 @@
+---
+title: Notion de transaction
+slug: notion-transaction
+order: 1
+estimatedReadMin: 6
+concepts: [transaction]
+source: "CM3, slides 3-4"
+---
+
+## Définition
+
+Une **transaction** est un ensemble ordonné d'opérations modifiant des données (instructions du **LMD** — Langage de Manipulation de Données) qu'un SGBD effectue **parfaitement et complètement, ou pas du tout**.
+
+Une opération de transaction est donc, au choix :
+
+- un `INSERT`,
+- un `UPDATE`,
+- un `DELETE`.
+
+Les `SELECT` ne sont **pas** des opérations de transaction au sens strict, mais ils interagissent avec les transactions en cours via les règles d'isolation.
+
+## Pourquoi des transactions ?
+
+Considérons un MLD simple :
+
+- `Facture(id, #idProduit, #idClient, qte, dateFact, montant)`
+- `Produit(id, stock, prixUnitaire)`
+- `Client(id, nom, prenom, caCumule)`
+
+Une **vente** d'un produit nécessite **trois opérations** :
+
+1. Une **insertion** dans `Facture`.
+2. Une **mise à jour** du stock dans `Produit`.
+3. Une **mise à jour** du chiffre d'affaires cumulé dans `Client`.
+
+Une vente est **cohérente** uniquement si les trois opérations sont effectuées. Si la deuxième échoue (par exemple stock insuffisant), il faut **annuler** la première. La transaction fournit cette garantie.
+
+## Vente sans transaction = catastrophe
+
+Sans transaction, une panne serveur entre l'opération 2 et 3 laisserait la base dans un état où :
+
+- la facture existe,
+- le stock est décrémenté,
+- mais le chiffre d'affaires du client n'est pas mis à jour.
+
+Plus aucune information n'est fiable. La transaction règle ce problème.
+
+## Le mécanisme général
+
+Une transaction commence :
+
+- **soit au début d'une session** (à la première instruction LMD),
+- **soit à la fin d'une transaction précédente**.
+
+Une transaction se termine :
+
+- **soit avec `COMMIT`** : toutes les opérations sont validées définitivement,
+- **soit avec `ROLLBACK`** : toutes les opérations sont annulées.
+
+```sql
+-- Début implicite de transaction
+INSERT INTO Facture VALUES (1, 100, 42, 2, SYSDATE, 19.90);
+UPDATE Produit SET stock = stock - 2 WHERE id = 100;
+UPDATE Client  SET caCumule = caCumule + 19.90 WHERE id = 42;
+COMMIT;        -- validation
+-- ou
+ROLLBACK;      -- annulation totale
+```
+
+> **À retenir**
+> - Transaction = ensemble ordonné d'opérations LMD exécutées **"tout ou rien"**.
+> - Opération LMD : `INSERT`, `UPDATE`, `DELETE` (pas `SELECT`).
+> - Commence implicitement au début de session ou après une transaction précédente.
+> - Termine par `COMMIT` (valide) ou `ROLLBACK` (annule).

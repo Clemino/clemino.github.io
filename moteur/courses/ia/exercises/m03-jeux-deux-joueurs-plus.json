@@ -1,0 +1,1211 @@
+[
+  {
+    "chapterSlug": "jeux-et-arbres",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Lequel de ces jeux ne fait PAS partie du cadre étudié dans ce module ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Un jeu de cartes où chaque joueur garde sa main cachée" },
+        { "id": "b", "label": "Les échecs" },
+        { "id": "c", "label": "Les dames" },
+        { "id": "d", "label": "Le Morpion (Tic-Tac-Toe)" }
+      ],
+      "shuffle": true
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Un jeu de cartes à mains cachées est à information incomplète : il sort du cadre du module, qui n'étudie que les jeux à information complète (échecs, dames, Morpion).",
+    "concepts": ["information-complete", "jeu-a-deux-joueurs"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "jeux-et-arbres",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Aux échecs, un état du jeu est entièrement déterminé par la configuration de l'échiquier, sans qu'il soit nécessaire de préciser le joueur dont c'est le tour.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. Un état est déterminé par la configuration des 8 × 8 cases AINSI QUE le joueur dont c'est le tour : l'identité du joueur au trait fait partie intégrante de l'état.",
+    "concepts": ["modelisation-d-un-jeu"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "jeux-et-arbres",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans la modélisation d'un jeu, qu'est-ce qu'une action ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Ce qui fait passer d'un état à un autre" },
+        { "id": "b", "label": "La valeur numérique d'un état final" },
+        { "id": "c", "label": "L'ensemble de toutes les configurations du jeu" },
+        { "id": "d", "label": "La configuration de départ de la partie" }
+      ],
+      "shuffle": true
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Une action fait passer d'un état à un autre : les actions décrivent les coups que les règles du jeu autorisent.",
+    "concepts": ["modelisation-d-un-jeu"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "jeux-et-arbres",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la phrase sur la définition d'une partie.",
+    "payload": {
+      "template": "Une partie est définie par une suite d'{{actions}} conduisant de l'état {{depart}} à un état {{fin}}.",
+      "slots": [
+        { "id": "actions", "placeholder": "?" },
+        { "id": "depart", "placeholder": "?" },
+        { "id": "fin", "placeholder": "?" }
+      ]
+    },
+    "solution": {
+      "answers": { "actions": ["actions", "action"], "depart": ["initial", "de départ", "de depart"], "fin": ["final", "finals"] },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Une partie est une suite d'actions conduisant de l'état initial à un état final.",
+    "concepts": ["modelisation-d-un-jeu"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "jeux-et-arbres",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un arbre de jeu binaire (facteur de branchement b = 2) est construit jusqu'à la profondeur m = 5 (racine au niveau 1, feuilles au niveau 5). Combien de feuilles comporte-t-il ?",
+    "payload": { "hint": "De la racine aux feuilles, m − 1 = 4 niveaux d'arêtes : 2⁴." },
+    "solution": { "value": 16 },
+    "explanation": "Avec b = 2 et 4 niveaux d'arêtes, le nombre de feuilles est 2⁴ = 16. En général, un arbre construit jusqu'à la profondeur m avec un facteur de branchement b comporte b^(m−1) feuilles.",
+    "concepts": ["facteur-de-branchement", "arbre-de-jeu"],
+    "source": "TD_Jeux_2J"
+  },
+  {
+    "chapterSlug": "jeux-et-arbres",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Aux échecs, le facteur de branchement moyen est évalué à environ 35. Combien de suites de coups distinctes faut-il, en ordre de grandeur, envisager pour anticiper 2 coups (un coup de chaque joueur) ? Donnez 35 × 35.",
+    "payload": { "hint": "Deux niveaux : 35 possibilités, puis 35 de nouveau." },
+    "solution": { "value": 1225 },
+    "explanation": "Avec un facteur de branchement de 35, anticiper 2 coups revient à envisager 35 × 35 = 1225 suites. C'est cette croissance — multiplication par le facteur de branchement à chaque niveau — qui fait exploser le nombre de parties.",
+    "concepts": ["facteur-de-branchement"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "jeux-et-arbres",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une feuille d'un arbre de jeu peut correspondre à deux situations. Lesquelles ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Soit un état final, soit un état non terminal auquel on s'arrête volontairement" },
+        { "id": "b", "label": "Soit la racine, soit un nœud du dernier niveau" },
+        { "id": "c", "label": "Soit un nœud Max, soit un nœud Min" },
+        { "id": "d", "label": "Soit un gain, soit une perte, jamais une partie nulle" }
+      ],
+      "shuffle": true
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Une feuille est soit un état final (partie réellement terminée, valuée par la fonction d'utilité), soit un état non terminal auquel on s'arrête volontairement parce que l'arbre n'a pas été construit jusqu'au bout (valué alors par une fonction d'évaluation).",
+    "concepts": ["arbre-de-jeu", "fonction-d-utilite", "fonction-d-evaluation"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "jeux-et-arbres",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Dans un arbre de jeu, comme les deux joueurs jouent à tour de rôle, les niveaux de l'arbre alternent entre les coups de l'un et les coups de l'autre.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. L'arbre de jeu rend visible cette alternance fondamentale : un niveau correspond à un tour de jeu, et les niveaux alternent entre les coups des deux joueurs. C'est le ressort de l'algorithme minimax.",
+    "concepts": ["arbre-de-jeu"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "minimax",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On considère un arbre à 3 niveaux : racine = joueur Max, chaque nœud non terminal a 3 fils, feuilles de gauche à droite : 6, 3, 9, 2, 7, 5, 8, 1, 4. Quelle est la valeur minimax de la racine ?",
+    "payload": { "hint": "Niveau 2 = nœuds Min (min de 3 feuilles), racine = nœud Max." },
+    "solution": { "value": 3 },
+    "explanation": "Niveau 2 (nœuds Min) : min(6,3,9)=3, min(2,7,5)=2, min(8,1,4)=1. Racine (nœud Max) : max(3,2,1)=3.",
+    "concepts": ["algorithme-minimax", "valeur-minimax", "noeud-max", "noeud-min"],
+    "source": "TD_Jeux_2J"
+  },
+  {
+    "chapterSlug": "minimax",
+    "type": "ALGO_TRACE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "L'arbre ci-dessous a la racine A (nœud Max), deux nœuds Min B et C, et quatre feuilles. Appliquez minimax et donnez la valeur de B, de C et de la racine.",
+    "payload": {
+      "description": "B = min de ses deux feuilles ; C = min de ses deux feuilles ; A = max(B, C).",
+      "figure": {
+        "kind": "game-tree",
+        "root": {
+          "type": "max",
+          "label": "A",
+          "children": [
+            { "type": "min", "label": "B", "children": [{ "type": "leaf", "value": 10 }, { "type": "leaf", "value": 9 }] },
+            { "type": "min", "label": "C", "children": [{ "type": "leaf", "value": 2 }, { "type": "leaf", "value": 1 }] }
+          ]
+        },
+        "caption": "Arbre de jeu : racine Max, niveau 2 Min"
+      },
+      "cells": [
+        { "id": "B", "label": "Valeur du nœud Min B", "kind": "number" },
+        { "id": "C", "label": "Valeur du nœud Min C", "kind": "number" },
+        { "id": "A", "label": "Valeur de la racine A", "kind": "number" }
+      ]
+    },
+    "solution": {
+      "cells": [
+        { "id": "B", "expected": 9 },
+        { "id": "C", "expected": 1 },
+        { "id": "A", "expected": 9 }
+      ]
+    },
+    "explanation": "B = min(10, 9) = 9. C = min(2, 1) = 1. A (nœud Max) = max(9, 1) = 9.",
+    "concepts": ["algorithme-minimax", "noeud-max", "noeud-min", "valeur-minimax"],
+    "source": "TD_Jeux_2J"
+  },
+  {
+    "chapterSlug": "minimax",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "L'arbre ci-dessous a 4 niveaux : racine A (Max), niveau 2 B et C (Min), niveau 3 D, E, F, G (Max), niveau 4 H à O (Min) dont les fils sont les feuilles. Appliquez minimax et donnez la valeur de chaque nœud interne.",
+    "payload": {
+      "description": "Remontez les valeurs des feuilles vers la racine, niveau par niveau.",
+      "figure": {
+        "kind": "game-tree",
+        "root": {
+          "type": "max",
+          "label": "A",
+          "children": [
+            {
+              "type": "min",
+              "label": "B",
+              "children": [
+                { "type": "max", "label": "D", "children": [
+                  { "type": "min", "label": "H", "children": [{ "type": "leaf", "value": 7 }, { "type": "leaf", "value": 4 }] },
+                  { "type": "min", "label": "I", "children": [{ "type": "leaf", "value": 1 }, { "type": "leaf", "value": 8 }] }
+                ] },
+                { "type": "max", "label": "E", "children": [
+                  { "type": "min", "label": "J", "children": [{ "type": "leaf", "value": 6 }, { "type": "leaf", "value": 2 }] },
+                  { "type": "min", "label": "K", "children": [{ "type": "leaf", "value": 9 }, { "type": "leaf", "value": 3 }] }
+                ] }
+              ]
+            },
+            {
+              "type": "min",
+              "label": "C",
+              "children": [
+                { "type": "max", "label": "F", "children": [
+                  { "type": "min", "label": "L", "children": [{ "type": "leaf", "value": 2 }, { "type": "leaf", "value": 9 }] },
+                  { "type": "min", "label": "M", "children": [{ "type": "leaf", "value": 5 }, { "type": "leaf", "value": 3 }] }
+                ] },
+                { "type": "max", "label": "G", "children": [
+                  { "type": "min", "label": "N", "children": [{ "type": "leaf", "value": 8 }, { "type": "leaf", "value": 4 }] },
+                  { "type": "min", "label": "O", "children": [{ "type": "leaf", "value": 1 }, { "type": "leaf", "value": 7 }] }
+                ] }
+              ]
+            }
+          ]
+        },
+        "caption": "Arbre de jeu à 4 niveaux"
+      },
+      "cells": [
+        { "id": "H", "label": "Valeur de H", "kind": "number" },
+        { "id": "I", "label": "Valeur de I", "kind": "number" },
+        { "id": "J", "label": "Valeur de J", "kind": "number" },
+        { "id": "K", "label": "Valeur de K", "kind": "number" },
+        { "id": "L", "label": "Valeur de L", "kind": "number" },
+        { "id": "M", "label": "Valeur de M", "kind": "number" },
+        { "id": "N", "label": "Valeur de N", "kind": "number" },
+        { "id": "O", "label": "Valeur de O", "kind": "number" },
+        { "id": "D", "label": "Valeur de D", "kind": "number" },
+        { "id": "E", "label": "Valeur de E", "kind": "number" },
+        { "id": "F", "label": "Valeur de F", "kind": "number" },
+        { "id": "G", "label": "Valeur de G", "kind": "number" },
+        { "id": "B", "label": "Valeur de B", "kind": "number" },
+        { "id": "C", "label": "Valeur de C", "kind": "number" },
+        { "id": "A", "label": "Valeur de la racine A", "kind": "number" }
+      ]
+    },
+    "solution": {
+      "cells": [
+        { "id": "H", "expected": 4 },
+        { "id": "I", "expected": 1 },
+        { "id": "J", "expected": 2 },
+        { "id": "K", "expected": 3 },
+        { "id": "L", "expected": 2 },
+        { "id": "M", "expected": 3 },
+        { "id": "N", "expected": 4 },
+        { "id": "O", "expected": 1 },
+        { "id": "D", "expected": 4 },
+        { "id": "E", "expected": 3 },
+        { "id": "F", "expected": 3 },
+        { "id": "G", "expected": 4 },
+        { "id": "B", "expected": 3 },
+        { "id": "C", "expected": 3 },
+        { "id": "A", "expected": 3 }
+      ]
+    },
+    "explanation": "Niveau 4 (Min) : H=min(7,4)=4, I=min(1,8)=1, J=min(6,2)=2, K=min(9,3)=3, L=min(2,9)=2, M=min(5,3)=3, N=min(8,4)=4, O=min(1,7)=1. Niveau 3 (Max) : D=max(4,1)=4, E=max(2,3)=3, F=max(2,3)=3, G=max(4,1)=4. Niveau 2 (Min) : B=min(4,3)=3, C=min(3,4)=3. Racine A (Max) = max(3,3) = 3.",
+    "concepts": ["algorithme-minimax", "noeud-max", "noeud-min", "valeur-minimax"],
+    "source": "TD_Jeux_2J"
+  },
+  {
+    "chapterSlug": "minimax",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "L'arbre ci-dessous a la racine A (Max), niveau 2 B et C (Min), niveau 3 D, E, F, G (Max), niveau 4 des nœuds Min dont les fils sont les feuilles. Les feuilles valent, de gauche à droite : 3, 12, 8, 2, 4, 6, 14, 5, 3, 12, 8, 2, 4, 6, 14, 5.",
+    "payload": {
+      "figure": {
+        "kind": "game-tree",
+        "root": {
+          "type": "max",
+          "label": "A",
+          "children": [
+            {
+              "type": "min",
+              "label": "B",
+              "children": [
+                { "type": "max", "label": "D", "children": [
+                  { "type": "min", "children": [{ "type": "leaf", "value": 3 }, { "type": "leaf", "value": 12 }] },
+                  { "type": "min", "children": [{ "type": "leaf", "value": 8 }, { "type": "leaf", "value": 2 }] }
+                ] },
+                { "type": "max", "label": "E", "children": [
+                  { "type": "min", "children": [{ "type": "leaf", "value": 4 }, { "type": "leaf", "value": 6 }] },
+                  { "type": "min", "children": [{ "type": "leaf", "value": 14 }, { "type": "leaf", "value": 5 }] }
+                ] }
+              ]
+            },
+            {
+              "type": "min",
+              "label": "C",
+              "children": [
+                { "type": "max", "label": "F", "children": [
+                  { "type": "min", "children": [{ "type": "leaf", "value": 3 }, { "type": "leaf", "value": 12 }] },
+                  { "type": "min", "children": [{ "type": "leaf", "value": 8 }, { "type": "leaf", "value": 2 }] }
+                ] },
+                { "type": "max", "label": "G", "children": [
+                  { "type": "min", "children": [{ "type": "leaf", "value": 4 }, { "type": "leaf", "value": 6 }] },
+                  { "type": "min", "children": [{ "type": "leaf", "value": 14 }, { "type": "leaf", "value": 5 }] }
+                ] }
+              ]
+            }
+          ]
+        },
+        "caption": "Arbre de jeu à 4 niveaux"
+      },
+      "caption": "Lecture d'un arbre de jeu",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la valeur minimax du nœud Max E ?",
+          "weight": 1,
+          "payload": { "hint": "E = max de ses deux nœuds Min." }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la valeur minimax du nœud Min C ?",
+          "weight": 1,
+          "payload": { "hint": "C = min(F, G)." }
+        },
+        {
+          "id": "q3",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la valeur minimax de la racine A ?",
+          "weight": 1,
+          "payload": { "hint": "A = max(B, C)." }
+        },
+        {
+          "id": "q4",
+          "type": "TRUE_FALSE",
+          "prompt": "Le nœud E a une valeur strictement supérieure à celle du nœud D.",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        { "id": "q1", "solution": { "value": 5 } },
+        { "id": "q2", "solution": { "value": 3 } },
+        { "id": "q3", "solution": { "value": 3 } },
+        { "id": "q4", "solution": { "value": true } }
+      ]
+    },
+    "explanation": "Nœuds Min du niveau 4 : min(3,12)=3, min(8,2)=2, min(4,6)=4, min(14,5)=5. Niveau 3 (Max) : D=max(3,2)=3, E=max(4,5)=5, F=max(3,2)=3, G=max(4,5)=5. Niveau 2 (Min) : B=min(3,5)=3, C=min(3,5)=3. Racine A (Max) = max(3,3) = 3. E vaut 5, D vaut 3 : E est bien strictement supérieur à D.",
+    "concepts": ["algorithme-minimax", "valeur-minimax"],
+    "source": "TD_Jeux_2J"
+  },
+  {
+    "chapterSlug": "minimax",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le calcul des valeurs dans minimax se fait des feuilles vers la racine.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. L'étape 3 de minimax consiste à calculer les valeurs des nœuds en allant des feuilles vers la racine : on a besoin de la valeur des fils pour calculer celle d'un nœud.",
+    "concepts": ["algorithme-minimax"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "minimax",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pour le nœud racine d'un arbre minimax, à quel fils Max joue-t-il effectivement (étape 4) ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Au fils dont la valeur est la plus grande du niveau" },
+        { "id": "b", "label": "Au fils dont la valeur est la plus petite du niveau" },
+        { "id": "c", "label": "Au fils le plus à gauche" },
+        { "id": "d", "label": "À un fils choisi au hasard" }
+      ],
+      "shuffle": true
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "L'étape 4 indique que Max joue un coup conduisant à un fils dont la valeur est la plus grande du niveau : c'est ce coup que Max jouera effectivement.",
+    "concepts": ["algorithme-minimax", "strategie-de-jeu", "noeud-max"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "minimax",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi un nœud Min prend-il le minimum des valeurs de ses fils ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Parce qu'à ce nœud c'est Min qui choisit, et Min joue vers le pire fils du point de vue de Max" },
+        { "id": "b", "label": "Parce que Min cherche à terminer la partie rapidement" },
+        { "id": "c", "label": "Parce que les nœuds Min sont toujours des feuilles" },
+        { "id": "d", "label": "Parce que Min joue toujours en second" }
+      ],
+      "shuffle": true
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "À un nœud Min, c'est Min qui choisit le coup. Comme Min cherche à minimiser la valeur, il jouera vers le pire fils du point de vue de Max, d'où le minimum.",
+    "concepts": ["noeud-min", "algorithme-minimax"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "minimax",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On considère l'arbre du TD à 4 niveaux : racine = joueur Max, chaque nœud non terminal a 3 fils, feuilles de gauche à droite : 10, 13, 5, 16, 1, 0, 7, 18, 9, 9, 5, 14, 16, 17, 2, 11, 13, 14, 18, 12, 7, 8, 9, 10, 2, 8, 3. Quelle est la valeur minimax de la racine ?",
+    "payload": { "hint": "Les feuilles sont au niveau 4. Leurs parents (niveau 3) sont des nœuds Max ; le niveau 2 des nœuds Min ; la racine un nœud Max." },
+    "solution": { "value": 14 },
+    "explanation": "Niveau 3 (nœuds Max, max de 3 feuilles) : max(10,13,5)=13, max(16,1,0)=16, max(7,18,9)=18, max(9,5,14)=14, max(16,17,2)=17, max(11,13,14)=14, max(18,12,7)=18, max(8,9,10)=10, max(2,8,3)=8. Niveau 2 (nœuds Min, min de 3 nœuds Max) : min(13,16,18)=13, min(14,17,14)=14, min(18,10,8)=8. Racine (nœud Max) : max(13,14,8)=14. La valeur minimax de la racine est 14.",
+    "concepts": ["algorithme-minimax", "valeur-minimax"],
+    "source": "TD_Jeux_2J"
+  },
+  {
+    "chapterSlug": "elagage-alpha-beta",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un arbre binaire à 3 niveaux a la racine A (Max) et deux nœuds Min B et C ; les feuilles valent, de gauche à droite : 8, 5, 2, 9. On applique l'élagage alpha-bêta de gauche à droite. Combien de feuilles ne sont PAS explorées ?",
+    "payload": { "hint": "B est exploré entièrement et fixe α à la racine. Que se passe-t-il à la première feuille de C ?" },
+    "solution": { "value": 1 },
+    "explanation": "B = min(8,5) = 5 ; la racine Max obtient α = 5. On descend dans C : sa 1re feuille vaut 2 ; comme 2 ≤ α = 5, on coupe — la 2e feuille de C (valeur 9) n'est pas explorée. Une seule feuille est élaguée.",
+    "concepts": ["elagage-alpha-beta", "coupure-alpha-beta"],
+    "source": "TD_Jeux_2J"
+  },
+  {
+    "chapterSlug": "elagage-alpha-beta",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "L'arbre binaire ci-dessous (racine A = Max ; B, C = Min ; D, E, F, G = Max ; nœuds Min puis feuilles) est exploré de gauche à droite par l'élagage alpha-bêta. Les feuilles valent, de gauche à droite : 3, 12, 8, 2, 4, 6, 14, 5. Donnez la valeur minimax de la racine, et indiquez si le nœud G est entièrement élagué.",
+    "payload": {
+      "description": "Suivez l'exploration de gauche à droite. Donnez la valeur numérique de A, puis répondez « oui » ou « non » pour G.",
+      "figure": {
+        "kind": "game-tree",
+        "root": {
+          "type": "max",
+          "label": "A",
+          "children": [
+            {
+              "type": "min",
+              "label": "B",
+              "children": [
+                { "type": "max", "label": "D", "children": [
+                  { "type": "min", "children": [{ "type": "leaf", "value": 3 }, { "type": "leaf", "value": 12 }] },
+                  { "type": "min", "children": [{ "type": "leaf", "value": 8 }, { "type": "leaf", "value": 2 }] }
+                ] },
+                { "type": "max", "label": "E", "children": [
+                  { "type": "min", "children": [{ "type": "leaf", "value": 4 }, { "type": "leaf", "value": 6 }] },
+                  { "type": "min", "children": [{ "type": "leaf", "value": 14 }, { "type": "leaf", "value": 5 }] }
+                ] }
+              ]
+            },
+            {
+              "type": "min",
+              "label": "C",
+              "children": [
+                { "type": "max", "label": "F", "children": [
+                  { "type": "min", "children": [{ "type": "leaf", "value": 3 }, { "type": "leaf", "value": 12 }] },
+                  { "type": "min", "children": [{ "type": "leaf", "value": 8 }, { "type": "leaf", "value": 2 }] }
+                ] },
+                { "type": "max", "label": "G", "children": [
+                  { "type": "min", "children": [{ "type": "leaf", "value": 4 }, { "type": "leaf", "value": 6 }] },
+                  { "type": "min", "children": [{ "type": "leaf", "value": 14 }, { "type": "leaf", "value": 5 }] }
+                ] }
+              ]
+            }
+          ]
+        },
+        "caption": "Arbre binaire exploré de gauche à droite par alpha-bêta"
+      },
+      "cells": [
+        { "id": "A", "label": "Valeur minimax de la racine A", "kind": "number" },
+        { "id": "G", "label": "Le nœud G est-il entièrement élagué ? (oui / non)", "kind": "text" }
+      ]
+    },
+    "solution": {
+      "cells": [
+        { "id": "A", "expected": 3 },
+        { "id": "G", "expected": "oui", "accepted": ["oui", "o", "yes"] }
+      ]
+    },
+    "explanation": "Minimax donne : nœuds Min du niveau 4 : min(3,12)=3, min(8,2)=2, min(4,6)=4, min(14,5)=5 ; D=max(3,2)=3, E=max(4,5)=5, donc B=min(3,5)=3 ; F=max(3,2)=3, G=max(4,5)=5, donc C=min(3,5)=3 ; A=max(3,3)=3. Pour l'élagage : après B=3, la racine Max a α=3. On descend dans C (Min) ; F est exploré et vaut 3, donc C≤3. Comme 3 ≤ α=3, la coupure α se déclenche sur C : le nœud G n'est pas exploré du tout (entièrement élagué). La racine garde A=3.",
+    "concepts": ["elagage-alpha-beta", "coupure-alpha-beta", "valeur-minimax"],
+    "source": "TD_Jeux_2J"
+  },
+  {
+    "chapterSlug": "elagage-alpha-beta",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un arbre à 3 niveaux a la racine A (Max), trois nœuds Min, et chaque nœud non terminal a 3 fils. Les feuilles valent, de gauche à droite : 5, 6, 8, 2, 9, 1, 7, 3, 4. On applique l'élagage alpha-bêta de gauche à droite. Combien de feuilles ne sont PAS explorées ?",
+    "payload": { "hint": "Le 1er nœud Min vaut 5 et fixe α = 5. Examinez les premières feuilles des 2e et 3e nœuds Min." },
+    "solution": { "value": 3 },
+    "explanation": "1er nœud Min : min(5,6,8)=5, donc la racine Max a α=5. 2e nœud Min : 1re feuille = 2 ; 2 ≤ α=5, on coupe — ses feuilles 9 et 1 ne sont pas explorées (2 feuilles). 3e nœud Min : 1re feuille = 7 (> 5, on continue), 2e feuille = 3 ; 3 ≤ α=5, on coupe — sa feuille 4 n'est pas explorée (1 feuille). Au total 3 feuilles ne sont pas explorées.",
+    "concepts": ["elagage-alpha-beta", "coupure-alpha-beta", "ordre-des-coups"],
+    "source": "TD_Jeux_2J"
+  },
+  {
+    "chapterSlug": "elagage-alpha-beta",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Les nœuds coupés par l'élagage alpha-bêta sont, par construction, des nœuds qui ne pouvaient pas modifier la valeur de la racine.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. L'élagage ne change jamais la valeur de la racine : les nœuds coupés sont exactement ceux dont on sait déjà qu'ils n'influenceront pas le résultat. Minimax et alpha-bêta donnent toujours le même résultat.",
+    "concepts": ["elagage-alpha-beta", "coupure-alpha-beta"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "elagage-alpha-beta",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remettez dans l'ordre les étapes de l'algorithme alpha-bêta pour le traitement d'un nœud Max (selon le pseudo-code du cours).",
+    "payload": {
+      "items": [
+        { "id": "a", "label": "Pour le fils courant, appeler récursivement l'algorithme avec le couple (α, β) ; soit r la valeur retournée" },
+        { "id": "b", "label": "Si r ≥ β, couper : s'arrêter et retourner β" },
+        { "id": "c", "label": "Sinon, si r > α, mettre α à jour : α = r" },
+        { "id": "d", "label": "Une fois tous les fils traités (sans coupure), retourner α" }
+      ]
+    },
+    "solution": { "order": ["a", "b", "c", "d"] },
+    "explanation": "Sur un nœud Max : pour chaque fils, on appelle l'algorithme et on récupère r ; si r ≥ β on coupe et on retourne β ; sinon si r > α on met α à jour ; quand tous les fils ont été explorés sans coupure, on retourne α.",
+    "concepts": ["elagage-alpha-beta", "parametre-alpha", "parametre-beta", "noeud-max"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "elagage-alpha-beta",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "À un nœud Min, l'élagage alpha-bêta a déjà évalué un premier fils de valeur 6. Quelle borne ce nœud Min connaît-il désormais sur sa propre valeur ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Sa valeur sera ≤ 6 (β = 6) : un nœud Min ne peut plus monter au-dessus d'une valeur déjà rencontrée" },
+        { "id": "b", "label": "Sa valeur sera ≥ 6 : un nœud Min ne peut plus descendre sous une valeur déjà rencontrée" },
+        { "id": "c", "label": "Sa valeur sera exactement 6" },
+        { "id": "d", "label": "Aucune borne ne peut être déduite avant d'avoir vu tous les fils" }
+      ],
+      "shuffle": true
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Un nœud Min prend le minimum de ses fils : dès qu'un premier fils vaut 6, la valeur du nœud ne pourra plus être supérieure à 6. Cette borne supérieure est β = 6.",
+    "concepts": ["parametre-beta", "noeud-min", "elagage-alpha-beta"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "elagage-alpha-beta",
+    "type": "MATCHING",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Associez chaque ordre d'exploration des coups à son effet sur l'élagage alpha-bêta.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "Ordre favorable (bons coups explorés en premier)" },
+        { "id": "l2", "label": "Ordre défavorable (bons coups explorés en dernier)" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Bornes resserrées rapidement : nombreuses coupures, gain maximal" },
+        { "id": "r2", "label": "Bornes resserrées lentement : peu de coupures, voire aucune" }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2" } },
+    "explanation": "Un ordre favorable resserre vite α et β et provoque beaucoup de coupures. Un ordre défavorable fait évoluer les bornes lentement : peu de branches sont coupées, et l'élagage peut se réduire à rien — alpha-bêta explore alors autant de nœuds que minimax.",
+    "concepts": ["ordre-des-coups", "elagage-alpha-beta", "coupure-alpha-beta"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "elagage-alpha-beta",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "En pratique, on cherche à ordonner les coups — souvent à l'aide d'une heuristique — pour examiner d'abord les coups les plus prometteurs et maximiser l'élagage.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai. Comme l'élagage dépend de l'ordre des coups, on cherche à examiner d'abord les coups les plus prometteurs, souvent grâce à une heuristique. L'élagage et l'ordre des coups sont indissociables.",
+    "concepts": ["ordre-des-coups", "elagage-alpha-beta"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "elagage-alpha-beta",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "L'arbre binaire ci-dessous (racine A = Max ; B, C = Min ; D, E, F, G = Max ; nœuds Min puis feuilles) est exploré de gauche à droite par l'élagage alpha-bêta. Les feuilles valent, de gauche à droite : 7, 4, 1, 8, 6, 2, 9, 3.",
+    "payload": {
+      "figure": {
+        "kind": "game-tree",
+        "root": {
+          "type": "max",
+          "label": "A",
+          "children": [
+            {
+              "type": "min",
+              "label": "B",
+              "children": [
+                { "type": "max", "label": "D", "children": [
+                  { "type": "min", "children": [{ "type": "leaf", "value": 7 }, { "type": "leaf", "value": 4 }] },
+                  { "type": "min", "children": [{ "type": "leaf", "value": 1 }, { "type": "leaf", "value": 8 }] }
+                ] },
+                { "type": "max", "label": "E", "children": [
+                  { "type": "min", "children": [{ "type": "leaf", "value": 6 }, { "type": "leaf", "value": 2 }] },
+                  { "type": "min", "children": [{ "type": "leaf", "value": 9 }, { "type": "leaf", "value": 3 }] }
+                ] }
+              ]
+            },
+            {
+              "type": "min",
+              "label": "C",
+              "children": [
+                { "type": "max", "label": "F", "children": [
+                  { "type": "min", "children": [{ "type": "leaf", "value": 7 }, { "type": "leaf", "value": 4 }] },
+                  { "type": "min", "children": [{ "type": "leaf", "value": 1 }, { "type": "leaf", "value": 8 }] }
+                ] },
+                { "type": "max", "label": "G", "children": [
+                  { "type": "min", "children": [{ "type": "leaf", "value": 6 }, { "type": "leaf", "value": 2 }] },
+                  { "type": "min", "children": [{ "type": "leaf", "value": 9 }, { "type": "leaf", "value": 3 }] }
+                ] }
+              ]
+            }
+          ]
+        },
+        "caption": "Arbre binaire exploré par alpha-bêta"
+      },
+      "caption": "Élagage alpha-bêta sur un arbre binaire",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la valeur minimax de la racine A ?",
+          "weight": 1,
+          "payload": { "hint": "Remontez d'abord par minimax : la valeur ne change pas avec l'élagage." }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Une fois B entièrement évalué, quelle borne la racine A connaît-elle sur sa valeur ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              { "id": "a", "label": "A ≥ valeur de B (α prend la valeur de B)" },
+              { "id": "b", "label": "A ≤ valeur de B" },
+              { "id": "c", "label": "A est exactement égal à la valeur de B" }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "Sur cet arbre, l'élagage alpha-bêta donne la même valeur de racine que minimax.",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        { "id": "q1", "solution": { "value": 3 } },
+        { "id": "q2", "solution": { "correct": ["a"] } },
+        { "id": "q3", "solution": { "value": true } }
+      ]
+    },
+    "explanation": "Nœuds Min du niveau 4 : min(7,4)=4, min(1,8)=1, min(6,2)=2, min(9,3)=3. Niveau 3 (Max) : D=max(4,1)=4, E=max(2,3)=3, F=max(4,1)=4, G=max(2,3)=3. Niveau 2 (Min) : B=min(4,3)=3, C=min(4,3)=3. Racine A (Max) = max(3,3) = 3. A est un nœud Max : après avoir évalué B, A connaît la borne α = valeur de B (donc A ≥ B). L'élagage ne change pas la valeur de la racine : alpha-bêta et minimax donnent le même résultat.",
+    "concepts": ["elagage-alpha-beta", "parametre-alpha", "valeur-minimax"],
+    "source": "TD_Jeux_2J"
+  },
+  {
+    "chapterSlug": "fonctions-evaluation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Que fixe-t-on lorsqu'on décide de « limiter la profondeur de recherche » ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Un niveau au-delà duquel la construction de l'arbre s'arrête" },
+        { "id": "b", "label": "Le nombre maximal de joueurs autorisés" },
+        { "id": "c", "label": "La valeur minimale d'une feuille" },
+        { "id": "d", "label": "Le nombre de parties à jouer avant d'arrêter" }
+      ],
+      "shuffle": true
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Limiter la profondeur de recherche, c'est fixer un niveau : l'arbre de jeu est construit jusqu'à ce niveau seulement, puis la construction s'arrête. Cette profondeur limite est choisie pour que l'arbre reste de taille abordable.",
+    "concepts": ["profondeur-de-recherche"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "fonctions-evaluation",
+    "type": "TRUE_FALSE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Avec une profondeur limitée, la valeur calculée pour la racine reste exacte, car la remontée par max et min est inchangée.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. Avec une profondeur limitée, la valeur de la racine n'est plus exacte : elle ne repose plus sur les véritables issues de la partie, mais sur des estimations fournies par la fonction d'évaluation. La remontée par max et min, elle, reste bien inchangée — mais cela ne rend pas la valeur exacte.",
+    "concepts": ["profondeur-de-recherche", "fonction-d-evaluation", "valeur-minimax"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "fonctions-evaluation",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la phrase sur la valuation des feuilles d'un arbre tronqué.",
+    "payload": {
+      "template": "Dans un arbre tronqué, une feuille qui est un état final est valuée par la fonction d'{{utilite}}, et une feuille non terminale est valuée par la fonction d'{{evaluation}}.",
+      "slots": [
+        { "id": "utilite", "placeholder": "?" },
+        { "id": "evaluation", "placeholder": "?" }
+      ]
+    },
+    "solution": {
+      "answers": { "utilite": ["utilité", "utilite"], "evaluation": ["évaluation", "evaluation"] },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Si la feuille est un état final, on lui applique la fonction d'utilité ; si elle est un état non terminal, on lui applique la fonction d'évaluation.",
+    "concepts": ["fonction-d-utilite", "fonction-d-evaluation"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "fonctions-evaluation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On augmente la profondeur de recherche d'un programme de jeu. Quel énoncé décrit correctement la conséquence ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "L'estimation s'améliore (on se rapproche des états finals), mais le coût O(bᵐ) augmente fortement" },
+        { "id": "b", "label": "L'estimation se dégrade et le coût diminue" },
+        { "id": "c", "label": "Ni l'estimation ni le coût ne changent" },
+        { "id": "d", "label": "Le coût diminue car l'arbre devient plus régulier" }
+      ],
+      "shuffle": true
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Augmenter la profondeur rapproche les feuilles des états finals : l'estimation devient meilleure. Mais le coût O(bᵐ) croît exponentiellement avec la profondeur m : il augmente donc fortement.",
+    "concepts": ["profondeur-de-recherche", "fonction-d-evaluation"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "fonctions-evaluation",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quand on remplace la fonction d'utilité par une fonction d'évaluation, il faut aussi modifier la règle de remontée des valeurs aux nœuds Max et Min.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. Le seul changement concerne les feuilles : la fonction d'évaluation fournit les valeurs de départ des feuilles non terminales. La remontée par max et min reste exactement la même.",
+    "concepts": ["fonction-d-evaluation", "algorithme-minimax"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "fonctions-evaluation",
+    "type": "ORDERING",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Remettez dans l'ordre les étapes de minimax avec profondeur limitée.",
+    "payload": {
+      "items": [
+        { "id": "a", "label": "Générer l'arbre de jeu jusqu'à la profondeur de recherche fixée" },
+        { "id": "b", "label": "Valuer chaque feuille : fonction d'utilité si état final, fonction d'évaluation si état non terminal" },
+        { "id": "c", "label": "Remonter les valeurs des feuilles vers la racine (max aux nœuds Max, min aux nœuds Min)" },
+        { "id": "d", "label": "Faire jouer Max vers le fils de plus grande valeur" }
+      ]
+    },
+    "solution": { "order": ["a", "b", "c", "d"] },
+    "explanation": "Minimax avec profondeur limitée : générer l'arbre jusqu'à la profondeur fixée, valuer les feuilles (utilité ou évaluation selon le cas), remonter les valeurs, puis faire jouer Max vers le meilleur fils.",
+    "concepts": ["profondeur-de-recherche", "fonction-d-evaluation", "algorithme-minimax"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "fonctions-evaluation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Pourquoi dit-on que la qualité de la fonction d'évaluation détermine, pour l'essentiel, la force du jeu d'un programme ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Parce qu'on ne peut pas pousser la profondeur très loin sans faire exploser le coût : c'est donc l'estimation faite sur les feuilles non terminales qui pèse le plus" },
+        { "id": "b", "label": "Parce que la fonction d'évaluation remplace entièrement la remontée par max et min" },
+        { "id": "c", "label": "Parce que la fonction d'évaluation supprime le besoin d'un arbre de jeu" },
+        { "id": "d", "label": "Parce qu'une fonction d'évaluation rend l'élagage alpha-bêta inutile" }
+      ],
+      "shuffle": true
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Comme on ne peut pas pousser la profondeur très loin sans faire exploser le coût O(bᵐ), c'est la qualité de l'estimation faite sur les feuilles non terminales qui détermine, pour l'essentiel, la force du jeu. Concevoir une bonne fonction d'évaluation est donc un travail décisif.",
+    "concepts": ["fonction-d-evaluation", "profondeur-de-recherche"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "fonctions-evaluation",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "La fonction d'évaluation et l'élagage alpha-bêta sont des techniques concurrentes : utiliser l'une interdit d'utiliser l'autre.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. Ce sont deux moyens complémentaires de rendre minimax praticable : on construit l'arbre jusqu'à une profondeur limitée (fonction d'évaluation sur les feuilles) ET l'on élague au passage les branches inutiles. C'est cette combinaison qui permet à un programme de bien jouer.",
+    "concepts": ["fonction-d-evaluation", "elagage-alpha-beta"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "fonctions-evaluation",
+    "type": "MATCHING",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Associez chaque technique au levier qu'elle actionne pour rendre minimax praticable.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "Fonction d'évaluation (profondeur limitée)" },
+        { "id": "l2", "label": "Élagage alpha-bêta" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Réduit la hauteur m de l'arbre à construire — s'attaque à l'exposant de O(bᵐ)" },
+        { "id": "r2", "label": "Réduit le nombre de nœuds réellement visités à profondeur donnée" }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2" } },
+    "explanation": "La fonction d'évaluation s'attaque à l'exposant du coût O(bᵐ) en limitant la profondeur m. L'élagage alpha-bêta s'attaque au nombre de nœuds réellement visités à profondeur donnée. Les deux se combinent.",
+    "concepts": ["fonction-d-evaluation", "elagage-alpha-beta", "profondeur-de-recherche"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "fonctions-evaluation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "D'après le cours, à quoi correspond la « qualité » d'un état estimée par une fonction d'évaluation ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Une moyenne des valeurs des états finals auxquels l'état conduit, ou la probabilité qu'il conduise à un état gagnant" },
+        { "id": "b", "label": "Le nombre de coups déjà joués depuis le début de la partie" },
+        { "id": "c", "label": "La profondeur exacte de l'état dans l'arbre de jeu" },
+        { "id": "d", "label": "Le nombre de fils du nœud correspondant" }
+      ],
+      "shuffle": true
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "La qualité estimée par une fonction d'évaluation peut s'entendre, d'après le cours, comme une moyenne des valeurs des états finals auxquels l'état conduit, ou comme la probabilité qu'il conduise à un état gagnant.",
+    "concepts": ["fonction-d-evaluation"],
+    "source": "Jeux_IA_slides.pdf"
+  },
+  {
+    "chapterSlug": "elagage-alpha-beta",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 5,
+    "prompt": "L'arbre binaire ci-dessous (racine A = Max ; B, C = Min ; D, E, F, G = Max ; H à O = Min ; feuilles) est exploré de gauche à droite par l'élagage alpha-bêta. Première partie : donnez la valeur minimax de CHAQUE nœud interne. Seconde partie : indiquez, pour les nœuds D, E, K et G, si chacun est ENTIÈREMENT élagué — c'est-à-dire jamais exploré du tout — en répondant « oui » ou « non ».",
+    "payload": {
+      "description": "Calculez d'abord toutes les valeurs minimax (feuilles vers racine : H à O sont des Min, D à G des Max, B et C des Min, A le Max racine). Simulez ensuite l'exploration de gauche à droite avec α = −∞, β = +∞ à la racine. Un nœud est « entièrement élagué » si la coupure intervient AVANT qu'on y entre ; un nœud dont seuls quelques fils sont coupés reste, lui, exploré.",
+      "figure": {
+        "kind": "game-tree",
+        "root": {
+          "type": "max",
+          "label": "A",
+          "children": [
+            {
+              "type": "min",
+              "label": "B",
+              "children": [
+                { "type": "max", "label": "D", "children": [
+                  { "type": "min", "label": "H", "children": [{ "type": "leaf", "value": 3 }, { "type": "leaf", "value": 4 }] },
+                  { "type": "min", "label": "I", "children": [{ "type": "leaf", "value": 8 }, { "type": "leaf", "value": 5 }] }
+                ] },
+                { "type": "max", "label": "E", "children": [
+                  { "type": "min", "label": "J", "children": [{ "type": "leaf", "value": 9 }, { "type": "leaf", "value": 7 }] },
+                  { "type": "min", "label": "K", "children": [{ "type": "leaf", "value": 6 }, { "type": "leaf", "value": 2 }] }
+                ] }
+              ]
+            },
+            {
+              "type": "min",
+              "label": "C",
+              "children": [
+                { "type": "max", "label": "F", "children": [
+                  { "type": "min", "label": "L", "children": [{ "type": "leaf", "value": 1 }, { "type": "leaf", "value": 12 }] },
+                  { "type": "min", "label": "M", "children": [{ "type": "leaf", "value": 2 }, { "type": "leaf", "value": 10 }] }
+                ] },
+                { "type": "max", "label": "G", "children": [
+                  { "type": "min", "label": "N", "children": [{ "type": "leaf", "value": 11 }, { "type": "leaf", "value": 8 }] },
+                  { "type": "min", "label": "O", "children": [{ "type": "leaf", "value": 13 }, { "type": "leaf", "value": 9 }] }
+                ] }
+              ]
+            }
+          ]
+        },
+        "caption": "Arbre binaire à 4 niveaux exploré de gauche à droite par alpha-bêta"
+      },
+      "cells": [
+        { "id": "H", "label": "Valeur minimax de H", "kind": "number" },
+        { "id": "I", "label": "Valeur minimax de I", "kind": "number" },
+        { "id": "J", "label": "Valeur minimax de J", "kind": "number" },
+        { "id": "K", "label": "Valeur minimax de K", "kind": "number" },
+        { "id": "L", "label": "Valeur minimax de L", "kind": "number" },
+        { "id": "M", "label": "Valeur minimax de M", "kind": "number" },
+        { "id": "N", "label": "Valeur minimax de N", "kind": "number" },
+        { "id": "O", "label": "Valeur minimax de O", "kind": "number" },
+        { "id": "D", "label": "Valeur minimax de D", "kind": "number" },
+        { "id": "E", "label": "Valeur minimax de E", "kind": "number" },
+        { "id": "F", "label": "Valeur minimax de F", "kind": "number" },
+        { "id": "G", "label": "Valeur minimax de G", "kind": "number" },
+        { "id": "B", "label": "Valeur minimax de B", "kind": "number" },
+        { "id": "C", "label": "Valeur minimax de C", "kind": "number" },
+        { "id": "A", "label": "Valeur minimax de la racine A", "kind": "number" },
+        { "id": "pruneD", "label": "Le nœud D est-il entièrement élagué ? (oui / non)", "kind": "text" },
+        { "id": "pruneE", "label": "Le nœud E est-il entièrement élagué ? (oui / non)", "kind": "text" },
+        { "id": "pruneK", "label": "Le nœud K est-il entièrement élagué ? (oui / non)", "kind": "text" },
+        { "id": "pruneG", "label": "Le nœud G est-il entièrement élagué ? (oui / non)", "kind": "text" }
+      ]
+    },
+    "solution": {
+      "cells": [
+        { "id": "H", "expected": 3 },
+        { "id": "I", "expected": 5 },
+        { "id": "J", "expected": 7 },
+        { "id": "K", "expected": 2 },
+        { "id": "L", "expected": 1 },
+        { "id": "M", "expected": 2 },
+        { "id": "N", "expected": 8 },
+        { "id": "O", "expected": 9 },
+        { "id": "D", "expected": 5 },
+        { "id": "E", "expected": 7 },
+        { "id": "F", "expected": 2 },
+        { "id": "G", "expected": 9 },
+        { "id": "B", "expected": 5 },
+        { "id": "C", "expected": 2 },
+        { "id": "A", "expected": 5 },
+        { "id": "pruneD", "expected": "non", "accepted": ["non", "n", "no"] },
+        { "id": "pruneE", "expected": "non", "accepted": ["non", "n", "no"] },
+        { "id": "pruneK", "expected": "oui", "accepted": ["oui", "o", "yes"] },
+        { "id": "pruneG", "expected": "oui", "accepted": ["oui", "o", "yes"] }
+      ]
+    },
+    "explanation": "Minimax (feuilles vers racine). Niveau 4 (Min) : H=min(3,4)=3, I=min(8,5)=5, J=min(9,7)=7, K=min(6,2)=2, L=min(1,12)=1, M=min(2,10)=2, N=min(11,8)=8, O=min(13,9)=9. Niveau 3 (Max) : D=max(3,5)=5, E=max(7,2)=7, F=max(1,2)=2, G=max(8,9)=9. Niveau 2 (Min) : B=min(5,7)=5, C=min(2,9)=2. Racine A (Max) = max(5,2) = 5. Élagage de gauche à droite : on explore B entièrement — D=5 puis E. Dans E (Max sous B), le premier fils J donne 7 ; comme 7 dépasse déjà la borne β = 5 transmise par B (D=5 fixe β=5 au nœud Min B), la coupure se déclenche et K n'est jamais exploré : K est entièrement élagué (« oui »). D et E, eux, ont bien été explorés (« non ») — E est entré et évalué, seul son fils K est coupé. B=5 fixe α = 5 à la racine A. On descend dans C (Min) ; son premier fils F est exploré et vaut 2, donc C ≤ 2 ≤ α = 5 : la coupure α se déclenche sur C et le nœud G n'est jamais exploré du tout — G est entièrement élagué (« oui »). La racine garde A = 5, identique à minimax.",
+    "concepts": ["elagage-alpha-beta", "coupure-alpha-beta", "valeur-minimax", "noeud-max", "noeud-min"],
+    "source": "TD_Jeux_2J"
+  },
+  {
+    "chapterSlug": "elagage-alpha-beta",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "L'arbre ci-dessous a la racine R (Max) et trois nœuds Min M1, M2, M3, chacun ayant trois feuilles. Les feuilles valent, de gauche à droite : 8, 6, 7, 3, 9, 2, 5, 10, 4. On applique l'élagage alpha-bêta en explorant les fils de gauche à droite.",
+    "payload": {
+      "figure": {
+        "kind": "game-tree",
+        "root": {
+          "type": "max",
+          "label": "R",
+          "children": [
+            { "type": "min", "label": "M1", "children": [{ "type": "leaf", "value": 8 }, { "type": "leaf", "value": 6 }, { "type": "leaf", "value": 7 }] },
+            { "type": "min", "label": "M2", "children": [{ "type": "leaf", "value": 3 }, { "type": "leaf", "value": 9 }, { "type": "leaf", "value": 2 }] },
+            { "type": "min", "label": "M3", "children": [{ "type": "leaf", "value": 5 }, { "type": "leaf", "value": 10 }, { "type": "leaf", "value": 4 }] }
+          ]
+        },
+        "caption": "Arbre à 3 niveaux, facteur de branchement 3, exploré de gauche à droite"
+      },
+      "caption": "Élagage alpha-bêta : feuilles élaguées et valeur de la racine",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la valeur minimax de la racine R ?",
+          "weight": 1,
+          "payload": { "hint": "R = max(M1, M2, M3), chaque Mi = min de ses trois feuilles. L'élagage ne change pas cette valeur." }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Combien de feuilles, au total, ne sont PAS explorées (sont élaguées) lors de l'exploration de gauche à droite ?",
+          "weight": 1,
+          "payload": { "hint": "M1 est exploré entièrement et fixe α à la racine. Examinez la première feuille de M2, puis celle de M3." }
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Pourquoi la coupure se déclenche-t-elle dès la première feuille de M2 ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              { "id": "a", "label": "Parce que cette feuille (3) est ≤ α : M2 étant un nœud Min, sa valeur ne pourra plus dépasser 3, donc jamais α — inutile de poursuivre" },
+              { "id": "b", "label": "Parce que cette feuille (3) est la plus petite de tout l'arbre" },
+              { "id": "c", "label": "Parce qu'un nœud Min coupe toujours après son premier fils" }
+            ]
+          }
+        },
+        {
+          "id": "q4",
+          "type": "TRUE_FALSE",
+          "prompt": "Sur cet arbre, l'élagage alpha-bêta renvoie la même valeur de racine que minimax sans élagage.",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        { "id": "q1", "solution": { "value": 6 } },
+        { "id": "q2", "solution": { "value": 4 } },
+        { "id": "q3", "solution": { "correct": ["a"] } },
+        { "id": "q4", "solution": { "value": true } }
+      ]
+    },
+    "explanation": "Minimax : M1 = min(8,6,7) = 6, M2 = min(3,9,2) = 2, M3 = min(5,10,4) = 4 ; racine R (Max) = max(6,2,4) = 6. Élagage de gauche à droite : M1 est exploré entièrement (feuilles 8, 6, 7) et vaut 6 ; la racine Max obtient α = 6. On descend dans M2 : sa première feuille vaut 3 ; comme 3 ≤ α = 6 et que M2 est un nœud Min (sa valeur ne pourra que diminuer), M2 ne pourra jamais atteindre α — coupure : ses deux feuilles suivantes (9 et 2) ne sont pas explorées. On descend dans M3 : sa première feuille vaut 5 ; 5 ≤ α = 6, même coupure — ses deux feuilles suivantes (10 et 4) ne sont pas explorées. Au total 2 + 2 = 4 feuilles ne sont pas explorées. La valeur de la racine reste 6 : l'élagage ne change jamais le résultat de minimax.",
+    "concepts": ["elagage-alpha-beta", "coupure-alpha-beta", "parametre-alpha", "valeur-minimax"],
+    "source": "TD_Jeux_2J"
+  },
+  {
+    "chapterSlug": "minimax",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 5,
+    "prompt": "L'arbre ci-dessous a 4 niveaux : racine A (Max), niveau 2 B et C (Min), niveau 3 D, E, F, G (Max), niveau 4 H à O (Min) dont les fils sont les feuilles. Première partie : donnez la valeur minimax de chaque nœud interne. Seconde partie : reconstituez le CHEMIN DE JEU OPTIMAL de Max en indiquant, dans les cases P1 à P4, la suite des étiquettes des nœuds visités depuis la racine jusqu'à un nœud du niveau 4, lorsque chaque joueur joue au mieux.",
+    "payload": {
+      "description": "Remontez les valeurs des feuilles vers la racine. Pour le chemin optimal : partez de la racine (P1 = A) ; à chaque nœud, le joueur au trait choisit le fils qui réalise l'optimum du niveau (le plus grand fils à un nœud Max, le plus petit à un nœud Min). Reportez les étiquettes des quatre nœuds successifs dans P1, P2, P3, P4.",
+      "figure": {
+        "kind": "game-tree",
+        "root": {
+          "type": "max",
+          "label": "A",
+          "children": [
+            {
+              "type": "min",
+              "label": "B",
+              "children": [
+                { "type": "max", "label": "D", "children": [
+                  { "type": "min", "label": "H", "children": [{ "type": "leaf", "value": 8 }, { "type": "leaf", "value": 5 }] },
+                  { "type": "min", "label": "I", "children": [{ "type": "leaf", "value": 7 }, { "type": "leaf", "value": 2 }] }
+                ] },
+                { "type": "max", "label": "E", "children": [
+                  { "type": "min", "label": "J", "children": [{ "type": "leaf", "value": 3 }, { "type": "leaf", "value": 9 }] },
+                  { "type": "min", "label": "K", "children": [{ "type": "leaf", "value": 1 }, { "type": "leaf", "value": 6 }] }
+                ] }
+              ]
+            },
+            {
+              "type": "min",
+              "label": "C",
+              "children": [
+                { "type": "max", "label": "F", "children": [
+                  { "type": "min", "label": "L", "children": [{ "type": "leaf", "value": 10 }, { "type": "leaf", "value": 4 }] },
+                  { "type": "min", "label": "M", "children": [{ "type": "leaf", "value": 2 }, { "type": "leaf", "value": 9 }] }
+                ] },
+                { "type": "max", "label": "G", "children": [
+                  { "type": "min", "label": "N", "children": [{ "type": "leaf", "value": 13 }, { "type": "leaf", "value": 7 }] },
+                  { "type": "min", "label": "O", "children": [{ "type": "leaf", "value": 11 }, { "type": "leaf", "value": 6 }] }
+                ] }
+              ]
+            }
+          ]
+        },
+        "caption": "Arbre de jeu à 4 niveaux : valeurs minimax et chemin de jeu optimal"
+      },
+      "cells": [
+        { "id": "H", "label": "Valeur de H", "kind": "number" },
+        { "id": "I", "label": "Valeur de I", "kind": "number" },
+        { "id": "J", "label": "Valeur de J", "kind": "number" },
+        { "id": "K", "label": "Valeur de K", "kind": "number" },
+        { "id": "L", "label": "Valeur de L", "kind": "number" },
+        { "id": "M", "label": "Valeur de M", "kind": "number" },
+        { "id": "N", "label": "Valeur de N", "kind": "number" },
+        { "id": "O", "label": "Valeur de O", "kind": "number" },
+        { "id": "D", "label": "Valeur de D", "kind": "number" },
+        { "id": "E", "label": "Valeur de E", "kind": "number" },
+        { "id": "F", "label": "Valeur de F", "kind": "number" },
+        { "id": "G", "label": "Valeur de G", "kind": "number" },
+        { "id": "B", "label": "Valeur de B", "kind": "number" },
+        { "id": "C", "label": "Valeur de C", "kind": "number" },
+        { "id": "A", "label": "Valeur de la racine A", "kind": "number" },
+        { "id": "P1", "label": "Chemin optimal — nœud 1 (racine)", "kind": "text" },
+        { "id": "P2", "label": "Chemin optimal — nœud 2 (niveau 2, Min)", "kind": "text" },
+        { "id": "P3", "label": "Chemin optimal — nœud 3 (niveau 3, Max)", "kind": "text" },
+        { "id": "P4", "label": "Chemin optimal — nœud 4 (niveau 4, Min)", "kind": "text" }
+      ]
+    },
+    "solution": {
+      "cells": [
+        { "id": "H", "expected": 5 },
+        { "id": "I", "expected": 2 },
+        { "id": "J", "expected": 3 },
+        { "id": "K", "expected": 1 },
+        { "id": "L", "expected": 4 },
+        { "id": "M", "expected": 2 },
+        { "id": "N", "expected": 7 },
+        { "id": "O", "expected": 6 },
+        { "id": "D", "expected": 5 },
+        { "id": "E", "expected": 3 },
+        { "id": "F", "expected": 4 },
+        { "id": "G", "expected": 7 },
+        { "id": "B", "expected": 3 },
+        { "id": "C", "expected": 4 },
+        { "id": "A", "expected": 4 },
+        { "id": "P1", "expected": "A", "accepted": ["A", "a"] },
+        { "id": "P2", "expected": "C", "accepted": ["C", "c"] },
+        { "id": "P3", "expected": "F", "accepted": ["F", "f"] },
+        { "id": "P4", "expected": "L", "accepted": ["L", "l"] }
+      ]
+    },
+    "explanation": "Niveau 4 (Min) : H=min(8,5)=5, I=min(7,2)=2, J=min(3,9)=3, K=min(1,6)=1, L=min(10,4)=4, M=min(2,9)=2, N=min(13,7)=7, O=min(11,6)=6. Niveau 3 (Max) : D=max(5,2)=5, E=max(3,1)=3, F=max(4,2)=4, G=max(7,6)=7. Niveau 2 (Min) : B=min(5,3)=3, C=min(4,7)=4. Racine A (Max) = max(3,4) = 4. Chemin de jeu optimal : à la racine A (Max), max(B=3, C=4)=4 : Max joue vers C. À C (Min), min(F=4, G=7)=4 : Min joue vers F. À F (Max), max(L=4, M=2)=4 : Max joue vers L. À L (Min), min(10,4)=4 : la partie aboutit à la feuille de valeur 4. Le chemin optimal est donc A → C → F → L, et la valeur 4 obtenue le long de ce chemin est bien la valeur minimax de la racine.",
+    "concepts": ["algorithme-minimax", "valeur-minimax", "strategie-de-jeu", "noeud-max", "noeud-min"],
+    "source": "TD_Jeux_2J"
+  },
+  {
+    "chapterSlug": "minimax",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "L'arbre ci-dessous a la racine A (Max), niveau 2 B et C (Min), niveau 3 D, E, F, G (Max), niveau 4 H à O (Min) dont les fils sont les feuilles. Les feuilles valent, de gauche à droite : 3, 11, 7, 2, 9, 6, 1, 8, 10, 4, 5, 12, 2, 13, 7, 6.",
+    "payload": {
+      "figure": {
+        "kind": "game-tree",
+        "root": {
+          "type": "max",
+          "label": "A",
+          "children": [
+            {
+              "type": "min",
+              "label": "B",
+              "children": [
+                { "type": "max", "label": "D", "children": [
+                  { "type": "min", "label": "H", "children": [{ "type": "leaf", "value": 3 }, { "type": "leaf", "value": 11 }] },
+                  { "type": "min", "label": "I", "children": [{ "type": "leaf", "value": 7 }, { "type": "leaf", "value": 2 }] }
+                ] },
+                { "type": "max", "label": "E", "children": [
+                  { "type": "min", "label": "J", "children": [{ "type": "leaf", "value": 9 }, { "type": "leaf", "value": 6 }] },
+                  { "type": "min", "label": "K", "children": [{ "type": "leaf", "value": 1 }, { "type": "leaf", "value": 8 }] }
+                ] }
+              ]
+            },
+            {
+              "type": "min",
+              "label": "C",
+              "children": [
+                { "type": "max", "label": "F", "children": [
+                  { "type": "min", "label": "L", "children": [{ "type": "leaf", "value": 10 }, { "type": "leaf", "value": 4 }] },
+                  { "type": "min", "label": "M", "children": [{ "type": "leaf", "value": 5 }, { "type": "leaf", "value": 12 }] }
+                ] },
+                { "type": "max", "label": "G", "children": [
+                  { "type": "min", "label": "N", "children": [{ "type": "leaf", "value": 2 }, { "type": "leaf", "value": 13 }] },
+                  { "type": "min", "label": "O", "children": [{ "type": "leaf", "value": 7 }, { "type": "leaf", "value": 6 }] }
+                ] }
+              ]
+            }
+          ]
+        },
+        "caption": "Arbre de jeu à 4 niveaux"
+      },
+      "caption": "Lecture d'un arbre de jeu : valeur d'un sous-arbre et jeu optimal",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la valeur minimax du sous-arbre de racine D ?",
+          "weight": 1,
+          "payload": { "hint": "D = max(H, I), avec H et I des nœuds Min de leurs deux feuilles." }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la valeur minimax de la racine A ?",
+          "weight": 1,
+          "payload": { "hint": "Remontez tout l'arbre : A = max(B, C)." }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "Lorsque les deux joueurs jouent de manière optimale, la partie atteint la feuille de valeur 8 (deuxième feuille du nœud K).",
+          "weight": 1,
+          "payload": {}
+        },
+        {
+          "id": "q4",
+          "type": "MCQ_SINGLE",
+          "prompt": "Vers lequel de ses deux fils le joueur Max joue-t-il à la racine A ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              { "id": "a", "label": "Vers C, car C a la plus grande valeur minimax des deux fils" },
+              { "id": "b", "label": "Vers B, car B est le fils le plus à gauche" },
+              { "id": "c", "label": "Vers B, car B a la plus petite valeur minimax" }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        { "id": "q1", "solution": { "value": 3 } },
+        { "id": "q2", "solution": { "value": 5 } },
+        { "id": "q3", "solution": { "value": false } },
+        { "id": "q4", "solution": { "correct": ["a"] } }
+      ]
+    },
+    "explanation": "Niveau 4 (Min) : H=min(3,11)=3, I=min(7,2)=2, J=min(9,6)=6, K=min(1,8)=1, L=min(10,4)=4, M=min(5,12)=5, N=min(2,13)=2, O=min(7,6)=6. Niveau 3 (Max) : D=max(3,2)=3, E=max(6,1)=6, F=max(4,5)=5, G=max(2,6)=6. La valeur du sous-arbre D est donc 3. Niveau 2 (Min) : B=min(3,6)=3, C=min(5,6)=5. Racine A (Max) = max(3,5) = 5. Chemin de jeu optimal : à A (Max), max(B=3, C=5)=5 → Max joue vers C ; à C (Min), min(F=5, G=6)=5 → Min joue vers F ; à F (Max), max(L=4, M=5)=5 → Max joue vers M ; à M (Min), min(5,12)=5. La partie optimale aboutit à la feuille de valeur 5 (première feuille de M) : elle ne passe jamais par le nœud K, donc la feuille de valeur 8 n'est pas atteinte sous jeu optimal — l'affirmation est fausse.",
+    "concepts": ["algorithme-minimax", "valeur-minimax", "strategie-de-jeu", "noeud-max"],
+    "source": "TD_Jeux_2J"
+  }
+]

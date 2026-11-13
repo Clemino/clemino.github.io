@@ -1,0 +1,194 @@
+---
+title: "Tube nommé et mkfifo"
+slug: fifo-mkfifo
+order: 1
+estimatedReadMin: 15
+concepts: [tube, tube-anonyme, tube-nomme, fifo-special, fichier-special-p, inode-fifo, processus-non-apparentes, mkfifo-commande, mkfifo-primitive, mode-fifo, unlink-fifo, fifo-tube]
+source: "Cours 3 — Les tubes nommés (FIFO)"
+---
+
+Le Module 3 a montré le **tube anonyme** : un canal puissant, mais qui souffre d'une limite décisive — il ne peut relier que des processus **apparentés**, parce qu'il s'utilise par des **descripteurs hérités** au `fork`. Deux programmes lancés séparément, sans ancêtre commun, n'ont **aucun moyen** de partager un tube anonyme. Le **tube nommé**, ou **FIFO**, lève exactement cette limite.
+
+## Le problème : faire communiquer des processus indépendants
+
+Reprenons la situation. On lance, dans **deux terminaux différents**, deux programmes :
+
+```text
+Terminal 1 : $ ./ecrivain
+Terminal 2 : $ ./lecteur
+```
+
+Ces deux processus n'ont **aucun lien de parenté** : aucun n'a créé l'autre par `fork`. Avec un tube anonyme, c'est sans espoir : le tube n'existe que dans la table des descripteurs du processus qui a appelé `pipe()`, et le seul moyen d'en transmettre une extrémité est l'**héritage**. Un processus étranger ne peut pas « deviner » un descripteur ouvert dans un autre processus.
+
+Il faut donc un canal qui possède une **identité publique** — un **nom** — que **n'importe quel processus** pourra citer pour s'y raccorder. C'est précisément le **tube nommé**.
+
+> ⚠️ Un tube **anonyme** n'a aucune référence dans le système de fichiers : il ne se désigne que par des descripteurs, et ces descripteurs ne se partagent que par **héritage** (`fork`). C'est la raison **mécanique** pour laquelle il ne relie que des processus **apparentés**. Le tube **nommé** existe justement pour faire communiquer des processus **quelconques**, sans lien de parenté.
+
+## Qu'est-ce qu'un tube nommé (FIFO) ?
+
+> Un **tube nommé** (en anglais *named pipe* ou **FIFO**) est un **tube** qui possède un **nom dans le système de fichiers** : un **chemin d'accès** (*pathname*). Tout processus qui **connaît ce chemin** et **dispose des droits d'accès** appropriés peut s'y raccorder pour lire ou écrire.
+
+Le sigle **FIFO** rappelle la nature du canal : *First In, First Out* — une file d'attente, comme tout tube.
+
+### Un fichier spécial du système de fichiers
+
+Un FIFO **apparaît** dans le système de fichiers, comme un fichier ordinaire. La commande `ls -l` le révèle, et le **premier caractère** de la ligne le distingue : le type **`p`** (comme *pipe*).
+
+```text
+$ mkfifo monTube
+$ ls -l monTube
+prw-r--r--  1 user  group  0 May 17 14:30 monTube
+^                          ^
+type p                     taille 0
+```
+
+Deux détails sont **fondamentaux** dans cet affichage :
+
+- le type est **`p`** — ce n'est **pas** un fichier ordinaire (`-`), ni un répertoire (`d`), ni un lien (`l`). C'est un **fichier spécial** de type *pipe* ;
+- la **taille** affichée est **`0`**. Et elle restera **`0`**, quoi qu'on y écrive.
+
+> ⚠️ La **taille d'un fichier FIFO est toujours `0`** : un FIFO **ne stocke aucune donnée sur le disque**. Comme tout tube, c'est une **file d'octets en mémoire**, gérée par le noyau. Le « fichier » visible avec `ls` n'est qu'un **point de rendez-vous nommé** — une entrée dans le système de fichiers (un **i-nœud**) qui permet de **désigner** le tube. Les octets transitent par le **tampon en mémoire**, jamais par le disque. Écrire 1 Mo dans un FIFO ne fait pas grossir le fichier d'un seul octet.
+
+### Le FIFO et l'i-nœud
+
+L'entrée `ls -l` correspond à un **i-nœud** réel : le système alloue, pour le FIFO, une structure d'i-nœud de type *pipe*. C'est cet i-nœud qui porte le **nom**, les **droits d'accès** (`rw-r--r--` ci-dessus) et le **propriétaire**. Mais cet i-nœud ne référence **aucun bloc de données disque** : il sert uniquement de **point d'ancrage** nommé vers le tube en mémoire.
+
+C'est ce qui explique la propriété la plus importante du tube nommé.
+
+### Le FIFO relie des processus quelconques
+
+> Parce qu'il possède un **nom**, un tube nommé permet de transmettre des données entre des processus **qui ne sont liés par aucun lien de parenté**. Il suffit que chaque processus **connaisse le chemin** du FIFO et possède les **droits** voulus.
+
+C'est **la** différence avec le tube anonyme, et la raison d'être du Module 4. Récapitulons les deux familles :
+
+| | **Tube anonyme** | **Tube nommé (FIFO)** |
+|---|---|---|
+| Nom dans le système de fichiers | **aucun** | un **chemin d'accès**, fichier de type `p` |
+| i-nœud visible (`ls -l`) | non | **oui** (type `p`, taille `0`) |
+| Processus qu'il peut relier | seulement des processus **apparentés** | des processus **quelconques** |
+| Désignation | par **descripteurs hérités** | par **nom de fichier** + `open` |
+| Création | `pipe()` | `mkfifo()` |
+| Destruction | automatique (dernier `close`) | i-nœud **persistant** : `unlink` explicite |
+
+En revanche, **tout le reste est identique** au tube anonyme — c'est essentiel à comprendre :
+
+- un FIFO est **half-duplex** : un seul sens de communication à la fois ;
+- c'est une **file FIFO en mémoire**, de **taille bornée**, gérée par le noyau ;
+- la **lecture y est destructrice** : une donnée n'est lue qu'une seule fois ;
+- on y lit et on y écrit avec `read` et `write` ;
+- le noyau assure la **synchronisation** (blocage sur tube vide / plein).
+
+Le tube nommé n'est donc pas un mécanisme *nouveau* : c'est un tube **ordinaire**, simplement **muni d'un nom** pour être accessible publiquement.
+
+## Créer un FIFO depuis le shell
+
+Avant même d'écrire du C, on peut fabriquer un tube nommé en ligne de commande. La commande dédiée est **`mkfifo`** :
+
+```text
+$ mkfifo nom_fichier
+```
+
+Elle crée, dans le système de fichiers, un fichier spécial de type `p` portant le nom indiqué. (Historiquement, la commande générale `mknod` peut aussi créer un FIFO — `mknod nom_fichier p` — mais `mkfifo` est l'outil **spécialisé** et **portable** ; on lui donnera toujours la préférence.)
+
+Le FIFO ainsi créé est un fichier comme un autre du point de vue de l'arborescence : on peut le voir avec `ls -l`, et le **supprimer** avec `rm` :
+
+```text
+$ rm nom_fichier
+```
+
+## Créer un FIFO en C : la primitive `mkfifo()`
+
+En langage C, un tube nommé se crée avec l'appel **`mkfifo()`**, déclaré dans **`<sys/stat.h>`** (l'en-tête `<sys/types.h>` fournit le type `mode_t`) :
+
+```c
+#include <sys/types.h>
+#include <sys/stat.h>
+
+int mkfifo(const char *pathname, mode_t mode);
+```
+
+Ses deux arguments :
+
+- **`pathname`** — le **chemin d'accès** du tube nommé à créer (par exemple `"monTube"` ou `"/tmp/serveur"`) ;
+- **`mode`** — les **droits d'accès** accordés aux différents utilisateurs sur ce fichier, exactement comme pour `chmod` ou `open` à la création. On les exprime soit en **octal** (`0644`), soit en combinant les **constantes symboliques** de `<sys/stat.h>` par un OU binaire : `S_IRUSR` (lecture propriétaire), `S_IWUSR` (écriture propriétaire), `S_IRGRP`, `S_IWGRP`, `S_IROTH`, `S_IWOTH`, etc.
+
+> Le sens des droits sur un FIFO est naturel : le droit de **lecture** (`r`) autorise à l'ouvrir **en lecture**, le droit d'**écriture** (`w`) autorise à l'ouvrir **en écriture**. Un processus qui voudra `open` le FIFO en lecture devra donc avoir le droit `r` ; en écriture, le droit `w`.
+
+La valeur de retour de `mkfifo()` :
+
+- **`0`** en cas de **succès** : le fichier FIFO a été créé ;
+- **`-1`** en cas d'**échec**, et `errno` est positionné (consulter `man 3 mkfifo` pour les codes).
+
+> ⚠️ Une cause d'échec **très fréquente** de `mkfifo` est `errno == EEXIST` : **le fichier existe déjà**. Si un FIFO du même nom subsiste (parce qu'une exécution précédente ne l'a pas supprimé — l'i-nœud est **persistant**), `mkfifo` échoue. Ce n'est pas forcément une erreur fatale : un programme **serveur** robuste **tolère** `EEXIST` (le FIFO voulu existe, c'est tout ce qui compte) et ne s'arrête que sur les **autres** erreurs. Tester `errno` plutôt que rejeter tout retour `-1`.
+
+### Exemple : créer un FIFO et y écrire (programme `ecrivain.c`)
+
+Voici un premier programme — fidèle au cours — qui **crée** un tube nommé, l'**ouvre en écriture**, y **dépose** un message, puis **referme** le descripteur. L'ouverture (`open`) et ses subtilités feront l'objet du chapitre suivant ; on se concentre ici sur **`mkfifo`**.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+/* ecrivain.c : cree le FIFO "fictub" et y ecrit un message */
+int main(void) {
+    mode_t mode = 0644;            /* ou : S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH */
+
+    /* 1. creation du tube nomme ; tolerer EEXIST (un FIFO deja present est reutilisable) */
+    if (mkfifo("fictub", mode) == -1 && errno != EEXIST) {
+        perror("mkfifo");
+        exit(EXIT_FAILURE);
+    }
+
+    /* 2. ouverture en ECRITURE (bloquante par defaut — voir chapitre 2) */
+    int tub = open("fictub", O_WRONLY);
+    if (tub == -1) { perror("open"); exit(EXIT_FAILURE); }
+
+    /* 3. ecriture dans le tube */
+    write(tub, "0123456789", 10);
+
+    /* 4. fermeture du descripteur */
+    close(tub);
+
+    return 0;
+}
+```
+
+À ce stade, le fichier `fictub` **existe** dans le répertoire courant (type `p`, taille `0`), et le message `"0123456789"` a transité par le **tampon en mémoire** du tube.
+
+## Le FIFO persiste : la destruction par `unlink`
+
+Voici la **dernière** différence majeure avec le tube anonyme, et un piège classique.
+
+> Un tube anonyme est **détruit automatiquement** quand son dernier descripteur est fermé. Un tube **nommé**, lui, possède une **entrée persistante** dans le système de fichiers (l'i-nœud). Cette entrée **survit** à la fin des processus qui l'ont utilisé : elle reste là, sur le disque, **tant qu'on ne la supprime pas explicitement**.
+
+Pour faire **disparaître** la référence d'un FIFO, on utilise l'appel **`unlink()`** (déclaré dans `<unistd.h>`) :
+
+```c
+#include <unistd.h>
+
+int unlink(const char *pathname);
+```
+
+`unlink` supprime le **nom** du FIFO de l'arborescence — c'est l'équivalent C de la commande `rm`. Il faut bien distinguer **deux opérations différentes** :
+
+| Opération | Effet |
+|---|---|
+| **`close(fd)`** | ferme **un descripteur** ; le processus n'utilise plus le FIFO, mais le **fichier reste** dans l'arborescence |
+| **`unlink("monTube")`** | supprime le **nom** du FIFO de l'arborescence ; le fichier spécial **disparaît** |
+
+> ⚠️ Ne pas confondre `close` et `unlink`. **`close`** ne fait que libérer un **descripteur** : le fichier FIFO **demeure** visible avec `ls`. Pour **effacer** le tube nommé du système de fichiers, il faut **`unlink`** (ou `rm` au shell). Un programme qui ferme ses descripteurs mais oublie le `unlink` **laisse derrière lui** un fichier `p` orphelin — qui, à la prochaine exécution, fera **échouer `mkfifo` avec `EEXIST`**.
+
+La règle pratique est donc : le programme qui **crée** le FIFO par `mkfifo` est aussi, en général, celui qui le **détruit** par `unlink` quand le service est terminé. Le chapitre suivant montrera que l'on peut aussi `unlink` un FIFO **après** l'avoir ouvert : le tube reste alors utilisable par les descripteurs déjà ouverts, et l'i-nœud n'est vraiment libéré que lorsque le dernier descripteur est fermé — un moyen commode de ne **pas** laisser de fichier traîner.
+
+> **À retenir**
+> - Un **tube nommé** (*FIFO*, *named pipe*) est un tube muni d'un **nom dans le système de fichiers** (un **chemin d'accès**) ; il apparaît avec `ls -l` comme un fichier spécial de type **`p`**.
+> - Sa grande force : il relie des **processus quelconques**, **sans lien de parenté** — il suffit qu'ils **connaissent le chemin** et aient les **droits**. C'est ce que le tube anonyme ne sait pas faire.
+> - Un FIFO **ne stocke rien sur disque** : sa taille est **toujours `0`** ; c'est, comme tout tube, une **file FIFO en mémoire** gérée par le noyau. L'i-nœud n'est qu'un **point de rendez-vous nommé**.
+> - Tout le reste est **identique** au tube anonyme : **half-duplex**, **taille bornée**, **lecture destructrice**, accès par `read`/`write`, synchronisation par le noyau.
+> - Création : commande shell **`mkfifo nom`** ; en C, **`mkfifo(const char *pathname, mode_t mode)`** (`<sys/stat.h>`) — retour `0` si succès, `-1` si échec. L'échec **`EEXIST`** (fichier déjà présent) est courant et souvent tolérable.
+> - Le fichier FIFO est **persistant** : il survit aux processus. On le supprime explicitement avec **`unlink(pathname)`** en C (ou `rm` au shell). `close` ferme un **descripteur**, `unlink` efface le **fichier** — à ne pas confondre.

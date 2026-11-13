@@ -1,0 +1,32 @@
+---
+title: "Mesurer les écarts"
+slug: mesurer-ecarts
+order: 1
+estimatedReadMin: 7
+concepts: [resultats-desagreges, ratio-selection, parite-demographique]
+source: "Diapositives 13 à 15"
+---
+## Idée centrale
+
+Un bon score moyen ne dit rien des écarts entre groupes. Il faut mesurer ces écarts, avec des métriques dont on connaît les limites.
+
+## L'accuracy globale masque les écarts
+
+Exemple du cours : 1 000 personnes classées correctement à 96 % et 500 personnes à 48 %. L'accuracy globale vaut 80 %, alors que l'écart entre les deux groupes est de **48 points**. Les scores doivent être accompagnés des **effectifs**, des **intervalles** et des **groupes croisés**.
+
+## Le ratio de sélection et la règle des 4/5
+
+**Ratio = taux de sélection du groupe b ÷ taux de sélection du groupe de référence.**
+
+Dans l'exemple TalentScore : 22 % ÷ 50 % = **0,44**.
+
+Le seuil de **0,80** (la règle des quatre cinquièmes) est un repère de **dépistage** issu du contexte américain de l'emploi. Le franchir ne prouve **ni l'équité, ni la conformité au droit européen**. On indique toujours les effectifs, le groupe de référence et l'incertitude du ratio.
+
+## La parité démographique
+
+**P(Ŷ = 1 ∣ A = a) = P(Ŷ = 1 ∣ A = b)** : chaque groupe a le même taux de sélection. A désigne le groupe, Y la qualification de référence et Ŷ la décision.
+
+Dans l'exemple, les femmes sont sélectionnées à 22 % et les hommes à 50 % : **28 points** d'écart.
+
+> **À retenir**
+> La parité démographique **ignore Y** : elle compare les décisions sans regarder qui est réellement qualifié.

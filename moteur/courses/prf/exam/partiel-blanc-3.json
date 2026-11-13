@@ -1,0 +1,948 @@
+{
+  "slug": "partiel-blanc-3",
+  "title": "Partiel blanc 3 - Synthese finale 20/20",
+  "description": "Simulation complete avec traces Scala, couts, preuves et diagnostic Petri.",
+  "durationMinutes": 120,
+  "totalPoints": 20,
+  "exercises": [
+    {
+      "chapterSlug": "paradigme-expressions",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 1,
+      "points": 2,
+      "prompt": "Valeur ?",
+      "payload": {
+        "program": "val a = 5\nif a > 3 then a * 2 else a - 2",
+        "language": "scala"
+      },
+      "solution": {
+        "expectedOutput": "10"
+      },
+      "explanation": "Branche then.",
+      "concepts": [
+        "expression"
+      ]
+    },
+    {
+      "chapterSlug": "option-tuples-if",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Le resultat de `Map(1 -> \"a\").get(2)` est :",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "None"
+          },
+          {
+            "id": "b",
+            "label": "\"a\""
+          },
+          {
+            "id": "c",
+            "label": "2"
+          },
+          {
+            "id": "d",
+            "label": "Unit"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "La cle 2 est absente.",
+      "concepts": [
+        "option",
+        "map-collection"
+      ]
+    },
+    {
+      "chapterSlug": "evaluation-recursion",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 2,
+      "prompt": "Condition indispensable d'une recursion correcte :",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Un cas de base et une progression vers lui."
+          },
+          {
+            "id": "b",
+            "label": "Une variable globale."
+          },
+          {
+            "id": "c",
+            "label": "Un println dans chaque appel."
+          },
+          {
+            "id": "d",
+            "label": "Une collection mutable."
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "Sans cas de base/progression, pas de terminaison.",
+      "concepts": [
+        "recursion",
+        "termination"
+      ]
+    },
+    {
+      "chapterSlug": "transformations",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Resultat ?",
+      "payload": {
+        "program": "for\n  x <- List(1, 2)\n  y <- List(10, 20)\nyield x + y",
+        "language": "scala"
+      },
+      "solution": {
+        "expectedOutput": "List(11, 21, 12, 22)"
+      },
+      "explanation": "Le generateur y tourne pour chaque x.",
+      "concepts": [
+        "map-filter-flatmap"
+      ]
+    },
+    {
+      "chapterSlug": "recursivite-diviser-regner",
+      "type": "MCQ_SINGLE",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "`T(n)=4T(n/2)+Theta(n)` donne :",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Theta(n^2)"
+          },
+          {
+            "id": "b",
+            "label": "Theta(n log n)"
+          },
+          {
+            "id": "c",
+            "label": "Theta(n)"
+          },
+          {
+            "id": "d",
+            "label": "Theta(log n)"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "n^(log_2 4)=n^2 domine f(n)=n.",
+      "concepts": [
+        "master"
+      ]
+    },
+    {
+      "chapterSlug": "invariants-correction",
+      "type": "TRUE_FALSE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Un variant de terminaison doit decroitre vers un ensemble bien fonde.",
+      "payload": {},
+      "solution": {
+        "value": true
+      },
+      "explanation": "C'est le principe standard de preuve de terminaison.",
+      "concepts": [
+        "termination"
+      ]
+    },
+    {
+      "chapterSlug": "definition-marquage",
+      "type": "PETRI_ENABLED_TRANSITIONS",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Transitions franchissables dans le cycle.",
+      "payload": {
+        "places": [
+          {
+            "id": "idle",
+            "label": "idle",
+            "tokens": 1,
+            "x": 160,
+            "y": 180
+          },
+          {
+            "id": "busy",
+            "label": "busy",
+            "tokens": 0,
+            "x": 560,
+            "y": 180
+          }
+        ],
+        "transitions": [
+          {
+            "id": "start",
+            "label": "start",
+            "x": 340,
+            "y": 105
+          },
+          {
+            "id": "finish",
+            "label": "finish",
+            "x": 340,
+            "y": 255
+          }
+        ],
+        "arcs": [
+          {
+            "from": "idle",
+            "to": "start"
+          },
+          {
+            "from": "start",
+            "to": "busy"
+          },
+          {
+            "from": "busy",
+            "to": "finish"
+          },
+          {
+            "from": "finish",
+            "to": "idle"
+          }
+        ]
+      },
+      "solution": {
+        "enabledTransitionIds": [
+          "start"
+        ]
+      },
+      "explanation": "Seul idle contient un jeton.",
+      "concepts": [
+        "firing"
+      ]
+    },
+    {
+      "chapterSlug": "franchissement-sequences",
+      "type": "PETRI_FIRE_SEQUENCE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Marquage final apres `produire, consommer`.",
+      "payload": {
+        "places": [
+          {
+            "id": "prod",
+            "label": "producteur",
+            "tokens": 1,
+            "x": 110,
+            "y": 90
+          },
+          {
+            "id": "vide",
+            "label": "places libres",
+            "tokens": 2,
+            "x": 110,
+            "y": 270
+          },
+          {
+            "id": "plein",
+            "label": "items",
+            "tokens": 0,
+            "x": 610,
+            "y": 90
+          },
+          {
+            "id": "cons",
+            "label": "consommateur",
+            "tokens": 1,
+            "x": 610,
+            "y": 270
+          }
+        ],
+        "transitions": [
+          {
+            "id": "produire",
+            "label": "produire",
+            "x": 360,
+            "y": 120
+          },
+          {
+            "id": "consommer",
+            "label": "consommer",
+            "x": 360,
+            "y": 245
+          }
+        ],
+        "arcs": [
+          {
+            "from": "prod",
+            "to": "produire"
+          },
+          {
+            "from": "vide",
+            "to": "produire"
+          },
+          {
+            "from": "produire",
+            "to": "prod"
+          },
+          {
+            "from": "produire",
+            "to": "plein"
+          },
+          {
+            "from": "plein",
+            "to": "consommer"
+          },
+          {
+            "from": "cons",
+            "to": "consommer"
+          },
+          {
+            "from": "consommer",
+            "to": "cons"
+          },
+          {
+            "from": "consommer",
+            "to": "vide"
+          }
+        ],
+        "sequence": [
+          "produire",
+          "consommer"
+        ]
+      },
+      "solution": {
+        "finalMarking": {
+          "prod": 1,
+          "vide": 2,
+          "plein": 0,
+          "cons": 1
+        },
+        "valid": true
+      },
+      "explanation": "Produire deplace une place libre vers plein ; consommer annule cette variation.",
+      "concepts": [
+        "firing-sequence"
+      ]
+    },
+    {
+      "chapterSlug": "proprietes",
+      "type": "PETRI_PROPERTY",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Exclusion mutuelle : proprietes vraies.",
+      "payload": {
+        "places": [
+          {
+            "id": "mutex",
+            "label": "mutex",
+            "tokens": 1,
+            "x": 360,
+            "y": 180
+          },
+          {
+            "id": "a_out",
+            "label": "A dehors",
+            "tokens": 1,
+            "x": 90,
+            "y": 90
+          },
+          {
+            "id": "a_in",
+            "label": "A dedans",
+            "tokens": 0,
+            "x": 90,
+            "y": 270
+          },
+          {
+            "id": "b_out",
+            "label": "B dehors",
+            "tokens": 1,
+            "x": 630,
+            "y": 90
+          },
+          {
+            "id": "b_in",
+            "label": "B dedans",
+            "tokens": 0,
+            "x": 630,
+            "y": 270
+          }
+        ],
+        "transitions": [
+          {
+            "id": "a_enter",
+            "label": "A entre",
+            "x": 220,
+            "y": 180
+          },
+          {
+            "id": "a_exit",
+            "label": "A sort",
+            "x": 220,
+            "y": 305
+          },
+          {
+            "id": "b_enter",
+            "label": "B entre",
+            "x": 500,
+            "y": 180
+          },
+          {
+            "id": "b_exit",
+            "label": "B sort",
+            "x": 500,
+            "y": 305
+          }
+        ],
+        "arcs": [
+          {
+            "from": "a_out",
+            "to": "a_enter"
+          },
+          {
+            "from": "mutex",
+            "to": "a_enter"
+          },
+          {
+            "from": "a_enter",
+            "to": "a_in"
+          },
+          {
+            "from": "a_in",
+            "to": "a_exit"
+          },
+          {
+            "from": "a_exit",
+            "to": "a_out"
+          },
+          {
+            "from": "a_exit",
+            "to": "mutex"
+          },
+          {
+            "from": "b_out",
+            "to": "b_enter"
+          },
+          {
+            "from": "mutex",
+            "to": "b_enter"
+          },
+          {
+            "from": "b_enter",
+            "to": "b_in"
+          },
+          {
+            "from": "b_in",
+            "to": "b_exit"
+          },
+          {
+            "from": "b_exit",
+            "to": "b_out"
+          },
+          {
+            "from": "b_exit",
+            "to": "mutex"
+          }
+        ],
+        "properties": [
+          {
+            "id": "safe",
+            "label": "sauf"
+          },
+          {
+            "id": "bounded",
+            "label": "borne"
+          },
+          {
+            "id": "twoinside",
+            "label": "A et B peuvent etre dedans simultanement"
+          },
+          {
+            "id": "mutex",
+            "label": "la place mutex empeche deux entrees simultanees"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "safe",
+          "bounded",
+          "mutex"
+        ]
+      },
+      "explanation": "Le jeton mutex est unique et conserve.",
+      "concepts": [
+        "safety",
+        "modeling"
+      ]
+    },
+    {
+      "chapterSlug": "graphe-accessibilite",
+      "type": "PETRI_REACHABILITY",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Dans le graphe Attiogbe, M3 par `e` mene a :",
+      "payload": {
+        "places": [
+          {
+            "id": "p1",
+            "label": "1",
+            "tokens": 1,
+            "x": 120,
+            "y": 80
+          },
+          {
+            "id": "p2",
+            "label": "2",
+            "tokens": 0,
+            "x": 120,
+            "y": 280
+          },
+          {
+            "id": "p3",
+            "label": "3",
+            "tokens": 0,
+            "x": 360,
+            "y": 80
+          },
+          {
+            "id": "p4",
+            "label": "4",
+            "tokens": 0,
+            "x": 600,
+            "y": 80
+          },
+          {
+            "id": "p5",
+            "label": "5",
+            "tokens": 0,
+            "x": 600,
+            "y": 280
+          }
+        ],
+        "transitions": [
+          {
+            "id": "a",
+            "label": "a",
+            "x": 240,
+            "y": 170
+          },
+          {
+            "id": "b",
+            "label": "b",
+            "x": 360,
+            "y": 250
+          },
+          {
+            "id": "c",
+            "label": "c",
+            "x": 500,
+            "y": 170
+          },
+          {
+            "id": "d",
+            "label": "d",
+            "x": 360,
+            "y": 35
+          },
+          {
+            "id": "e",
+            "label": "e",
+            "x": 500,
+            "y": 320
+          }
+        ],
+        "arcs": [
+          {
+            "from": "p1",
+            "to": "a"
+          },
+          {
+            "from": "a",
+            "to": "p2"
+          },
+          {
+            "from": "a",
+            "to": "p3"
+          },
+          {
+            "from": "p2",
+            "to": "b"
+          },
+          {
+            "from": "b",
+            "to": "p4"
+          },
+          {
+            "from": "p3",
+            "to": "c"
+          },
+          {
+            "from": "c",
+            "to": "p5"
+          },
+          {
+            "from": "p4",
+            "to": "d"
+          },
+          {
+            "from": "p5",
+            "to": "d"
+          },
+          {
+            "from": "d",
+            "to": "p1"
+          },
+          {
+            "from": "p5",
+            "to": "e"
+          },
+          {
+            "from": "e",
+            "to": "p3"
+          }
+        ],
+        "graph": {
+          "nodes": [
+            {
+              "id": "m0",
+              "label": "M0",
+              "marking": {
+                "p1": 1,
+                "p2": 0,
+                "p3": 0,
+                "p4": 0,
+                "p5": 0
+              },
+              "x": 110,
+              "y": 180
+            },
+            {
+              "id": "m1",
+              "label": "M1",
+              "marking": {
+                "p1": 0,
+                "p2": 1,
+                "p3": 1,
+                "p4": 0,
+                "p5": 0
+              },
+              "x": 260,
+              "y": 80
+            },
+            {
+              "id": "m2",
+              "label": "M2",
+              "marking": {
+                "p1": 0,
+                "p2": 0,
+                "p3": 1,
+                "p4": 1,
+                "p5": 0
+              },
+              "x": 430,
+              "y": 80
+            },
+            {
+              "id": "m3",
+              "label": "M3",
+              "marking": {
+                "p1": 0,
+                "p2": 1,
+                "p3": 0,
+                "p4": 0,
+                "p5": 1
+              },
+              "x": 260,
+              "y": 280
+            },
+            {
+              "id": "m4",
+              "label": "M4",
+              "marking": {
+                "p1": 0,
+                "p2": 0,
+                "p3": 0,
+                "p4": 1,
+                "p5": 1
+              },
+              "x": 430,
+              "y": 280
+            }
+          ],
+          "edges": [
+            {
+              "from": "m0",
+              "to": "m1",
+              "transitionId": "a"
+            },
+            {
+              "from": "m1",
+              "to": "m2",
+              "transitionId": "b"
+            },
+            {
+              "from": "m1",
+              "to": "m3",
+              "transitionId": "c"
+            },
+            {
+              "from": "m2",
+              "to": "m4",
+              "transitionId": "c"
+            },
+            {
+              "from": "m3",
+              "to": "m4",
+              "transitionId": "b"
+            },
+            {
+              "from": "m3",
+              "to": "m1",
+              "transitionId": "e"
+            },
+            {
+              "from": "m4",
+              "to": "m2",
+              "transitionId": "e"
+            },
+            {
+              "from": "m4",
+              "to": "m0",
+              "transitionId": "d"
+            }
+          ]
+        },
+        "options": [
+          {
+            "id": "a",
+            "label": "M1"
+          },
+          {
+            "id": "b",
+            "label": "M0"
+          },
+          {
+            "id": "c",
+            "label": "M4"
+          },
+          {
+            "id": "d",
+            "label": "M2"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "L'arete M3 --e--> M1 existe.",
+      "concepts": [
+        "reachability-graph"
+      ]
+    },
+    {
+      "chapterSlug": "invariants-modelisation",
+      "type": "PETRI_INVARIANT",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "T-invariants du cycle.",
+      "payload": {
+        "places": [
+          {
+            "id": "idle",
+            "label": "idle",
+            "tokens": 1,
+            "x": 160,
+            "y": 180
+          },
+          {
+            "id": "busy",
+            "label": "busy",
+            "tokens": 0,
+            "x": 560,
+            "y": 180
+          }
+        ],
+        "transitions": [
+          {
+            "id": "start",
+            "label": "start",
+            "x": 340,
+            "y": 105
+          },
+          {
+            "id": "finish",
+            "label": "finish",
+            "x": 340,
+            "y": 255
+          }
+        ],
+        "arcs": [
+          {
+            "from": "idle",
+            "to": "start"
+          },
+          {
+            "from": "start",
+            "to": "busy"
+          },
+          {
+            "from": "busy",
+            "to": "finish"
+          },
+          {
+            "from": "finish",
+            "to": "idle"
+          }
+        ],
+        "invariantType": "transition",
+        "vectors": [
+          {
+            "id": "a",
+            "label": "(1,1)",
+            "values": {
+              "start": 1,
+              "finish": 1
+            }
+          },
+          {
+            "id": "b",
+            "label": "(2,1)",
+            "values": {
+              "start": 2,
+              "finish": 1
+            }
+          },
+          {
+            "id": "c",
+            "label": "(3,3)",
+            "values": {
+              "start": 3,
+              "finish": 3
+            }
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a",
+          "c"
+        ]
+      },
+      "explanation": "Les tirs start et finish doivent etre en nombre egal.",
+      "concepts": [
+        "t-invariant"
+      ]
+    },
+    {
+      "chapterSlug": "synthese-transversale",
+      "type": "MATCHING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Associe chaque piege a la correction.",
+      "payload": {
+        "left": [
+          {
+            "id": "reduce",
+            "label": "reduce vide"
+          },
+          {
+            "id": "unit",
+            "label": "println"
+          },
+          {
+            "id": "state",
+            "label": "equation d'etat"
+          },
+          {
+            "id": "safe",
+            "label": "surete"
+          }
+        ],
+        "right": [
+          {
+            "id": "fold",
+            "label": "Preferer fold avec valeur initiale"
+          },
+          {
+            "id": "effect",
+            "label": "Distinguer effet et valeur Unit"
+          },
+          {
+            "id": "necessary",
+            "label": "Condition necessaire non suffisante"
+          },
+          {
+            "id": "one",
+            "label": "Verifier 1-bornitude"
+          }
+        ]
+      },
+      "solution": {
+        "pairs": {
+          "reduce": "fold",
+          "unit": "effect",
+          "state": "necessary",
+          "safe": "one"
+        }
+      },
+      "explanation": "Ces corrections couvrent les pieges frequents.",
+      "concepts": [
+        "reduce",
+        "unit",
+        "state-equation",
+        "safety"
+      ]
+    },
+    {
+      "chapterSlug": "traits-generiques",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Un `sealed trait` est surtout utile pour :",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Raisonner sur tous les cas connus."
+          },
+          {
+            "id": "b",
+            "label": "Executer en parallele."
+          },
+          {
+            "id": "c",
+            "label": "Rendre un champ mutable."
+          },
+          {
+            "id": "d",
+            "label": "Changer une List en Set."
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "Les sous-types directs sont connus.",
+      "concepts": [
+        "sealed"
+      ]
+    }
+  ]
+}

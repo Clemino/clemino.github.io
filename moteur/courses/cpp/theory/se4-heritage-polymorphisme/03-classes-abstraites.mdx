@@ -1,0 +1,146 @@
+---
+title: Classes abstraites
+slug: classes-abstraites
+order: 3
+estimatedReadMin: 10
+concepts: [classe-abstraite, methode-virtuelle-pure, methode-virtuelle, redefinition]
+source: "Cours 4 — Héritage & Polymorphisme"
+---
+
+## Le problème : une méthode de base sans comportement sensé
+
+Reprenons la hiérarchie des formes. Une `Forme` possède une méthode `aire()`. Mais quelle est l'aire d'une « forme » en général ? La question **n'a pas de sens** : seules les formes **concrètes** — `Cercle`, `Triangle` — ont une aire calculable. Une `Forme` n'est qu'une **abstraction**.
+
+On pourrait donner à `Forme::aire()` un corps factice (`return 0;`), mais c'est une mauvaise solution : ce corps n'a aucun sens, et **rien n'oblige** une classe dérivée à le redéfinir — un `Triangle` qui oublierait `aire()` renverrait `0` silencieusement.
+
+Il faut un outil qui exprime : « *toute forme a une aire, mais c'est à chaque forme concrète de dire comment la calculer* ». Cet outil est la **méthode virtuelle pure**.
+
+## La méthode virtuelle pure
+
+> Une méthode est **virtuelle pure** lorsqu'elle est `virtual` et **dépourvue de définition**, signalée par `= 0` à la fin de sa déclaration.
+
+```cpp
+class Forme {
+    public:
+        virtual double aire() const = 0;   // méthode virtuelle pure
+};
+```
+
+La syntaxe générale est :
+
+```cpp
+virtual type nomMethode(parametres) = 0;
+```
+
+Le `= 0` — appelé *pure-specifier* — signifie que la méthode **n'a aucune définition** dans la classe de base. Elle ne décrit qu'une **intention** : « *toute classe de cette famille fournira cette opération* ». C'est une déclaration **sans implémentation**.
+
+## La classe abstraite
+
+> Une classe est dite **abstraite** dès qu'elle contient **au moins une** méthode virtuelle pure.
+
+`Forme`, qui déclare `aire()` virtuelle pure, est donc une **classe abstraite**. Une classe abstraite peut parfaitement contenir, **à côté** de ses méthodes virtuelles pures, des méthodes ordinaires (avec un corps), des attributs, des constructeurs :
+
+```cpp
+class Forme {
+    public:
+        virtual void description() const {            // méthode normale (avec corps)
+            std::cout << "Ceci est une forme." << std::endl;
+        }
+        virtual double aire() const = 0;              // méthode virtuelle pure
+};
+```
+
+Ici `Forme` reste abstraite à cause de la **seule** méthode `aire()` : il suffit d'**une** virtuelle pure pour rendre toute la classe abstraite, même si toutes les autres méthodes sont définies.
+
+## Une classe abstraite ne peut pas être instanciée
+
+C'est la conséquence majeure :
+
+> Une classe abstraite **ne peut pas être instanciée** : il est **impossible** de créer un objet d'une classe abstraite.
+
+```cpp
+Forme f;                  // ERREUR : Forme est abstraite
+Forme* p = new Forme;     // ERREUR : Forme est abstraite
+```
+
+C'est logique : `Forme::aire()` n'a **pas de code**. Si un objet `Forme` pouvait exister, qu'exécuterait l'appel `f.aire()` ? Rien. Le compilateur **interdit** donc la création de l'objet.
+
+Mais une classe abstraite reste **utilisable** — c'est tout son intérêt — comme **type de pointeur ou de référence** :
+
+```cpp
+Forme* p = new Cercle(5.0);    // OK : on pointe une Forme, l'objet réel est un Cercle
+```
+
+On ne crée jamais une `Forme` « pure » ; on crée des objets **concrets** (`Cercle`, `Triangle`) que l'on **désigne** par un pointeur ou une référence de type `Forme`. C'est exactement ce qu'exige le polymorphisme.
+
+## La classe abstraite comme interface
+
+Une classe abstraite définit un **contrat** : la liste des opérations que **toute** classe de la famille devra fournir. Elle joue le rôle d'**interface**.
+
+> Une méthode virtuelle pure réalise un **héritage d'interface** : elle impose la **signature** de l'opération aux classes dérivées, **sans** leur imposer d'implémentation.
+
+```cpp
+class Forme {
+    public:
+        virtual void description() const = 0;   // contrat : savoir se décrire
+        virtual double aire() const = 0;        // contrat : savoir calculer son aire
+        virtual ~Forme() = default;             // destructeur virtuel (classe de base polymorphe)
+};
+```
+
+Cette classe `Forme` ne dit **rien** de la manière de calculer une aire ou d'afficher une description : elle énonce seulement que **toute** forme **devra** savoir le faire. Chaque classe concrète remplit ce contrat à sa façon. C'est le mécanisme central de la **programmation orientée objet** : programmer **contre une interface** plutôt que contre des classes concrètes.
+
+> Le destructeur d'une classe abstraite doit lui aussi être `virtual` : la classe est faite pour être une base polymorphe, manipulée par pointeur de base — la règle du chapitre 2 s'applique pleinement.
+
+## Une classe dérivée doit implémenter toutes les virtuelles pures
+
+Hériter d'une classe abstraite impose une **obligation** :
+
+> Une classe dérivée **doit fournir une définition pour toutes** les méthodes virtuelles pures héritées. Si elle en laisse **au moins une** sans implémentation, elle reste **elle-même abstraite**.
+
+```cpp
+class Cercle : public Forme {
+    private:
+        double rayon;
+    public:
+        Cercle(double r) : rayon(r) {}
+        void description() const override {            // implémentation fournie
+            std::cout << "Ceci est un cercle." << std::endl;
+        }
+        double aire() const override {                 // implémentation fournie
+            return 3.14159 * rayon * rayon;
+        }
+};
+```
+
+`Cercle` redéfinit **les deux** méthodes virtuelles pures de `Forme` : elle remplit entièrement le contrat. Elle devient donc une **classe concrète** — et **instanciable** :
+
+```cpp
+Cercle c(5.0);    // OK : Cercle est concrète, toutes les virtuelles pures sont définies
+```
+
+À l'inverse, une dérivée qui n'implémenterait que `description()` mais oublierait `aire()` **resterait abstraite**, et `Cercle c(5.0);` redeviendrait une erreur de compilation.
+
+> Une classe dérivée d'une classe abstraite a donc **deux** options : soit elle **implémente toutes** les virtuelles pures et devient **concrète** (instanciable), soit elle en laisse certaines de côté et **reste abstraite** — utile pour une classe intermédiaire dans une longue hiérarchie.
+
+## Méthode virtuelle, virtuelle pure, non virtuelle : la synthèse
+
+Trois sortes de méthodes peuvent figurer dans une classe de base, avec des sens d'héritage distincts :
+
+| Sorte de méthode | Déclaration | Corps dans la base ? | Ce que la dérivée doit faire |
+|---|---|---|---|
+| **Non virtuelle** | `void f();` | oui | hérite l'interface **et** l'implémentation (à ne pas redéfinir) |
+| **Virtuelle** | `virtual void f();` | oui | hérite l'interface ; **peut** redéfinir, sinon garde l'implémentation par défaut |
+| **Virtuelle pure** | `virtual void f() = 0;` | non | hérite l'interface ; **doit** fournir l'implémentation (ou rester abstraite) |
+
+- Une méthode **virtuelle pure** transmet une **interface** que la dérivée concrète **doit** implémenter.
+- Une méthode **virtuelle** transmet une interface **et** une implémentation **par défaut** que la dérivée **peut** redéfinir si elle le souhaite.
+- Une méthode **non virtuelle** transmet un comportement **fixe**, identique pour toute la hiérarchie.
+
+> **À retenir**
+> - Une méthode est **virtuelle pure** quand elle est `virtual` et **sans définition** : `virtual type methode(...) = 0;`. Le `= 0` indique l'absence d'implémentation.
+> - Une classe est **abstraite** dès qu'elle possède **au moins une** méthode virtuelle pure ; elle peut aussi contenir des méthodes ordinaires et des attributs.
+> - Une classe abstraite **ne peut pas être instanciée** ; elle s'emploie uniquement comme **type de pointeur ou de référence** vers des objets concrets.
+> - Une classe abstraite sert d'**interface** : elle énonce un **contrat** (les signatures à fournir) sans imposer d'implémentation — c'est l'**héritage d'interface**.
+> - Une classe dérivée **doit implémenter toutes** les virtuelles pures héritées pour devenir **concrète** (instanciable) ; sinon elle **reste abstraite**.
+> - Distinguer **non virtuelle** (comportement fixe), **virtuelle** (implémentation par défaut redéfinissable) et **virtuelle pure** (implémentation obligatoire dans la dérivée concrète).

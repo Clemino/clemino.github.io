@@ -1,0 +1,39 @@
+---
+title: "Documentation et dérive"
+slug: documentation-derive
+order: 3
+estimatedReadMin: 7
+concepts: [documentation-artefacts, derive, resultats-desagreges]
+source: "Diapositives 10 à 12"
+---
+## Idée centrale
+
+On documente chaque artefact pour savoir d'où vient un résultat, puis on surveille le système, car le monde change après le déploiement.
+
+## Documentation et lignage
+
+| Document | Questions auxquelles il répond |
+|---|---|
+| **Datasheet** du jeu de données | Origine, collecte, population, annotation, usages permis |
+| **Model Card** du modèle | Usage prévu, performance, sous-groupes, limites |
+| **Manifeste de version** | Données, code, modèle et configuration exacts |
+| **Rapport de validation** | Test indépendant, protocole, incertitude, résultats |
+
+Un **identifiant** relie chaque résultat à ses artefacts. Une Model Card contribue à la documentation technique, mais ne la remplace pas systématiquement.
+
+## Trois dérives
+
+| Type | Ce qui change | Surveillance |
+|---|---|---|
+| **Dérive des données** | Pₜ(X) ≠ P₀(X) | Distribution et couverture des entrées |
+| **Dérive du concept** | Pₜ(Y∣X) ≠ P₀(Y∣X) | Erreurs, avec des étiquettes fiables |
+| **Dérive de prévalence** | Pₜ(Y) ≠ P₀(Y) | Fréquence de la cible observée |
+
+Une alerte déclenche une **investigation** et une **action prévue**. Exemple de règle interne : une AUC qui passe sous 0,74, après contrôle de la fenêtre et de l'incertitude.
+
+## Cas court : un rappel de 97,1 % peut masquer un risque
+
+Un détecteur de piétons trouve 891 piétons sur 900 le jour et 80 sur 100 la nuit. Globalement : 971 sur 1 000, soit **97,1 %**. Mais la nuit, **20 %** des piétons sont manqués. La réponse proposée : **restreindre le domaine d'emploi**.
+
+> **À retenir**
+> Un indicateur global peut être excellent alors qu'un contexte précis est dangereux : il faut des **résultats désagrégés**.

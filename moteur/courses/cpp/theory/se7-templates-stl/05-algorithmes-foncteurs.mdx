@@ -1,0 +1,227 @@
+---
+title: Algorithmes et foncteurs
+slug: algorithmes-foncteurs
+order: 5
+estimatedReadMin: 12
+concepts: [algorithme-stl, foncteur, tri-comparateur, priority-queue]
+source: "Cours 7 — Templates & STL"
+---
+
+## Des algorithmes prêts à l'emploi
+
+On sait stocker des données (les conteneurs) et les parcourir (les itérateurs). Reste à les **traiter** : trier, chercher, compter… La STL fournit pour cela une bibliothèque d'**algorithmes**.
+
+> Un **algorithme** de la STL est une **fonction template** qui agit sur une **collection d'éléments**, en travaillant à travers des **itérateurs**. L'algorithme ne connaît pas le conteneur : il reçoit deux itérateurs délimitant l'intervalle à traiter — typiquement `c.begin()` et `c.end()`.
+
+Comme un algorithme ne manipule que des itérateurs, **le même algorithme fonctionne sur n'importe quel conteneur**. Les algorithmes sont dans l'en-tête `<algorithm>`.
+
+```cpp
+#include <algorithm>
+#include <vector>
+#include <list>
+
+std::vector<int> v {1, 3, 1, 5, 1};
+int n = std::count(v.begin(), v.end(), 1);    // nombre d'éléments égaux à 1  -> 3
+
+std::list<double> l;
+int m = std::count(l.begin(), l.end(), 3.5);  // même algorithme, conteneur différent
+```
+
+## Quelques algorithmes courants
+
+| Algorithme | Rôle |
+|---|---|
+| `std::sort(deb, fin)` | trie l'intervalle (itérateurs à accès direct requis) |
+| `std::find(deb, fin, val)` | renvoie un itérateur sur la 1re occurrence de `val`, ou `fin` si absente |
+| `std::count(deb, fin, val)` | compte les éléments égaux à `val` |
+| `std::for_each(deb, fin, f)` | applique la fonction `f` à chaque élément |
+| `std::copy(deb, fin, dest)` | recopie l'intervalle vers `dest` |
+| `std::max_element` / `std::min_element` | itérateur sur le plus grand / plus petit élément |
+
+```cpp
+std::vector<int> v {4, 2, 7, 1, 9};
+
+std::sort(v.begin(), v.end());                       // v devient {1, 2, 4, 7, 9}
+
+auto it = std::find(v.begin(), v.end(), 7);          // recherche la valeur 7
+if (it != v.end())
+    std::cout << "7 trouvé\n";                       // it != end() => présent
+```
+
+> ⚠️ `std::find` renvoie **toujours** un itérateur. Pour savoir si la valeur a été trouvée, on **compare le résultat à `end()`** : si l'itérateur renvoyé vaut `end()`, l'élément est absent. Ne jamais déréférencer le résultat sans avoir fait ce test.
+
+## Les foncteurs : un objet qui se comporte comme une fonction
+
+Beaucoup d'algorithmes ont besoin qu'on leur fournisse un **comportement** : selon quel critère trier ? quelle propriété tester ? Ce comportement est passé en argument sous la forme d'un **foncteur**.
+
+> Un **foncteur** (*function object*, objet-fonction) est un **objet qui se comporte comme une fonction**. C'est une classe qui **surcharge l'opérateur d'appel `operator()`**. On peut alors « appeler » une instance de cette classe comme on appellerait une fonction.
+
+Voici l'exemple `addition.h` du cours — une classe dont la seule méthode est `operator()` :
+
+```cpp
+class Addition {
+public:
+    int operator()(int a, int b) {   // surcharge de l'opérateur d'appel ()
+        return a + b;
+    }
+};
+```
+
+Cette classe n'a **aucun attribut** et une seule méthode. Comme il n'y a pas d'attribut à initialiser, le **constructeur par défaut suffit**. On l'utilise ainsi :
+
+```cpp
+#include "addition.h"
+
+int main() {
+    Addition add;                    // add est un objet
+    int a = 2, b = 3;
+    std::cout << a << " + " << b << " = " << add(a, b) << '\n';   // affiche : 2 + 3 = 5
+}
+```
+
+`add(a, b)` ressemble à un appel de fonction, mais `add` est un **objet** : l'écriture `add(a, b)` déclenche `add.operator()(a, b)`. C'est en cela qu'un foncteur « se comporte comme une fonction ».
+
+## Pourquoi un foncteur plutôt qu'une fonction ?
+
+Un foncteur étant un objet, il peut posséder des **attributs**, comme n'importe quelle classe. Cela permet de créer une **fonction qui a une mémoire** : son comportement dépend d'un état conservé entre les appels. Le cours illustre avec le foncteur `Remplir`, qui renvoie un entier croissant à chaque appel :
+
+```cpp
+class Remplir {
+public:
+    Remplir(int i) : val(i) {}
+    int operator()() {       // pas d'argument : la donnée est l'état interne
+        ++val;
+        return val;
+    }
+private:
+    int val;                 // l'état mémorisé entre deux appels
+};
+
+int main() {
+    std::vector<int> tab(10, 0);
+    Remplir f(0);
+    for (auto it = tab.begin(); it != tab.end(); ++it) {
+        *it = f();           // chaque appel renvoie 1, 2, 3, ... 10
+        std::cout << *it << '\n';
+    }
+}
+```
+
+Une fonction ordinaire ne pourrait pas faire cela proprement : elle n'a pas d'état propre. Le foncteur, lui, **emballe un comportement et une donnée** dans un même objet.
+
+## Foncteurs génériques et prédicats
+
+Un foncteur peut lui-même être une **classe template** — il devient **générique** : son type d'opérande est inconnu à la création. Et un foncteur particulièrement utile est le **prédicat**.
+
+> Un **prédicat** est un foncteur qui **renvoie un booléen**. Il sert à **tester une propriété** des éléments. Un prédicat à un argument teste un élément ; un prédicat à deux arguments **compare** deux éléments — c'est un **comparateur**.
+
+Le cours donne le foncteur générique `greater` — un comparateur « est plus grand que » :
+
+```cpp
+template <typename T>
+class greater {
+public:
+    bool operator()(const T& x, const T& y) const {
+        return x > y;
+    }
+};
+```
+
+> Ce `greater` n'est montré **que** pour illustrer comment se construit un foncteur comparateur générique : la STL fournit déjà exactement ce comparateur dans `<functional>` — on ne le redéfinit jamais soi-même. C'est pourquoi, en pratique, on écrit toujours le comparateur standard, `std::greater`.
+
+C'est ce comparateur qu'on passe à `std::sort` pour **changer le critère de tri**. Par défaut, `std::sort` trie en ordre **croissant** (il utilise `operator<`). En lui fournissant `greater<int>()` comme troisième argument, on trie en ordre **décroissant** :
+
+```cpp
+#include <algorithm>
+#include <functional>     // std::greater est fourni ici, prêt à l'emploi
+
+std::vector<int> v {1, 5, 2, 4, 3};
+
+std::sort(v.begin(), v.end(), std::greater<int>());   // ordre décroissant : {5, 4, 3, 2, 1}
+std::sort(v.begin(), v.end());                        // ordre croissant  : {1, 2, 3, 4, 5}
+```
+
+Le troisième argument est `std::greater<int>()` : on **instancie** le foncteur (les `()` créent un objet temporaire), et `sort` l'appellera pour comparer deux éléments. Changer ce foncteur, c'est changer le tri sans toucher à `sort`.
+
+## Les lambdas : un foncteur écrit en une ligne
+
+Définir une classe complète pour un comportement utilisé une seule fois est lourd. C++ moderne permet d'écrire un foncteur **à la volée**, directement à l'endroit où on en a besoin : c'est une **lambda**.
+
+```cpp
+std::vector<int> v {4, 2, 7, 1, 9};
+
+// tri décroissant avec une lambda — un foncteur anonyme défini sur place
+std::sort(v.begin(), v.end(), [](int a, int b) { return a > b; });
+
+// for_each avec une lambda : afficher chaque élément
+std::for_each(v.begin(), v.end(), [](int x) { std::cout << x << ' '; });
+```
+
+La syntaxe `[](paramètres) { corps }` produit un objet-fonction sans nom. `[ ]` est la **liste de capture** : elle indique quelles variables locales la lambda réutilise (vide ici). Une lambda et un foncteur jouent le même rôle ; la lambda est simplement la forme **concise** quand le comportement est court et local.
+
+## `std::priority_queue` avec un comparateur : l'ordonnanceur
+
+Le cas qui rassemble conteneur **et** foncteur est `std::priority_queue` — une **file de priorité** : à chaque instant, l'élément accessible (`top()`) est le **plus prioritaire**. C'est le conteneur choisi quand on veut « le plus gros élément en premier ».
+
+Sur des types simples, l'ordre va de soi :
+
+```cpp
+#include <queue>
+
+std::priority_queue<char> pq;
+pq.push('a'); pq.push('c'); pq.push('m'); pq.push('d'); pq.push('w');
+
+std::cout << pq.top() << '\n';        // 'w' : le plus grand caractère
+while (!pq.empty()) {
+    std::cout << pq.top() << ' ';     // sortie ordonnée : w m d c a
+    pq.pop();
+}
+```
+
+Mais pour des **objets**, le compilateur ne sait pas ce que « prioritaire » veut dire. Il faut le lui **dire avec un comparateur**. C'est l'exemple de l'ordonnanceur de processus du cours : chaque `Processus` a une `priority`, et la file doit servir le processus de plus forte priorité.
+
+```cpp
+class Processus {
+public:
+    Processus(int id, int p, int t) : id(id), priority(p), t(t) {}
+    int id;
+    int priority;     // priorité du processus
+    int t;            // durée restante
+};
+
+// foncteur comparateur : définit "moins prioritaire que"
+class Comparaison {
+public:
+    bool operator()(const Processus& p1, const Processus& p2) {
+        return p1.priority < p2.priority;     // priorité plus faible => passe après
+    }
+};
+```
+
+On instancie alors la `priority_queue` en lui passant **trois** paramètres template : le type des éléments, le conteneur sous-jacent, et le **type du foncteur comparateur**.
+
+```cpp
+std::priority_queue<Processus, std::vector<Processus>, Comparaison> pq;
+
+pq.push(Processus(1, 5, 100));
+pq.push(Processus(2, 9, 50));
+pq.push(Processus(3, 2, 200));
+
+while (!pq.empty()) {
+    Processus p = pq.top();      // toujours le processus de plus forte priorité
+    // ... traiter p ...
+    pq.pop();
+}
+```
+
+Le type `std::priority_queue<Processus, std::vector<Processus>, Comparaison>` se lit ainsi : une file de priorité **de `Processus`**, stockés dans un **`vector<Processus>`**, ordonnés selon le foncteur **`Comparaison`**. La `priority_queue` appelle `Comparaison::operator()` pour décider, à chaque `push`, où placer l'élément — et `top()` rend toujours le plus prioritaire.
+
+> C'est la synthèse du module : une **classe template** (`priority_queue`) instanciée avec un type métier (`Processus`), un **conteneur** (`vector`), et un **foncteur** (`Comparaison`) qui en paramètre le comportement. Templates, conteneurs, itérateurs, algorithmes et foncteurs forment un tout cohérent — la **programmation générique** en C++.
+
+> **À retenir**
+> - Un **algorithme** STL est une **fonction template** opérant sur un intervalle d'**itérateurs** (`begin()`, `end()`) — donc valable pour tout conteneur ; en-tête `<algorithm>`.
+> - Algorithmes courants : `sort`, `find`, `count`, `for_each`, `copy` ; `find` renvoie un itérateur qu'on **compare à `end()`** pour savoir si la valeur existe.
+> - Un **foncteur** est un **objet qui se comporte comme une fonction** : une classe qui surcharge **`operator()`** ; ayant des **attributs**, il peut avoir une mémoire (foncteur `Remplir`).
+> - Un **prédicat** est un foncteur renvoyant un `bool` ; à deux arguments c'est un **comparateur**, qu'on passe à `sort` pour changer le critère de tri (`std::greater<int>()` → ordre décroissant).
+> - Une **lambda** `[](...){...}` est un foncteur anonyme défini sur place — la forme concise pour un comportement court.
+> - **`std::priority_queue`** rend toujours l'élément le plus prioritaire (`top()`) ; pour des objets, on l'instancie avec un **foncteur comparateur** : `priority_queue<Processus, vector<Processus>, Comparaison>`.

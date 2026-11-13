@@ -1,0 +1,259 @@
+---
+title: "Le recuit simulé"
+slug: recuit-simule
+order: 3
+estimatedReadMin: 14
+concepts: [recuit-simule, energie, temperature, perturbation, equilibre-thermodynamique, metaheuristique, critere-de-metropolis]
+source: "Optimisationstochastique-1.pdf"
+---
+
+## Un peu de physique : le recuit des matériaux
+
+Le **recuit simulé** tire son nom — et son principe — d'une technique de la
+**physique des matériaux**. Avant d'en venir à l'algorithme, il faut comprendre cette
+analogie, car c'est elle qui en éclaire tout le fonctionnement.
+
+Le **recuit** est une technique qui permet d'**améliorer la qualité d'un matériau**.
+Elle procède en deux temps :
+
+1. on **porte le matériau à très haute température** pour le **liquéfier** ;
+2. on **abaisse progressivement la température** pour **stabiliser la structure** du
+   matériau.
+
+À haute température, le matériau est dans un **état « visqueux »** : la
+**configuration des particules est désordonnée** et l'**énergie du système est
+élevée**. La manière dont on refroidit ensuite ce matériau change tout :
+
+- un **refroidissement lent** — c'est la **technique du recuit** — conduit à un
+  **état solide cristallin**, qui correspond au **minimum global de l'énergie** ;
+- un **refroidissement très rapide** — c'est la **technique de la trempe** — conduit
+  à un **état solide amorphe**, qui ne correspond qu'à un **minimum local de
+  l'énergie**.
+
+| Technique | Refroidissement | État obtenu | Énergie |
+| --- | --- | --- | --- |
+| **Recuit** | **Lent** | Solide **cristallin** | **Minimum global** |
+| **Trempe** | Très **rapide** | Solide **amorphe** | Minimum **local** |
+
+Cette opposition est la **clé du module**. Refroidir **lentement** mène au **meilleur
+état possible** ; refroidir **trop vite** fige le matériau dans un état **médiocre**.
+On reconnaît déjà l'opposition **optimum global / optimum local** de la première
+section.
+
+> **À retenir** : le **recuit** physique chauffe un matériau puis le refroidit
+> **lentement** pour atteindre le **minimum global** d'énergie (état cristallin) ; un
+> refroidissement **trop rapide** (trempe) le fige dans un **minimum local** (état
+> amorphe).
+
+## Du recuit physique au recuit simulé
+
+Le **recuit simulé** (en anglais *Simulated Annealing*) **transpose** cette idée
+physique en un **algorithme d'optimisation**. Le cours en donne la fiche
+d'identité :
+
+- c'est une **métaheuristique**, variante de l'**algorithme de Metropolis-Hastings** ;
+- elle a été **proposée en 1983 par Kirkpatrick, Gelatt et Vecchi**, et **en 1985 par
+  Cerny** ;
+- c'est la **première métaheuristique** proposée ;
+- elle est **adaptée aux problèmes discrets** — son application d'origine était le
+  **placement de composants électroniques sur une plaque**.
+
+Le recuit simulé hérite donc des propriétés des métaheuristiques vues à la première
+section : il est **global**, **stochastique**, **générique**, et **ne garantit pas
+l'optimalité** de la solution renvoyée.
+
+> ⚠️ Le recuit simulé est **historiquement la première métaheuristique**. Il est
+> **adapté aux problèmes discrets** (placement de composants à l'origine, mais aussi
+> le TSP), tout en restant une méthode **générique**.
+
+## L'analogie, terme à terme
+
+Tout l'algorithme repose sur une **correspondance** entre le vocabulaire de la
+physique et celui de l'optimisation. Le cours l'établit point par point :
+
+- **la fonction `f` à minimiser est l'énergie du système** : minimiser `f`, c'est
+  chercher l'état de **plus basse énergie** ;
+- **une solution `X` représente un état du matériau** : explorer les solutions, c'est
+  parcourir les états possibles du matériau ;
+- **l'équilibre thermodynamique est atteint lors d'un palier de température** :
+  l'algorithme maintient la température **constante** un certain temps, le temps de
+  « stabiliser » le système à cette température ;
+- **à température `T`, une perturbation de la solution courante est acceptée de
+  manière probabiliste, selon le critère de Metropolis**.
+
+| Physique | Optimisation (recuit simulé) |
+| --- | --- |
+| Énergie du système | Fonction objectif `f` à **minimiser** |
+| État du matériau | Solution `X` |
+| Refroidissement lent | **Schéma de refroidissement** de `T` |
+| Palier de température | **Équilibre thermodynamique** (boucle interne) |
+| Agitation thermique | Acceptation **probabiliste** (critère de Metropolis) |
+
+Retenir cette table, c'est retenir l'algorithme : tout le recuit simulé en découle.
+
+> **À retenir** : l'analogie est **terme à terme** — `f` à minimiser ↔ **énergie**,
+> solution `X` ↔ **état du matériau**, palier de température ↔ **équilibre
+> thermodynamique**, et acceptation d'une **perturbation** ↔ agitation thermique
+> régie par le **critère de Metropolis**.
+
+## Les briques de l'algorithme
+
+Avant d'écrire l'algorithme complet, isolons ses **quatre briques fonctionnelles**.
+Chacune correspond à une fonction que le pseudo-code appellera.
+
+**La perturbation.** Elle **génère une nouvelle solution au voisinage** de la
+solution en cours. Trois caractéristiques, données par le cours :
+
+- elle produit une solution **dans le voisinage** de la solution courante ;
+- la **distance** entre les deux solutions (l'*hypervolume du voisinage*) a une
+  **influence** sur le comportement de l'algorithme ;
+- elle est **spécifique au problème** à résoudre — discret ou continu.
+
+Pour le **TSP**, la perturbation est typiquement l'**opérateur 2-opt** vu à la
+section précédente : l'inversion d'un sous-chemin, qui ne modifie que deux arêtes.
+
+**Le critère de Metropolis.** C'est la **règle d'acceptation probabiliste** : il
+décide si une solution voisine **dégradante** (moins bonne) est tout de même
+acceptée. La section suivante lui est entièrement consacrée ; pour l'instant, il
+suffit de savoir qu'il **autorise parfois d'accepter une solution moins bonne**.
+
+**L'équilibre thermodynamique.** C'est la **boucle interne**, exécutée **à
+température constante**. Le cours indique qu'elle permet de **« fouiller » autour
+d'une bonne solution en cours**. Elle se répète jusqu'à ce que :
+
+- le **nombre d'évaluations atteigne une limite** ;
+- ou qu'**il n'y ait plus d'amélioration depuis un certain nombre d'itérations**.
+
+**Le refroidissement.** C'est la **diminution de la température**, appliquée **entre
+deux paliers**. La section suivante en détaillera les différents schémas
+(géométrique, logarithmique, exponentiel) et l'effet du réglage.
+
+> **À retenir** : quatre briques — la **perturbation** (un voisin, spécifique au
+> problème), le **critère de Metropolis** (acceptation probabiliste), l'**équilibre
+> thermodynamique** (boucle interne à `T` constante) et le **refroidissement**
+> (baisse de `T` entre paliers).
+
+## L'algorithme du recuit simulé
+
+Voici l'**algorithme du recuit simulé**, à lire attentivement. On y reconnaît les
+quatre briques. Les éléments en jeu : `X` une solution, `f(X)` l'énergie du système,
+`T` la température initiale ; `X_min` et `f_min` mémorisent la **meilleure solution
+rencontrée**.
+
+```
+X, une solution, f(X) énergie du système, T température initiale
+f_min  <- f(X)
+X_min  <- X
+Tant que T > T_min ou non critèreConvergence()
+    Tant que non équilibreThermodynamique()        // palier de température
+        X_vois <- perturbation(X)
+        Δf = f(X_vois) - f(X)
+        Si Δf < 0 ou acceptationCritèreMétropolis(Δf, T) alors
+            Si Δf < 0 et f(X_vois) < f_min alors
+                f_min <- f(X_vois)
+                X_min <- X_vois
+            Fin si
+            f(X) <- f(X_vois)
+            X     <- X_vois
+        Fin si
+    Fin tant que
+    T <- refroidissement(T)
+Fin tant que
+```
+
+**Lecture pas à pas.**
+
+- On part d'une solution `X` et l'on **mémorise** son énergie comme meilleure connue
+  (`f_min`, `X_min`).
+- La **boucle externe** tourne **tant que la température n'a pas atteint `T_min`**
+  *et* que le **critère de convergence** n'est pas satisfait.
+- La **boucle interne** est le **palier de température** : elle tourne à `T`
+  **constante** jusqu'à l'**équilibre thermodynamique**.
+- À chaque itération interne, on **perturbe** `X` pour obtenir un voisin `X_vois`,
+  puis on calcule la **variation d'énergie** `Δf = f(X_vois) − f(X)`.
+- **Décision d'acceptation** : on accepte le voisin **si `Δf < 0`** (il améliore
+  l'énergie) **ou** si le **critère de Metropolis** l'accepte malgré tout (cas d'un
+  voisin dégradant).
+- **Mise à jour de la meilleure solution** : si le voisin **améliore** *et* fait
+  mieux que `f_min`, on met à jour `X_min` et `f_min`. La meilleure solution connue
+  n'est donc **jamais perdue**, même si l'algorithme accepte ensuite des solutions
+  dégradantes.
+- Si le voisin est accepté, il **devient la solution courante** `X`.
+- À la **fin de chaque palier**, on applique le **refroidissement** à `T`.
+
+> ⚠️ Distinguez la **solution courante `X`** et la **meilleure solution `X_min`**. `X`
+> peut **se dégrader** (le recuit accepte parfois des voisins moins bons) ; `X_min`,
+> elle, ne **garde que le meilleur** rencontré et ne se dégrade jamais.
+
+## Une variante équivalente de l'algorithme
+
+Le cours sur le TSP présente une **formulation plus compacte** du même algorithme,
+qu'il est utile de mettre en regard. Ici, `S` est la solution courante et `S*` la
+meilleure solution rencontrée :
+
+```
+Engendrer une solution initiale S
+S* = S
+T = température initiale (valeur arbitraire en général assez grande)
+Répéter
+    V = un voisin S
+    Si f(V) < f(S) ou aleat() < metropolis(V, S, T) alors S = V
+    Si f(S) < f(S*) alors S* = S
+    Mettre à jour T
+Jusqu'à condition de fin
+Retourner S*
+```
+
+C'est **le même algorithme**, avec deux remarques :
+
+- la **température initiale** est en général **assez grande** — ce qui, on le verra,
+  autorise au départ une **forte exploration** ;
+- la **mise à jour de la meilleure solution** (`S*`) suit directement l'acceptation
+  du voisin ; l'algorithme **renvoie `S*`**, et non la solution courante finale.
+
+Les deux versions s'accordent sur l'essentiel : **perturber**, **décider** d'accepter
+(amélioration **ou** critère de Metropolis), **mémoriser le meilleur**, **refroidir**,
+**recommencer**.
+
+> **À retenir** : le recuit simulé **boucle** sur quatre actions — *perturber* une
+> solution, *décider* de l'accepter (`Δf < 0` **ou** Metropolis), *mémoriser* la
+> meilleure solution rencontrée, *refroidir* — et **renvoie la meilleure** solution
+> trouvée, pas la dernière.
+
+## Pourquoi accepter une solution moins bonne ?
+
+Un point peut surprendre : le recuit simulé **accepte parfois des solutions moins
+bonnes** que la solution courante. Pourquoi se « dégrader » volontairement ?
+
+La réponse tient à l'opposition **recuit / trempe**. Un algorithme qui n'accepterait
+**jamais** de solution dégradante descendrait *tout droit* au fond du premier creux
+rencontré — et y resterait **piégé** : c'est le comportement de la **trempe**, qui
+fige le matériau dans un **minimum local**. En **acceptant parfois de remonter la
+pente**, le recuit simulé peut **sortir d'un optimum local** et aller chercher un
+creux plus profond, c'est-à-dire le **minimum global**.
+
+C'est exactement le rôle du **critère de Metropolis** : doser, de manière
+**probabiliste**, ces acceptations dégradantes — beaucoup au début (forte
+exploration), de moins en moins ensuite (exploitation fine). La section suivante
+détaille ce critère et son réglage.
+
+## Synthèse de la section
+
+Le **recuit simulé** transpose le **recuit physique des matériaux** : on chauffe puis
+on refroidit **lentement** pour atteindre le **minimum global** d'énergie — par
+opposition à la **trempe**, qui fige le matériau dans un **minimum local**.
+Métaheuristique **proposée en 1983** (Kirkpatrick, Gelatt, Vecchi) et **1985**
+(Cerny), variante de **Metropolis-Hastings** et **première métaheuristique** de
+l'histoire, il est **adapté aux problèmes discrets**. L'analogie est **terme à
+terme** : `f` à minimiser ↔ **énergie**, solution ↔ **état du matériau**, palier ↔
+**équilibre thermodynamique**. L'algorithme **boucle** : une **boucle externe** sur la
+température et une **boucle interne** (le **palier**) à `T` constante ; à chaque
+itération il **perturbe** la solution, calcule `Δf`, **accepte** le voisin si
+`Δf < 0` **ou** si le **critère de Metropolis** le permet, **mémorise la meilleure
+solution** (`X_min` / `S*`), puis **refroidit** entre paliers. Accepter parfois une
+solution **dégradante** est ce qui permet de **s'échapper des optima locaux**.
+
+> **À retenir** : recuit simulé = recuit physique transposé ; boucle **externe**
+> (température) + boucle **interne** (palier à `T` constante) ; à chaque pas :
+> **perturber**, **accepter** (`Δf < 0` ou Metropolis), **mémoriser le meilleur**,
+> **refroidir** ; les acceptations dégradantes servent à **fuir les optima locaux**.

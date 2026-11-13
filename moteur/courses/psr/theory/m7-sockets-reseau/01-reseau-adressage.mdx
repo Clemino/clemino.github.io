@@ -1,0 +1,393 @@
+---
+title: "Modèle client/serveur, adressage et endianness"
+slug: reseau-adressage
+order: 1
+estimatedReadMin: 22
+concepts: [socket, modele-client-serveur, descripteur-socket, af-inet, af-unix, sock-stream, sock-dgram, socket-primitive, adresse-ip, port, sockaddr-in, sockaddr-generique, boutisme, boutisme-reseau, htons-htonl, ntohs-ntohl, inet-aton, inet-ntoa, inet-pton-ntop, inaddr-any, bouclage-loopback, gethostname, gethostbyname]
+source: "Cours 5 — Sockets et programmation réseau"
+---
+
+Les six premiers modules ont fait communiquer des processus **sur une même machine** : tubes, signaux, files de messages, mémoire partagée. Ce dernier module franchit la frontière de la machine. Avec les **sockets**, deux processus situés sur des **ordinateurs différents**, reliés par un **réseau**, peuvent dialoguer. Ce premier chapitre pose les fondations : ce qu'est une socket, comment on **désigne** une machine et un service sur Internet, et le piège du **boutisme** (endianness) — l'ordre des octets — qu'il faut maîtriser avant d'écrire la moindre ligne de code réseau.
+
+## Communiquer entre machines : le modèle client/serveur
+
+Sur une seule machine, le FIFO du Module 4 nous a déjà donné le **schéma client/serveur** : un serveur attend, des clients le sollicitent. Le réseau reprend **exactement** ce modèle, à l'échelle d'Internet.
+
+> Le **modèle client/serveur** est le paradigme de communication entre processus le plus répandu. Un **serveur** est un processus rendant un **service** précis, installé puis **mis en attente** sur une **machine bien identifiée** du réseau. Un **client** est un processus qui **appelle** le serveur pour obtenir ce service ; il est lancé **à la demande**, depuis **n'importe quelle** machine.
+
+Le dialogue est un échange **requête / réponse** : le client envoie une **requête**, le serveur la traite et renvoie une **réponse**. C'est le fonctionnement d'un navigateur web et d'un serveur web, d'un client de messagerie et d'un serveur de mail, etc.
+
+```text
+   [ Machine A ]                              [ Machine B ]
+                       requête  ----->
+      CLIENT                                     SERVEUR
+                       <-----  réponse
+```
+
+La difficulté nouvelle est la **désignation** : sur une seule machine, un chemin (`/tmp/service`) suffisait à nommer le point de rendez-vous. À travers un réseau, il faut désigner **deux choses** : **quelle machine** parmi des millions, et **quel service** sur cette machine.
+
+## Qu'est-ce qu'une socket ?
+
+> Une **socket** (en français *prise*) est un **point de communication** — une **extrémité** — par lequel un processus peut **émettre** et **recevoir** des données à destination ou en provenance d'un autre processus. Les sockets constituent une **A.P.I.** (*Application Programming Interface*) : un ensemble de **primitives** permettant aux applications d'accéder au réseau.
+
+Deux idées importantes dès maintenant.
+
+- **La socket prolonge le modèle « fichier » d'UNIX.** L'A.P.I. socket a été conçue pour **ressembler** à la gestion des fichiers UNIX, et elle **réutilise** des appels système déjà connus. Une socket est désignée par un **descripteur** — un `int` — exactement comme un fichier ou un tube. Une fois la connexion établie, on peut **lire** et **écrire** sur une socket avec les `read` et `write` habituels.
+- **Une socket est une extrémité locale.** Une socket vit **dans un seul processus, sur une seule machine**. Une communication réseau met en jeu **deux** sockets : une chez le client, une chez le serveur. Le réseau relie ces deux extrémités.
+
+L'A.P.I. socket est **générique** : elle ne dépend pas d'un protocole particulier. Le **domaine** et le **type** choisis à la création décident du protocole réellement utilisé.
+
+## Les domaines : familles d'adresses
+
+Le **domaine** (ou **famille d'adresses**) fixe l'**univers** dans lequel la socket communique — et donc la **forme des adresses** employées. Les deux domaines au programme :
+
+| Domaine | Univers | Adresses |
+|---|---|---|
+| **`AF_INET`** | **Internet** (IPv4) | adresse IP + numéro de port |
+| **`AF_UNIX`** | machine **locale** | un chemin dans le système de fichiers |
+
+- **`AF_INET`** (*Address Family INET*, pour *Internet*) — le domaine **Internet** en version 4. C'est **celui de tout ce module** : il permet la communication **entre machines** distinctes. (`AF_INET6` est son équivalent pour IPv6, hors programme.)
+- **`AF_UNIX`** (aussi `AF_LOCAL`) — un domaine **local** : les deux processus sont sur la **même machine** et la socket est désignée par un **chemin de fichier**. C'est une alternative au FIFO, qui ne sort pas de la machine.
+
+> ⚠️ On rencontre aussi les noms **`PF_INET`** et **`PF_UNIX`** (*Protocol Family*). Historiquement, `AF_*` désignait la famille d'**adresses** et `PF_*` la famille de **protocoles**. En pratique, sur tous les systèmes courants, **`AF_INET == PF_INET`** : les deux sont interchangeables. Ce module emploie systématiquement les noms **`AF_*`**.
+
+## Les types : mode connecté ou non connecté
+
+Le **type** de la socket fixe le **mode de transport** des données — et, dans le domaine `AF_INET`, **quel protocole** de transport est utilisé :
+
+| Type | Mode | Protocole (`AF_INET`) | Étudié au |
+|---|---|---|---|
+| **`SOCK_STREAM`** | **connecté**, flot d'octets fiable | **TCP** | chapitres 2-3 |
+| **`SOCK_DGRAM`** | **non connecté**, datagrammes | **UDP** | chapitre 4 |
+
+- **`SOCK_STREAM`** — transport en **mode connecté**. Une **connexion** est d'abord établie entre les deux extrémités ; les données circulent ensuite comme un **flot d'octets** continu et **fiable**. Dans le domaine `AF_INET`, c'est le protocole **TCP** qui est employé.
+- **`SOCK_DGRAM`** — transport en **mode non connecté**. **Aucune connexion** préalable : les données voyagent en **datagrammes** indépendants. Dans le domaine `AF_INET`, c'est le protocole **UDP**.
+
+Il existe d'autres types (`SOCK_RAW` pour l'accès direct aux paquets IP, `SOCK_SEQPACKET`…), hors programme. Tout ce module se concentre sur les deux types ci-dessus : **TCP** (`SOCK_STREAM`) et **UDP** (`SOCK_DGRAM`).
+
+## Créer une socket : `socket()`
+
+Toute communication réseau commence par la création d'une socket avec la primitive **`socket()`** :
+
+```c
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int socket(int domain, int type, int protocol);
+```
+
+Ses trois paramètres :
+
+- **`domain`** — le **domaine** de communication : `AF_INET`, `AF_UNIX`… ;
+- **`type`** — le **mode** : `SOCK_STREAM` (TCP) ou `SOCK_DGRAM` (UDP) ;
+- **`protocol`** — le **protocole** précis. La valeur **`0`** demande au système de choisir le protocole **le mieux adapté** au type indiqué — ce qui est l'usage **quasi systématique**. Avec `0`, `SOCK_STREAM` donne TCP et `SOCK_DGRAM` donne UDP.
+
+`socket()` renvoie le **descripteur** de la socket créée (un `int` ≥ 0), ou **`-1`** en cas d'erreur (avec `errno` positionné).
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int main(void) {
+    /* une socket TCP dans le domaine Internet */
+    int sk_tcp = socket(AF_INET, SOCK_STREAM, 0);
+    if (sk_tcp == -1) { perror("socket TCP"); exit(EXIT_FAILURE); }
+
+    /* une socket UDP dans le domaine Internet */
+    int sk_udp = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sk_udp == -1) { perror("socket UDP"); exit(EXIT_FAILURE); }
+
+    printf("sockets creees : TCP=%d, UDP=%d\n", sk_tcp, sk_udp);
+    return 0;
+}
+```
+
+À ce stade, la socket **existe** mais n'est **pas encore utilisable** : elle n'est associée à **aucune adresse**. C'est l'objet des chapitres suivants — et de la notion d'adresse, que nous abordons maintenant.
+
+## Adresser une machine et un service : IP et port
+
+Sur Internet, désigner l'autre extrémité d'une communication exige **deux** informations.
+
+### L'adresse IP : quelle machine
+
+Chaque machine connectée à Internet possède une **adresse IP** (*Internet Protocol*) **unique**, codée sur **32 bits** (en IPv4). Elle contient assez d'information pour identifier de façon unique un **réseau** et un **ordinateur** sur ce réseau.
+
+On l'écrit pour les humains en **notation pointée** : quatre octets en décimal séparés par des points, par exemple `132.227.104.15` ou `193.49.30.38`. Chaque nombre va de 0 à 255 (un octet).
+
+### Le port : quel service
+
+Une même machine héberge souvent **plusieurs services** (un serveur web, un serveur de mail…). L'adresse IP ne suffit donc pas : il faut préciser **lequel**. C'est le rôle du **numéro de port**, un entier sur **16 bits** (de 0 à 65535).
+
+> Le couple **(adresse IP, port)** identifie de façon **unique** une extrémité de communication sur Internet : l'**IP** désigne la **machine**, le **port** désigne le **service** sur cette machine.
+
+Les ports **inférieurs à 1024** sont **réservés** aux services standard (port 80 pour le web, 22 pour SSH…) et leur usage exige des privilèges. Pour ses propres serveurs, on choisit un numéro de port **libre**, **≥ 1024**.
+
+### Les noms de domaine
+
+Une adresse IP numérique est peu commode pour un humain. Le **nom de domaine** (`www.formadep.fr`) en est la forme **symbolique**, organisée **hiérarchiquement** : nom de la machine hôte (`www`), sous-domaine, organisation, pays. Un service appelé le **DNS** traduit les noms de domaine en adresses IP — c'est le rôle de `gethostbyname`, vu plus bas.
+
+## La structure d'adresse : `struct sockaddr_in`
+
+Pour transmettre un couple (IP, port) aux primitives socket, le domaine `AF_INET` impose une **structure** dédiée, **`struct sockaddr_in`**, décrite dans l'en-tête **`<netinet/in.h>`** :
+
+```c
+struct in_addr {
+    in_addr_t s_addr;         /* adresse IP, sur 32 bits, en ordre RESEAU */
+                              /* in_addr_t est un entier non signe de 32 bits (uint32_t) */
+};
+
+struct sockaddr_in {
+    short          sin_family;   /* famille d'adresses : AF_INET            */
+    unsigned short sin_port;     /* numero de port, sur 16 bits, ordre RESEAU */
+    struct in_addr sin_addr;     /* adresse IP de la machine                */
+    char           sin_zero[8];  /* remplissage : 8 octets a zero           */
+};
+```
+
+Les trois champs à remplir :
+
+- **`sin_family`** — la **famille** : toujours **`AF_INET`** ici ;
+- **`sin_port`** — le **numéro de port**, sur 16 bits, qui doit être en **ordre réseau** (voir plus bas) ;
+- **`sin_addr`** — l'**adresse IP**, encapsulée dans une `struct in_addr` dont le seul champ `s_addr` contient les 32 bits de l'adresse, eux aussi en **ordre réseau**.
+
+Le champ `sin_zero[8]` n'a pas de signification : c'est un **remplissage** qui aligne la taille de `sockaddr_in` sur celle de la structure générique `sockaddr` (voir ci-dessous). On le met **à zéro** — d'où l'habitude d'effacer toute la structure avec `memset` avant de la remplir.
+
+### La structure générique `struct sockaddr`
+
+Les primitives socket (`bind`, `connect`, `accept`…) sont **génériques** : elles doivent fonctionner pour **tous** les domaines, pas seulement `AF_INET`. Leur prototype attend donc un pointeur vers une structure **générique**, **`struct sockaddr`** — et **non** vers `sockaddr_in`.
+
+`struct sockaddr_in` (Internet) et `struct sockaddr_un` (domaine UNIX) sont des structures **spécialisées**, conçues pour avoir la **même taille** et le **même premier champ** que `sockaddr`. On remplit donc une `sockaddr_in`, puis on la **transtype** (cast) en `struct sockaddr *` au moment de l'appel :
+
+```c
+struct sockaddr_in adresse;
+/* ... remplissage de adresse ... */
+
+/* cast obligatoire vers la structure GENERIQUE attendue par bind() */
+bind(sk, (struct sockaddr *) &adresse, sizeof(adresse));
+```
+
+> ⚠️ Ce **cast `(struct sockaddr *)`** est **obligatoire** et apparaît dans **tous** les appels à `bind`, `connect`, `accept`, `sendto`, `recvfrom`. L'oublier provoque un avertissement (ou une erreur) du compilateur sur l'incompatibilité de pointeurs. On **remplit** une `sockaddr_in`, mais on **passe** un `(struct sockaddr *)`. La taille passée en dernier argument reste, elle, `sizeof(struct sockaddr_in)`.
+
+## Le piège du boutisme : ordre des octets
+
+Voici le point le plus subtil — et le plus piégeux — de la programmation réseau.
+
+### Big endian, little endian
+
+Un entier sur plusieurs octets peut être rangé en mémoire de **deux façons** opposées :
+
+- **gros-boutiste** (*big endian*) : l'octet de **poids fort** d'abord ;
+- **petit-boutiste** (*little endian*) : l'octet de **poids faible** d'abord.
+
+La représentation choisie dépend de l'**architecture du processeur** :
+
+- les machines **x86 / x86-64** (Windows, Linux, macOS sur Intel/AMD) sont **petit-boutistes** ;
+- le **réseau Internet**, lui, impose un **standard universel** : le **gros-boutiste**. C'est l'**ordre réseau** (*network byte order*).
+
+Exemple : l'adresse IP `132.227.70.77` se code sur 32 bits.
+
+| Représentation | Octets |
+|---|---|
+| **Big endian** (ordre réseau) | `84 E3 46 4D` |
+| **Little endian** (machine x86) | `4D 46 E3 84` |
+
+Si une machine petit-boutiste envoie le port `8080` sans précaution, la machine d'en face — ou le réseau — lira un **autre nombre**. Le résultat : la connexion vise un **mauvais port**, ou échoue.
+
+> Tout nombre destiné à **circuler sur le réseau** — en pratique le **numéro de port** (`sin_port`) et l'**adresse IP** (`sin_addr`) — doit être placé en **ordre réseau** avant l'envoi, et reconverti en **ordre machine** à la réception. La conversion est **obligatoire**, même sur une machine déjà gros-boutiste (où elle ne fait simplement rien) : c'est ce qui rend le code **portable**.
+
+### Les fonctions de conversion : `htons`, `htonl`, `ntohs`, `ntohl`
+
+L'en-tête **`<arpa/inet.h>`** fournit quatre fonctions de conversion. Leurs noms se lisent : **h**ost (machine) / **n**etwork (réseau) / **s**hort (16 bits) / **l**ong (32 bits).
+
+| Fonction | Signification | Usage |
+|---|---|---|
+| **`htons`** | **h**ost **to** **n**etwork **s**hort | machine → réseau, **16 bits** : les **ports** |
+| **`htonl`** | **h**ost **to** **n**etwork **l**ong | machine → réseau, **32 bits** : les **adresses IP** |
+| **`ntohs`** | **n**etwork **to** **h**ost **s**hort | réseau → machine, **16 bits** |
+| **`ntohl`** | **n**etwork **to** **h**ost **l**ong | réseau → machine, **32 bits** |
+
+Le moyen mnémotechnique : on **lit le nom dans le sens de la conversion**. `htons` = *host to network short* convertit un **port** (16 bits) du format machine vers le format réseau.
+
+```c
+#include <stdio.h>
+#include <arpa/inet.h>
+
+int main(void) {
+    /* AVANT envoi : du format machine vers le format reseau */
+    unsigned short port        = 8080;
+    unsigned short port_reseau = htons(port);    /* port en ordre reseau */
+
+    /* APRES reception : du format reseau vers le format machine */
+    unsigned short port_recu = ntohs(port_reseau);
+
+    printf("port machine : %u\n", port);         /* 8080 */
+    printf("port recu apres ntohs : %u\n", port_recu); /* 8080 */
+    return 0;
+}
+```
+
+> ⚠️ **Oublier `htons` sur le port est l'erreur de débutant numéro un.** Le champ `sin_port` doit **toujours** recevoir une valeur passée par `htons` : `adresse.sin_port = htons(8080);`. Écrire `adresse.sin_port = 8080;` directement « marche » parfois par hasard (port symétrique en binaire) mais reste **faux** : sur une machine petit-boutiste, le serveur écoutera sur un **autre port** que celui prévu, et le client ne le trouvera pas. La règle est sans exception : **port → `htons`**, **adresse IP → ordre réseau**.
+
+## Conversion d'adresses : de la notation pointée aux 32 bits
+
+Les fonctions précédentes convertissent des nombres **bruts**. Mais une adresse IP est, pour l'humain, une **chaîne** comme `"127.0.0.1"`. Il faut traduire cette chaîne en les 32 bits attendus par `sin_addr` — et inversement.
+
+### De la chaîne vers le binaire : `inet_aton` et `inet_addr`
+
+```c
+#include <arpa/inet.h>
+
+int          inet_aton(const char *chaine, struct in_addr *adr);
+in_addr_t    inet_addr(const char *chaine);
+```
+
+- **`inet_aton`** (*ASCII to network*) — convertit une chaîne en notation pointée (`"193.49.30.38"`) en une `struct in_addr` (donc directement en **ordre réseau**). Elle renvoie une valeur **non nulle** en cas de succès, **`0`** si la chaîne est invalide. C'est la fonction **recommandée**, et celle que l'on retrouve dans les sujets d'examen.
+- **`inet_addr`** — joue le même rôle mais renvoie directement l'adresse 32 bits (ordre réseau). Son défaut : elle renvoie `INADDR_NONE` (la valeur `(in_addr_t) -1`) en cas d'erreur, **valeur qui se confond** avec l'adresse de diffusion `255.255.255.255` — d'où la préférence pour `inet_aton`.
+
+```c
+struct sockaddr_in serveur;
+serveur.sin_family = AF_INET;
+serveur.sin_port   = htons(8080);
+
+/* remplit serveur.sin_addr a partir de la chaine pointee */
+if (inet_aton("193.49.30.38", &serveur.sin_addr) == 0) {
+    fprintf(stderr, "adresse IP invalide\n");
+    exit(EXIT_FAILURE);
+}
+```
+
+### Du binaire vers la chaîne : `inet_ntoa`
+
+```c
+#include <arpa/inet.h>
+
+char *inet_ntoa(struct in_addr adr);
+```
+
+**`inet_ntoa`** (*network to ASCII*) fait l'inverse : elle prend une `struct in_addr` et renvoie la chaîne pointée correspondante (`"193.49.30.38"`), pratique pour **afficher** l'adresse d'un correspondant.
+
+```c
+struct in_addr adr;
+inet_aton("132.227.70.77", &adr);
+printf("adresse : %s\n", inet_ntoa(adr));   /* affiche 132.227.70.77 */
+```
+
+> ⚠️ `inet_ntoa` renvoie un pointeur vers un **tampon interne statique**, **réécrit** à chaque appel. On ne **conserve pas** ce pointeur ; si l'on a besoin de garder la chaîne, on la **recopie** aussitôt (`strcpy`). Deux `inet_ntoa` dans un même `printf` afficheraient **deux fois la même** adresse.
+
+### Les fonctions modernes : `inet_pton` et `inet_ntop`
+
+`inet_aton` et `inet_ntoa` ne gèrent **que l'IPv4**. Les fonctions modernes **`inet_pton`** (*presentation to network*) et **`inet_ntop`** (*network to presentation*) jouent les mêmes rôles mais gèrent **aussi l'IPv6** et n'utilisent **pas** de tampon statique. Pour ce module — centré sur IPv4 et calé sur le cours — on emploie `inet_aton` / `inet_ntoa`, mais il est bon de connaître l'existence de leurs successeurs.
+
+## Deux adresses spéciales : `INADDR_ANY` et le bouclage
+
+Deux valeurs d'adresse reviennent constamment.
+
+- **`INADDR_ANY`** — une constante (l'adresse `0.0.0.0`) qui signifie **« n'importe quelle adresse locale »**. Un **serveur** l'emploie pour `sin_addr` : il accepte alors les connexions arrivant par **n'importe quelle interface réseau** de sa machine, sans avoir à connaître ni à coder en dur son propre IP. C'est l'usage **standard** côté serveur.
+- **L'adresse de bouclage** **`127.0.0.1`** (la *loopback*) — une adresse spéciale qui désigne **la machine locale elle-même**. Un client visant `127.0.0.1` parle à un serveur tournant sur **le même ordinateur**, sans aucun trafic réseau réel. C'est l'adresse idéale pour **tester** un client et un serveur sur une même machine — exactement le cadre des **sujets d'examen** sur les sockets.
+
+```c
+/* COTE SERVEUR : ecouter sur toutes les interfaces locales */
+adresse.sin_addr.s_addr = htonl(INADDR_ANY);
+
+/* COTE CLIENT : viser un serveur tournant sur la meme machine */
+inet_aton("127.0.0.1", &adresse.sin_addr);
+```
+
+> ⚠️ `INADDR_ANY` est un **nombre** (la valeur 0) ; bien qu'il vaille 0 — et qu'une conversion de 0 ne change rien — l'usage propre et portable reste **`htonl(INADDR_ANY)`** pour rester cohérent avec la règle « toute adresse IP passe en ordre réseau ». Ne pas confondre `INADDR_ANY` (côté **serveur**, « écoute partout ») avec `127.0.0.1` (une **adresse précise**, la machine locale, utile côté **client** pour les tests).
+
+## Résolution de noms : du nom de machine à l'adresse
+
+Coder une adresse IP en dur n'est pas toujours souhaitable. Deux fonctions permettent de manipuler les **noms** de machines.
+
+### Connaître le nom de la machine locale : `gethostname`
+
+```c
+#include <unistd.h>
+
+int gethostname(char *nom, size_t taille);
+```
+
+**`gethostname`** écrit le **nom de la machine locale** dans le tampon `nom` (tronqué à `taille` caractères). Elle renvoie `0` en cas de succès, `-1` sinon.
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+
+int main(void) {
+    char nom[256];
+    if (gethostname(nom, sizeof(nom)) == 0)
+        printf("nom d'hote : %s\n", nom);
+    else
+        perror("gethostname");
+    return 0;
+}
+```
+
+### Résoudre un nom en adresse IP : `gethostbyname`
+
+```c
+#include <netdb.h>
+
+struct hostent *gethostbyname(const char *nom);
+```
+
+**`gethostbyname`** **résout** un nom de machine (`"www.google.com"`) en adresse(s) IP, en interrogeant le **DNS**. Elle renvoie un pointeur vers une `struct hostent`, ou **`NULL`** en cas d'échec.
+
+```c
+struct hostent {
+    char  *h_name;        /* nom officiel de l'hote        */
+    char **h_aliases;     /* liste d'alias                 */
+    int    h_addrtype;    /* type d'adresse (AF_INET)      */
+    int    h_length;      /* longueur d'une adresse        */
+    char **h_addr_list;   /* liste des adresses IP         */
+};
+```
+
+Le champ utile est `h_addr_list[0]` : la **première adresse IP** trouvée. On la transtype en `struct in_addr *` pour la lire ou l'afficher :
+
+```c
+#include <stdio.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+
+int main(void) {
+    struct hostent *h = gethostbyname("www.google.com");
+    if (h == NULL) { fprintf(stderr, "hote introuvable\n"); return 1; }
+
+    printf("nom officiel : %s\n", h->h_name);
+    /* la premiere adresse IP, convertie en chaine pour l'affichage */
+    struct in_addr *adr = (struct in_addr *) h->h_addr_list[0];
+    printf("adresse IP : %s\n", inet_ntoa(*adr));
+    return 0;
+}
+```
+
+La fonction symétrique **`gethostbyaddr`** fait l'inverse (résolution **DNS inverse** : d'une adresse IP vers un nom). De nos jours, ces fonctions sont remplacées par **`getaddrinfo`**, plus moderne, indépendante du protocole (IPv4/IPv6) et **réentrante** — mais `gethostbyname`, présente dans le cours, reste la référence des examens.
+
+> ⚠️ **`gethostbyname` ne positionne pas `errno`** : en cas d'échec elle renvoie `NULL` et place le code d'erreur dans la variable globale `h_errno` (à afficher avec `herror`). Ne pas tester son échec avec `perror`/`errno` comme pour un appel système ordinaire — tester simplement `if (h == NULL)`.
+
+## Récapitulatif des en-têtes
+
+La programmation socket éparpille ses déclarations dans plusieurs en-têtes ; les voici réunis :
+
+| En-tête | Fournit |
+|---|---|
+| `<sys/types.h>` | types de base |
+| `<sys/socket.h>` | `socket`, `bind`, `listen`, `accept`, `connect`, `send`, `recv`, `AF_INET`, `SOCK_STREAM`… |
+| `<netinet/in.h>` | `struct sockaddr_in`, `struct in_addr`, `INADDR_ANY` |
+| `<arpa/inet.h>` | `htons`, `htonl`, `ntohs`, `ntohl`, `inet_aton`, `inet_ntoa` |
+| `<netdb.h>` | `gethostbyname`, `gethostbyaddr`, `struct hostent` |
+| `<unistd.h>` | `gethostname`, `read`, `write`, `close` |
+
+> **À retenir**
+> - Le **modèle client/serveur** structure la communication réseau : un **serveur** attend sur une machine identifiée, des **clients** le sollicitent ; l'échange est **requête / réponse**.
+> - Une **socket** est un **point de communication** local, désigné par un **descripteur** (`int`) comme un fichier ; l'A.P.I. socket prolonge le modèle « fichier » d'UNIX et réutilise `read`/`write`.
+> - **`socket(domain, type, protocol)`** crée une socket. Le **domaine** `AF_INET` = Internet (IPv4), `AF_UNIX` = local. Le **type** `SOCK_STREAM` = **TCP** (connecté, fiable), `SOCK_DGRAM` = **UDP** (non connecté). Le protocole `0` laisse le système choisir.
+> - On désigne une extrémité par le couple **(adresse IP, port)** : l'**IP** (32 bits) identifie la **machine**, le **port** (16 bits) le **service**.
+> - La structure **`struct sockaddr_in`** (`sin_family` = `AF_INET`, `sin_port`, `sin_addr`) porte ce couple ; on la **transtype en `(struct sockaddr *)`** pour la passer aux primitives génériques.
+> - **Boutisme** : le réseau impose l'ordre **gros-boutiste**. Le **port** et l'**adresse IP** doivent passer en **ordre réseau** : **`htons`** pour un port (16 bits), **`htonl`** pour une adresse (32 bits) ; **`ntohs`/`ntohl`** à la réception.
+> - **Conversion d'adresse** : **`inet_aton`** transforme `"193.49.30.38"` en `struct in_addr` ; **`inet_ntoa`** fait l'inverse (tampon statique, à recopier). `inet_pton`/`inet_ntop` sont les successeurs modernes (IPv4 + IPv6).
+> - **`INADDR_ANY`** = « toute interface locale » (côté **serveur**) ; **`127.0.0.1`** = la machine **locale** (bouclage, idéal pour **tester** client et serveur ensemble).
+> - **`gethostname`** donne le nom local ; **`gethostbyname`** résout un nom en adresse IP via le DNS (renvoie `NULL` si échec ; `getaddrinfo` est le successeur moderne).

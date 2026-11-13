@@ -1,0 +1,743 @@
+[
+ {
+  "chapterSlug": "obligation-sources",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Qu'est-ce qui distingue l'acte juridique du fait juridique ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La volonté de produire des effets de droit"
+    },
+    {
+     "id": "b",
+     "label": "La présence d'au moins deux parties"
+    },
+    {
+     "id": "c",
+     "label": "Le caractère volontaire du comportement"
+    },
+    {
+     "id": "d",
+     "label": "L'existence d'un dommage subi par autrui"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Un fait peut être volontaire (changer de domicile) sans que ses effets de droit soient voulus. L'acte juridique, lui, vise ces effets.",
+  "hint": "Un fait peut être voulu sans que ses conséquences juridiques le soient.",
+  "concepts": [
+   "acte-juridique",
+   "fait-juridique"
+  ],
+  "source": "CM, Section 1, §1 et §2 (p. 1) ; TD n° 1, doc. 1"
+ },
+ {
+  "chapterSlug": "obligation-sources",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel critère sépare l'acte juridique unilatéral du contrat ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'existence d'une contrepartie"
+    },
+    {
+     "id": "b",
+     "label": "L'accord de volontés"
+    },
+    {
+     "id": "c",
+     "label": "La forme écrite de l'acte"
+    },
+    {
+     "id": "d",
+     "label": "Le caractère gratuit de l'acte"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "Le contrat est un acte conventionnel : il suppose la rencontre d'au moins deux volontés.",
+  "hint": "Compte les volontés qui se rencontrent.",
+  "concepts": [
+   "acte-unilateral",
+   "definition-contrat"
+  ],
+  "source": "CM, Section 1, §1 et §2 (p. 1) ; TD n° 1, doc. 1"
+ },
+ {
+  "chapterSlug": "obligation-sources",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Un fait juridique se prouve en principe par écrit.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "C'est l'acte juridique qui se prouve en principe par écrit ; le fait juridique se prouve librement.",
+  "hint": "Compare le régime de preuve des deux catégories.",
+  "concepts": [
+   "fait-juridique",
+   "acte-juridique"
+  ],
+  "source": "CM, Section 1, §1 et §2 (p. 1) ; TD n° 1, doc. 1"
+ },
+ {
+  "chapterSlug": "obligation-sources",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque source d'obligation à un exemple.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Acte juridique unilatéral"
+    },
+    {
+     "id": "l1",
+     "label": "Contrat"
+    },
+    {
+     "id": "l2",
+     "label": "Quasi-contrat"
+    },
+    {
+     "id": "l3",
+     "label": "Obligation née de la loi"
+    },
+    {
+     "id": "l4",
+     "label": "Obligation naturelle"
+    }
+   ],
+   "right": [
+    {
+     "id": "r3",
+     "label": "Une obligation de voisinage"
+    },
+    {
+     "id": "r1",
+     "label": "Un bail"
+    },
+    {
+     "id": "r0",
+     "label": "Un testament"
+    },
+    {
+     "id": "r4",
+     "label": "Le secours alimentaire à un frère"
+    },
+    {
+     "id": "r2",
+     "label": "Le paiement de l'indu"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2",
+    "l3": "r3",
+    "l4": "r4"
+   }
+  },
+  "explanation": "Ce sont les exemples du schéma du TD n° 1 et du cours.",
+  "hint": "Demande-toi d'où vient l'obligation : une volonté, deux volontés, un fait, un texte, la conscience.",
+  "concepts": [
+   "acte-unilateral",
+   "quasi-contrat",
+   "obligation-legale",
+   "obligation-naturelle"
+  ],
+  "source": "CM, Section 1, §1 et §2 (p. 1) ; TD n° 1, doc. 1"
+ },
+ {
+  "chapterSlug": "obligation-sources",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "L'obligation naturelle devient obligatoire quand son débiteur l'exécute ou promet de l'exécuter.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Article 1100, alinéa 2 : le devoir de conscience accède à la vie civile par l'exécution ou la promesse d'exécution.",
+  "hint": "Pense au passage du devoir moral à l'obligation civile.",
+  "concepts": [
+   "obligation-naturelle"
+  ],
+  "source": "CM, Section 1, §1 et §2 (p. 1) ; TD n° 1, doc. 1"
+ },
+ {
+  "chapterSlug": "obligation-sources",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Lesquels de ces mécanismes sont des quasi-contrats ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'enrichissement injustifié"
+    },
+    {
+     "id": "b",
+     "label": "Le testament"
+    },
+    {
+     "id": "c",
+     "label": "Le paiement de l'indu"
+    },
+    {
+     "id": "d",
+     "label": "La gestion d'affaires"
+    },
+    {
+     "id": "e",
+     "label": "La réparation d'un dommage causé à autrui"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "c",
+    "d"
+   ]
+  },
+  "explanation": "Les trois quasi-contrats du code (art. 1300 et s.). Le testament est un acte unilatéral, la réparation d'un dommage relève de la responsabilité délictuelle.",
+  "hint": "Le quasi-contrat naît d'un fait purement volontaire, souvent profitable à autrui.",
+  "concepts": [
+   "quasi-contrat"
+  ],
+  "source": "CM, Section 1, §1 et §2 (p. 1) ; TD n° 1, doc. 1"
+ },
+ {
+  "chapterSlug": "obligation-sources",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "La résiliation unilatérale d'un contrat est un acte juridique unilatéral.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Le schéma du TD n° 1 la cite parmi les actes unilatéraux, avec le testament et la reconnaissance d'enfant.",
+  "hint": "Regarde le schéma du TD : combien de volontés interviennent ?",
+  "concepts": [
+   "acte-unilateral"
+  ],
+  "source": "CM, Section 1, §1 et §2 (p. 1) ; TD n° 1, doc. 1"
+ },
+ {
+  "chapterSlug": "obligation-sources",
+  "type": "FILL_BLANK",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Complète la définition de l'obligation.",
+  "payload": {
+   "template": "L'obligation est un lien de droit par lequel le {{a}} peut contraindre le {{b}} à exécuter une prestation ou une abstention.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "md"
+    },
+    {
+     "id": "b",
+     "width": "md"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "créancier"
+    ],
+    "b": [
+     "débiteur"
+    ]
+   }
+  },
+  "explanation": "Le créancier peut exiger, le débiteur doit.",
+  "hint": "Deux parties : celle qui peut exiger, celle qui doit.",
+  "concepts": [
+   "obligation"
+  ],
+  "source": "CM, Section 1, §1 et §2 (p. 1) ; TD n° 1, doc. 1"
+ },
+ {
+  "chapterSlug": "loteries-publicitaires",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quelle source d'obligation la Chambre mixte retient-elle le 6 septembre 2002 ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La responsabilité délictuelle"
+    },
+    {
+     "id": "b",
+     "label": "Le quasi-contrat"
+    },
+    {
+     "id": "c",
+     "label": "L'engagement unilatéral de volonté"
+    },
+    {
+     "id": "d",
+     "label": "Le contrat"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "Au visa de l'ancien article 1371, la Chambre mixte qualifie l'annonce du gain de fait purement volontaire, donc de quasi-contrat.",
+  "hint": "Le visa est l'ancien article 1371.",
+  "concepts": [
+   "quasi-contrat",
+   "annonce-gain"
+  ],
+  "source": "TD n° 1, doc. 2 à 7"
+ },
+ {
+  "chapterSlug": "loteries-publicitaires",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Selon l'attendu de 2002, quand l'organisateur d'une loterie doit-il délivrer le gain ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Si le gain annoncé dépasse 100 000 francs"
+    },
+    {
+     "id": "b",
+     "label": "Si le destinataire a passé commande"
+    },
+    {
+     "id": "c",
+     "label": "Si le destinataire a renvoyé dans les délais le bon de validation joint au courrier"
+    },
+    {
+     "id": "d",
+     "label": "S'il annonce un gain à une personne dénommée sans mettre en évidence un aléa"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "L'attendu tient en deux éléments : une personne dénommée, et un aléa qui n'est pas mis en évidence.",
+  "hint": "L'attendu vise à qui l'annonce est faite et ce qu'elle laisse dans l'ombre.",
+  "concepts": [
+   "annonce-gain"
+  ],
+  "source": "TD n° 1, doc. 2 à 7"
+ },
+ {
+  "chapterSlug": "loteries-publicitaires",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Selon l'arrêt du 10 juillet 2013, un règlement lisible au prix d'une certaine attention suffit à mettre l'aléa en évidence.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Cassation : l'annonce ne mettait pas en évidence l'aléa « à première lecture ». Un règlement en petits caractères ne suffit pas.",
+  "hint": "Relis l'expression de l'attendu sur la façon de lire l'annonce.",
+  "concepts": [
+   "annonce-gain"
+  ],
+  "source": "TD n° 1, doc. 2 à 7"
+ },
+ {
+  "chapterSlug": "loteries-publicitaires",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque arrêt à la source d'obligation retenue.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Civ. 1re, 28 mars 1995 (Inter-Selection)"
+    },
+    {
+     "id": "l1",
+     "label": "Civ. 2e, 28 juin 1995 (Ompex)"
+    },
+    {
+     "id": "l2",
+     "label": "Civ. 2e, 11 février 1998 (FDS)"
+    },
+    {
+     "id": "l3",
+     "label": "Ch. mixte, 6 septembre 2002 (MFD)"
+    }
+   ],
+   "right": [
+    {
+     "id": "r2",
+     "label": "Contrat formé par la rencontre des volontés"
+    },
+    {
+     "id": "r1",
+     "label": "Faute délictuelle"
+    },
+    {
+     "id": "r3",
+     "label": "Quasi-contrat"
+    },
+    {
+     "id": "r0",
+     "label": "Engagement unilatéral de volonté"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2",
+    "l3": "r3"
+   }
+  },
+  "explanation": "La Cour de cassation a sollicité toutes les sources avant de se fixer sur le quasi-contrat.",
+  "hint": "Suis la chronologie : une volonté seule, une faute, un accord, puis un fait volontaire.",
+  "concepts": [
+   "loteries-publicitaires"
+  ],
+  "source": "TD n° 1, doc. 2 à 7"
+ },
+ {
+  "chapterSlug": "loteries-publicitaires",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Pourquoi la responsabilité civile déçoit-elle dans le contentieux des loteries ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Elle est réservée aux litiges entre cocontractants"
+    },
+    {
+     "id": "b",
+     "label": "Elle indemnise un préjudice souvent bien inférieur au gain annoncé"
+    },
+    {
+     "id": "c",
+     "label": "Elle exige de prouver la volonté ferme de l'entreprise de payer"
+    },
+    {
+     "id": "d",
+     "label": "Elle interdit d'indemniser le préjudice moral"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "Tenu de réparer le seul préjudice, le juge accorde souvent bien moins que le lot promis : la sanction n'est pas dissuasive.",
+  "hint": "Compare ce qu'obtient la victime d'une faute et ce qu'elle croyait avoir gagné.",
+  "concepts": [
+   "loteries-publicitaires",
+   "fait-juridique"
+  ],
+  "source": "TD n° 1, doc. 2 à 7"
+ },
+ {
+  "chapterSlug": "loteries-publicitaires",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Dans l'arrêt Civad (1999), l'engagement unilatéral est écarté parce que les documents publicitaires étaient équivoques.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Les juges ont souverainement estimé les documents équivoques : la volonté certaine de s'engager faisait défaut.",
+  "hint": "Une volonté solitaire n'oblige que si elle est certaine.",
+  "concepts": [
+   "engagement-unilateral"
+  ],
+  "source": "TD n° 1, doc. 2 à 7"
+ },
+ {
+  "chapterSlug": "loteries-publicitaires",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel est l'intérêt du quasi-contrat pour le destinataire de l'annonce ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Obtenir l'intégralité du gain annoncé"
+    },
+    {
+     "id": "b",
+     "label": "Agir sans avoir à produire le courrier reçu"
+    },
+    {
+     "id": "c",
+     "label": "Obtenir des dommages-intérêts punitifs"
+    },
+    {
+     "id": "d",
+     "label": "Échapper à tout débat sur l'existence d'un aléa"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Le quasi-contrat évite le débat sur la fermeté de la volonté et contraint l'auteur de la promesse à la tenir.",
+  "hint": "Compare avec la réparation d'un simple préjudice.",
+  "concepts": [
+   "quasi-contrat",
+   "annonce-gain"
+  ],
+  "source": "TD n° 1, doc. 2 à 7"
+ },
+ {
+  "chapterSlug": "td-seance-1",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Selon D. Mazeaud, comment se caractérise le quasi-contrat dans sa conception classique ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Un accord de volontés tacite entre deux personnes"
+    },
+    {
+     "id": "b",
+     "label": "Une faute intentionnelle de son auteur"
+    },
+    {
+     "id": "c",
+     "label": "Une promesse faite dans un but commercial"
+    },
+    {
+     "id": "d",
+     "label": "Un fait volontaire spontané et désintéressé"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Le quasi-contrat classique rétablit un équilibre patrimonial rompu par un fait profitable à autrui, sur le fondement de l'équité.",
+  "hint": "Pense à celui qui gère les affaires d'autrui sans en avoir été chargé.",
+  "concepts": [
+   "quasi-contrat"
+  ],
+  "source": "TD n° 1, doc. 8 (D. Mazeaud) et doc. 9 (D. Fenouillet)"
+ },
+ {
+  "chapterSlug": "td-seance-1",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Pour D. Mazeaud, l'arrêt de 2002 fait du quasi-contrat une technique de sanction des promesses sans lendemain.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Le fait volontaire vient désormais du débiteur, il est intéressé : le quasi-contrat ne sert plus à compenser, mais à sanctionner.",
+  "hint": "Demande-toi ce que l'on reproche à l'entreprise.",
+  "concepts": [
+   "quasi-contrat",
+   "annonce-gain"
+  ],
+  "source": "TD n° 1, doc. 8 (D. Mazeaud) et doc. 9 (D. Fenouillet)"
+ },
+ {
+  "chapterSlug": "td-seance-1",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quelles pistes D. Fenouillet propose-t-elle pour lutter contre les loteries trompeuses ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Revenir à l'engagement unilatéral de volonté"
+    },
+    {
+     "id": "b",
+     "label": "Consacrer des dommages-intérêts punitifs"
+    },
+    {
+     "id": "c",
+     "label": "Supprimer la catégorie des quasi-contrats"
+    },
+    {
+     "id": "d",
+     "label": "Renforcer le droit spécial des loteries"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b",
+    "d"
+   ]
+  },
+  "explanation": "Elle demande au législateur de renforcer la gratuité et la séparation des bons, et suggère des dommages-intérêts punitifs.",
+  "hint": "Elle se tourne vers le législateur, puis vers la sanction elle-même.",
+  "concepts": [
+   "loteries-publicitaires"
+  ],
+  "source": "TD n° 1, doc. 8 (D. Mazeaud) et doc. 9 (D. Fenouillet)"
+ },
+ {
+  "chapterSlug": "td-seance-1",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque ancien article du code civil à sa nouvelle numérotation.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Ancien article 1371 (quasi-contrats)"
+    },
+    {
+     "id": "l1",
+     "label": "Ancien article 1382 (responsabilité délictuelle)"
+    },
+    {
+     "id": "l2",
+     "label": "Ancien article 1134, alinéa 1er (force obligatoire)"
+    },
+    {
+     "id": "l3",
+     "label": "Ancien article 1134, alinéa 3 (bonne foi)"
+    }
+   ],
+   "right": [
+    {
+     "id": "r2",
+     "label": "Article 1103"
+    },
+    {
+     "id": "r3",
+     "label": "Article 1104"
+    },
+    {
+     "id": "r0",
+     "label": "Article 1300"
+    },
+    {
+     "id": "r1",
+     "label": "Article 1240"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2",
+    "l3": "r3"
+   }
+  },
+  "explanation": "C'est l'exercice n° 3 de la séance : les nouveaux articles se trouvent dans le schéma du TD n° 1 et dans le TD n° 2, doc. 2.",
+  "hint": "La force obligatoire et la bonne foi se suivent au début du nouveau droit des contrats.",
+  "concepts": [
+   "quasi-contrat",
+   "force-obligatoire",
+   "bonne-foi"
+  ],
+  "source": "TD n° 1, doc. 1 et exercice 3 ; TD n° 2, doc. 2"
+ },
+ {
+  "chapterSlug": "td-seance-1",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "D. Mazeaud reproche à l'arrêt de 2002 de faire d'une source rare une source vague.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "« Qui trop embrasse, mal étreint » : la catégorie perd son homogénéité, et le débat se déplace sur l'existence de l'aléa.",
+  "hint": "Pense à la seconde partie de la note : « source hasardeuse ? ».",
+  "concepts": [
+   "quasi-contrat"
+  ],
+  "source": "TD n° 1, doc. 8 (D. Mazeaud) et doc. 9 (D. Fenouillet)"
+ },
+ {
+  "chapterSlug": "td-seance-1",
+  "type": "WRITING",
+  "difficulty": 3,
+  "points": 4,
+  "prompt": "Réalise la fiche de l'arrêt Ch. mixte, 6 septembre 2002 (TD n° 1, doc. 6).",
+  "payload": {
+   "modelAnswer": "Faits : un consommateur reçoit d'une société de vente par correspondance deux documents qui le désignent nominativement, en gros caractères, comme gagnant de 105 750 francs, avec paiement immédiat contre renvoi d'un bon de validation. Il renvoie le bon ; il ne reçoit ni lot ni réponse.\n\nProcédure : il assigne la société en délivrance du gain et, subsidiairement, en paiement pour publicité trompeuse ; une association de consommateurs demande réparation de l'atteinte à l'intérêt collectif. La cour d'appel de Paris (23 octobre 1998) retient une faute délictuelle (avoir annoncé de façon affirmative une simple éventualité) et accorde 5 000 francs au consommateur, un franc à l'association.\n\nQuestion de droit : l'organisateur d'une loterie qui annonce un gain à une personne dénommée, sans mettre en évidence l'existence d'un aléa, doit-il seulement réparer le préjudice causé par sa faute, ou est-il tenu de délivrer le gain annoncé ?\n\nSolution : cassation partielle, sur un moyen relevé d'office, au visa de l'article 1371. Les quasi-contrats sont les faits purement volontaires de l'homme dont il résulte un engagement quelconque envers un tiers ; l'organisateur qui annonce un gain à une personne dénommée sans mettre en évidence l'existence d'un aléa s'oblige, par ce fait purement volontaire, à le délivrer. Renvoi devant la cour d'appel de Versailles.",
+   "rubric": [
+    {
+     "id": "c0",
+     "label": "Les parties sont qualifiées juridiquement, sans leur nom"
+    },
+    {
+     "id": "c1",
+     "label": "La procédure donne la solution et le fondement de la cour d'appel"
+    },
+    {
+     "id": "c2",
+     "label": "La question de droit oppose la réparation d'une faute et l'obligation de délivrer le gain"
+    },
+    {
+     "id": "c3",
+     "label": "La solution cite le visa (article 1371) et reprend l'attendu"
+    },
+    {
+     "id": "c4",
+     "label": "La cassation partielle, le moyen relevé d'office et le renvoi sont mentionnés"
+    }
+   ]
+  },
+  "solution": {},
+  "explanation": "Ce corrigé n'est qu'un exemple : d'autres formulations de la question de droit sont possibles si elles restent juridiques.",
+  "concepts": [
+   "quasi-contrat",
+   "fiche-arret"
+  ],
+  "source": "TD n° 1, doc. 6 ; fascicule de méthodologie, p. 18-20"
+ }
+]

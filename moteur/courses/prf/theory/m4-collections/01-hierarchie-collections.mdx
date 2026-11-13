@@ -1,0 +1,31 @@
+---
+title: "Hierarchie et familles de collections"
+slug: hierarchie-collections
+order: 1
+estimatedReadMin: 12
+concepts: [collection, immutable, list, vector, set, map-collection, option]
+source: "Collection/Scala_04.pdf; Collection/collectionBis1 (1).pdf"
+---
+## Familles de collections
+
+Le cours distingue les collections immuables et mutables. En programmation fonctionnelle, on privilegie les immuables : une transformation renvoie une nouvelle collection.
+
+```scala
+val xs = List(1, 2, 3)
+val ys = xs :+ 4  // xs reste List(1,2,3)
+```
+
+## Choisir une structure
+
+- `List` est efficace pour construire en tete.
+- `Vector` offre un bon acces indexe immutable.
+- `Set` elimine les doublons.
+- `Map` associe des cles a des valeurs.
+- `Option` peut se lire comme une collection de zero ou un element.
+
+## Pieges
+
+`map(key)` leve une erreur si la cle est absente ; `map.get(key)` renvoie une `Option`. `reduce` echoue sur une collection vide, alors que `fold` prend une valeur initiale.
+
+> **A retenir**  
+> La bonne reponse depend souvent de la structure : ordre, doublons, acces indexe, absence possible.

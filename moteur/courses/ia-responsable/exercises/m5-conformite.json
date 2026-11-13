@@ -1,0 +1,700 @@
+[
+  {
+    "chapterSlug": "ai-act",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque régime de l'AI Act à un exemple.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Pratiques interdites"
+        },
+        {
+          "id": "l1",
+          "label": "Haut risque"
+        },
+        {
+          "id": "l2",
+          "label": "Transparence"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Certaines formes de scoring social"
+        },
+        {
+          "id": "r1",
+          "label": "Recrutement"
+        },
+        {
+          "id": "r2",
+          "label": "Interaction avec une IA et contenus synthétiques"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2"
+      }
+    },
+    "explanation": "Le régime dépend de la finalité, du rôle et des conditions d'usage.",
+    "hint": "Le recrutement fait partie des usages les plus encadrés sans être interdit.",
+    "concepts": [
+      "ai-act-qualification"
+    ],
+    "source": "Diapositives 28"
+  },
+  {
+    "chapterSlug": "ai-act",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "L'AI Act classe une technologie à haut risque quel que soit son usage.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "La qualification dépend de la finalité, du rôle et des conditions d'usage.",
+    "hint": "Relis ce que l'AI Act qualifie : une technologie, ou un système et son usage ?",
+    "concepts": [
+      "ai-act-qualification"
+    ],
+    "source": "Diapositives 28"
+  },
+  {
+    "chapterSlug": "ai-act",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quel article de l'AI Act vise les pratiques interdites ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "L'article 5"
+        },
+        {
+          "id": "b",
+          "label": "L'article 6"
+        },
+        {
+          "id": "c",
+          "label": "L'article 50"
+        },
+        {
+          "id": "d",
+          "label": "L'article 14"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Article 5 : pratiques interdites ; article 6 : haut risque ; article 50 : transparence.",
+    "hint": "C'est le premier des articles cités dans le tableau des régimes.",
+    "concepts": [
+      "ai-act-qualification"
+    ],
+    "source": "Diapositives 28"
+  },
+  {
+    "chapterSlug": "ai-act",
+    "type": "ORDERING",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Remets ces échéances de l'AI Act dans l'ordre chronologique.",
+    "payload": {
+      "items": [
+        {
+          "id": "i1",
+          "label": "Modèles d'IA à usage général"
+        },
+        {
+          "id": "i3",
+          "label": "Haut risque de l'annexe III"
+        },
+        {
+          "id": "i0",
+          "label": "Premières dispositions et interdictions"
+        },
+        {
+          "id": "i2",
+          "label": "Transparence de l'article 50"
+        },
+        {
+          "id": "i4",
+          "label": "Haut risque intégré aux produits de l'annexe I"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "i0",
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ]
+    },
+    "explanation": "2 février 2025, 2 août 2025, 2 août 2026, 2 décembre 2027, 2 août 2028.",
+    "hint": "Les interdictions viennent en premier, les produits de l'annexe I en dernier.",
+    "concepts": [
+      "ai-act-calendrier"
+    ],
+    "source": "Diapositives 29"
+  },
+  {
+    "chapterSlug": "ai-act",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Selon le calendrier actualisé, quand s'applique le haut risque de l'annexe III ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le 2 décembre 2027"
+        },
+        {
+          "id": "b",
+          "label": "Le 2 août 2025"
+        },
+        {
+          "id": "c",
+          "label": "Le 2 août 2026"
+        },
+        {
+          "id": "d",
+          "label": "Le 2 août 2028"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Après l'AI Omnibus, le haut risque de l'annexe III s'applique le 2 décembre 2027.",
+    "hint": "Il vient après la transparence de l'article 50 et avant les produits de l'annexe I.",
+    "concepts": [
+      "ai-act-calendrier"
+    ],
+    "source": "Diapositives 29"
+  },
+  {
+    "chapterSlug": "ai-act",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quel plafond d'amende vise les pratiques interdites ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "35 M€ ou 7 %"
+        },
+        {
+          "id": "b",
+          "label": "15 M€ ou 3 %"
+        },
+        {
+          "id": "c",
+          "label": "20 M€ ou 4 %"
+        },
+        {
+          "id": "d",
+          "label": "7 M€ ou 1 %"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "35 M€ ou 7 % pour les interdictions, 15 M€ ou 3 % pour certains autres manquements.",
+    "hint": "C'est le plafond le plus élevé des deux donnés en cours.",
+    "concepts": [
+      "ai-act-calendrier"
+    ],
+    "source": "Diapositives 29"
+  },
+  {
+    "chapterSlug": "ai-act",
+    "type": "MATCHING",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Associe chaque bloc d'obligations à son exemple de preuve.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Risques"
+        },
+        {
+          "id": "l1",
+          "label": "Données"
+        },
+        {
+          "id": "l2",
+          "label": "Documentation"
+        },
+        {
+          "id": "l3",
+          "label": "Journalisation"
+        },
+        {
+          "id": "l4",
+          "label": "Supervision"
+        },
+        {
+          "id": "l5",
+          "label": "Surveillance"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Registre et mesures de réduction"
+        },
+        {
+          "id": "r1",
+          "label": "Provenance et audit de qualité"
+        },
+        {
+          "id": "r2",
+          "label": "Dossier technique versionné"
+        },
+        {
+          "id": "r3",
+          "label": "Événements et conservation"
+        },
+        {
+          "id": "r4",
+          "label": "Rôles et tests d'intervention"
+        },
+        {
+          "id": "r5",
+          "label": "Suivi et procédure d'incidents"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4",
+        "l5": "r5"
+      }
+    },
+    "explanation": "Chaque obligation se démontre par une preuve concrète.",
+    "hint": "La supervision se prouve en testant que les humains peuvent intervenir.",
+    "concepts": [
+      "ai-act-obligations"
+    ],
+    "source": "Diapositives 30"
+  },
+  {
+    "chapterSlug": "ai-act",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quel article de l'AI Act porte sur les données ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "L'article 10"
+        },
+        {
+          "id": "b",
+          "label": "L'article 9"
+        },
+        {
+          "id": "c",
+          "label": "L'article 11"
+        },
+        {
+          "id": "d",
+          "label": "L'article 15"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Article 9 : risques ; 10 : données ; 11 : documentation ; 15 : performance et sécurité.",
+    "hint": "Il suit immédiatement l'article sur la gestion des risques.",
+    "concepts": [
+      "ai-act-obligations"
+    ],
+    "source": "Diapositives 30"
+  },
+  {
+    "chapterSlug": "ai-act",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Les obligations sont les mêmes pour le fournisseur et le déployeur d'un système.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "La répartition fournisseur et déployeur compte.",
+    "hint": "Relis la remarque sous la grille des obligations.",
+    "concepts": [
+      "ai-act-obligations"
+    ],
+    "source": "Diapositives 30"
+  },
+  {
+    "chapterSlug": "rgpd",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque question RGPD à ce qu'elle vérifie.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Finalité et base"
+        },
+        {
+          "id": "l1",
+          "label": "Minimisation"
+        },
+        {
+          "id": "l2",
+          "label": "AIPD"
+        },
+        {
+          "id": "l3",
+          "label": "Décision automatisée"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Pourquoi traiter ces données, sur quel fondement ?"
+        },
+        {
+          "id": "r1",
+          "label": "Quelles données sont nécessaires, pour quelle durée ?"
+        },
+        {
+          "id": "r2",
+          "label": "Le traitement présente-t-il un risque élevé ?"
+        },
+        {
+          "id": "r3",
+          "label": "L'article 22 s'applique-t-il ?"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "Quatre questions à poser tout au long du pipeline.",
+    "hint": "L'AIPD est l'analyse d'impact relative à la protection des données.",
+    "concepts": [
+      "rgpd"
+    ],
+    "source": "Diapositives 31"
+  },
+  {
+    "chapterSlug": "rgpd",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Les attributs sensibles ne doivent jamais être utilisés, même pour auditer l'équité.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Il faut vérifier le cadre de traitement, les garanties et l'usage nécessaire à l'audit.",
+    "hint": "Mesurer un écart entre groupes demande de connaître le groupe.",
+    "concepts": [
+      "rgpd"
+    ],
+    "source": "Diapositives 31"
+  },
+  {
+    "chapterSlug": "rgpd",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complète la phrase.",
+    "payload": {
+      "template": "Pour une décision entièrement automatisée, on vérifie si l'article {{a}} du RGPD s'applique.",
+      "slots": [
+        {
+          "id": "a",
+          "width": "md"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "a": [
+          "22"
+        ]
+      }
+    },
+    "explanation": "L'article 22 encadre les décisions fondées exclusivement sur un traitement automatisé.",
+    "hint": "C'est l'article déjà cité pour le circuit de contestation.",
+    "concepts": [
+      "rgpd"
+    ],
+    "source": "Diapositives 31"
+  },
+  {
+    "chapterSlug": "llm-exploitation",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque risque d'un LLM avec RAG à ce qu'il faut éprouver.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Information erronée"
+        },
+        {
+          "id": "l1",
+          "label": "Injection indirecte"
+        },
+        {
+          "id": "l2",
+          "label": "Fuite de données"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Validité des sources et des affirmations"
+        },
+        {
+          "id": "r1",
+          "label": "Isolation entre contenu et commandes"
+        },
+        {
+          "id": "r2",
+          "label": "Accès par utilisateur et sorties sensibles"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2"
+      }
+    },
+    "explanation": "Chaque risque appelle un test précis.",
+    "hint": "Une injection indirecte passe par un document récupéré.",
+    "concepts": [
+      "risques-llm"
+    ],
+    "source": "Diapositives 32"
+  },
+  {
+    "chapterSlug": "llm-exploitation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un document du corpus contient des instructions adressées au modèle. De quel risque s'agit-il ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une injection indirecte"
+        },
+        {
+          "id": "b",
+          "label": "Une information erronée"
+        },
+        {
+          "id": "c",
+          "label": "Une fuite de données"
+        },
+        {
+          "id": "d",
+          "label": "Une dérive du concept"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "On l'éprouve en isolant le contenu des commandes.",
+    "hint": "Le contenu récupéré essaie de piloter le modèle.",
+    "concepts": [
+      "risques-llm"
+    ],
+    "source": "Diapositives 32"
+  },
+  {
+    "chapterSlug": "llm-exploitation",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Ajouter un RAG garantit que le LLM utilise correctement ses sources.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Le RAG ajoute des sources, il ne garantit pas leur usage correct.",
+    "hint": "Une réponse peut citer une règle abrogée.",
+    "concepts": [
+      "risques-llm"
+    ],
+    "source": "Diapositives 32"
+  },
+  {
+    "chapterSlug": "llm-exploitation",
+    "type": "MATCHING",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Associe chaque frontière au contrôle proposé.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Entrée et documents"
+        },
+        {
+          "id": "l1",
+          "label": "Recherche"
+        },
+        {
+          "id": "l2",
+          "label": "Outils"
+        },
+        {
+          "id": "l3",
+          "label": "Sortie"
+        },
+        {
+          "id": "l4",
+          "label": "Exploitation"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Séparer instructions et données"
+        },
+        {
+          "id": "r1",
+          "label": "Appliquer les droits avant récupération"
+        },
+        {
+          "id": "r2",
+          "label": "Permissions minimales et confirmation des actions sensibles"
+        },
+        {
+          "id": "r3",
+          "label": "Vérifier les sources et prévoir l'abstention"
+        },
+        {
+          "id": "r4",
+          "label": "Journaliser et tester les abus"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4"
+      }
+    },
+    "explanation": "On contrôle chaque frontière du système.",
+    "hint": "Les droits d'accès s'appliquent avant de récupérer un passage.",
+    "concepts": [
+      "controles-frontieres"
+    ],
+    "source": "Diapositives 33"
+  },
+  {
+    "chapterSlug": "llm-exploitation",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Que recouvre la réversibilité en exploitation ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une version stable"
+        },
+        {
+          "id": "b",
+          "label": "Un arrêt testé"
+        },
+        {
+          "id": "c",
+          "label": "Un rollback et un mode dégradé"
+        },
+        {
+          "id": "d",
+          "label": "Un modèle plus grand"
+        },
+        {
+          "id": "e",
+          "label": "Une mise à jour automatique sans test"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Pouvoir revenir en arrière ou fonctionner en mode dégradé si le système pose problème.",
+    "hint": "Il s'agit de pouvoir revenir à un état sûr.",
+    "concepts": [
+      "exploitation-responsable"
+    ],
+    "source": "Diapositives 35"
+  },
+  {
+    "chapterSlug": "llm-exploitation",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Le CO₂e d'inférence cumulé ne dépend pas du nombre de requêtes traitées.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Le CO₂e d'inférence cumulé dépend du volume.",
+    "hint": "Chaque requête consomme de l'énergie.",
+    "concepts": [
+      "exploitation-responsable"
+    ],
+    "source": "Diapositives 35"
+  }
+]

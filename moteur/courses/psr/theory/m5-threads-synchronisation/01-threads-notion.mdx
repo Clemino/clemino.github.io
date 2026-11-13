@@ -1,0 +1,364 @@
+---
+title: "Processus vs thread : pthread_create et pthread_join"
+slug: threads-notion
+order: 1
+estimatedReadMin: 18
+concepts: [thread, processus-leger, pile-thread, thread-vs-processus, bibliotheque-pthread, option-pthread, pthread-create, fonction-thread, pthread-join, pthread-exit, pthread-self, thread-joignable, thread-detache, pthread-detach]
+source: "Cours 4 — Les threads POSIX"
+---
+
+Les quatre premiers modules ont construit la **programmation par processus** : `fork` crée un processus, chaque processus a son **espace d'adressage propre**, et les processus communiquent par des mécanismes lourds (tubes, signaux). Ce module change de modèle. Il introduit le **thread** — le *processus léger* — où plusieurs fils d'exécution **partagent un même espace mémoire**. C'est à la fois plus rapide et plus dangereux : tout le module suivant (mutex, conditions, sémaphores) existe précisément pour **maîtriser ce partage**.
+
+## Le problème : `fork` est lourd
+
+On peut déjà écrire des programmes **parallèles** avec ce qui a été vu : `fork` crée des processus concurrents, les tubes les font communiquer. Mais cette approche est **coûteuse** :
+
+- `fork` est un **appel système lourd** : le père et le fils sont des processus **indépendants**, chacun avec son **espace d'adressage** complet et sa **pile d'exécution** ;
+- le **changement de contexte** (*context switch*) entre processus est **lent** : le système doit sauvegarder et restaurer beaucoup d'état (table des pages mémoire notamment) ;
+- la **communication inter-processus** est généralement **lente** (passage par le noyau) ;
+- le **partage de données** est **délicat** : les espaces d'adressage étant étanches, il faut un IPC explicite pour la moindre variable commune.
+
+La **solution** apportée par ce module : les **processus légers**, c'est-à-dire les **threads**.
+
+## Qu'est-ce qu'un thread ?
+
+Un **thread** (en français *fil d'exécution* ou *processus léger*) est une **« partie » d'un processus**. La relation est la suivante :
+
+- un processus qui crée des threads **ne crée pas d'autres processus** : tout se passe **dans le même espace d'adressage** ;
+- un thread est une **partie** d'un processus ;
+- réciproquement, un **processus est l'exécution d'un ensemble (≥ 1) de threads**.
+
+Tout processus a donc **au moins un thread**. Un programme « classique » est en réalité un processus à **un seul thread** — le **thread principal**, celui qui exécute la fonction `main`.
+
+### Ce qui est partagé, ce qui est propre
+
+C'est le point fondamental du chapitre. Au sein d'un même processus, **les threads partagent presque tout** :
+
+- les **variables globales** ;
+- les **variables statiques locales** ;
+- le **tas** (la mémoire allouée par `malloc`) ;
+- les **descripteurs de fichiers ouverts** ;
+- le **PID** et le **PPID** (un thread n'a **pas** de PID propre) ;
+- les **gestionnaires de signaux**, le **répertoire courant**, le **masque de création de fichiers** (`umask`)…
+
+En revanche, **chaque thread possède en propre** :
+
+- son **identifiant de thread** (TID), de type `pthread_t` ;
+- sa **pile d'exécution** (*stack*) — donc ses **variables locales** et ses **paramètres de fonction** ;
+- ses **registres** processeur, dont le **compteur d'instructions** ;
+- son **masque de signaux**.
+
+| Ressource | Processus (`fork`) | Threads d'un même processus |
+|---|---|---|
+| Espace d'adressage | **un par processus** (isolé) | **partagé** par tous les threads |
+| Variables globales / statiques | une copie par processus | **communes** à tous les threads |
+| Tas (`malloc`) | un par processus | **commun** à tous les threads |
+| Descripteurs de fichiers | hérités puis indépendants | **partagés** |
+| PID / PPID | **un PID par processus** | **un seul PID** partagé |
+| Pile, registres, TID | un par processus | **un par thread** |
+
+> ⚠️ Le partage de la mémoire est la **caractéristique centrale** du thread — et la source de **tous** ses dangers. Comme les threads partagent les variables globales et le tas, **deux threads peuvent modifier la même variable en même temps**. La synchronisation n'est **plus gérée par le système** (comme l'était le blocage des tubes) : elle est **entièrement à la charge du programmeur**. C'est l'objet des chapitres 2 à 5.
+
+## Avantages et inconvénients
+
+**Avantages des threads par rapport aux processus :**
+
+- **partage de la mémoire** : la communication inter-thread est **immédiate** (il suffit d'une variable globale), sans passer par un IPC ;
+- **plus légers** : moins de données système à recopier à la création ;
+- **plus rapides** : le **changement de contexte** entre threads d'un même processus est **bien plus rapide** (l'espace d'adressage ne change pas).
+
+**Inconvénients** — ce sont **uniquement des difficultés de programmation** :
+
+- **pas d'isolation mémoire** : une erreur d'un thread (un pointeur invalide) peut **corrompre** la mémoire vue par tous les autres ;
+- un `exit()` ou un plantage (`SIGSEGV`) **affecte le processus entier**, donc **tous** ses threads d'un coup ;
+- il faut **gérer soi-même la synchronisation** (mutex, sémaphores…) ;
+- en cas de **mauvaise synchronisation**, le comportement devient **« aléatoire »** : bogues intermittents, *segfaults*, **interblocages** ;
+- le **débogage** est plus difficile (l'exécution n'est plus reproductible).
+
+## La bibliothèque POSIX Threads
+
+Sous UNIX, les threads sont normalisés par **POSIX** : c'est la bibliothèque **pthreads** (*POSIX threads*). Les fonctions, types et constantes sont déclarés dans l'en-tête :
+
+```c
+#include <pthread.h>
+```
+
+Tous les noms commencent par le préfixe **`pthread_`**. Les types essentiels sont :
+
+- **`pthread_t`** — l'identifiant d'un thread (TID). C'est un **type opaque** : la norme **ne dit pas** ce qu'il contient. On ne l'examine donc jamais directement.
+- **`pthread_attr_t`** — un objet regroupant les **attributs** d'un thread (taille de pile, politique d'ordonnancement…).
+
+> ⚠️ **L'option de compilation est obligatoire.** Un programme utilisant les pthreads doit être compilé **et lié** avec l'option **`-pthread`** :
+> ```text
+> gcc -o programme programme.c -pthread
+> ```
+> La forme `gcc programme.c -o programme -lpthread` fonctionne aussi, mais `-pthread` est préférable : elle règle à la fois le **compilateur** (définition des bons macros) et l'**éditeur de liens**. **Oublier cette option** provoque des erreurs de l'éditeur de liens (*undefined reference to `pthread_create`*) ou un comportement incorrect à l'exécution.
+
+## Créer un thread : `pthread_create`
+
+Au départ, un processus est constitué d'un **unique thread**, le **thread principal**, celui qui exécute `main`. Pour créer un **nouveau** thread, on appelle **`pthread_create`** :
+
+```c
+#include <pthread.h>
+
+int pthread_create(pthread_t *tid,
+                    const pthread_attr_t *attr,
+                    void *(*func)(void *),
+                    void *arg);
+```
+
+Les quatre paramètres :
+
+- **`tid`** — un **pointeur** vers une variable `pthread_t` que `pthread_create` **remplira** avec l'identifiant du thread créé ;
+- **`attr`** — un pointeur vers les **attributs** du thread. La valeur **`NULL`** demande les attributs **par défaut** : le thread créé est **joignable** (non détaché) et utilise la politique d'ordonnancement normale (non temps-réel). On passera presque toujours `NULL`.
+- **`func`** — la **fonction à exécuter** par le nouveau thread. Sa signature est **imposée** : elle prend **un** argument `void *` et **renvoie** un `void *`.
+- **`arg`** — l'argument qui sera **transmis** à `func` (passé tel quel comme paramètre).
+
+La **valeur de retour** suit une convention **différente** de celle des appels système habituels :
+
+- **`0`** en cas de **succès** ;
+- une **valeur non nulle** (le code d'erreur lui-même, par exemple `EAGAIN` si le nombre maximal de threads est atteint, `EINVAL` si `attr` est invalide) en cas d'**échec**.
+
+> ⚠️ `pthread_create` (comme la plupart des fonctions `pthread_`) **ne positionne pas `errno`** : elle **renvoie directement** le code d'erreur. On teste donc `if (pthread_create(...) != 0)`, et **non** `== -1`. C'est une différence importante avec `fork`, `pipe` ou `open`.
+
+### La fonction de thread : `void *f(void *)`
+
+La fonction exécutée par un thread a une **signature obligatoire** : elle reçoit un `void *` et renvoie un `void *`. Premier exemple, fidèle au cours — un thread affiche un message en boucle pendant que le `main` fait de même :
+
+```c
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+/* la fonction executee par le nouveau thread */
+void *fonction_thread(void *arg) {
+    (void) arg;                 /* arg non utilise ici */
+    while (1) {
+        fprintf(stderr, "Nouveau Thread\n");
+        sleep(1);
+    }
+    return NULL;
+}
+
+int main(void) {
+    pthread_t thr;
+
+    if (pthread_create(&thr, NULL, fonction_thread, NULL) != 0) {
+        fprintf(stderr, "Erreur dans pthread_create\n");
+        exit(EXIT_FAILURE);
+    }
+
+    while (1) {                 /* le thread principal continue en parallele */
+        fprintf(stderr, "Thread Main\n");
+        sleep(1);
+    }
+    return 0;
+}
+```
+
+À l'exécution (`gcc exemple.c -o exemple -pthread` puis `./exemple`), les deux messages s'**entrelacent** :
+
+```text
+Thread Main
+Nouveau Thread
+Thread Main
+Nouveau Thread
+Thread Main
+Nouveau Thread
+^C
+```
+
+Les deux threads — le principal et le nouveau — **s'exécutent réellement en parallèle**, chacun avec sa propre pile.
+
+> ⚠️ Sur un autre terminal, `ps aux` ne montre **qu'un seul** processus pour ce programme : les threads **partagent le PID**. Pour **voir les threads** individuellement, il faut l'option `m` : `ps maux`. Cela confirme qu'un thread n'a **pas de PID propre**.
+
+### Passer un argument à un thread
+
+Le paramètre `arg` permet de **transmettre une donnée** à la fonction de thread. L'exemple suivant crée trois threads et passe à chacun son **numéro d'ordre** :
+
+```c
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+void *fonction_thread(void *arg) {
+    long num = (long) arg;          /* on recupere le numero d'ordre */
+    int i = 0;
+    while (i < 3) {
+        fprintf(stderr, "Thread %ld, iteration %d\n", num, i);
+        i++;
+        sleep(1);
+    }
+    return NULL;
+}
+
+int main(void) {
+    pthread_t thr[3];
+
+    for (long i = 0; i < 3; i++) {
+        if (pthread_create(&thr[i], NULL, fonction_thread, (void *) i) != 0) {
+            fprintf(stderr, "Erreur dans pthread_create\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    pthread_exit(NULL);             /* le main se termine, les threads continuent */
+}
+```
+
+Ici, l'entier `i` est converti en `void *` à l'aller, puis reconverti à l'arrivée. On utilise volontairement le type `long` (et non `int`) pour cette conversion : sur la plupart des systèmes 64 bits, un `long` a la **même taille qu'un pointeur**, ce qui rend la conversion **sûre et portable**.
+
+> ⚠️ **Le piège de l'argument partagé.** Ne passez **jamais** l'adresse d'une variable de boucle qui **change** entre deux `pthread_create`. Le code `pthread_create(&thr[i], NULL, f, &i)` est **faux** : tous les threads reçoivent l'adresse de **la même** variable `i`, et liront sa valeur **au moment où ils s'exécutent** — pas au moment de leur création. La boucle aura souvent déjà avancé. Solutions correctes : passer la **valeur** convertie en `void *` (comme ci-dessus), ou allouer une **structure distincte par thread**.
+
+## Terminer un thread : `pthread_exit` et la valeur de retour
+
+Un thread se termine de **deux manières équivalentes** :
+
+1. sa fonction **fait `return`** — quand la fonction principale d'un thread se termine, le thread est **éliminé** ;
+2. le thread appelle **`pthread_exit`** :
+
+```c
+#include <pthread.h>
+
+void pthread_exit(void *retour);
+```
+
+`pthread_exit` **termine le thread appelant** et **renvoie** la valeur `retour` (un `void *`, éventuellement `NULL`). Cette valeur pourra être **récupérée par un autre thread** via `pthread_join` (section suivante). Faire `return valeur;` dans la fonction de thread est **équivalent** à `pthread_exit(valeur);`.
+
+### Le cas particulier du thread principal
+
+Le comportement à la fin du `main` est **crucial** et constitue un classique d'examen :
+
+> ⚠️ Si le **thread principal** se termine par `return` ou par `exit()`, **tout le processus se termine** — et **tous les autres threads sont tués brutalement**, même s'ils n'avaient pas fini.
+>
+> Si l'on veut que le thread principal **finisse sa fonction** tout en **laissant les autres threads continuer**, il faut terminer le `main` par **`pthread_exit(NULL)`** — et **surtout pas** par `return` ni `exit()`.
+
+Autrement dit : `pthread_exit(NULL)` à la fin du `main` termine **seulement** le thread principal ; le processus, lui, ne s'éteindra que lorsque le **dernier** thread aura terminé.
+
+## Identifier un thread : `pthread_self`
+
+Un thread peut obtenir **son propre identifiant** avec :
+
+```c
+#include <pthread.h>
+
+pthread_t pthread_self(void);
+```
+
+`pthread_self` renvoie le **TID** du thread appelant. C'est l'équivalent, pour les threads, de ce qu'est `getpid()` pour les processus. Comme `pthread_t` est un type **opaque**, on ne l'affiche pas comme un entier : on le caste en `void *` pour un affichage indicatif — `printf("%p\n", (void *) pthread_self());`.
+
+Pour **comparer** deux identifiants de thread, on n'utilise **pas** `==` (le type étant opaque) mais la fonction dédiée **`pthread_equal(t1, t2)`**, qui renvoie une valeur non nulle si les deux TID désignent le même thread.
+
+## Attendre un thread : `pthread_join`
+
+Le thread principal a souvent besoin d'**attendre la fin** d'un thread qu'il a créé — par exemple pour récupérer son résultat. C'est le rôle de **`pthread_join`** :
+
+```c
+#include <pthread.h>
+
+int pthread_join(pthread_t tid, void **retour);
+```
+
+`pthread_join` **suspend le thread appelant** jusqu'à la **terminaison** du thread désigné par `tid`. C'est l'**équivalent de `waitpid`** pour les threads — à ceci près qu'on doit **spécifier précisément** le `tid` du thread à attendre (il n'existe pas d'équivalent de `wait(NULL)` qui attendrait « n'importe quel » thread).
+
+- **`tid`** — l'identifiant du thread à attendre ;
+- **`retour`** — un pointeur sur un `void *` où sera **copiée la valeur de retour** du thread (celle passée à `pthread_exit` ou rendue par `return`). On passe **`NULL`** si cette valeur ne nous intéresse pas.
+
+`pthread_join` renvoie **`0`** en cas de succès, un **code d'erreur** sinon. Elle **échoue** notamment si le `tid` n'existe pas, ou si le thread est **détaché** (voir plus bas).
+
+### Exemple : récupérer le résultat de chaque thread
+
+Le programme suivant crée un thread par argument de la ligne de commande ; chaque thread **calcule le carré** de son argument et le **renvoie** ; le thread principal **récupère** chaque résultat par `pthread_join` :
+
+```c
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+void *fonction_thread(void *arg) {
+    long num = (long) arg;
+    return (void *) (num * num);        /* renvoie le carre */
+}
+
+int main(int argc, char *argv[]) {
+    pthread_t *thr;
+    void *ptr;
+
+    thr = calloc(argc - 1, sizeof(pthread_t));
+    if (thr == NULL) {
+        perror("calloc");
+        exit(EXIT_FAILURE);
+    }
+
+    /* creation : un thread par argument */
+    for (int i = 1; i < argc; i++) {
+        long n = atol(argv[i]);
+        if (pthread_create(&thr[i - 1], NULL, fonction_thread, (void *) n) != 0) {
+            fprintf(stderr, "Erreur dans pthread_create\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    /* attente : on joint chaque thread et on lit son resultat */
+    for (int i = 1; i < argc; i++) {
+        pthread_join(thr[i - 1], &ptr);
+        printf("%ld -> %ld\n", atol(argv[i]), (long) ptr);
+    }
+
+    free(thr);
+    return EXIT_SUCCESS;
+}
+```
+
+Exécution :
+
+```text
+$ ./exemple 1 2 3
+1 -> 1
+2 -> 4
+3 -> 9
+```
+
+Le thread principal a bien **attendu** chaque thread de calcul et **récupéré** son résultat. Sans les `pthread_join`, le `return EXIT_SUCCESS` du `main` aurait tué les threads **avant** qu'ils aient fini de calculer.
+
+## Threads joignables et threads détachés
+
+Avec les attributs par défaut (`attr = NULL`), un thread est créé **joignable** : un autre thread **peut** (et souvent **doit**) l'attendre par `pthread_join`.
+
+> ⚠️ Comme un processus zombie a besoin d'un `wait`, un **thread joignable terminé** doit être **joint**. Tant qu'il ne l'est pas, le système **conserve** sa **pile** et son **code de retour** : c'est un **risque de saturation** mémoire si l'on crée beaucoup de threads sans jamais les joindre.
+
+Quand on **n'a pas besoin** de récupérer la fin d'un thread, on le **détache**. Un thread détaché libère **automatiquement** ses ressources (pile, code de retour) **dès qu'il se termine** — sans qu'aucun `pthread_join` soit nécessaire. On détache un thread avec :
+
+```c
+#include <pthread.h>
+
+int pthread_detach(pthread_t tid);
+```
+
+`pthread_detach` place le thread `tid` dans l'état **détaché** : ses ressources seront libérées à la fin de son exécution. Conséquences :
+
+- les autres threads **ne peuvent plus** se synchroniser sur sa fin (`pthread_join` sur un thread détaché **échoue**) ;
+- la **pile** et le **code de retour** sont libérés **immédiatement** à la terminaison du thread → **pas de risque de saturation**.
+
+`pthread_detach` **échoue** si le thread n'existe pas ou s'il est **déjà détaché**.
+
+| Aspect | Thread **joignable** (défaut) | Thread **détaché** |
+|---|---|---|
+| Récupération par `pthread_join` | **oui** (et nécessaire) | **non** (join interdit) |
+| Libération des ressources | au moment du **`pthread_join`** | **automatique** à la fin du thread |
+| Risque si on « oublie » | **saturation** (ressources conservées) | aucun |
+| Quand le choisir | on veut **attendre** / **récupérer le résultat** | thread autonome, fin sans intérêt |
+
+Exemple : un programme qui lance des threads détachés en continu peut en créer un **très grand nombre**, car chacun rend sa mémoire dès qu'il finit (« pas de limite »), là où des threads joignables non joints satureraient vite le système.
+
+> **À retenir**
+> - Un **thread** (*processus léger*) est une partie d'un processus ; un processus exécute **un ensemble (≥ 1) de threads** qui **partagent le même espace d'adressage**.
+> - Les threads d'un processus **partagent** : variables globales et statiques, tas, descripteurs de fichiers, PID/PPID. Chaque thread a **en propre** : sa **pile**, ses **registres**, son **TID**, son masque de signaux.
+> - **Avantages** : communication immédiate par la mémoire, création et changement de contexte rapides. **Inconvénients** : pas d'isolation mémoire, un plantage tue tout le processus, synchronisation à la charge du programmeur.
+> - On compile **obligatoirement** avec **`-pthread`** ; les fonctions sont dans **`<pthread.h>`** et **renvoient directement le code d'erreur** (pas via `errno`).
+> - **`pthread_create(&tid, NULL, func, arg)`** crée un thread exécutant `func` (signature **`void *f(void *)`**) ; renvoie **`0`** si succès.
+> - Un thread se termine par `return` ou **`pthread_exit(retour)`**. Si le **`main`** se termine par `return`/`exit()`, **tout le processus meurt** ; pour laisser vivre les autres threads, terminer le `main` par **`pthread_exit(NULL)`**.
+> - **`pthread_join(tid, &retour)`** attend la fin d'un thread (équivalent de `waitpid`) et récupère sa **valeur de retour** ; **`pthread_self()`** renvoie le TID du thread appelant.
+> - Un thread **joignable** (défaut) doit être **joint**, sinon ses ressources saturent ; un thread **détaché** (`pthread_detach`) libère tout **automatiquement** à sa fin mais ne peut plus être joint.

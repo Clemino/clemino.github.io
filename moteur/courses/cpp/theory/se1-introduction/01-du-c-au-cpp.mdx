@@ -1,0 +1,225 @@
+---
+title: Du C/Java au C++
+slug: du-c-au-cpp
+order: 1
+estimatedReadMin: 9
+concepts: [compilation-gpp, iostream, namespace-std, cpp-vs-c]
+source: "Cours 1 — Introduction au C++"
+---
+
+## Qu'est-ce que le C++ ?
+
+Le **C++** est un langage de programmation **multi-paradigme** : il permet aussi bien la programmation **procédurale** (fonctions, comme en C) que la programmation **orientée objet** (classes, objets) et la **programmation générique** (templates). C'est l'objet de tout ce cours.
+
+On le choisit pour quatre raisons principales :
+
+- **rapide** : il est compilé directement en code machine optimisé ;
+- **portable** : le même code source se recompile sur Windows, Linux, macOS ;
+- **riche** : il dispose de très nombreuses bibliothèques, dont la *Standard Template Library* (STL) ;
+- **multi-paradigme** : il s'adapte au style de programmation adéquat pour chaque problème.
+
+Cette puissance a un revers : le C++ est **complexe**, il laisse au programmeur un **contrôle fin** du fonctionnement de la machine, et il impose de **gérer soi-même la mémoire**. C'est précisément ce qui le rend exigeant et formateur.
+
+## C++ comparé à C
+
+Une question classique : *le C est-il un sous-ensemble du C++ ?* En pratique, presque tout programme C correct se compile en C++, mais ce dernier ajoute beaucoup. Par rapport au C, le C++ apporte :
+
+- le **multi-paradigme** (procédural **et** orienté objet) ;
+- la **programmation générique** (templates) ;
+- un **contrôle de type plus strict** (*type checking*) : le compilateur refuse des conversions que le C laissait passer silencieusement.
+
+Une différence visible dès la déclaration d'une variable : en C on écrit `TYPE nom = valeur;`, alors que le C++ autorise aussi la forme **par initialisation directe** `TYPE nom(valeur);` — vue en détail au chapitre suivant.
+
+## C++ comparé à Java
+
+Si vous venez de Java, les philosophies des deux langages diffèrent profondément :
+
+| Critère | C++ | Java |
+|---|---|---|
+| **But** | Efficacité d'exécution (performance) | Productivité du programmeur (portabilité) |
+| **Liberté** | Fait confiance au programmeur | Impose des contraintes |
+| **Paradigme** | Procédural **et** orienté objet | Orienté objet |
+| **Gestion mémoire** | Manuelle — attention aux fuites mémoire | Ramasse-miettes (*garbage collection*) |
+| **Exécution** | Compilé en code machine, exécuté par l'OS | Compilé en *bytecode*, interprété par la JVM |
+| **Performance** | Compilation statique → code machine optimisé | *Bytecode*, mais progrès grâce au JIT |
+
+Conséquence directe de l'exécution native : un programme C++ mal écrit peut provoquer des **buffer overflows** ou des **erreurs de segmentation** (*segmentation faults*) que la JVM aurait interceptés sous forme d'exceptions.
+
+## Les outils du programmeur
+
+Pour développer, trois outils sont nécessaires :
+
+1. un **éditeur de texte** pour écrire le code source ;
+2. un **compilateur** pour le traduire en programme exécutable ;
+3. un **débogueur** (*debugger*) pour traquer les erreurs à l'exécution.
+
+Un **IDE** (en français **EDI**, *Environnement de Développement Intégré*) réunit ces trois outils. Le code s'organise en **projet** : plusieurs fichiers `.cpp` et `.h`, ainsi que les ressources (images, etc.).
+
+## Le modèle de compilation
+
+C'est le point central de ce chapitre. Un programme C++ n'est pas traduit d'un seul bloc : chaque fichier source est compilé **séparément**, puis tous les morceaux sont **assemblés**.
+
+```text
+source file 1 ──compile──▶ object file 1 ─┐
+                                          ├──link──▶ executable
+source file 2 ──compile──▶ object file 2 ─┘
+```
+
+Trois étapes se succèdent :
+
+1. **Préprocesseur** — il traite les directives commençant par `#` (comme `#include`) *avant* la compilation proprement dite. `#include` recopie le contenu d'un fichier d'en-tête dans le source.
+2. **Compilation** — chaque fichier `.cpp` est traduit isolément en un **fichier objet** (extension `.o`), du code machine encore incomplet.
+3. **Édition de liens** (*linking*) — l'éditeur de liens fusionne tous les `.o` (et les bibliothèques) en un seul **fichier exécutable**.
+
+### Types de fichiers d'un projet
+
+- **Fichier d'implémentation** : `file.cpp` (parfois `.cc`, `.C`) — contient le code.
+- **Fichier de déclaration** (*header*) : `file.h` (parfois `.hpp`) — contient les déclarations.
+- **Fichier objet** : `file.o` — résultat intermédiaire de la compilation.
+- **Bibliothèques** : `file.lib` (statique) ou `file.dll` (dynamique).
+
+### Compiler avec g++
+
+`g++` est le compilateur C++ du projet GNU (on rencontre aussi `c++`). Deux commandes typiques :
+
+```bash
+# 1. Compiler un source en fichier objet (option -c = "compile seulement")
+g++ -Wall -std=c++17 -c file.cpp
+
+# 2. Lier les fichiers objets en un exécutable nommé "prog"
+g++ -o prog file1.o file2.o
+```
+
+- `-Wall` active **tous les avertissements** (*all warnings*) : à utiliser systématiquement, ils signalent les erreurs probables.
+- `-std=c++17` fixe la **version** du langage utilisée.
+- `-c` arrête le processus après la compilation, sans édition de liens.
+- `-o nom` choisit le nom du fichier produit.
+
+> ℹ️ Les diapositives du cours utilisent `-std=c++11`. Cette plateforme compile en `-std=c++17`, une version plus récente et **rétro-compatible** : tout le code C++11 du cours reste valide. Ne soyez donc pas surpris de voir `-std=c++17` ici et `-std=c++11` sur les slides — c'est la même langue, dans une édition plus moderne.
+
+On peut aussi tout faire en une commande : `g++ -Wall -std=c++17 *.cpp -o prog.exe`. Quand un projet grossit, un **makefile** automatise ces appels en ne recompilant que les fichiers modifiés.
+
+> ⚠️ Si vous oubliez un fichier `.o` lors de l'édition de liens, le compilateur signale une erreur du type *undefined reference* : le code d'une fonction est introuvable. Ce n'est **pas** une erreur de compilation mais une erreur de **liaison**.
+
+## Premier programme en C++
+
+Voici le programme minimal, à connaître par cœur :
+
+```cpp
+#include <iostream>  // Inclut la bibliothèque iostream (entrées/sorties)
+
+using namespace std; // Indique quel espace de noms on va utiliser
+
+/*
+Fonction principale "main"
+Tous les programmes commencent par la fonction main.
+*/
+int main()
+{
+    cout << "Hello world!" << endl; // Affiche un message
+    return 0; // Termine main, et donc le programme (0 = succès)
+}
+```
+
+Décortiquons chaque ligne.
+
+### #include : le préprocesseur
+
+`#include <iostream>` demande au préprocesseur d'insérer le fichier d'en-tête **iostream** (*input/output stream*). Sans lui, `cout` et `endl` seraient inconnus. Les chevrons `<...>` désignent un en-tête **standard** ; on utilise des guillemets `"..."` pour ses **propres** fichiers (par exemple `#include "point.h"`).
+
+### Les flux d'entrée/sortie
+
+C++ a **redéfini** les fonctions d'entrée/sortie du C pour les simplifier. La bibliothèque `<iostream>` fournit trois flux globaux :
+
+- **`cout`** — la sortie standard (l'écran). Remplace `printf`.
+- **`cin`** — l'entrée standard (le clavier). Remplace `scanf`.
+- **`cerr`** — la sortie d'erreur standard.
+
+On écrit dans un flux avec l'**opérateur d'injection `<<`** et on lit avec l'**opérateur d'extraction `>>`** :
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() {
+    int a;
+    cout << "Saisir a : ";          // affichage
+    cin >> a;                       // lecture au clavier
+    cout << "le carre de " << a << " vaut " << a * a << endl;
+    return 0;
+}
+```
+
+`endl` insère un retour à la ligne **et** vide le tampon du flux. On peut **chaîner** les `<<` autant de fois que nécessaire, en mélangeant texte et valeurs.
+
+### L'espace de noms std
+
+Toute la bibliothèque standard est définie dans l'**espace de noms** (*namespace*) appelé **`std`**. Un nom comme `cout` s'appelle donc en réalité `std::cout`, où `::` est l'opérateur de résolution de portée.
+
+Deux écritures équivalentes :
+
+```cpp
+std::cout << "Bonjour" << std::endl;   // préfixe explicite std::
+```
+
+```cpp
+using namespace std;          // une fois, en haut du fichier
+cout << "Bonjour" << endl;    // plus besoin du préfixe
+```
+
+La clause `using namespace std;` rend tous les noms de `std` directement accessibles, ce qui évite de répéter `std::`. C'est pratique dans un cours et dans de petits programmes.
+
+> ⚠️ `using namespace std;` est commode mais **déconseillé dans les fichiers d'en-tête (`.h`)** : il imposerait ce choix à tout fichier qui inclut l'en-tête et risquerait des conflits de noms. Dans le doute, préférez le préfixe explicite `std::` dans les `.h`.
+
+### Définir son propre espace de noms
+
+`std` n'est pas réservé à la bibliothèque standard : **vous pouvez créer vos propres espaces de noms**. Le but est d'**éviter les collisions de noms** — deux bibliothèques (ou deux parties d'un projet) peuvent ainsi définir chacune un `x` ou une fonction `init` sans se gêner.
+
+On déclare un espace de noms avec le mot-clé `namespace` suivi d'un bloc :
+
+```cpp
+#include <iostream>
+
+namespace premier {
+    int premier1;
+    int x;
+}
+
+namespace second {
+    int second1;
+    int x;
+}
+
+// Un même espace de noms peut être ROUVERT : ce bloc complète "premier"
+namespace premier {
+    int premier2;
+}
+
+int main() {
+    premier::premier1 = 1;   // accès qualifié : nom de l'espace + ::
+    premier::x       = 1;    // le x de "premier"
+    second::x        = 2;    // le x de "second" — aucun conflit
+    premier::premier2 = 3;   // déclaré dans le second bloc "premier"
+    std::cout << premier::x << " " << second::x << std::endl;
+    return 0;
+}
+```
+
+Trois points à retenir :
+
+- **Déclaration** : `namespace monEspace { ... }` regroupe des noms (variables, fonctions, classes) sous une étiquette commune.
+- **Réouverture** : un espace de noms peut être déclaré en **plusieurs blocs** — même dans des fichiers différents. Tous les blocs portant le même nom contribuent au **même** espace.
+- **Accès qualifié** : depuis l'extérieur, on désigne un nom par `monEspace::nom`, avec l'opérateur de résolution de portée `::`. La clause `using namespace monEspace;` rend les noms accessibles sans préfixe, exactement comme pour `std`.
+
+### La fonction main
+
+**Tout programme C++ commence son exécution par la fonction `main`.** Elle renvoie un `int` : la valeur `0` signale au système d'exploitation que le programme s'est terminé **avec succès** ; une valeur non nulle signale une erreur. C'est le rôle de `return 0;`.
+
+> **À retenir**
+> - C++ est **multi-paradigme** (procédural + objet + générique), rapide, portable, mais à **gestion mémoire manuelle**.
+> - Par rapport à C : typage plus strict et orienté objet. Par rapport à Java : performance native, pas de ramasse-miettes.
+> - Compilation en 3 temps : **préprocesseur** → **compilation** de chaque `.cpp` en `.o` → **édition de liens** vers l'exécutable.
+> - `g++ -Wall -std=c++17 -c file.cpp` compile ; `g++ -o prog *.o` lie.
+> - `#include <iostream>` donne accès aux flux ; `cout`/`cin`/`cerr` avec `<<`/`>>` remplacent `printf`/`scanf` ; `endl` retourne à la ligne.
+> - La bibliothèque standard est dans le namespace `std` : `std::cout` ou `using namespace std;`. On peut aussi **définir ses propres espaces de noms** (`namespace nom { ... }`, réouvrables) pour éviter les collisions de noms.
+> - L'exécution commence toujours par `int main()`, qui renvoie `0` en cas de succès.

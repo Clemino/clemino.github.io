@@ -1,0 +1,108 @@
+---
+title: Structure physique d'une base Oracle
+slug: stockage-physique
+order: 1
+estimatedReadMin: 9
+concepts: [tablespace, segment-donnees, segment-index, segment-temporaire, segment-rollback, fichier-donnees, redo-log, fichier-controle]
+source: "CM2, slides 4-12"
+---
+
+## Le niveau physique SPARC
+
+Le **niveau physique** décrit le stockage réel des données sur disque. Oracle **redéfinit le système de gestion de fichiers** sur chaque OS : il ne s'appuie pas sur les structures natives mais empile ses propres concepts.
+
+## Hiérarchie de stockage
+
+```
+Base de données (Oracle)
+  └─ Tablespaces        (SYSTEM, USERS, …)
+       └─ Fichiers       (.dbf : DBS1.ORA, USERS1.ORA, …)
+            └─ Segments  (données, index, rollback, temporaires, bootstrap)
+                 └─ Extensions
+                      └─ Blocs logiques
+                           └─ Blocs physiques
+```
+
+### Tablespace
+
+Un **tablespace** est un **conteneur logique** Oracle qui regroupe un ou plusieurs fichiers `.dbf`. À la création d'une base, deux tablespaces existent toujours :
+
+- **SYSTEM** : tablespace système (dictionnaire de données, segments d'amorçage).
+- **USERS** : tablespace par défaut pour les objets utilisateurs.
+
+À la création d'un utilisateur, on indique son **tablespace par défaut** :
+
+```sql
+CREATE USER alice IDENTIFIED BY pwd DEFAULT TABLESPACE users;
+```
+
+### Fichiers Oracle
+
+Oracle utilise **trois familles de fichiers** sur disque :
+
+| Fichier | Extension | Rôle |
+|---|---|---|
+| **Fichiers de données** | `.dbf` | Toutes les données de la base : tables, vues matérialisées, index, procédures stockées. |
+| **Fichiers Redo Log** | `.rdo` ou `.log` | Historique des modifications effectuées (servent à la reprise après panne). |
+| **Fichiers de contrôle** | `.ctl` (parfois `.dbf`) | État de la base : emplacement des fichiers, dates de création, version. |
+
+> **Minimum vital** : une base Oracle nécessite **au moins un fichier de données, deux fichiers redo log et un fichier de contrôle**.
+
+Tous ces fichiers sont référencés dans un **fichier d'initialisation** typiquement nommé `init.ora`.
+
+```ini
+# Database Identification
+db_name=XE
+# File Configuration
+control_files=("C:\oraclexe\oradata\XE\control.dbf")
+# Cursors and Library Cache
+open_cursors=300
+# Processes and Sessions
+sessions=20
+```
+
+## Les segments
+
+Un **segment** est un espace alloué dans un tablespace pour un type particulier de données. Oracle distingue cinq familles :
+
+### 1. Segments de données
+
+Stockent les **lignes des tables** (utilisateurs et système) ainsi que les tables groupées en **clusters**. **Une table = un segment**, créé automatiquement à la création de la table.
+
+### 2. Segments d'index
+
+Stockent les **structures d'index**. Ils peuvent résider dans **un tablespace différent** de celui des données — utile pour répartir les E/S sur plusieurs disques :
+
+```sql
+CREATE INDEX idx_nom ON Client(nom) TABLESPACE indexs;
+```
+
+### 3. Segments temporaires
+
+Utilisés par Oracle pour les **opérations SQL** nécessitant un espace disque temporaire (tri d'un `ORDER BY` qui dépasse la mémoire, jointures volumineuses…). Créés à la volée, supprimés en fin d'instruction.
+
+Le tablespace cible se définit utilisateur par utilisateur :
+
+```sql
+CREATE USER alice IDENTIFIED BY pwd
+  DEFAULT TABLESPACE users
+  TEMPORARY TABLESPACE temp;
+```
+
+Si non précisé, le tablespace **SYSTEM** est utilisé (à éviter en production).
+
+### 4. Segment d'amorçage (bootstrap)
+
+Stocké dans **SYSTEM**, il contient les **définitions du dictionnaire de données**, chargées à l'ouverture de la base.
+
+### 5. Segments d'annulation (rollback)
+
+Contiennent **l'image avant modification** des données touchées par une transaction. Ils permettent d'**annuler** (ROLLBACK) une transaction et d'assurer la cohérence en lecture (isolation).
+
+> **À retenir**
+> - Tablespace = conteneur logique de fichiers ; SYSTEM et USERS existent toujours.
+> - 3 types de fichiers : données (.dbf), redo log (.rdo/.log), contrôle (.ctl).
+> - 5 familles de segments : données, index, temporaires, bootstrap, rollback.
+> - Une table = un segment de données, créé automatiquement.
+> - Les index peuvent vivre dans un autre tablespace pour répartir les E/S.
+> - `CREATE USER ... TEMPORARY TABLESPACE temp;` évite d'user SYSTEM pour les tris.

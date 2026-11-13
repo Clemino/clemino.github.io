@@ -1,0 +1,293 @@
+---
+title: "Sémaphores System V"
+slug: semaphores-systemev
+order: 2
+estimatedReadMin: 22
+concepts: [semaphore-systemev, semget, ensemble-semaphores, sembuf, semop, operation-atomique-semop, semctl, union-semun, semaphore-posix-vs-systemev]
+source: "Cours 2 — Les sémaphores (mécanisme P/V abstrait) ; API System V (au-delà des diapositives)"
+---
+
+Le Module 5 a présenté le sémaphore POSIX (`sem_t`) : un compteur, deux opérations `sem_wait` (P) et `sem_post` (V). Le **sémaphore System V** poursuit la **même idée** — un compteur, des opérations P et V — mais c'est un **objet IPC System V** : créé par une **clé**, **persistant dans le noyau**, partageable entre processus **quelconques**. Et il introduit une différence structurelle de taille : on ne crée jamais *un* sémaphore, mais un **ensemble** de sémaphores.
+
+## Rappel : le mécanisme abstrait P et V
+
+Avant l'API System V, redonnons le **principe** du sémaphore, indépendant de toute implémentation.
+
+> Un **sémaphore** est un objet de synchronisation composé de **deux** parties : une **valeur entière** (le compteur, qui représente le nombre d'unités disponibles d'une ressource) et une **file d'attente** des processus bloqués sur ce sémaphore. Deux primitives le manipulent.
+
+- **P** (*Prendre*, ou *Wait*) — **demande d'autorisation**. Si la valeur est **> 0**, elle est **décrémentée** et le processus continue. Si la valeur est **0**, le processus est **bloqué** (endormi, placé dans la file d'attente).
+- **V** (*Vendre*, ou *Signal*) — **restitution d'autorisation**. La valeur est **incrémentée** ; si des processus attendaient, **l'un d'eux est réveillé** (celui qui a dormi le plus longtemps).
+
+Un sémaphore s'**initialise** avec une valeur **positive ou nulle**. Cette valeur initiale encode le rôle : **1** → exclusion mutuelle ; **N** → `N` accès simultanés ; **0** → synchronisation / signalisation. C'est exactement le mécanisme du Module 5 — ici décliné en **objet IPC System V**, donc utilisable **entre processus** (pas seulement entre threads).
+
+## Créer un ensemble de sémaphores : `semget`
+
+Première surprise de l'API System V : `semget` ne crée **pas** un sémaphore isolé.
+
+> **`semget`** crée (ou récupère) un **ensemble** de sémaphores : un **tableau** de `nsems` sémaphores indépendants, désignés globalement par **un seul identifiant**. Chaque sémaphore de l'ensemble est repéré par son **indice**, de `0` à `nsems - 1`.
+
+```c
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+
+int semget(key_t key, int nsems, int semflg);
+```
+
+Ses arguments suivent le **motif `*get`** du chapitre 1 :
+
+- **`key`** — la **clé IPC** : issue de `ftok`, ou `IPC_PRIVATE` ;
+- **`nsems`** — le **nombre de sémaphores** dans l'ensemble. À la **création**, c'est la taille du tableau ; pour seulement **récupérer** un ensemble existant, on peut passer `0` ;
+- **`semflg`** — les **drapeaux** : bits de droits en octal, combinés à `IPC_CREAT` et/ou `IPC_EXCL`.
+
+`semget` renvoie l'**identifiant** de l'ensemble (un `int`), ou **`-1`** + `errno` en cas d'échec.
+
+```c
+key_t cle = ftok("/etc/hosts", 42);
+int   semid = semget(cle, 3, IPC_CREAT | 0600);   /* ensemble de 3 semaphores */
+if (semid == -1) { perror("semget"); exit(EXIT_FAILURE); }
+```
+
+> ⚠️ `semget` crée un **ensemble (un tableau)**, jamais un sémaphore unique. Un sémaphore seul est obtenu en demandant un ensemble de **taille 1** (`nsems == 1`), et on l'utilisera toujours via l'**indice `0`**. C'est la différence la plus déroutante avec le sémaphore POSIX (où une variable `sem_t` *est* un sémaphore). Autre piège : `semget` **n'initialise pas** la valeur des sémaphores — à la création, leur valeur est **indéterminée** ; il faut la fixer explicitement par `semctl` (voir plus bas).
+
+## Manipuler les sémaphores : `struct sembuf` et `semop`
+
+Les opérations P et V ne se font **pas** par deux fonctions distinctes. Une **seule** fonction, **`semop`**, exécute des opérations décrites par des **structures `struct sembuf`**.
+
+### La structure `struct sembuf`
+
+Chaque opération à effectuer sur **un** sémaphore de l'ensemble est décrite par une structure :
+
+```c
+struct sembuf {
+    unsigned short sem_num;   /* indice du semaphore dans l'ensemble (0..nsems-1) */
+    short          sem_op;    /* operation a effectuer (voir ci-dessous)          */
+    short          sem_flg;   /* drapeaux : IPC_NOWAIT, SEM_UNDO                  */
+};
+```
+
+Le champ **`sem_op`** est le cœur du mécanisme. **Son signe détermine l'opération** :
+
+| Valeur de `sem_op` | Opération | Effet |
+|---|---|---|
+| **`sem_op < 0`** | **P** (prendre) | tente de **retrancher** \|`sem_op`\| à la valeur ; si la valeur deviendrait **négative**, le processus **bloque** jusqu'à ce qu'elle soit assez grande |
+| **`sem_op > 0`** | **V** (vendre) | **ajoute** `sem_op` à la valeur ; **réveille** d'éventuels processus en attente |
+| **`sem_op == 0`** | attente de zéro | **bloque** tant que la valeur du sémaphore n'est **pas nulle** (attente que la ressource soit entièrement consommée) |
+
+Une **opération P** est donc un `sem_op` **négatif** (`-1` pour prendre une unité), une **opération V** un `sem_op` **positif** (`+1` pour rendre une unité). C'est la convention de signe à mémoriser absolument.
+
+Le champ `sem_flg` accepte deux drapeaux : **`IPC_NOWAIT`** (rendre l'opération **non bloquante** — au lieu de bloquer, `semop` échoue avec `errno == EAGAIN`), et **`SEM_UNDO`** (le noyau **annule automatiquement** l'opération si le processus se termine — un filet de sécurité contre les sémaphores laissés dans un mauvais état par un processus qui plante).
+
+### L'appel `semop`
+
+```c
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+
+int semop(int semid, struct sembuf *sops, size_t nsops);
+```
+
+- **`semid`** — l'**identifiant** de l'ensemble (renvoyé par `semget`) ;
+- **`sops`** — un **tableau** de `nsops` structures `struct sembuf` : les opérations à exécuter ;
+- **`nsops`** — le **nombre** d'opérations dans ce tableau.
+
+`semop` renvoie **`0`** en cas de succès, **`-1`** + `errno` en cas d'échec.
+
+> Une garantie **fondamentale** : `semop` exécute **toutes** les opérations du tableau `sops` de façon **atomique** — soit toutes réussissent, soit **aucune** n'est appliquée. Si l'une des opérations devrait bloquer, `semop` **bloque** sans avoir appliqué **les autres**, et ne les appliquera que lorsqu'il pourra **toutes** les réaliser. Cela permet de prendre **plusieurs** sémaphores d'un coup, sans risque d'interblocage partiel.
+
+### Les fonctions P et V en pratique
+
+On définit en général des **fonctions enveloppes** lisibles. Voici le motif de référence pour un ensemble dont on utilise le sémaphore d'indice `0` :
+
+```c
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+
+/* P : prendre une unite sur le semaphore numero `num` de l'ensemble `semid` */
+int P(int semid, int num) {
+    struct sembuf op;
+    op.sem_num = num;
+    op.sem_op  = -1;          /* sem_op NEGATIF  -> operation P (prendre) */
+    op.sem_flg = 0;           /* operation bloquante                     */
+    return semop(semid, &op, 1);
+}
+
+/* V : rendre une unite sur le semaphore numero `num` de l'ensemble `semid` */
+int V(int semid, int num) {
+    struct sembuf op;
+    op.sem_num = num;
+    op.sem_op  = +1;          /* sem_op POSITIF  -> operation V (vendre) */
+    op.sem_flg = 0;
+    return semop(semid, &op, 1);
+}
+```
+
+Avec ces deux enveloppes, le code applicatif redevient simple : `P(semid, 0)` avant la section critique, `V(semid, 0)` après — exactement le couple `sem_wait` / `sem_post` du Module 5.
+
+## Contrôler l'ensemble : `semctl`
+
+Il reste deux besoins essentiels : **initialiser** la valeur des sémaphores (puisque `semget` ne le fait pas) et **supprimer** l'ensemble (puisqu'il est persistant). Les deux passent par **`semctl`**.
+
+```c
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+
+int semctl(int semid, int semnum, int cmd, ... /* union semun arg */);
+```
+
+- **`semid`** — l'identifiant de l'ensemble ;
+- **`semnum`** — l'**indice** du sémaphore visé (utile pour les commandes qui agissent sur **un** sémaphore ; ignoré pour celles qui agissent sur l'ensemble entier) ;
+- **`cmd`** — la **commande** à exécuter ;
+- un **quatrième argument optionnel**, de type `union semun`, dont le sens dépend de `cmd`.
+
+Les commandes `cmd` les plus utiles :
+
+| `cmd` | Effet |
+|---|---|
+| **`SETVAL`** | fixe la **valeur** du sémaphore d'indice `semnum` à `arg.val` |
+| **`GETVAL`** | renvoie (comme valeur de retour) la **valeur courante** du sémaphore d'indice `semnum` |
+| **`SETALL`** | fixe les valeurs de **tous** les sémaphores de l'ensemble depuis le tableau `arg.array` |
+| **`GETALL`** | copie les valeurs de **tous** les sémaphores dans le tableau `arg.array` |
+| **`IPC_STAT`** | copie les métadonnées de l'ensemble dans `arg.buf` (`struct semid_ds`) |
+| **`IPC_RMID`** | **supprime** l'ensemble de sémaphores du noyau |
+
+### L'`union semun`
+
+Le quatrième argument n'a pas un type unique : selon `cmd`, c'est un entier, un pointeur de tableau ou un pointeur de structure. La norme historique réunit ces possibilités dans une **union**, `union semun`, que — détail important — **le programme doit lui-même déclarer** (elle n'est pas garantie par les en-têtes) :
+
+```c
+/* a declarer soi-meme : l'union semun n'est pas fournie par <sys/sem.h> */
+union semun {
+    int               val;    /* pour SETVAL                    */
+    struct semid_ds  *buf;     /* pour IPC_STAT, IPC_SET         */
+    unsigned short   *array;   /* pour GETALL, SETALL            */
+};
+```
+
+### Exemple : initialiser, lire, supprimer
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+
+union semun {                          /* declaration obligatoire */
+    int               val;
+    struct semid_ds  *buf;
+    unsigned short   *array;
+};
+
+int main(void) {
+    key_t cle = ftok("/etc/hosts", 42);
+    if (cle == (key_t) -1) { perror("ftok"); exit(EXIT_FAILURE); }
+
+    /* 1. creation d'un ensemble d'UN seul semaphore */
+    int semid = semget(cle, 1, IPC_CREAT | 0600);
+    if (semid == -1) { perror("semget"); exit(EXIT_FAILURE); }
+
+    /* 2. initialisation INDISPENSABLE : valeur 1 (semaphore binaire) */
+    union semun arg;
+    arg.val = 1;
+    if (semctl(semid, 0, SETVAL, arg) == -1) {
+        perror("semctl SETVAL"); exit(EXIT_FAILURE);
+    }
+
+    /* 3. lecture de la valeur courante */
+    int v = semctl(semid, 0, GETVAL);   /* GETVAL renvoie la valeur */
+    printf("Valeur du semaphore 0 : %d\n", v);
+
+    /* ... utilisation : semop pour P et V ... */
+
+    /* 4. suppression de l'ensemble (objet IPC persistant !) */
+    if (semctl(semid, 0, IPC_RMID) == -1) {
+        perror("semctl IPC_RMID"); exit(EXIT_FAILURE);
+    }
+    return 0;
+}
+```
+
+> ⚠️ **Toujours initialiser** la valeur d'un sémaphore System V par `semctl(..., SETVAL, ...)` **avant** de l'utiliser : `semget` laisse la valeur **indéterminée**. Et **toujours supprimer** l'ensemble par `semctl(..., IPC_RMID)` quand le travail est fini : sans cela, l'objet **persiste dans le noyau**. Un sémaphore initialisé par hasard à une valeur farfelue, ou un ensemble orphelin réutilisé d'une exécution à l'autre, sont des bogues classiques — à diagnostiquer avec `ipcs` et à nettoyer avec `ipcrm -s`.
+
+## Exemple complet : exclusion mutuelle entre processus
+
+Voici un sémaphore binaire System V protégeant une section critique partagée par un **père et son fils** — deux processus, là où le Module 5 ne synchronisait que des threads.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+
+union semun { int val; struct semid_ds *buf; unsigned short *array; };
+
+int P(int id) { struct sembuf o = {0, -1, 0}; return semop(id, &o, 1); }
+int V(int id) { struct sembuf o = {0, +1, 0}; return semop(id, &o, 1); }
+
+void section_critique(const char *qui) {
+    printf("%s : entre en section critique\n", qui);
+    sleep(1);                         /* travail exclusif simule */
+    printf("%s : sort de section critique\n", qui);
+}
+
+int main(void) {
+    /* ensemble d'UN semaphore, prive (partage par heritage avec le fils) */
+    int semid = semget(IPC_PRIVATE, 1, IPC_CREAT | 0600);
+    if (semid == -1) { perror("semget"); exit(EXIT_FAILURE); }
+
+    union semun arg;
+    arg.val = 1;                      /* semaphore binaire : valeur 1 */
+    if (semctl(semid, 0, SETVAL, arg) == -1) { perror("semctl"); exit(EXIT_FAILURE); }
+
+    pid_t pid = fork();               /* le fils HERITE de semid */
+    if (pid == -1) { perror("fork"); exit(EXIT_FAILURE); }
+
+    if (pid == 0) {                   /* --- fils --- */
+        P(semid); section_critique("fils");  V(semid);
+        exit(EXIT_SUCCESS);
+    }
+
+    /* --- pere --- */
+    P(semid); section_critique("pere"); V(semid);
+    wait(NULL);                       /* attendre la fin du fils */
+
+    /* le pere, dernier vivant, supprime l'objet IPC */
+    semctl(semid, 0, IPC_RMID);
+    return 0;
+}
+```
+
+Le sémaphore vaut `1` au départ : le premier processus à exécuter `P` le fait passer à `0` et entre en section critique ; l'autre, s'il appelle `P` entre-temps, **bloque** jusqu'au `V` du premier. Les deux affichages « entre / sort » ne s'**imbriquent jamais** : l'exclusion mutuelle est garantie **entre processus**.
+
+## Sémaphore System V ou sémaphore POSIX ?
+
+Les deux familles offrent des sémaphores ; le Module 5 a traité les **POSIX**, ce chapitre les **System V**. Il faut savoir les **distinguer**.
+
+| Critère | Sémaphore **POSIX** (Module 5) | Sémaphore **System V** (ce chapitre) |
+|---|---|---|
+| Type / en-tête | `sem_t`, `<semaphore.h>` | identifiant `int`, `<sys/sem.h>` |
+| Unité de création | **un** sémaphore (`sem_init` / `sem_open`) | un **ensemble** (tableau) de sémaphores (`semget`) |
+| Opération P | `sem_wait` (fonction dédiée) | `semop` avec `sem_op < 0` |
+| Opération V | `sem_post` (fonction dédiée) | `semop` avec `sem_op > 0` |
+| Initialisation de la valeur | à la création (`sem_init`) | **séparée**, par `semctl(..., SETVAL, ...)` |
+| Opérations multiples atomiques | non | **oui** (`semop` sur un tableau d'opérations) |
+| Portée | threads, ou processus (sémaphore nommé) | processus **quelconques** (objet IPC) |
+| Persistance | nommé : système de fichiers | **persistant dans le noyau** |
+| Style | **moderne**, simple, recommandé | **historique**, plus lourd (`union semun`…) |
+
+En résumé : l'API **POSIX** est plus **simple et moderne** ; l'API **System V** est plus **ancienne et verbeuse**, mais elle s'inscrit dans la famille **uniforme** des IPC System V (mêmes clés, mêmes commandes `ipcs`/`ipcrm` que les files de messages et la mémoire partagée) — ce qui la rend incontournable, notamment pour **synchroniser l'accès à un segment de mémoire partagée** (chapitre 4).
+
+> **À retenir**
+> - Un **sémaphore System V** reprend le mécanisme **P/V** (un compteur, P décrémente ou bloque, V incrémente et réveille) mais c'est un **objet IPC** : clé, identifiant, **persistance dans le noyau**, partage entre processus quelconques.
+> - **`semget(key, nsems, semflg)`** crée ou récupère un **ensemble** (tableau) de `nsems` sémaphores ; un sémaphore seul = un ensemble de **taille 1**, utilisé via l'**indice 0**.
+> - Les opérations passent par **`semop(semid, sops, nsops)`** et des **`struct sembuf`**. **Le signe de `sem_op`** fait l'opération : **négatif → P** (prendre), **positif → V** (vendre), **zéro → attente de zéro**.
+> - `semop` applique le tableau d'opérations de façon **atomique** : tout ou rien.
+> - **`semctl`** contrôle l'ensemble : **`SETVAL`** initialise la valeur (indispensable — `semget` ne le fait pas), **`GETVAL`** la lit, **`IPC_RMID`** **supprime** l'ensemble. Le quatrième argument est une **`union semun`** que le programme doit **déclarer lui-même**.
+> - Différences avec le sémaphore **POSIX** : System V crée un **ensemble** (pas un sémaphore isolé), sépare l'**initialisation** de la création, et autorise des **opérations multiples atomiques** ; il est plus verbeux mais s'intègre à la famille IPC (clés, `ipcs`, `ipcrm`).

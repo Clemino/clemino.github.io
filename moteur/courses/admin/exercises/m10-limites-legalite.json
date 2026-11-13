@@ -1,0 +1,1144 @@
+[
+ {
+  "chapterSlug": "actes-en-deca",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Qu'est-ce qu'une mesure d'ordre intérieur ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Une décision du juge"
+    },
+    {
+     "id": "b",
+     "label": "Une décision interne à faible impact, insusceptible de recours"
+    },
+    {
+     "id": "c",
+     "label": "Une décision interne qui touche les droits fondamentaux, ouverte à tout recours devant le juge"
+    },
+    {
+     "id": "d",
+     "label": "Une loi organique"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "Elle ne fait pas grief, en raison de ses faibles effets.",
+  "hint": "Le cours parle d'actes trop peu importants pour être contrôlés.",
+  "concepts": [
+   "mesures-ordre-interieur"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-en-deca",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque arrêt à son domaine.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Kherouaa"
+    },
+    {
+     "id": "l1",
+     "label": "Hardouin"
+    },
+    {
+     "id": "l2",
+     "label": "Marie"
+    },
+    {
+     "id": "l3",
+     "label": "Mme B."
+    }
+   ],
+   "right": [
+    {
+     "id": "r1",
+     "label": "Armée"
+    },
+    {
+     "id": "r3",
+     "label": "Agents publics"
+    },
+    {
+     "id": "r2",
+     "label": "Prison"
+    },
+    {
+     "id": "r0",
+     "label": "École"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2",
+    "l3": "r3"
+   }
+  },
+  "explanation": "Ces arrêts montrent le recul des mesures d'ordre intérieur.",
+  "hint": "Trois milieux différents : l'école, l'armée, la prison, et un arrêt pour les agents.",
+  "concepts": [
+   "mesures-ordre-interieur"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-en-deca",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Selon Boussouar, sur quels critères qualifier une mesure en prison ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La gravité de l'infraction commise et le comportement du détenu en détention"
+    },
+    {
+     "id": "b",
+     "label": "La durée de la peine"
+    },
+    {
+     "id": "c",
+     "label": "La nature de l'acte et l'importance de ses effets"
+    },
+    {
+     "id": "d",
+     "label": "L'accord du détenu"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Le déclassement d'emploi est ainsi attaquable.",
+  "hint": "Le Conseil d'État regarde ce qu'est l'acte et ce qu'il change pour le détenu.",
+  "concepts": [
+   "mesures-ordre-interieur"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-en-deca",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Le déclassement d'emploi d'un détenu peut faire l'objet d'un recours pour excès de pouvoir.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Il est attaquable, à la différence du refus d'emploi.",
+  "hint": "Compare le travail du détenu à ce qu'il lui apporte : revenus et réinsertion.",
+  "concepts": [
+   "mesures-ordre-interieur"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-en-deca",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Le refus d'emploi opposé à un détenu est toujours attaquable.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Il ne l'est pas, sauf si des libertés et droits fondamentaux sont en cause.",
+  "hint": "Boussouar distingue le déclassement et d'autres décisions proches.",
+  "concepts": [
+   "mesures-ordre-interieur"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-en-deca",
+  "type": "MCQ_SINGLE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Une fonctionnaire est affectée à une autre section, sans perte de responsabilités ni de rémunération et sans atteinte à ses droits. Que décide le juge selon Mme B. ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "C'est une mesure d'ordre intérieur, sauf discrimination"
+    },
+    {
+     "id": "b",
+     "label": "Le recours est recevable, car tout changement d'affectation fait grief à l'agent"
+    },
+    {
+     "id": "c",
+     "label": "Le recours est toujours recevable"
+    },
+    {
+     "id": "d",
+     "label": "C'est un acte de gouvernement"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "C'est le critère de la décision.",
+  "hint": "Vérifie si la mesure touche aux droits statutaires ou à la rémunération.",
+  "concepts": [
+   "mesures-ordre-interieur"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-en-deca",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Que peut-on contester après un avis préalable à une décision ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Ni l'un ni l'autre"
+    },
+    {
+     "id": "b",
+     "label": "La décision finale"
+    },
+    {
+     "id": "c",
+     "label": "L'avis seul"
+    },
+    {
+     "id": "d",
+     "label": "Le fonctionnaire qui l'a rédigé"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "L'acte préparatoire est contrôlé à travers la décision finale.",
+  "hint": "Un acte préparatoire n'a pas de sens tout seul.",
+  "concepts": [
+   "actes-preparatoires"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-en-deca",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Selon GISTI (2020), quel document peut être déféré au juge ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Uniquement un document impératif, qui s'adresse aux agents et les oblige à appliquer une interprétation de la loi"
+    },
+    {
+     "id": "b",
+     "label": "Aucun document de portée générale"
+    },
+    {
+     "id": "c",
+     "label": "Un document susceptible d'avoir des effets notables sur d'autres personnes que les agents qui l'appliquent"
+    },
+    {
+     "id": "d",
+     "label": "Seulement une circulaire impérative"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Le critère est celui des effets notables.",
+  "hint": "Le critère est celui des effets, et sur qui ils se produisent.",
+  "concepts": [
+   "droit-souple"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-en-deca",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quels documents ont, notamment, de tels effets ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Ceux qui présentent le caractère de lignes directrices"
+    },
+    {
+     "id": "b",
+     "label": "Les simples discours"
+    },
+    {
+     "id": "c",
+     "label": "Les notes sans aucune portée"
+    },
+    {
+     "id": "d",
+     "label": "Ceux qui ont un caractère impératif"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "d"
+   ]
+  },
+  "explanation": "GISTI cite ces deux catégories.",
+  "hint": "L'arrêt cite deux catégories de documents qui produisent de tels effets.",
+  "concepts": [
+   "droit-souple"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-gouvernement",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quelle est la conséquence d'un acte de gouvernement ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Il relève du juge judiciaire"
+    },
+    {
+     "id": "b",
+     "label": "Il échappe au contrôle du juge"
+    },
+    {
+     "id": "c",
+     "label": "Il doit être ratifié"
+    },
+    {
+     "id": "d",
+     "label": "Il est annulé automatiquement"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "C'est une immunité juridictionnelle.",
+  "hint": "Le cours parle d'actes trop importants pour être contrôlés.",
+  "concepts": [
+   "actes-gouvernement"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-gouvernement",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quels actes sont des actes de gouvernement ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Un permis de construire"
+    },
+    {
+     "id": "b",
+     "label": "La décision d'engager l'armée"
+    },
+    {
+     "id": "c",
+     "label": "La décision de recourir à l'article 16"
+    },
+    {
+     "id": "d",
+     "label": "La dissolution de l'Assemblée nationale"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b",
+    "c",
+    "d"
+   ]
+  },
+  "explanation": "Le permis est détachable, même accordé à une autorité étrangère.",
+  "hint": "Pense aux rapports entre pouvoirs publics et à la diplomatie.",
+  "concepts": [
+   "actes-gouvernement"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-gouvernement",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Un acte de gouvernement peut faire l'objet d'un recours pour excès de pouvoir.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Il en est exclu : la dissolution, par exemple, ne se conteste pas.",
+  "hint": "Le cours parle d'une immunité juridictionnelle.",
+  "concepts": [
+   "actes-gouvernement"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-gouvernement",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quel arrêt soumet le décret d'extradition au contrôle du juge ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Decerf"
+    },
+    {
+     "id": "b",
+     "label": "Heyriès"
+    },
+    {
+     "id": "c",
+     "label": "Boussouar"
+    },
+    {
+     "id": "d",
+     "label": "Kherouaa"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "CE, 1937.",
+  "hint": "C'est un arrêt de 1937, qui a réduit le champ des actes de gouvernement.",
+  "concepts": [
+   "acte-detachable"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-gouvernement",
+  "type": "MCQ_SINGLE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Dans l'affaire ACAT, pourquoi le juge est-il incompétent ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Les licences sont de droit privé"
+    },
+    {
+     "id": "b",
+     "label": "L'association n'a pas d'intérêt à agir, car elle n'est pas établie dans les pays impliqués dans la guerre au Yémen"
+    },
+    {
+     "id": "c",
+     "label": "La demande était tardive"
+    },
+    {
+     "id": "d",
+     "label": "Le refus de suspendre les licences n'est pas détachable de la conduite des relations internationales"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "C'est un acte de gouvernement.",
+  "hint": "Demande-toi si la décision peut être séparée de la politique étrangère.",
+  "concepts": [
+   "acte-detachable"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-gouvernement",
+  "type": "TRUE_FALSE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Des préjudices non détachables de la conduite des relations avec un autre État ne peuvent pas engager la responsabilité de l'État pour faute.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "C'est la solution de l'arrêt M. B. de 2018.",
+  "hint": "L'arrêt M. B. de 2018 se place sur le terrain de la faute.",
+  "concepts": [
+   "acte-detachable"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-gouvernement",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque acte à sa catégorie.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Dissolution"
+    },
+    {
+     "id": "l1",
+     "label": "Négociation d'un traité"
+    },
+    {
+     "id": "l2",
+     "label": "Décret d'extradition"
+    }
+   ],
+   "right": [
+    {
+     "id": "r0",
+     "label": "Rapports entre pouvoirs publics"
+    },
+    {
+     "id": "r1",
+     "label": "Relations internationales"
+    },
+    {
+     "id": "r2",
+     "label": "Acte détachable"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2"
+   }
+  },
+  "explanation": "Ce dernier reste contestable.",
+  "hint": "Tout dépend du lien avec les pouvoirs publics ou les relations internationales.",
+  "concepts": [
+   "actes-gouvernement"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 1, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "pouvoir-discretionnaire",
+  "type": "MATCHING",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Associe chaque notion à sa définition.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Compétence liée"
+    },
+    {
+     "id": "l1",
+     "label": "Pouvoir discrétionnaire"
+    }
+   ],
+   "right": [
+    {
+     "id": "r1",
+     "label": "L'administration dispose d'une marge"
+    },
+    {
+     "id": "r0",
+     "label": "L'administration n'a pas le choix"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1"
+   }
+  },
+  "explanation": "La précision des normes fait la différence.",
+  "hint": "La précision des normes fait la différence.",
+  "concepts": [
+   "competence-liee"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §1"
+ },
+ {
+  "chapterSlug": "pouvoir-discretionnaire",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel est le danger du pouvoir discrétionnaire ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'arbitraire"
+    },
+    {
+     "id": "b",
+     "label": "La loi-écran"
+    },
+    {
+     "id": "c",
+     "label": "La décentralisation"
+    },
+    {
+     "id": "d",
+     "label": "La lenteur du juge"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "C'est pourquoi le juge le contrôle.",
+  "hint": "Le juge contrôle ce pouvoir pour une raison : qu'est-ce qu'on redoute ?",
+  "concepts": [
+   "pouvoir-discretionnaire"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §1"
+ },
+ {
+  "chapterSlug": "pouvoir-discretionnaire",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Que sanctionne le contrôle restreint ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'erreur manifeste d'appréciation"
+    },
+    {
+     "id": "b",
+     "label": "L'erreur d'opportunité"
+    },
+    {
+     "id": "c",
+     "label": "Toute erreur de qualification"
+    },
+    {
+     "id": "d",
+     "label": "Aucune erreur"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Il faut que l'erreur soit grossière.",
+  "hint": "Le contrôle restreint ne s'intéresse qu'aux erreurs les plus grossières.",
+  "concepts": [
+   "intensite-controle"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §1"
+ },
+ {
+  "chapterSlug": "pouvoir-discretionnaire",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Plus la règle est précise, plus le contrôle du juge est étendu.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "C'est la gradation de l'intensité du contrôle.",
+  "hint": "Le contrôle suit la précision de la norme.",
+  "concepts": [
+   "intensite-controle"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §1"
+ },
+ {
+  "chapterSlug": "pouvoir-discretionnaire",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Le pouvoir discrétionnaire échappe à tout contrôle du juge.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Le juge contrôle au moins la compétence, la forme, le droit et le but.",
+  "hint": "Le cours énumère plusieurs aspects toujours contrôlés.",
+  "concepts": [
+   "pouvoir-discretionnaire"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §1"
+ },
+ {
+  "chapterSlug": "pouvoir-discretionnaire",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Un maire prend une décision pour servir l'intérêt personnel d'un ami. De quelle illégalité s'agit-il ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Une incompétence"
+    },
+    {
+     "id": "b",
+     "label": "Une erreur de droit"
+    },
+    {
+     "id": "c",
+     "label": "Un vice de forme"
+    },
+    {
+     "id": "d",
+     "label": "Un détournement de pouvoir"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Le but d'une décision doit être l'intérêt général.",
+  "hint": "Regarde le but de la décision.",
+  "concepts": [
+   "pouvoir-discretionnaire"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §1"
+ },
+ {
+  "chapterSlug": "pouvoir-discretionnaire",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quels aspects le juge contrôle-t-il ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Les règles de forme et de procédure"
+    },
+    {
+     "id": "b",
+     "label": "La compétence de l'auteur"
+    },
+    {
+     "id": "c",
+     "label": "La qualification juridique des faits"
+    },
+    {
+     "id": "d",
+     "label": "Le but de la décision"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "b",
+    "c",
+    "d"
+   ]
+  },
+  "explanation": "Le cours énumère cinq aspects, avec l'application du droit.",
+  "hint": "Le cours énumère cinq aspects, de l'auteur de l'acte jusqu'aux faits.",
+  "concepts": [
+   "pouvoir-discretionnaire"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §1"
+ },
+ {
+  "chapterSlug": "pouvoir-discretionnaire",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Toute méconnaissance d'une règle de forme entraîne l'annulation.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Elle ne l'entraîne que si elle a eu un impact sur la décision ou privé d'une garantie.",
+  "hint": "Il faut un impact sur la décision, ou la perte d'une garantie.",
+  "concepts": [
+   "pouvoir-discretionnaire"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §1"
+ },
+ {
+  "chapterSlug": "regimes-crise",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quelles sont les conditions de l'article 16 ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Une menace grave et immédiate"
+    },
+    {
+     "id": "b",
+     "label": "L'interruption du fonctionnement régulier des pouvoirs publics"
+    },
+    {
+     "id": "c",
+     "label": "Un vote du Sénat"
+    },
+    {
+     "id": "d",
+     "label": "Une calamité publique"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "b"
+   ]
+  },
+  "explanation": "La calamité publique relève de l'état d'urgence.",
+  "hint": "L'article 16 concerne les pouvoirs publics et une menace sur la Nation.",
+  "concepts": [
+   "regimes-crise"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "regimes-crise",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel texte fonde l'état d'urgence ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'article 16"
+    },
+    {
+     "id": "b",
+     "label": "La loi du 9 août 1849"
+    },
+    {
+     "id": "c",
+     "label": "L'article 36"
+    },
+    {
+     "id": "d",
+     "label": "La loi du 3 avril 1955"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Il a un fondement législatif.",
+  "hint": "Ce régime a un fondement législatif, adopté pendant la guerre d'Algérie.",
+  "concepts": [
+   "regimes-crise"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "regimes-crise",
+  "type": "MATCHING",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Associe chaque régime à sa nature.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "État de siège"
+    },
+    {
+     "id": "l1",
+     "label": "État d'urgence"
+    }
+   ],
+   "right": [
+    {
+     "id": "r0",
+     "label": "Régime militaire"
+    },
+    {
+     "id": "r1",
+     "label": "Régime civil"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1"
+   }
+  },
+  "explanation": "C'est la différence essentielle.",
+  "hint": "L'un confie les pouvoirs à l'armée, l'autre aux autorités civiles.",
+  "concepts": [
+   "regimes-crise"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "regimes-crise",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "La prorogation de l'état d'urgence au-delà de douze jours exige une loi.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "L'article 2 de la loi de 1955 le prévoit.",
+  "hint": "La loi de 1955 encadre la durée du régime.",
+  "concepts": [
+   "regimes-crise"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "regimes-crise",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quels arrêts fondent la théorie des circonstances exceptionnelles ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Heyriès et Dames Dol et Laurent"
+    },
+    {
+     "id": "b",
+     "label": "Nicolo et Sarran"
+    },
+    {
+     "id": "c",
+     "label": "Benjamin et Daudignac"
+    },
+    {
+     "id": "d",
+     "label": "Blanco et Cadot"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Ils datent de 1918 et 1919.",
+  "hint": "Ces arrêts datent de la Première Guerre mondiale.",
+  "concepts": [
+   "circonstances-exceptionnelles"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "regimes-crise",
+  "type": "MCQ_MULTI",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Selon l'arrêt de 2025, que faut-il pour agir sur le fondement des circonstances exceptionnelles ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'absence de tout contrôle du juge"
+    },
+    {
+     "id": "b",
+     "label": "L'accord préalable du Parlement"
+    },
+    {
+     "id": "c",
+     "label": "Des mesures indispensables à la date de la décision"
+    },
+    {
+     "id": "d",
+     "label": "Une impossibilité d'agir selon les normes en vigueur"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c",
+    "d"
+   ]
+  },
+  "explanation": "Le contrôle reste entier.",
+  "hint": "Regarde le point 2 de l'arrêt : deux conditions sur l'action de l'administration.",
+  "concepts": [
+   "circonstances-exceptionnelles"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "regimes-crise",
+  "type": "MCQ_SINGLE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Pourquoi la suspension de TikTok est-elle annulée ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le Premier ministre ne peut jamais sortir de ses compétences, même en cas de circonstances exceptionnelles"
+    },
+    {
+     "id": "b",
+     "label": "Les troubles n'étaient pas graves"
+    },
+    {
+     "id": "c",
+     "label": "Le Premier ministre ne pouvait jamais agir"
+    },
+    {
+     "id": "d",
+     "label": "L'interruption totale pour une durée indéterminée est disproportionnée"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Le principe d'une interruption provisoire était admis.",
+  "hint": "Le principe d'une interruption provisoire était admis : regarde sa durée et son étendue.",
+  "concepts": [
+   "circonstances-exceptionnelles"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "regimes-crise",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Les circonstances exceptionnelles suspendent tout contrôle du juge.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Le juge exerce un entier contrôle.",
+  "hint": "L'arrêt de 2025 précise la nature du contrôle du juge.",
+  "concepts": [
+   "circonstances-exceptionnelles"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "regimes-crise",
+  "type": "FILL_BLANK",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Complète la disposition.",
+  "payload": {
+   "template": "L'état de siège est prévu à l'article {{a}} de la Constitution.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "md"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "36"
+    ]
+   }
+  },
+  "explanation": "Il suppose un péril imminent résultant d'une guerre étrangère ou d'une insurrection armée.",
+  "hint": "C'est un article du titre de la Constitution sur les rapports entre le Parlement et le Gouvernement.",
+  "concepts": [
+   "regimes-crise"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2, Section 2, §2 ; Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "td-seance-9",
+  "type": "WRITING",
+  "difficulty": 3,
+  "points": 4,
+  "prompt": "Sujet d'entraînement (non officiel) : « Le principe de légalité connaît-il de véritables exceptions ? » Rédige l'introduction et le plan détaillé.",
+  "payload": {
+   "modelAnswer": "Accroche : en 2025, le Conseil d'État admet qu'une autorité puisse sortir de ses compétences habituelles, et annule pourtant sa décision.\n\nDéfinitions : le principe de légalité soumet l'administration au droit. Une véritable exception serait une situation où ce principe cesserait de s'appliquer.\n\nProblématique : les limites au principe de légalité sont-elles des exceptions, ou seulement des aménagements du contrôle ?\n\nI. Des effacements réels mais de plus en plus étroits. A. Des actes trop peu importants pour être contrôlés (Kherouaa, Boussouar, GISTI). B. Des actes trop importants pour être contrôlés (actes de gouvernement, ACAT, Decerf).\n\nII. Des assouplissements qui maintiennent le contrôle. A. Le pouvoir discrétionnaire, une liberté contrôlée (intensité du contrôle). B. Les crises, une légalité adaptée (article 16, Heyriès, LDH 2025).",
+   "rubric": [
+    {
+     "id": "c0",
+     "label": "Le principe de légalité est défini"
+    },
+    {
+     "id": "c1",
+     "label": "La problématique discute la notion d'exception"
+    },
+    {
+     "id": "c2",
+     "label": "La distinction entre effacement et assouplissement structure le plan"
+    },
+    {
+     "id": "c3",
+     "label": "Le recul des mesures d'ordre intérieur ou des actes de gouvernement est montré"
+    },
+    {
+     "id": "c4",
+     "label": "La décision de 2025 est utilisée"
+    }
+   ]
+  },
+  "solution": {},
+  "explanation": "Ce corrigé n'est qu'un exemple : il n'est pas officiel.",
+  "concepts": [
+   "pouvoir-discretionnaire",
+   "circonstances-exceptionnelles"
+  ],
+  "source": "Fascicule de TD, séance 9"
+ }
+]

@@ -1,0 +1,343 @@
+---
+title: "Le cadre du renforcement : processus de décision markovien"
+slug: cadre-renforcement-mdp
+order: 1
+estimatedReadMin: 24
+concepts: [apprentissage-par-renforcement, agent-environnement, essai-erreur, signal-de-renforcement, propriete-de-markov, chaine-de-markov, matrice-de-transition, processus-de-decision-markovien, fonction-de-transition]
+source: "Apprentissage_renforcement.pdf"
+---
+
+## De quoi s'agit-il ?
+
+Ce module présente un **troisième grand type d'apprentissage**, à côté de
+l'apprentissage supervisé et de l'apprentissage non supervisé : l'**apprentissage
+par renforcement** (en anglais *reinforcement learning*). Le cours en donne la
+définition suivante :
+
+> **Définition** : l'**apprentissage par renforcement** est le problème auquel
+> est confronté un **agent** qui **apprend à se comporter** à l'aide des
+> **interactions avec son environnement**, basées sur le principe
+> **Essai-Erreur**.
+
+Autrement dit : **chaque action effectuée par l'agent provoque un retour de la
+part de l'environnement** — une **« récompense »** ou une **« punition »**. Ce
+retour est **utilisé par l'agent pour affiner ses choix** de l'action à
+exécuter.
+
+L'idée centrale tient donc en une boucle. L'agent **agit**, l'environnement
+**réagit** par un retour chiffré, et l'agent **se sert de ce retour** pour mieux
+agir la fois suivante. C'est le principe **Essai-Erreur** : on essaie, on
+observe le résultat, on corrige.
+
+> **À retenir** : l'**apprentissage par renforcement** est le problème d'un
+> **agent** qui **apprend à se comporter** par ses **interactions** avec son
+> **environnement**, selon le principe **Essai-Erreur** : chaque action provoque
+> un **retour** (récompense ou punition) que l'agent utilise pour **affiner ses
+> choix**.
+
+## Le modèle agent / environnement
+
+Le cours détaille le **modèle de l'apprentissage** :
+
+- un **agent est connecté à son environnement** via sa **perception** et son
+  **action** ;
+- à **chaque étape**, l'agent **reçoit en entrée une indication concernant
+  l'état de l'environnement**. Il **choisit alors une action** ;
+- l'**action modifie l'état de l'environnement**, et l'agent **reçoit un
+  retour** de ce dernier ;
+- le **comportement de l'agent doit maximiser la somme à long terme de ces
+  retours** ;
+- l'agent **apprend** à faire cela en **renouvelant les essais** et en **prenant
+  en compte les retours** de l'environnement.
+
+On retient de ce modèle un **cycle perception → action → retour**, répété étape
+après étape :
+
+```text
+        ┌──────────────────────────────────┐
+        │          Environnement           │
+        └──────────────────────────────────┘
+   (1) Perception │   ▲ (2) Action   │ (3) Retour (reward)
+                  ▼   │              ▼
+        ┌──────────────────────────────────┐
+        │              AGENT               │
+        └──────────────────────────────────┘
+```
+
+Le cours illustre ce cadre par deux **exemples** :
+
+1. **un robot qui se déplace** dans un environnement dans lequel il y a de la
+   **nourriture** (→ récompense) et des **obstacles** (→ punition) ;
+2. les **jeux** (par exemple le **Backgammon** ou le **Go**) : un **gain** →
+   récompense, une **perte** → punition.
+
+> **À retenir** : l'agent est **connecté** à son environnement par sa
+> **perception** et son **action**. Le cycle se répète : il **perçoit** l'état,
+> **choisit** une action, l'action **modifie** l'environnement, et il **reçoit
+> un retour**. Son but est de **maximiser la somme à long terme** des retours,
+> ce qu'il **apprend** en multipliant les essais.
+
+## La formalisation d'un problème d'apprentissage par renforcement
+
+Le cours **formalise** un problème d'apprentissage par renforcement. Il est
+**défini par** :
+
+- un **ensemble d'états `S`** ;
+- un **ensemble d'actions `A`** ;
+- un **ensemble de « signaux de renforcement » scalaires** : qui peut être
+  l'ensemble `{0, 1}` ou l'ensemble `ℝ` par exemple ;
+- une **fonction `I`** dont l'ensemble de départ est `S`. À chaque étape,
+  l'entrée de l'agent est la valeur `I(s)`, où `s` est l'état en cours. Ici on
+  prend **`I` = la fonction Identité de `S`** (comme c'est souvent le cas dans le
+  domaine). Ce choix correspond à l'hypothèse de l'**« observabilité totale »** :
+  **l'agent perçoit l'environnement tel qu'il est** ;
+- une **fonction `reward`** qui détermine le **« signal de renforcement » `r`**
+  obtenu **après chaque action**.
+
+Le **déroulement de l'apprentissage** est donc une **suite d'étapes** dont
+chacune est composée de :
+
+1. **Perception** : l'agent reçoit la valeur de l'état `s` ;
+2. **Décision / Action** : l'agent exécute une action `a` ;
+3. **Conséquence** : l'agent reçoit un `reward` `r` de la part de
+   l'environnement — l'environnement passe dans l'état `s′`.
+
+L'agent doit donc **associer une action `a` à chaque état `s`**. Il doit pour
+cela **apprendre une stratégie `π : S ⟶ A`**. Cet apprentissage est **guidé par
+un objectif** : **maximiser la somme des rewards à long terme**. **Plusieurs
+algorithmes d'apprentissage sont possibles** (étudiés plus loin).
+
+> **À retenir** : un problème d'apprentissage par renforcement est défini par un
+> **ensemble d'états `S`**, un **ensemble d'actions `A`**, un ensemble de
+> **signaux de renforcement** scalaires, une **fonction `I`** (prise égale à
+> l'**identité** : observabilité totale) et une **fonction `reward`**. Chaque
+> étape est un triplet **perception → action → conséquence**, et l'agent doit
+> **apprendre une stratégie `π : S ⟶ A`**.
+
+## Un environnement non déterministe et stationnaire
+
+Le cours ajoute une **remarque** importante sur la nature de l'environnement :
+
+> **L'environnement est souvent non déterministe** : une **même action**
+> exécutée à partir d'un **même état** à **deux moments différents** peut
+> générer **deux couples différents** (reward `r`, nouvel état `s′`).
+
+Même dans ce cas, le cours précise que **l'environnement est supposé
+stationnaire** :
+
+> Les **probabilités** des nouveaux couples `(r, s′)` sont **toujours les
+> mêmes**.
+
+Il faut donc bien distinguer deux propriétés :
+
+| Propriété | Signification |
+| --- | --- |
+| **Non déterministe** | À `(s, a)` fixés, le couple `(r, s′)` obtenu **n'est pas toujours le même** : il est tiré au hasard |
+| **Stationnaire** | Les **probabilités** de ces couples `(r, s′)` **ne changent pas** au cours du temps |
+
+C'est cette **stationnarité** qui rend l'apprentissage possible : si les
+probabilités changeaient sans cesse, ce que l'agent a appris hier ne vaudrait
+plus rien aujourd'hui.
+
+> **À retenir** : l'environnement est **non déterministe** (une même action dans
+> un même état peut produire des couples `(r, s′)` différents) mais
+> **stationnaire** (les **probabilités** de ces couples sont **constantes** dans
+> le temps).
+
+## L'apprentissage par renforcement parmi les types d'apprentissage
+
+Le cours **situe l'apprentissage par renforcement** par rapport aux autres
+formes d'apprentissage. Il rappelle d'abord la définition de l'apprentissage :
+
+> Un programme (un **agent**) **apprend** si sa **performance** dans l'exécution
+> d'une **tâche** s'**améliore** avec l'**expérience**.
+
+L'apprentissage par renforcement **vérifie bien cette définition** :
+
+- la **performance** dans l'exécution est **mesurée par le retour** de
+  l'environnement ;
+- l'**expérience** est la **suite des interactions** avec l'environnement ;
+- l'**amélioration** de la performance grâce à l'expérience se fait par la
+  **prise en compte des retours** de l'environnement dans l'exécution des
+  actions « qui rapportent le plus ».
+
+Le cours le **distingue ensuite** des deux autres grands types d'apprentissage :
+
+- **contrairement à l'apprentissage supervisé**, l'apprentissage par
+  renforcement **ne reçoit pas en entrée des exemples** (**pas de superviseur**)
+  qu'il faudrait généraliser ;
+- **contrairement à l'apprentissage non supervisé**, l'apprentissage par
+  renforcement **ne se contente pas de regrouper les données** (les états et les
+  actions) selon une mesure de similarité. Il leur **associe une valeur** en
+  fonction des retours de l'environnement ;
+- **contrairement aux deux**, l'apprentissage par renforcement introduit la
+  **notion d'action** et celles d'**essai**, d'**erreur** et de
+  **récompense / punition**. Il introduit aussi le **facteur temps** (prise en
+  compte de la récompense à long terme).
+
+| Type d'apprentissage | Entrée | Ce qui est appris |
+| --- | --- | --- |
+| **Supervisé** | Des **exemples étiquetés** (un superviseur) | Une généralisation des exemples |
+| **Non supervisé** | Des **données sans étiquette** | Des **groupes** d'objets similaires |
+| **Par renforcement** | Des **interactions** et des **retours** | Une **stratégie** d'action, guidée par une **valeur** |
+
+> **À retenir** : l'apprentissage par renforcement **est bien un apprentissage**
+> (la performance s'améliore avec l'expérience). Il se distingue du supervisé
+> (**pas d'exemples**, pas de superviseur), du non supervisé (il **associe une
+> valeur**, ne se contente pas de regrouper), et introduit l'**action**,
+> l'**Essai-Erreur** et le **facteur temps**.
+
+## La propriété de Markov
+
+Pour modéliser ces problèmes, le cours introduit un cadre mathématique : les
+**processus de Markov**. Il part de deux définitions.
+
+> **Définition** : un **processus stochastique** est une **famille de variables
+> aléatoires `Xₜ`**, `t ∈ T`, **indexée par le temps**.
+
+> **Définition** : un processus stochastique vérifie la **propriété de Markov**
+> si la **prédiction de l'avenir à partir du présent n'est pas rendue plus
+> précise par la connaissance du passé**. Un tel processus est appelé
+> **processus de Markov**. Un processus de Markov peut être **continu** ou
+> **discret**.
+
+Le cours précise le **cas discret**. Soit `Xₜ`, `t ∈ ℕ`, une suite de variables
+aléatoires prenant leurs valeurs dans l'ensemble **fini ou dénombrable**
+`S = {s₁, s₂, …, s_M, …}`, appelé **espace d'états**. Cette suite est appelée
+**chaîne de Markov** si l'on a la propriété : pour tout ensemble de valeurs
+`x₀, …, xₜ₋₁, x, y` prises dans `S`,
+
+```text
+P(Xₜ₊₁ = y | Xₜ = x, Xₜ₋₁ = xₜ₋₁, …, X₀ = x₀) = P(Xₜ₊₁ = y | Xₜ = x)
+```
+
+Le cours explique ce que **cela signifie** :
+
+- l'**état à un instant donné dépend de celui à l'instant précédent mais pas de
+  l'historique** ;
+- autrement dit : **« le futur dépend directement du présent mais pas du
+  passé »** ;
+- on peut aussi parler d'un **processus « sans mémoire »** ;
+- la **distribution conditionnelle de probabilité des états futurs ne dépend que
+  de l'état présent**.
+
+> **À retenir** : un **processus stochastique** est une famille de variables
+> aléatoires indexée par le temps. Il vérifie la **propriété de Markov** si le
+> **futur ne dépend que du présent** (et pas du passé) — un processus **« sans
+> mémoire »**. Une suite discrète vérifiant cette propriété sur un **espace
+> d'états `S`** est une **chaîne de Markov**.
+
+## La matrice de transition
+
+Pour une chaîne de Markov, le cours **note `Pᵢⱼ`**, pour `sᵢ, sⱼ ∈ S`, la
+**probabilité de passer de l'état `sᵢ` à l'état `sⱼ`**. Autrement dit :
+
+```text
+Pᵢⱼ = P(Xₙ₊₁ = sⱼ | Xₙ = sᵢ)
+```
+
+Ces valeurs sont **résumées dans une matrice carrée** appelée **matrice de
+transition** :
+
+```text
+        ⎛ P₁₁   P₁₂   …   P₁M ⎞
+        ⎜ P₂₁   P₂₂   …   P₂M ⎟
+   P =  ⎜  …     …    …    …  ⎟
+        ⎝ PM₁   PM₂   …   PMM ⎠
+```
+
+Le cours en donne une **propriété** : la **somme des éléments de chaque ligne
+est égale à 1**. C'est normal : depuis un état `sᵢ`, l'agent passe forcément
+dans **l'un** des états de `S`, donc les probabilités d'une ligne couvrent
+**tous les cas possibles**.
+
+Le cours note enfin que la **connaissance de la matrice de transition et de la
+distribution de `X₀`** est **suffisante pour calculer la probabilité de toute
+suite d'états**. En effet, en appliquant la propriété de Markov, la probabilité
+d'une suite `x₀, x₁, …, xₙ` se décompose en un produit :
+
+```text
+P(Xₙ = xₙ, …, X₀ = x₀) = P_xₙxₙ₋₁ · P_xₙ₋₁xₙ₋₂ · … · P_x₁x₀ · P(X₀ = x₀)
+```
+
+Chaque facteur `P_xₖxₖ₋₁` est lu dans la matrice de transition, et le dernier
+facteur `P(X₀ = x₀)` est donné par la distribution initiale.
+
+> **À retenir** : la **matrice de transition `P`** d'une chaîne de Markov
+> rassemble les probabilités `Pᵢⱼ` de passer de `sᵢ` à `sⱼ` ; la **somme de
+> chaque ligne vaut 1**. Avec la **distribution de `X₀`**, elle suffit à
+> calculer la probabilité de **n'importe quelle suite d'états**, par un
+> **produit** de probabilités de transition.
+
+## Du processus de Markov au processus de décision markovien
+
+Le cours **relie** alors la chaîne de Markov au cadre du renforcement. Le
+fonctionnement de l'agent indique que **l'état `Sₜ₊₁` de l'agent à l'instant
+`t+1` dépend entièrement de son état `Sₜ` à l'instant `t`**. La suite
+`S₁, …, Sₜ, Sₜ₊₁, …` est **donc une chaîne de Markov**.
+
+Mais une chaîne de Markov ne suffit pas : il **reste à prendre en compte les
+actions et les récompenses** dans le modèle. C'est ce que fait le **processus de
+décision markovien** (MDP, *Markov Decision Process*).
+
+> **Définition** : un **processus de décision markovien** est défini par :
+>
+> - un **ensemble d'états `S`** ;
+> - un **ensemble d'actions `A`** ;
+> - une **fonction de transition `T : S × A × S ⟶ [0, 1]`**. `T(s, a, s′)` est
+>   la **probabilité de passer de l'état `s` à l'état `s′` en utilisant
+>   l'action `a`**. On peut aussi écrire
+>   `T(s, a, s′) = P(Sₜ₊₁ = s′ | Sₜ = s, Aₜ = a)` ;
+> - une **fonction de récompense (`reward`) `R : S × A ⟶ ℝ`** ;
+> - un **facteur d'actualisation `γ ∈ [0, 1[`**.
+
+Le cours ajoute une **remarque** : comme une **action `a`, exécutée à partir
+d'un état `s`, peut conduire à plusieurs états**, la valeur `R(s, a)` est **une
+moyenne**. Plus précisément :
+
+```text
+R(s, a) = E(Rₜ₊₁ | Sₜ = s, Aₜ = a)
+```
+
+Comparons les deux modèles : la **chaîne de Markov** décrit seulement
+**comment** l'environnement évolue ; le **MDP** y ajoute les **actions** (ce que
+l'agent décide), les **récompenses** (ce qu'il gagne) et le **facteur `γ`** (la
+manière de tenir compte du futur).
+
+| Modèle | Composants |
+| --- | --- |
+| **Chaîne de Markov** | États `S`, matrice de transition `P` |
+| **Processus de décision markovien** | États `S`, **actions `A`**, fonction de transition `T(s, a, s′)`, **récompense `R(s, a)`**, **facteur `γ`** |
+
+> **À retenir** : la suite des états de l'agent est une **chaîne de Markov**.
+> Pour modéliser complètement un problème d'apprentissage par renforcement, on
+> ajoute les **actions** et les **récompenses** : c'est le **processus de
+> décision markovien (MDP)**, défini par `(S, A, T, R, γ)`, où
+> `T(s, a, s′)` est une **probabilité** et `R(s, a)` une **récompense moyenne**.
+
+## Synthèse de la section
+
+L'**apprentissage par renforcement** est le problème d'un **agent** qui apprend
+à se comporter par ses **interactions** avec son **environnement**, selon le
+principe **Essai-Erreur** : chaque action provoque un **retour** (récompense ou
+punition) que l'agent exploite pour **maximiser la somme des retours à long
+terme**. Formellement, le problème est donné par un ensemble d'**états `S`**,
+un ensemble d'**actions `A`**, des **signaux de renforcement** scalaires, une
+**fonction `I`** (prise égale à l'identité — observabilité totale) et une
+**fonction `reward`** ; l'agent doit apprendre une **stratégie `π : S ⟶ A`**.
+L'environnement est **non déterministe** mais **stationnaire**. Ce type
+d'apprentissage se distingue du **supervisé** (pas d'exemples) et du **non
+supervisé** (il associe une **valeur** aux états), et introduit l'**action** et
+le **facteur temps**. Le cadre mathématique est celui des **processus de
+Markov** : un processus **« sans mémoire »** dont le **futur ne dépend que du
+présent** ; sur un espace d'états discret, c'est une **chaîne de Markov**,
+résumée par sa **matrice de transition** (somme des lignes égale à 1). En
+ajoutant à la chaîne de Markov les **actions** et les **récompenses**, on
+obtient le **processus de décision markovien (MDP)** `(S, A, T, R, γ)`, modèle
+complet d'un problème d'apprentissage par renforcement.
+
+> **À retenir** : l'apprentissage par renforcement = un **agent** qui apprend
+> par **Essai-Erreur** à **maximiser** ses retours. Son cadre formel est le
+> **processus de décision markovien** `(S, A, T, R, γ)`, obtenu en enrichissant
+> une **chaîne de Markov** (futur ne dépendant que du présent) des **actions**
+> et des **récompenses**.

@@ -1,0 +1,172 @@
+[
+  {
+    "slug": "dossier-de-confiance",
+    "label": "Dossier de confiance",
+    "summary": "Cinq pièces (risques, équité, explicabilité, conformité, décision), chacune avec un identifiant de preuve, une version, un responsable et une date."
+  },
+  {
+    "slug": "choix-de-valeurs",
+    "label": "Choix de valeurs",
+    "summary": "Objectif, proxy, seuil et données sont des choix techniques qui répartissent bénéfices et préjudices."
+  },
+  {
+    "slug": "cycle-de-vie",
+    "label": "Cycle de vie et préjudice",
+    "summary": "Besoin, données, étiquettes, métriques, déploiement, usage : à chaque étape, une défaillance possible et une preuve attendue."
+  },
+  {
+    "slug": "matrice-risques",
+    "label": "Matrice de priorisation",
+    "summary": "Gravité et probabilité sur des échelles ordinales de 1 à 5, dont le produit sert à prioriser sans mesurer une perte attendue."
+  },
+  {
+    "slug": "incidents-audit",
+    "label": "Incidents documentés",
+    "summary": "Amazon, COMPAS, Uber à Tempe, Tay, Air Canada et le cas de santé d'Obermeyer servent d'exercices d'audit."
+  },
+  {
+    "slug": "registre-risques",
+    "label": "Registre des risques",
+    "summary": "Pour chaque scénario : personne exposée, cause à vérifier, cotation et incertitude, mesure et propriétaire, preuve de clôture."
+  },
+  {
+    "slug": "trace-decision",
+    "label": "Trace d'une décision",
+    "summary": "Entrée, modèle, score et seuil, décision : de quoi rejouer et contrôler une décision individuelle."
+  },
+  {
+    "slug": "integrite-journal",
+    "label": "Intégrité du journal",
+    "summary": "Empreinte, ancrage, horodatage et sondage avec rejeu réduisent l'incertitude sur une falsification du journal."
+  },
+  {
+    "slug": "documentation-artefacts",
+    "label": "Documentation et lignage",
+    "summary": "Datasheet, Model Card, manifeste de version et rapport de validation, reliés par un identifiant."
+  },
+  {
+    "slug": "derive",
+    "label": "Dérives",
+    "summary": "Les entrées, la relation entre entrées et cible, ou la fréquence de la cible peuvent changer après le déploiement."
+  },
+  {
+    "slug": "resultats-desagreges",
+    "label": "Résultats désagrégés",
+    "summary": "Un score global peut masquer un sous-groupe : on publie les résultats par groupe, avec effectifs et intervalles."
+  },
+  {
+    "slug": "ratio-selection",
+    "label": "Ratio de sélection",
+    "summary": "Taux de sélection d'un groupe divisé par celui du groupe de référence, comparé au repère américain des quatre cinquièmes."
+  },
+  {
+    "slug": "parite-demographique",
+    "label": "Parité démographique",
+    "summary": "Même taux de sélection d'un groupe à l'autre, sans regarder la qualification réelle."
+  },
+  {
+    "slug": "egalite-des-chances",
+    "label": "Égalité des chances",
+    "summary": "Comparer, d'un groupe à l'autre, la part des personnes qualifiées qui sont sélectionnées."
+  },
+  {
+    "slug": "matrice-de-confusion",
+    "label": "Matrice de confusion",
+    "summary": "Les quatre effectifs d'un classifieur binaire et les taux qui en découlent, calculés groupe par groupe."
+  },
+  {
+    "slug": "attenuation-biais",
+    "label": "Atténuer un biais",
+    "summary": "Agir avant, pendant ou après l'apprentissage, chaque moment ayant ses limites à tester."
+  },
+  {
+    "slug": "notions-explication",
+    "label": "Notions d'explication",
+    "summary": "Transparence, interprétabilité, explicabilité et intelligibilité posent quatre questions différentes."
+  },
+  {
+    "slug": "portee-explication",
+    "label": "Portée et origine d'une explication",
+    "summary": "Une explication est globale ou locale, et vient d'un modèle interprétable ou d'une méthode appliquée après coup."
+  },
+  {
+    "slug": "attribution",
+    "label": "Méthodes d'attribution",
+    "summary": "Perturbation, gradient, décomposition et Shapley décrivent un calcul selon des hypothèses propres."
+  },
+  {
+    "slug": "contrefactuel",
+    "label": "Contrefactuel et recours",
+    "summary": "Le plus petit changement réaliste de l'entrée qui modifierait la sortie, sous contraintes de faisabilité."
+  },
+  {
+    "slug": "supervision-humaine",
+    "label": "Supervision humaine effective",
+    "summary": "Comprendre, interrompre et refuser, avec la charge de travail et le délai qui rendent ces pouvoirs réels."
+  },
+  {
+    "slug": "biais-automatisation",
+    "label": "Biais d'automatisation",
+    "summary": "La validation humaine peut devenir une formalité par excès de confiance dans le système."
+  },
+  {
+    "slug": "contestation",
+    "label": "Circuit de contestation",
+    "summary": "Notification, explication, contestation, réexamen et trace permettent à une personne de faire corriger une décision."
+  },
+  {
+    "slug": "ai-act-qualification",
+    "label": "Qualification AI Act",
+    "summary": "Le régime applicable dépend de la finalité, du rôle de l'acteur et des conditions d'usage du système."
+  },
+  {
+    "slug": "ai-act-calendrier",
+    "label": "Calendrier de l'AI Act",
+    "summary": "Les obligations entrent en application par étapes, selon un calendrier actualisé par la Commission."
+  },
+  {
+    "slug": "ai-act-obligations",
+    "label": "Obligations et preuves",
+    "summary": "Chaque bloc d'obligations du haut risque se démontre par une preuve concrète dans le dossier."
+  },
+  {
+    "slug": "rgpd",
+    "label": "Questions RGPD",
+    "summary": "Finalité et base légale, minimisation, analyse d'impact et décision automatisée."
+  },
+  {
+    "slug": "risques-llm",
+    "label": "Risques d'un LLM avec RAG",
+    "summary": "Information erronée, injection indirecte et fuite de données, que le RAG ne suffit pas à écarter."
+  },
+  {
+    "slug": "controles-frontieres",
+    "label": "Contrôles aux frontières",
+    "summary": "Des contrôles à l'entrée, à la recherche, aux outils, à la sortie et en exploitation."
+  },
+  {
+    "slug": "exploitation-responsable",
+    "label": "Exploitation responsable",
+    "summary": "Suivi, réversibilité, empreinte mesurée et comparaison avec des solutions plus sobres."
+  },
+  {
+    "slug": "comite-decision",
+    "label": "Comité de décision",
+    "summary": "Technique, juridique, métier et production donnent chacun leur question décisive avant d'autoriser, refuser ou conditionner."
+  },
+  {
+    "slug": "tableau-de-bord",
+    "label": "Tableau de bord",
+    "summary": "Chaque indicateur suivi a une lecture nécessaire et une action préparée."
+  },
+  {
+    "slug": "note-de-decision",
+    "label": "Note de décision",
+    "summary": "Objet, preuves, avis, conditions et réexamen, avec des affirmations toutes justifiées."
+  },
+  {
+    "slug": "projet-dossier",
+    "label": "Projet et évaluation",
+    "summary": "Un dossier de confiance produit en équipe en 3 h 30, puis défendu devant une commission d'audit."
+  }
+]

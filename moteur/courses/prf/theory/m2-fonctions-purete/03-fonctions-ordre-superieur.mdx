@@ -1,0 +1,34 @@
+---
+title: "Fonctions d'ordre superieur"
+slug: fonctions-ordre-superieur
+order: 3
+estimatedReadMin: 12
+concepts: [hof, lambda, currying, partial-application, pattern-matching]
+source: "Fonction/Fonction/Scala_02.pdf; Fonction/Fonction/functions.pdf"
+---
+## Fonctions comme valeurs
+
+Une fonction peut etre stockee, transmise et retournee. Une lambda est une fonction anonyme.
+
+```scala
+val double = (x: Int) => x * 2
+List(1, 2, 3).map(double)
+```
+
+## Fonctions d'ordre superieur
+
+`map`, `filter`, `foldLeft`, `exists` et `forall` recoivent des fonctions. Tu dois lire le role de la fonction pas a pas.
+
+## Currying et application partielle
+
+Une fonction curryfiee prend ses arguments en plusieurs listes.
+
+```scala
+def ajoute(a: Int)(b: Int) = a + b
+val ajoute10 = ajoute(10)
+```
+
+`ajoute10(5)` vaut 15. L'application partielle fixe une partie des arguments.
+
+> **A retenir**  
+> Une fonction d'ordre superieur n'est pas plus mysterieuse qu'une fonction normale : elle manipule simplement une autre fonction comme donnee.

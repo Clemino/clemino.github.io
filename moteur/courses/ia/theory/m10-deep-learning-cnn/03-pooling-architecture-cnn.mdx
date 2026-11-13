@@ -1,0 +1,272 @@
+---
+title: "Pooling et architecture d'un CNN"
+slug: pooling-architecture-cnn
+order: 3
+estimatedReadMin: 22
+concepts: [pooling, max-pooling, couche-dense, architecture-cnn, reseau-convolutif, couche-de-convolution, nombre-de-parametres]
+source: "Slides_ConvNet.pdf"
+---
+
+## Le rôle des couches de pooling
+
+Après la couche de convolution, le cours présente le deuxième type de couche
+caractéristique d'un ConvNet : la couche de **pooling**.
+
+Le cours en situe d'abord la **place** et le **rôle** :
+
+- **les couches « pooling » arrivent en général à la suite des couches de
+  convolution** ;
+- **leur rôle est de « simplifier » / « résumer » l'information contenue dans
+  ces dernières**.
+
+Une couche de pooling ne calcule donc pas de nouveau motif : elle **condense**
+ce que la couche de convolution a produit. C'est ce qui justifie l'image donnée
+au chapitre 1 — une couche de pooling est une **copie sous-échantillonnée** de
+la couche qui la précède.
+
+> **À retenir** : les couches de **pooling** arrivent **après** les couches de
+> convolution. Leur rôle est de **simplifier / résumer** l'information : une
+> couche de pooling est une **copie sous-échantillonnée** de la précédente.
+
+## Le mécanisme du pooling
+
+Le cours décrit **précisément** le pooling. Il consiste à :
+
+**Regrouper les neurones d'une couche de convolution par carré `p × p`.** On
+note `Carr(i, j)` le carré dont les neurones occupent les positions :
+
+```text
+{ (p∗i, p∗j), …, (p∗(i+1) − 1, p∗(j+1) − 1) }
+```
+
+**La couche de pooling contient un tableau dont chaque neurone est connecté à un
+carré de la couche précédente**, et dont la valeur est définie par :
+
+```text
+P(i, j) = f( Carr(i, j) )
+```
+
+où **`f` est la fonction qui sert à « résumer » les neurones du carré
+`Carr(i, j)`**.
+
+Le pooling découpe donc la couche de convolution en **carrés `p × p` disjoints**
+et **remplace chaque carré par une seule valeur** — celle que renvoie la
+fonction `f`. La couche de pooling est ainsi `p` fois plus petite, dans chaque
+dimension, que la couche de convolution.
+
+> **À retenir** : le **pooling** regroupe les neurones d'une couche de
+> convolution par **carrés `p × p`** (`Carr(i, j)`) et **résume chaque carré**
+> par une seule valeur `P(i, j) = f(Carr(i, j))`, où `f` est la **fonction de
+> pooling**.
+
+## Les fonctions de pooling : max, moyenne, L2
+
+Quelle fonction `f` utiliser pour résumer un carré ? Le cours en cite
+**plusieurs**.
+
+| Fonction de pooling `f` | Valeur du carré `Carr(i, j)` |
+| --- | --- |
+| **Maximum** (Max-pooling) | La **plus grande** valeur du carré |
+| **Moyenne** | La **moyenne** des valeurs du carré |
+| **L2-Pooling** | La **racine carrée de la somme des carrés** des valeurs |
+
+Le cours précise : **on prend `f = max`** — c'est le cas le plus courant. **Dans
+ce cas, nous parlerons de Max-Pooling.** **Les autres fonctions utilisées sont
+la moyenne et la racine carrée de la somme des carrés (L2-Pooling).**
+
+Le cours illustre le **Max-pooling** par une figure : une couche de convolution
+de taille `4 × 4` est découpée en **quatre carrés `2 × 2`** ; chaque carré est
+remplacé par sa **valeur maximale**, produisant une couche de pooling `2 × 2`.
+
+> **À retenir** : la fonction de pooling `f` peut être le **maximum**
+> (**Max-pooling**, le cas usuel), la **moyenne**, ou la **racine carrée de la
+> somme des carrés** (**L2-Pooling**).
+
+## Les hyperparamètres d'une couche de pooling
+
+À l'image des couches de convolution, les couches de pooling ont besoin de
+**définir des hyperparamètres**. Le cours en cite **deux** :
+
+- **la taille `p` du pooling** — précisant qu'elle est **en général prise égale
+  à `2`** ;
+- **la fonction de pooling.**
+
+Une couche de pooling est donc bien plus simple à régler qu'une couche de
+convolution : il suffit de fixer la **taille des carrés** (typiquement `2`) et
+la **fonction** (typiquement le **max**).
+
+Point important pour le décompte du chapitre suivant : **une couche de pooling
+ne contient aucun paramètre à apprendre.** Elle se contente d'appliquer une
+fonction fixe (`max`, moyenne…) ; il n'y a **ni poids ni biais** dans une couche
+de pooling.
+
+> **À retenir** : une couche de **pooling** a **deux hyperparamètres** : la
+> **taille `p`** (en général `2`) et la **fonction de pooling**. Elle ne
+> contient **aucun paramètre à apprendre** (ni poids ni biais).
+
+## Les couches entièrement connectées
+
+Le cours décrit le troisième type de couche d'un ConvNet : la couche
+**entièrement connectée (FC, fully connected)**.
+
+**La sortie d'un réseau est assurée par une couche entièrement connectée**,
+**telle qu'on en trouve dans les réseaux de neurones standards**. Le cours en
+rappelle la propriété : **un neurone d'une telle couche est connecté à tous les
+neurones de la couche précédente** (par exemple une couche de pooling).
+
+Comme **nouveaux paramètres**, on a besoin, pour définir la couche de sortie,
+**des poids `w` et des biais `b` associés à chaque neurone de sortie**.
+
+C'est exactement la couche **dense** du module précédent. Contrairement aux
+couches de convolution (connexions **locales**, poids **partagés**), une couche
+entièrement connectée relie **chaque** neurone à **tous** les neurones de la
+couche précédente, avec des poids et des biais **propres** à chaque neurone.
+
+> ⚠️ Avant la couche entièrement connectée, il faut **passer de la dimension 2 à
+> la dimension 1** : c'est le rôle de la couche **Flatten** dans les programmes
+> Keras des TP, qui « met à plat » les tableaux 2D en un vecteur.
+
+> **À retenir** : un ConvNet **se termine** par une ou plusieurs couches
+> **entièrement connectées (FC)**, comme dans les réseaux standards : chaque
+> neurone y est relié à **tous** les neurones de la couche précédente, avec ses
+> **poids `w`** et son **biais `b`** propres.
+
+## L'architecture globale d'un CNN
+
+Le cours assemble les trois types de couches en une **architecture globale**.
+
+**À première vue, un réseau ConvNet est composé** :
+
+- d'une **couche d'entrée**,
+- **suivie d'une couche de convolution**,
+- **suivie d'une couche pooling**,
+- **elle-même suivie d'une couche convolution**,
+- **suivie d'une couche pooling…**,
+- et **se termine par une couche de sortie FC**.
+
+Le cours ajoute une précision : **une couche de convolution et une couche
+pooling successives contiennent le même nombre de tableaux.**
+
+On peut donc noter un réseau CNN de la manière suivante :
+
+```text
+Input → (Cnv → Pool) × p1 … → (Cnv → Pool) × pn → FC
+```
+
+La notation se lit ainsi : après la couche d'**entrée** (`Input`), le réseau
+enchaîne des **blocs `(Cnv → Pool)`** — un bloc de convolution suivi de pooling
+— **répétés** (`× p1`, …, `× pn`), puis se termine par une couche **FC** de
+sortie. Le cours résume aussi cette succession par une figure : un **niveau
+d'entrée**, des **couches de convolution** (plusieurs tableaux), des **couches
+de pooling** (plusieurs tableaux, plus petits).
+
+> **À retenir** : un **CNN** s'écrit
+> **`Input → (Cnv → Pool) × p1 … → (Cnv → Pool) × pn → FC`** : une couche
+> d'**entrée**, une succession de **blocs convolution-pooling**, puis une couche
+> de **sortie FC**. Une convolution et son pooling ont le **même nombre de
+> tableaux**.
+
+## Lire une architecture CNN en Keras
+
+Le cours illustre cette architecture, dans les travaux pratiques, par des
+réseaux Keras. Voici un exemple **à lire** — un petit ConvNet pour la
+reconnaissance des chiffres manuscrits (MNIST) :
+
+```python
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Conv2D, MaxPooling2D
+
+convnet = Sequential()
+convnet.add(Conv2D(32, kernel_size=(3, 3),
+                   activation='relu',
+                   input_shape=(28, 28, 1)))   # couche de convolution
+convnet.add(MaxPooling2D(pool_size=(2, 2)))    # couche de pooling (max, p = 2)
+convnet.add(Dropout(0.25))                     # couche dropout
+convnet.add(Flatten())                         # passage 2D → 1D
+convnet.add(Dense(10, activation='softmax'))   # couche de sortie FC (10 classes)
+
+convnet.summary()   # description du réseau, paramètres par couche
+```
+
+On y reconnaît l'architecture du cours : la couche d'entrée (`input_shape`), un
+bloc **convolution** (`Conv2D`) puis **pooling** (`MaxPooling2D` avec
+`pool_size=(2, 2)`, soit `p = 2`), et la couche de **sortie FC** (`Dense`). La
+couche `Flatten` réalise le **passage de la dimension 2 à la dimension 1** ; la
+couche `Dropout` est un type de couche supplémentaire, étudié au chapitre
+suivant.
+
+Pour les images **en couleurs** (CIFAR-10), les TP empilent **plusieurs** blocs
+`(Conv2D → Conv2D → MaxPooling2D → Dropout)` avant les couches denses : c'est un
+réseau **plus profond**, conforme à la notation
+`Input → (Cnv → Pool) × pn → FC`.
+
+> **À retenir** : en **Keras**, un CNN s'écrit en empilant `Conv2D`,
+> `MaxPooling2D` (`pool_size`), éventuellement `Dropout`, une couche `Flatten`
+> (**2D → 1D**), puis une couche `Dense` de **sortie** — exactement
+> l'architecture `Input → (Cnv → Pool) … → FC`.
+
+## Compter les paramètres d'un CNN
+
+Le cours pose, en exercice, deux questions : **recenser les paramètres qu'un
+réseau ConvNet doit apprendre**, puis **calculer le nombre de ces paramètres et
+le comparer avec celui des réseaux standards**. Le décompte repose sur le **type
+de chaque couche**.
+
+| Type de couche | Paramètres à apprendre |
+| --- | --- |
+| **Couche d'entrée** | **Aucun** (introduit seulement les données) |
+| **Couche de convolution** | Les **poids du filtre** et son **biais**, **partagés** : un filtre `t × t` compte `t × t` poids `+ 1` biais — **par filtre** |
+| **Couche de pooling** | **Aucun** (fonction fixe : max, moyenne…) |
+| **Couche entièrement connectée (FC)** | Comme un réseau standard : **(neurones de la couche précédente + 1) × (neurones de la couche)** |
+
+Le point décisif tient au **partage des poids** dans les couches de convolution.
+Comme **les poids et le biais sont les mêmes dans chaque tableau**, une couche de
+convolution ne compte, **par filtre**, que `t × t` poids et `1` biais — **quelle
+que soit la taille de la couche**. C'est ce que le cours met en avant comme
+**caractéristique et avantage** des ConvNet :
+
+> Grâce au fait qu'un neurone est en général connecté à un **petit nombre de
+> neurones de la couche précédente** et que les **poids et les biais sont les
+> mêmes dans chaque tableau**, les ConvNet **réduisent le nombre de paramètres à
+> calculer** (par rapport à celui d'un réseau ordinaire totalement connecté).
+
+La comparaison demandée par l'exercice penche donc nettement en faveur des
+ConvNet : à structure comparable, un réseau **totalement connecté** aurait
+**bien plus** de poids qu'un réseau convolutif, où chaque filtre n'apporte qu'un
+**petit** nombre de paramètres **partagés**.
+
+> **À retenir** : seules les couches de **convolution** (poids du filtre `+`
+> biais, **partagés**, **par filtre**) et **entièrement connectées**
+> (`(entrées + 1) × neurones`) ont des paramètres à apprendre ; les couches
+> d'**entrée** et de **pooling** n'en ont **aucun**. Le **partage des poids**
+> fait que les ConvNet ont **bien moins** de paramètres qu'un réseau totalement
+> connecté.
+
+## Synthèse de la section
+
+Les couches de **pooling** arrivent **après** les couches de convolution et
+**résument** leur information : une couche de pooling est une **copie
+sous-échantillonnée**. Le pooling regroupe les neurones par **carrés `p × p`**
+(`Carr(i, j)`) et remplace chaque carré par `P(i, j) = f(Carr(i, j))`, où la
+**fonction de pooling `f`** est le plus souvent le **maximum**
+(**Max-pooling**), parfois la **moyenne** ou la **racine carrée de la somme des
+carrés** (**L2-Pooling**). Ses **hyperparamètres** sont la **taille `p`** (en
+général `2`) et la **fonction** ; une couche de pooling n'a **aucun paramètre**.
+La couche **entièrement connectée (FC)**, comme dans les réseaux standards,
+relie **chaque** neurone à **tous** ceux de la couche précédente et porte des
+**poids `w`** et **biais `b`** propres ; elle assure la **sortie** du réseau.
+L'**architecture globale** d'un CNN s'écrit
+**`Input → (Cnv → Pool) × p1 … → (Cnv → Pool) × pn → FC`** : couche d'entrée,
+succession de **blocs convolution-pooling** (une convolution et son pooling ont
+le **même nombre de tableaux**), puis couche de **sortie FC**. Côté
+**paramètres**, seules les couches de **convolution** (poids du filtre `+`
+biais, **partagés**, par filtre) et **FC** (`(entrées + 1) × neurones`) en ont ;
+le **partage des poids** réduit fortement leur nombre par rapport à un réseau
+totalement connecté.
+
+> **À retenir** : un **CNN** enchaîne des **blocs convolution-pooling** puis une
+> couche **FC** de sortie. Le **pooling** résume des carrés `p × p` (souvent par
+> le **max**) sans paramètre ; les paramètres sont portés par les couches de
+> **convolution** (poids **partagés**) et **FC**, d'où **bien moins** de
+> paramètres qu'un réseau totalement connecté.

@@ -1,0 +1,1685 @@
+[
+  {
+    "chapterSlug": "apprentissage-profond",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Selon la première définition donnée par le cours, qu'est-ce qui distingue un réseau de neurones profond (deep) d'un réseau ordinaire (shallow) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il a un plus grand nombre de couches"
+        },
+        {
+          "id": "b",
+          "label": "Il utilise obligatoirement la fonction softmax en sortie"
+        },
+        {
+          "id": "c",
+          "label": "Il n'a aucune couche cachée"
+        },
+        {
+          "id": "d",
+          "label": "Il traite uniquement des données textuelles"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La profondeur d'un réseau est son nombre de couches. La première définition du cours : un réseau profond (deep) est un réseau ayant plus de couches qu'un réseau ordinaire (shallow).",
+    "concepts": [
+      "apprentissage-profond"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "apprentissage-profond",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque caractéristique au type de réseau correspondant, d'après le tableau comparatif du cours.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Circulation des données feedforward, sans boucles"
+        },
+        {
+          "id": "l2",
+          "label": "Plusieurs types de couches dans un même réseau"
+        },
+        {
+          "id": "l3",
+          "label": "Couches toutes totalement connectées"
+        },
+        {
+          "id": "l4",
+          "label": "Une couche peut contenir plusieurs tableaux de neurones"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Réseau standard (shallow)"
+        },
+        {
+          "id": "r2",
+          "label": "Réseau profond (deep)"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r1",
+        "l4": "r2"
+      }
+    },
+    "explanation": "Réseau standard : feedforward, couches totalement connectées, un seul type de couche, un tableau de neurones par couche. Réseau profond : possibilité de boucles, plusieurs types de couches, connexions variées, couches à un ou plusieurs tableaux.",
+    "concepts": [
+      "apprentissage-profond",
+      "reseau-convolutif"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "apprentissage-profond",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la description du principe d'un réseau convolutif (ConvNet).",
+    "payload": {
+      "template": "Un ConvNet prend en compte la structure {{s1}} des données : sa couche d'entrée est un tableau à {{s2}} dimensions. L'opération qui relie deux couches successives est la {{s3}}, et le réseau se termine par une ou plusieurs couches entièrement {{s4}}.",
+      "slots": [
+        {
+          "id": "s1",
+          "width": "sm",
+          "placeholder": "mot"
+        },
+        {
+          "id": "s2",
+          "width": "sm",
+          "placeholder": "nombre"
+        },
+        {
+          "id": "s3",
+          "width": "md",
+          "placeholder": "mot"
+        },
+        {
+          "id": "s4",
+          "width": "md",
+          "placeholder": "mot"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": "spatiale",
+        "s2": [
+          "2",
+          "deux"
+        ],
+        "s3": "convolution",
+        "s4": [
+          "connectées",
+          "connectees"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Un ConvNet prend en compte la structure spatiale des données ; sa couche d'entrée est un tableau à 2 dimensions. L'opération clé entre deux couches est la convolution ; le réseau se termine par des couches entièrement connectées.",
+    "concepts": [
+      "reseau-convolutif",
+      "couche-de-convolution",
+      "couche-dense"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "couche-convolution",
+    "type": "NUMERIC",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "On convolue un tableau T de taille 10 × 10 par un filtre W de taille 3 × 3 (convolution de base, sans padding ni stride). Quelle est la taille (dans une dimension) du tableau Conv produit ?",
+    "payload": {
+      "placeholder": "ex. 8",
+      "hint": "Convolution de base : la sortie a pour taille n − m + 1."
+    },
+    "solution": {
+      "value": 8,
+      "absTol": 0.001
+    },
+    "explanation": "La convolution de base d'un tableau n × n par un filtre m × m donne un tableau de taille n − m + 1 = 10 − 3 + 1 = 8 dans chaque dimension.",
+    "concepts": [
+      "couche-de-convolution",
+      "dimension-de-sortie-convolution"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "couche-convolution",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une couche de convolution reçoit une entrée de taille 28 × 28. Elle applique des filtres 5 × 5, avec un padding P = 0 et un stride S = 1. Quelle est la dimension de sortie (une dimension) ?",
+    "payload": {
+      "placeholder": "ex. 24",
+      "hint": "Dimension de sortie = (W − F + 2P)/S + 1."
+    },
+    "solution": {
+      "value": 24,
+      "absTol": 0.001
+    },
+    "explanation": "(W − F + 2P)/S + 1 = (28 − 5 + 0)/1 + 1 = 23 + 1 = 24.",
+    "concepts": [
+      "dimension-de-sortie-convolution",
+      "couche-de-convolution"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "couche-convolution",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une convolution s'applique à une entrée 32 × 32 avec un filtre 5 × 5 et un padding P = 2 (option « same »), stride S = 1. Quelle est la dimension de sortie (une dimension) ?",
+    "payload": {
+      "placeholder": "ex. 32",
+      "hint": "Dimension de sortie = (W − F + 2P)/S + 1."
+    },
+    "solution": {
+      "value": 32,
+      "absTol": 0.001
+    },
+    "explanation": "(W − F + 2P)/S + 1 = (32 − 5 + 2·2)/1 + 1 = (32 − 5 + 4) + 1 = 31 + 1 = 32. Le padding P = 2 conserve la taille de l'entrée pour un filtre 5 × 5 : c'est le rôle de « same ».",
+    "concepts": [
+      "dimension-de-sortie-convolution",
+      "padding"
+    ],
+    "source": "DL_Exo5_Corr.py"
+  },
+  {
+    "chapterSlug": "couche-convolution",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Une convolution s'applique à une entrée 100 × 100 avec un filtre 4 × 4, un padding P = 0 et un stride S = 2. Quelle est la dimension de sortie (une dimension) ?",
+    "payload": {
+      "placeholder": "ex. 49",
+      "hint": "Dimension de sortie = (W − F + 2P)/S + 1 ; pensez à la division par S."
+    },
+    "solution": {
+      "value": 49,
+      "absTol": 0.001
+    },
+    "explanation": "(W − F + 2P)/S + 1 = (100 − 4 + 0)/2 + 1 = 96/2 + 1 = 48 + 1 = 49. Le stride S = 2 sous-échantillonne le tableau de sortie : le filtre saute une position sur deux.",
+    "concepts": [
+      "dimension-de-sortie-convolution",
+      "stride"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "couche-convolution",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On convolue le tableau T (3 × 3) par le filtre W (2 × 2), sans padding ni stride. T = [[1, 2, 0], [0, 1, 3], [2, 1, 1]] et W = [[1, 0], [0, 1]]. Le tableau Conv est de taille 2 × 2 ; calculez ses quatre coefficients avec Conv(i, j) = Σₖ Σₗ W(k, l)·T(i+k, j+l).",
+    "payload": {
+      "description": "Pour chaque position (i, j), on pose W sur T en faisant coïncider W(0,0) avec T(i,j), on multiplie terme à terme et on additionne. Ici W détecte la diagonale : Conv(i,j) = T(i,j) + T(i+1,j+1).",
+      "cells": [
+        {
+          "id": "c00",
+          "label": "Conv(0,0)",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "c01",
+          "label": "Conv(0,1)",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "c10",
+          "label": "Conv(1,0)",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "c11",
+          "label": "Conv(1,1)",
+          "kind": "number",
+          "placeholder": "0"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "c00",
+          "expected": 2,
+          "absTol": 0.001
+        },
+        {
+          "id": "c01",
+          "expected": 5,
+          "absTol": 0.001
+        },
+        {
+          "id": "c10",
+          "expected": 1,
+          "absTol": 0.001
+        },
+        {
+          "id": "c11",
+          "expected": 2,
+          "absTol": 0.001
+        }
+      ]
+    },
+    "explanation": "W = [[1,0],[0,1]] : Conv(i,j) = 1·T(i,j) + 0·T(i,j+1) + 0·T(i+1,j) + 1·T(i+1,j+1) = T(i,j) + T(i+1,j+1). Conv(0,0) = T(0,0)+T(1,1) = 1+1 = 2. Conv(0,1) = T(0,1)+T(1,2) = 2+3 = 5. Conv(1,0) = T(1,0)+T(2,1) = 0+1 = 1. Conv(1,1) = T(1,1)+T(2,2) = 1+1 = 2.",
+    "concepts": [
+      "couche-de-convolution",
+      "filtre-noyau"
+    ],
+    "source": "DL_Exo1_Corr_2526.py"
+  },
+  {
+    "chapterSlug": "couche-convolution",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans une couche de convolution, les coefficients wₖₗ et le biais b sont communs à tous les neurones d'un même tableau. Comment s'appelle cette propriété et quel est son effet ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le partage des poids ; il réduit fortement le nombre de paramètres à apprendre"
+        },
+        {
+          "id": "b",
+          "label": "Le dropout ; il met certaines sorties à zéro"
+        },
+        {
+          "id": "c",
+          "label": "Le pooling ; il sous-échantillonne le tableau"
+        },
+        {
+          "id": "d",
+          "label": "Le padding ; il ajoute des bordures de zéros"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "C'est le partage des poids (weight sharing) : un même filtre détecte le même motif partout. Comme un filtre t × t ne compte que t × t poids et un biais quelle que soit la taille de la couche, le nombre de paramètres est fortement réduit.",
+    "concepts": [
+      "couche-de-convolution",
+      "nombre-de-parametres"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "couche-convolution",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une couche Conv2D applique 32 filtres de taille 3 × 3 à une entrée à 1 canal (image en niveaux de gris). Combien de paramètres (poids + biais) cette couche doit-elle apprendre ?",
+    "payload": {
+      "placeholder": "ex. 320",
+      "hint": "Nombre de paramètres d'une Conv2D = (F·F·C_in + 1)·n_filtres ; le +1 est le biais par filtre."
+    },
+    "solution": {
+      "value": 320,
+      "absTol": 0.001
+    },
+    "explanation": "(F·F·C_in + 1)·n_filtres = (3·3·1 + 1)·32 = (9 + 1)·32 = 10·32 = 320. Chaque filtre compte 9 poids plus 1 biais ; il y a 32 filtres.",
+    "concepts": [
+      "nombre-de-parametres",
+      "couche-de-convolution"
+    ],
+    "source": "DL_Exo4_Corr.py"
+  },
+  {
+    "chapterSlug": "couche-convolution",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Une couche Conv2D applique 64 filtres de taille 3 × 3 à une entrée à 32 canaux (32 cartes de caractéristiques en entrée). Combien de paramètres cette couche doit-elle apprendre ?",
+    "payload": {
+      "placeholder": "ex. 18496",
+      "hint": "(F·F·C_in + 1)·n_filtres ; ici C_in = 32."
+    },
+    "solution": {
+      "value": 18496,
+      "absTol": 0.001
+    },
+    "explanation": "(F·F·C_in + 1)·n_filtres = (3·3·32 + 1)·64 = (288 + 1)·64 = 289·64 = 18 496.",
+    "concepts": [
+      "nombre-de-parametres",
+      "couche-de-convolution"
+    ],
+    "source": "DL_Exo5_Corr.py"
+  },
+  {
+    "chapterSlug": "couche-convolution",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la définition de la fonction d'activation ReLU citée par le cours ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "ReLU(x) = max(0, x)"
+        },
+        {
+          "id": "b",
+          "label": "ReLU(x) = 1 / (1 + e^(−x))"
+        },
+        {
+          "id": "c",
+          "label": "ReLU(x) = (e^x − e^(−x)) / (e^x + e^(−x))"
+        },
+        {
+          "id": "d",
+          "label": "ReLU(x) = x²"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "ReLU (Rectified Linear Units) « corrige » la sortie d'un neurone, par exemple en prenant le max entre 0 et la valeur : ReLU(x) = max(0, x). L'option b est la sigmoïde, l'option c la tangente hyperbolique.",
+    "concepts": [
+      "fonction-relu"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "couche-convolution",
+    "type": "ALGO_TRACE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "On applique la fonction ReLU(x) = max(0, x) aux quatre valeurs de sortie suivantes. Donnez le résultat pour chacune.",
+    "payload": {
+      "description": "ReLU « corrige » chaque valeur en gardant le max entre 0 et la valeur : les valeurs négatives sont mises à 0, les positives sont conservées.",
+      "cells": [
+        {
+          "id": "v1",
+          "label": "ReLU(3.5)",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "v2",
+          "label": "ReLU(−2.0)",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "v3",
+          "label": "ReLU(0)",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "v4",
+          "label": "ReLU(−0.1)",
+          "kind": "number",
+          "placeholder": "0"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "v1",
+          "expected": 3.5,
+          "absTol": 0.001
+        },
+        {
+          "id": "v2",
+          "expected": 0,
+          "absTol": 0.001
+        },
+        {
+          "id": "v3",
+          "expected": 0,
+          "absTol": 0.001
+        },
+        {
+          "id": "v4",
+          "expected": 0,
+          "absTol": 0.001
+        }
+      ]
+    },
+    "explanation": "ReLU(x) = max(0, x). ReLU(3.5) = 3.5 (positif, conservé). ReLU(−2.0) = 0. ReLU(0) = 0. ReLU(−0.1) = 0 (négatif, mis à 0).",
+    "concepts": [
+      "fonction-relu"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "couche-convolution",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le code Keras ci-dessous définit une couche de convolution, telle qu'utilisée dans les TP. Lisez-le et répondez.",
+    "payload": {
+      "code": "from keras.models import Sequential\nfrom keras.layers import Conv2D\n\nconvnet = Sequential()\n# Couche de convolution, entree : image 28x28 en niveaux de gris\nconvnet.add(Conv2D(32, kernel_size=(3, 3),\n                   activation='relu',\n                   input_shape=(28, 28, 1)))",
+      "language": "keras",
+      "caption": "Une couche Conv2D pour MNIST",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Combien de cartes de caractéristiques cette couche produit-elle en sortie ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 32"
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la dimension (une dimension) de chaque carte de caractéristiques produite ? L'entrée est 28 × 28, le filtre 3 × 3, sans padding ni stride.",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 26",
+            "hint": "(W − F + 2P)/S + 1 avec P = 0, S = 1."
+          }
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quel est le rôle de l'argument activation='relu' ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Il fixe la fonction d'activation des neurones de la couche (ReLU = max(0, x))"
+              },
+              {
+                "id": "b",
+                "label": "Il fixe le nombre de filtres de la couche"
+              },
+              {
+                "id": "c",
+                "label": "Il ajoute un padding qui conserve la taille"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 32,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 26,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "Conv2D(32, …) applique 32 filtres → 32 cartes de caractéristiques. Dimension d'une carte : (28 − 3 + 0)/1 + 1 = 26, donc 26 × 26. activation='relu' fixe la fonction d'activation des neurones de la couche.",
+    "concepts": [
+      "couche-de-convolution",
+      "carte-de-caracteristiques",
+      "fonction-relu",
+      "dimension-de-sortie-convolution"
+    ],
+    "source": "DL_Exo4_Corr.py"
+  },
+  {
+    "chapterSlug": "couche-convolution",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 2,
+    "prompt": "Complétez la formule de la dimension de sortie d'une convolution.",
+    "payload": {
+      "template": "La dimension de sortie d'une convolution vaut (W − F + 2P) / S + 1, où W est la taille de l'{{s1}}, F la taille du {{s2}}, P le {{s3}} et S le {{s4}}.",
+      "slots": [
+        {
+          "id": "s1",
+          "width": "sm",
+          "placeholder": "mot"
+        },
+        {
+          "id": "s2",
+          "width": "sm",
+          "placeholder": "mot"
+        },
+        {
+          "id": "s3",
+          "width": "sm",
+          "placeholder": "mot"
+        },
+        {
+          "id": "s4",
+          "width": "sm",
+          "placeholder": "mot"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": [
+          "entrée",
+          "entree"
+        ],
+        "s2": "filtre",
+        "s3": "padding",
+        "s4": "stride"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Dimension de sortie = (W − F + 2P)/S + 1, avec W la taille d'entrée, F la taille du filtre, P le padding et S le stride. Sans padding ni stride (P = 0, S = 1) elle se réduit à W − F + 1.",
+    "concepts": [
+      "dimension-de-sortie-convolution",
+      "padding",
+      "stride"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "pooling-architecture-cnn",
+    "type": "ALGO_TRACE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Une couche de convolution de taille 4 × 4 est sous-échantillonnée par un Max-Pooling de carrés 2 × 2. La couche vaut [[8, 11, 21, 14], [6, 4, 7, 13], [12, 9, 14, 10], [22, 18, 10, 5]]. Donnez les quatre valeurs de la couche de pooling 2 × 2.",
+    "payload": {
+      "description": "Le Max-Pooling découpe la couche en carrés 2 × 2 disjoints et remplace chaque carré par sa valeur maximale. P(0,0) est le coin haut-gauche, P(0,1) le coin haut-droit, etc.",
+      "cells": [
+        {
+          "id": "p00",
+          "label": "P(0,0) — carré haut-gauche",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "p01",
+          "label": "P(0,1) — carré haut-droit",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "p10",
+          "label": "P(1,0) — carré bas-gauche",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "p11",
+          "label": "P(1,1) — carré bas-droit",
+          "kind": "number",
+          "placeholder": "0"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "p00",
+          "expected": 11,
+          "absTol": 0.001
+        },
+        {
+          "id": "p01",
+          "expected": 21,
+          "absTol": 0.001
+        },
+        {
+          "id": "p10",
+          "expected": 22,
+          "absTol": 0.001
+        },
+        {
+          "id": "p11",
+          "expected": 14,
+          "absTol": 0.001
+        }
+      ]
+    },
+    "explanation": "Carré haut-gauche {8,11,6,4} → max = 11. Carré haut-droit {21,14,7,13} → max = 21. Carré bas-gauche {12,9,22,18} → max = 22. Carré bas-droit {14,10,10,5} → max = 14.",
+    "concepts": [
+      "max-pooling",
+      "pooling"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "pooling-architecture-cnn",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une carte de caractéristiques de taille 24 × 24 traverse une couche de Max-Pooling de taille p = 2. Quelle est la taille (une dimension) de la carte après pooling ?",
+    "payload": {
+      "placeholder": "ex. 12",
+      "hint": "Le pooling de carrés p × p divise chaque dimension par p."
+    },
+    "solution": {
+      "value": 12,
+      "absTol": 0.001
+    },
+    "explanation": "Le pooling regroupe les neurones par carrés p × p disjoints : la couche de pooling est p fois plus petite dans chaque dimension. 24 / 2 = 12.",
+    "concepts": [
+      "pooling",
+      "max-pooling"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "pooling-architecture-cnn",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remettez dans l'ordre les couches d'un ConvNet selon l'architecture globale du cours : Input → (Cnv → Pool) … → FC.",
+    "payload": {
+      "items": [
+        {
+          "id": "a",
+          "label": "Couche d'entrée"
+        },
+        {
+          "id": "b",
+          "label": "Couche de convolution"
+        },
+        {
+          "id": "c",
+          "label": "Couche de pooling"
+        },
+        {
+          "id": "d",
+          "label": "Couche entièrement connectée (sortie)"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Un ConvNet s'écrit Input → (Cnv → Pool) × p1 … → FC : une couche d'entrée, une succession de blocs convolution-pooling, puis une couche de sortie entièrement connectée.",
+    "concepts": [
+      "architecture-cnn",
+      "reseau-convolutif"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "pooling-architecture-cnn",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Après la dernière couche de pooling, une carte de caractéristiques a la forme 13 × 13 et il y a 32 cartes. La couche Flatten met le tout à plat en un vecteur. Combien de valeurs contient ce vecteur ?",
+    "payload": {
+      "placeholder": "ex. 5408",
+      "hint": "Taille du vecteur aplati = largeur × hauteur × nombre de cartes."
+    },
+    "solution": {
+      "value": 5408,
+      "absTol": 0.001
+    },
+    "explanation": "Le vecteur aplati contient largeur × hauteur × nombre de cartes = 13 × 13 × 32 = 169 × 32 = 5408 valeurs.",
+    "concepts": [
+      "architecture-cnn",
+      "couche-dense"
+    ],
+    "source": "DL_Exo4_Corr.py"
+  },
+  {
+    "chapterSlug": "pooling-architecture-cnn",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une couche entièrement connectée (Dense) de 10 neurones reçoit en entrée un vecteur de 5408 valeurs. Combien de paramètres (poids + biais) cette couche doit-elle apprendre ?",
+    "payload": {
+      "placeholder": "ex. 54090",
+      "hint": "Paramètres d'une couche Dense = (n_entrées + 1) × n_neurones."
+    },
+    "solution": {
+      "value": 54090,
+      "absTol": 0.001
+    },
+    "explanation": "Paramètres d'une Dense = (n_entrées + 1) × n_neurones = (5408 + 1) × 10 = 5409 × 10 = 54 090. Le +1 correspond au biais de chaque neurone.",
+    "concepts": [
+      "nombre-de-parametres",
+      "couche-dense"
+    ],
+    "source": "DL_Exo4_Corr.py"
+  },
+  {
+    "chapterSlug": "pooling-architecture-cnn",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On suit l'évolution de la taille d'une carte le long d'un ConvNet. Entrée : 28 × 28. Conv2D filtres 3 × 3 (P = 0, S = 1), puis MaxPooling2D p = 2, puis Conv2D filtres 3 × 3 (P = 0, S = 1), puis MaxPooling2D p = 2. Donnez la dimension (une dimension) après chaque couche.",
+    "payload": {
+      "description": "Conv (P=0, S=1) : dimension = W − 3 + 1 = W − 2. Pooling p = 2 : dimension divisée par 2 (division entière).",
+      "cells": [
+        {
+          "id": "d1",
+          "label": "Après la 1re Conv2D",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "d2",
+          "label": "Après le 1er MaxPooling",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "d3",
+          "label": "Après la 2e Conv2D",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "d4",
+          "label": "Après le 2e MaxPooling",
+          "kind": "number",
+          "placeholder": "0"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "d1",
+          "expected": 26,
+          "absTol": 0.001
+        },
+        {
+          "id": "d2",
+          "expected": 13,
+          "absTol": 0.001
+        },
+        {
+          "id": "d3",
+          "expected": 11,
+          "absTol": 0.001
+        },
+        {
+          "id": "d4",
+          "expected": 5,
+          "absTol": 0.001
+        }
+      ]
+    },
+    "explanation": "1re Conv : 28 − 3 + 1 = 26. 1er Pool : 26 / 2 = 13. 2e Conv : 13 − 3 + 1 = 11. 2e Pool : 11 / 2 = 5 (division entière, le carré incomplet est ignoré).",
+    "concepts": [
+      "architecture-cnn",
+      "dimension-de-sortie-convolution",
+      "pooling"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "pooling-architecture-cnn",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Le code Keras ci-dessous est le ConvNet du TP sur MNIST (chiffres manuscrits). L'entrée est une image 28 × 28 en niveaux de gris. Lisez le code et répondez.",
+    "payload": {
+      "code": "from keras.models import Sequential\nfrom keras.layers import Dense, Dropout, Flatten\nfrom keras.layers import Conv2D, MaxPooling2D\n\nconvnet = Sequential()\nconvnet.add(Conv2D(32, kernel_size=(3, 3),\n                   activation='relu',\n                   input_shape=(28, 28, 1)))\nconvnet.add(MaxPooling2D(pool_size=(2, 2)))\nconvnet.add(Dropout(0.25))\nconvnet.add(Flatten())\nconvnet.add(Dense(10, activation='softmax'))\n\nconvnet.summary()",
+      "language": "keras",
+      "caption": "ConvNet pour MNIST (DL_Exo4)",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Combien de paramètres la couche Conv2D doit-elle apprendre ? (32 filtres 3 × 3, entrée à 1 canal)",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 320",
+            "hint": "(F·F·C_in + 1)·n_filtres."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Combien de valeurs le vecteur produit par la couche Flatten contient-il ? La Conv2D donne des cartes 26 × 26 (32 cartes), le MaxPooling p = 2 les ramène à 13 × 13.",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 5408",
+            "hint": "13 × 13 × 32."
+          }
+        },
+        {
+          "id": "q3",
+          "type": "NUMERIC",
+          "prompt": "Combien de paramètres la couche Dense(10) doit-elle apprendre ? Elle reçoit le vecteur aplati de 5408 valeurs.",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 54090",
+            "hint": "(n_entrées + 1) × n_neurones."
+          }
+        },
+        {
+          "id": "q4",
+          "type": "MCQ_SINGLE",
+          "prompt": "Parmi ces couches, lesquelles n'ont AUCUN paramètre à apprendre ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "MaxPooling2D, Dropout et Flatten"
+              },
+              {
+                "id": "b",
+                "label": "Conv2D et Dense"
+              },
+              {
+                "id": "c",
+                "label": "Conv2D et MaxPooling2D"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 320,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 5408,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": 54090,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q4",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "Conv2D : (3·3·1 + 1)·32 = 10·32 = 320. Flatten : la Conv2D donne 26 × 26, le Max-Pooling p = 2 ramène à 13 × 13, soit 13·13·32 = 5408. Dense(10) : (5408 + 1)·10 = 54 090. Les couches MaxPooling2D, Dropout et Flatten n'ont aucun paramètre ; seules Conv2D et Dense en ont.",
+    "concepts": [
+      "nombre-de-parametres",
+      "architecture-cnn",
+      "couche-de-convolution",
+      "couche-dense"
+    ],
+    "source": "DL_Exo4_Corr.py"
+  },
+  {
+    "chapterSlug": "pooling-architecture-cnn",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi un ConvNet a-t-il, à structure comparable, bien moins de paramètres qu'un réseau totalement connecté ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Grâce aux connexions locales et au partage des poids dans les couches de convolution"
+        },
+        {
+          "id": "b",
+          "label": "Parce qu'il n'a aucune couche entièrement connectée"
+        },
+        {
+          "id": "c",
+          "label": "Parce que ses couches de pooling apprennent moins de poids"
+        },
+        {
+          "id": "d",
+          "label": "Parce qu'il n'utilise jamais de biais"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Dans une couche de convolution, un neurone n'est connecté qu'à un petit carré de la couche précédente (connexion locale) et les poids/biais sont partagés par tout un tableau. Un filtre t × t ne coûte que t × t poids + 1 biais, quelle que soit la taille de la couche : d'où une forte réduction du nombre de paramètres.",
+    "concepts": [
+      "nombre-de-parametres",
+      "couche-de-convolution",
+      "reseau-convolutif"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "pooling-architecture-cnn",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Comparaison de coût en paramètres. Une image 32 × 32 en niveaux de gris est mise à plat (vecteur de 1024 valeurs) puis envoyée dans une couche Dense de 100 neurones totalement connectée. Combien de paramètres (poids + biais) cette couche Dense doit-elle apprendre ?",
+    "payload": {
+      "placeholder": "ex. 102500",
+      "hint": "(n_entrées + 1) × n_neurones, avec n_entrées = 32 × 32."
+    },
+    "solution": {
+      "value": 102500,
+      "absTol": 0.001
+    },
+    "explanation": "Le vecteur aplati a 32 × 32 = 1024 valeurs. Couche Dense totalement connectée : (1024 + 1) × 100 = 1025 × 100 = 102 500 paramètres. À comparer aux 10 poids (+ 1 biais) d'un seul filtre 3 × 3 : le partage des poids des ConvNet réduit drastiquement ce coût.",
+    "concepts": [
+      "nombre-de-parametres",
+      "couche-dense"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "entrainement-regularisation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quel est l'objectif principal de la couche dropout ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Réduire le sur-apprentissage et la complexité de l'apprentissage"
+        },
+        {
+          "id": "b",
+          "label": "Augmenter le nombre de paramètres du réseau"
+        },
+        {
+          "id": "c",
+          "label": "Remplacer la rétropropagation"
+        },
+        {
+          "id": "d",
+          "label": "Conserver la taille des cartes de caractéristiques"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La couche dropout a pour objectif de réduire à la fois le sur-apprentissage et la complexité de l'apprentissage. En désactivant aléatoirement des neurones, elle empêche le réseau de trop se spécialiser sur les exemples d'apprentissage.",
+    "concepts": [
+      "dropout",
+      "sur-apprentissage"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "entrainement-regularisation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce que le sur-apprentissage d'un réseau de neurones ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le réseau colle trop aux exemples d'apprentissage et perd sa capacité à généraliser"
+        },
+        {
+          "id": "b",
+          "label": "Le réseau n'arrive pas du tout à apprendre les exemples"
+        },
+        {
+          "id": "c",
+          "label": "Le réseau a trop peu de couches"
+        },
+        {
+          "id": "d",
+          "label": "Le réseau utilise un optimiseur trop lent"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le sur-apprentissage est le fait, pour un réseau, de coller trop aux exemples d'apprentissage et de mal généraliser à des données nouvelles : il apprend « par cœur » les particularités, voire le bruit, du jeu d'apprentissage.",
+    "concepts": [
+      "sur-apprentissage"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "entrainement-regularisation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi le cours introduit-il les optimiseurs (par exemple Adam) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Parce que le coût très élevé de la rétropropagation a conduit à introduire des outils pour réduire ce coût"
+        },
+        {
+          "id": "b",
+          "label": "Parce que la rétropropagation ne fonctionne pas sur les ConvNet"
+        },
+        {
+          "id": "c",
+          "label": "Pour remplacer la fonction d'activation ReLU"
+        },
+        {
+          "id": "d",
+          "label": "Pour ajouter des couches de pooling automatiquement"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le coût très élevé de la rétropropagation a conduit à introduire les optimiseurs. Le rôle d'un optimiseur (par exemple Adam) est de réduire le coût de l'apprentissage.",
+    "concepts": [
+      "optimiseur",
+      "retropropagation"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "entrainement-regularisation",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque hyperparamètre ou outil de l'apprentissage d'un ConvNet à sa définition.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Batch size"
+        },
+        {
+          "id": "l2",
+          "label": "Epochs"
+        },
+        {
+          "id": "l3",
+          "label": "Optimiseur"
+        },
+        {
+          "id": "l4",
+          "label": "Dropout (paramètre p)"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Taille des vagues d'exemples après lesquelles les poids et biais sont mis à jour"
+        },
+        {
+          "id": "r2",
+          "label": "Paramètre lié au nombre d'itérations de la descente du gradient stochastique"
+        },
+        {
+          "id": "r3",
+          "label": "Outil qui réduit le coût de l'apprentissage (ex. Adam)"
+        },
+        {
+          "id": "r4",
+          "label": "Probabilité de mettre une sortie à 0 pour réduire le sur-apprentissage"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4"
+      }
+    },
+    "explanation": "Batch size : taille des vagues d'exemples (mise à jour après chaque vague). Epochs : lié au nombre d'itérations de la descente du gradient stochastique. Optimiseur : réduit le coût de l'apprentissage (Adam). Dropout p : probabilité de mise à 0 d'une sortie, contre le sur-apprentissage.",
+    "concepts": [
+      "epoch-batch-size",
+      "optimiseur",
+      "dropout"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "entrainement-regularisation",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le code Keras ci-dessous correspond aux étapes de compilation et d'apprentissage d'un ConvNet, telles que présentées dans les TP. Lisez-le et répondez.",
+    "payload": {
+      "code": "# Etape 3 : compilation (preparation de l'apprentissage)\nconvnet.compile(loss='categorical_crossentropy',\n                optimizer='adam',\n                metrics=['accuracy'])\n\n# Etape 4 : apprentissage\nconvnet.fit(x_train, y_train,\n            batch_size=10, epochs=200, verbose=2)\n\n# Etape 5 : evaluation\nscore = convnet.evaluate(x_test, y_test, verbose=2)\nprint('Test accuracy:', score[1])",
+      "language": "keras",
+      "caption": "Compilation, apprentissage et évaluation (DL_Exo4)",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Quelle est la valeur de la batch size choisie pour l'apprentissage ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 10"
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Que désigne l'argument optimizer='adam' ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "L'optimiseur, un outil qui réduit le coût de l'apprentissage"
+              },
+              {
+                "id": "b",
+                "label": "La fonction d'activation des couches cachées"
+              },
+              {
+                "id": "c",
+                "label": "Le nombre de filtres de la première couche"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "À quelle étape les poids et les biais du réseau sont-ils effectivement mis à jour ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "À l'étape 4, l'apprentissage (convnet.fit)"
+              },
+              {
+                "id": "b",
+                "label": "À l'étape 3, la compilation (convnet.compile)"
+              },
+              {
+                "id": "c",
+                "label": "À l'étape 5, l'évaluation (convnet.evaluate)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 10,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "batch_size=10 : les exemples sont traités par vagues de 10. optimizer='adam' désigne l'optimiseur, qui réduit le coût de l'apprentissage. Les poids et biais sont mis à jour pendant l'apprentissage (fit) ; la compilation ne fait que préparer, l'évaluation ne fait que mesurer.",
+    "concepts": [
+      "epoch-batch-size",
+      "optimiseur",
+      "retropropagation"
+    ],
+    "source": "DL_Exo4_Corr.py"
+  },
+  {
+    "chapterSlug": "entrainement-regularisation",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "La figure montre l'évolution de l'erreur d'un réseau au fil des epochs, sur le jeu d'apprentissage et sur le jeu de validation. Lisez les courbes et répondez.",
+    "payload": {
+      "figure": {
+        "kind": "training-curve",
+        "xLabel": "Epoch",
+        "yLabel": "Erreur",
+        "series": [
+          {
+            "label": "Erreur d'apprentissage",
+            "tone": "accent",
+            "points": [
+              {
+                "x": 1,
+                "y": 0.62
+              },
+              {
+                "x": 5,
+                "y": 0.4
+              },
+              {
+                "x": 10,
+                "y": 0.26
+              },
+              {
+                "x": 15,
+                "y": 0.16
+              },
+              {
+                "x": 20,
+                "y": 0.09
+              },
+              {
+                "x": 25,
+                "y": 0.05
+              },
+              {
+                "x": 30,
+                "y": 0.03
+              }
+            ]
+          },
+          {
+            "label": "Erreur de validation",
+            "tone": "error",
+            "points": [
+              {
+                "x": 1,
+                "y": 0.64
+              },
+              {
+                "x": 5,
+                "y": 0.44
+              },
+              {
+                "x": 10,
+                "y": 0.33
+              },
+              {
+                "x": 15,
+                "y": 0.3
+              },
+              {
+                "x": 20,
+                "y": 0.34
+              },
+              {
+                "x": 25,
+                "y": 0.41
+              },
+              {
+                "x": 30,
+                "y": 0.49
+              }
+            ]
+          }
+        ],
+        "caption": "Erreur d'apprentissage et de validation au fil des epochs"
+      },
+      "caption": "Diagnostic d'un apprentissage",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quel phénomène ces courbes mettent-elles en évidence ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Du sur-apprentissage : l'erreur d'apprentissage continue de baisser tandis que l'erreur de validation remonte"
+              },
+              {
+                "id": "b",
+                "label": "Du sous-apprentissage : les deux erreurs restent élevées"
+              },
+              {
+                "id": "c",
+                "label": "Un apprentissage idéal : les deux erreurs baissent ensemble jusqu'au bout"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "À quelle epoch l'erreur de validation est-elle minimale ? C'est le moment idéal pour arrêter l'entraînement.",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 15"
+          }
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quel outil vu dans le module aide à réduire ce phénomène ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "La couche dropout"
+              },
+              {
+                "id": "b",
+                "label": "La couche Flatten"
+              },
+              {
+                "id": "c",
+                "label": "Le padding 'same'"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 15,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "L'erreur d'apprentissage baisse jusqu'à 0,03 alors que l'erreur de validation, après un minimum, remonte (0,30 → 0,49) : c'est la signature du sur-apprentissage. L'erreur de validation est minimale à l'epoch 15 (0,30) : c'est le bon moment pour arrêter. La couche dropout aide à réduire le sur-apprentissage.",
+    "concepts": [
+      "sur-apprentissage",
+      "epoch-batch-size",
+      "dropout"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "entrainement-regularisation",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "La figure montre l'évolution de l'exactitude (accuracy) d'un réseau au fil des epochs, sur l'apprentissage et la validation. Lisez les courbes et répondez.",
+    "payload": {
+      "figure": {
+        "kind": "training-curve",
+        "xLabel": "Epoch",
+        "yLabel": "Accuracy",
+        "series": [
+          {
+            "label": "Accuracy d'apprentissage",
+            "tone": "accent",
+            "points": [
+              {
+                "x": 1,
+                "y": 0.55
+              },
+              {
+                "x": 5,
+                "y": 0.58
+              },
+              {
+                "x": 10,
+                "y": 0.6
+              },
+              {
+                "x": 15,
+                "y": 0.61
+              },
+              {
+                "x": 20,
+                "y": 0.62
+              }
+            ]
+          },
+          {
+            "label": "Accuracy de validation",
+            "tone": "info",
+            "points": [
+              {
+                "x": 1,
+                "y": 0.53
+              },
+              {
+                "x": 5,
+                "y": 0.57
+              },
+              {
+                "x": 10,
+                "y": 0.59
+              },
+              {
+                "x": 15,
+                "y": 0.6
+              },
+              {
+                "x": 20,
+                "y": 0.61
+              }
+            ]
+          }
+        ],
+        "caption": "Accuracy d'apprentissage et de validation au fil des epochs"
+      },
+      "caption": "Diagnostic d'un apprentissage (2)",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Que diagnostiquez-vous à partir de ces courbes ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Du sous-apprentissage : les deux accuracies restent basses et proches, le réseau n'apprend pas assez"
+              },
+              {
+                "id": "b",
+                "label": "Du sur-apprentissage : l'accuracy d'apprentissage est très haute et celle de validation s'effondre"
+              },
+              {
+                "id": "c",
+                "label": "Un apprentissage parfait : les deux accuracies atteignent presque 100 %"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quelle action est la plus pertinente face à cette situation ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Augmenter la capacité du réseau (plus de couches/filtres) ou entraîner plus longtemps"
+              },
+              {
+                "id": "b",
+                "label": "Ajouter beaucoup de dropout pour désactiver des neurones"
+              },
+              {
+                "id": "c",
+                "label": "Arrêter immédiatement l'entraînement, le réseau est optimal"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "L'écart entre l'accuracy d'apprentissage et celle de validation est ici très faible.",
+          "weight": 1,
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": true
+          }
+        }
+      ]
+    },
+    "explanation": "Les deux accuracies restent basses (autour de 0,60) et très proches l'une de l'autre : le réseau n'arrive pas à apprendre suffisamment, c'est du sous-apprentissage. La bonne réponse est d'augmenter la capacité du réseau ou d'entraîner plus longtemps ; le dropout, lui, combat le sur-apprentissage (le problème opposé). L'écart apprentissage/validation est en effet très faible : il n'y a pas de sur-apprentissage.",
+    "concepts": [
+      "sur-apprentissage",
+      "epoch-batch-size",
+      "architecture-cnn"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  },
+  {
+    "chapterSlug": "entrainement-regularisation",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pour une image en couleurs (RGB), la couche d'entrée d'un ConvNet comporte trois tableaux de neurones et les filtres sont de dimension 3.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. Une image en couleurs est décrite par trois canaux (rouge, vert, bleu). Sa couche d'entrée comporte donc trois tableaux, et les filtres sont de dimension 3 — c'est le cas du dataset CIFAR-10 des TP.",
+    "concepts": [
+      "reseau-convolutif",
+      "couche-de-convolution"
+    ],
+    "source": "DL_Exo5_Corr.py"
+  },
+  {
+    "chapterSlug": "entrainement-regularisation",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Pour définir entièrement un réseau convolutif, parmi ces choix, lesquels sont des hyperparamètres fixés par le concepteur (et non des paramètres appris) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le nombre de filtres et leur forme dans chaque couche de convolution"
+        },
+        {
+          "id": "b",
+          "label": "La taille des carrés et la fonction de chaque couche de pooling"
+        },
+        {
+          "id": "c",
+          "label": "Le paramètre p des couches dropout"
+        },
+        {
+          "id": "d",
+          "label": "Les valeurs des poids des filtres"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Le nombre et la forme des filtres, la taille et la fonction de pooling, le p du dropout, le choix de l'optimiseur : ce sont des hyperparamètres, fixés par le concepteur selon le type de données. Seuls les poids et les biais sont des paramètres appris par la descente du gradient.",
+    "concepts": [
+      "architecture-cnn",
+      "dropout",
+      "optimiseur"
+    ],
+    "source": "Slides_ConvNet.pdf"
+  }
+]

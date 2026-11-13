@@ -1,0 +1,279 @@
+{
+  "slug": "partiel-3",
+  "title": "Partiel blanc 3 — IPC System V et programmation réseau",
+  "description": "Examen blanc de programmation système et réseau couvrant les modules 6 et 7 : IPC System V (clés et ftok, sémaphores, files de messages, mémoire partagée) et programmation par sockets (adressage et boutisme, TCP serveur et client, UDP, serveur concurrent). Quatorze exercices de difficulté croissante — questions de cours, prédiction de sortie et écriture de code C — à traiter en 2 heures, notés sur 20.",
+  "durationMinutes": 120,
+  "totalPoints": 20,
+  "exercises": [
+    {
+      "chapterSlug": "ipc-cles-ftok",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Un processus crée une file de messages System V, y dépose des données, puis se termine normalement sans appeler `msgctl(..., IPC_RMID, ...)`. Que devient cette file ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Elle est détruite automatiquement à la terminaison du processus, comme un tube anonyme." },
+          { "id": "b", "label": "Elle subsiste dans le noyau, avec ses messages, jusqu'à une suppression explicite ou l'arrêt de la machine." },
+          { "id": "c", "label": "Elle est vidée de ses messages mais l'objet file reste, prêt à resservir." },
+          { "id": "d", "label": "Elle est transférée au processus init, qui la supprimera à sa place." }
+        ]
+      },
+      "solution": { "correct": ["b"] },
+      "explanation": "Un objet IPC System V est **persistant dans le noyau** : une file de messages **survit à tous ses processus**. La terminaison du créateur ne la détruit pas — contrairement à un tube anonyme, effacé à la fermeture du dernier descripteur. La file **subsiste avec tous ses messages** et ne disparaît que de **deux** façons : une **suppression explicite** (`msgctl(..., IPC_RMID, ...)` ou la commande `ipcrm`), ou l'**arrêt de la machine**. Oublier `IPC_RMID` laisse un objet orphelin — une **fuite d'objet IPC** : à la prochaine exécution, un `msgrcv` lira ces vieux messages comme s'ils venaient d'arriver.",
+      "concepts": ["persistance-noyau", "objet-ipc", "fuite-ipc", "msgctl"],
+      "source": "partiel-3"
+    },
+    {
+      "chapterSlug": "memoire-partagee",
+      "type": "TRUE_FALSE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "L'appel `shmdt(ptr)` détache le segment de mémoire partagée du processus appelant **et** détruit le segment dans le noyau.",
+      "payload": {},
+      "solution": { "value": false },
+      "explanation": "Faux. `shmdt` détache le segment **du seul espace d'adressage du processus appelant** : il le retire de **ses** tables de pages, c'est tout. Le segment **continue d'exister** dans le noyau, et **tous les autres processus** qui l'ont attaché l'utilisent normalement. C'est l'exact parallèle de `close` pour un descripteur. La **destruction** réelle du segment, c'est **`shmctl(shmid, IPC_RMID, NULL)`** — et même alors, si des processus l'ont encore attaché, la libération effective est **différée** au dernier `shmdt`. `shmdt` libère un accès local ; `IPC_RMID` supprime l'objet.",
+      "concepts": ["shmdt", "shmctl", "memoire-partagee", "cycle-vie-shm"],
+      "source": "partiel-3"
+    },
+    {
+      "chapterSlug": "semaphores-systemev",
+      "type": "MATCHING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Sur un sémaphore System V, une opération est décrite par une `struct sembuf` dont le champ `sem_op` détermine l'action selon son **signe**. Associez chaque valeur de `sem_op` à son effet.",
+      "payload": {
+        "left": [
+          { "id": "neg", "label": "sem_op vaut -1 (valeur strictement négative)" },
+          { "id": "pos", "label": "sem_op vaut +1 (valeur strictement positive)" },
+          { "id": "zero", "label": "sem_op vaut 0" }
+        ],
+        "right": [
+          { "id": "p", "label": "Opération P : retranche 1 à la valeur, bloque si elle deviendrait négative" },
+          { "id": "v", "label": "Opération V : ajoute 1 à la valeur et réveille d'éventuels processus en attente" },
+          { "id": "att", "label": "Attente que la valeur du sémaphore devienne nulle" }
+        ]
+      },
+      "solution": { "pairs": { "neg": "p", "pos": "v", "zero": "att" } },
+      "explanation": "Sur un sémaphore System V, il n'y a **pas** deux fonctions P et V distinctes : une seule fonction, `semop`, exécute des opérations dont **le signe de `sem_op`** fixe la nature. **`sem_op < 0`** est une opération **P** (prendre) : elle tente de **retrancher** la valeur absolue ; si le résultat deviendrait négatif, le processus **bloque**. **`sem_op > 0`** est une opération **V** (vendre) : elle **ajoute** la valeur et **réveille** d'éventuels processus en attente. **`sem_op == 0`** est un cas particulier : le processus **bloque tant que la valeur du sémaphore n'est pas nulle** — l'attente que la ressource soit entièrement consommée.",
+      "concepts": ["sembuf", "semop", "semaphore-systemev"],
+      "source": "partiel-3"
+    },
+    {
+      "chapterSlug": "files-messages",
+      "type": "FILL_BLANK",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Complétez ce code qui dépose un message dans une file System V. Attention au calcul de la taille passée à `msgsnd` : c'est l'erreur classique des files de messages.",
+      "payload": {
+        "template": "struct message { long mtype; char texte[256]; };\n\nstruct message msg;\nmsg.mtype = {{type}};                 /* type : entier strictement positif */\nstrcpy(msg.texte, \"bonjour\");\n\n/* msgsz = taille du seul CORPS du message, sans le long mtype */\nif (msgsnd(msqid, &msg, {{taille}}, 0) == -1) {\n    perror(\"msgsnd\");\n    exit(EXIT_FAILURE);\n}",
+        "slots": [
+          { "id": "type", "width": "sm", "placeholder": "valeur du type" },
+          { "id": "taille", "width": "lg", "placeholder": "taille du corps" }
+        ]
+      },
+      "solution": {
+        "answers": {
+          "type": ["1"],
+          "taille": ["sizeof(msg.texte)", "256", "sizeof(struct message) - sizeof(long)", "sizeof(msg) - sizeof(long)"]
+        },
+        "caseSensitive": false,
+        "stripAccents": true
+      },
+      "explanation": "Deux pièges. Le champ **`mtype` doit être strictement positif** dans tout message envoyé : un type nul ou négatif fait **échouer `msgsnd`** avec `errno == EINVAL`. On met donc une valeur **`> 0`**, par exemple **`1`**. Surtout, le paramètre `msgsz` de `msgsnd` est la **taille du seul corps** du message — ici **`sizeof(msg.texte)`** (soit 256) — et **non** `sizeof(msg)`. Écrire `sizeof(msg)` inclut par erreur les **8 octets du `long mtype`**. La règle infaillible : `msgsz = sizeof(struct message) - sizeof(long)`, ou directement la taille du champ qui suit `mtype`. Le même calcul devra être cohérent côté `msgrcv`.",
+      "concepts": ["msgsnd", "msgbuf", "message-type", "file-de-messages"],
+      "source": "partiel-3"
+    },
+    {
+      "chapterSlug": "reseau-adressage",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Avant d'appeler `bind`, un serveur remplit le champ `sin_port` de sa `struct sockaddr_in`. Pourquoi écrit-on `adresse.sin_port = htons(8080);` plutôt que `adresse.sin_port = 8080;` ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Parce que htons vérifie que le port est bien compris entre 0 et 65535." },
+          { "id": "b", "label": "Parce que le champ sin_port doit contenir le port en ordre réseau (gros-boutiste) ; htons effectue la conversion depuis l'ordre machine." },
+          { "id": "c", "label": "Parce que htons réserve le port auprès du système d'exploitation." },
+          { "id": "d", "label": "Parce que sans htons le port serait interprété comme une adresse IP." }
+        ]
+      },
+      "solution": { "correct": ["b"] },
+      "explanation": "Tout nombre destiné à **circuler sur le réseau** — le numéro de port comme l'adresse IP — doit être placé en **ordre réseau** (gros-boutiste, *network byte order*), un standard universel d'Internet. Or les machines x86/x86-64 sont **petit-boutistes** : l'ordre de leurs octets en mémoire est l'inverse. La fonction **`htons`** (*host to network short*) convertit une valeur 16 bits de l'**ordre machine** vers l'**ordre réseau**. Écrire `sin_port = 8080;` directement « marche » parfois par hasard, mais reste **faux** : sur une machine petit-boutiste, le serveur écoutera sur un **autre port** que celui prévu. La conversion est **obligatoire**, même sur une machine déjà gros-boutiste (où elle ne fait rien) — c'est ce qui rend le code **portable**.",
+      "concepts": ["boutisme", "htons-htonl", "boutisme-reseau", "sockaddr-in"],
+      "source": "partiel-3"
+    },
+    {
+      "chapterSlug": "tcp-serveur",
+      "type": "ORDERING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Ordonnez les appels système d'un serveur TCP qui sert **un** client, depuis la création de la socket jusqu'à la fermeture.",
+      "payload": {
+        "items": [
+          { "id": "socket", "label": "socket() — créer la socket d'écoute (SOCK_STREAM)" },
+          { "id": "bind", "label": "bind() — lui attacher l'adresse locale (IP + port)" },
+          { "id": "listen", "label": "listen() — passer la socket en mode écoute, ouvrir la file d'attente" },
+          { "id": "accept", "label": "accept() — accepter un client, obtenir la socket de service" },
+          { "id": "recv", "label": "recv() / send() — dialoguer avec le client sur la socket de service" },
+          { "id": "close", "label": "close() — fermer la socket de service" }
+        ]
+      },
+      "solution": { "order": ["socket", "bind", "listen", "accept", "recv", "close"] },
+      "explanation": "Un serveur TCP suit **toujours** le même enchaînement, à connaître par cœur. (1) **`socket`** crée la socket d'**écoute**, pour l'instant anonyme. (2) **`bind`** lui attache une **adresse locale** (IP + port) — sans quoi le système ne saurait pas sur quel port attendre. (3) **`listen`** la passe en **mode écoute** et dimensionne la **file d'attente** des connexions ; il ne bloque pas et n'accepte rien. (4) **`accept`** **bloque** jusqu'à l'arrivée d'un client et renvoie une **nouvelle socket de service**, distincte de la socket d'écoute. (5) On **dialogue** avec `recv`/`send` sur la **socket de service**. (6) On **ferme** cette socket de service à la fin du client. La socket d'écoute, elle, n'est fermée qu'à l'arrêt du serveur.",
+      "concepts": ["sequence-serveur-tcp", "bind", "listen", "accept", "socket-service"],
+      "source": "partiel-3"
+    },
+    {
+      "chapterSlug": "udp",
+      "type": "MCQ_MULTI",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Parmi ces affirmations comparant le protocole **UDP** au protocole **TCP**, lesquelles sont correctes ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "UDP est non connecté : aucune connexion n'est établie avant l'échange de données." },
+          { "id": "b", "label": "Un serveur UDP n'appelle ni listen ni accept ; il se contente de socket puis bind." },
+          { "id": "c", "label": "Un recvfrom extrait exactement un datagramme, le produit d'un seul sendto : les frontières de messages sont préservées." },
+          { "id": "d", "label": "UDP garantit que les datagrammes arrivent tous, dans l'ordre et sans doublon." },
+          { "id": "e", "label": "En UDP, accept crée une nouvelle socket de service pour chaque client, comme en TCP." }
+        ]
+      },
+      "solution": { "correct": ["a", "b", "c"] },
+      "explanation": "(a) **Vrai** : UDP est **non connecté** — aucune poignée de main préalable, on envoie « à l'aveugle » vers une adresse. (b) **Vrai** : faute de connexion, un serveur UDP n'a **ni `listen` ni `accept`** ; sa séquence se réduit à `socket` + `bind`. (c) **Vrai** : un datagramme est un message **délimité** — un `recvfrom` extrait **exactement un** `sendto`, jamais besoin de lire en boucle (au contraire du flot d'octets de TCP). (d) est **faux** : UDP est **non fiable** — un datagramme peut être **perdu**, **dupliqué** ou **désordonné**, et UDP ne le détecte pas. C'est TCP qui garantit l'intégrité et l'ordre. (e) est **faux** : il n'y a **pas d'`accept`** en UDP ; le serveur garde **une seule** socket pour **tous** les clients, sans aucune socket de service.",
+      "concepts": ["udp", "mode-non-connecte", "datagramme", "frontiere-datagramme", "tcp-vs-udp"],
+      "source": "partiel-3"
+    },
+    {
+      "chapterSlug": "serveur-multi-clients",
+      "type": "MATCHING",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Dans un serveur TCP concurrent qui `fork()` un processus par client, chaque processus possède, juste après le `fork`, une copie des deux sockets. Associez chaque processus à l'action de fermeture qu'il doit effectuer, et identifiez la conséquence d'un oubli.",
+      "payload": {
+        "left": [
+          { "id": "parent", "label": "Le processus PÈRE, juste après le fork" },
+          { "id": "enfant", "label": "Le processus ENFANT, juste après le fork" },
+          { "id": "oubli", "label": "Si le père oublie de fermer la socket de service" }
+        ],
+        "right": [
+          { "id": "ferme-service", "label": "Ferme la socket de service : c'est l'enfant qui dialogue avec ce client" },
+          { "id": "ferme-ecoute", "label": "Ferme la socket d'écoute : il ne sert qu'un client et n'accepte rien" },
+          { "id": "fuite", "label": "Fuite de descripteurs, et la connexion ne se ferme jamais proprement côté client" }
+        ]
+      },
+      "solution": { "pairs": { "parent": "ferme-service", "enfant": "ferme-ecoute", "oubli": "fuite" } },
+      "explanation": "Après le `fork`, **chaque processus hérite des deux sockets** : la socket d'**écoute** et la socket de **service** renvoyée par `accept`. Les fermetures sont **obligatoires**. Le **père** ferme la **socket de service** : c'est l'**enfant** qui prend en charge ce client, le père n'en a aucun usage et doit revenir au `accept`. L'**enfant** ferme la **socket d'écoute** : il ne `accept`e jamais de connexion, cette socket ne lui sert à rien. Si le **père oublie de fermer la socket de service** : (1) il **accumule** un descripteur à chaque client — **fuite de descripteurs** ; (2) plus grave, la **connexion ne se ferme jamais proprement** — une connexion TCP ne se ferme que lorsque **tous** les descripteurs qui la désignent sont fermés, donc tant que la copie oubliée du père reste ouverte, le client ne voit pas la fin de connexion. C'est la règle d'or des tubes appliquée aux sockets.",
+      "concepts": ["serveur-concurrent", "fork-par-client", "fermeture-descripteurs-serveur", "socket-service", "socket-ecoute"],
+      "source": "partiel-3"
+    },
+    {
+      "chapterSlug": "reseau-adressage",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Ce programme s'exécute sur une machine **petit-boutiste** (x86-64). Il convertit le port `2` en ordre réseau avec `htons`, puis examine octet par octet le résultat, et vérifie la conversion inverse `ntohs`. Quelle est la sortie exacte ?",
+      "payload": {
+        "program": "#include <stdio.h>\n#include <arpa/inet.h>\n\nint main(void) {\n    unsigned short port = 2;\n    unsigned short reseau = htons(port);\n    unsigned short retour = ntohs(reseau);\n\n    unsigned char *octets = (unsigned char *) &reseau;\n    printf(\"octet 0 : %d\\n\", octets[0]);\n    printf(\"octet 1 : %d\\n\", octets[1]);\n    printf(\"ntohs(htons(2)) = %u\\n\", retour);\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "octet 0 : 0\noctet 1 : 2\nntohs(htons(2)) = 2" },
+      "explanation": "`htons(2)` convertit le nombre `2` (16 bits) de l'ordre **machine** vers l'ordre **réseau**, qui est le **gros-boutiste** (*big endian*) : l'**octet de poids fort en premier**. La valeur 2 sur 16 bits s'écrit `0x0002` ; en ordre réseau, ses deux octets en mémoire sont donc, dans l'ordre des adresses croissantes, **`00`** puis **`02`** — d'où `octet 0 : 0` et `octet 1 : 2`. C'est précisément l'effet de `htons` : sur une machine **petit-boutiste**, où `2` serait rangé `02 00`, `htons` **inverse** les octets pour produire l'ordre réseau `00 02`. Enfin, `ntohs` effectue la conversion **inverse** (réseau → machine) : `ntohs(htons(2))` redonne **`2`**. La sortie est entièrement déterministe.",
+      "concepts": ["htons-htonl", "ntohs-ntohl", "boutisme-reseau", "boutisme"],
+      "source": "partiel-3"
+    },
+    {
+      "chapterSlug": "semaphores-systemev",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Ce programme crée un ensemble de **deux** sémaphores System V, tous deux initialisés à **0**, et synchronise un père et son fils. `P` et `V` sont les enveloppes habituelles (`sem_op` à -1 et +1). Chaque affichage est suivi de `fflush(stdout)`. Quelle est la sortie exacte ?",
+      "payload": {
+        "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/sem.h>\n\nunion semun { int val; struct semid_ds *buf; unsigned short *array; };\n\nint P(int id, int n) { struct sembuf o = {(unsigned short) n, -1, 0}; return semop(id, &o, 1); }\nint V(int id, int n) { struct sembuf o = {(unsigned short) n, +1, 0}; return semop(id, &o, 1); }\n\nint main(void) {\n    int semid = semget(IPC_PRIVATE, 2, IPC_CREAT | 0600);\n    if (semid == -1) { perror(\"semget\"); exit(EXIT_FAILURE); }\n\n    union semun arg;\n    unsigned short vals[2] = {0, 0};\n    arg.array = vals;\n    semctl(semid, 0, SETALL, arg);\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        P(semid, 0);\n        printf(\"fils : travail\\n\");\n        fflush(stdout);\n        V(semid, 1);\n        exit(EXIT_SUCCESS);\n    }\n\n    printf(\"pere : demarrage\\n\");\n    fflush(stdout);\n    V(semid, 0);\n    P(semid, 1);\n    wait(NULL);\n    printf(\"pere : termine\\n\");\n    fflush(stdout);\n\n    semctl(semid, 0, IPC_RMID);\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "pere : demarrage\nfils : travail\npere : termine" },
+      "explanation": "Les **deux** sémaphores de l'ensemble valent **`0`** au départ (`SETALL` avec `{0, 0}`), ce qui force un **enchaînement strict**. Le **fils** commence par `P(semid, 0)` : le sémaphore 0 valant 0, il **bloque d'emblée**. Le **père**, lui, n'attend personne pour son premier affichage : il affiche **`pere : demarrage`**, puis fait `V(semid, 0)` — ce qui **réveille le fils**. Le fils affiche alors **`fils : travail`**, puis fait `V(semid, 1)`. Pendant ce temps, le père avait enchaîné sur `P(semid, 1)` : le sémaphore 1 valant 0, il **bloquait** ; le `V(semid, 1)` du fils le **débloque**. Le père fait alors `wait(NULL)` (le fils est déjà terminé) et affiche **`pere : termine`**. L'ordre est entièrement déterminé par la chaîne de sémaphores `père → fils → père` ; les `fflush` garantissent que l'affichage suit cet ordre logique.",
+      "concepts": ["semaphore-systemev", "semget", "semctl", "operation-atomique-semop"],
+      "source": "partiel-3"
+    },
+    {
+      "chapterSlug": "files-messages",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Ce programme crée une file de messages privée et y dépose **trois** messages, dans l'ordre, de types `3` (corps « log »), `1` (« urgent ») et `2` (« normal »). Il effectue ensuite trois `msgrcv` successifs avec les sélecteurs `msgtyp` 2, -2 puis 0. Quelle est la sortie exacte ?",
+      "payload": {
+        "program": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/msg.h>\n\nstruct message { long mtype; char texte[32]; };\n\nint main(void) {\n    int msqid = msgget(IPC_PRIVATE, IPC_CREAT | 0600);\n    if (msqid == -1) { perror(\"msgget\"); exit(EXIT_FAILURE); }\n\n    struct message m;\n    long types[3] = {3, 1, 2};\n    const char *corps[3] = {\"log\", \"urgent\", \"normal\"};\n    for (int i = 0; i < 3; i++) {\n        m.mtype = types[i];\n        strcpy(m.texte, corps[i]);\n        msgsnd(msqid, &m, sizeof(m.texte), 0);\n    }\n\n    struct message r;\n    msgrcv(msqid, &r, sizeof(r.texte), 2, 0);\n    printf(\"msgtyp=2  -> %s\\n\", r.texte);\n\n    msgrcv(msqid, &r, sizeof(r.texte), -2, 0);\n    printf(\"msgtyp=-2 -> %s\\n\", r.texte);\n\n    msgrcv(msqid, &r, sizeof(r.texte), 0, 0);\n    printf(\"msgtyp=0  -> %s\\n\", r.texte);\n\n    msgctl(msqid, IPC_RMID, NULL);\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "msgtyp=2  -> normal\nmsgtyp=-2 -> urgent\nmsgtyp=0  -> log" },
+      "explanation": "La file contient, dans l'ordre de dépôt, les messages de types **3** (« log »), **1** (« urgent ») et **2** (« normal »). Le sélecteur `msgtyp` de `msgrcv` décide quel message est extrait. Premier appel, **`msgtyp == 2`** : type **exactement** égal à 2 — on extrait « **normal** » (le seul de type 2). Deuxième appel, **`msgtyp == -2`** : mode priorité — parmi les messages de type **≤ 2** restants (il reste « log » de type 3 et « urgent » de type 1 ; seul « urgent » a un type ≤ 2), on extrait celui de **plus petit type**, donc « **urgent** ». Troisième appel, **`msgtyp == 0`** : on ignore le type et on prend le **plus ancien message présent** — il ne reste que « **log** ». La distinction clé : `msgtyp > 0` cible un type **exact**, `msgtyp < 0` cible le **plus petit type ≤ |msgtyp|**, `msgtyp == 0` prend le **premier** quel qu'il soit.",
+      "concepts": ["msgrcv", "selecteur-msgtyp", "file-de-messages", "msgsnd"],
+      "source": "partiel-3"
+    },
+    {
+      "chapterSlug": "memoire-partagee",
+      "type": "CODE_WRITE",
+      "difficulty": 2,
+      "points": 2,
+      "prompt": "Écrivez un programme C qui crée un segment de **mémoire partagée** System V (un seul `int`), puis se dédouble par `fork()`. Le **fils** attache le segment et y écrit la valeur `1234`. Le **père** attend la fin du fils, attache le segment à son tour, lit la valeur et affiche exactement la ligne `valeur lue : 1234`. Le programme détache puis supprime le segment.",
+      "payload": {
+        "spec": "Le programme inclut <stdio.h>, <stdlib.h>, <unistd.h>, <sys/wait.h>, <sys/types.h>, <sys/ipc.h> et <sys/shm.h>. Il cree un segment avec shmget(IPC_PRIVATE, sizeof(int), IPC_CREAT | 0600) (en testant l'echec -1) : IPC_PRIVATE fournit un objet neuf, partage par heritage avec le fils. Il appelle fork() (en testant l'echec -1). Dans le fils : attacher le segment avec shmat(shmid, NULL, 0), tester l'echec par comparaison a (void *) -1 (et NON a NULL), ecrire 1234 a l'emplacement pointe, detacher avec shmdt, puis terminer le fils. Dans le pere : attendre la fin du fils avec wait(NULL) — c'est ce qui garantit que l'ecriture du fils a eu lieu avant la lecture —, attacher le segment avec shmat (test (void *) -1), lire la valeur via le pointeur, afficher la ligne 'valeur lue : 1234' avec printf(\"valeur lue : %d\\n\", *p), detacher avec shmdt, puis supprimer le segment avec shmctl(shmid, IPC_RMID, NULL). L'attente par wait sequence l'ecriture du fils et la lecture du pere : aucune autre synchronisation n'est requise ici.",
+        "std": "gnu11",
+        "compare": "trimmed",
+        "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/shm.h>\n\nint main(void) {\n    /* 1. creer un segment de memoire partagee d'un int (IPC_PRIVATE) */\n\n    /* 2. fork() : le fils attache le segment et y ecrit 1234 ;\n          le pere attend le fils, attache le segment, lit la valeur\n          et affiche 'valeur lue : 1234' */\n\n    /* 3. detacher (shmdt) puis supprimer le segment (shmctl IPC_RMID) */\n\n    return 0;\n}\n",
+        "tests": [
+          { "name": "le pere lit la valeur ecrite par le fils dans le segment partage", "stdin": "", "expectedStdout": "valeur lue : 1234", "compare": "trimmed" }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/shm.h>\n\nint main(void) {\n    int shmid = shmget(IPC_PRIVATE, sizeof(int), IPC_CREAT | 0600);\n    if (shmid == -1) { perror(\"shmget\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        int *p = (int *) shmat(shmid, NULL, 0);\n        if (p == (void *) -1) { perror(\"shmat\"); exit(EXIT_FAILURE); }\n        *p = 1234;\n        shmdt(p);\n        exit(EXIT_SUCCESS);\n    }\n\n    wait(NULL);\n    int *p = (int *) shmat(shmid, NULL, 0);\n    if (p == (void *) -1) { perror(\"shmat\"); exit(EXIT_FAILURE); }\n    printf(\"valeur lue : %d\\n\", *p);\n    shmdt(p);\n    shmctl(shmid, IPC_RMID, NULL);\n    return 0;\n}"
+      },
+      "explanation": "Le segment est créé par `shmget` avec la clé **`IPC_PRIVATE`** : un objet **neuf et sans clé publique**, partageable par **héritage** entre processus apparentés — exactement ce qu'il faut pour un père et son fils. La taille `sizeof(int)` est fixée définitivement. Après le `fork`, chaque processus doit **attacher** le segment pour y accéder : `shmat` renvoie un **pointeur** dans l'espace d'adressage du processus appelant. Point crucial : l'échec de `shmat` se teste par **`(void *) -1`**, **pas** par `NULL`. Le **fils** attache, écrit `1234` via le pointeur — un simple accès mémoire —, puis **détache** avec `shmdt`. Le **père** appelle `wait(NULL)` : cette attente **séquence** les deux processus — l'écriture du fils est garantie **terminée** avant que le père ne lise —, ce qui dispense ici de tout sémaphore. Le père attache à son tour, lit la valeur, affiche `valeur lue : 1234`, **détache** (`shmdt`) puis **supprime** le segment du noyau (`shmctl(..., IPC_RMID, ...)`) — étape indispensable, l'objet IPC étant persistant.",
+      "concepts": ["memoire-partagee", "shmget", "shmat", "shmdt", "shmctl"],
+      "source": "partiel-3"
+    },
+    {
+      "chapterSlug": "files-messages",
+      "type": "CODE_FIX",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Ce programme crée une file de messages privée, puis se dédouble : le fils envoie un message au père, qui devrait le lire et afficher `recu : ping`. En réalité le programme **se fige** et ne se termine jamais. Trouvez et corrigez l'erreur.",
+      "payload": {
+        "spec": "Le programme cree une file de messages privee avec msgget(IPC_PRIVATE, IPC_CREAT | 0600), puis fork(). Le fils prepare une struct message et l'envoie avec msgsnd ; le pere la lit avec msgrcv en demandant le type 1 (msgtyp = 1), affiche 'recu : ping', attend le fils, puis supprime la file. LE BUG est dans le fils : il fixe m.mtype = 0 avant d'appeler msgsnd. Or le champ mtype d'un message ENVOYE doit etre un entier STRICTEMENT POSITIF (> 0). Avec mtype = 0, msgsnd echoue immediatement avec errno == EINVAL : le message n'est JAMAIS depose dans la file. Consequence : le pere appelle msgrcv(msqid, &recu, sizeof(recu.texte), 1, 0) qui bloque en attendant un message de type 1 ; comme aucun message n'arrivera jamais, le pere reste bloque indefiniment et le programme se fige. La correction consiste a donner a m.mtype une valeur strictement positive — m.mtype = 1 — coherente avec le type 1 que le pere demande a la reception. Une fois mtype = 1, msgsnd reussit, le message de type 1 est depose, le msgrcv du pere le recoit, et le programme affiche 'recu : ping' puis se termine normalement.",
+        "std": "gnu11",
+        "compare": "trimmed",
+        "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/msg.h>\n\nstruct message { long mtype; char texte[64]; };\n\nint main(void) {\n    int msqid = msgget(IPC_PRIVATE, IPC_CREAT | 0600);\n    if (msqid == -1) { perror(\"msgget\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        struct message m;\n        m.mtype = 0;                  /* BUG ici */\n        strcpy(m.texte, \"ping\");\n        if (msgsnd(msqid, &m, sizeof(m.texte), 0) == -1) {\n            perror(\"msgsnd\"); exit(EXIT_FAILURE);\n        }\n        exit(EXIT_SUCCESS);\n    }\n\n    struct message recu;\n    if (msgrcv(msqid, &recu, sizeof(recu.texte), 1, 0) == -1) {\n        perror(\"msgrcv\"); exit(EXIT_FAILURE);\n    }\n    printf(\"recu : %s\\n\", recu.texte);\n    wait(NULL);\n    msgctl(msqid, IPC_RMID, NULL);\n    return 0;\n}\n",
+        "tests": [
+          { "name": "le pere recoit le message du fils et se termine", "stdin": "", "expectedStdout": "recu : ping", "compare": "trimmed", "timeoutMs": 3000 }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/msg.h>\n\nstruct message { long mtype; char texte[64]; };\n\nint main(void) {\n    int msqid = msgget(IPC_PRIVATE, IPC_CREAT | 0600);\n    if (msqid == -1) { perror(\"msgget\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        struct message m;\n        m.mtype = 1;\n        strcpy(m.texte, \"ping\");\n        if (msgsnd(msqid, &m, sizeof(m.texte), 0) == -1) {\n            perror(\"msgsnd\"); exit(EXIT_FAILURE);\n        }\n        exit(EXIT_SUCCESS);\n    }\n\n    struct message recu;\n    if (msgrcv(msqid, &recu, sizeof(recu.texte), 1, 0) == -1) {\n        perror(\"msgrcv\"); exit(EXIT_FAILURE);\n    }\n    printf(\"recu : %s\\n\", recu.texte);\n    wait(NULL);\n    msgctl(msqid, IPC_RMID, NULL);\n    return 0;\n}"
+      },
+      "explanation": "Le bug est la ligne **`m.mtype = 0;`** dans le fils. Le champ `mtype` d'un message **envoyé** doit être un entier **strictement positif** (`> 0`) : la valeur `0` (et les valeurs négatives) est **interdite à l'envoi** — elle est réservée au rôle de **sélecteur** côté `msgrcv`. Avec `mtype = 0`, **`msgsnd` échoue immédiatement** avec `errno == EINVAL` : le message n'est **jamais déposé** dans la file. Le père, lui, appelle `msgrcv(..., 1, 0)` : il **bloque** en attendant un message de **type 1** — qui n'arrivera jamais. Le père reste **bloqué indéfiniment** : le programme se **fige**. La correction : donner à `mtype` une valeur **strictement positive**, et **cohérente** avec ce que le père demande — **`m.mtype = 1;`**. Le `msgsnd` réussit alors, le message de type 1 est déposé, le `msgrcv` du père le reçoit, et le programme affiche `recu : ping` puis se termine.",
+      "concepts": ["message-type", "msgsnd", "msgrcv", "blocage-fdm"],
+      "source": "partiel-3"
+    },
+    {
+      "chapterSlug": "tcp-serveur",
+      "type": "CODE_FIX",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Ce programme contient un serveur et un client TCP reliés par un tube et un `fork()`, communiquant en local sur `127.0.0.1`. Le client devrait afficher `client a recu : salut le client`. En réalité, la connexion échoue. Trouvez et corrigez l'erreur dans la séquence du serveur.",
+      "payload": {
+        "spec": "Le programme cree un tube avec pipe(), puis fork(). Le FILS joue le serveur TCP : il cree une socket d'ecoute SOCK_STREAM, la bind sur INADDR_ANY et le port 0 (le systeme choisit un port libre), recupere le port effectivement attribue avec getsockname, transmet ce port au pere par le tube, puis appelle accept et dialogue (recv puis send 'salut le client'). Le PERE joue le client : il lit le port dans le tube, cree une socket, remplit l'adresse du serveur (AF_INET, htons(port), 127.0.0.1 via inet_aton), appelle connect, envoie un message, recoit la reponse et affiche 'client a recu : <reponse>'. LE BUG est dans le serveur : l'appel listen() est absent — la socket d'ecoute est bind mais n'est JAMAIS passee en mode ecoute avant l'appel a accept. Consequences : accept echoue (errno EINVAL, une socket non ecoutante ne peut pas accepter), et surtout le port bind n'accepte aucune connexion entrante, donc le connect du client echoue avec errno ECONNREFUSED ('Connection refused'). Le client se termine alors par perror('connect') sans rien afficher. La correction consiste a INSERER, dans le serveur, l'appel listen(ecoute, 5) APRES le bind et AVANT le getsockname/accept (par exemple juste apres le bind, ou juste avant le accept) : la socket passe alors en mode ecoute, sa file d'attente de connexions est ouverte, le connect du client reussit, le dialogue a lieu et le programme affiche 'client a recu : salut le client'.",
+        "std": "gnu11",
+        "compare": "trimmed",
+        "starterCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(void) {\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* ===== SERVEUR ===== */\n        close(tube[0]);\n        int ecoute = socket(AF_INET, SOCK_STREAM, 0);\n        if (ecoute == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof(adr));\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(ecoute, (struct sockaddr *) &adr, sizeof(adr)) == -1) {\n            perror(\"bind\"); exit(EXIT_FAILURE);\n        }\n\n        socklen_t lg = sizeof(adr);\n        getsockname(ecoute, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n\n        /* BUG : la socket n'est jamais passee en mode ecoute */\n\n        write(tube[1], &port, sizeof(port));\n        close(tube[1]);\n\n        struct sockaddr_in client;\n        socklen_t lgc = sizeof(client);\n        int service = accept(ecoute, (struct sockaddr *) &client, &lgc);\n        if (service == -1) { perror(\"accept\"); exit(EXIT_FAILURE); }\n\n        char tampon[128];\n        ssize_t n = recv(service, tampon, sizeof(tampon) - 1, 0);\n        if (n > 0) {\n            tampon[n] = '\\0';\n            const char *rep = \"salut le client\";\n            send(service, rep, strlen(rep), 0);\n        }\n        close(service);\n        close(ecoute);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* ===== CLIENT ===== */\n    close(tube[1]);\n    unsigned short port;\n    read(tube[0], &port, sizeof(port));\n    close(tube[0]);\n\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n\n    struct sockaddr_in serveur;\n    memset(&serveur, 0, sizeof(serveur));\n    serveur.sin_family = AF_INET;\n    serveur.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &serveur.sin_addr);\n\n    if (connect(sk, (struct sockaddr *) &serveur, sizeof(serveur)) == -1) {\n        perror(\"connect\"); exit(EXIT_FAILURE);\n    }\n\n    const char *msg = \"salut le serveur\";\n    send(sk, msg, strlen(msg), 0);\n\n    char tampon[128];\n    ssize_t n = recv(sk, tampon, sizeof(tampon) - 1, 0);\n    if (n > 0) {\n        tampon[n] = '\\0';\n        printf(\"client a recu : %s\\n\", tampon);\n    }\n    close(sk);\n    wait(NULL);\n    return 0;\n}\n",
+        "tests": [
+          { "name": "le client se connecte, dialogue et recoit la reponse du serveur", "stdin": "", "expectedStdout": "client a recu : salut le client", "compare": "trimmed", "timeoutMs": 5000 }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/wait.h>\n#include <sys/types.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\nint main(void) {\n    int tube[2];\n    if (pipe(tube) == -1) { perror(\"pipe\"); exit(EXIT_FAILURE); }\n\n    pid_t pid = fork();\n    if (pid == -1) { perror(\"fork\"); exit(EXIT_FAILURE); }\n\n    if (pid == 0) {\n        /* ===== SERVEUR ===== */\n        close(tube[0]);\n        int ecoute = socket(AF_INET, SOCK_STREAM, 0);\n        if (ecoute == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n\n        struct sockaddr_in adr;\n        memset(&adr, 0, sizeof(adr));\n        adr.sin_family = AF_INET;\n        adr.sin_addr.s_addr = htonl(INADDR_ANY);\n        adr.sin_port = htons(0);\n        if (bind(ecoute, (struct sockaddr *) &adr, sizeof(adr)) == -1) {\n            perror(\"bind\"); exit(EXIT_FAILURE);\n        }\n\n        if (listen(ecoute, 5) == -1) { perror(\"listen\"); exit(EXIT_FAILURE); }\n\n        socklen_t lg = sizeof(adr);\n        getsockname(ecoute, (struct sockaddr *) &adr, &lg);\n        unsigned short port = ntohs(adr.sin_port);\n\n        write(tube[1], &port, sizeof(port));\n        close(tube[1]);\n\n        struct sockaddr_in client;\n        socklen_t lgc = sizeof(client);\n        int service = accept(ecoute, (struct sockaddr *) &client, &lgc);\n        if (service == -1) { perror(\"accept\"); exit(EXIT_FAILURE); }\n\n        char tampon[128];\n        ssize_t n = recv(service, tampon, sizeof(tampon) - 1, 0);\n        if (n > 0) {\n            tampon[n] = '\\0';\n            const char *rep = \"salut le client\";\n            send(service, rep, strlen(rep), 0);\n        }\n        close(service);\n        close(ecoute);\n        exit(EXIT_SUCCESS);\n    }\n\n    /* ===== CLIENT ===== */\n    close(tube[1]);\n    unsigned short port;\n    read(tube[0], &port, sizeof(port));\n    close(tube[0]);\n\n    int sk = socket(AF_INET, SOCK_STREAM, 0);\n    if (sk == -1) { perror(\"socket\"); exit(EXIT_FAILURE); }\n\n    struct sockaddr_in serveur;\n    memset(&serveur, 0, sizeof(serveur));\n    serveur.sin_family = AF_INET;\n    serveur.sin_port = htons(port);\n    inet_aton(\"127.0.0.1\", &serveur.sin_addr);\n\n    if (connect(sk, (struct sockaddr *) &serveur, sizeof(serveur)) == -1) {\n        perror(\"connect\"); exit(EXIT_FAILURE);\n    }\n\n    const char *msg = \"salut le serveur\";\n    send(sk, msg, strlen(msg), 0);\n\n    char tampon[128];\n    ssize_t n = recv(sk, tampon, sizeof(tampon) - 1, 0);\n    if (n > 0) {\n        tampon[n] = '\\0';\n        printf(\"client a recu : %s\\n\", tampon);\n    }\n    close(sk);\n    wait(NULL);\n    return 0;\n}"
+      },
+      "explanation": "Le bug est une **étape manquante** de la séquence du serveur TCP : **`listen` est absent**. La socket d'écoute est bien créée (`socket`) et attachée (`bind`), mais elle n'est **jamais passée en mode écoute** avant l'appel à `accept`. Or `socket → bind → listen → accept` est l'enchaînement **obligatoire**. Sans `listen`, deux choses échouent : l'`accept` du serveur (`errno == EINVAL` — on ne peut pas accepter sur une socket non écoutante) et surtout, le port attaché **n'accepte aucune connexion entrante**. Le `connect` du client échoue donc avec **`errno == ECONNREFUSED`** (« *Connection refused* »), et le client se termine sur `perror(\"connect\")` sans rien afficher. La correction : **insérer `listen(ecoute, 5)`** après le `bind` et avant l'`accept`. La socket passe alors en mode écoute, sa **file d'attente** de connexions est ouverte, le `connect` du client réussit, le dialogue a lieu, et le programme affiche `client a recu : salut le client`.",
+      "concepts": ["listen", "sequence-serveur-tcp", "accept", "connect", "socket-ecoute"],
+      "source": "partiel-3"
+    }
+  ]
+}

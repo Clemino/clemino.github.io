@@ -1,0 +1,236 @@
+---
+title: "Fonction de valeur et équation de Bellman"
+slug: fonction-valeur-bellman
+order: 3
+estimatedReadMin: 24
+concepts: [fonction-de-valeur, equation-de-bellman, valeur-optimale, politique-optimale, matrice-de-transition, facteur-d-actualisation, recompense]
+source: "Apprentissage_renforcement.pdf"
+---
+
+## La valeur d'un état dans une chaîne de Markov avec récompense
+
+La section précédente a associé à chaque état une **récompense `Rₛ`** et fixé le
+**modèle à horizon infini actualisé**. Le cours pose maintenant la question :
+**de quelle manière un agent doit-il prendre en compte les récompenses futures
+pour évaluer la qualité d'un état ?** Autrement dit : **de quelle manière
+l'agent doit-il intégrer le futur dans sa prise de décision ?**
+
+La réponse est la **valeur d'un état**. Compte tenu du fait que l'on a adopté le
+modèle à **horizon infini et actualisé**, cette valeur se définit ainsi :
+
+```text
+v(s) = E( Rₜ₊₁ + γ·Rₜ₊₂ + γ²·Rₜ₊₃ + …  |  Sₜ = s )
+```
+
+C'est la **moyenne du gain actualisé** obtenu à partir de l'état `s` : la somme
+des récompenses futures, chacune pondérée par une puissance de `γ`.
+
+> **À retenir** : la **valeur d'un état `s`** est la **moyenne du gain
+> actualisé** à partir de `s` :
+> `v(s) = E(Rₜ₊₁ + γ·Rₜ₊₂ + γ²·Rₜ₊₃ + … | Sₜ = s)`. Elle répond à la question :
+> **comment intégrer le futur** pour juger de la qualité d'un état.
+
+## La réécriture récursive de la valeur
+
+Le cours montre que cette valeur **peut être réécrite**. On isole le **premier
+terme** `Rₜ₊₁` du reste de la somme :
+
+```text
+V(s) = E( Rₜ₊₁ | Sₜ = s )  +  γ · E( Rₜ₊₂ + γ·Rₜ₊₃ + …  | Sₜ = s )
+```
+
+Le cours en déduit l'écriture suivante :
+
+```text
+V(s) = Rₛ + γ · Σ Pₛₛ′ · V(s′)
+```
+
+(somme sur tous les états successeurs `s′`).
+
+Comprenons cette réécriture, ligne à ligne :
+
+- le premier terme `E(Rₜ₊₁ | Sₜ = s)` est, **par définition**, la récompense
+  **`Rₛ`** de l'état `s` (vue dans la section précédente) ;
+- le second terme est `γ` fois l'espérance du **gain actualisé à partir de
+  l'instant suivant**. Or, depuis `s`, l'agent passe dans un état successeur
+  `s′` avec la probabilité `Pₛₛ′` (lue dans la **matrice de transition**), et la
+  valeur du gain à partir de `s′` est justement `V(s′)`. En **moyennant sur tous
+  les `s′`**, on obtient `Σ Pₛₛ′ · V(s′)`.
+
+L'équation `V(s) = Rₛ + γ · Σ Pₛₛ′ · V(s′)` est donc **récursive** : la valeur
+d'un état s'exprime à l'aide de la valeur de **ses successeurs**. Elle dit, en
+français : la valeur d'un état = **ce qu'il rapporte tout de suite** (`Rₛ`)
+**plus** `γ` fois **la valeur moyenne de là où l'on arrive ensuite**.
+
+> **À retenir** : la valeur d'un état se **réécrit récursivement** :
+> `V(s) = Rₛ + γ · Σ Pₛₛ′ · V(s′)`. Elle se lit : récompense **immédiate** `Rₛ`,
+> **plus** `γ` fois la **valeur moyenne** des états **successeurs** (pondérée par
+> les probabilités de transition `Pₛₛ′`).
+
+## L'équation de Bellman et sa résolution
+
+L'équation précédente vaut pour **chaque état**. Pour obtenir **les valeurs de
+tous les états**, le cours indique qu'il faut donc **résoudre le système**
+contenant **une équation pour chaque état `s` de `S`** :
+
+```text
+V(s) = Rₛ + γ · Σ Pₛₛ′ · V(s′)        pour chaque s ∈ S
+```
+
+Cette équation est l'**équation de Bellman** (pour une chaîne de Markov avec
+récompense). Le cours indique que **plusieurs méthodes de résolution existent** :
+
+1. **résolution directe du système** — surtout lorsque le **nombre d'états est
+   faible** (voir TD) ;
+2. **résolution indirecte** — par exemple la **programmation dynamique**.
+
+Le système est **linéaire** : on a `|S|` équations à `|S|` inconnues (les
+valeurs `V(s)`). En écriture matricielle, en notant `V` le vecteur des valeurs,
+`R` le vecteur des récompenses et `P` la matrice de transition, le système
+`V = R + γPV` se réécrit `(I − γP)V = R`, dont la résolution directe donne
+`V = (I − γP)⁻¹R`. Cette résolution directe n'est praticable que si **le nombre
+d'états est faible** — d'où l'intérêt des méthodes **indirectes** lorsque les
+états sont nombreux.
+
+Le cours signale enfin une **limite** de ce cadre : pour arriver à une
+**description complète** d'un problème d'apprentissage par renforcement, il faut
+**ajouter un ensemble d'actions** — ce que font les **processus de décision
+markoviens**, déjà introduits, et qui servent de base à la suite.
+
+> **À retenir** : l'**équation de Bellman** `V(s) = Rₛ + γ · Σ Pₛₛ′ · V(s′)`,
+> écrite pour **chaque état**, forme un **système** (linéaire) à résoudre. On
+> peut le résoudre **directement** (peu d'états) ou **indirectement**
+> (programmation dynamique).
+
+## La valeur d'un état pour une stratégie π
+
+Le cours passe au cadre **complet** du **processus de décision markovien**, où
+interviennent les **actions** et donc une **stratégie `π`**. Pour
+**caractériser la qualité des états** en termes de récompenses **immédiate et
+futures**, il introduit la notion de **valeur d'un état** — cette fois
+**relative à une stratégie**.
+
+> Pour commencer, on définit la **valeur d'un état `s` pour une stratégie donnée
+> `π`** :
+>
+> ```text
+> Vπ(s) = Eπ( Σ γᵗ rₜ )        somme sur t de 0 à l'infini
+> ```
+
+Le cours explique la notation : **`Eπ` signifie que la moyenne est calculée dans
+le cas où la stratégie suivie par l'agent est `π`**. Autrement dit, **`Vπ(s)`
+est la valeur moyenne de la somme actualisée des récompenses que l'agent va
+gagner s'il commence en `s` et qu'il exécute la stratégie `π`**.
+
+Le point essentiel : **la valeur d'un état dépend de la stratégie**. Un même
+état `s` peut avoir une grande valeur `Vπ(s)` sous une **bonne** stratégie, et
+une faible valeur sous une **mauvaise**. Évaluer un état, c'est donc toujours
+l'évaluer **pour une stratégie donnée**.
+
+> **À retenir** : la **valeur d'un état `s` pour une stratégie `π`** est
+> `Vπ(s) = Eπ(Σ γᵗ rₜ)` : la **moyenne** du gain actualisé obtenu en **partant
+> de `s`** et en **suivant `π`**. La valeur d'un état **dépend de la stratégie**
+> suivie.
+
+## La valeur optimale d'un état
+
+Parmi toutes les stratégies possibles, certaines sont meilleures que d'autres.
+Le cours définit alors **la valeur optimale** d'un état `s` :
+
+> C'est la **valeur moyenne de la somme actualisée des récompenses** que l'agent
+> va gagner **s'il commence en `s` et qu'il exécute la stratégie optimale**.
+> Soit :
+>
+> ```text
+> V*(s) = maxπ E( Σ γᵗ rₜ )        somme sur t de 0 à l'infini
+> ```
+
+La valeur optimale `V*(s)` est donc le **maximum**, sur **toutes les stratégies
+`π`**, de la valeur `Vπ(s)`.
+
+Le cours énonce une **propriété fondamentale** : **cette valeur est unique** et
+elle est la **solution des équations suivantes** :
+
+```text
+V*(s) = maxₐ ( R(s, a) + γ · Σ T(s, a, s′) · V*(s′) )
+```
+
+(somme sur les états successeurs `s′`).
+
+Cette équation est l'**équation de Bellman d'optimalité**. Comparons-la à
+l'équation de Bellman vue plus haut :
+
+| Équation | Cadre | Forme |
+| --- | --- | --- |
+| Bellman (chaîne de Markov) | Pas d'action | `V(s) = Rₛ + γ Σ Pₛₛ′ V(s′)` |
+| Bellman d'optimalité (MDP) | **Avec actions** | `V*(s) = maxₐ (R(s, a) + γ Σ T(s, a, s′) V*(s′))` |
+
+La nouveauté est le **`maxₐ`** : pour la valeur optimale, on ne **subit** plus la
+transition, on **choisit** la **meilleure action `a`**. Pour chaque action
+candidate `a`, la quantité `R(s, a) + γ · Σ T(s, a, s′) · V*(s′)` mesure ce que
+rapporte cette action (sa récompense immédiate plus la valeur optimale moyenne
+de l'état d'arrivée) ; on **retient le maximum**.
+
+> **À retenir** : la **valeur optimale** d'un état est
+> `V*(s) = maxπ E(Σ γᵗ rₜ)` : la valeur de la **meilleure** stratégie. Elle est
+> **unique** et **solution** de l'**équation de Bellman d'optimalité**
+> `V*(s) = maxₐ (R(s, a) + γ · Σ T(s, a, s′) · V*(s′))`, où le **`maxₐ`** traduit
+> le **choix** de la meilleure action.
+
+## De la valeur optimale à la stratégie optimale
+
+La valeur optimale des états sert un but précis : **caractériser une stratégie
+optimale**. Le cours énonce que **la valeur optimale des états permet de
+caractériser une stratégie optimale (déterministe) `π*`** :
+
+```text
+s ∈ S,   π*(s) = argmaxₐ ( R(s, a) + γ · Σ T(s, a, s′) · V*(s′) )
+```
+
+Il faut bien distinguer **`max`** et **`argmax`** :
+
+- **`maxₐ`** donne **la valeur** de la meilleure action : c'est ce qui définit
+  `V*(s)` ;
+- **`argmaxₐ`** donne **l'action elle-même** qui réalise ce maximum : c'est ce
+  qui définit `π*(s)`.
+
+Connaître `V*` permet donc de **déduire** `π*` : dans chaque état `s`, la
+stratégie optimale **choisit l'action `a`** qui **maximise**
+`R(s, a) + γ · Σ T(s, a, s′) · V*(s′)`. La stratégie optimale est ainsi
+**gloutonne par rapport à `V*`** : elle prend, état par état, l'action qui
+paraît la meilleure au vu des valeurs optimales.
+
+Le cours pose alors le programme de la suite : il **faut résoudre ces équations
+pour déterminer, ou du moins approcher, la fonction `V*` et la stratégie `π*`**.
+Pour cela, il **présente les deux algorithmes Value Iteration et Policy
+Iteration** — étudiés dans la section suivante.
+
+> **À retenir** : la valeur optimale `V*` **détermine** une **stratégie optimale
+> déterministe** `π*(s) = argmaxₐ (R(s, a) + γ · Σ T(s, a, s′) · V*(s′))` :
+> dans chaque état, `π*` **choisit l'action** qui réalise le maximum. Reste à
+> **résoudre les équations** pour obtenir (ou approcher) `V*` et `π*` —
+> objet des algorithmes **Value Iteration** et **Policy Iteration**.
+
+## Synthèse de la section
+
+Pour juger de la **qualité d'un état**, on définit sa **valeur** : dans le
+modèle à **horizon infini actualisé**, la valeur d'un état est la **moyenne du
+gain actualisé** `v(s) = E(Rₜ₊₁ + γ·Rₜ₊₂ + … | Sₜ = s)`. En isolant le premier
+terme, cette valeur se **réécrit récursivement** :
+`V(s) = Rₛ + γ · Σ Pₛₛ′ · V(s′)` — récompense **immédiate** plus `γ` fois la
+**valeur moyenne** des successeurs. Écrite pour **chaque état**, cette **équation
+de Bellman** forme un **système** que l'on résout **directement** (peu d'états)
+ou **indirectement** (programmation dynamique). Dans le cadre complet du **MDP**,
+la valeur dépend de la **stratégie** : `Vπ(s) = Eπ(Σ γᵗ rₜ)` est le gain moyen
+en partant de `s` et en suivant `π`. La **valeur optimale**
+`V*(s) = maxπ E(Σ γᵗ rₜ)`, **unique**, est **solution** de l'**équation de
+Bellman d'optimalité** `V*(s) = maxₐ (R(s, a) + γ · Σ T(s, a, s′) · V*(s′))`, où
+le **`maxₐ`** traduit le **choix** de la meilleure action. De `V*` on **déduit**
+la **stratégie optimale** `π*(s) = argmaxₐ (R(s, a) + γ · Σ T(s, a, s′)
+· V*(s′))`.
+
+> **À retenir** : la valeur d'un état mesure le **gain actualisé moyen** à
+> partir de cet état et obéit à l'**équation de Bellman**. La **valeur optimale
+> `V*`** est **unique**, **solution** de l'équation de Bellman **d'optimalité**
+> (avec un **`maxₐ`**), et elle **détermine** la **stratégie optimale `π*`**
+> par un **`argmaxₐ`**.

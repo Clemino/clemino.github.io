@@ -1,0 +1,276 @@
+---
+title: "Le traitement automatique du langage naturel"
+slug: traitement-langage-naturel
+order: 1
+estimatedReadMin: 20
+concepts: [traitement-du-langage-naturel, niveaux-d-analyse-linguistique, ambiguite-linguistique, application-nlp]
+source: "Intro_NLP.pdf"
+---
+
+## De quoi s'agit-il ?
+
+Ce **dernier module** du cours est consacré au **traitement automatique du
+langage naturel** — en anglais *Natural Language Processing* (NLP). Le cours en
+donne d'abord une caractérisation simple :
+
+> Le **traitement automatique du langage naturel** est une **branche de
+> l'intelligence artificielle**. Il s'agit de **communiquer avec les machines en
+> utilisant une langue naturelle** (humaine).
+
+Le cours cite ensuite une définition plus complète, due à **E. D. Liddy** :
+
+> « Le traitement automatique du langage naturel est un ensemble de **techniques
+> computationnelles**, **théoriquement motivées**, pour **analyser** et
+> **représenter** des **textes** se présentant **naturellement**, à un ou
+> plusieurs **niveaux** d'analyse linguistique, dans le but de réaliser un
+> traitement du langage **proche de celui des humains** pour une gamme de
+> **tâches** ou d'**applications**. »
+
+Cette définition concentre les idées-clés du domaine. Le NLP s'appuie sur des
+**techniques computationnelles** (donc des algorithmes), il porte sur des
+**textes réels** (et non sur des exemples artificiels fabriqués pour la
+circonstance), il les **analyse** et les **représente** à **différents
+niveaux** linguistiques, et son objectif est un traitement du langage **proche
+de celui d'un humain**, au service de **tâches** et d'**applications** variées.
+
+> **À retenir** : le **traitement automatique du langage naturel (NLP)** est une
+> branche de l'**IA** dont le but est de **communiquer avec les machines** dans
+> une **langue naturelle**. Selon Liddy, c'est un ensemble de **techniques
+> computationnelles** d'**analyse** et de **représentation** de **textes
+> naturels**, à plusieurs **niveaux** linguistiques, pour réaliser un traitement
+> du langage **proche de celui des humains**.
+
+## Quels documents, quelles applications ?
+
+Le cours précise le périmètre du NLP en répondant à plusieurs questions.
+
+**Quels documents ?** Le NLP traite des **langues naturelles**, par opposition
+aux **langues formelles**. Une **langue naturelle** est une langue que les
+humains **parlent naturellement** — l'arabe, le français, l'anglais, etc. Le
+cours rappelle que ces langues existent à la fois sous une **forme écrite** et
+sous une **forme parlée**.
+
+**Quelles applications ?** Le cours cite quelques applications du NLP :
+
+- la **traduction automatique** ;
+- le **question-réponse** (*question answering*) ;
+- le **résumé de texte** (*text summarization*) ;
+- et **beaucoup d'autres applications**.
+
+Ces applications seront détaillées au dernier chapitre du module ; on retient
+ici qu'elles sont **nombreuses et variées**.
+
+> **À retenir** : le NLP traite les **langues naturelles** (français, anglais,
+> arabe…), par opposition aux **langues formelles**, sous leur forme **écrite**
+> comme **parlée**. Ses applications incluent la **traduction automatique**, le
+> **question-réponse**, le **résumé de texte** et bien d'autres.
+
+## Quelles méthodes, quelles approches ?
+
+Le cours distingue ensuite les **méthodes / techniques** mobilisées par le NLP,
+puis les **approches** générales du domaine.
+
+Les **méthodes et techniques** employées sont :
+
+1. la **théorie des automates** ;
+2. l'**apprentissage automatique** (*machine learning*) ;
+3. les **statistiques** ;
+4. la **logique**.
+
+Le cours identifie par ailleurs **trois grandes approches** du NLP :
+
+- l'approche **symbolique** : la connaissance y est (principalement)
+  **représentée sous forme de faits ou de règles** ;
+- l'approche **statistique** : elle utilise de **grands corpus** pour
+  développer des **modèles statistiques généralisés et approximés** des
+  phénomènes linguistiques, **fondés sur des exemples réels** de ces phénomènes ;
+- l'approche **connexionniste** : elle utilise des **réseaux de neurones**. Le
+  cours précise que, de nos jours, les principaux réseaux de neurones utilisés
+  en NLP sont les **LSTM** (*Long Short Term Memory*) et les **ConvNet**
+  (réseaux de neurones convolutifs).
+
+On reconnaît ici les notions des modules précédents : les réseaux de neurones,
+les LSTM et les réseaux convolutifs ont été étudiés dans les modules de *deep
+learning*. Le NLP en est donc l'un des grands domaines d'application.
+
+| Approche | Principe |
+| --- | --- |
+| **Symbolique** | Connaissance représentée par des **faits** et des **règles** |
+| **Statistique** | **Modèles statistiques** appris sur de **grands corpus** |
+| **Connexionniste** | **Réseaux de neurones** (LSTM, ConvNet) |
+
+> **À retenir** : le NLP mobilise la **théorie des automates**, le **machine
+> learning**, les **statistiques** et la **logique**. Trois approches le
+> structurent : **symbolique** (faits et règles), **statistique** (modèles
+> appris sur de grands corpus) et **connexionniste** (réseaux de neurones, en
+> particulier **LSTM** et **ConvNet**).
+
+## Les niveaux d'analyse du langage
+
+Le cœur de la définition de Liddy est la notion de **niveaux** d'analyse
+linguistique. Le cours en énumère **sept**, du plus bas au plus haut :
+
+1. **Phonologie** : l'étude des **sons** dont les séquences définissent les
+   mots ;
+2. **Morphologie** : l'étude de la **forme des mots** ;
+3. **Lexique** : l'étude du **rôle des mots dans les phrases** et de leur
+   **sens** ;
+4. **Syntaxe** : l'**analyse des mots dans une phrase** ;
+5. **Sémantique** : la **compréhension du sens du document** ;
+6. **Discours** : l'analyse qui porte sur les **propriétés du texte pris comme
+   un tout**, plutôt que sur les phrases isolées ;
+7. **Pragmatique** : l'« étude de la manière dont les **connaissances sur le
+   monde** et les **conventions de la langue** interagissent avec le sens
+   littéral ».
+
+Le cours fait une remarque importante sur la **portée pratique** de ces
+niveaux :
+
+> Les systèmes de NLP traitent **principalement les niveaux d'analyse les plus
+> bas**, et plus particulièrement les analyses **lexicale** (y compris
+> **morphologique**), **syntaxique** et **sémantique**.
+
+Autrement dit, si l'analyse du discours et la pragmatique relèvent bien du
+langage, les systèmes concrets se concentrent surtout sur le **lexique**, la
+**syntaxe** et la **sémantique**. C'est précisément ce découpage que suit la
+suite du module.
+
+> **À retenir** : le langage s'analyse à **sept niveaux** — **phonologie**,
+> **morphologie**, **lexique**, **syntaxe**, **sémantique**, **discours**,
+> **pragmatique**. En pratique, les systèmes de NLP se concentrent sur les
+> niveaux **les plus bas** : analyses **lexicale** (et morphologique),
+> **syntaxique** et **sémantique**.
+
+## Une chaîne de traitement par couches
+
+Le cours représente l'enchaînement de ces niveaux comme une **chaîne de
+traitement** : un **document** brut entre par le bas, et chaque couche
+s'appuie sur le résultat de la précédente.
+
+```text
+        ┌───────────────────────────┐
+        │     Analyse sémantique    │
+        └───────────────────────────┘
+                     ▲
+        ┌───────────────────────────┐
+        │     Analyse syntaxique    │
+        └───────────────────────────┘
+                     ▲
+        ┌───────────────────────────┐
+        │ Analyse lexicale /        │
+        │ morphologique             │
+        └───────────────────────────┘
+                     ▲
+              (  Document  )
+```
+
+La lecture de ce schéma est instructive. Le **document** brut est d'abord
+traité au niveau **lexical / morphologique** : on le découpe en mots et on
+travaille sur la forme de ces mots. Le résultat alimente l'**analyse
+syntaxique**, qui étudie l'organisation des mots en phrases. Vient enfin
+l'**analyse sémantique**, qui vise le **sens**. Chaque couche prépare le
+travail de la suivante.
+
+Cette architecture **structure le module entier** :
+
+- le **chapitre 2** traite le niveau **lexical / morphologique** —
+  prétraitement du texte et représentation ;
+- le **chapitre 3** prolonge la représentation du texte avec les **modèles de
+  langage** et les **plongements lexicaux** ;
+- le **chapitre 4** aborde les niveaux **syntaxique** et **sémantique** ainsi
+  que les **applications** du NLP.
+
+> **À retenir** : le traitement du langage forme une **chaîne par couches** : un
+> **document** brut subit d'abord l'analyse **lexicale / morphologique**, puis
+> l'analyse **syntaxique**, puis l'analyse **sémantique**. Chaque couche
+> **s'appuie sur le résultat de la précédente**.
+
+## Le défi de l'ambiguïté
+
+Le cours insiste sur une **difficulté centrale** du NLP : l'**ambiguïté** du
+langage humain.
+
+> De nombreuses phrases humaines / naturelles sont **ambiguës** : elles sont
+> **ouvertes à de multiples interprétations**. Pour comprendre le sens d'une
+> phrase, un système de NLP doit **résoudre l'ambiguïté**.
+
+C'est un point essentiel : contrairement à un langage formel, une phrase en
+langue naturelle peut admettre **plusieurs sens**, et la machine doit en
+**choisir un**. Le cours distingue **trois types principaux d'ambiguïté** :
+
+- l'ambiguïté **lexicale** : elle apparaît lorsqu'on utilise un **mot qui a
+  plus d'un sens**. Exemple du cours : *« The priest married my sister »* — le
+  verbe *married* peut signifier « a épousé » ou « a marié » ;
+- l'ambiguïté **syntaxique** : elle apparaît lorsqu'une phrase admet **deux
+  analyses syntaxiques (parses) différentes**, donc deux structures possibles.
+  Exemple du cours : *« Police help dog bite victim »* ;
+- l'ambiguïté **référentielle** : elle apparaît, par exemple, lorsqu'un
+  **pronom peut renvoyer à plusieurs personnes ou choses**. Exemple du cours :
+  *« He told the good news to his father. He was very happy »* — qui était
+  heureux, le fils ou le père ?
+
+| Type d'ambiguïté | Origine | Exemple du cours |
+| --- | --- | --- |
+| **Lexicale** | Un **mot** a plusieurs sens | *The priest married my sister.* |
+| **Syntaxique** | La phrase a plusieurs **analyses** | *Police help dog bite victim.* |
+| **Référentielle** | Un **pronom** peut renvoyer à plusieurs référents | *He told the good news to his father. He was very happy.* |
+
+> **À retenir** : l'**ambiguïté** est un défi central du NLP — une phrase
+> naturelle peut avoir **plusieurs interprétations**, et le système doit la
+> **résoudre**. On distingue l'ambiguïté **lexicale** (un mot polysémique),
+> **syntaxique** (plusieurs analyses possibles) et **référentielle** (un pronom
+> à référent incertain).
+
+## Un exemple célèbre d'ambiguïté en français
+
+Pour montrer à quel point l'ambiguïté peut être profonde, le cours rapporte un
+**exemple célèbre en français**, dû au regretté **professeur Daniel Kayser**.
+La phrase *« Le Prix Goncourt »* peut désigner, selon le contexte, des
+**réalités de natures complètement différentes** :
+
+1. une **récompense** dans « *le Prix Goncourt a été attribué à X* » ;
+2. une **somme d'argent** dans « *X a versé son Prix Goncourt à la Croix
+   Rouge* » ;
+3. une **personne** dans « *le Prix Goncourt a été félicité par le Président* » ;
+4. un **jury** dans « *le Prix Goncourt a admis un nouveau membre* » ;
+5. un **livre** dans « *peux-tu m'acheter le Prix Goncourt* » ;
+6. un **événement** dans « *depuis son Prix Goncourt, il est devenu arrogant* » ;
+7. et **encore un autre sens** dans « *le Prix Goncourt pervertit la vie
+   littéraire* ».
+
+Le même groupe de mots, *« le Prix Goncourt »*, renvoie donc tour à tour à une
+récompense, une somme, une personne, un jury, un livre, un événement… Seul le
+**contexte** permet de trancher. Cet exemple illustre bien pourquoi le NLP est
+**difficile** : comprendre une phrase suppose souvent de mobiliser des
+**connaissances sur le monde** qui dépassent le seul texte.
+
+> **À retenir** : l'exemple du **« Prix Goncourt »** (D. Kayser) montre qu'un
+> même groupe de mots peut désigner une **récompense**, une **somme**, une
+> **personne**, un **jury**, un **livre** ou un **événement** : seul le
+> **contexte** lève l'ambiguïté. Le NLP est difficile car comprendre suppose
+> souvent des **connaissances sur le monde**.
+
+## Synthèse de la section
+
+Le **traitement automatique du langage naturel (NLP)** est la branche de l'**IA**
+qui vise à **communiquer avec les machines** dans une **langue naturelle**.
+Suivant la définition de **Liddy**, c'est un ensemble de **techniques
+computationnelles** d'**analyse** et de **représentation** de **textes
+naturels**, à plusieurs **niveaux** linguistiques, pour un traitement du langage
+**proche de celui des humains**. Le NLP s'applique à la **traduction**, au
+**question-réponse**, au **résumé** et à bien d'autres tâches ; il mobilise la
+**théorie des automates**, le **machine learning**, les **statistiques** et la
+**logique**, selon trois approches — **symbolique**, **statistique** et
+**connexionniste**. Le langage s'analyse à **sept niveaux** (de la **phonologie**
+à la **pragmatique**), mais les systèmes concrets se concentrent sur les niveaux
+**bas** : **lexical**, **syntaxique** et **sémantique**, organisés en une
+**chaîne par couches** partant du **document** brut. Enfin, le défi central est
+l'**ambiguïté** — **lexicale**, **syntaxique** ou **référentielle** —, qu'un
+système de NLP doit **résoudre**, comme le montre l'exemple du **« Prix
+Goncourt »**.
+
+> **À retenir** : le **NLP** analyse et représente des **textes naturels** à
+> plusieurs **niveaux** linguistiques pour un traitement **proche de l'humain**.
+> Il s'appuie sur les approches **symbolique**, **statistique** et
+> **connexionniste**, se concentre en pratique sur les niveaux **lexical**,
+> **syntaxique** et **sémantique**, et doit surmonter le défi de l'**ambiguïté**.

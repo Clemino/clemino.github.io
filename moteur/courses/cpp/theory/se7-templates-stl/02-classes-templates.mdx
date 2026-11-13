@@ -1,0 +1,141 @@
+---
+title: Classes templates
+slug: classes-templates
+order: 2
+estimatedReadMin: 11
+concepts: [classe-template, parametre-type, instanciation-template]
+source: "Cours 7 — Templates & STL"
+---
+
+## Une classe générique
+
+Le chapitre précédent rendait une **fonction** générique. La même idée s'applique à une **classe** entière. Reprenons la première classe C++ vue dans le cours, un vecteur de `double` :
+
+```cpp
+class Vector {
+private:
+    double* elem;            // tableau alloué dynamiquement
+    unsigned int size;
+public:
+    Vector(unsigned int s);
+    ~Vector();
+    double& operator[](unsigned int i);
+    unsigned int getSize() const;
+};
+```
+
+Cette classe ne sait gérer que des `double`. Pour un vecteur de `char`, de `string` ou de `Personne`, il faudrait recopier toute la classe en remplaçant `double` par le type voulu. C'est exactement la duplication que les templates suppriment — cette fois au niveau d'une classe.
+
+> Une **classe template** est un patron de classe : le type des données qu'elle manipule devient un **paramètre**. On écrit la classe une fois ; le compilateur en fabrique ensuite une version pour chaque type réellement utilisé.
+
+## Déclarer une classe template
+
+On préfixe la classe par `template <...>`, exactement comme pour une fonction. Voici le `Vector` du cours rendu générique — il remplace partout `double` par le paramètre `T` :
+
+```cpp
+template <typename T>
+class Vector {
+private:
+    T* elem;                 // tableau de T, plus de double
+    unsigned int size;
+public:
+    Vector(unsigned int s);
+    ~Vector() { delete[] elem; }
+    T& operator[](unsigned int i);
+    const T& operator[](unsigned int i) const;
+    unsigned int getSize() const { return size; }
+};
+```
+
+Tout `double` est devenu `T`. La classe ne décrit plus « un vecteur de réels » mais « un vecteur de **n'importe quoi** ». Le cours montre aussi qu'une classe template peut recevoir un **paramètre non-type** — ici une taille fixée à la compilation : `template <typename T, int size>`. Le cas le plus courant reste un unique paramètre de type.
+
+> Remarquez les **deux** versions de `operator[]` : `T&` pour un objet modifiable, `const T&` pour un objet `const`. C'est l'idiome habituel des conteneurs — il permet d'utiliser `v[i]` aussi bien en lecture seule qu'en écriture.
+
+## Instancier une classe template
+
+Pour utiliser une classe template, on **doit** fournir le type entre chevrons : il n'y a **pas** de déduction pour les classes (contrairement aux fonctions). Le type fait partie du nom du type instancié.
+
+```cpp
+Vector<char>      vc(200);   // un vecteur de caractères
+Vector<string>    vs(17);    // un vecteur de chaînes
+Vector<list<int>> vli(45);   // un vecteur de listes d'entiers !
+```
+
+`Vector<char>`, `Vector<string>`, `Vector<list<int>>` sont **trois types distincts**, fabriqués à partir du même patron. On peut même imbriquer : `Vector<list<int>>` est un vecteur dont chaque case est une `list<int>`.
+
+> ⚠️ `Vector` **tout seul n'est pas un type** : c'est un patron. On ne peut pas écrire `Vector v;`. Il faut toujours `Vector<UnType> v;`. Le compilateur ne génère le code de la classe `Vector<char>` que lorsqu'il rencontre cette instanciation précise.
+
+## Définir les méthodes : dans la classe ou en dehors
+
+Une méthode courte peut être définie **directement dans le corps** de la classe — c'est le cas ci-dessus pour le destructeur et `getSize()`. Aucune syntaxe particulière : on écrit le corps comme d'habitude.
+
+Une méthode plus longue se définit **en dehors** de la classe. La syntaxe demande alors deux choses : reprendre la ligne `template <typename T>`, et préfixer le nom de la méthode par `Vector<T>::`. Voici le constructeur, comme dans `vector.cpp` du cours :
+
+```cpp
+template <typename T>
+Vector<T>::Vector(unsigned int s) {
+    elem = new T[s];         // alloue un tableau de T
+    size = s;
+}
+```
+
+Décortiquons cet en-tête, point délicat de la syntaxe :
+
+- `template <typename T>` : on **redéclare** le paramètre de type — chaque définition liée à un template doit le réintroduire.
+- `Vector<T>::` : la méthode appartient à la **classe instanciée** `Vector<T>`, pas à un hypothétique type `Vector`. Le `<T>` est obligatoire.
+- `Vector(...)` : le nom de la méthode (ici le constructeur).
+
+Même chose pour `operator[]`, où l'on retrouve l'idiome de l'exception déjà vu au cours sur la gestion des erreurs :
+
+```cpp
+template <typename T>
+const T& Vector<T>::operator[](unsigned int i) const {
+    if (i >= size)
+        throw std::out_of_range("Vector::operator[]");
+    return elem[i];
+}
+```
+
+> Une confusion fréquente : oublier le `<T>`. `Vector::operator[]` ne compile pas hors de la classe — il faut `Vector<T>::operator[]`. Le `<T>` dit « la méthode d'une instanciation quelconque du patron ».
+
+## Pourquoi une classe template vit dans le `.h`
+
+C'est le point que le cours souligne par le commentaire `// dans un fichier.h`, et la **règle la plus importante** de ce chapitre.
+
+Avec une classe ordinaire, on sépare : interface dans `Vector.h`, implémentation dans `Vector.cpp` compilé une fois. Avec une classe **template**, cela **ne fonctionne pas**.
+
+Tant qu'aucun type n'est appliqué, une classe template n'est **pas du code** : c'est un patron, le compilateur ne génère rien. Le code de `Vector<char>` n'est fabriqué que lorsque le compilateur **voit** l'instanciation `Vector<char>` — et, à ce moment-là, il a besoin de la **définition complète** : le corps de la classe **et** le corps de toutes ses méthodes.
+
+Si l'implémentation était dans un `Vector.cpp` compilé séparément, le fichier `main.cpp` qui écrit `Vector<char> vc(200);` verrait l'interface (le `.h`) mais **pas** le corps des méthodes : il ne pourrait pas générer `Vector<char>`. Résultat classique : une erreur d'**édition de liens** (`undefined reference`).
+
+> ⚠️ **Une classe template se met intégralement dans le fichier d'en-tête `.h`** : déclaration de la classe **et** définition de toutes ses méthodes. C'est pour cela que les conteneurs de la STL (`vector`, `list`, `map`…) sont fournis entièrement sous forme d'en-têtes : `#include <vector>` apporte tout le code, prêt à être instancié.
+
+En pratique on peut garder deux fichiers pour la lisibilité (par exemple `Vector.h` et `Vector.tpp`), mais le `.tpp` est alors `#include` à la fin du `.h` : tout finit bien dans l'en-tête.
+
+## Un cas réel du cours : la classe `Polynome`
+
+Toutes les classes ne sont pas templates. La classe `Polynome` du cours **utilise** un conteneur générique sans être elle-même un template : un polynôme y est représenté par un `vector<double>`, chaque case étant le coefficient d'un monôme et son indice le degré.
+
+```cpp
+#include <vector>
+
+class Polynome {
+public:
+    Polynome(double coef = 0.0, unsigned int degre = 0);
+    unsigned int degre() const { return p.size() - 1; }
+    double get_coef(unsigned int n) const { return p[n]; }
+    // operator+, operator*, operator/ ...
+private:
+    std::vector<double> p;   // les coefficients : p[i] = coefficient du monome de degre i
+};
+```
+
+`Polynome` n'a pas de paramètre de type : c'est une classe ordinaire. Mais son attribut `p` est un `vector<double>`, c'est-à-dire la classe template `vector` **instanciée** avec `double`. C'est la situation la plus fréquente : on écrit rarement ses propres templates, mais on **emploie** en permanence des classes templates de la STL comme briques de base — ce qui est précisément l'objet des chapitres suivants.
+
+> **À retenir**
+> - Une **classe template** rend une classe générique : le type de ses données devient un **paramètre** déclaré par `template <typename T>`.
+> - On l'**instancie** en fournissant le type entre chevrons — `Vector<char>` — et il n'y a **pas** de déduction : le type est obligatoire. `Vector` seul n'est pas un type.
+> - `Vector<char>` et `Vector<string>` sont des **types distincts** produits du même patron.
+> - Une méthode courte se définit **dans** la classe ; une méthode longue se définit **en dehors**, en répétant `template <typename T>` et en préfixant le nom par `Vector<T>::`.
+> - **Règle clé** : une classe template se place **intégralement dans le `.h`** (classe + corps des méthodes) — le compilateur a besoin du corps pour instancier ; séparer en `.cpp` provoque une erreur d'édition de liens.
+> - C'est pourquoi les conteneurs STL sont livrés en en-têtes ; et une classe ordinaire comme `Polynome` peut très bien **utiliser** un template (`vector<double>`) sans en être un.

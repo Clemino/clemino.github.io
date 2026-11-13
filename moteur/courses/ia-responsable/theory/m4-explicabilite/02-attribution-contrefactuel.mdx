@@ -1,0 +1,33 @@
+---
+title: "Attributions et contrefactuels"
+slug: attribution-contrefactuel
+order: 2
+estimatedReadMin: 7
+concepts: [attribution, contrefactuel]
+source: "Diapositives 22 et 23"
+---
+## Idée centrale
+
+Une méthode d'attribution répond à « quelles entrées ont compté ? ». Un contrefactuel répond à « que faudrait-il changer pour obtenir une autre décision ? ».
+
+## Méthodes d'attribution
+
+| Famille | Principe | Point de vigilance |
+|---|---|---|
+| **Perturbation** | Retirer ou modifier une entrée | Entrées artificielles hors distribution |
+| **Gradient** | Sensibilité locale de la sortie | Saturation et choix de la référence |
+| **Décomposition** | Redistribuer le signal, par exemple LRP | Dépendance aux règles de propagation |
+| **Shapley, SHAP** | Contributions selon des coalitions | Référence et dépendance des variables |
+
+Une attribution **décrit un calcul** selon une méthode et ses hypothèses. Ce n'est pas une vérité sur le monde.
+
+## Le contrefactuel et le recours réalisable
+
+Trouver **x′ proche de x**, avec **f(x′) différent de f(x)**, sous **contraintes de faisabilité**.
+
+- **Action autorisée** : améliorer une compétence mesurée, ou corriger une donnée.
+- **Contrainte** : l'âge est immuable, le coût doit rester acceptable, les relations entre variables réalistes.
+- **Vérification** : tester la validité du changement et la stabilité du résultat.
+
+> **À retenir**
+> Un **voisin** est proche. Un **prototype** est typique. Une **instance influente** agit sur l'apprentissage.

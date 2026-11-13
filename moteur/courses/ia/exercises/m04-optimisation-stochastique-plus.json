@@ -1,0 +1,1039 @@
+[
+  {
+    "chapterSlug": "metaheuristiques",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un optimum local est nécessairement l'optimum global du problème.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Un optimum local n'est meilleur que son seul voisinage immédiat : ce n'est qu'un creux parmi d'autres. Rien ne garantit qu'il soit le creux le plus profond, c'est-à-dire l'optimum global x*.",
+    "concepts": [
+      "optimum-local",
+      "optimum-global"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "metaheuristiques",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Qu'appelle-t-on « optimisation difficile » dans le cours ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le domaine où aucune méthode exacte efficace n'existe et où il faut recourir à des méthodes approchées"
+        },
+        {
+          "id": "b",
+          "label": "Le domaine des problèmes que l'on résout toujours par énumération exhaustive"
+        },
+        {
+          "id": "c",
+          "label": "Le domaine des problèmes sans solution"
+        },
+        {
+          "id": "d",
+          "label": "Le domaine des problèmes à une seule variable"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Lorsqu'aucune méthode exacte efficace n'existe, on entre dans le domaine de l'optimisation difficile : il faut alors recourir à des méthodes approchées. Le cas non linéaire continu en relève aussi.",
+    "concepts": [
+      "optimisation-combinatoire",
+      "metaheuristique"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "metaheuristiques",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la phrase sur la malédiction de la dimension.",
+    "payload": {
+      "template": "La malédiction de la dimension : à mesure que le nombre de {{quoi}} augmente, le {{vol}} de l'espace de recherche croît de manière explosive.",
+      "slots": [
+        {
+          "id": "quoi",
+          "placeholder": "?"
+        },
+        {
+          "id": "vol",
+          "placeholder": "?"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "quoi": [
+          "variables",
+          "dimensions"
+        ],
+        "vol": [
+          "volume"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "La malédiction de la dimension : quand le nombre de variables augmente, le volume de l'espace de recherche croît de façon explosive — couvrir convenablement un tel espace devient vite hors de portée.",
+    "concepts": [
+      "optimisation-continue"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "metaheuristiques",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Selon le cours, de quels éléments une métaheuristique est-elle généralement composée ? (Plusieurs réponses.)",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une ou plusieurs solutions initiales"
+        },
+        {
+          "id": "b",
+          "label": "Une stratégie de génération de nouvelle solution basée sur l'aléatoire"
+        },
+        {
+          "id": "c",
+          "label": "Un critère d'acceptation d'une nouvelle solution"
+        },
+        {
+          "id": "d",
+          "label": "Un critère de convergence qui décide de l'arrêt"
+        },
+        {
+          "id": "e",
+          "label": "Une garantie mathématique d'atteindre l'optimum global"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Une métaheuristique combine solution(s) initiale(s), génération aléatoire de nouvelles solutions, critère d'acceptation, coefficients de contrôle, mémoire éventuelle et critère de convergence. Elle ne fournit aucune garantie d'optimalité.",
+    "concepts": [
+      "metaheuristique"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "metaheuristiques",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le cours propose deux façons d'initialiser la ou les solutions de départ. Associez chaque mode à sa description.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Initialisation aléatoire"
+        },
+        {
+          "id": "l2",
+          "label": "Initialisation intelligente"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "On tire les solutions de départ purement au hasard"
+        },
+        {
+          "id": "r2",
+          "label": "On utilise un sampling, des hypercubes latins, une séquence de Halton pour mieux couvrir l'espace"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2"
+      }
+    },
+    "explanation": "On peut produire les solutions de départ aléatoirement, ou de manière intelligente — sampling, hypercubes latins, séquence de Halton — pour mieux couvrir l'espace de recherche.",
+    "concepts": [
+      "metaheuristique"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "voyageur-de-commerce",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans un TSP non symétrique, le graphe est orienté : la distance de la ville A vers B peut différer de celle de B vers A.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Le TSP non symétrique correspond à un graphe orienté : la distance de A vers B peut différer de celle de B vers A. Dans le TSP symétrique (graphe non orienté), elles sont identiques.",
+    "concepts": [
+      "probleme-du-voyageur-de-commerce"
+    ],
+    "source": "Voyageur de commerce TSP.pdf"
+  },
+  {
+    "chapterSlug": "voyageur-de-commerce",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "L'algorithme naïf du TSP a une complexité en (n−1)! pour n sommets. Combien de tournées possibles énumère-t-il pour n = 5 villes ? (Calculez (n−1)!.)",
+    "payload": {
+      "hint": "(5−1)! = 4! = 4 × 3 × 2 × 1"
+    },
+    "solution": {
+      "value": 24
+    },
+    "explanation": "Pour n = 5 villes, le nombre de tournées de l'algorithme naïf est (n−1)! = 4! = 24.",
+    "concepts": [
+      "probleme-du-voyageur-de-commerce"
+    ],
+    "source": "Voyageur de commerce TSP.pdf"
+  },
+  {
+    "chapterSlug": "voyageur-de-commerce",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Pour un TSP symétrique, parcourir une tournée dans un sens ou dans l'autre revient au même : le nombre de tournées distinctes est alors (n−1)! / 2. Calculez ce nombre pour n = 6 villes.",
+    "payload": {
+      "hint": "(6−1)! / 2 = 5! / 2 = 120 / 2"
+    },
+    "solution": {
+      "value": 60
+    },
+    "explanation": "Pour n = 6 villes en TSP symétrique, le nombre de tournées distinctes est (n−1)! / 2 = 5! / 2 = 120 / 2 = 60.",
+    "concepts": [
+      "probleme-du-voyageur-de-commerce"
+    ],
+    "source": "Voyageur de commerce TSP.pdf"
+  },
+  {
+    "chapterSlug": "voyageur-de-commerce",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Matrice de distances symétrique de 4 villes A, B, C, D : AB = 8, AC = 14, AD = 6, BC = 11, BD = 9, CD = 7. Calculez la longueur totale de la tournée A − B − C − D − A.",
+    "payload": {
+      "unit": "unités",
+      "hint": "Somme des arêtes A-B, B-C, C-D, D-A."
+    },
+    "solution": {
+      "value": 32
+    },
+    "explanation": "La tournée A−B−C−D−A emprunte A-B = 8, B-C = 11, C-D = 7 et D-A = 6. Longueur totale : 8 + 11 + 7 + 6 = 32.",
+    "concepts": [
+      "probleme-du-voyageur-de-commerce",
+      "cycle-hamiltonien"
+    ],
+    "source": "Voyageur de commerce TSP.pdf"
+  },
+  {
+    "chapterSlug": "voyageur-de-commerce",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "L'instance 14.tsp donne les villes par leurs coordonnées (x, y) ; la distance entre deux villes est la distance euclidienne. Voici quatre villes extraites de cette instance.",
+    "payload": {
+      "figure": {
+        "kind": "data-table",
+        "columns": [
+          "Ville",
+          "x",
+          "y"
+        ],
+        "rows": [
+          [
+            "V1",
+            16.47,
+            96.1
+          ],
+          [
+            "V8",
+            17.2,
+            96.29
+          ],
+          [
+            "V9",
+            16.3,
+            97.38
+          ],
+          [
+            "V11",
+            16.53,
+            97.38
+          ]
+        ],
+        "caption": "Quatre villes de l'instance 14.tsp (coordonnées x, y)"
+      },
+      "subQuestions": [
+        {
+          "id": "sq1",
+          "type": "NUMERIC",
+          "prompt": "Calculez la distance euclidienne entre V9 et V11. (Arrondissez à 0,01.)",
+          "payload": {
+            "hint": "racine de (Δx)² + (Δy)² ; ici les y sont identiques."
+          },
+          "weight": 1
+        },
+        {
+          "id": "sq2",
+          "type": "NUMERIC",
+          "prompt": "Calculez la distance euclidienne entre V1 et V8. (Arrondissez à 0,01.)",
+          "payload": {
+            "hint": "racine de (17,20 − 16,47)² + (96,29 − 96,10)²"
+          },
+          "weight": 1
+        },
+        {
+          "id": "sq3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Pourquoi cette instance relève-t-elle d'un TSP symétrique ?",
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Parce que la distance euclidienne de i à j est toujours égale à celle de j à i"
+              },
+              {
+                "id": "b",
+                "label": "Parce que toutes les villes ont la même abscisse"
+              },
+              {
+                "id": "c",
+                "label": "Parce qu'il y a un nombre pair de villes"
+              }
+            ],
+            "shuffle": true
+          },
+          "weight": 1
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "sq1",
+          "solution": {
+            "value": 0.23,
+            "absTol": 0.01
+          }
+        },
+        {
+          "id": "sq2",
+          "solution": {
+            "value": 0.75,
+            "absTol": 0.01
+          }
+        },
+        {
+          "id": "sq3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "V9(16,30 ; 97,38) et V11(16,53 ; 97,38) : Δx = 0,23, Δy = 0, distance = 0,23. V1(16,47 ; 96,10) et V8(17,20 ; 96,29) : Δx = 0,73, Δy = 0,19, distance = racine de (0,73² + 0,19²) ≈ 0,75. La distance euclidienne est symétrique (d(i,j) = d(j,i)) : l'instance relève d'un TSP symétrique.",
+    "concepts": [
+      "probleme-du-voyageur-de-commerce",
+      "cycle-hamiltonien"
+    ],
+    "source": "Voyageur de commerce TSP.pdf"
+  },
+  {
+    "chapterSlug": "voyageur-de-commerce",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Matrice de distances symétrique de 6 villes : A-B = 12, B-C = 19, C-D = 21, D-E = 4, E-F = 16, F-A = 24, A-F = 24. On considère la tournée A − B − C − D − E − F − A. Calculez sa longueur totale, arête par arête.",
+    "payload": {
+      "description": "Additionnez les six arêtes de la tournée A−B−C−D−E−F−A.",
+      "cells": [
+        {
+          "id": "e1",
+          "label": "Longueur de l'arête A-B",
+          "kind": "number"
+        },
+        {
+          "id": "e2",
+          "label": "Longueur de l'arête B-C",
+          "kind": "number"
+        },
+        {
+          "id": "e3",
+          "label": "Longueur de l'arête C-D",
+          "kind": "number"
+        },
+        {
+          "id": "e4",
+          "label": "Longueur de l'arête D-E",
+          "kind": "number"
+        },
+        {
+          "id": "e5",
+          "label": "Longueur de l'arête E-F",
+          "kind": "number"
+        },
+        {
+          "id": "e6",
+          "label": "Longueur de l'arête F-A",
+          "kind": "number"
+        },
+        {
+          "id": "tot",
+          "label": "Longueur totale de la tournée",
+          "kind": "number"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "e1",
+          "expected": 12
+        },
+        {
+          "id": "e2",
+          "expected": 19
+        },
+        {
+          "id": "e3",
+          "expected": 21
+        },
+        {
+          "id": "e4",
+          "expected": 4
+        },
+        {
+          "id": "e5",
+          "expected": 16
+        },
+        {
+          "id": "e6",
+          "expected": 24
+        },
+        {
+          "id": "tot",
+          "expected": 96
+        }
+      ]
+    },
+    "explanation": "La tournée A−B−C−D−E−F−A emprunte les arêtes A-B = 12, B-C = 19, C-D = 21, D-E = 4, E-F = 16 et F-A = 24. Longueur totale : 12 + 19 + 21 + 4 + 16 + 24 = 96.",
+    "concepts": [
+      "cycle-hamiltonien",
+      "probleme-du-voyageur-de-commerce"
+    ],
+    "source": "Voyageur de commerce TSP.pdf"
+  },
+  {
+    "chapterSlug": "voyageur-de-commerce",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la phrase sur l'opérateur 2-opt appliqué à la tournée A − B − C − D − E − A.",
+    "payload": {
+      "template": "L'opérateur 2-opt inverse le sous-chemin entre B et E : la tournée A−B−C−D−E−A devient A−E−D−C−B−A, ce qui ne modifie que {{nb}} arêtes, à savoir A-B et {{arete}}.",
+      "slots": [
+        {
+          "id": "nb",
+          "width": "sm",
+          "placeholder": "combien ?"
+        },
+        {
+          "id": "arete",
+          "width": "sm",
+          "placeholder": "quelle arête ?"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "nb": [
+          "2",
+          "deux"
+        ],
+        "arete": [
+          "E-A",
+          "EA",
+          "A-E",
+          "AE"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "En inversant le sous-chemin entre B et E, A−B−C−D−E−A devient A−E−D−C−B−A : seules 2 arêtes sont modifiées, A-B et E-A. Les arêtes internes du sous-chemin sont parcourues en sens inverse, de même longueur (TSP symétrique).",
+    "concepts": [
+      "operateur-2-opt",
+      "voisinage"
+    ],
+    "source": "Voyageur de commerce TSP.pdf"
+  },
+  {
+    "chapterSlug": "voyageur-de-commerce",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Matrice de distances symétrique de 5 villes : A-B = 4, A-C = 8, A-D = 5, A-E = 3, B-C = 6, B-D = 7, B-E = 9, C-D = 2, C-E = 10, D-E = 6. Comparez deux tournées et le voisin 2-opt obtenu en inversant le sous-chemin B…D de la première.",
+    "payload": {
+      "description": "Inverser le sous-chemin B…D dans A−B−C−D−E−A donne A−D−C−B−E−A. Δf = coût du voisin − coût de la tournée de départ.",
+      "cells": [
+        {
+          "id": "c0",
+          "label": "Coût de A−B−C−D−E−A",
+          "kind": "number"
+        },
+        {
+          "id": "c1",
+          "label": "Coût du voisin 2-opt A−D−C−B−E−A",
+          "kind": "number"
+        },
+        {
+          "id": "df",
+          "label": "Variation Δf",
+          "kind": "number"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "c0",
+          "expected": 21
+        },
+        {
+          "id": "c1",
+          "expected": 25
+        },
+        {
+          "id": "df",
+          "expected": 4
+        }
+      ]
+    },
+    "explanation": "A−B−C−D−E−A : 4 + 6 + 2 + 6 + 3 = 21. En inversant B…D, on obtient A−D−C−B−E−A : A-D = 5, D-C = 2, C-B = 6, B-E = 9, E-A = 3, soit 5 + 2 + 6 + 9 + 3 = 25. Le 2-opt a remplacé A-B et D-E par A-D et B-E. Δf = 25 − 21 = +4.",
+    "concepts": [
+      "operateur-2-opt",
+      "cycle-hamiltonien"
+    ],
+    "source": "Voyageur de commerce TSP.pdf"
+  },
+  {
+    "chapterSlug": "recuit-simule",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "À haute température, dans quel état se trouve le matériau, selon l'analogie physique du recuit ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un état « visqueux » : configuration désordonnée des particules, énergie élevée"
+        },
+        {
+          "id": "b",
+          "label": "Un état solide cristallin parfaitement ordonné"
+        },
+        {
+          "id": "c",
+          "label": "Un état d'énergie nulle"
+        },
+        {
+          "id": "d",
+          "label": "Un état gazeux figé"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "À haute température, le matériau est dans un état « visqueux » : la configuration des particules est désordonnée et l'énergie du système est élevée.",
+    "concepts": [
+      "recuit-simule",
+      "energie",
+      "temperature"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "recuit-simule",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "D'après le cours, quels traits caractérisent la perturbation dans le recuit simulé ? (Plusieurs réponses.)",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Elle génère une nouvelle solution dans le voisinage de la solution courante"
+        },
+        {
+          "id": "b",
+          "label": "La distance entre les deux solutions a une influence sur le comportement de l'algorithme"
+        },
+        {
+          "id": "c",
+          "label": "Elle est spécifique au problème à résoudre (discret ou continu)"
+        },
+        {
+          "id": "d",
+          "label": "Elle est toujours identique quel que soit le problème"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "La perturbation génère un voisin de la solution courante ; la distance entre les deux solutions (hypervolume du voisinage) influence le comportement de l'algorithme ; elle est spécifique au problème. Elle n'est donc pas universelle.",
+    "concepts": [
+      "perturbation",
+      "voisinage"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "recuit-simule",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans l'algorithme du recuit simulé, comment s'articulent la boucle externe et la boucle interne ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La boucle externe gère la température ; la boucle interne est le palier exécuté à T constante"
+        },
+        {
+          "id": "b",
+          "label": "La boucle externe est le palier ; la boucle interne gère la température"
+        },
+        {
+          "id": "c",
+          "label": "Les deux boucles modifient la température en même temps"
+        },
+        {
+          "id": "d",
+          "label": "Il n'y a qu'une seule boucle dans l'algorithme"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La boucle externe tourne tant que la température n'a pas atteint T_min (et que le critère de convergence n'est pas satisfait). La boucle interne est le palier de température, exécuté à T constante jusqu'à l'équilibre thermodynamique.",
+    "concepts": [
+      "recuit-simule",
+      "equilibre-thermodynamique",
+      "temperature"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "recuit-simule",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ordonnez les grandes étapes de l'algorithme du recuit simulé (variante compacte), de l'initialisation au résultat.",
+    "payload": {
+      "items": [
+        {
+          "id": "a",
+          "label": "Engendrer une solution initiale S, poser S* = S et une température initiale assez grande"
+        },
+        {
+          "id": "b",
+          "label": "Générer un voisin V de S et décider de l'accepter (f(V) < f(S) ou critère de Metropolis)"
+        },
+        {
+          "id": "c",
+          "label": "Mettre à jour la meilleure solution S* si f(S) < f(S*), puis mettre à jour T"
+        },
+        {
+          "id": "d",
+          "label": "Une fois la condition de fin atteinte, retourner S*"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "On engendre S, on pose S* = S et T initiale assez grande ; on boucle : générer un voisin et décider de l'accepter, mettre à jour S* et T ; à la condition de fin, on retourne S*.",
+    "concepts": [
+      "recuit-simule",
+      "critere-de-metropolis"
+    ],
+    "source": "Voyageur de commerce TSP.pdf"
+  },
+  {
+    "chapterSlug": "recuit-simule",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On suit le recuit simulé (minimisation). À chaque pas, on connaît l'énergie courante f(S) et celle du voisin proposé f(V), ainsi que la décision d'acceptation. La solution courante f(S) du pas suivant en découle. Complétez la trace, et indiquez la meilleure énergie f(S*) atteinte.\n\nPas 1 : f(S) = 80, f(V) = 73, voisin accepté.\nPas 2 : f(S) = ?, f(V) = 79, voisin accepté.\nPas 3 : f(S) = ?, f(V) = 71, voisin accepté.",
+    "payload": {
+      "description": "f(S) du pas suivant = f(V) du pas courant si le voisin est accepté. f(S*) est la plus petite énergie de solution courante rencontrée.",
+      "cells": [
+        {
+          "id": "fs2",
+          "label": "Pas 2 — énergie courante f(S)",
+          "kind": "number"
+        },
+        {
+          "id": "fs3",
+          "label": "Pas 3 — énergie courante f(S)",
+          "kind": "number"
+        },
+        {
+          "id": "fsfin",
+          "label": "Énergie courante f(S) après le pas 3",
+          "kind": "number"
+        },
+        {
+          "id": "fstar",
+          "label": "Meilleure énergie f(S*) rencontrée",
+          "kind": "number"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "fs2",
+          "expected": 73
+        },
+        {
+          "id": "fs3",
+          "expected": 79
+        },
+        {
+          "id": "fsfin",
+          "expected": 71
+        },
+        {
+          "id": "fstar",
+          "expected": 71
+        }
+      ]
+    },
+    "explanation": "Pas 1 : le voisin 73 est accepté, donc f(S) au pas 2 vaut 73. Pas 2 : le voisin 79 est accepté (le recuit accepte parfois une dégradation), donc f(S) au pas 3 vaut 79. Pas 3 : le voisin 71 est accepté, f(S) final = 71. Les énergies courantes parcourues sont 80, 73, 79, 71 ; la meilleure rencontrée est f(S*) = 71.",
+    "concepts": [
+      "recuit-simule",
+      "energie",
+      "critere-de-metropolis"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "recuit-simule",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans le recuit simulé, la solution courante X peut se dégrader d'une itération à l'autre, mais la meilleure solution mémorisée X_min ne se dégrade jamais.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Il faut distinguer la solution courante X — qui peut se dégrader, le recuit acceptant parfois des voisins moins bons — de la meilleure solution X_min, qui ne garde que le meilleur rencontré et ne se dégrade jamais.",
+    "concepts": [
+      "recuit-simule"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "critere-de-metropolis",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un voisin dégradant a une variation de coût Δf = 8 ; la température vaut T = 8. Calculez la probabilité d'acceptation par le critère de Metropolis : exp(−Δf/T). Donnez le résultat arrondi à 0,001.",
+    "payload": {
+      "hint": "exp(−8/8) = exp(−1)"
+    },
+    "solution": {
+      "value": 0.368,
+      "absTol": 0.002
+    },
+    "explanation": "Δf = 8 et T = 8, donc −Δf/T = −1. La probabilité d'acceptation vaut exp(−1) ≈ 0,368.",
+    "concepts": [
+      "critere-de-metropolis",
+      "temperature"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "critere-de-metropolis",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un voisin dégradant a une variation de coût Δf = 40 ; la température vaut T = 20. Calculez la probabilité d'acceptation par le critère de Metropolis : exp(−Δf/T). Donnez le résultat arrondi à 0,001.",
+    "payload": {
+      "hint": "exp(−40/20) = exp(−2)"
+    },
+    "solution": {
+      "value": 0.135,
+      "absTol": 0.002
+    },
+    "explanation": "Δf = 40 et T = 20, donc −Δf/T = −2. La probabilité d'acceptation vaut exp(−2) ≈ 0,135.",
+    "concepts": [
+      "critere-de-metropolis",
+      "temperature"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "critere-de-metropolis",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un voisin dégradant a une variation de coût Δf = 50 ; la température vaut T = 100. Calculez la probabilité d'acceptation par le critère de Metropolis : exp(−Δf/T). Donnez le résultat arrondi à 0,001.",
+    "payload": {
+      "hint": "exp(−50/100) = exp(−0,5)"
+    },
+    "solution": {
+      "value": 0.607,
+      "absTol": 0.002
+    },
+    "explanation": "Δf = 50 et T = 100, donc −Δf/T = −0,5. La probabilité d'acceptation vaut exp(−0,5) ≈ 0,607.",
+    "concepts": [
+      "critere-de-metropolis",
+      "temperature"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "critere-de-metropolis",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un voisin AMÉLIORE la solution courante : sa variation de coût est Δf = −12 (Δf ≤ 0). Quelle est, dans ce cas, la probabilité que le critère de Metropolis l'accepte ?",
+    "payload": {
+      "hint": "Quand Δf ≤ 0, le critère retourne VRAI sans condition."
+    },
+    "solution": {
+      "value": 1
+    },
+    "explanation": "Si Δf ≤ 0, le voisin améliore (ou égale) la solution courante : il est accepté sans condition. La probabilité d'acceptation est donc 1 — l'acceptation probabiliste exp(−Δf/T) ne concerne que les voisins dégradants.",
+    "concepts": [
+      "critere-de-metropolis"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "critere-de-metropolis",
+    "type": "ALGO_TRACE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "On applique un refroidissement géométrique T_{k+1} = α · T_k avec α = 0,9 et une température initiale T_0 = 1000. Donnez la température au début de chaque palier.",
+    "payload": {
+      "description": "À chaque palier, la température est multipliée par α = 0,9.",
+      "cells": [
+        {
+          "id": "t0",
+          "label": "T_0",
+          "kind": "number"
+        },
+        {
+          "id": "t1",
+          "label": "T_1",
+          "kind": "number"
+        },
+        {
+          "id": "t2",
+          "label": "T_2",
+          "kind": "number"
+        },
+        {
+          "id": "t3",
+          "label": "T_3",
+          "kind": "number"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "t0",
+          "expected": 1000
+        },
+        {
+          "id": "t1",
+          "expected": 900
+        },
+        {
+          "id": "t2",
+          "expected": 810
+        },
+        {
+          "id": "t3",
+          "expected": 729
+        }
+      ]
+    },
+    "explanation": "Avec T_{k+1} = 0,9 · T_k et T_0 = 1000 : T_1 = 900 ; T_2 = 0,9 × 900 = 810 ; T_3 = 0,9 × 810 = 729.",
+    "concepts": [
+      "schema-de-refroidissement",
+      "temperature"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "critere-de-metropolis",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On suit le recuit simulé pour une minimisation, avec un refroidissement géométrique de coefficient α = 0,8 et une température initiale T = 100. On vous donne, pour chaque pas, l'énergie courante f(S), celle du voisin f(V), et — pour les voisins dégradants — le nombre aléatoire tiré dans [0,1[. Complétez la trace.\n\nPas 1 : f(S) = 200, f(V) = 185.\nPas 2 : f(S) = 185, f(V) = 201, tirage aléatoire = 0,50.\n\nRappel : un voisin avec Δf ≤ 0 est accepté ; un voisin dégradant est accepté si le tirage aléatoire est inférieur à exp(−Δf/T).",
+    "payload": {
+      "description": "Répondez « oui » ou « non » pour les décisions. Pour exp(−Δf/T), arrondissez à 0,001. T est la température au moment du pas (T = 100 au pas 1, refroidie ensuite).",
+      "cells": [
+        {
+          "id": "df1",
+          "label": "Pas 1 — Δf = f(V) − f(S)",
+          "kind": "number"
+        },
+        {
+          "id": "acc1",
+          "label": "Pas 1 — voisin accepté ? (oui/non)",
+          "kind": "text"
+        },
+        {
+          "id": "t2",
+          "label": "Pas 2 — température T (après le refroidissement du pas 1)",
+          "kind": "number"
+        },
+        {
+          "id": "df2",
+          "label": "Pas 2 — Δf = f(V) − f(S)",
+          "kind": "number"
+        },
+        {
+          "id": "p2",
+          "label": "Pas 2 — valeur de exp(−Δf/T)",
+          "kind": "number"
+        },
+        {
+          "id": "acc2",
+          "label": "Pas 2 — voisin accepté ? (oui/non)",
+          "kind": "text"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "df1",
+          "expected": -15
+        },
+        {
+          "id": "acc1",
+          "expected": "oui"
+        },
+        {
+          "id": "t2",
+          "expected": 80
+        },
+        {
+          "id": "df2",
+          "expected": 16
+        },
+        {
+          "id": "p2",
+          "expected": 0.819,
+          "absTol": 0.003
+        },
+        {
+          "id": "acc2",
+          "expected": "oui"
+        }
+      ],
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Pas 1 : Δf = 185 − 200 = −15 ≤ 0, voisin améliorant → accepté. Puis T passe de 100 à 0,8 × 100 = 80. Pas 2 : Δf = 201 − 185 = +16 (dégradant) ; avec T = 80, exp(−16/80) = exp(−0,2) ≈ 0,819 ; le tirage 0,50 < 0,819 → voisin accepté.",
+    "concepts": [
+      "critere-de-metropolis",
+      "recuit-simule",
+      "schema-de-refroidissement"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  },
+  {
+    "chapterSlug": "critere-de-metropolis",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quel rôle le refroidissement joue-t-il dans le compromis exploration / exploitation ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il fait basculer l'algorithme de l'exploration (chaud) vers l'exploitation (froid)"
+        },
+        {
+          "id": "b",
+          "label": "Il maintient une exploration constante du début à la fin"
+        },
+        {
+          "id": "c",
+          "label": "Il supprime toute exploitation"
+        },
+        {
+          "id": "d",
+          "label": "Il n'a aucun effet sur ce compromis"
+        }
+      ],
+      "shuffle": true
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le refroidissement diminue progressivement la probabilité d'accepter une solution non améliorante : il fait basculer l'algorithme de l'exploration (température haute) vers l'exploitation (température basse).",
+    "concepts": [
+      "schema-de-refroidissement",
+      "exploration-exploitation",
+      "temperature"
+    ],
+    "source": "Optimisationstochastique-1.pdf"
+  }
+]

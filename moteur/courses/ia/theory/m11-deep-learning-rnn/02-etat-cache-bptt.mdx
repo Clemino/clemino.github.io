@@ -1,0 +1,252 @@
+---
+title: "État caché et rétropropagation dans le temps"
+slug: etat-cache-bptt
+order: 2
+estimatedReadMin: 22
+concepts: [etat-cache, recurrence, reseau-recurrent, retropropagation-dans-le-temps, fonction-de-perte, descente-de-gradient]
+source: "Slides_RNN_2526.pdf"
+---
+
+## La définition du RNN conventionnel
+
+La section précédente a posé l'idée d'un réseau à boucles. Le cours en donne
+maintenant la **définition formelle**, celle du **RNN conventionnel**.
+
+> **Définition.** Un **réseau de neurones récurrent (RNN)** possède une **couche
+> d'entrée**, une **couche cachée** et une **couche de sortie**. Son entrée est
+> une **séquence `Xᵗ`**, `t = 1, …, T` de vecteurs dont la **longueur `T` est
+> variable**. Pour chaque valeur de `t`, l'**état caché `Hᵗ`** de la couche
+> cachée (*hidden state*) et la **sortie `Yᵗ`** du réseau sont définis par :
+> - `Hᵗ = σₕ(U·Xᵗ + V·Hᵗ⁻¹ + Bʰ)`
+> - `Yᵗ = σ_o(W·Hᵗ + Bᵒ)`
+>
+> où **`U`, `V` et `W` sont des matrices de poids**, **`Bʰ` et `Bᵒ` des vecteurs
+> de biais**, et **`σₕ` et `σ_o` des fonctions d'activation**.
+
+Le cours précise un point sur les activations : **il est habituel d'utiliser la
+fonction sigmoïde ou la fonction tangente hyperbolique pour `σₕ`** (l'activation
+de la couche cachée).
+
+Trois éléments de cette définition méritent d'être soulignés.
+
+- L'entrée est une **séquence de longueur variable `T`** : c'est exactement ce
+  qui distingue un RNN d'un réseau *feedforward*, dont l'entrée est de taille
+  fixe.
+- La **première équation est une relation de récurrence** : `Hᵗ` dépend de
+  `Hᵗ⁻¹`. C'est elle qui crée la **mémoire**.
+- La **seconde équation** calcule la sortie `Yᵗ` à partir du **seul** état caché
+  courant `Hᵗ`.
+
+> **À retenir** : un **RNN conventionnel** a trois couches — entrée, cachée,
+> sortie ; son entrée est une **séquence `Xᵗ`** de longueur **variable `T`** ;
+> son **état caché** vaut `Hᵗ = σₕ(U·Xᵗ + V·Hᵗ⁻¹ + Bʰ)` et sa **sortie**
+> `Yᵗ = σ_o(W·Hᵗ + Bᵒ)`. Pour `σₕ`, on utilise habituellement la **sigmoïde**
+> ou la **tangente hyperbolique**.
+
+## Les notations détaillées
+
+Pour passer de l'écriture **matricielle** à une écriture **détaillée
+neurone par neurone**, le cours fixe des notations précises.
+
+On appelle **`n`, `m` et `p`** le **nombre de neurones** de la couche d'entrée,
+de la couche cachée et de la couche de sortie, respectivement. Pour chaque
+valeur de `t` :
+
+- **`Xᵗ`** est un vecteur de **dimension `n`** ;
+- **`Hᵗ`** est un vecteur de **dimension `m`** ;
+- **`Yᵗ`** est un vecteur de **dimension `p`**.
+
+On note **`xᵢᵗ`, `hⱼᵗ` et `yₖᵗ`** la `i`-ème entrée du réseau (`Xᵗ[i]`), la
+sortie du `j`-ème neurone de la couche cachée (`Hᵗ[j]`) et la sortie du
+`k`-ème neurone de la couche de sortie (`Yᵗ[k]`).
+
+Les **matrices de poids** et les **biais** se lisent alors ainsi :
+
+| Élément | Dimension | Signification |
+| --- | --- | --- |
+| **`U`** — `U[j, i]` ou `uᵢⱼ` | `(m, n)` | Poids entre le `i`-ème neurone d'**entrée** et le `j`-ème neurone **caché** |
+| **`V`** — `V[j, j′]` ou `vⱼ′ⱼ` | `(m, m)` | Poids de la connexion de la sortie du `j′`-ème neurone caché vers l'entrée du `j`-ème neurone caché |
+| **`Bʰ`** — `Bʰ[j]` ou `bⱼʰ` | `m` | Biais du `j`-ème neurone **caché** |
+| **`W`** — `W[k, j]` ou `wⱼₖ` | `(p, m)` | Poids entre le `j`-ème neurone **caché** et le `k`-ème neurone de **sortie** |
+| **`Bᵒ`** — `Bᵒ[k]` ou `bₖᵒ` | `p` | Biais du `k`-ème neurone de **sortie** |
+
+La **matrice `V`** est la nouveauté propre au RNN : c'est elle qui pèse les
+connexions **récurrentes**, celles qui relient la couche cachée à elle-même d'un
+instant à l'autre.
+
+> **À retenir** : avec `n`, `m`, `p` neurones d'entrée / cachés / de sortie, un
+> RNN utilise trois matrices de poids — **`U` `(m, n)`** entrée→caché,
+> **`V` `(m, m)`** récurrente caché→caché, **`W` `(p, m)`** caché→sortie — et
+> deux biais **`Bʰ`** et **`Bᵒ`**.
+
+## Les équations détaillées
+
+À partir de ces notations et de la définition, le cours **déduit les équations
+détaillées** qui définissent les sorties des couches cachée et de sortie. Pour
+`t = 1, …, T` :
+
+```text
+Pour j = 1, …, m :
+  hⱼᵗ = σₕ( Σᵢ₌₁ⁿ uᵢⱼ·xᵢᵗ + Σⱼ′₌₁ᵐ vⱼ′ⱼ·hⱼ′ᵗ⁻¹ + bⱼʰ )
+
+Pour k = 1, …, p :
+  yₖᵗ = σ_o( Σⱼ₌₁ᵐ wⱼₖ·hⱼᵗ + bₖᵒ )
+```
+
+Ces deux formules sont la version « développée » des équations matricielles.
+On y lit clairement la structure d'un neurone — une **somme pondérée** suivie
+d'une **fonction d'activation** —, avec une particularité pour la couche
+cachée : sa somme pondérée comporte **deux termes**,
+
+- un terme `Σᵢ uᵢⱼ·xᵢᵗ` portant sur l'**entrée courante** ;
+- un terme `Σⱼ′ vⱼ′ⱼ·hⱼ′ᵗ⁻¹` portant sur l'**état caché précédent**.
+
+C'est ce **second terme** qui réalise la **récurrence**.
+
+> **À retenir** : la sortie d'un neurone **caché** est
+> `hⱼᵗ = σₕ(Σᵢ uᵢⱼ·xᵢᵗ + Σⱼ′ vⱼ′ⱼ·hⱼ′ᵗ⁻¹ + bⱼʰ)` — une somme pondérée à **deux
+> termes**, entrée courante **et** état caché précédent ; la sortie d'un neurone
+> de **sortie** est `yₖᵗ = σ_o(Σⱼ wⱼₖ·hⱼᵗ + bₖᵒ)`.
+
+## Paramètres et hyperparamètres d'un RNN
+
+Comme pour tout réseau de neurones, le cours distingue **hyperparamètres** et
+**paramètres**.
+
+Les **hyperparamètres** d'un RNN sont :
+
+- le **nombre de couches cachées**, dont la **valeur par défaut est `1`** ;
+- le **nombre de neurones dans chaque couche** ;
+- la **fonction d'activation** de la (ou des) couche(s) cachée(s) et de la
+  couche de sortie.
+
+Les **paramètres** sont les **poids et les biais** (`U`, `V`, `W`, `Bʰ`, `Bᵒ`).
+
+Le cours rappelle la règle habituelle : **les hyperparamètres sont déterminés
+par le concepteur du réseau.** Certaines **« règles empiriques »** peuvent être
+trouvées ici et là, mais **il n'existe pas de véritables méthodes** pour les
+fixer. Les **paramètres**, eux, sont **appris** — par une **version spéciale de
+rétropropagation : la rétropropagation dans le temps**.
+
+> **À retenir** : les **hyperparamètres** d'un RNN — **nombre de couches
+> cachées** (défaut `1`), **nombre de neurones** par couche, **fonctions
+> d'activation** — sont fixés par le **concepteur** ; les **paramètres** (poids
+> et biais) sont **appris** par **rétropropagation dans le temps**.
+
+## L'apprentissage : la fonction de perte
+
+Avant de décrire l'algorithme, le cours rappelle le **principe de
+l'apprentissage** d'un réseau de neurones : il est fondé sur la **minimisation
+de l'erreur**, c'est-à-dire de la **différence entre les sorties prédites et les
+sorties cibles**.
+
+Cette erreur est calculée à l'aide d'une **fonction de perte** (*loss
+function*). Le cours cite trois exemples : l'**erreur quadratique**,
+l'**entropie croisée binaire** et l'**entropie croisée catégorielle**.
+
+L'erreur est une **fonction `E(U, V, W, Bʰ, Bᵒ)`** des **paramètres** du réseau,
+c'est-à-dire des poids et biais des couches cachées et de sortie. On note **`P`
+l'ensemble de tous ces paramètres**.
+
+L'erreur totale est la **somme des erreurs commises à chaque instant** :
+
+```text
+E(P) = Σₜ Eᵗ(P)
+
+avec  Eᵗ(P) = loss(Ŷᵗ, Yᵗ)
+```
+
+où **`Ŷᵗ` est la sortie du réseau** et **`Yᵗ` la valeur cible**. Autrement dit,
+on calcule une erreur **à chaque étape `t`** du traitement de la séquence, puis
+on **les additionne**.
+
+> **À retenir** : l'apprentissage d'un RNN **minimise une erreur** mesurée par
+> une **fonction de perte** (erreur quadratique, entropie croisée binaire ou
+> catégorielle). Cette erreur `E(P) = Σₜ Eᵗ(P)` est la **somme**, sur tous les
+> instants, des erreurs `Eᵗ(P) = loss(Ŷᵗ, Yᵗ)`.
+
+## La descente du gradient et les dérivées partielles
+
+L'algorithme utilisé pour **minimiser `E`** est la **descente de gradient** —
+le même que pour les autres réseaux.
+
+À chaque itération, pour **mettre à jour les poids et les biais**, cet
+algorithme doit d'abord **calculer les dérivées partielles** de `E` par rapport
+à chacun des paramètres :
+
+| Dérivée partielle | Domaine des indices |
+| --- | --- |
+| `∂E / ∂uᵢⱼ` | `1 ≤ i ≤ n` et `1 ≤ j ≤ m` |
+| `∂E / ∂vⱼ′ⱼ` | `1 ≤ j′, j ≤ m` |
+| `∂E / ∂bⱼʰ` | `1 ≤ j ≤ m` |
+| `∂E / ∂wⱼₖ` | `1 ≤ j ≤ m` et `1 ≤ k ≤ p` |
+| `∂E / ∂bₖᵒ` | `1 ≤ k ≤ p` |
+
+Il faut donc une dérivée partielle **par poids** et **par biais** du réseau :
+une fois ces dérivées connues, la descente du gradient **met à jour chaque
+paramètre** dans la direction qui **fait décroître l'erreur**.
+
+> **À retenir** : un RNN apprend par **descente de gradient** ; à chaque
+> itération, l'algorithme calcule les **dérivées partielles** de `E` par rapport
+> à **tous les poids et biais** (`uᵢⱼ`, `vⱼ′ⱼ`, `bⱼʰ`, `wⱼₖ`, `bₖᵒ`), puis met
+> à jour les paramètres.
+
+## La rétropropagation dans le temps (BPTT)
+
+Reste à savoir **comment** ces dérivées partielles sont calculées. Le cours
+répond :
+
+> Ces calculs se font **de la couche de sortie vers la couche cachée**, et **des
+> valeurs `t` vers les valeurs `t − 1`**. C'est la **rétropropagation à travers
+> le temps** (*Backpropagation Through Time*, **BPTT**).
+
+La BPTT est donc une **version spéciale de la rétropropagation** adaptée aux
+RNN. La rétropropagation ordinaire propage l'erreur **de la sortie vers
+l'entrée**, couche par couche. La BPTT ajoute une **seconde direction de
+propagation** : comme l'état caché `Hᵗ` dépend de `Hᵗ⁻¹`, l'erreur doit aussi
+**remonter le temps**, des instants `t` vers les instants `t − 1`.
+
+Le **dépliage** vu à la section précédente éclaire ce point : sur le RNN déplié,
+les copies forment une **chaîne**, et l'erreur se rétropropage **le long de
+cette chaîne**, d'un maillon vers le maillon **précédent**. Comme tous les
+maillons **partagent les mêmes poids**, la mise à jour de chaque paramètre
+combine les contributions venues de **tous les instants**.
+
+```text
+Rétropropagation ordinaire :  sortie  →  entrée
+BPTT (en plus)             :  instant t  →  instant t − 1
+```
+
+> ⚠️ C'est précisément cette propagation **à rebours dans le temps** qui rendra
+> l'apprentissage des **dépendances longues** difficile : sur de longues
+> séquences, le gradient qui remonte la chaîne peut **s'évanouir** ou
+> **exploser** — le problème étudié dans la section suivante.
+
+> **À retenir** : la **rétropropagation dans le temps (BPTT)** est la
+> rétropropagation adaptée aux RNN : les dérivées partielles se calculent **de
+> la sortie vers la couche cachée** *et* **des instants `t` vers les instants
+> `t − 1`**, c'est-à-dire le long du RNN **déplié**.
+
+## Synthèse de la section
+
+Un **RNN conventionnel** a trois couches ; il reçoit une **séquence `Xᵗ`** de
+longueur **variable `T`** et calcule, par récurrence, son **état caché**
+`Hᵗ = σₕ(U·Xᵗ + V·Hᵗ⁻¹ + Bʰ)` puis sa **sortie** `Yᵗ = σ_o(W·Hᵗ + Bᵒ)` ; pour
+`σₕ`, on prend habituellement la **sigmoïde** ou la **tangente hyperbolique**.
+En notant `n`, `m`, `p` les tailles des couches, on a trois matrices de poids —
+**`U`** entrée→caché, **`V`** récurrente caché→caché, **`W`** caché→sortie — et
+deux biais ; la forme détaillée d'un neurone caché,
+`hⱼᵗ = σₕ(Σᵢ uᵢⱼ·xᵢᵗ + Σⱼ′ vⱼ′ⱼ·hⱼ′ᵗ⁻¹ + bⱼʰ)`, montre la **somme à deux
+termes** qui réalise la récurrence. Les **hyperparamètres** (nombre de couches
+cachées, défaut `1` ; nombre de neurones ; activations) sont fixés par le
+**concepteur** ; les **paramètres** sont **appris**. L'apprentissage **minimise**
+une **erreur** `E(P) = Σₜ Eᵗ(P)`, somme des pertes `loss(Ŷᵗ, Yᵗ)`, par
+**descente de gradient** : celle-ci calcule les **dérivées partielles** par
+rapport à tous les poids et biais grâce à la **rétropropagation dans le temps
+(BPTT)** — qui propage l'erreur **de la sortie vers la couche cachée** et **des
+instants `t` vers `t − 1`**.
+
+> **À retenir** : un RNN se définit par `Hᵗ = σₕ(U·Xᵗ + V·Hᵗ⁻¹ + Bʰ)` et
+> `Yᵗ = σ_o(W·Hᵗ + Bᵒ)` ; il **apprend** ses poids et biais par **descente de
+> gradient**, dont les dérivées sont obtenues par **BPTT** — la
+> rétropropagation propagée **à rebours dans le temps**.

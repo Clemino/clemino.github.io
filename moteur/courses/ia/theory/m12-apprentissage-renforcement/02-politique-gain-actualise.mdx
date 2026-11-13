@@ -1,0 +1,276 @@
+---
+title: "Politique, récompense et gain actualisé"
+slug: politique-gain-actualise
+order: 2
+estimatedReadMin: 22
+concepts: [politique, recompense, signal-de-renforcement, modeles-d-optimalite, facteur-d-actualisation, gain-actualise, fonction-de-recompense]
+source: "Apprentissage_renforcement.pdf"
+---
+
+## Ce que l'agent doit apprendre : une stratégie
+
+La section précédente a posé le cadre : un **processus de décision markovien**
+`(S, A, T, R, γ)`. Le cours rappelle maintenant **ce que l'agent doit
+apprendre**.
+
+> L'agent doit apprendre une **stratégie `π : S ⟶ A`**.
+
+Le cours en précise le sens :
+
+- une **stratégie définit les actions « immédiates »**, mais l'**objectif de
+  l'agent est de maximiser le cumul des récompenses à long terme** ;
+- autrement dit, l'agent **apprend à choisir une action en fonction de
+  récompenses qui peuvent arriver bien plus tard** ;
+- il doit donc être capable de **calculer, pour chaque état `s`, une valeur
+  `Vπ(s)`** qui **caractérise le cumul des récompenses à partir de l'état `s` si
+  une stratégie `π` est suivie**.
+
+On voit déjà se dessiner la difficulté centrale du module : une bonne stratégie
+ne se juge **pas** sur la récompense **immédiate** de la prochaine action, mais
+sur le **cumul** de toutes les récompenses **futures**. Cette section met en
+place les notions qui permettent de définir précisément ce cumul.
+
+> **À retenir** : l'agent doit apprendre une **stratégie `π : S ⟶ A`**. Une
+> stratégie fixe les **actions immédiates**, mais l'objectif est de **maximiser
+> le cumul des récompenses à long terme** — il faudra donc pouvoir **chiffrer ce
+> cumul** pour chaque état.
+
+## Qu'est-ce qu'une stratégie (politique) ?
+
+Le cours donne la définition d'une **stratégie** (en anglais *policy*, d'où le
+terme **politique**) :
+
+> Une **stratégie (policy)** définit un **comportement possible de l'agent**.
+
+Le cours distingue **deux cas** :
+
+- dans le **cas général**, elle est définie par une **distribution de
+  probabilités** :
+
+  ```text
+  π(s, a) = P(Aₜ = a | Sₜ = s)
+  ```
+
+  `π(s, a)` est alors la **probabilité que l'agent choisisse l'action `a`
+  lorsqu'il est dans l'état `s`** ;
+- dans le **cas déterministe**, elle est définie par une **fonction** :
+
+  ```text
+  π : S ⟶ A
+  ```
+
+  À chaque état `s`, la stratégie déterministe **associe une seule action**
+  `π(s)`.
+
+| Type de stratégie | Forme | Lecture |
+| --- | --- | --- |
+| **Cas général** | Distribution `π(s, a) = P(Aₜ = a \| Sₜ = s)` | Une **probabilité** par couple `(s, a)` |
+| **Cas déterministe** | Fonction `π : S ⟶ A` | **Une action** `π(s)` par état |
+
+Une stratégie déterministe est donc un **cas particulier** : c'est une politique
+qui, dans chaque état, choisit toujours **la même** action (probabilité 1 sur
+une action, 0 sur les autres).
+
+> **À retenir** : une **stratégie (politique)** décrit un **comportement** de
+> l'agent. Dans le **cas général** c'est une **distribution de probabilités**
+> `π(s, a) = P(Aₜ = a | Sₜ = s)` ; dans le **cas déterministe** c'est une
+> **fonction `π : S ⟶ A`** qui donne **une action par état**.
+
+## Pourquoi associer une récompense aux états
+
+Avant de cumuler des récompenses, le cours explique **pourquoi** on associe une
+récompense aux états. Il part d'une observation :
+
+> **Tous les états n'ont pas, dans la vie d'un agent, la même valeur.**
+> L'origine de cette différence dépend des applications.
+
+L'exemple donné est parlant : **un état qui correspond à une partie gagnée a
+forcément une valeur supérieure à celle d'un état qui correspond à une partie
+perdue**.
+
+Le cours décide donc de **supposer qu'à chaque état `s` correspond une
+récompense `Rₛ`**. Cette **récompense est une donnée du problème**. Elle est
+définie comme étant la **récompense moyenne que l'agent reçoit à l'instant `t+1`
+lorsqu'à l'instant `t` il est dans l'état `s`**. Autrement dit :
+
+```text
+Rₛ = E(Rₜ₊₁ | Sₜ = s)
+```
+
+Il faut bien noter que `Rₛ` est une **moyenne** (une espérance). Comme
+l'environnement est **non déterministe**, le retour reçu après un passage en `s`
+peut varier d'une fois à l'autre ; `Rₛ` en est la **valeur moyenne**.
+
+> **À retenir** : tous les états n'ont pas la **même valeur**. On suppose donc
+> qu'à chaque état `s` correspond une **récompense `Rₛ`**, **donnée du
+> problème**, définie comme la **récompense moyenne** reçue à l'instant `t+1`
+> quand l'agent est en `s` à l'instant `t` : `Rₛ = E(Rₜ₊₁ | Sₜ = s)`.
+
+## La question du futur : quel horizon, quelles récompenses ?
+
+La récompense `Rₛ` ne décrit que ce que rapporte **le passage par un seul
+état**. Or l'objectif est de **maximiser le gain à long terme**. Le cours pose
+alors une **question** :
+
+> **Comment prendre en compte le futur dans la prise de décision ?** Autrement
+> dit : **quel horizon considérer** et **comment prendre en compte les
+> récompenses futures** ?
+
+La réponse n'est pas unique. Le cours annonce qu'il y a **principalement trois
+modèles** pour prendre en compte le futur : le **modèle à horizon fini**, le
+**modèle à horizon infini** et le **modèle à « récompense moyenne »**. C'est ce
+qu'on appelle les **modèles d'optimalité**.
+
+> **À retenir** : l'objectif est de **maximiser le gain à long terme**, ce qui
+> pose la question de l'**horizon** et de la **prise en compte des récompenses
+> futures**. Il existe **trois modèles d'optimalité** : **horizon fini**,
+> **horizon infini** et **récompense moyenne**.
+
+## Les trois modèles d'optimalité
+
+Le cours détaille les **trois modèles d'optimalité**.
+
+### Le modèle à horizon fini
+
+Dans le **modèle à horizon fini**, l'agent doit **maximiser la moyenne de ses
+rewards sur les `h` prochaines étapes**. La valeur à maximiser est :
+
+```text
+E( Σ rₜ  pour t de 0 à h−1 )
+```
+
+Ici, on ne regarde que les `h` étapes à venir : tout ce qui se passe **après**
+l'étape `h` est **ignoré**.
+
+### Le modèle à horizon infini
+
+Dans le **modèle à horizon infini**, la somme des rewards futurs est **pondérée
+par un facteur d'actualisation `γ`**. L'agent **prend en compte la totalité des
+rewards futurs**, mais **l'importance de ces derniers décroît lorsqu'on
+s'éloigne de l'étape courante**. La valeur à maximiser est :
+
+```text
+Σ γᵗ rₜ   pour t de 0 à l'infini
+```
+
+**avec `0 ≤ γ < 1`**.
+
+### Le modèle à « récompense moyenne »
+
+Dans le **modèle à « récompense moyenne »** (*average-reward*), là aussi le long
+terme est pris en compte, mais sous une **autre forme** : c'est la **moyenne à
+long terme** des récompenses que l'agent doit maximiser, soit :
+
+```text
+limₕ→∞  E( (1/h) · Σ rₜ )   pour t de 0 à h−1
+```
+
+Le tableau suivant résume les trois modèles :
+
+| Modèle | Quantité à maximiser | Idée |
+| --- | --- | --- |
+| **Horizon fini** | `E(Σ rₜ)`, `t = 0 … h−1` | Les **`h` prochaines** étapes seulement |
+| **Horizon infini** | `Σ γᵗ rₜ`, `t = 0 … ∞`, `0 ≤ γ < 1` | **Toutes** les étapes, **pondérées** par `γᵗ` |
+| **Récompense moyenne** | `limₕ→∞ E((1/h) Σ rₜ)` | La **moyenne** à long terme des récompenses |
+
+Le cours indique que le **choix du modèle d'optimalité et de ses paramètres
+éventuels doit être fait en fonction de l'application considérée**. Il fixe
+ensuite le choix retenu :
+
+> **Dans ce cours, nous adoptons le modèle à horizon infini avec un facteur
+> d'actualisation `γ`.**
+
+> **À retenir** : trois **modèles d'optimalité** pour le futur — **horizon
+> fini** (`E(Σ rₜ)` sur `h` étapes), **horizon infini** (`Σ γᵗ rₜ`, toutes les
+> étapes pondérées par `γᵗ`, `0 ≤ γ < 1`) et **récompense moyenne**
+> (`limₕ→∞ E((1/h) Σ rₜ)`). **Le cours adopte le modèle à horizon infini
+> actualisé.**
+
+## Le facteur d'actualisation γ et le gain actualisé
+
+Le modèle retenu repose sur le **facteur d'actualisation `γ`** et sur la
+quantité `Σ γᵗ rₜ`, que l'on appelle le **gain actualisé**. Prenons le temps de
+bien comprendre le rôle de `γ`.
+
+Comme `0 ≤ γ < 1`, les **puissances `γᵗ`** forment une suite **décroissante** :
+`γ⁰ = 1`, puis `γ¹ = γ`, puis `γ² < γ`, etc. Dans la somme `Σ γᵗ rₜ`, chaque
+récompense `rₜ` est donc multipliée par un poids `γᵗ` **d'autant plus petit que
+l'étape `t` est lointaine**. C'est exactement ce qu'énonce le cours :
+**l'importance des rewards futurs décroît lorsqu'on s'éloigne de l'étape
+courante**.
+
+Le facteur `γ` traduit ainsi une forme de **préférence pour le présent** :
+
+- une **récompense proche** compte **presque pleinement** (poids proche de `1`) ;
+- une **récompense lointaine** compte **peu** (poids `γᵗ` proche de `0`).
+
+On peut lire les **cas limites** :
+
+| Valeur de `γ` | Effet sur le gain `Σ γᵗ rₜ` |
+| --- | --- |
+| `γ` **proche de `0`** | Seules les **récompenses très proches** comptent — agent « **myope** » |
+| `γ` **proche de `1`** | Les **récompenses lointaines** comptent **presque autant** que les proches — agent « **prévoyant** » |
+
+Un **autre rôle** de `γ`, plus technique, apparaît dans la condition
+`0 ≤ γ < 1` : elle **garantit que la somme infinie `Σ γᵗ rₜ` reste finie**
+(lorsque les récompenses sont bornées). Sans cette condition, additionner une
+**infinité** de récompenses pourrait donner une valeur infinie, donc inutilisable
+pour comparer des stratégies. C'est aussi ce qui distingue le modèle à horizon
+infini du modèle à horizon fini, qui n'additionne qu'un **nombre fini** de
+termes et n'a donc pas besoin de pondération.
+
+> **À retenir** : le **facteur d'actualisation `γ ∈ [0, 1[`** pondère chaque
+> récompense `rₜ` du **gain actualisé `Σ γᵗ rₜ`** par un poids `γᵗ`
+> **décroissant** : les récompenses **lointaines** comptent **moins** que les
+> proches. La condition `γ < 1` assure aussi que la **somme infinie reste
+> finie**.
+
+## La fonction de récompense R(s, a) d'un MDP
+
+La récompense `Rₛ` était associée à un **état**. Dans un **processus de décision
+markovien**, le cours associe la récompense à un **couple état-action** : la
+**fonction de récompense est `R : S × A ⟶ ℝ`**.
+
+Comme on l'a vu en fin de section précédente, le cours précise par une
+**remarque** que, **une action `a` exécutée à partir d'un état `s` pouvant
+conduire à plusieurs états**, la valeur `R(s, a)` est **une moyenne** :
+
+```text
+R(s, a) = E(Rₜ₊₁ | Sₜ = s, Aₜ = a)
+```
+
+Il faut donc distinguer deux écritures de la récompense, selon le modèle :
+
+| Notation | Cadre | Définition |
+| --- | --- | --- |
+| `Rₛ` | Chaîne de Markov **avec récompense** | `Rₛ = E(Rₜ₊₁ \| Sₜ = s)` — moyenne sur le **passage en `s`** |
+| `R(s, a)` | **Processus de décision markovien** | `R(s, a) = E(Rₜ₊₁ \| Sₜ = s, Aₜ = a)` — moyenne sur le couple **`(s, a)`** |
+
+Dans les deux cas, la récompense est une **espérance** : elle moyenne le retour
+sur le **non-déterminisme** de l'environnement.
+
+> **À retenir** : dans un **MDP**, la **fonction de récompense** est
+> `R : S × A ⟶ ℝ`. Comme une action peut mener à plusieurs états, `R(s, a)` est
+> une **moyenne** : `R(s, a) = E(Rₜ₊₁ | Sₜ = s, Aₜ = a)`.
+
+## Synthèse de la section
+
+L'agent doit apprendre une **stratégie (politique) `π`** : un **comportement**
+qui, dans le **cas général**, est une **distribution de probabilités**
+`π(s, a) = P(Aₜ = a | Sₜ = s)` et, dans le **cas déterministe**, une **fonction
+`π : S ⟶ A`**. Une stratégie fixe les actions **immédiates**, mais l'objectif
+est le **cumul des récompenses à long terme**. Comme tous les états n'ont pas la
+même valeur, on associe à chaque état une **récompense `Rₛ`** (une **moyenne**,
+`Rₛ = E(Rₜ₊₁ | Sₜ = s)`). Reste à choisir **comment prendre en compte le
+futur** : il existe **trois modèles d'optimalité** — **horizon fini**
+(`E(Σ rₜ)`), **horizon infini** (`Σ γᵗ rₜ`) et **récompense moyenne**. **Le
+cours adopte le modèle à horizon infini actualisé.** Le **facteur
+d'actualisation `γ ∈ [0, 1[`** pondère le **gain actualisé `Σ γᵗ rₜ`** : les
+récompenses **lointaines** comptent **moins**, et `γ < 1` garde la somme infinie
+**finie**. Enfin, dans un **MDP**, la **récompense** porte sur un couple
+état-action, `R(s, a) = E(Rₜ₊₁ | Sₜ = s, Aₜ = a)`.
+
+> **À retenir** : l'agent apprend une **politique `π`** ; son but est le **gain
+> actualisé `Σ γᵗ rₜ`** du **modèle à horizon infini** retenu par le cours. Le
+> **facteur `γ ∈ [0, 1[`** fait **décroître** le poids des récompenses
+> **lointaines**, et la **récompense** d'un MDP, `R(s, a)`, est une **moyenne**.

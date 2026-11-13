@@ -1,0 +1,26 @@
+---
+title: "Bornitude, surete, vivacite et blocages"
+slug: proprietes
+order: 2
+estimatedReadMin: 15
+concepts: [boundedness, safety, liveness, deadlock]
+source: "Petri net/UP2-2-RdP-slides.pdf; Petri net/mcar_cours2_ReseauxDePetri.2x1.pdf"
+---
+## Bornitude et surete
+
+Une place est `k`-bornee si elle ne depasse jamais `k` jetons dans les marquages atteignables. Un reseau est sauf ou safe s'il est 1-borne.
+
+## Vivacite
+
+Une transition est vivante si, depuis tout marquage atteignable, on peut atteindre un marquage qui la rend franchissable. La vivacite exclut les evenements definitivement morts.
+
+## Blocage
+
+Un deadlock est un marquage atteignable sans transition franchissable. Un reseau peut etre borne mais pas vivant, ou non bloque mais avoir une transition morte.
+
+## Lecture pratique
+
+Sur un graphe d'accessibilite fini, la bornitude se lit sur les etiquettes des marquages, les blocages se lisent par les noeuds sans sortie, et la vivacite se verifie par les cycles et atteignabilites.
+
+> **A retenir**  
+> Borne, sauf, vivant et sans blocage sont des proprietes differentes : ne les confonds pas.

@@ -1,0 +1,605 @@
+[
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Dans quelle zone mémoire un objet créé par l'opérateur `new` est-il placé ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Sur la pile d'exécution (stack)." },
+        { "id": "b", "label": "Sur le tas (heap)." },
+        { "id": "c", "label": "Dans la zone du code binaire." },
+        { "id": "d", "label": "Dans la zone des données statiques." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "L'opérateur **`new`** alloue de la mémoire **sur le tas** (*heap*) et y construit l'objet. Le tas est la zone des données allouées dynamiquement, dont la durée de vie n'est pas liée à un bloc `{ }`. Les variables locales ordinaires, elles, vont sur la **pile**.",
+    "concepts": ["new-delete", "tas-vs-pile"]
+  },
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelles affirmations sur la paire `new` / `delete` sont correctes ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "new appelle le constructeur de l'objet alloué." },
+        { "id": "b", "label": "delete appelle le destructeur de l'objet avant de libérer la mémoire." },
+        { "id": "c", "label": "À chaque new doit répondre exactement un delete." },
+        { "id": "d", "label": "delete libère automatiquement tous les objets du programme." },
+        { "id": "e", "label": "Un objet alloué par new[] doit être libéré par delete[]." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c", "e"] },
+    "explanation": "`new` alloue **et** construit (appel du constructeur) ; `delete` détruit (appel du destructeur) **et** libère. La règle d'or est **un `new` ⇄ un `delete`**, et un tableau de `new[]` se libère par `delete[]`. En revanche `delete` ne libère **que** l'objet visé : il ne nettoie jamais tout le programme à lui seul.",
+    "concepts": ["new-delete"]
+  },
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remets dans l'ordre les étapes d'utilisation correcte d'un objet sur le tas.",
+    "payload": {
+      "items": [
+        { "id": "decl", "label": "Déclarer le pointeur : Fraction* pf;" },
+        { "id": "new", "label": "Allouer et construire l'objet : pf = new Fraction(5, 6);" },
+        { "id": "use", "label": "Utiliser l'objet via le pointeur : pf->affiche();" },
+        { "id": "del", "label": "Détruire et libérer l'objet : delete pf;" }
+      ]
+    },
+    "solution": { "order": ["decl", "new", "use", "del"] },
+    "explanation": "Le cycle d'un objet sur le tas : on **déclare** d'abord le pointeur (sur la pile), on **alloue** l'objet avec `new` (qui appelle le constructeur), on **utilise** l'objet via `->`, puis on le **détruit** avec `delete` (qui appelle le destructeur). Oublier la dernière étape provoque une fuite de mémoire.",
+    "concepts": ["new-delete", "tas-vs-pile"]
+  },
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète : un tableau dynamique de `n` entiers s'alloue avec `new[]` et se libère avec `delete[]`.",
+    "payload": {
+      "template": "int* tab = {{alloc}} int[n];\n// ... utilisation ...\n{{free}} tab;",
+      "slots": [
+        { "id": "alloc", "width": "sm" },
+        { "id": "free", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "alloc": "new", "free": "delete[]" },
+      "caseSensitive": false
+    },
+    "explanation": "Un **tableau** dynamique s'alloue avec **`new`** suivi du type et de la taille entre crochets : `new int[n]`. Il se libère **obligatoirement** avec **`delete[]`** — avec ses crochets. Mélanger `delete` et `delete[]` est un comportement indéfini : un `new[]` exige toujours un `delete[]`.",
+    "concepts": ["new-delete"]
+  },
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Allouer un tableau d'objets avec `new Fraction[n]` exige que la classe `Fraction` possède un constructeur par défaut accessible.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Vrai : `new Fraction[n]` appelle **`n` fois le constructeur par défaut** — un par élément du tableau. Si la classe `Fraction` ne déclare aucun constructeur par défaut accessible, le compilateur **refuse** la ligne. C'est une contrainte propre à `new[]`, qui ne permet pas de passer d'arguments aux éléments.",
+    "concepts": ["new-delete"]
+  },
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Que désigne-t-on par « pointeur pendouillant » (*dangling pointer*) ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Un pointeur qui n'a jamais été initialisé." },
+        { "id": "b", "label": "Un pointeur qui désigne une zone mémoire déjà libérée par delete." },
+        { "id": "c", "label": "Un pointeur dont la valeur est nullptr." },
+        { "id": "d", "label": "Un pointeur vers un objet de la pile." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Un **pointeur pendouillant** désigne une zone mémoire **déjà libérée** : après `delete pf`, le pointeur `pf` contient encore l'ancienne adresse, mais l'objet n'existe plus. L'utiliser (`pf->...`) est un comportement indéfini. La bonne habitude est de faire `pf = nullptr;` après le `delete` pour neutraliser le pointeur.",
+    "concepts": ["new-delete"]
+  },
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe le moment où le destructeur s'exécute.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Fraction {\n    private:\n        int num, den;\n    public:\n        Fraction(int n = 0, int d = 1) : num(n), den(d) {\n            cout << \"construction \" << num << \"/\" << den << endl;\n        }\n        ~Fraction() {\n            cout << \"destruction \" << num << \"/\" << den << endl;\n        }\n        void affiche() { cout << num << \"/\" << den << endl; }\n};\n\nint main() {\n    cout << \"avant new\" << endl;\n    Fraction* pf = new Fraction(3, 4);\n    cout << \"objet cree\" << endl;\n    pf->affiche();\n    delete pf;\n    cout << \"apres delete\" << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "avant new\nconstruction 3/4\nobjet cree\n3/4\ndestruction 3/4\napres delete" },
+    "explanation": "`new Fraction(3, 4)` alloue l'objet sur le tas et appelle son **constructeur** (`construction 3/4`). `pf->affiche()` affiche `3/4`. Le destructeur s'exécute **au moment exact du `delete`** — un objet sur le tas n'attend pas la fin de portée. La ligne `delete pf;` précédant `cout << \"apres delete\"`, on lit donc `destruction 3/4` **puis** `apres delete`.",
+    "concepts": ["new-delete", "tas-vs-pile"]
+  },
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme utilisant un tableau dynamique d'objets ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Case {\n    private:\n        int v;\n    public:\n        Case() : v(0) { cout << \"C \"; }\n        ~Case() { cout << \"D \"; }\n        void set(int x) { v = x; }\n        int get() { return v; }\n};\n\nint main() {\n    Case* tab = new Case[3];\n    cout << \"| \";\n    for (int i = 0; i < 3; i++) {\n        tab[i].set(i + 1);\n    }\n    cout << tab[0].get() << tab[1].get() << tab[2].get() << \" \";\n    delete[] tab;\n    cout << \"fin\";\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "C C C | 123 D D D fin" },
+    "explanation": "`new Case[3]` appelle **3 fois le constructeur par défaut** → `C C C`. Après `|`, la boucle remplit les cases avec 1, 2, 3, affichés par `123`. `delete[] tab` appelle le **destructeur de chaque élément** → `D D D`. Enfin `fin`. Le `delete[]` détruit bien les trois objets avant de libérer le bloc.",
+    "concepts": ["new-delete"]
+  },
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Deux pointeurs désignent le même objet.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Compteur {\n    private:\n        int n;\n    public:\n        Compteur(int x) : n(x) {}\n        void inc() { n++; }\n        int valeur() { return n; }\n};\n\nint main() {\n    Compteur* p = new Compteur(5);\n    Compteur* q = p;\n    p->inc();\n    q->inc();\n    cout << p->valeur() << endl;\n    cout << q->valeur() << endl;\n    delete p;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "7\n7" },
+    "explanation": "`Compteur* q = p;` copie l'**adresse** : `p` et `q` désignent le **même objet** sur le tas. `p->inc()` puis `q->inc()` incrémentent donc le même `n` : 5 → 6 → 7. Les deux affichages donnent `7`. Un seul `delete` suffit (et est nécessaire) : faire `delete q` ensuite serait une double libération.",
+    "concepts": ["new-delete", "tas-vs-pile"]
+  },
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans le `main`, crée un objet `Point` **sur le tas** avec `new`, affiche-le via le pointeur, puis libère-le avec `delete`. La classe `Point` est fournie.",
+    "payload": {
+      "spec": "La classe Point (deux attributs prives x, y ; constructeur a deux parametres ; methode affiche()) est fournie. Dans le main : lire deux entiers, allouer un Point sur le tas avec new, appeler affiche() via le pointeur (operateur ->), puis liberer l'objet avec delete.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Point {\n    private:\n        int x, y;\n    public:\n        Point(int px, int py) : x(px), y(py) {}\n        void affiche() { cout << \"(\" << x << \", \" << y << \")\" << endl; }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    // a completer : allouer un Point sur le tas, l'afficher, le liberer\n    return 0;\n}\n",
+      "tests": [
+        { "name": "positifs", "stdin": "4 7", "expectedStdout": "(4, 7)" },
+        { "name": "avec negatif", "stdin": "-1 9", "expectedStdout": "(-1, 9)" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Point {\n    private:\n        int x, y;\n    public:\n        Point(int px, int py) : x(px), y(py) {}\n        void affiche() { cout << \"(\" << x << \", \" << y << \")\" << endl; }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Point* p = new Point(a, b);\n    p->affiche();\n    delete p;\n    return 0;\n}"
+    },
+    "explanation": "`new Point(a, b)` alloue l'objet sur le **tas** et appelle son constructeur ; il renvoie un **pointeur** stocké dans `p`. On accède à la méthode via la flèche : `p->affiche()`. Enfin `delete p` détruit l'objet et libère la mémoire — un `new` ⇄ un `delete`.",
+    "concepts": ["new-delete", "tas-vs-pile"]
+  },
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Lis un entier `n`, alloue **un tableau dynamique** de `n` entiers, lis `n` valeurs, affiche leur somme, puis libère le tableau.",
+    "payload": {
+      "spec": "Dans le main : lire un entier n, allouer un tableau dynamique de n entiers avec new[], lire n entiers dans ce tableau, calculer leur somme, afficher 'somme = ' suivi de la somme et d'un retour a la ligne, puis liberer le tableau avec delete[].",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    // a completer : tableau dynamique, lecture, somme, liberation\n    return 0;\n}\n",
+      "tests": [
+        { "name": "quatre valeurs", "stdin": "4 10 20 30 40", "expectedStdout": "somme = 100" },
+        { "name": "une valeur", "stdin": "1 99", "expectedStdout": "somme = 99" },
+        { "name": "cache", "stdin": "3 -5 5 0", "expectedStdout": "somme = 0", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    int* tab = new int[n];\n    int somme = 0;\n    for (int i = 0; i < n; i++) {\n        cin >> tab[i];\n        somme += tab[i];\n    }\n    cout << \"somme = \" << somme << endl;\n    delete[] tab;\n    return 0;\n}"
+    },
+    "explanation": "`new int[n]` alloue un **tableau dynamique** de `n` entiers sur le tas, dont la taille est décidée **à l'exécution** — impossible sur la pile. On le parcourt comme un tableau ordinaire avec `tab[i]`. La libération se fait avec **`delete[]`** (et ses crochets), jamais `delete` seul.",
+    "concepts": ["new-delete", "tas-vs-pile"]
+  },
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Lis un entier `n`. Alloue un objet `Compteur` **sur le tas**, incrémente-le `n` fois via le pointeur, affiche sa valeur, puis libère-le. La classe `Compteur` est fournie.",
+    "payload": {
+      "spec": "La classe Compteur est fournie (attribut valeur initialise a 0, methode incrementer(), methode lire()). Dans le main : lire un entier n, allouer un Compteur sur le tas avec new, appeler incrementer() n fois via le pointeur, afficher lire() suivi d'un retour a la ligne, puis liberer l'objet avec delete.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Compteur {\n    private:\n        int valeur;\n    public:\n        Compteur() : valeur(0) {}\n        void incrementer() { valeur++; }\n        int lire() { return valeur; }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    // a completer : Compteur sur le tas, n incrementations, affichage, liberation\n    return 0;\n}\n",
+      "tests": [
+        { "name": "cinq fois", "stdin": "5", "expectedStdout": "5" },
+        { "name": "zero fois", "stdin": "0", "expectedStdout": "0" },
+        { "name": "cache", "stdin": "100", "expectedStdout": "100", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Compteur {\n    private:\n        int valeur;\n    public:\n        Compteur() : valeur(0) {}\n        void incrementer() { valeur++; }\n        int lire() { return valeur; }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    Compteur* c = new Compteur();\n    for (int i = 0; i < n; i++) {\n        c->incrementer();\n    }\n    cout << c->lire() << endl;\n    delete c;\n    return 0;\n}"
+    },
+    "explanation": "`new Compteur()` alloue l'objet sur le tas (constructeur par défaut, `valeur` à 0). Toutes les manipulations passent par le pointeur avec la flèche : `c->incrementer()` et `c->lire()`. Le `delete c` final détruit l'objet — sans lui, l'objet resterait sur le tas (fuite de mémoire).",
+    "concepts": ["new-delete", "tas-vs-pile"]
+  },
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Lis un entier `n`. Alloue un **tableau dynamique de `n` objets** `Cellule`, donne à chacun l'identifiant `(i+1)*10`, affiche tous les identifiants séparés par une espace, puis libère le tableau. La classe `Cellule` est fournie.",
+    "payload": {
+      "spec": "La classe Cellule est fournie (attribut id initialise a 0, setId(int), getId()). Dans le main : lire un entier n, allouer un tableau dynamique de n Cellule avec new[], affecter a la cellule d'indice i l'identifiant (i+1)*10, afficher tous les identifiants separes par une espace puis un retour a la ligne, et liberer le tableau avec delete[].",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Cellule {\n    private:\n        int id;\n    public:\n        Cellule() : id(0) {}\n        void setId(int i) { id = i; }\n        int getId() { return id; }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    // a completer : tableau dynamique de Cellule, remplissage, affichage, liberation\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois cellules", "stdin": "3", "expectedStdout": "10 20 30" },
+        { "name": "une cellule", "stdin": "1", "expectedStdout": "10" },
+        { "name": "cache", "stdin": "5", "expectedStdout": "10 20 30 40 50", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Cellule {\n    private:\n        int id;\n    public:\n        Cellule() : id(0) {}\n        void setId(int i) { id = i; }\n        int getId() { return id; }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    Cellule* tab = new Cellule[n];\n    for (int i = 0; i < n; i++) {\n        tab[i].setId((i + 1) * 10);\n    }\n    for (int i = 0; i < n; i++) {\n        cout << tab[i].getId() << \" \";\n    }\n    cout << endl;\n    delete[] tab;\n    return 0;\n}"
+    },
+    "explanation": "`new Cellule[n]` appelle `n` fois le **constructeur par défaut** (d'où l'importance qu'il existe). Chaque élément s'utilise avec le point : `tab[i].setId(...)`, car `tab[i]` est un objet, pas un pointeur. La libération obligatoire est `delete[] tab` : elle détruit les `n` objets puis libère le bloc.",
+    "concepts": ["new-delete", "tas-vs-pile"]
+  },
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas. La classe `Robot` est manipulée par un pointeur. Corrige l'accès à la méthode.",
+    "payload": {
+      "spec": "La classe Robot (attribut prive energie, constructeur a un parametre, methode afficher()) est correcte. Le main alloue un Robot sur le tas avec new et doit appeler afficher() via le pointeur.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Robot {\n    private:\n        int energie;\n    public:\n        Robot(int e) : energie(e) {}\n        void afficher() { cout << \"energie = \" << energie << endl; }\n};\n\nint main() {\n    int e;\n    cin >> e;\n    Robot* r = new Robot(e);\n    r.afficher();\n    delete r;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "positif", "stdin": "42", "expectedStdout": "energie = 42" },
+        { "name": "zero", "stdin": "0", "expectedStdout": "energie = 0" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Robot {\n    private:\n        int energie;\n    public:\n        Robot(int e) : energie(e) {}\n        void afficher() { cout << \"energie = \" << energie << endl; }\n};\n\nint main() {\n    int e;\n    cin >> e;\n    Robot* r = new Robot(e);\n    r->afficher();\n    delete r;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `r.afficher()` utilise l'opérateur point `.` alors que `r` est un **pointeur** (`Robot*`). g++ refuse de compiler (`request for member ... which is of pointer type`). Sur un pointeur, on accède aux membres avec la flèche **`->`** : `r->afficher()`.",
+    "concepts": ["new-delete"]
+  },
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme compile mais affiche un résultat faux : il doit afficher la somme des carrés de 1 à `n`. Corrige la boucle de calcul.",
+    "payload": {
+      "spec": "Le programme alloue un tableau dynamique de n entiers, y place les carres 1, 4, 9, ... (la case d'indice i contient (i+1)*(i+1)), puis affiche 'somme des carres = ' suivi de la somme de TOUS les elements. Le resultat affiche est trop petit.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    int* tab = new int[n];\n    for (int i = 0; i < n; i++) {\n        tab[i] = (i + 1) * (i + 1);\n    }\n    int somme = 0;\n    for (int i = 1; i < n; i++) {\n        somme += tab[i];\n    }\n    cout << \"somme des carres = \" << somme << endl;\n    delete[] tab;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "quatre", "stdin": "4", "expectedStdout": "somme des carres = 30" },
+        { "name": "un", "stdin": "1", "expectedStdout": "somme des carres = 1" },
+        { "name": "cinq", "stdin": "5", "expectedStdout": "somme des carres = 55" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    int* tab = new int[n];\n    for (int i = 0; i < n; i++) {\n        tab[i] = (i + 1) * (i + 1);\n    }\n    int somme = 0;\n    for (int i = 0; i < n; i++) {\n        somme += tab[i];\n    }\n    cout << \"somme des carres = \" << somme << endl;\n    delete[] tab;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : la boucle de somme démarre à `i = 1`, ce qui **saute la case d'indice 0** (le carré 1). Le premier indice d'un tableau est **0** : la boucle doit s'écrire `for (int i = 0; i < n; i++)`. Avec `n = 4` : 1+4+9+16 = 30, et non 4+9+16 = 29.",
+    "concepts": ["new-delete"]
+  },
+  {
+    "chapterSlug": "allocation-dynamique",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme ne compile pas. Il alloue un tableau d'objets `Bille` avec `new[]`. Corrige la classe `Bille` pour rendre l'allocation possible.",
+    "payload": {
+      "spec": "Le main alloue un tableau dynamique de n objets Bille avec new[] et affiche leur couleur. La classe Bille ne possede qu'un constructeur a un parametre, ce qui empeche new[] de fonctionner. Ajouter ce qu'il faut sans modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Bille {\n    private:\n        int couleur;\n    public:\n        Bille(int c) : couleur(c) {}\n        int getCouleur() { return couleur; }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    Bille* sac = new Bille[n];\n    for (int i = 0; i < n; i++) {\n        cout << sac[i].getCouleur() << \" \";\n    }\n    cout << endl;\n    delete[] sac;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "trois billes", "stdin": "3", "expectedStdout": "0 0 0" },
+        { "name": "une bille", "stdin": "1", "expectedStdout": "0" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Bille {\n    private:\n        int couleur;\n    public:\n        Bille() : couleur(0) {}\n        Bille(int c) : couleur(c) {}\n        int getCouleur() { return couleur; }\n};\n\nint main() {\n    int n;\n    cin >> n;\n    Bille* sac = new Bille[n];\n    for (int i = 0; i < n; i++) {\n        cout << sac[i].getCouleur() << \" \";\n    }\n    cout << endl;\n    delete[] sac;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `new Bille[n]` appelle le **constructeur par défaut** pour chaque élément, mais `Bille` ne déclarait qu'un constructeur à un paramètre — dès qu'un constructeur est déclaré, le constructeur par défaut n'est plus synthétisé. g++ refuse (`no matching function for call to 'Bille::Bille()'`). Il faut **ajouter** explicitement `Bille() : couleur(0) {}`.",
+    "concepts": ["new-delete"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la signature correcte du constructeur de copie d'une classe `Fraction` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Fraction(Fraction f);" },
+        { "id": "b", "label": "Fraction(const Fraction& f);" },
+        { "id": "c", "label": "Fraction copie(Fraction& f);" },
+        { "id": "d", "label": "Fraction& Fraction(const Fraction f);" }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Le constructeur de copie prend **une référence constante** vers un objet de sa propre classe : **`Fraction(const Fraction& f)`**. `const` car on ne modifie pas la source ; `&` (référence) pour **éviter une copie** lors du passage — un constructeur de copie qui prendrait son argument par valeur s'appellerait lui-même indéfiniment.",
+    "concepts": ["constructeur-copie"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans quelles situations le constructeur de copie est-il appelé ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Lors de l'initialisation d'un objet à partir d'un autre : Fraction f2(f1);" },
+        { "id": "b", "label": "Lors du passage d'un objet par valeur en argument d'une fonction." },
+        { "id": "c", "label": "Lors du retour d'un objet par valeur par une fonction." },
+        { "id": "d", "label": "Lors de l'affectation sur un objet déjà construit : f3 = f1;" },
+        { "id": "e", "label": "À chaque appel d'une méthode de l'objet." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "Le constructeur de copie est invoqué dans **trois situations** : l'**initialisation** d'un objet à partir d'un autre, le **passage par valeur** en argument, et le **retour par valeur**. Les deux dernières sont silencieuses : aucun `=` visible. L'affectation sur un objet déjà construit relève, elle, de `operator=` — pas du constructeur de copie.",
+    "concepts": ["constructeur-copie"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "L'écriture `Compte D = C;` (où `C` existe déjà) appelle l'opérateur d'affectation `operator=`.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux : dans `Compte D = C;`, l'objet `D` est **créé sur cette ligne même**. Le `=` y est une **initialisation**, pas une affectation : il appelle le **constructeur de copie**. La règle : `=` *à la création* d'un objet → constructeur de copie ; `=` sur un objet *déjà construit* → `operator=`.",
+    "concepts": ["constructeur-copie", "operateur-affectation"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une classe `Vector` détient un attribut `double* elem` (tableau alloué avec `new`). Que produit la **copie par défaut** (membre à membre) d'un `Vector` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Une copie profonde : chaque objet a son propre tableau." },
+        { "id": "b", "label": "Une copie superficielle : les deux objets partagent le même tableau." },
+        { "id": "c", "label": "Une erreur de compilation." },
+        { "id": "d", "label": "Un tableau vide dans l'objet copié." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "La copie par défaut copie l'attribut `elem` **tel quel** — c'est-à-dire l'**adresse**, pas le tableau pointé. C'est une **copie superficielle** : les deux objets contiennent la même adresse et partagent donc le **même tableau**. Conséquences graves : partage non voulu (modifier l'un modifie l'autre) et **double libération** par les deux destructeurs.",
+    "concepts": ["copie-superficielle", "constructeur-copie"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque ligne de code à l'opération qu'elle déclenche.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "Vector v2(v1);" },
+        { "id": "l2", "label": "Vector v3 = v1;" },
+        { "id": "l3", "label": "v4 = v1;  (v4 déjà construit)" },
+        { "id": "l4", "label": "Vector v5(10);" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Constructeur de copie" },
+        { "id": "r2", "label": "Opérateur d'affectation" },
+        { "id": "r3", "label": "Constructeur paramétré (non-copie)" }
+      ]
+    },
+    "solution": {
+      "pairs": { "l1": "r1", "l2": "r1", "l3": "r2", "l4": "r3" }
+    },
+    "explanation": "`Vector v2(v1);` et `Vector v3 = v1;` **créent** un objet à partir d'un autre `Vector` : ce sont deux formes du **constructeur de copie**. `v4 = v1;` agit sur un objet **déjà construit** : c'est l'**opérateur d'affectation**. `Vector v5(10);` crée un objet à partir d'un `int` : c'est un **constructeur paramétré** ordinaire, pas une copie.",
+    "concepts": ["constructeur-copie", "operateur-affectation"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Le constructeur de copie et `operator=` affichent un message.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Compte {\n    private:\n        double actif;\n    public:\n        Compte(double a) : actif(a) { cout << \"ctor parametre\" << endl; }\n        Compte(const Compte& c) : actif(c.actif) { cout << \"ctor copie\" << endl; }\n        Compte& operator=(const Compte& c) {\n            actif = c.actif;\n            cout << \"operator=\" << endl;\n            return *this;\n        }\n};\n\nint main() {\n    Compte a(100.0);\n    Compte b(a);\n    Compte c = a;\n    Compte d(50.0);\n    d = a;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "ctor parametre\nctor copie\nctor copie\nctor parametre\noperator=" },
+    "explanation": "`Compte a(100.0)` → `ctor parametre`. `Compte b(a)` → **constructeur de copie** (`ctor copie`). `Compte c = a` → le `=` est *à la création*, donc encore le **constructeur de copie** (`ctor copie`). `Compte d(50.0)` → `ctor parametre`. `d = a` → `d` existe déjà, c'est l'**opérateur d'affectation** (`operator=`).",
+    "concepts": ["constructeur-copie", "operateur-affectation"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? La classe réalise une **copie profonde**.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Tableau {\n    private:\n        int* donnees;\n        int taille;\n    public:\n        Tableau(int t) : donnees(new int[t]), taille(t) {\n            for (int i = 0; i < taille; i++) donnees[i] = 0;\n        }\n        Tableau(const Tableau& a) : donnees(new int[a.taille]), taille(a.taille) {\n            for (int i = 0; i < taille; i++) donnees[i] = a.donnees[i];\n        }\n        ~Tableau() { delete[] donnees; }\n        void set(int i, int v) { donnees[i] = v; }\n        int get(int i) { return donnees[i]; }\n};\n\nint main() {\n    Tableau t1(3);\n    t1.set(0, 10);\n    Tableau t2 = t1;\n    t2.set(0, 99);\n    cout << t1.get(0) << endl;\n    cout << t2.get(0) << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "10\n99" },
+    "explanation": "`Tableau t2 = t1;` appelle le **constructeur de copie**, qui réalise une **copie profonde** : il alloue son **propre tableau** (`new int[a.taille]`) et recopie les valeurs. `t1` et `t2` ont donc des tableaux **distincts**. Modifier `t2` (`t2.set(0, 99)`) n'affecte pas `t1`, resté à 10. Les deux objets sont indépendants.",
+    "concepts": ["constructeur-copie", "copie-profonde"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Une fonction renvoie un objet par valeur.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Element {\n    private:\n        int id;\n    public:\n        Element(int i) : id(i) { cout << \"naissance \" << id << endl; }\n        Element(const Element& e) : id(e.id) { cout << \"copie \" << id << endl; }\n        ~Element() { cout << \"mort \" << id << endl; }\n};\n\nElement choisir(bool premier) {\n    Element a(1);\n    Element b(2);\n    if (premier)\n        return a;\n    return b;\n}\n\nint main() {\n    Element resultat = choisir(true);\n    cout << \"fin\" << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "naissance 1\nnaissance 2\ncopie 1\nmort 2\nmort 1\nfin\nmort 1" },
+    "explanation": "Dans `choisir`, `a` et `b` sont construits (`naissance 1`, `naissance 2`). `return a;` renvoie l'objet **par valeur** : le **constructeur de copie** crée la valeur de retour à partir de `a` (`copie 1`). À la fin de la fonction, les locaux sont détruits en ordre inverse (`mort 2`, `mort 1`). Puis `fin`. Enfin `resultat` (la copie) meurt à la fin du `main` (`mort 1`).",
+    "concepts": ["constructeur-copie"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ajoute à la classe `Point` un **constructeur de copie** qui affiche `copie effectuee` et recopie les coordonnées. Le `main` est fourni.",
+    "payload": {
+      "spec": "La classe Point a deux attributs prives x, y, un constructeur a deux parametres et une methode affiche(). Ajouter un constructeur de copie de signature Point(const Point&) qui affiche 'copie effectuee' suivi d'un retour a la ligne, puis recopie x et y. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Point {\n    private:\n        int x, y;\n    public:\n        Point(int px, int py) : x(px), y(py) {}\n        // a completer : constructeur de copie\n        void affiche() { cout << \"(\" << x << \", \" << y << \")\" << endl; }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Point p1(a, b);\n    Point p2(p1);\n    p1.affiche();\n    p2.affiche();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "positifs", "stdin": "3 8", "expectedStdout": "copie effectuee\n(3, 8)\n(3, 8)" },
+        { "name": "avec negatif", "stdin": "-2 5", "expectedStdout": "copie effectuee\n(-2, 5)\n(-2, 5)" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Point {\n    private:\n        int x, y;\n    public:\n        Point(int px, int py) : x(px), y(py) {}\n        Point(const Point& p) : x(p.x), y(p.y) {\n            cout << \"copie effectuee\" << endl;\n        }\n        void affiche() { cout << \"(\" << x << \", \" << y << \")\" << endl; }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Point p1(a, b);\n    Point p2(p1);\n    p1.affiche();\n    p2.affiche();\n    return 0;\n}"
+    },
+    "explanation": "Le constructeur de copie a la signature **`Point(const Point& p)`** : référence constante vers un objet de la même classe. Il initialise ses attributs depuis ceux de la source via la liste d'initialisation `: x(p.x), y(p.y)`. `Point p2(p1);` le déclenche, d'où l'affichage de `copie effectuee`.",
+    "concepts": ["constructeur-copie"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ajoute à la classe `Compteur` un **`operator=`** qui recopie la valeur et renvoie `*this`, afin de permettre le **chaînage** `z = y = x`. Le `main` est fourni.",
+    "payload": {
+      "spec": "La classe Compteur a un attribut prive int valeur et un constructeur a un parametre. Ajouter l'operateur d'affectation : signature Compteur& operator=(const Compteur&), qui recopie valeur et renvoie *this pour autoriser le chainage. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Compteur {\n    private:\n        int valeur;\n    public:\n        Compteur(int v) : valeur(v) {}\n        // a completer : operator=\n        int lire() { return valeur; }\n};\n\nint main() {\n    int a, b, c;\n    cin >> a >> b >> c;\n    Compteur x(a);\n    Compteur y(b);\n    Compteur z(c);\n    z = y = x;\n    cout << x.lire() << endl;\n    cout << y.lire() << endl;\n    cout << z.lire() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "valeurs 5 10 15", "stdin": "5 10 15", "expectedStdout": "5\n5\n5" },
+        { "name": "valeurs 1 2 3", "stdin": "1 2 3", "expectedStdout": "1\n1\n1" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Compteur {\n    private:\n        int valeur;\n    public:\n        Compteur(int v) : valeur(v) {}\n        Compteur& operator=(const Compteur& c) {\n            valeur = c.valeur;\n            return *this;\n        }\n        int lire() { return valeur; }\n};\n\nint main() {\n    int a, b, c;\n    cin >> a >> b >> c;\n    Compteur x(a);\n    Compteur y(b);\n    Compteur z(c);\n    z = y = x;\n    cout << x.lire() << endl;\n    cout << y.lire() << endl;\n    cout << z.lire() << endl;\n    return 0;\n}"
+    },
+    "explanation": "`operator=` a la signature **`Compteur& operator=(const Compteur& c)`** : il renvoie une **référence** sur l'objet courant. Le `return *this;` est essentiel : `*this` est l'objet lui-même, et le renvoyer permet le **chaînage** `z = y = x` (évalué de droite à gauche : `y = x` renvoie `y`, puis `z = y`). Les trois compteurs valent finalement la valeur de `x`.",
+    "concepts": ["operateur-affectation"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ajoute à la classe `Texte` une **fonction amie** `operator<<` qui affiche `Texte de longueur N`. La fonction doit accéder à l'attribut privé `longueur`.",
+    "payload": {
+      "spec": "La classe Texte a un attribut prive int longueur et un constructeur a un parametre. Declarer dans la classe une fonction amie : friend ostream& operator<<(ostream&, const Texte&). Definir cette fonction HORS de la classe : elle ecrit 'Texte de longueur ' suivi de longueur, et renvoie le flux. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Texte {\n    private:\n        int longueur;\n    public:\n        Texte(int l) : longueur(l) {}\n        // a completer : declaration de la fonction amie operator<<\n};\n\n// a completer : definition de operator<<\n\nint main() {\n    int n;\n    cin >> n;\n    Texte t(n);\n    cout << t << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "longueur 12", "stdin": "12", "expectedStdout": "Texte de longueur 12" },
+        { "name": "longueur 0", "stdin": "0", "expectedStdout": "Texte de longueur 0" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Texte {\n    private:\n        int longueur;\n    public:\n        Texte(int l) : longueur(l) {}\n        friend ostream& operator<<(ostream& out, const Texte& t);\n};\n\nostream& operator<<(ostream& out, const Texte& t) {\n    out << \"Texte de longueur \" << t.longueur;\n    return out;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    Texte t(n);\n    cout << t << endl;\n    return 0;\n}"
+    },
+    "explanation": "`operator<<` est une fonction **non-membre** (son opérande gauche est un `ostream`, pas un `Texte`). Pour qu'elle puisse lire l'attribut privé `longueur`, on la déclare **`friend`** dans la classe. La définition, écrite **hors** de la classe et **sans** `friend`, accède alors librement à `t.longueur` et renvoie le flux pour permettre le chaînage.",
+    "concepts": ["fonction-amie"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "La classe `Pile` gère un tableau dynamique. Applique la **règle des trois** : écris le **constructeur de copie** et l'**`operator=`** (le destructeur est fourni). Le `main` teste les deux.",
+    "payload": {
+      "spec": "La classe Pile a int* donnees et int sz. Le constructeur Pile(int s) alloue donnees et le remplit avec 0, 1, 2, ... Le destructeur fait delete[] donnees. Ajouter, en copie profonde : le constructeur de copie Pile(const Pile&) ; l'operateur Pile& operator=(const Pile&) qui libere l'ancien tableau, en alloue un nouveau, recopie les valeurs et renvoie *this. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Pile {\n    private:\n        int* donnees;\n        int sz;\n    public:\n        Pile(int s) : donnees(new int[s]), sz(s) {\n            for (int i = 0; i < sz; i++) donnees[i] = i;\n        }\n        // a completer : constructeur de copie\n        // a completer : operator=\n        ~Pile() { delete[] donnees; }\n        int somme() {\n            int s = 0;\n            for (int i = 0; i < sz; i++) s += donnees[i];\n            return s;\n        }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Pile p1(a);\n    Pile p2(p1);\n    Pile p3(b);\n    p3 = p1;\n    cout << p1.somme() << endl;\n    cout << p2.somme() << endl;\n    cout << p3.somme() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "tailles 4 et 2", "stdin": "4 2", "expectedStdout": "6\n6\n6" },
+        { "name": "tailles 5 et 1", "stdin": "5 1", "expectedStdout": "10\n10\n10" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Pile {\n    private:\n        int* donnees;\n        int sz;\n    public:\n        Pile(int s) : donnees(new int[s]), sz(s) {\n            for (int i = 0; i < sz; i++) donnees[i] = i;\n        }\n        Pile(const Pile& p) : donnees(new int[p.sz]), sz(p.sz) {\n            for (int i = 0; i < sz; i++) donnees[i] = p.donnees[i];\n        }\n        Pile& operator=(const Pile& p) {\n            sz = p.sz;\n            delete[] donnees;\n            donnees = new int[sz];\n            for (int i = 0; i < sz; i++) donnees[i] = p.donnees[i];\n            return *this;\n        }\n        ~Pile() { delete[] donnees; }\n        int somme() {\n            int s = 0;\n            for (int i = 0; i < sz; i++) s += donnees[i];\n            return s;\n        }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Pile p1(a);\n    Pile p2(p1);\n    Pile p3(b);\n    p3 = p1;\n    cout << p1.somme() << endl;\n    cout << p2.somme() << endl;\n    cout << p3.somme() << endl;\n    return 0;\n}"
+    },
+    "explanation": "La **règle des trois** : la classe ayant un destructeur non trivial (`delete[]`), elle a besoin des **trois** membres. Le **constructeur de copie** alloue son tableau et recopie (`p2(p1)`). L'**`operator=`** part d'un objet déjà construit : il **libère d'abord** l'ancien tableau, en alloue un neuf, recopie, et renvoie `*this` (`p3 = p1`). Les trois piles deviennent indépendantes et de même contenu.",
+    "concepts": ["regle-des-trois", "constructeur-copie", "operateur-affectation", "copie-profonde"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas. Le constructeur de copie de `Point` a une signature invalide. Corrige-la.",
+    "payload": {
+      "spec": "La classe Point a deux attributs x, y, un constructeur a deux parametres et une methode affiche(). Son constructeur de copie a une signature incorrecte. Corriger uniquement la signature du constructeur de copie.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Point {\n    private:\n        int x, y;\n    public:\n        Point(int px, int py) : x(px), y(py) {}\n        Point(Point p) {\n            x = p.x;\n            y = p.y;\n        }\n        void affiche() { cout << \"(\" << x << \", \" << y << \")\" << endl; }\n};\n\nint main() {\n    Point p1(3, 4);\n    Point p2(p1);\n    p1.affiche();\n    p2.affiche();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "point fixe", "stdin": "", "expectedStdout": "(3, 4)\n(3, 4)" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Point {\n    private:\n        int x, y;\n    public:\n        Point(int px, int py) : x(px), y(py) {}\n        Point(const Point& p) {\n            x = p.x;\n            y = p.y;\n        }\n        void affiche() { cout << \"(\" << x << \", \" << y << \")\" << endl; }\n};\n\nint main() {\n    Point p1(3, 4);\n    Point p2(p1);\n    p1.affiche();\n    p2.affiche();\n    return 0;\n}"
+    },
+    "explanation": "Le bug : le constructeur de copie était déclaré `Point(Point p)` — il prend son argument **par valeur**. Or copier l'argument exigerait... d'appeler le constructeur de copie, donc une récursion infinie. g++ refuse (`invalid constructor; you probably meant 'Point(const Point&)'`). La signature correcte prend une **référence constante** : `Point(const Point& p)`.",
+    "concepts": ["constructeur-copie"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme affiche un résultat faux : modifier `b2` change aussi `b1`. La classe `Buffer` gère un tableau dynamique. Corrige-la en appliquant la règle des trois.",
+    "payload": {
+      "spec": "La classe Buffer a int* data et int sz. Le constructeur alloue data et le remplit de 0 ; le destructeur fait delete[] data. Il manque le constructeur de copie : la copie par defaut est superficielle, donc b1 et b2 partagent le meme tableau. Ajouter un constructeur de copie realisant une copie profonde, sans modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Buffer {\n    private:\n        int* data;\n        int sz;\n    public:\n        Buffer(int s) : data(new int[s]), sz(s) {\n            for (int i = 0; i < sz; i++) data[i] = 0;\n        }\n        ~Buffer() { delete[] data; }\n        void set(int i, int v) { data[i] = v; }\n        int get(int i) { return data[i]; }\n};\n\nint main() {\n    Buffer b1(4);\n    b1.set(0, 10);\n    Buffer b2 = b1;\n    b2.set(0, 77);\n    cout << \"b1[0] = \" << b1.get(0) << endl;\n    cout << \"b2[0] = \" << b2.get(0) << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "objets independants", "stdin": "", "expectedStdout": "b1[0] = 10\nb2[0] = 77" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Buffer {\n    private:\n        int* data;\n        int sz;\n    public:\n        Buffer(int s) : data(new int[s]), sz(s) {\n            for (int i = 0; i < sz; i++) data[i] = 0;\n        }\n        Buffer(const Buffer& b) : data(new int[b.sz]), sz(b.sz) {\n            for (int i = 0; i < sz; i++) data[i] = b.data[i];\n        }\n        ~Buffer() { delete[] data; }\n        void set(int i, int v) { data[i] = v; }\n        int get(int i) { return data[i]; }\n};\n\nint main() {\n    Buffer b1(4);\n    b1.set(0, 10);\n    Buffer b2 = b1;\n    b2.set(0, 77);\n    cout << \"b1[0] = \" << b1.get(0) << endl;\n    cout << \"b2[0] = \" << b2.get(0) << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : sans constructeur de copie, `Buffer b2 = b1;` fait une **copie superficielle** — `b2.data` reçoit l'**adresse** de `b1.data`, les deux objets partagent un seul tableau (et le `delete[]` double provoque même un crash en fin de programme). La correction ajoute un **constructeur de copie profonde** : il alloue son propre tableau (`new int[b.sz]`) et recopie les valeurs. Les objets deviennent indépendants.",
+    "concepts": ["constructeur-copie", "copie-superficielle", "copie-profonde", "regle-des-trois"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas : le chaînage `a = b = c` est refusé. Corrige le type de retour de l'`operator=`.",
+    "payload": {
+      "spec": "La classe Compteur a un attribut valeur et un constructeur a un parametre. Son operator= a un type de retour incorrect qui empeche le chainage a = b = c. Corriger l'operator= pour qu'il renvoie une reference sur l'objet courant.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Compteur {\n    private:\n        int valeur;\n    public:\n        Compteur(int v) : valeur(v) {}\n        void operator=(const Compteur& c) {\n            valeur = c.valeur;\n        }\n        int lire() { return valeur; }\n};\n\nint main() {\n    Compteur a(1), b(2), c(3);\n    a = b = c;\n    cout << a.lire() << \" \" << b.lire() << \" \" << c.lire() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "chainage", "stdin": "", "expectedStdout": "3 3 3" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Compteur {\n    private:\n        int valeur;\n    public:\n        Compteur(int v) : valeur(v) {}\n        Compteur& operator=(const Compteur& c) {\n            valeur = c.valeur;\n            return *this;\n        }\n        int lire() { return valeur; }\n};\n\nint main() {\n    Compteur a(1), b(2), c(3);\n    a = b = c;\n    cout << a.lire() << \" \" << b.lire() << \" \" << c.lire() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `operator=` renvoyait `void`. Le chaînage `a = b = c` s'évalue de droite à gauche : `b = c` doit **produire une valeur** que `a =` puisse à son tour recevoir. Avec un retour `void`, g++ refuse (`no match for 'operator='`). Il faut renvoyer une référence sur l'objet : type de retour **`Compteur&`** et corps terminé par **`return *this;`**.",
+    "concepts": ["operateur-affectation"]
+  },
+  {
+    "chapterSlug": "copie-affectation",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme affiche un résultat faux : après `l2 = l1`, modifier `l2` change aussi `l1`. L'`operator=` de la classe `Liste` est défectueux. Corrige-le.",
+    "payload": {
+      "spec": "La classe Liste gere un tableau dynamique int* elem. Le constructeur de copie est correct (copie profonde). L'operator= est defectueux : il copie le POINTEUR (elem = a.elem) au lieu d'allouer un nouveau tableau. Corriger operator= pour qu'il libere l'ancien tableau, en alloue un nouveau, recopie les valeurs et renvoie *this.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Liste {\n    private:\n        int* elem;\n        int sz;\n    public:\n        Liste(int s, int valeur) : elem(new int[s]), sz(s) {\n            for (int i = 0; i < sz; i++) elem[i] = valeur;\n        }\n        Liste(const Liste& a) : elem(new int[a.sz]), sz(a.sz) {\n            for (int i = 0; i < sz; i++) elem[i] = a.elem[i];\n        }\n        Liste& operator=(const Liste& a) {\n            sz = a.sz;\n            elem = a.elem;\n            return *this;\n        }\n        ~Liste() { delete[] elem; }\n        void set(int i, int v) { elem[i] = v; }\n        int get(int i) { return elem[i]; }\n};\n\nint main() {\n    Liste l1(3, 5);\n    Liste l2(3, 0);\n    l2 = l1;\n    l2.set(0, 100);\n    cout << \"l1[0] = \" << l1.get(0) << endl;\n    cout << \"l2[0] = \" << l2.get(0) << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "objets independants", "stdin": "", "expectedStdout": "l1[0] = 5\nl2[0] = 100" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Liste {\n    private:\n        int* elem;\n        int sz;\n    public:\n        Liste(int s, int valeur) : elem(new int[s]), sz(s) {\n            for (int i = 0; i < sz; i++) elem[i] = valeur;\n        }\n        Liste(const Liste& a) : elem(new int[a.sz]), sz(a.sz) {\n            for (int i = 0; i < sz; i++) elem[i] = a.elem[i];\n        }\n        Liste& operator=(const Liste& a) {\n            sz = a.sz;\n            delete[] elem;\n            elem = new int[sz];\n            for (int i = 0; i < sz; i++) elem[i] = a.elem[i];\n            return *this;\n        }\n        ~Liste() { delete[] elem; }\n        void set(int i, int v) { elem[i] = v; }\n        int get(int i) { return elem[i]; }\n};\n\nint main() {\n    Liste l1(3, 5);\n    Liste l2(3, 0);\n    l2 = l1;\n    l2.set(0, 100);\n    cout << \"l1[0] = \" << l1.get(0) << endl;\n    cout << \"l2[0] = \" << l2.get(0) << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `operator=` faisait `elem = a.elem;` — une **copie superficielle** du pointeur. `l1` et `l2` partageaient alors le même tableau (modifier l'un modifiait l'autre, et le double `delete[]` faisait planter le programme). La correction réalise une **copie profonde** : libérer l'ancien tableau (`delete[] elem`), en allouer un nouveau, puis recopier les valeurs terme à terme.",
+    "concepts": ["operateur-affectation", "copie-profonde", "copie-superficielle"]
+  }
+]

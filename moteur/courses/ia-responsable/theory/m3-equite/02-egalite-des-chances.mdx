@@ -1,0 +1,46 @@
+---
+title: "Égalité des chances et matrice de confusion"
+slug: egalite-des-chances
+order: 2
+estimatedReadMin: 8
+concepts: [egalite-des-chances, matrice-de-confusion]
+source: "Diapositives 16 et 19"
+---
+## Idée centrale
+
+L'égalité des chances regarde uniquement les personnes **qualifiées** : sont-elles sélectionnées dans la même proportion dans chaque groupe ? Pour la calculer, il faut la matrice de confusion, groupe par groupe.
+
+## L'égalité des chances compare les rappels
+
+**TPR = VP / (VP + FN)**. *Equal opportunity* : TPRₐ = TPRᵦ.
+
+| Groupe | Qualifiés | Sélectionnés parmi eux | TPR |
+|---|---|---|---|
+| G1 | 600 | 480 | 80 % |
+| G2 | 200 | 120 | 60 % |
+
+Écart de **20 points** : l'égalité des chances n'est pas satisfaite.
+
+## La matrice de confusion (TD2)
+
+Dans le TD sur COMPAS, l'observation Y est la récidive observée à 2 ans (colonne `two_year_recid`), et la prédiction vaut Ŷ = 1 si `decile_score` ≥ 5.
+
+| | Prédit à risque (Ŷ = 1) | Prédit faible risque (Ŷ = 0) |
+|---|---|---|
+| Récidive observée (Y = 1) | VP | FN |
+| Pas de récidive (Y = 0) | FP | VN |
+
+| Indicateur | Formule |
+|---|---|
+| TPR, rappel | VP / (VP + FN) |
+| FPR, taux de faux positifs | FP / (FP + VN) |
+| FNR, taux de faux négatifs | FN / (VP + FN) = 1 − TPR |
+| Précision positive, PPV | VP / (VP + FP) |
+| Accuracy, exactitude | (VP + VN) / N |
+| Taux de sélection | (VP + FP) / N |
+| Prévalence observée | (VP + FN) / N |
+
+Avec N = VP + FN + FP + VN.
+
+> **À retenir**
+> Le **dénominateur** indique la population concernée par le taux, et les taux se calculent **séparément par groupe**.

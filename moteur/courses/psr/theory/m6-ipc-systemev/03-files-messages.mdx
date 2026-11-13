@@ -1,0 +1,354 @@
+---
+title: "Files de messages"
+slug: files-messages
+order: 3
+estimatedReadMin: 24
+concepts: [file-de-messages, message-type, msgget, msgbuf, msgsnd, msgrcv, selecteur-msgtyp, ipc-nowait, msgctl, blocage-fdm]
+source: "Cours 6 — Les files de messages"
+---
+
+Les tubes transportent un **flot continu** d'octets : on y écrit, on y lit, mais rien ne **structure** les données — la frontière entre deux envois est perdue. La **file de messages** (FDM) corrige cela : c'est une **boîte aux lettres** où chaque envoi est un **paquet identifiable et indivisible**, muni d'un **type**. C'est le mécanisme central de ce module, et un grand classique d'examen.
+
+## La file de messages : une boîte aux lettres
+
+> Une **file de messages** (FDM, en anglais *message queue*) est un objet IPC System V réalisant le concept de **boîte aux lettres** : un processus y **dépose** des messages, un autre les y **retire**. Chaque message est une donnée **structurée** composée d'un **type** et d'un **corps de longueur variable**.
+
+C'est un mode de communication fondamentalement différent du tube :
+
+| | **Tube** (Modules 3-4) | **File de messages** (ce chapitre) |
+|---|---|---|
+| Nature des données | **flot continu** d'octets | **messages** identifiables et indivisibles |
+| Délimitation | aucune (à la charge du programme) | un `read` extrait **exactement** un `write` |
+| Sélection à la lecture | impossible — on lit ce qui vient | possible — par le **type** du message |
+| Identité | descripteur / chemin | **clé** + identifiant IPC |
+| Durée de vie | tube : volatile ; FIFO : i-nœud | **persistant dans le noyau** |
+
+Trois propriétés sont à retenir d'emblée.
+
+- **Des paquets indivisibles.** Une demande de lecture extrait **exactement le produit d'une opération d'écriture** : si un processus a envoyé un message de 40 octets, le lecteur reçoit ces 40 octets **en un seul bloc** — jamais 30 puis 10. Le contraire d'un tube.
+- **Le multiplexage par le type.** Chaque message porte un **type** (un entier strictement positif). Un processus peut **demander un message d'un type donné** : la file lui sert un message de **ce type**, en ignorant les autres. Une même file peut ainsi acheminer plusieurs « canaux » logiques.
+- **L'algorithme FIFO par type.** Comme un tube, une file est gérée en **FIFO**, mais affinée par le type : `msgrcv` extrait, **parmi les messages du type cherché**, celui qui a **séjourné le plus longtemps** dans la file.
+
+Comme les tubes, les files de messages portent des **droits d'accès UNIX** (`rwx` pour propriétaire, groupe, autres). L'attente est par défaut **bloquante**, mais un drapeau `IPC_NOWAIT` permet de ne pas attendre.
+
+## Le format d'un message : `struct msgbuf`
+
+Un message n'est pas une simple chaîne : sa structure est imposée. L'en-tête **`<sys/msg.h>`** définit une structure **générique**, `msgbuf` :
+
+```c
+struct msgbuf {
+    long mtype;       /* type du message : entier STRICTEMENT POSITIF */
+    char mtext[1];    /* corps du message : suite d'octets quelconque */
+};
+```
+
+Cette structure est un **modèle**. On a le droit — et c'est l'usage courant — de définir **sa propre** structure de message, à condition de **respecter deux règles** :
+
+1. le **premier champ** doit être un **`long`** : c'est le **type** du message. Il doit être un **entier strictement positif** (`> 0`). Il fournit aux lecteurs le **critère de sélection** (le multiplexage).
+2. le **second champ** est une **suite d'octets consécutifs** en mémoire : le **corps** du message. Il peut contenir n'importe quoi — un tableau de caractères, mais aussi une `struct`, un entier, etc.
+
+```c
+/* structure de message sur mesure : le 1er champ DOIT etre un long */
+struct message {
+    long mtype;            /* type : > 0 obligatoire             */
+    char texte[256];       /* corps : ici 256 octets de texte    */
+};
+
+struct requete {
+    long mtype;            /* type                                */
+    int  longueur;         /* le corps peut etre une structure    */
+    int  largeur;
+    int  hauteur;
+};
+```
+
+> ⚠️ Le champ de type **`mtype` doit être strictement positif** dans tout message **envoyé** : un type nul ou négatif fait **échouer `msgsnd`** (`errno == EINVAL`). La valeur `0` et les valeurs **négatives** sont réservées à un autre rôle — celui de **sélecteur** à la **réception** (paramètre `msgtyp` de `msgrcv`, voir plus bas). À l'envoi : type `> 0`. À la réception : `msgtyp` peut être nul, positif ou négatif. Ne pas confondre ces deux emplois du « type ».
+
+## Créer la file : `msgget`
+
+On obtient une file de messages par `msgget`, fidèle au **motif `*get`** du chapitre 1 :
+
+```c
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+
+int msgget(key_t key, int msgflg);
+```
+
+- **`key`** — la **clé IPC** : issue de `ftok`, ou `IPC_PRIVATE` pour une file privée ;
+- **`msgflg`** — les **drapeaux** : bits de droits en octal (usage courant `0664` ou `0666`), combinés à `IPC_CREAT` et/ou `IPC_EXCL`.
+
+`msgget` renvoie l'**identifiant** de la file (le `msqid`, un `int`), utilisé par tous les appels suivants, ou **`-1`** + `errno` en cas d'échec.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+
+int main(void) {
+    key_t cle = ftok("/etc/hosts", 65);
+    if (cle == (key_t) -1) { perror("ftok"); exit(EXIT_FAILURE); }
+
+    /* cree la file si besoin, lecture/ecriture pour tous */
+    int msqid = msgget(cle, IPC_CREAT | 0666);
+    if (msqid == -1) { perror("msgget"); exit(EXIT_FAILURE); }
+
+    printf("File de messages prete, msqid = %d\n", msqid);
+    return 0;
+}
+```
+
+## Envoyer un message : `msgsnd`
+
+Un message se **dépose** dans la file avec `msgsnd` :
+
+```c
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+
+int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg);
+```
+
+- **`msqid`** — l'**identifiant** de la file (renvoyé par `msgget`) ;
+- **`msgp`** — un **pointeur** vers la structure du message (du type de `msgbuf`, ou votre structure sur mesure) ;
+- **`msgsz`** — la **taille, en octets, du seul corps** du message — c'est-à-dire la taille du champ **après** `mtype`. **Le `long mtype` n'est PAS compté** ;
+- **`msgflg`** — `0` (envoi bloquant), ou **`IPC_NOWAIT`**.
+
+`msgsnd` renvoie **`0`** en cas de succès, **`-1`** + `errno` en cas d'échec.
+
+```c
+struct message { long mtype; char texte[256]; };
+
+struct message msg;
+msg.mtype = 1;                                  /* type 1, strictement positif */
+strcpy(msg.texte, "Bonjour le serveur");
+
+/* msgsz = taille du CORPS seulement, sans le long mtype */
+if (msgsnd(msqid, &msg, sizeof(msg.texte), 0) == -1) {
+    perror("msgsnd");
+    exit(EXIT_FAILURE);
+}
+```
+
+> ⚠️ Le calcul de **`msgsz`** est l'erreur numéro un des files de messages. `msgsz` est la taille du **corps uniquement** — `sizeof(msg.texte)`, **pas** `sizeof(msg)`. Écrire `sizeof(msg)` y inclut par erreur les **8 octets du `long mtype`**. La règle infaillible : `msgsz = sizeof(struct message) - sizeof(long)`, ou simplement la taille du champ qui suit `mtype`. Le même calcul devra être cohérent côté `msgrcv`.
+
+## Recevoir un message : `msgrcv` et le sélecteur `msgtyp`
+
+L'extraction d'un message se fait par `msgrcv`. **`msgrcv` supprime** le message de la file et le copie dans le tampon fourni.
+
+```c
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+
+ssize_t msgrcv(int msqid, void *msgp, size_t msgsz, long msgtyp, int msgflg);
+```
+
+- **`msqid`** — l'identifiant de la file ;
+- **`msgp`** — un **pointeur** vers la structure qui **recevra** le message ;
+- **`msgsz`** — la **taille maximale du corps** que le tampon peut accueillir (toujours sans le `long mtype`) ;
+- **`msgtyp`** — le **sélecteur de type** : c'est lui qui réalise le **multiplexage** (détaillé ci-dessous) ;
+- **`msgflg`** — `0` (réception bloquante), ou `IPC_NOWAIT`.
+
+`msgrcv` renvoie la **taille en octets du corps** du message extrait en cas de succès, ou **`-1`** + `errno` en cas d'échec.
+
+### Le sélecteur `msgtyp` : le cœur du multiplexage
+
+Le paramètre `msgtyp` détermine **quel** message est extrait. Ses **trois cas** sont **fondamentaux** — c'est la question d'examen par excellence :
+
+| Valeur de `msgtyp` | Message extrait |
+|---|---|
+| **`msgtyp == 0`** | le **premier** message de la file, **quel que soit son type** (FIFO pur) |
+| **`msgtyp > 0`** | le **premier** message **de type exactement égal à `msgtyp`** |
+| **`msgtyp < 0`** | le **premier** message dont le type est le **plus petit** parmi ceux **`≤ |msgtyp|`** |
+
+Détaillons :
+
+- **`msgtyp == 0`** — on **ignore le type** : on prend le plus ancien message présent. La file se comporte alors comme un tube FIFO ordinaire.
+- **`msgtyp > 0`** — on veut **précisément** ce type. Si la file contient des messages d'autres types mais **aucun** du type demandé, le processus **bloque** (attente passive). C'est le mode du **canal logique** : « donne-moi un message destiné au type 2 ».
+- **`msgtyp < 0`** — mode **priorité**. Parmi tous les messages dont le type est **inférieur ou égal à `|msgtyp|`**, on extrait celui de **plus petit type** (et, à type égal, le plus ancien). En convenant que **type 1 = urgent, type 2 = normal, type 3 = log**, un `msgrcv` avec `msgtyp = -3` sert **d'abord les urgents**, puis les normaux, puis les logs : un **traitement par priorité**.
+
+```c
+struct message { long mtype; char texte[256]; };
+struct message recu;
+
+/* recoit le plus ancien message de type EXACTEMENT 2 ; bloque s'il n'y en a pas */
+ssize_t n = msgrcv(msqid, &recu, sizeof(recu.texte), 2, 0);
+if (n == -1) { perror("msgrcv"); exit(EXIT_FAILURE); }
+printf("Recu (type %ld, %zd octets) : %s\n", recu.mtype, n, recu.texte);
+```
+
+> ⚠️ Distinguer `msgtyp > 0` (type **exact**) et `msgtyp < 0` (type **plus petit ou égal**). Avec `msgtyp = 2`, on n'obtient **que** des messages de type 2. Avec `msgtyp = -2`, on obtient un message de type **1 ou 2**, en **préférant le 1**. Erreur fréquente : croire que `msgtyp = 2` sert « les messages de type ≤ 2 » — c'est faux, c'est `msgtyp = -2` qui fait cela.
+
+## Le comportement bloquant et `IPC_NOWAIT`
+
+Par défaut, les deux opérations sont **bloquantes** — c'est la **synchronisation** offerte par le noyau :
+
+- **`msgrcv`** sur une file qui ne contient **aucun message du type demandé** : le processus **bloque** (attente passive, sans consommer de processeur) jusqu'à ce qu'un tel message arrive ;
+- **`msgsnd`** sur une file **pleine** (la file a une capacité bornée en octets) : le processus **bloque** jusqu'à ce qu'un lecteur libère de la place.
+
+Le drapeau **`IPC_NOWAIT`**, placé dans `msgflg`, **supprime ce blocage** : l'opération qui devrait attendre **échoue immédiatement** au lieu de bloquer, en renvoyant `-1` avec `errno` positionné (typiquement `ENOMSG` pour un `msgrcv` sans message du bon type, `EAGAIN` pour un `msgsnd` sur file pleine).
+
+```c
+/* reception NON bloquante : revient aussitot si aucun message de type 1 */
+ssize_t n = msgrcv(msqid, &recu, sizeof(recu.texte), 1, IPC_NOWAIT);
+if (n == -1) {
+    if (errno == ENOMSG)
+        printf("aucun message de type 1 pour l'instant\n");
+    else
+        perror("msgrcv");
+}
+```
+
+`IPC_NOWAIT` permet à un processus de **scruter** une file sans s'y bloquer — utile pour traiter plusieurs files, ou rester réactif à d'autres événements.
+
+## Contrôler la file : `msgctl`
+
+La file étant un objet IPC **persistant**, il faut savoir la **consulter**, la **modifier** et surtout la **supprimer**. C'est le rôle de `msgctl` :
+
+```c
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+
+int msgctl(int msqid, int cmd, struct msqid_ds *buf);
+```
+
+- **`msqid`** — l'identifiant de la file ;
+- **`cmd`** — la **commande** ;
+- **`buf`** — un pointeur vers une `struct msqid_ds` (utilisée par `IPC_STAT` et `IPC_SET` ; peut être `NULL` pour `IPC_RMID`).
+
+`msgctl` renvoie **`0`** en cas de succès, **`-1`** + `errno` en cas d'échec. Les trois commandes essentielles :
+
+| `cmd` | Effet |
+|---|---|
+| **`IPC_STAT`** | **copie** les informations de la file (la `struct msqid_ds` du noyau) dans `*buf` |
+| **`IPC_SET`** | **écrit** dans la file certains champs modifiables de `*buf` (droits, propriétaire, taille max) |
+| **`IPC_RMID`** | **supprime** la file de messages du noyau |
+
+La structure `struct msqid_ds` décrit l'état de la file. Ses champs les plus utiles :
+
+```c
+struct msqid_ds {
+    struct ipc_perm msg_perm;    /* droits d'acces (configurables par IPC_SET) */
+    time_t          msg_stime;   /* date du dernier msgsnd                     */
+    time_t          msg_rtime;   /* date du dernier msgrcv                     */
+    time_t          msg_ctime;   /* date de la derniere modification           */
+    unsigned long   msg_cbytes;  /* nombre d'octets actuellement dans la file  */
+    unsigned long   msg_qnum;    /* nombre de messages actuellement dans la file */
+    unsigned long   msg_qbytes;  /* taille maximale de la file, en octets      */
+    pid_t           msg_lspid;   /* PID du dernier processus ayant envoye      */
+    pid_t           msg_lrpid;   /* PID du dernier processus ayant lu          */
+    /* ... */
+};
+```
+
+`msg_qnum` (nombre de messages en attente) et `msg_perm` (les droits) sont les champs les plus consultés.
+
+```c
+/* consulter puis supprimer une file */
+struct msqid_ds info;
+if (msgctl(msqid, IPC_STAT, &info) == -1) { perror("msgctl IPC_STAT"); exit(EXIT_FAILURE); }
+printf("Messages en attente : %lu\n", info.msg_qnum);
+printf("Droits : %o\n", info.msg_perm.mode);
+
+if (msgctl(msqid, IPC_RMID, NULL) == -1) { perror("msgctl IPC_RMID"); exit(EXIT_FAILURE); }
+```
+
+> ⚠️ **Ne jamais oublier `msgctl(msqid, IPC_RMID, NULL)`** quand la file ne sert plus. Une file non supprimée **persiste dans le noyau** avec **tous ses messages** : à la prochaine exécution, un `msgrcv` lira ces **vieux messages** comme s'ils venaient d'arriver — un bogue déroutant. En général, c'est le **serveur** (créateur de la file) qui la **supprime** à la fin du service, jamais les clients. En cas de plantage, nettoyer manuellement avec `ipcs` puis `ipcrm -q`.
+
+## Schéma complet : un dialogue client / serveur
+
+Voici le motif d'examen de référence — directement inspiré du TP : un **client** envoie une requête, un **serveur** la lit et **répond**. Une **seule** file suffit, en utilisant **deux types** : type `1` pour les requêtes (client → serveur), type `2` pour les réponses (serveur → client).
+
+```c
+/* ============ serveur.c ============ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+
+struct message { long mtype; char texte[256]; };
+
+int main(void) {
+    key_t cle = ftok("/etc/hosts", 65);
+    int   msqid = msgget(cle, IPC_CREAT | 0666);
+    if (msqid == -1) { perror("msgget"); exit(EXIT_FAILURE); }
+
+    struct message req, rep;
+
+    /* lit une requete : type 1 (client -> serveur) ; bloque si la file est vide */
+    if (msgrcv(msqid, &req, sizeof(req.texte), 1, 0) == -1) {
+        perror("msgrcv"); exit(EXIT_FAILURE);
+    }
+    printf("Serveur : requete recue : %s\n", req.texte);
+
+    /* prepare et depose la reponse : type 2 (serveur -> client) */
+    rep.mtype = 2;
+    snprintf(rep.texte, sizeof(rep.texte), "Traite : %.*s",
+             (int)(sizeof(rep.texte) - 10), req.texte);
+    if (msgsnd(msqid, &rep, sizeof(rep.texte), 0) == -1) {
+        perror("msgsnd"); exit(EXIT_FAILURE);
+    }
+
+    /* fin du service : le serveur, createur de la file, la supprime */
+    msgctl(msqid, IPC_RMID, NULL);
+    return 0;
+}
+```
+
+```c
+/* ============ client.c ============ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+
+struct message { long mtype; char texte[256]; };
+
+int main(void) {
+    key_t cle = ftok("/etc/hosts", 65);    /* MEME fichier, MEME proj_id que le serveur */
+    int   msqid = msgget(cle, 0666);       /* la file existe deja : pas de IPC_CREAT    */
+    if (msqid == -1) { perror("msgget"); exit(EXIT_FAILURE); }
+
+    struct message req, rep;
+
+    /* depose une requete de type 1 */
+    req.mtype = 1;
+    strcpy(req.texte, "Bonjour serveur");
+    if (msgsnd(msqid, &req, sizeof(req.texte), 0) == -1) {
+        perror("msgsnd"); exit(EXIT_FAILURE);
+    }
+
+    /* attend la reponse de type 2 ; bloque jusqu'a ce que le serveur reponde */
+    if (msgrcv(msqid, &rep, sizeof(rep.texte), 2, 0) == -1) {
+        perror("msgrcv"); exit(EXIT_FAILURE);
+    }
+    printf("Client : reponse recue : %s\n", rep.texte);
+    return 0;
+}
+```
+
+Le mécanisme : le client `msgsnd` un message de **type 1** ; le serveur, qui fait `msgrcv` avec `msgtyp = 1`, ne lit **que** ce canal. Le serveur répond par un message de **type 2** ; le client, qui fait `msgrcv` avec `msgtyp = 2`, ne lit **que** les réponses — et ne risque **jamais** de relire sa propre requête. Le **typage** des messages remplace ici les **deux FIFO** qu'exigeait le schéma client/serveur du Module 4.
+
+Ce motif s'étend naturellement : pour **plusieurs clients**, on donne à chaque réponse un type **dérivé du PID du client** (`mtype = pid`), de sorte que chaque client ne récupère **que sa propre réponse** — exactement le rôle que jouait le FIFO de retour privé du Module 4.
+
+> **Note :** Il existe une API **POSIX** des files de messages, plus moderne, fondée sur les fonctions `mq_open`, `mq_send`, `mq_receive`, `mq_close` et `mq_unlink` (en-tête `<mqueue.h>`, lien avec `-lrt`) — comme les sémaphores POSIX le sont aux sémaphores System V, les files POSIX offrent une interface plus simple et des noms dans le système de fichiers, mais les files System V, décrites ici, restent la référence des examens et du code hérité.
+
+> **À retenir**
+> - Une **file de messages** (FDM) est une **boîte aux lettres** : objet IPC System V échangeant des **messages structurés et indivisibles**, contrairement au **flot d'octets** d'un tube. Un `msgrcv` extrait **exactement** un `msgsnd`.
+> - Un message suit le modèle **`struct msgbuf`** : un **premier champ `long mtype`** (le **type**, entier **strictement positif** à l'envoi) suivi d'un **corps** de longueur variable. On peut définir sa propre structure, le `long` en tête restant **obligatoire**.
+> - **`msgget(key, msgflg)`** crée ou récupère la file et renvoie son identifiant (`msqid`).
+> - **`msgsnd(msqid, msgp, msgsz, msgflg)`** dépose un message ; **`msgsz` est la taille du seul corps**, sans le `long mtype` (erreur classique : `sizeof(msg)` au lieu de `sizeof(corps)`).
+> - **`msgrcv(msqid, msgp, msgsz, msgtyp, msgflg)`** retire un message. Le **sélecteur `msgtyp`** réalise le multiplexage : **`0`** = premier message quel qu'il soit ; **`> 0`** = premier de **type exact** ; **`< 0`** = premier de **plus petit type ≤ `|msgtyp|`** (traitement par priorité).
+> - Par défaut, `msgrcv` (file sans message du bon type) et `msgsnd` (file pleine) **bloquent** ; le drapeau **`IPC_NOWAIT`** fait échouer l'opération aussitôt (`ENOMSG`, `EAGAIN`) au lieu de bloquer.
+> - **`msgctl`** contrôle la file : **`IPC_STAT`** lit son état (`struct msqid_ds` : `msg_qnum`, droits…), **`IPC_SET`** modifie ses attributs, **`IPC_RMID`** la **supprime** — indispensable, la file étant persistante.
+> - Schéma **client/serveur** : une seule file, le **type** distingue les canaux (type 1 = requêtes, type 2 = réponses, ou `mtype = pid` pour viser un client précis).

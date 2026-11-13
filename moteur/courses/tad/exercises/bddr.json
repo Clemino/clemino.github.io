@@ -1,0 +1,221 @@
+[
+  {
+    "chapterSlug": "introduction-bddr",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une base de données répartie c'est :",
+    "payload": { "options": [
+      { "id": "a", "label": "Une grosse base de données monolithique" },
+      { "id": "b", "label": "Plusieurs bases identiques stockées en RAID" },
+      { "id": "c", "label": "Un ensemble de données stockées sur plusieurs sites connectés par un réseau" },
+      { "id": "d", "label": "Une base de données en mémoire" }
+    ]},
+    "solution": { "correct": ["c"] },
+    "explanation": "Définition standard : données réparties sur plusieurs sites, reliées par un réseau, gérées par un SGBD réparti.",
+    "concepts": ["bdd-repartie"]
+  },
+  {
+    "chapterSlug": "introduction-bddr",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quels sont les intérêts d'une BDD répartie ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Plus grande fiabilité" },
+      { "id": "b", "label": "Meilleures performances" },
+      { "id": "c", "label": "Facilité de croissance" },
+      { "id": "d", "label": "Suppression des coûts de communication" },
+      { "id": "e", "label": "Suppression des deadlocks" }
+    ]},
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "Atouts : fiabilité (panne locale n'arrête pas tout), performance (servir au plus proche), croissance facile. Les coûts de communication AUGMENTENT et les deadlocks deviennent plus complexes.",
+    "concepts": ["bdd-repartie"]
+  },
+  {
+    "chapterSlug": "introduction-bddr",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque méthode de conception à sa description.",
+    "payload": {
+      "left": [
+        { "id": "td", "label": "Top-down" },
+        { "id": "bu", "label": "Bottom-up" }
+      ],
+      "right": [
+        { "id": "global", "label": "Schéma global d'abord, puis distribution vers schémas locaux par fragmentation" },
+        { "id": "local", "label": "Intégration de schémas locaux pré-existants dans un schéma global" }
+      ]
+    },
+    "solution": { "pairs": { "td": "global", "bu": "local" } },
+    "explanation": "Top-down = du global au local (conception neuve). Bottom-up = intégration de bases existantes (fusion).",
+    "concepts": ["top-down-design", "bottom-up-design"]
+  },
+  {
+    "chapterSlug": "fragmentation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "La fragmentation HORIZONTALE correspond à quel opérateur d'algèbre relationnelle ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Projection π" },
+      { "id": "b", "label": "Sélection σ" },
+      { "id": "c", "label": "Jointure ⋈" },
+      { "id": "d", "label": "Produit cartésien ×" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Horizontale = SÉLECTION (on garde un sous-ensemble de lignes). Verticale = PROJECTION (on garde un sous-ensemble de colonnes).",
+    "concepts": ["fragmentation-horizontale"]
+  },
+  {
+    "chapterSlug": "fragmentation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Comment reconstruit-on une relation fragmentée HORIZONTALEMENT ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Par jointure naturelle ⋈" },
+      { "id": "b", "label": "Par produit cartésien ×" },
+      { "id": "c", "label": "Par UNION ∪" },
+      { "id": "d", "label": "Par INTERSECTION ∩" }
+    ]},
+    "solution": { "correct": ["c"] },
+    "explanation": "Horizontale = sélection → reconstruction par UNION. Verticale = projection → reconstruction par jointure naturelle.",
+    "concepts": ["fragmentation-horizontale"]
+  },
+  {
+    "chapterSlug": "fragmentation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pour reconstruire une relation R fragmentée VERTICALEMENT, quelle condition essentielle doit respecter chaque fragment ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Contenir au moins une ligne" },
+      { "id": "b", "label": "Contenir une clé de R" },
+      { "id": "c", "label": "Avoir le même nombre d'attributs" },
+      { "id": "d", "label": "Être dans le même tablespace" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Chaque fragment vertical doit contenir une clé de R (typiquement la clé primaire) pour permettre la reconstruction par jointure naturelle.",
+    "concepts": ["fragmentation-verticale"]
+  },
+  {
+    "chapterSlug": "fragmentation",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "La fragmentation mixte combine d'abord une fragmentation verticale, puis une fragmentation horizontale sur chaque fragment vertical.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "C'est l'enchaînement classique : on coupe d'abord les colonnes (vertical) puis on coupe les lignes (horizontal).",
+    "concepts": ["fragmentation-mixte"]
+  },
+  {
+    "chapterSlug": "fragmentation",
+    "type": "RUBRIC_OPEN",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Une entreprise a 12 bureaux : 6 à Paris, 4 à Marseille, 2 à Lyon. 80% des requêtes dans une ville portent sur les employés de cette ville. 10% des requêtes consultent une table de taux. Proposez un découpage de la base sur les différents sites et justifiez vos choix.",
+    "payload": {
+      "rubric": [
+        { "id": "horiz", "description": "Propose fragmentation horizontale d'Employé par ville", "keywords": ["fragmentation horizontale", "horizontal", "ville", "filtré", "sélection"], "weight": 2 },
+        { "id": "replic-taux", "description": "Propose réplication de Taux sur chaque site", "keywords": ["réplication", "Taux", "copie", "répliquer", "replic"], "weight": 2 },
+        { "id": "sites", "description": "Mentionne les 3 sites P/M/L", "keywords": ["Paris", "Marseille", "Lyon", "trois sites"], "weight": 1 },
+        { "id": "optim", "description": "Justifie en terme d'optimisation des accès locaux", "keywords": ["local", "locaux", "80%", "performance", "réseau", "trafic"], "weight": 1 },
+        { "id": "alt", "description": "Mentionne une alternative si trop cher (fusion ou copie unique)", "keywords": ["fusionner", "fusion", "coût", "alternative"], "weight": 1 }
+      ],
+      "minWords": 80
+    },
+    "solution": { "modelAnswer": "Je crée 3 bases : P (Paris), M (Marseille), L (Lyon). Sur chaque base, je place un fragment HORIZONTAL de la table Employé filtré sur la ville (`WHERE loc = 'Paris'` sur P, etc.), ce qui optimise les 80% de requêtes locales. La table Taux est petite et utilisée dans toutes les villes (10% des requêtes) : je la réplique entièrement sur chaque site. Cette répartition réduit drastiquement le trafic réseau pour les requêtes les plus fréquentes. Si le coût est trop important (par exemple si Taux est volumineuse), on peut fusionner les deux plus petits sites (M et L) en une seule base, ou ne maintenir une copie de Taux que sur M et accepter quelques requêtes distantes." },
+    "explanation": "Bonne réponse : 3 sites, fragmentation horizontale d'Employé par ville, réplication de Taux. Alternative : fusion M+L ou unique copie de Taux.",
+    "concepts": ["fragmentation-horizontale", "replication"]
+  },
+  {
+    "chapterSlug": "database-link",
+    "type": "SQL_DDL",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Créez un database link nommé `db_toulouse` qui se connecte à l'utilisateur `user_dist` avec le mot de passe `pwd_dist` sur le service `XE`.",
+    "payload": {
+      "requiredElements": [
+        { "kind": "keyword", "keyword": "CREATE", "description": "CREATE" },
+        { "kind": "keyword", "keyword": "DATABASE", "description": "DATABASE" },
+        { "kind": "keyword", "keyword": "LINK", "description": "LINK" },
+        { "kind": "keyword", "keyword": "db_toulouse", "description": "Nom du lien" },
+        { "kind": "keyword", "keyword": "CONNECT", "description": "CONNECT" },
+        { "kind": "keyword", "keyword": "user_dist", "description": "Utilisateur distant" },
+        { "kind": "keyword", "keyword": "IDENTIFIED", "description": "IDENTIFIED" },
+        { "kind": "keyword", "keyword": "USING", "description": "USING" },
+        { "kind": "keyword", "keyword": "XE", "description": "Service XE" }
+      ]
+    },
+    "solution": { "ddl": "CREATE DATABASE LINK db_toulouse CONNECT TO user_dist IDENTIFIED BY pwd_dist USING 'XE';" },
+    "explanation": "Syntaxe : CREATE [PUBLIC] DATABASE LINK nom CONNECT TO user IDENTIFIED BY pwd USING 'service';",
+    "concepts": ["database-link"]
+  },
+  {
+    "chapterSlug": "database-link",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pour requêter la table `Client` sur la base distante connectée via le lien `db_lyon` :",
+    "payload": { "options": [
+      { "id": "a", "label": "SELECT * FROM Client db_lyon;" },
+      { "id": "b", "label": "SELECT * FROM Client@db_lyon;" },
+      { "id": "c", "label": "SELECT * FROM db_lyon.Client;" },
+      { "id": "d", "label": "SELECT db_lyon * FROM Client;" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Notation : table@lien (le @ sépare le nom de la table du nom du database link).",
+    "concepts": ["database-link"]
+  },
+  {
+    "chapterSlug": "database-link",
+    "type": "SQL_DDL",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Créez une vue `V_Clients_Global` qui reconstruit une fragmentation horizontale en faisant l'UNION de `Client@db_paris`, `Client@db_lyon` et `Client@db_marseille`.",
+    "payload": {
+      "requiredElements": [
+        { "kind": "keyword", "keyword": "CREATE", "description": "CREATE" },
+        { "kind": "keyword", "keyword": "VIEW", "description": "VIEW" },
+        { "kind": "keyword", "keyword": "V_Clients_Global", "description": "Nom de la vue" },
+        { "kind": "keyword", "keyword": "UNION", "description": "UNION (×2 minimum)" },
+        { "kind": "keyword", "keyword": "db_paris", "description": "Lien db_paris" },
+        { "kind": "keyword", "keyword": "db_lyon", "description": "Lien db_lyon" },
+        { "kind": "keyword", "keyword": "db_marseille", "description": "Lien db_marseille" }
+      ]
+    },
+    "solution": { "ddl": "CREATE VIEW V_Clients_Global AS SELECT * FROM Client@db_paris UNION SELECT * FROM Client@db_lyon UNION SELECT * FROM Client@db_marseille;" },
+    "explanation": "Reconstruction par UNION des fragments horizontaux distants accessibles via leurs liens respectifs.",
+    "concepts": ["fragmentation-horizontale", "database-link"]
+  },
+  {
+    "chapterSlug": "replication",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la principale différence entre cohérence forte (synchrone) et faible (asynchrone) ?",
+    "payload": { "options": [
+      { "id": "a", "label": "La cohérence forte est plus rapide" },
+      { "id": "b", "label": "La cohérence forte garantit que toutes les copies sont identiques à tout instant ; la faible accepte une divergence temporaire" },
+      { "id": "c", "label": "La cohérence faible utilise des verrous, pas la forte" },
+      { "id": "d", "label": "Aucune différence pratique" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Forte (synchrone) = toutes les copies identiques en permanence (au prix de la performance). Faible (eventual consistency) = divergence temporaire tolérée, convergence à terme.",
+    "concepts": ["replication"]
+  },
+  {
+    "chapterSlug": "replication",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Une vue matérialisée Oracle peut servir de mécanisme de réplication asynchrone.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "C'est même un cas d'usage très classique : CREATE MATERIALIZED VIEW MV ... REFRESH FAST ON COMMIT AS SELECT * FROM table@lien_distant;",
+    "concepts": ["replication", "vue-materialisee"]
+  }
+]

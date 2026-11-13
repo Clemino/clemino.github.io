@@ -1,0 +1,185 @@
+---
+title: "Fonction sigmoïde et frontière de décision"
+slug: sigmoide-frontiere
+order: 2
+estimatedReadMin: 17
+concepts: [fonction-logit, fonction-sigmoide, regression-logistique, frontiere-de-decision, classification, prediction]
+source: "ING2_GI_IA_RegLog_Slides.pdf"
+---
+
+## La fonction LOGIT
+
+La section précédente a conclu que le modèle de `p(x)` doit être une **fonction
+sigmoïde** obtenue par une **fonction de transfert**. Cette fonction de transfert
+est le **LOGIT inverse** ; pour la comprendre, le cours commence par définir la
+fonction **LOGIT** elle-même.
+
+Le **LOGIT** est une fonction qui va de l'intervalle `]0,1[` vers l'ensemble des
+réels `ℝ`. Le cours l'écrit ainsi :
+
+> **Fonction LOGIT.** `LOGIT : ]0,1[ → ℝ`
+>
+> `p(x) → ln( p(x) / (1 − p(x)) )`
+
+Le LOGIT prend donc une **probabilité** `p(x)` — un nombre dans `]0,1[` — et lui
+associe le **logarithme** du rapport `p(x) / (1 − p(x))`. Ce rapport oppose la
+probabilité de la classe positive à celle de la classe négative ; son logarithme
+est un **nombre réel quelconque**, négatif, nul ou positif.
+
+Examinons le **comportement** de cette fonction.
+
+- Quand `p(x)` est **proche de `0`**, le rapport `p(x)/(1−p(x))` tend vers `0` et
+  son logarithme tend vers `−∞` : le LOGIT prend des valeurs **très négatives**.
+- Quand `p(x)` vaut **`0,5`**, le rapport vaut `1` et son logarithme vaut `0` :
+  le LOGIT **s'annule**.
+- Quand `p(x)` est **proche de `1`**, le rapport tend vers `+∞` et son logarithme
+  aussi : le LOGIT prend des valeurs **très positives**.
+
+Le LOGIT **étire** ainsi l'intervalle borné `]0,1[` sur **toute la droite
+réelle** `ℝ`. C'est exactement la grandeur dont la régression linéaire a besoin :
+une régression linéaire produit un réel quelconque, et le LOGIT d'une probabilité
+**est** un réel quelconque.
+
+> **À retenir** : la fonction **LOGIT**, `LOGIT(p) = ln( p / (1 − p) )`, va de
+> `]0,1[` vers `ℝ`. Elle **étire** une probabilité bornée sur **toute la droite
+> réelle** : `−∞` vers `p = 0`, `0` en `p = 0,5`, `+∞` vers `p = 1`.
+
+## La fonction de transfert LOGIT inverse — la sigmoïde
+
+Pour modéliser `p(x)`, on a besoin du chemin **inverse** : partir d'un réel
+quelconque (la sortie de la régression linéaire) et en revenir à une probabilité
+de `]0,1[`. C'est le rôle du **LOGIT inverse**, la **fonction de transfert** de
+la régression logistique. Le cours l'écrit :
+
+> **Fonction LOGIT inverse.** `LOGIT⁻¹ : ℝ → ]0,1[`
+>
+> `z → exp(z) / (1 + exp(z))`
+
+Cette fonction prend un **réel quelconque** `z` et le ramène dans `]0,1[`. C'est
+la fameuse **fonction sigmoïde** — sa courbe a la forme d'un **S** : elle vaut
+presque `0` pour les `z` très négatifs, presque `1` pour les `z` très positifs,
+et passe par `0,5` en `z = 0`, avec une **transition douce** au milieu.
+
+Le LOGIT inverse admet une **seconde écriture**, obtenue en divisant numérateur
+et dénominateur par `exp(z)` :
+
+`exp(z) / (1 + exp(z)) = 1 / (1 + exp(−z))`
+
+Les **deux formes** sont strictement équivalentes :
+
+| Forme | Expression |
+| --- | --- |
+| Avec `exp(z)` au numérateur | `LOGIT⁻¹(z) = exp(z) / (1 + exp(z))` |
+| Sous forme `1 / (1 + exp(−z))` | `LOGIT⁻¹(z) = 1 / (1 + exp(−z))` |
+
+Le LOGIT et le LOGIT inverse sont, comme leur nom l'indique, **inverses l'une de
+l'autre** : le LOGIT transforme une probabilité de `]0,1[` en un réel de `ℝ` ; le
+LOGIT inverse fait le **chemin retour**, de `ℝ` vers `]0,1[`. C'est ce
+**va-et-vient** qui articule toute la régression logistique.
+
+> **À retenir** : la **fonction de transfert** est le **LOGIT inverse**,
+> `LOGIT⁻¹(z) = exp(z)/(1+exp(z)) = 1/(1+exp(−z))`, de `ℝ` vers `]0,1[`. C'est la
+> **fonction sigmoïde** — courbe en **S** — qui ramène un réel quelconque dans
+> `]0,1[`. Elle est l'**inverse** de la fonction LOGIT.
+
+## Le modèle de la régression logistique
+
+Ces deux fonctions permettent enfin d'**écrire le modèle**. L'idée de la
+régression logistique est de **ne pas** modéliser `p(x)` directement par une
+régression linéaire — on a vu que cela échoue —, mais de modéliser son **LOGIT**
+par une régression linéaire. Le cours écrit, **la modélisation de `p(x)`
+devient** :
+
+`logit( p(x) ) = a₀ + a₁x`
+
+Le membre de gauche, `logit(p(x))`, est un **réel quelconque** (le LOGIT prend
+ses valeurs dans `ℝ`) ; le membre de droite, `a₀ + a₁x`, est lui aussi un **réel
+quelconque**. Les **deux côtés vivent dans `ℝ`** : l'égalité est cette fois
+**cohérente**, là où `p(x) = a₀ + a₁x` opposait une probabilité bornée à une
+droite non bornée.
+
+Pour **revenir à `p(x)`**, il suffit d'appliquer le **LOGIT inverse** aux deux
+membres. On obtient l'expression explicite de la probabilité :
+
+`p(x) = exp(a₀ + a₁x) / (1 + exp(a₀ + a₁x)) = 1 / (1 + exp(−a₀ − a₁x))`
+
+Cette `p(x)` est, par construction, **toujours dans `]0,1[`** : c'est une
+**sigmoïde** de la variable `x`. L'exigence de la section 1 — un modèle en S
+confiné dans `[0,1]` — est satisfaite.
+
+Le tableau ci-dessous résume les deux écritures équivalentes du modèle.
+
+| Écriture | Formule | Domaine |
+| --- | --- | --- |
+| Sur le **LOGIT** | `logit(p(x)) = a₀ + a₁x` | `ℝ` |
+| Sur **`p(x)`** | `p(x) = exp(a₀+a₁x)/(1+exp(a₀+a₁x)) = 1/(1+exp(−a₀−a₁x))` | `]0,1[` |
+
+Il faut bien retenir la **logique** du modèle : la **régression linéaire**
+`a₀ + a₁x` n'agit **pas** sur `p(x)` directement, mais sur son **LOGIT**. La
+probabilité `p(x)` s'obtient ensuite en **composant** cette partie linéaire avec
+la **fonction de transfert** sigmoïde.
+
+> **À retenir** : la régression logistique modélise le **LOGIT** de `p(x)` par
+> une régression linéaire : `logit(p(x)) = a₀ + a₁x` — égalité **cohérente**, les
+> deux membres étant dans `ℝ`. En appliquant le **LOGIT inverse**, on obtient
+> `p(x) = 1/(1+exp(−a₀−a₁x))`, une **sigmoïde** toujours dans `]0,1[`.
+
+## La frontière de décision
+
+Une fois le modèle `p(x)` connu, la **classification** est immédiate. Le cours
+le souligne : **comme pour toute méthode supervisée de classification, une fois
+`p(x) = P(Y = 1 | X = x)` connu, il est simple de prédire la classe `Ŷ` d'un
+nouvel individu dont on connaît `x`**.
+
+La règle de décision est la suivante :
+
+> **Frontière de décision.** Si `p(x) > 0,5` on dira que `Ŷ = 1` ; si
+> `p(x) < 0,5` on dira que `Ŷ = 0`.
+
+On calcule la probabilité `p(x)` pour l'individu, puis on la **compare au seuil
+`0,5`** : au-dessus, on prédit la **classe positive** (`Ŷ = 1`) ; en dessous, la
+**classe négative** (`Ŷ = 0`). La valeur `0,5` est la **frontière** qui sépare
+les deux décisions.
+
+Le cours ajoute une remarque importante sur la **fiabilité** de la prédiction :
+**plus `p(x)` est éloigné de `0,5`, plus la décision est confortable**.
+
+- Une probabilité `p(x)` **proche de `1`** (ou de `0`) signale une instance dont
+  la classe est **nette** : le modèle est très sûr de lui.
+- Une probabilité `p(x)` **proche de `0,5`** signale une instance **incertaine**,
+  tout près de la frontière : la décision est **fragile**, un faible changement
+  de `x` la ferait basculer.
+
+| Valeur de `p(x)` | Classe prédite `Ŷ` | Décision |
+| --- | --- | --- |
+| `p(x) > 0,5` | `Ŷ = 1` (classe positive) | D'autant plus **confortable** que `p(x)` est proche de `1` |
+| `p(x) < 0,5` | `Ŷ = 0` (classe négative) | D'autant plus **confortable** que `p(x)` est proche de `0` |
+| `p(x) ≈ 0,5` | Cas limite | Décision **incertaine** (instance proche de la frontière) |
+
+Ainsi, le modèle ne fournit pas seulement une **classe** : il fournit une
+**probabilité**, qui renseigne en plus sur la **confiance** à accorder à la
+prédiction. C'est l'un des intérêts de la méthode.
+
+> **À retenir** : prédire la classe d'un individu, c'est **comparer `p(x)` au
+> seuil `0,5`** : `Ŷ = 1` si `p(x) > 0,5`, `Ŷ = 0` si `p(x) < 0,5`. Plus `p(x)`
+> est **éloigné de `0,5`**, plus la **décision est confortable** ; proche de
+> `0,5`, la décision est **incertaine**.
+
+## Synthèse de la section
+
+La régression logistique repose sur deux fonctions inverses l'une de l'autre. La
+fonction **LOGIT**, `LOGIT(p) = ln(p/(1−p))`, va de `]0,1[` vers `ℝ` : elle
+**étire** une probabilité sur toute la droite réelle. La fonction **LOGIT
+inverse**, `LOGIT⁻¹(z) = exp(z)/(1+exp(z)) = 1/(1+exp(−z))`, va de `ℝ` vers
+`]0,1[` : c'est la **fonction sigmoïde**, en S, employée comme **fonction de
+transfert**. Le modèle s'écrit alors en modélisant le **LOGIT** de `p(x)` par une
+régression linéaire, `logit(p(x)) = a₀ + a₁x` — égalité **cohérente** dans `ℝ` —,
+d'où `p(x) = 1/(1+exp(−a₀−a₁x))`, une **sigmoïde** toujours dans `]0,1[`. La
+**classification** se fait enfin par une **frontière de décision** : on compare
+`p(x)` au seuil `0,5` — `Ŷ = 1` si `p(x) > 0,5`, `Ŷ = 0` sinon — et la décision
+est **d'autant plus confortable** que `p(x)` est **éloigné de `0,5`**.
+
+> **À retenir** : **LOGIT** (`]0,1[ → ℝ`) et **LOGIT inverse** (`ℝ → ]0,1[`, la
+> **sigmoïde**) sont inverses. Le modèle est `logit(p(x)) = a₀ + a₁x`, soit
+> `p(x) = 1/(1+exp(−a₀−a₁x))`. La **frontière de décision** au seuil `0,5` donne
+> la classe `Ŷ`.

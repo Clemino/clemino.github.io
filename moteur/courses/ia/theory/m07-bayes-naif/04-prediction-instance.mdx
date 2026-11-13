@@ -1,0 +1,256 @@
+---
+title: "Prédiction d'une nouvelle instance"
+slug: prediction-instance
+order: 4
+estimatedReadMin: 20
+concepts: [prediction-bayesienne, probabilite-a-posteriori, classifieur-bayesien-naif, theoreme-des-probabilites-totales, variable-numerique-bayes, prediction]
+source: "Slides_Bayes.pdf"
+---
+
+## De la probabilité a posteriori à la classe prédite
+
+Les sections précédentes ont permis de calculer, pour une instance `d` et
+chaque classe `Cⱼ`, la probabilité a posteriori `Pr(Cⱼ / d)`. Reste l'étape
+finale : **prédire** la classe de `d` — affecter `d` à **une** classe.
+
+Le cours rappelle d'abord la formule complète, qui combine les trois quantités
+estimées :
+
+`Pr(Cⱼ / d) = Pr(d / Cⱼ) · Pr(Cⱼ) / Pr(d)`
+
+La règle de décision est alors naturelle : on retient **la classe la plus
+probable** pour l'instance `d`. Le cours l'écrit avec l'opérateur `arg Max` —
+qui désigne **l'argument (ici la classe) réalisant le maximum** d'une
+quantité :
+
+`C = arg Max (Pr(Cⱼ / d))`
+
+Autrement dit, **`C` est la classe `Cⱼ` qui maximise la probabilité a posteriori
+`Pr(Cⱼ / d)`**. On calcule `Pr(Cⱼ / d)` pour les `m` classes, et l'on
+**conserve celle dont la probabilité est la plus grande** : c'est la classe
+prédite.
+
+> **À retenir** : prédire la classe de `d`, c'est choisir **la classe la plus
+> probable** : `C = arg Max (Pr(Cⱼ/d))` — la classe `Cⱼ` qui **maximise** la
+> probabilité a posteriori.
+
+## Ignorer le dénominateur `Pr(d)`
+
+Le cours fait alors une remarque qui **simplifie considérablement** le calcul de
+la prédiction. Elle se formule ainsi :
+
+> Si nous **n'avons besoin que de la classe la plus probable** pour l'instance
+> `d`, nous calculerons :
+>
+> `C = arg Max (Pr(Cⱼ) · Pr(d / Cⱼ))`
+
+Le dénominateur `Pr(d)` a **disparu**. Pourquoi peut-on l'**ignorer** ?
+
+L'argument est simple. Dans `Pr(Cⱼ / d) = Pr(d / Cⱼ) · Pr(Cⱼ) / Pr(d)`, le
+terme `Pr(d)` **ne dépend pas de la classe `Cⱼ`** : c'est la **même valeur pour
+toutes les classes**. Diviser toutes les quantités à comparer par un même nombre
+positif **ne change pas laquelle est la plus grande** — l'ordre est préservé.
+Or, pour **prédire**, on ne cherche pas la **valeur** de la probabilité, mais
+seulement **quelle classe l'emporte**. On peut donc **omettre le diviseur
+commun** `Pr(d)`.
+
+Il faut bien mesurer la portée — et les limites — de cette simplification.
+
+- Pour **prédire la classe** (le `arg Max`), `Pr(d)` est **inutile** : il
+  suffit de comparer les produits `Pr(Cⱼ) · Pr(d / Cⱼ)`. On évite ainsi le
+  calcul du théorème des probabilités totales.
+- Si l'on veut la **valeur exacte** de la probabilité `Pr(Cⱼ / d)` — par
+  exemple pour **mesurer la fiabilité** de la prédiction —, alors `Pr(d)` est
+  **nécessaire** : il faut bien diviser par lui pour obtenir une probabilité
+  comprise entre `0` et `1`.
+
+| Objectif | Formule | `Pr(d)` |
+| --- | --- | --- |
+| **Prédire** la classe | `C = arg Max (Pr(Cⱼ)·Pr(d/Cⱼ))` | **Inutile** (diviseur commun) |
+| Obtenir la **probabilité** `Pr(Cⱼ/d)` | `Pr(d/Cⱼ)·Pr(Cⱼ) / Pr(d)` | **Nécessaire** |
+
+En développant `Pr(d / Cⱼ)` par l'hypothèse d'indépendance, la règle de
+prédiction prend sa forme la plus opérationnelle :
+
+`C = arg Max ( Pr(Cⱼ) · Πᵢ Pr(Aᵢ = aᵢ / Cⱼ) )`
+
+— pour chaque classe, on multiplie sa probabilité a priori par le produit des
+probabilités conditionnelles de toutes les valeurs d'attributs de `d`, et l'on
+retient la classe au plus grand résultat.
+
+> **À retenir** : pour **prédire**, on peut **ignorer `Pr(d)`** — c'est un
+> **diviseur commun** à toutes les classes, sans effet sur le `arg Max` :
+> `C = arg Max (Pr(Cⱼ)·Pr(d/Cⱼ))`. `Pr(d)` ne redevient nécessaire que pour
+> obtenir la **valeur** exacte de `Pr(Cⱼ/d)`.
+
+## L'exemple du cours : l'ensemble d'apprentissage
+
+Le cours illustre toute la démarche sur un exemple complet. L'ensemble
+d'apprentissage `D` est le suivant — deux attributs `A` et `B`, une classe `C` :
+
+| A | B | C |
+| --- | --- | --- |
+| m | b | t |
+| m | s | t |
+| g | q | t |
+| h | s | t |
+| g | q | t |
+| g | q | f |
+| g | s | f |
+| h | b | f |
+| h | q | f |
+| m | b | f |
+
+Le cours décrit ce jeu de données.
+
+- Il y a **deux classes** : `t` (pour *true*) et `f` (pour *false*).
+- L'attribut `A` peut prendre **trois valeurs** : `m`, `g` et `h`.
+- L'attribut `B` peut prendre **trois valeurs** : `b`, `s` et `q`.
+
+> **À retenir** : l'exemple du cours porte sur `10` exemples, **deux attributs**
+> `A` (valeurs `m`, `g`, `h`) et `B` (valeurs `b`, `s`, `q`), et **deux
+> classes** `t` et `f`.
+
+## Calcul des probabilités a priori et conditionnelles
+
+**Probabilités a priori.** On compte les classes dans `D` : `5` exemples de
+classe `t`, `5` de classe `f`, sur `10` au total. D'où, par estimation de
+fréquence :
+
+`Pr(t) = 5/10 = 0,5` &nbsp;&nbsp;et&nbsp;&nbsp; `Pr(f) = 5/10 = 0,5`
+
+**Probabilités conditionnelles.** Le cours fournit ensuite **deux tableaux**
+donnant les probabilités conditionnelles `Pr(Aᵢ = aᵢ / Cⱼ)` — la proportion,
+parmi les exemples d'une classe, de ceux qui portent chaque valeur.
+
+Probabilités conditionnelles de l'attribut `A` :
+
+| `Pr(A = · / C)` | `t` | `f` |
+| --- | --- | --- |
+| `A = m` | `2/5` | `1/5` |
+| `A = g` | `2/5` | `2/5` |
+| `A = h` | `1/5` | `2/5` |
+
+Probabilités conditionnelles de l'attribut `B` :
+
+| `Pr(B = · / C)` | `t` | `f` |
+| --- | --- | --- |
+| `B = b` | `1/5` | `2/5` |
+| `B = s` | `2/5` | `1/5` |
+| `B = q` | `2/5` | `2/5` |
+
+Chaque dénominateur est `5` — le nombre d'exemples de la classe considérée — et
+chaque numérateur compte, parmi ces `5` exemples, ceux qui présentent la valeur
+voulue. On vérifie par exemple `Pr(A = m / t) = 2/5` : parmi les `5` exemples de
+classe `t`, **deux** ont `A = m`.
+
+> **À retenir** : sur l'exemple, `Pr(t) = Pr(f) = 0,5`, et **deux tableaux**
+> donnent les `Pr(A = · / C)` et `Pr(B = · / C)` — chacune estimée par une
+> **proportion parmi les `5` exemples** de la classe.
+
+## Classer une nouvelle instance
+
+Le cours considère enfin une **nouvelle instance `d`** à classer, définie par :
+
+`A = m` &nbsp;et&nbsp; `B = q`
+
+Il s'agit de **calculer les probabilités** que cet exemple appartienne à `t` et
+à `f`. En appliquant la formule de Bayes avec l'hypothèse d'indépendance — qui
+factorise `Pr(d / C)` en `Pr(A = m / C) · Pr(B = q / C)` — le cours écrit :
+
+`Pr(C = t / d) = Pr(C = t) · Pr(A = m / C = t) · Pr(B = q / C = t) / Pr(d)`
+
+`Pr(C = f / d) = Pr(C = f) · Pr(A = m / C = f) · Pr(B = q / C = f) / Pr(d)`
+
+On lit les facteurs dans les tableaux ci-dessus. Pour la classe `t` :
+`Pr(C = t) = 0,5`, `Pr(A = m / t) = 2/5`, `Pr(B = q / t) = 2/5`. Pour la classe
+`f` : `Pr(C = f) = 0,5`, `Pr(A = m / f) = 1/5`, `Pr(B = q / f) = 2/5`.
+
+D'après la règle de prédiction, le dénominateur `Pr(d)` étant **commun**, il
+suffit de **comparer les numérateurs** `Pr(C) · Pr(A = m / C) · Pr(B = q / C)` :
+
+| Classe | `Pr(C)` | `Pr(A = m / C)` | `Pr(B = q / C)` | Produit `Pr(C)·Pr(A=m/C)·Pr(B=q/C)` |
+| --- | --- | --- | --- | --- |
+| `t` | `0,5` | `2/5` | `2/5` | `0,5 · 0,4 · 0,4 = 0,08` |
+| `f` | `0,5` | `1/5` | `2/5` | `0,5 · 0,2 · 0,4 = 0,04` |
+
+Le produit est **plus grand pour la classe `t`** (`0,08` contre `0,04`). Par la
+règle `C = arg Max (Pr(Cⱼ) · Pr(d / Cⱼ))`, le classifieur **prédit la classe
+`t`** pour l'instance `d`.
+
+> **À retenir** : pour l'instance `d = (A = m, B = q)`, on **compare les
+> produits** `Pr(C)·Pr(A=m/C)·Pr(B=q/C)`. Le produit est plus élevé pour `t`
+> que pour `f` : le classifieur **prédit `t`**.
+
+## Cas des variables numériques
+
+Tout ce qui précède suppose, comme le note le cours, que **la formule de Bayes
+utilisée traite des variables indépendantes (les attributs) qui sont
+catégorielles, c'est-à-dire discrètes** — l'attribut prend un nombre **fini** de
+valeurs, et l'on peut **compter** les exemples portant chaque valeur.
+
+Mais « dans certains problèmes, **tout ou partie des variables indépendantes
+sont numériques, c'est-à-dire continues** ». Une variable continue peut prendre
+une **infinité** de valeurs : compter les exemples qui valent **exactement** `aᵢ`
+n'a plus de sens — l'estimation par fréquence des sections précédentes ne
+s'applique plus telle quelle. Le cours indique comment adapter le classifieur.
+
+> **Cas continu.** Pour une variable numérique `Aᵢ`, la probabilité
+> `Pr(Aᵢ = aᵢ / C)` est **remplacée par la valeur `f_{Aᵢ|C}(x)`**, où
+> `f_{Aᵢ|C}` est la **densité conditionnelle** de la variable `Aᵢ` étant donné
+> `C`.
+
+On ne calcule donc plus une **probabilité** (un comptage), mais on évalue une
+**densité de probabilité** au point observé. Le produit de la vraisemblance
+`Pr(d / Cⱼ)` mélange alors, attribut par attribut, des probabilités (pour les
+attributs catégoriels) et des valeurs de densité (pour les attributs
+numériques).
+
+Pour rendre l'approche concrète, le cours précise quelle densité employer.
+
+- « On suppose **généralement que la variable (numérique) `Aᵢ` suit une
+  distribution normale** » — la loi de Gauss, la fameuse « courbe en cloche ».
+- « Lorsque c'est nécessaire, **la moyenne et l'écart type sont estimés avec les
+  exemples** (éléments de l'ensemble d'apprentissage) **correspondant à `C`** ».
+
+Le mécanisme reste donc le même que dans le cas discret — **estimer une
+quantité à partir des seuls exemples de la classe** —, mais l'objet estimé
+change : au lieu d'une proportion, on estime les **paramètres** (moyenne et
+écart type) de la **loi normale** conditionnelle, et l'on s'en sert pour
+calculer la valeur de la densité `f_{Aᵢ|C}(x)`.
+
+| Type d'attribut | Ce qui entre dans `Pr(d / Cⱼ)` | Estimé sur les exemples de `Cⱼ` |
+| --- | --- | --- |
+| **Catégoriel** (discret) | La **probabilité** `Pr(Aᵢ = aᵢ / Cⱼ)` | Une **proportion** (comptage) |
+| **Numérique** (continu) | La **densité** `f_{Aᵢ\|Cⱼ}(x)` | **Moyenne** et **écart type** d'une loi **normale** |
+
+> ⚠️ Pour une variable **numérique**, on ne **compte** plus : `Pr(Aᵢ=aᵢ/C)` est
+> remplacée par la **densité conditionnelle** `f_{Aᵢ|C}(x)`, supposée
+> **normale**, dont la **moyenne** et l'**écart type** sont estimés sur les
+> exemples de la classe `C`.
+
+> **À retenir** : les attributs **catégoriels** entrent dans la vraisemblance
+> par une **probabilité** estimée par comptage ; les attributs **numériques** y
+> entrent par une **densité** — une **loi normale** dont moyenne et écart type
+> sont estimés sur les exemples de la classe.
+
+## Synthèse de la section
+
+Une fois les probabilités a posteriori calculées, **prédire** la classe d'une
+instance `d`, c'est appliquer la règle `C = arg Max (Pr(Cⱼ / d))` : retenir la
+**classe la plus probable**. Comme le dénominateur `Pr(d)` est un **diviseur
+commun** à toutes les classes, on peut l'**ignorer** pour la prédiction et se
+contenter de comparer les produits : `C = arg Max (Pr(Cⱼ) · Pr(d / Cⱼ))`, soit,
+développé, `C = arg Max (Pr(Cⱼ) · Πᵢ Pr(Aᵢ = aᵢ / Cⱼ))` ; `Pr(d)` ne reste
+nécessaire que pour la **valeur exacte** de la probabilité. L'exemple du cours
+— `10` exemples, attributs `A` et `B`, classes `t` et `f` — le met en œuvre :
+pour l'instance `d = (A = m, B = q)`, les produits valent `0,08` pour `t` et
+`0,04` pour `f`, d'où la prédiction **`t`**. Enfin, lorsque des attributs sont
+**numériques** (continus), la probabilité `Pr(Aᵢ = aᵢ / C)` est remplacée par
+une **densité conditionnelle** `f_{Aᵢ|C}(x)`, généralement **normale**, dont la
+**moyenne** et l'**écart type** sont estimés sur les exemples de la classe `C`.
+
+> **À retenir** : on **prédit** par `C = arg Max (Pr(Cⱼ)·Pr(d/Cⱼ))`, en
+> **ignorant `Pr(d)`**. Sur l'exemple du cours, `d = (m, q)` est classée **`t`**
+> (`0,08 > 0,04`). Pour les attributs **numériques**, la probabilité devient une
+> **densité normale** conditionnelle estimée sur les exemples de la classe.

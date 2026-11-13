@@ -1,0 +1,304 @@
+---
+title: "pipe() et fork() : communication parent/enfant"
+slug: pipe-fork
+order: 2
+estimatedReadMin: 18
+concepts: [pipe-primitive, descripteur-fichier, extremite-lecture, extremite-ecriture, pipe-fork, heritage-descripteurs, fermeture-extremites, tube-blocage, eof-tube, sigpipe-epipe, communication-bidirectionnelle]
+source: "Cours 3 — Les tubes"
+---
+
+Le chapitre précédent a défini le tube. Voici maintenant la **pratique** : comment **créer** un tube anonyme en C avec `pipe()`, comment le **partager** avec un processus fils grâce à `fork()`, et — point le plus délicat de tout le module — pourquoi **chaque processus doit fermer les extrémités du tube qu'il n'utilise pas**.
+
+## La primitive `pipe()`
+
+Un tube anonyme se crée avec l'appel système **`pipe()`**, déclaré dans **`<unistd.h>`** :
+
+```c
+#include <unistd.h>
+
+int pipe(int fd[2]);
+```
+
+`pipe()` reçoit en argument un **tableau de deux entiers** que la primitive va **remplir**. À son retour, le tableau contient les **deux descripteurs** des deux extrémités du tube nouvellement créé :
+
+- **`fd[0]`** — le descripteur en **lecture** (l'extrémité par laquelle on **lit** dans le tube) ;
+- **`fd[1]`** — le descripteur en **écriture** (l'extrémité par laquelle on **écrit** dans le tube).
+
+Un moyen mnémotechnique simple : **0 comme l'entrée standard** (`stdin`, on y *lit*), **1 comme la sortie standard** (`stdout`, on y *écrit*).
+
+La valeur de retour de `pipe()` est :
+
+- **`0`** en cas de **succès** ;
+- **`-1`** en cas d'**échec** (par exemple si la table des descripteurs du processus est pleine), et `errno` est positionné.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main(void) {
+    int fd[2];
+
+    if (pipe(fd) == -1) {       /* toujours tester l'echec */
+        perror("pipe");
+        exit(EXIT_FAILURE);
+    }
+    /* ici : fd[0] = lecture, fd[1] = ecriture, le tube existe */
+    return 0;
+}
+```
+
+À ce stade, le tube existe **dans le noyau**, et le processus possède ses **deux descripteurs**. Mais un tube utilisé par un **seul** processus ne sert à rien : il faut maintenant le **partager** avec un autre processus.
+
+## Le partage par héritage : `pipe()` puis `fork()`
+
+C'est ici qu'intervient le **lien de parenté** évoqué au chapitre 1. Le schéma est **toujours le même**, et il faut le connaître par cœur :
+
+1. **`pipe()`** — le père crée le tube. Il possède `fd[0]` et `fd[1]`.
+2. **`fork()`** — le père crée un fils.
+3. **héritage** — le fils, copie du père, **hérite** de tous ses descripteurs ouverts, **dont les deux extrémités du tube**.
+4. les **deux processus** partagent désormais le **même tube** : chacun a sa propre copie de `fd[0]` et `fd[1]`, mais ces descripteurs pointent vers le **même** objet tube dans le noyau.
+
+Le point capital est l'**ordre** : le `pipe()` doit précéder le `fork()`.
+
+> ⚠️ Le `pipe()` doit **impérativement** être appelé **avant** le `fork()`. `fork` ne copie que les descripteurs **déjà ouverts** au moment où il s'exécute. Un tube créé **après** le `fork` n'existerait que dans le processus qui l'a créé : l'autre n'en aurait **aucune connaissance**, et le tube ne relierait personne. C'est l'erreur la plus fréquente du débutant.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main(void) {
+    int fd[2];
+
+    if (pipe(fd) == -1) { perror("pipe"); exit(EXIT_FAILURE); }   /* 1. d'ABORD le tube */
+
+    pid_t pid = fork();                                           /* 2. PUIS le fork    */
+    if (pid == -1) { perror("fork"); exit(EXIT_FAILURE); }
+
+    if (pid == 0) {
+        /* --- le fils : possede sa copie de fd[0] et fd[1] --- */
+    } else {
+        /* --- le pere : possede sa copie de fd[0] et fd[1] --- */
+    }
+    return 0;
+}
+```
+
+Après ce code, le tube possède **quatre** descripteurs ouverts dessus : `fd[0]` et `fd[1]` côté père, `fd[0]` et `fd[1]` côté fils. C'est précisément ce surnombre qu'il va falloir corriger.
+
+## La règle d'or : fermer les extrémités inutiles
+
+On a posé un sens de communication : disons que le **père écrit** et que le **fils lit**. Que faut-il alors faire des **quatre** descripteurs ?
+
+- le père **écrit** : il a besoin de `fd[1]` ; il **n'utilise pas** `fd[0]` ;
+- le fils **lit** : il a besoin de `fd[0]` ; il **n'utilise pas** `fd[1]`.
+
+> **Règle d'or.** Chaque processus doit **fermer immédiatement** (`close`) les extrémités du tube qu'il **n'utilise pas**. Dans le sens « le père écrit, le fils lit » : le **père ferme `fd[0]`** (l'extrémité de lecture), le **fils ferme `fd[1]`** (l'extrémité d'écriture).
+
+Cette règle n'est **pas** une simple question de propreté. Elle est **indispensable** au bon fonctionnement du tube, pour **deux raisons** distinctes — la fin de fichier et `SIGPIPE` — que les sections suivantes détaillent.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main(void) {
+    int fd[2];
+    char buff[100];
+
+    if (pipe(fd) == -1) { perror("pipe"); exit(EXIT_FAILURE); }
+
+    pid_t pid = fork();
+    if (pid == -1) { perror("fork"); exit(EXIT_FAILURE); }
+
+    if (pid > 0) {                       /* ====== le pere ECRIT ====== */
+        close(fd[0]);                    /* il NE lit PAS : ferme la lecture   */
+        write(fd[1], "Salut", 5);
+        close(fd[1]);                    /* ecriture finie : ferme l'ecriture  */
+        wait(NULL);                      /* attend la fin du fils              */
+    } else {                             /* ====== le fils LIT ======== */
+        close(fd[1]);                    /* il N'ecrit PAS : ferme l'ecriture  */
+        ssize_t n = read(fd[0], buff, sizeof(buff) - 1);
+        if (n < 0) { perror("read"); exit(EXIT_FAILURE); }
+        buff[n] = '\0';                  /* termine la chaine lue              */
+        printf("Le fils a recu : %s\n", buff);
+        close(fd[0]);                    /* lecture finie : ferme la lecture   */
+        exit(EXIT_SUCCESS);
+    }
+    return 0;
+}
+```
+
+## Les primitives de lecture et d'écriture
+
+On lit et on écrit dans un tube avec les **mêmes primitives** que pour un fichier ordinaire — c'est tout l'intérêt de la notion de descripteur.
+
+### Écrire : `write`
+
+```c
+ssize_t write(int fd, const void *buf, size_t nb);
+```
+
+`write` dépose `nb` octets pris dans `buf` à l'extrémité d'écriture `fd` (qui doit être un `fd[1]`). Elle renvoie le **nombre d'octets réellement écrits**. Son comportement face à un tube :
+
+- si le tube **n'est pas plein**, les octets sont déposés et `write` revient ;
+- si le tube est **plein** et qu'il existe **au moins un lecteur**, `write` est **bloquante** : le processus est suspendu jusqu'à ce que le lecteur fasse de la place ;
+- si le tube **n'a plus aucun lecteur**, l'écriture **échoue** : c'est le cas `SIGPIPE` / `EPIPE` (section dédiée plus bas).
+
+### Lire : `read`
+
+```c
+ssize_t read(int fd, void *buf, size_t nb);
+```
+
+`read` extrait jusqu'à `nb` octets de l'extrémité de lecture `fd` (un `fd[0]`) et les range dans `buf`. Elle renvoie le **nombre d'octets réellement lus**. Sa sémantique, point par point :
+
+- si le tube **contient `taille` octets**, `read` en extrait `min(taille, nb)` : elle prend ce qui est **disponible**, sans attendre d'en avoir davantage ;
+- si le tube est **vide** mais qu'il existe **au moins un écrivain**, `read` est **bloquante** : le processus est endormi jusqu'à ce que des données arrivent ;
+- si le tube est **vide** et qu'il **n'y a plus aucun écrivain**, `read` renvoie **`0`** : c'est la **fin de fichier**.
+
+> ⚠️ Ne supposez **jamais** qu'un `read` rend exactement `nb` octets. Sur un tube, `read` rend ce qui est **disponible au moment de l'appel** : si l'écrivain a déposé 5 octets et qu'on demande `read(fd[0], buf, 100)`, on obtient **5**, pas 100. Il faut **toujours** exploiter la **valeur de retour** de `read`, et — si l'on attend un message complet — **boucler** sur `read` jusqu'à avoir tout reçu (ou jusqu'au retour `0`).
+
+## Le blocage : la synchronisation assurée par le noyau
+
+Récapitulons le **comportement par défaut** d'un tube anonyme — c'est un grand classique d'examen :
+
+| État du tube | `read` (lecture) | `write` (écriture) |
+|---|---|---|
+| **vide** | **bloquante** (s'il reste un écrivain) | — |
+| **non vide** | rend les octets **disponibles** (pas d'attente) | — |
+| **plein** | — | **bloquante** (s'il reste un lecteur) |
+| **non plein** | — | dépose les octets |
+
+Deux blocages, donc, symétriques :
+
+- **lecture bloquante sur tube vide** — le lecteur est plus rapide que l'écrivain ; le noyau l'**endort** jusqu'à ce que des données arrivent ;
+- **écriture bloquante sur tube plein** — l'écrivain est plus rapide que le lecteur, et le tube (de taille finie) sature ; le noyau **endort** l'écrivain jusqu'à ce que le lecteur libère de la place.
+
+C'est cette double règle qui réalise la **synchronisation automatique** : le programmeur écrit simplement `read` et `write`, et le noyau cadence les deux processus l'un sur l'autre. Aucune `attente` explicite n'est nécessaire pour réguler le flux.
+
+## La fin de fichier : pourquoi fermer `fd[1]` est vital
+
+Voici la **première raison** — la plus importante — de la règle d'or.
+
+Reprenons le `read` sur tube vide. On a dit : il **bloque tant qu'il reste un écrivain**, et il rend **`0`** (fin de fichier) **quand il n'y a plus d'écrivain**. La question décisive est : *quand le système considère-t-il qu'il « n'y a plus d'écrivain » ?*
+
+> Un `read` sur un tube vide renvoie **`0` (fin de fichier)** uniquement lorsque **TOUS les descripteurs en écriture** ouverts sur ce tube ont été **fermés**. Tant qu'**un seul** descripteur d'écriture reste ouvert — **n'importe où, dans n'importe quel processus** — le tube est considéré comme ayant **encore un écrivain potentiel**, et le `read` **continue de bloquer**.
+
+C'est exactement ici que la règle d'or devient **vitale**. Déroulons le scénario « le père écrit, le fils lit » **sans** la fermeture :
+
+- le **père** garde `fd[1]` ouvert (normal, il écrit dessus) ;
+- mais le **fils** a **lui aussi hérité** d'un `fd[1]`, et **ne l'a pas fermé**.
+
+Le père écrit son message, **ferme son `fd[1]`**, puis se termine. Le fils lit le message, puis refait un `read` pour détecter la fin. Or il existe **encore un `fd[1]` ouvert** : **le sien**. Du point de vue du noyau, « il reste un écrivain ». Le `read` du fils ne renverra **jamais `0`** : le fils **bloque indéfiniment**. Et comme le père l'attend par `wait`, **le programme entier se fige**.
+
+> ⚠️ **L'interblocage le plus classique des tubes.** Un lecteur qui **n'a pas fermé son propre descripteur d'écriture** `fd[1]` ne verra **jamais** la fin de fichier : son `read` bloquera pour toujours, parce que ce `fd[1]`-là compte comme « un écrivain encore présent ». Pour que la fin de fichier arrive, **tous** les `fd[1]` du tube — y compris celui, hérité et inutile, du processus lecteur — doivent être fermés. C'est la raison nº 1 de la **règle d'or**.
+
+Avec la fermeture correcte (le fils ferme **son** `fd[1]` dès le début), le seul `fd[1]` restant est celui du père ; quand le père le ferme à son tour, il **n'existe plus aucun** descripteur d'écriture, et le `read` du fils renvoie enfin **`0`**.
+
+## `SIGPIPE` et `EPIPE` : pourquoi fermer `fd[0]` compte aussi
+
+Voici la **seconde raison** de la règle d'or — le cas **symétrique**, du côté de l'écrivain.
+
+> Lorsqu'un processus tente d'**écrire** dans un tube dont **tous les descripteurs en lecture sont fermés**, l'opération échoue : le système envoie le signal **`SIGPIPE`** au processus écrivain. Si ce signal n'est pas intercepté, son action par défaut **termine** le processus (le shell affiche alors le message *« Broken pipe »*). Si `SIGPIPE` est ignoré ou intercepté, le `write` revient avec **`-1`** et `errno` vaut **`EPIPE`**.
+
+L'idée est logique : écrire dans un tube que **personne** ne lira jamais n'a **aucun sens** ; le tube est devenu **inutilisable** dans ce sens. Plutôt que d'accumuler des octets que nul ne consommera, le système **interrompt** l'écrivain.
+
+Le nombre de lecteurs d'un tube est, là encore, le **nombre de descripteurs en lecture** (`fd[0]`) ouverts dessus. Tant qu'il en reste **un**, l'écriture reste possible (quitte à bloquer si le tube est plein). Dès qu'il **n'en reste aucun**, c'est `SIGPIPE`.
+
+C'est pourquoi l'écrivain a tout intérêt à ce que les `fd[0]` inutiles soient fermés au plus tôt — et pourquoi le **père écrivain doit fermer son propre `fd[0]`**. Le couple `SIGPIPE`/`EPIPE` ne se déclenche que si **tous** les lecteurs ont disparu ; un `fd[0]` traînant fausserait ce compte, exactement comme un `fd[1]` traînant fausse la fin de fichier.
+
+On retrouve ici le signal **`SIGPIPE`** (numéro 13) du Module 2 : son action par défaut est bien la **terminaison** du processus.
+
+## La symétrie des deux cas
+
+Les deux raisons de la règle d'or sont parfaitement **symétriques**. On peut les résumer ainsi :
+
+| Côté | Compte qui importe | Quand le compte tombe à zéro… |
+|---|---|---|
+| **Lecteur** | nombre de descripteurs en **écriture** (`fd[1]`) | le `read` voit la **fin de fichier** (renvoie `0`) |
+| **Écrivain** | nombre de descripteurs en **lecture** (`fd[0]`) | le `write` reçoit **`SIGPIPE`** / `EPIPE` |
+
+D'où la formulation complète et définitive de la règle :
+
+> **Tout processus ferme, dès que possible, les deux extrémités du tube dont il n'a pas l'usage.** L'écrivain ferme l'extrémité de lecture (`fd[0]`) ; le lecteur ferme l'extrémité d'écriture (`fd[1]`). Sans cela, ni la fin de fichier ni `SIGPIPE` ne peuvent fonctionner correctement, et le programme s'expose à un **interblocage**.
+
+## La communication bidirectionnelle : deux tubes
+
+Que faire si l'on veut un **dialogue** — le père envoie une question, le fils renvoie une réponse ?
+
+On pourrait être tenté d'utiliser **un seul** tube dans les deux sens. C'est un **piège**, déjà annoncé au chapitre 1. Comme la lecture est destructrice et le tube partagé, deux situations se produisent :
+
+- le père écrit, le père relit **avant** le fils → le père **lit sa propre question** au lieu de la réponse ;
+- le père écrit, le fils écrit, le fils relit → le fils **lit ce qu'il a lui-même écrit**.
+
+Le comportement devient **non maîtrisable**.
+
+> ⚠️ Un **seul** tube ne peut pas servir **fiablement** dans les deux sens : un processus risque de **relire sa propre écriture** au lieu du message de l'autre. La communication **bidirectionnelle** exige **deux tubes distincts**, **un par sens** : un tube « père → fils » et un tube « fils → père ». Chacun est alors **unidirectionnel**, donc parfaitement prévisible.
+
+Le schéma à deux tubes (modèle **question/réponse**), avec fermeture des extrémités inutiles dans chaque processus :
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main(void) {
+    int versFils[2];     /* tube 1 : le pere ecrit, le fils lit */
+    int versPere[2];     /* tube 2 : le fils ecrit, le pere lit */
+    char buff[100];
+
+    if (pipe(versFils) == -1 || pipe(versPere) == -1) {
+        perror("pipe"); exit(EXIT_FAILURE);
+    }
+
+    pid_t pid = fork();
+    if (pid == -1) { perror("fork"); exit(EXIT_FAILURE); }
+
+    if (pid > 0) {                          /* ============ le PERE ============ */
+        close(versFils[0]);                 /* le pere n'y lit pas               */
+        close(versPere[1]);                 /* le pere n'y ecrit pas             */
+
+        write(versFils[1], "question", 8);  /* envoie la question                */
+        ssize_t n = read(versPere[0], buff, sizeof(buff) - 1);  /* lit la reponse */
+        if (n < 0) { perror("read"); exit(EXIT_FAILURE); }
+        buff[n] = '\0';
+        printf("Le pere a recu la reponse : %s\n", buff);
+
+        close(versFils[1]);
+        close(versPere[0]);
+        wait(NULL);
+    } else {                                /* ============ le FILS ============ */
+        close(versFils[1]);                 /* le fils n'y ecrit pas             */
+        close(versPere[0]);                 /* le fils n'y lit pas               */
+
+        ssize_t n = read(versFils[0], buff, sizeof(buff) - 1);  /* lit la question */
+        if (n < 0) { perror("read"); exit(EXIT_FAILURE); }
+        buff[n] = '\0';
+        printf("Le fils a recu la question : %s\n", buff);
+        write(versPere[1], "reponse", 7);   /* renvoie la reponse                */
+
+        close(versFils[0]);
+        close(versPere[1]);
+        exit(EXIT_SUCCESS);
+    }
+    return 0;
+}
+```
+
+Chaque tube est utilisé **dans un seul sens** ; dans chaque processus, on a **fermé une extrémité par tube** (celle qui ne sert pas). Le comportement est alors **déterministe** : le père reçoit bien la réponse du fils, jamais sa propre question.
+
+> **À retenir**
+> - **`pipe(int fd[2])`** (dans `<unistd.h>`) crée un tube anonyme et remplit le tableau : **`fd[0]`** = extrémité de **lecture**, **`fd[1]`** = extrémité d'**écriture**. Retour `0` si succès, `-1` si échec.
+> - Le schéma standard est **`pipe()` PUIS `fork()`** : le fils **hérite** des descripteurs du tube. Le `pipe` **doit** précéder le `fork`, sinon le tube ne relie personne.
+> - **Règle d'or** : chaque processus **ferme** les extrémités du tube qu'il n'utilise pas. Sens « père écrit, fils lit » → le **père ferme `fd[0]`**, le **fils ferme `fd[1]`**.
+> - **Blocage** : `read` bloque sur tube **vide** (tant qu'il reste un écrivain) ; `write` bloque sur tube **plein** (tant qu'il reste un lecteur). C'est la synchronisation assurée par le noyau.
+> - **Fin de fichier** : `read` ne renvoie **`0`** que lorsque **tous** les descripteurs d'**écriture** sont fermés. Un `fd[1]` oublié par le lecteur fait **bloquer son `read` indéfiniment**.
+> - **`SIGPIPE` / `EPIPE`** : écrire dans un tube dont **tous** les descripteurs de **lecture** sont fermés déclenche **`SIGPIPE`** (terminaison par défaut, *« Broken pipe »*) ; si le signal est ignoré, `write` renvoie `-1` avec `errno == EPIPE`.
+> - Un `read` rend les octets **disponibles**, pas forcément `nb` : toujours exploiter sa **valeur de retour**.
+> - La communication **bidirectionnelle** exige **deux tubes**, un par sens — un seul tube ferait relire à un processus sa propre écriture.

@@ -1,0 +1,197 @@
+---
+title: Propagation et sélection du catch
+slug: propagation
+order: 2
+estimatedReadMin: 11
+concepts: [selection-catch-par-type, propagation-pile, deroulement-pile, relancer-exception, catch-tous]
+source: "Cours 6 — Gestion des exceptions"
+---
+
+## Le `catch` est choisi par le TYPE de l'exception
+
+Une exception transporte une valeur d'un certain **type**. Quand plusieurs `catch` suivent un même `try`, le mécanisme n'en retient qu'**un seul** : celui dont le type **correspond** à la valeur lancée.
+
+> Le programme est dérouté vers le bloc `catch` dont le **type** est celui de la valeur lancée par le `throw`. Le nom de la variable n'a aucun rôle dans ce choix : seul le **type** compte.
+
+```cpp
+try {
+    // bloc sensible aux erreurs
+}
+catch (int e) {                       // rattrape les entiers lancés
+    // pour un entier, une référence n'a pas de sens
+}
+catch (const std::string& e) {        // rattrape les std::string lancées
+    // ...
+}
+catch (const Personnage& e) {         // rattrape les objets Personnage
+    // ...
+}
+```
+
+Si le `try` lève un `int`, c'est le premier `catch` qui s'exécute ; s'il lève une `std::string`, c'est le deuxième ; s'il lève un `Personnage`, c'est le troisième. Les autres sont **ignorés** : un seul gestionnaire traite l'exception.
+
+## Plusieurs `catch` : l'ordre compte
+
+Quand des types sont **liés par héritage**, l'ordre des `catch` devient crucial. Le mécanisme essaie les `catch` **dans l'ordre où ils sont écrits** et retient **le premier compatible**. Or un `catch` sur une **classe de base** est compatible avec une exception d'une **classe dérivée** (un objet dérivé *est-un* objet de base).
+
+```cpp
+// ORDRE CORRECT : du plus dérivé au plus général
+try {
+    // ...
+}
+catch (const std::out_of_range& e) {   // type le plus précis d'abord
+    std::cerr << "hors bornes\n";
+}
+catch (const std::exception& e) {      // type de base ensuite
+    std::cerr << "autre exception standard\n";
+}
+```
+
+```cpp
+// ORDRE FAUTIF : la base masque la dérivée
+try {
+    // ...
+}
+catch (const std::exception& e) {      // attrape TOUT, y compris out_of_range
+    std::cerr << "exception\n";
+}
+catch (const std::out_of_range& e) {   // jamais atteint : code mort
+    std::cerr << "hors bornes\n";
+}
+```
+
+> ⚠️ Toujours placer les `catch` du type **le plus dérivé** vers le type **le plus général**. Un `catch` sur une classe de base intercepte aussi les classes dérivées : s'il est écrit en premier, les `catch` plus précis qui le suivent deviennent **inatteignables** (code mort).
+
+## La propagation : remonter la pile d'appels
+
+Que se passe-t-il si le `throw` a lieu dans une fonction qui **ne contient pas** de `try` ? L'exception ne disparaît pas : elle **se propage**.
+
+> Une exception non rattrapée dans une fonction est **transmise à la fonction appelante**. Elle remonte ainsi la **pile d'appels**, fonction par fonction, jusqu'à rencontrer un `try`/`catch` capable de la traiter.
+
+Imaginons que `main` appelle `F1`, qui appelle `F2`, qui appelle `F3`, et que `F3` lève une exception :
+
+```cpp
+void F3() { throw std::string("panne dans F3"); }   // pas de try ici
+void F2() { F3(); }                                  // ni ici
+void F1() { F2(); }                                  // ni ici
+
+int main() {
+    try {
+        F1();                       // l'exception lancée dans F3 remonte jusqu'ici
+    }
+    catch (const std::string& e) {
+        std::cerr << "rattrape dans main : " << e << '\n';
+    }
+    return 0;
+}
+```
+
+L'exception levée dans `F3` n'y trouve pas de gestionnaire : elle quitte `F3`, puis `F2`, puis `F1` — toutes **interrompues** — et n'est finalement traitée que dans `main`, le premier niveau qui possède un `try`/`catch` adapté. Une fonction appelée peut ainsi « **demander le déroutement** » à une fonction appelante située plus haut.
+
+> Quand des blocs `try` sont **imbriqués**, la recherche du `catch` se fait du bloc `try` le **plus imbriqué** vers le **moins imbriqué** — c'est exactement la remontée de la pile d'appels.
+
+## Le déroulement de pile : les destructeurs s'exécutent
+
+Pendant cette remontée, les fonctions traversées sont abandonnées. Mais leurs **objets locaux** ne sont pas oubliés.
+
+> Le **déroulement de pile** (*stack unwinding*) est le nettoyage qui accompagne la propagation : pour chaque fonction quittée par l'exception, **les destructeurs de ses objets locaux sont appelés**, dans l'ordre inverse de leur construction.
+
+```cpp
+#include <iostream>
+
+class Ressource {
+    public:
+        Ressource()  { std::cout << "Constructeur de Ressource\n"; }
+        ~Ressource() { std::cout << "Destructeur de Ressource\n"; }
+        void travailler() { throw 10; }
+};
+
+int main() {
+    try {
+        Ressource r;          // construite
+        r.travailler();        // lève une exception
+        std::cout << "jamais atteint\n";
+    }
+    catch (int e) {
+        std::cout << "Erreur numero : " << e << '\n';
+    }
+    return 0;
+}
+```
+
+Affichage :
+
+```text
+Constructeur de Ressource
+Destructeur de Ressource
+Erreur numero : 10
+```
+
+Le destructeur de `r` est appelé **avant** que le `catch` ne s'exécute : en quittant le `try`, l'objet local `r` est proprement détruit. C'est une garantie majeure du langage — une exception **ne fuit pas** les ressources des objets locaux **automatiques** (ceux placés sur la pile). En revanche, le déroulement n'appelle **pas** `delete` sur la mémoire allouée par `new` : un objet créé sur le tas et non libéré reste une **fuite**.
+
+## Relancer une exception : `throw;`
+
+Un gestionnaire peut vouloir faire un traitement **partiel** — journaliser l'erreur, libérer une ressource — puis **laisser un niveau supérieur** finir le travail. Pour cela, il **relance** l'exception avec un `throw` **sans argument** :
+
+```cpp
+try {
+    // ...
+}
+catch (TypeException& e) {
+    // traitement local : on journalise, on nettoie...
+    throw;          // relance l'exception telle quelle vers le niveau supérieur
+}
+```
+
+> Un **`throw` sans argument** à l'intérieur d'un `catch` **retransmet l'exception courante** au niveau `try`/`catch` immédiatement supérieur. L'exception relancée est **la même** — son type et sa valeur sont conservés à l'identique.
+
+C'est la différence essentielle avec `throw e;` : `throw;` propage **l'objet d'origine** intact (utile quand l'exception est d'un type dérivé attrapé par référence à la base), alors que `throw e;` lancerait une **copie** du type statique de `e`. Pour relancer fidèlement, on écrit toujours **`throw;`** seul.
+
+## La capture universelle : `catch(...)`
+
+Comment se prémunir d'une exception dont on **ignore le type** ? Le langage offre un gestionnaire « attrape-tout », noté `catch(...)` — les trois points sont littéraux.
+
+```cpp
+try {
+    // ...
+}
+catch (const Erreur& e) {     // exceptions de type Erreur
+    std::cerr << "Erreur : " << e.getNumero() << '\n';
+}
+catch (int e) {               // exceptions de type int
+    std::cerr << "Erreur int : " << e << '\n';
+}
+catch (...) {                 // TOUTES les autres exceptions
+    std::cerr << "Exception inattendue !\n";
+}
+```
+
+> Le bloc **`catch(...)`** intercepte **n'importe quelle** exception, quel que soit son type. C'est un filet de sécurité — mais on ne peut **pas y récupérer l'objet** : il n'a pas de variable, donc aucun accès à la valeur lancée ni à son contenu.
+
+`catch(...)` doit **toujours être placé en dernier** : étant compatible avec tout, il rendrait tout `catch` placé après lui inatteignable. C'est l'ultime gestionnaire, après tous les gestionnaires typés.
+
+## Aucun gestionnaire ne convient : `std::terminate`
+
+Si une exception remonte toute la pile **sans jamais** rencontrer de `catch` compatible — pas même un `catch(...)` —, le programme ne peut plus continuer.
+
+> Dès qu'une exception se propage sans qu'aucun gestionnaire `catch` compatible ne soit trouvé sur toute la pile d'appels, **`std::terminate()`** est appelé automatiquement, ce qui **interrompt immédiatement** le programme. Sur la plupart des systèmes, l'arrêt s'accompagne d'un message **abscons** et d'un *core dump*.
+
+```cpp
+int main() {
+    throw 42;        // aucun try/catch : terminate() est appelé, le programme s'arrête
+    return 0;
+}
+```
+
+C'est exactement le comportement à éviter. Une application robuste enveloppe son point d'entrée dans un `try` doté de `catch` typés **et** d'un `catch(...)` final, afin qu'**aucune** exception ne puisse atteindre `terminate` sans qu'un message clair n'ait été affiché.
+
+> ⚠️ Ne pas confondre les deux dangers. Une exception **non rattrapée** déclenche `terminate` (arrêt brutal). Une exception **rattrapée mais non traitée correctement** est plus sournoise : le programme **continue avec des données erronées**. Un `catch` qui se contente d'ignorer l'erreur est presque aussi nuisible que pas de `catch` du tout.
+
+> **À retenir**
+> - Un `catch` est sélectionné par le **type** de l'exception lancée ; le nom de sa variable n'intervient pas dans ce choix.
+> - Avec plusieurs `catch`, le **premier compatible** gagne : il faut donc les ordonner du type **le plus dérivé** au **plus général**, sinon les gestionnaires précis deviennent du **code mort**.
+> - Une exception non rattrapée **se propage** : elle remonte la **pile d'appels**, fonction par fonction, jusqu'à un `try`/`catch` adapté.
+> - Le **déroulement de pile** appelle les **destructeurs des objets locaux** des fonctions quittées — mais ne fait **pas** les `delete` du tas.
+> - **`throw;`** seul, dans un `catch`, **relance** l'exception courante intacte vers le niveau supérieur (à la différence de `throw e;` qui en lance une copie).
+> - **`catch(...)`** rattrape **toute** exception mais sans accès à l'objet ; il se place **en dernier**.
+> - Dès qu'une exception se propage sans trouver de `catch` compatible sur toute la pile d'appels, **`std::terminate()`** est appelé : arrêt immédiat du programme avec un message abscons.

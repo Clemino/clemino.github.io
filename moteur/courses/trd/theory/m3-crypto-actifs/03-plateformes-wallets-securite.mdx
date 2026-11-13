@@ -1,0 +1,61 @@
+---
+title: "Plateformes, wallets et sécurité"
+slug: plateformes-wallets-securite
+order: 3
+estimatedReadMin: 9
+concepts: [wallet, cle-privee, phrase-de-recuperation, risque-plateforme, psca]
+source: "Livre blanc de Bitcoin (traduction française) ; ESMA, AES, « Crypto-actifs : ce que MiCA signifie pour vous en tant qu'investisseur »"
+---
+
+## Idée centrale
+
+En bourse, tes titres sont conservés par un teneur de compte régulé et protégés par la ségrégation des avoirs. En crypto, **c'est la garde des clés privées qui détermine qui possède quoi**. Tu dois choisir entre confier tes clés à une plateforme ou les garder toi-même, et chaque option a ses risques.
+
+## Les plateformes d'échange
+
+### Centralisées
+
+Une **plateforme centralisée** fonctionne comme un courtier : tu y verses des euros, tu achètes et vends des crypto-actifs dans un carnet d'ordres, et la plateforme conserve les actifs pour toi. C'est simple, mais tu ne détiens pas les clés : tu as une **créance** sur la plateforme.
+
+En novembre 2022, la faillite de la plateforme FTX a montré ce risque : les fonds des clients avaient été utilisés par la société et des centaines de milliers de clients ont vu leurs avoirs bloqués.
+
+D'où l'importance de choisir un **prestataire agréé** au titre de MiCA, tenu de **séparer les actifs des clients** des siens, d'avoir des fonds propres suffisants et de traiter les réclamations.
+
+### Décentralisées
+
+Une **plateforme décentralisée** (DEX) est un ensemble de smart contracts : tu échanges directement depuis ton propre wallet, sans intermédiaire. Pas de risque de faillite d'une société, mais pas de recours non plus, des risques de failles dans les contrats et, en général, aucune régulation applicable.
+
+## Les wallets
+
+Un **wallet** (portefeuille) ne contient pas de crypto-actifs : ceux-ci restent sur la blockchain. Il contient les **clés** qui permettent de les dépenser.
+
+| Type | Qui détient les clés | Avantage | Risque |
+|---|---|---|---|
+| Custodial (sur une plateforme) | La plateforme | Simple, mot de passe récupérable | Faillite, piratage ou gel par la plateforme |
+| Self-custody « chaud » (application) | Toi, sur un appareil connecté | Contrôle total, pratique | Piratage de l'appareil, hameçonnage |
+| Self-custody « froid » (matériel) | Toi, sur un appareil hors ligne | Très résistant au piratage | Perte ou destruction de l'appareil et de la sauvegarde |
+
+### La phrase de récupération
+
+À la création d'un wallet en self-custody, tu reçois une **phrase de récupération** de 12 ou 24 mots. Elle permet de reconstituer toutes tes clés sur un autre appareil. Elle **est** ton argent :
+
+- note-la sur papier (ou métal), jamais en photo, jamais dans un fichier en ligne ;
+- range-la en lieu sûr, éventuellement en deux exemplaires ;
+- **ne la communique jamais à personne** : aucun service légitime ne te la demandera.
+
+## Les règles de sécurité de base
+
+1. Authentification à deux facteurs par application, pas par SMS, sur toutes les plateformes.
+2. Vérifier l'adresse du site à chaque connexion : les faux sites copiés sont la première source de vol.
+3. Faire un petit **virement de test** avant d'envoyer une grosse somme vers une nouvelle adresse.
+4. Ne laisser sur une plateforme que ce dont tu as besoin pour trader.
+5. Ne jamais signer une transaction ou une « autorisation » que tu ne comprends pas.
+
+> **À retenir**
+> « Pas tes clés, pas tes cryptos » : sur une plateforme, tu fais confiance à une société ; en self-custody, tu fais confiance à toi-même. Il n'existe pas de troisième voie sans risque.
+
+## Pièges classiques
+
+- Stocker sa phrase de récupération dans ses notes de téléphone ou ses e-mails.
+- Envoyer des fonds sur le mauvais réseau ou la mauvaise adresse : l'opération est irréversible.
+- Croire qu'une plateforme connue est forcément solide : FTX était l'une des plus grandes.

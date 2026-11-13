@@ -1,0 +1,241 @@
+---
+title: "Formuler un problème : espace d'états"
+slug: formuler-un-probleme
+order: 1
+estimatedReadMin: 13
+concepts: [espace-d-etats, etat-initial, etats-finaux, action, cout-d-action, arbre-de-recherche, strategie-de-recherche]
+source: "Intro_IA_slides2.pdf"
+---
+
+## La planification : un premier problème d'IA classique
+
+Ce module aborde un **exemple classique de problème d'intelligence artificielle :
+la planification**. Planifier, c'est trouver une **suite d'actions** qui mène d'une
+situation de départ à une situation souhaitée — déplacer un robot vers une cible,
+résoudre un casse-tête, faire traverser un fleuve à un chargement. Avant de pouvoir
+*résoudre* un tel problème, il faut d'abord savoir le **formuler** : c'est l'objet de
+cette première section.
+
+L'idée directrice est la suivante : un problème de planification ne se résout pas
+« à l'intuition », mais en le décrivant rigoureusement à l'aide d'un petit nombre
+d'éléments. Une fois cette description posée, résoudre le problème devient une
+**recherche** dans un ensemble bien défini.
+
+> **À retenir** : la planification consiste à chercher une suite d'actions reliant
+> un état de départ à un état d'arrivée ; la première étape est toujours la
+> **formulation** précise du problème.
+
+## Les cinq éléments de définition d'un problème
+
+Pour **définir un problème**, nous avons besoin des éléments suivants :
+
+- un **ensemble d'états** `S` ;
+- un **état initial** `e₀ ∈ S` ;
+- un **ensemble d'états finals** `F ⊂ S` ;
+- une **fonction de transition** `T`, définie par un **ensemble d'actions** `{Aᵢⱼ}` ;
+- les **coûts** des actions.
+
+Détaillons chacun de ces éléments.
+
+**L'ensemble d'états `S`.** C'est l'ensemble de toutes les **configurations** que le
+problème peut prendre. On l'appelle aussi l'**espace d'états**. Un état est une
+« photographie » complète de la situation à un instant donné : il contient toute
+l'information nécessaire pour décider de la suite.
+
+**L'état initial `e₀`.** C'est l'état, **appartenant à `S`**, à partir duquel le
+problème commence. La recherche d'une solution partira toujours de cet état.
+
+**L'ensemble d'états finals `F`.** C'est un **sous-ensemble de `S`** (`F ⊂ S`)
+rassemblant les états que l'on cherche à atteindre. Un problème peut donc avoir
+**plusieurs** états finals : il suffit d'en atteindre **un seul** pour résoudre le
+problème.
+
+**La fonction de transition `T`.** Elle est définie par un **ensemble d'actions**
+notées `{Aᵢⱼ}`. La notation `Aᵢⱼ` signifie que **cette action permet de passer de
+l'état `eᵢ` à l'état `eⱼ`**. Autrement dit, les actions décrivent quels états sont
+accessibles directement depuis un état donné.
+
+**Les coûts des actions.** Les différentes actions peuvent avoir des **coûts
+différents**. Le coût mesure ce que « dépense » une action : une distance, une durée,
+un nombre d'étapes, etc. Cette notion de coût sera essentielle dès que l'on voudra
+non pas une solution quelconque, mais la **meilleure** solution.
+
+> ⚠️ Ne confondez pas l'**état initial** (un unique état `e₀`) et les **états
+> finals** (un ensemble `F` pouvant contenir plusieurs états). Atteindre n'importe
+> lequel des états de `F` suffit à résoudre le problème.
+
+## Ce que signifie « résoudre » un problème
+
+Une fois le problème défini par ces cinq éléments, **résoudre le problème** signifie
+**trouver une suite d'actions conduisant de l'état initial à un état final**.
+
+Sur une telle suite d'actions, on peut **exiger certaines propriétés** : par exemple,
+on peut demander qu'elle ait un **coût minimal**. On distingue ainsi deux niveaux
+d'exigence :
+
+- trouver **une** suite d'actions valide (n'importe laquelle qui mène à un état
+  final) ;
+- trouver **la meilleure** suite d'actions, par exemple celle de **coût minimal**.
+
+Cette distinction est importante : selon ce que l'on exige, on n'utilisera pas les
+mêmes algorithmes de recherche. Les sections suivantes montreront que la recherche
+*aveugle* peut suffire à trouver une solution, alors que la recherche *informée*
+— et notamment l'algorithme A\* — vise une solution **de coût minimal**.
+
+## Un premier exemple : le problème des trois pièces
+
+Illustrons cette formulation sur un exemple simple et concret.
+
+Considérons **3 pièces de monnaie** dont les **deux premières montrent « pile »** et
+**l'autre « face »**. On veut que **toutes les pièces montrent le même côté
+(« face »)**. La définition du problème est alors la suivante.
+
+**Les états.** Un état est un **triplet `C₁C₂C₃`** dont chaque élément représente le
+côté montré par une pièce. Autrement dit, chaque `Cᵢ` vaut **`P` (pile)** ou
+**`F` (face)**.
+
+**L'ensemble `S`.** Comme chaque pièce a deux côtés possibles et qu'il y a trois
+pièces, l'ensemble `S` contient `2 × 2 × 2 = 8` éléments :
+
+```
+PPP   PPF   PFP   PFF   FPP   FPF   FFP   FFF
+```
+
+**L'état initial.** L'état initial `e₀` est égal à **`PPF`** : les deux premières
+pièces montrent pile, la troisième montre face.
+
+**Les états finals.** L'ensemble des états finals `F` est égal à **`{PPP, FFF}`** :
+on veut que les trois pièces montrent le même côté, et il y a deux façons d'y
+parvenir (tout en pile ou tout en face).
+
+**Les actions.** À partir de chaque état, **trois actions sont possibles** :
+**retourner l'une ou l'autre des trois pièces**. Retourner une pièce change le côté
+montré par cette pièce (un `P` devient `F` et inversement) et laisse les deux autres
+inchangées.
+
+| Élément du problème | Valeur pour les trois pièces |
+| --- | --- |
+| États `S` | Les 8 triplets de `P`/`F` |
+| État initial `e₀` | `PPF` |
+| États finals `F` | `{PPP, FFF}` |
+| Actions disponibles | Retourner la pièce 1, 2 ou 3 |
+| Nombre d'actions par état | 3 |
+
+Ce problème peut être **généralisé au cas de `n` pièces** : l'espace d'états compte
+alors `2ⁿ` configurations, et chaque état admet `n` actions (retourner l'une des `n`
+pièces).
+
+## Le graphe des états et des actions
+
+Les états et les actions d'un problème peuvent se représenter par un **graphe** :
+
+- chaque **sommet** du graphe est un **état** ;
+- chaque **arc** est une **transition** entre deux états, c'est-à-dire une action.
+
+Pour le problème des trois pièces, ce graphe relie les 8 états entre eux : depuis
+`PPF`, par exemple, on peut atteindre `FPF` (retourner la pièce 1), `PFF` (retourner
+la pièce 2) ou `PPP` (retourner la pièce 3). Comme retourner une pièce est une action
+**réversible** — la retourner à nouveau ramène à l'état précédent — les transitions
+de ce problème fonctionnent dans les deux sens.
+
+Ce graphe rend visible une difficulté importante : il **contient des cycles**. On
+peut retourner une pièce, puis la retourner encore, et revenir à l'état de départ.
+Naviguer dans ce graphe sans précaution peut donc conduire à **tourner en rond**.
+
+## De la formulation à la recherche
+
+Résoudre le problème — trouver une suite d'actions allant de l'état initial à un état
+final — se fait **via une recherche dans l'espace des états**. Concrètement, cela
+signifie que l'on part de l'état initial, puis :
+
+1. on **constate** que ce n'est pas un état final ;
+2. on **génère** d'autres états, obtenus à l'aide des actions qui conviennent ;
+3. pour chacun de ces nouveaux états, on **recommence** la même chose :
+   - est-ce un état final ? Si **oui**, on **s'arrête** ;
+   - si **non**, on **génère de nouveaux états** et on continue.
+
+L'**ordre dans lequel on considère les états** n'est pas fixé par le problème : il
+est défini par une **stratégie de recherche**. Le choix de cette stratégie est
+décisif, et c'est lui qui distinguera la recherche aveugle de la recherche informée
+dans les sections suivantes.
+
+## L'arbre de recherche
+
+Le processus de recherche que l'on vient de décrire revient à **construire un
+arbre**, appelé **arbre de recherche**, défini comme suit :
+
+- la **racine** de l'arbre est l'**état initial `e₀`** ;
+- une **feuille** correspond à un état qui n'a **pas de successeurs**, et ce pour
+  l'une des deux raisons suivantes :
+  - soit parce que l'algorithme **ne l'a pas encore considéré** ;
+  - soit parce que l'algorithme l'a considéré **mais qu'aucun autre nœud-état n'a
+    été généré à partir de lui** ;
+- pour chaque **nœud-état `eᵢ`**, les **successeurs** sont les états atteints par une
+  action à partir de `eᵢ` ;
+- à **chaque étape**, l'algorithme **choisit une feuille** et **génère les nouveaux
+  états** à partir d'elle, s'il y a lieu.
+
+Il faut bien distinguer le **graphe des états** et l'**arbre de recherche**. Le
+graphe est *donné* par le problème : il contient tous les états et toutes les
+transitions, une fois pour toutes. L'arbre de recherche est *construit
+progressivement* par l'algorithme ; un même état du graphe peut y apparaître
+**plusieurs fois**, dans des branches différentes, parce qu'on peut l'atteindre par
+plusieurs chemins.
+
+> **À retenir** : l'**arbre de recherche** a pour racine l'état initial ; les
+> successeurs d'un nœud sont les états atteignables par une action ; ses feuilles
+> sont les états non encore développés ou sans successeur. C'est cet arbre que les
+> algorithmes de recherche construisent.
+
+## L'algorithme de construction de l'arbre de recherche
+
+La construction de l'arbre de recherche suit un schéma général, indépendant de la
+stratégie choisie. On peut le présenter sous la forme du pseudo-code suivant, à
+lire attentivement :
+
+```
+Initialiser l'arbre en utilisant l'état initial en tant que racine.
+Faire
+    Si aucune feuille n'a de successeurs
+        Sortir en Échec.
+    Choisir une feuille selon la stratégie de recherche.
+    Si le nœud est un état final
+        Alors le retourner (Succès).
+    Sinon
+        Développer l'arbre en ajoutant les successeurs de ce nœud.
+```
+
+Commentons ce schéma :
+
+- l'arbre est **initialisé** avec l'état initial comme **racine** ;
+- à chaque tour de boucle, si **aucune feuille n'a de successeurs**, la recherche
+  s'arrête sur un **Échec** : il n'y a plus rien à explorer et aucune solution n'a
+  été trouvée ;
+- sinon, on **choisit une feuille** — et ce choix est précisément ce que dicte la
+  **stratégie de recherche** ;
+- si le nœud choisi est un **état final**, on le **retourne** : c'est un **Succès**,
+  la recherche est terminée ;
+- sinon, on **développe** l'arbre en ajoutant les **successeurs** de ce nœud, puis
+  on recommence.
+
+Ce qui reste **indéterminé** dans cet algorithme, c'est la ligne « Choisir une
+feuille selon la stratégie de recherche ». Tout l'enjeu des sections suivantes est
+de **préciser cette stratégie** : d'abord avec les stratégies *aveugles* (largeur et
+profondeur d'abord), puis avec les stratégies *informées* qui exploitent une
+heuristique, jusqu'à l'algorithme A\*.
+
+## Synthèse de la section
+
+Un problème de planification se **formule** au moyen de cinq éléments : un ensemble
+d'états `S`, un état initial `e₀`, un ensemble d'états finals `F ⊂ S`, une fonction
+de transition `T` donnée par les actions `{Aᵢⱼ}`, et les **coûts** de ces actions.
+**Résoudre** le problème, c'est trouver une suite d'actions de `e₀` jusqu'à un état
+de `F`, éventuellement de **coût minimal**. Cette résolution s'effectue par une
+**recherche** dans l'espace d'états, qui revient à construire un **arbre de
+recherche** dont l'ordre d'exploration est fixé par une **stratégie de recherche**.
+
+> **À retenir** : retenez les **cinq éléments** d'un problème (états, état initial,
+> états finals, actions, coûts), que **résoudre = trouver une suite d'actions** de
+> `e₀` à `F`, et que cette recherche construit un **arbre de recherche** piloté par
+> une **stratégie de recherche** — la notion que les prochaines sections vont
+> préciser.

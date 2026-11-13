@@ -1,0 +1,585 @@
+[
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Que signifie « surcharger un opérateur » en C++ ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Définir le comportement d'un opérateur du langage lorsqu'il s'applique aux objets d'une classe." },
+        { "id": "b", "label": "Créer un nouvel opérateur qui n'existe pas dans le langage." },
+        { "id": "c", "label": "Augmenter la priorité d'un opérateur existant." },
+        { "id": "d", "label": "Interdire l'usage d'un opérateur sur certains types." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Surcharger un opérateur, c'est **définir le comportement** d'un opérateur du langage (`+`, `==`, `<<`...) quand il s'applique à des objets d'une **classe** que l'on a écrite. Le but est de rendre la classe aussi expressive qu'un type prédéfini : écrire `z1 + z2` plutôt qu'un verbeux `additionner(z1, z2)`.",
+    "concepts": ["surcharge-operateur"]
+  },
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi ces opérateurs, lesquels **ne peuvent pas** être surchargés en C++ ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "L'opérateur de résolution de portée ::" },
+        { "id": "b", "label": "L'opérateur d'accès à un membre ." },
+        { "id": "c", "label": "L'opérateur d'addition +" },
+        { "id": "d", "label": "L'opérateur conditionnel (ternaire) ?:" },
+        { "id": "e", "label": "L'opérateur sizeof" },
+        { "id": "f", "label": "L'opérateur de comparaison ==" }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "d", "e"] },
+    "explanation": "Quatre opérateurs **ne sont pas surchargeables** : `.` (accès à un membre), `.*` (accès via pointeur), `::` (résolution de portée), `?:` (ternaire) et `sizeof`. Tous les autres — `+`, `==`, `<<`, `[]`, `=`... — peuvent l'être.",
+    "concepts": ["surcharge-operateur"]
+  },
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "En surchargeant l'opérateur `+`, on peut décider qu'il soit unaire (un seul opérande) et plus prioritaire que `*`.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. La surcharge **ne change ni la priorité, ni l'associativité, ni l'arité** (le nombre d'opérandes) d'un opérateur. `+` reste binaire et moins prioritaire que `*`, quoi qu'on en fasse. On ne peut pas non plus **inventer** un opérateur (pas de `**` pour la puissance).",
+    "concepts": ["surcharge-operateur"]
+  },
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pourquoi est-il **impossible** de surcharger l'opérateur `+` pour redéfinir `int + int` ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Parce que + est déjà surchargé pour les flux." },
+        { "id": "b", "label": "Parce qu'au moins un opérande doit être d'un type classe défini par l'utilisateur." },
+        { "id": "c", "label": "Parce que int n'est pas un type numérique." },
+        { "id": "d", "label": "Parce que + ne peut être surchargé qu'en fonction membre." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "C'est la **règle d'or** : lors de la surcharge d'un opérateur, **au moins un des opérandes doit être d'un type classe** (ou énumération) défini par l'utilisateur. Le comportement des opérateurs sur les types fondamentaux est **figé** : `int + int` ou `double == double` ne sont pas redéfinissables.",
+    "concepts": ["surcharge-operateur"]
+  },
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque expression à l'appel de fonction que le compilateur génère, sachant que `operator+` est une **fonction membre** et `operator==` une **fonction non-membre**.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "a + b  (operator+ membre)" },
+        { "id": "l2", "label": "a == b  (operator== non-membre)" },
+        { "id": "l3", "label": "Le mot-clé qui forme le nom d'une fonction-opérateur" }
+      ],
+      "right": [
+        { "id": "r1", "label": "a.operator+(b)" },
+        { "id": "r2", "label": "operator==(a, b)" },
+        { "id": "r3", "label": "operator" }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3" } },
+    "explanation": "En forme **membre**, `a + b` devient `a.operator+(b)` : l'opérande gauche `a` est l'objet sur lequel la méthode est appelée. En forme **non-membre**, `a == b` devient `operator==(a, b)` : les deux opérandes sont des arguments. Le nom de toute fonction-opérateur commence par le mot-clé **`operator`**.",
+    "concepts": ["operateur-membre", "operateur-non-membre"]
+  },
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète la déclaration, dans la classe `Complexe`, de l'opérateur `==` surchargé en **fonction membre** renvoyant un `bool` et ne modifiant pas l'objet courant.",
+    "payload": {
+      "template": "bool {{op}}(const Complexe& c) {{q}};",
+      "slots": [
+        { "id": "op", "width": "md" },
+        { "id": "q", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "op": "operator==", "q": "const" },
+      "caseSensitive": false
+    },
+    "explanation": "Le nom de la fonction est `operator==` (mot-clé `operator` + symbole `==`). Le `const` final indique que la méthode **ne modifie pas** l'objet courant : un test d'égalité doit pouvoir s'appliquer à des objets `const`. La forme finale : `bool operator==(const Complexe& c) const;`.",
+    "concepts": ["operateur-membre", "surcharge-operateur"]
+  },
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "TRUE_FALSE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Surcharger l'opérateur `+` d'une classe `Liste` pour qu'il **supprime** des éléments est une bonne pratique, car cela rend le code plus concis.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. Détourner un opérateur de son sens usuel rend le programme **trompeur** : le lecteur croit lire une addition là où se cache une suppression. Règle de bon sens : ne surcharger un opérateur **que si son sens reste évident**. Dans le doute, une **méthode nommée** (`supprimer()`) est préférable — elle dit ce qu'elle fait.",
+    "concepts": ["surcharge-operateur"]
+  },
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On veut écrire l'opérateur permettant `2 * objet` (un `int` à gauche, un objet à droite). Quelle forme est **obligatoire** et pourquoi ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "La forme membre, car l'opérande de droite est un objet." },
+        { "id": "b", "label": "La forme non-membre, car l'opérande de gauche (2) n'est pas un objet de la classe et ne peut donc pas être *this." },
+        { "id": "c", "label": "La forme membre, car * est toujours une méthode." },
+        { "id": "d", "label": "Aucune des deux : 2 * objet est impossible en C++." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "En forme **membre**, l'opérande de **gauche** doit être l'objet courant (`*this`) — donc un objet de la classe. Pour `2 * objet`, la gauche est un `int` : la forme membre est **impossible**. Il faut une fonction **non-membre** `operator*(int, const Classe&)` qui reçoit les deux opérandes en paramètres. C'est l'arithmétique mixte.",
+    "concepts": ["operateur-non-membre", "operateur-membre"]
+  },
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Les deux écritures de l'addition sont équivalentes.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Distance {\n        int metres;\n    public:\n        Distance(int m = 0) : metres(m) {}\n        Distance operator+(const Distance& a) const {\n            return Distance(metres + a.metres);\n        }\n        int valeur() const { return metres; }\n};\n\nint main() {\n    Distance d1(30), d2(12);\n    Distance d3 = d1 + d2;\n    Distance d4 = d1.operator+(d2);\n    cout << d3.valeur() << endl;\n    cout << d4.valeur() << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "42\n42" },
+    "explanation": "`d1 + d2` et `d1.operator+(d2)` sont **strictement équivalents** : la notation infixe n'est que la forme commode de l'appel explicite. Les deux calculent `30 + 12 = 42`. La seconde écriture est légale mais inhabituelle ; on préfère toujours la notation infixe.",
+    "concepts": ["surcharge-operateur", "operateur-membre"]
+  },
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme utilisant un `operator==` **non-membre** ?",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Compteur {\n        int n;\n    public:\n        Compteur(int v = 0) : n(v) {}\n        int get() const { return n; }\n};\n\nbool operator==(const Compteur& a, const Compteur& b) {\n    return a.get() == b.get();\n}\n\nint main() {\n    Compteur a(5), b(5), c(8);\n    if (a == b) cout << \"a egal b\" << endl;\n    if (operator==(a, c)) cout << \"a egal c\" << endl;\n    else cout << \"a different de c\" << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "a egal b\na different de c" },
+    "explanation": "`a == b` appelle `operator==(a, b)` : 5 == 5, vrai → `a egal b`. La seconde ligne utilise l'**appel explicite** `operator==(a, c)` (équivalent à `a == c`) : 5 == 8, faux → la branche `else` affiche `a different de c`.",
+    "concepts": ["operateur-non-membre", "surcharge-operateur"]
+  },
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? L'opérateur `<` est surchargé en **fonction membre**.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Point {\n        int x;\n    public:\n        Point(int v = 0) : x(v) {}\n        bool operator<(const Point& autre) const {\n            return x < autre.x;\n        }\n        int get() const { return x; }\n};\n\nint main() {\n    Point p1(3), p2(7);\n    cout << (p1 < p2) << endl;\n    cout << (p2 < p1) << endl;\n    cout << (p1 < p1) << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "1\n0\n0" },
+    "explanation": "`operator<` renvoie un `bool` ; `cout` affiche `1` pour `true` et `0` pour `false`. `p1 < p2` : 3 < 7 → `1`. `p2 < p1` : 7 < 3 → `0`. `p1 < p1` : 3 < 3 → `0`. En forme membre, `p1 < p2` est interprété comme `p1.operator<(p2)`.",
+    "concepts": ["operateur-membre", "surcharge-operateur"]
+  },
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète la classe `Argent` (montant en centimes) avec l'opérateur `+` surchargé en **fonction membre**. Le `main` lit deux montants et affiche leur somme.",
+    "payload": {
+      "spec": "Definir la classe Argent avec un attribut prive int centimes. Constructeur Argent(int c = 0). Surcharger operator+ en fonction membre : il prend l'autre Argent en parametre const reference, est const, et renvoie par valeur un nouvel Argent dont le montant est la somme. Methode valeur() const qui renvoie centimes. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Argent {\n    private:\n        int centimes;\n    public:\n        Argent(int c = 0) : centimes(c) {}\n        // a completer : operator+ en fonction membre\n        int valeur() const { return centimes; }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Argent m1(a), m2(b);\n    Argent total = m1 + m2;\n    cout << total.valeur() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "deux montants", "stdin": "150 75", "expectedStdout": "225" },
+        { "name": "deux zeros", "stdin": "0 0", "expectedStdout": "0" },
+        { "name": "cache", "stdin": "999 1", "expectedStdout": "1000", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Argent {\n    private:\n        int centimes;\n    public:\n        Argent(int c = 0) : centimes(c) {}\n        Argent operator+(const Argent& autre) const {\n            return Argent(centimes + autre.centimes);\n        }\n        int valeur() const { return centimes; }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Argent m1(a), m2(b);\n    Argent total = m1 + m2;\n    cout << total.valeur() << endl;\n    return 0;\n}"
+    },
+    "explanation": "En forme membre, `operator+` prend **un seul** paramètre (l'opérande de droite), en `const Argent&`. La méthode est `const` (elle ne modifie pas l'objet de gauche) et renvoie un **nouvel** objet par valeur. `m1 + m2` est interprété comme `m1.operator+(m2)`.",
+    "concepts": ["operateur-membre", "surcharge-operateur"]
+  },
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Écris la classe `Note` (un entier `valeur`) et un `operator==` surchargé en **fonction non-membre**. Le `main` lit deux notes et indique si elles sont égales.",
+    "payload": {
+      "spec": "Definir la classe Note avec un attribut prive int valeur, un constructeur Note(int v = 0) et un accesseur get() const. Surcharger operator== comme fonction NON-MEMBRE (libre, en dehors de la classe) prenant deux Note en parametres const reference et renvoyant un bool. Le main affiche 'egales' ou 'differentes'. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Note {\n    private:\n        int valeur;\n    public:\n        Note(int v = 0) : valeur(v) {}\n        int get() const { return valeur; }\n};\n\n// a completer : operator== en fonction non-membre\n\nint main() {\n    int x, y;\n    cin >> x >> y;\n    Note n1(x), n2(y);\n    if (n1 == n2)\n        cout << \"egales\" << endl;\n    else\n        cout << \"differentes\" << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "egales", "stdin": "12 12", "expectedStdout": "egales" },
+        { "name": "differentes", "stdin": "8 15", "expectedStdout": "differentes" },
+        { "name": "cache", "stdin": "0 0", "expectedStdout": "egales", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Note {\n    private:\n        int valeur;\n    public:\n        Note(int v = 0) : valeur(v) {}\n        int get() const { return valeur; }\n};\n\nbool operator==(const Note& a, const Note& b) {\n    return a.get() == b.get();\n}\n\nint main() {\n    int x, y;\n    cin >> x >> y;\n    Note n1(x), n2(y);\n    if (n1 == n2)\n        cout << \"egales\" << endl;\n    else\n        cout << \"differentes\" << endl;\n    return 0;\n}"
+    },
+    "explanation": "Une fonction-opérateur **non-membre** est extérieure à la classe : elle reçoit **tous** ses opérandes en paramètres — ici deux `const Note&`. Comme elle n'accède qu'à l'accesseur public `get()`, elle n'a pas besoin d'être `friend`. `n1 == n2` devient `operator==(n1, n2)`.",
+    "concepts": ["operateur-non-membre", "surcharge-operateur"]
+  },
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris la classe `Temperature` (un entier `degres`). Surcharge `operator<` en **fonction non-membre** déclarée `friend` pour pouvoir lire l'attribut privé. Le `main` compare deux températures.",
+    "payload": {
+      "spec": "Definir la classe Temperature avec un attribut prive int degres et un constructeur Temperature(int d = 0). Surcharger operator< comme fonction NON-MEMBRE prenant deux Temperature en parametres const reference et renvoyant un bool. Cette fonction doit etre declaree friend dans la classe pour acceder a l'attribut prive degres. Le main affiche 't1 plus froide' si t1 < t2, sinon 't1 pas plus froide'. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Temperature {\n    private:\n        int degres;\n    public:\n        Temperature(int d = 0) : degres(d) {}\n        // a completer : declaration friend de operator<\n};\n\n// a completer : definition de operator< (non-membre)\n\nint main() {\n    int x, y;\n    cin >> x >> y;\n    Temperature t1(x), t2(y);\n    if (t1 < t2)\n        cout << \"t1 plus froide\" << endl;\n    else\n        cout << \"t1 pas plus froide\" << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "t1 plus froide", "stdin": "10 20", "expectedStdout": "t1 plus froide" },
+        { "name": "t1 plus chaude", "stdin": "30 5", "expectedStdout": "t1 pas plus froide" },
+        { "name": "cache egales", "stdin": "15 15", "expectedStdout": "t1 pas plus froide", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Temperature {\n    private:\n        int degres;\n    public:\n        Temperature(int d = 0) : degres(d) {}\n        friend bool operator<(const Temperature& a, const Temperature& b);\n};\n\nbool operator<(const Temperature& a, const Temperature& b) {\n    return a.degres < b.degres;\n}\n\nint main() {\n    int x, y;\n    cin >> x >> y;\n    Temperature t1(x), t2(y);\n    if (t1 < t2)\n        cout << \"t1 plus froide\" << endl;\n    else\n        cout << \"t1 pas plus froide\" << endl;\n    return 0;\n}"
+    },
+    "explanation": "`operator<` est ici **non-membre** : ses deux opérandes sont des paramètres. Pour lire l'attribut `private` `degres`, on le déclare **`friend`** dans la classe — la déclaration `friend` ne fait pas de lui une méthode, elle lui donne juste l'accès aux membres privés. `t1 < t2` devient `operator<(t1, t2)`.",
+    "concepts": ["operateur-non-membre", "fonction-amie"]
+  },
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme ne compile pas. L'auteur a voulu utiliser `**` comme opérateur de multiplication. Corrige le code pour qu'il compile et calcule le produit.",
+    "payload": {
+      "spec": "La classe Produit a un attribut prive int valeur et un constructeur Produit(int v = 0). Elle doit surcharger l'operateur de multiplication * (fonction membre, const, retour par valeur). get() renvoie valeur. Le main lit deux entiers, construit deux Produit et affiche leur produit.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Produit {\n    private:\n        int valeur;\n    public:\n        Produit(int v = 0) : valeur(v) {}\n        Produit operator**(const Produit& autre) const {\n            return Produit(valeur * autre.valeur);\n        }\n        int get() const { return valeur; }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Produit p(a);\n    Produit q(b);\n    Produit r = p ** q;\n    cout << r.get() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "produit", "stdin": "4 3", "expectedStdout": "12" },
+        { "name": "avec zero", "stdin": "7 0", "expectedStdout": "0" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Produit {\n    private:\n        int valeur;\n    public:\n        Produit(int v = 0) : valeur(v) {}\n        Produit operator*(const Produit& autre) const {\n            return Produit(valeur * autre.valeur);\n        }\n        int get() const { return valeur; }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Produit p(a);\n    Produit q(b);\n    Produit r = p * q;\n    cout << r.get() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `operator**` n'existe pas. On **ne peut pas inventer** un nouvel opérateur ; `**` n'est pas un opérateur du C++, donc g++ refuse (`declaration of 'operator*' as non-function`). Il faut utiliser l'opérateur existant `*` : `operator*` dans la classe, et `p * q` dans le `main`.",
+    "concepts": ["surcharge-operateur"]
+  },
+  {
+    "chapterSlug": "principe-surcharge",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme ne compile pas. L'opérateur `+` est déclaré en **fonction membre** mais avec deux paramètres. Corrige sa signature.",
+    "payload": {
+      "spec": "La classe Vecteur2D a deux attributs prives int x et y, un constructeur Vecteur2D(int a = 0, int b = 0) et une methode afficher() const qui ecrit x puis un espace puis y puis un retour a la ligne. Surcharger operator+ en fonction MEMBRE : l'operande de gauche est *this, il ne reste donc qu'UN seul parametre (l'operande de droite). Le main lit quatre entiers, construit deux vecteurs et affiche leur somme.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Vecteur2D {\n    private:\n        int x, y;\n    public:\n        Vecteur2D(int a = 0, int b = 0) : x(a), y(b) {}\n        Vecteur2D operator+(const Vecteur2D& g, const Vecteur2D& d) const {\n            return Vecteur2D(g.x + d.x, g.y + d.y);\n        }\n        void afficher() const { cout << x << \" \" << y << endl; }\n};\n\nint main() {\n    int a, b, c, d;\n    cin >> a >> b >> c >> d;\n    Vecteur2D u(a, b), v(c, d);\n    Vecteur2D w = u + v;\n    w.afficher();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "somme positive", "stdin": "1 2 3 4", "expectedStdout": "4 6" },
+        { "name": "avec negatifs", "stdin": "-5 0 5 10", "expectedStdout": "0 10" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Vecteur2D {\n    private:\n        int x, y;\n    public:\n        Vecteur2D(int a = 0, int b = 0) : x(a), y(b) {}\n        Vecteur2D operator+(const Vecteur2D& d) const {\n            return Vecteur2D(x + d.x, y + d.y);\n        }\n        void afficher() const { cout << x << \" \" << y << endl; }\n};\n\nint main() {\n    int a, b, c, d;\n    cin >> a >> b >> c >> d;\n    Vecteur2D u(a, b), v(c, d);\n    Vecteur2D w = u + v;\n    w.afficher();\n    return 0;\n}"
+    },
+    "explanation": "Le bug : en forme **membre**, l'opérande de gauche est déjà `*this` ; un opérateur binaire ne peut donc avoir que **zéro ou un** argument. Déclaré avec deux paramètres, g++ refuse : `'operator+' must have either zero or one argument`. La signature correcte : `Vecteur2D operator+(const Vecteur2D& d) const`, où `x`/`y` désignent l'objet courant et `d` l'opérande de droite.",
+    "concepts": ["operateur-membre", "surcharge-operateur"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Comment un opérateur arithmétique comme `operator*` doit-il renvoyer son résultat ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Par valeur : un nouvel objet, distinct des deux opérandes." },
+        { "id": "b", "label": "Par référence vers une variable locale à la fonction." },
+        { "id": "c", "label": "En modifiant et renvoyant l'opérande de gauche." },
+        { "id": "d", "label": "Il ne renvoie rien : son type de retour est void." }
+      ]
+    },
+    "solution": { "correct": ["a"] },
+    "explanation": "Le produit (ou la somme...) est un **nouvel objet**, distinct des deux opérandes. Un opérateur arithmétique le renvoie donc **par valeur**. Renvoyer une référence vers un local donnerait une **référence pendante** (le local est détruit au `return`), et modifier un opérande violerait le principe que `a * b` laisse `a` et `b` intacts.",
+    "concepts": ["operateur-arithmetique"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans la signature membre `Fraction operator*(const Fraction& autre) const;`, à quoi sert le `const` **final** (après les parenthèses) ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Il garantit que le paramètre autre n'est pas modifié." },
+        { "id": "b", "label": "Il garantit que la méthode ne modifie pas l'objet de gauche (*this) et qu'elle s'applique aux objets const." },
+        { "id": "c", "label": "Il rend le résultat renvoyé non modifiable." },
+        { "id": "d", "label": "Il interdit toute copie du résultat." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Le `const` **final** porte sur l'**objet courant** (`*this`) : il garantit que la méthode **ne modifie pas** l'objet de gauche, et permet d'appliquer l'opérateur à des objets `const`. C'est le `const` du **paramètre** (`const Fraction& autre`) qui protège l'opérande de droite.",
+    "concepts": ["operateur-arithmetique", "operateur-membre"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quels éléments caractérisent la **forme canonique** d'un opérateur arithmétique `operator+` membre ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Le paramètre est passé en const Classe& (référence constante)." },
+        { "id": "b", "label": "La méthode est marquée const." },
+        { "id": "c", "label": "Le résultat est renvoyé par valeur." },
+        { "id": "d", "label": "Le résultat est renvoyé par référence vers un objet local." },
+        { "id": "e", "label": "L'opérateur modifie l'opérande de gauche pour y stocker le résultat." }
+      ]
+    },
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "La forme canonique d'un `operator+` membre : **paramètre `const Classe&`** (lu, pas copié), **méthode `const`** (l'objet de gauche n'est pas modifié), **retour par valeur** (un nouvel objet). Renvoyer une référence vers un local est un bug (référence pendante) ; modifier un opérande viole le sens de `+`.",
+    "concepts": ["operateur-arithmetique", "operateur-membre"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remets dans l'ordre les trois étapes de l'implémentation canonique de `operator+` à partir de `operator+=`.",
+    "payload": {
+      "items": [
+        { "id": "ret", "label": "Renvoyer la copie par valeur" },
+        { "id": "copy", "label": "Copier l'opérande de gauche dans un objet local resultat" },
+        { "id": "compound", "label": "Appliquer operator+= sur la copie resultat" }
+      ]
+    },
+    "solution": { "order": ["copy", "compound", "ret"] },
+    "explanation": "L'idiome canonique en trois temps : 1) on **copie** l'opérande de gauche dans un local `resultat` (l'original ne doit pas bouger) ; 2) on applique `+=` **sur la copie**, ce qui réutilise le calcul écrit une seule fois ; 3) on **renvoie la copie par valeur**. La formule d'addition n'existe ainsi qu'à un seul endroit.",
+    "concepts": ["operateur-arithmetique", "operateur-affectation-compose"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète la **forme canonique** de `operator+=` pour `Fraction` : elle renvoie une référence vers l'objet modifié, ce qui autorise le chaînage.",
+    "payload": {
+      "template": "Fraction& Fraction::operator+=(const Fraction& autre) {\n    // ... calcul ...\n    return {{ret}};\n}",
+      "slots": [
+        { "id": "ret", "width": "sm" }
+      ]
+    },
+    "solution": {
+      "answers": { "ret": "*this" },
+      "caseSensitive": false
+    },
+    "explanation": "La forme canonique de `+=` renvoie une **référence** (`Fraction&`) vers l'objet courant modifié, donc se termine par `return *this;`. `this` est un pointeur vers l'objet courant ; `*this` est l'objet lui-même. Renvoyer cette référence autorise le chaînage `a += b += c;` — exactement comme `operator=`.",
+    "concepts": ["operateur-affectation-compose"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associe chaque catégorie d'opérateur à la caractéristique correcte de sa forme membre.",
+    "payload": {
+      "left": [
+        { "id": "l1", "label": "operator+ (arithmétique)" },
+        { "id": "l2", "label": "operator+= (affectation composée)" },
+        { "id": "l3", "label": "Le paramètre (opérande de droite), dans les deux cas" }
+      ],
+      "right": [
+        { "id": "r1", "label": "Méthode const, renvoie un nouvel objet par valeur" },
+        { "id": "r2", "label": "Méthode non const, modifie *this, renvoie *this" },
+        { "id": "r3", "label": "Passé en const Classe& (référence constante)" }
+      ]
+    },
+    "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3" } },
+    "explanation": "`operator+` est **`const`** et renvoie un **nouvel objet par valeur** : il ne modifie aucun opérande. `operator+=` n'est **pas `const`** : il **modifie** `*this` et le renvoie (forme canonique → `return *this;`). Dans les deux cas, le paramètre (l'opérande de droite) est passé en **`const Classe&`** : lu, jamais copié.",
+    "concepts": ["operateur-arithmetique", "operateur-affectation-compose"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "TRUE_FALSE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Renvoyer le résultat de `operator*` par référence (`Fraction&`) vers l'objet local créé dans la fonction est correct, car cela évite une copie.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux, et c'est un bug grave. Le résultat du produit est un objet **local** à la fonction : il est **détruit** dès le `return`. Renvoyer une référence (`Fraction&`) vers ce local donne une **référence pendante** — elle désigne un objet qui n'existe plus. Un opérateur arithmétique renvoie **par valeur**, jamais par référence vers un local.",
+    "concepts": ["operateur-arithmetique"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Dans `operator*=`, l'appel `f1 *= 2;` compile alors que `2` est un `int` et le paramètre un `const Fraction&`. Pourquoi ?",
+    "payload": {
+      "options": [
+        { "id": "a", "label": "Parce que le compilateur ignore le type du paramètre pour les opérateurs raccourcis." },
+        { "id": "b", "label": "Parce que le constructeur Fraction(int) autorise la conversion implicite de 2 en Fraction, et le paramètre const Fraction& accepte ce temporaire." },
+        { "id": "c", "label": "Parce que 2 est automatiquement un Fraction en C++." },
+        { "id": "d", "label": "Parce que *= n'accepte que des int." }
+      ]
+    },
+    "solution": { "correct": ["b"] },
+    "explanation": "Le constructeur `Fraction(int)` (ou `Fraction(int n, int d = 1)`) autorise la **conversion implicite** d'un `int` en `Fraction` : `2` devient un objet temporaire `Fraction(2)`. Un paramètre **`const Fraction&`** accepte de se lier à ce temporaire. C'est pourquoi `f1 *= 2;` est interprété comme `f1.operator*=(Fraction(2))`.",
+    "concepts": ["operateur-affectation-compose", "operateur-arithmetique"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelle est la sortie exacte de ce programme ? `operator*` multiplie deux fractions.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Fraction {\n        int num, den;\n    public:\n        Fraction(int n = 0, int d = 1) : num(n), den(d) {}\n        Fraction operator*(const Fraction& autre) const {\n            return Fraction(num * autre.num, den * autre.den);\n        }\n        void afficher() const { cout << num << \"/\" << den << endl; }\n};\n\nint main() {\n    Fraction f1(1, 8), f2(1, 2);\n    Fraction res = f1 * f2;\n    res.afficher();\n    Fraction bis = f1.operator*(f2);\n    bis.afficher();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "1/16\n1/16" },
+    "explanation": "`operator*` multiplie numérateurs entre eux et dénominateurs entre eux : `(1*1)/(8*2) = 1/16`. `f1 * f2` et `f1.operator*(f2)` sont **strictement équivalents** — la notation infixe est juste la forme commode de l'appel explicite. Les deux affichent `1/16`.",
+    "concepts": ["operateur-arithmetique", "operateur-membre"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la sortie exacte de ce programme ? Observe l'effet de `operator*=`, y compris avec un `int`.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Fraction {\n        int num, den;\n    public:\n        Fraction(int n = 0, int d = 1) : num(n), den(d) {}\n        void operator*=(const Fraction& autre) {\n            num *= autre.num;\n            den *= autre.den;\n        }\n        void afficher() const { cout << num << \"/\" << den << endl; }\n};\n\nint main() {\n    Fraction f1(4, 5), f2(3, 11);\n    f1 *= f2;\n    f1.afficher();\n    f1 *= 2;\n    f1.afficher();\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "12/55\n24/55" },
+    "explanation": "`f1 *= f2` modifie `f1` : `num = 4*3 = 12`, `den = 5*11 = 55` → `12/55`. Puis `f1 *= 2` : `2` est converti en `Fraction(2)` (donc `2/1`) ; `num = 12*2 = 24`, `den = 55*1 = 55` → `24/55`. L'opérateur raccourci **modifie** l'opérande de gauche à chaque fois.",
+    "concepts": ["operateur-affectation-compose"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Quelle est la sortie exacte de ce programme ? `operator+=` renvoie une référence, ce qui permet le chaînage.",
+    "payload": {
+      "program": "#include <iostream>\nusing namespace std;\n\nclass Somme {\n        int total;\n    public:\n        Somme(int t = 0) : total(t) {}\n        Somme& operator+=(const Somme& autre) {\n            total += autre.total;\n            return *this;\n        }\n        int get() const { return total; }\n};\n\nint main() {\n    Somme a(1), b(2), c(3);\n    a += b += c;\n    cout << a.get() << \" \" << b.get() << \" \" << c.get() << endl;\n    return 0;\n}"
+    },
+    "solution": { "expectedOutput": "6 5 3" },
+    "explanation": "`+=` est associatif **à droite** : `a += (b += c)` d'abord. `b += c` ajoute 3 à `b` → `b` vaut 5, et renvoie une **référence** vers `b`. Puis `a += b` ajoute 5 (la nouvelle valeur de `b`) à `a` → `a` vaut 6. `c` n'est jamais modifié. Sortie : `6 5 3`.",
+    "concepts": ["operateur-affectation-compose"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète la classe `Complexe` avec l'opérateur `-` (soustraction) en **fonction membre**. Le `main` lit deux complexes (re im re im) et affiche leur différence.",
+    "payload": {
+      "spec": "Definir la classe Complexe avec deux attributs prives int re et im. Constructeur Complexe(int r = 0, int i = 0). Surcharger operator- en fonction membre : parametre const reference, methode const, retour par valeur d'un nouveau Complexe (re-c.re, im-c.im). Methode afficher() const qui ecrit 're + i * im' suivi d'un retour a la ligne. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Complexe {\n    private:\n        int re, im;\n    public:\n        Complexe(int r = 0, int i = 0) : re(r), im(i) {}\n        // a completer : operator- en fonction membre\n        void afficher() const { cout << re << \" + i * \" << im << endl; }\n};\n\nint main() {\n    int a, b, c, d;\n    cin >> a >> b >> c >> d;\n    Complexe z1(a, b), z2(c, d);\n    Complexe z3 = z1 - z2;\n    z3.afficher();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "difference positive", "stdin": "5 7 2 3", "expectedStdout": "3 + i * 4" },
+        { "name": "resultat negatif", "stdin": "0 0 4 9", "expectedStdout": "-4 + i * -9" },
+        { "name": "cache nul", "stdin": "10 10 10 10", "expectedStdout": "0 + i * 0", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Complexe {\n    private:\n        int re, im;\n    public:\n        Complexe(int r = 0, int i = 0) : re(r), im(i) {}\n        Complexe operator-(const Complexe& c) const {\n            return Complexe(re - c.re, im - c.im);\n        }\n        void afficher() const { cout << re << \" + i * \" << im << endl; }\n};\n\nint main() {\n    int a, b, c, d;\n    cin >> a >> b >> c >> d;\n    Complexe z1(a, b), z2(c, d);\n    Complexe z3 = z1 - z2;\n    z3.afficher();\n    return 0;\n}"
+    },
+    "explanation": "`operator-` se construit comme `operator+` : forme membre, **un paramètre** `const Complexe&` (l'opérande de droite), méthode **`const`**, **retour par valeur** d'un nouvel objet `Complexe(re - c.re, im - c.im)`. `z1 - z2` est interprété comme `z1.operator-(z2)`.",
+    "concepts": ["operateur-arithmetique", "operateur-membre"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complète la classe `Vecteur` avec `operator+=` en **forme canonique** (modifie `*this`, renvoie `Vecteur&`). Le `main` lit deux vecteurs et affiche `u` après `u += v`.",
+    "payload": {
+      "spec": "Definir la classe Vecteur avec deux attributs prives int x et y. Constructeur Vecteur(int a = 0, int b = 0). Surcharger operator+= en forme canonique : il modifie *this (x += autre.x, y += autre.y), n'est PAS const, renvoie une reference Vecteur& via return *this. Methode afficher() const qui ecrit x puis un espace puis y puis un retour a la ligne. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Vecteur {\n    private:\n        int x, y;\n    public:\n        Vecteur(int a = 0, int b = 0) : x(a), y(b) {}\n        // a completer : operator+= en forme canonique\n        void afficher() const { cout << x << \" \" << y << endl; }\n};\n\nint main() {\n    int a, b, c, d;\n    cin >> a >> b >> c >> d;\n    Vecteur u(a, b), v(c, d);\n    u += v;\n    u.afficher();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "somme positive", "stdin": "1 2 3 4", "expectedStdout": "4 6" },
+        { "name": "avec negatifs", "stdin": "10 0 -5 -5", "expectedStdout": "5 -5" },
+        { "name": "cache nul", "stdin": "0 0 0 0", "expectedStdout": "0 0", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Vecteur {\n    private:\n        int x, y;\n    public:\n        Vecteur(int a = 0, int b = 0) : x(a), y(b) {}\n        Vecteur& operator+=(const Vecteur& autre) {\n            x += autre.x;\n            y += autre.y;\n            return *this;\n        }\n        void afficher() const { cout << x << \" \" << y << endl; }\n};\n\nint main() {\n    int a, b, c, d;\n    cin >> a >> b >> c >> d;\n    Vecteur u(a, b), v(c, d);\n    u += v;\n    u.afficher();\n    return 0;\n}"
+    },
+    "explanation": "La forme canonique de `+=` : la méthode **modifie** `*this` (donc **pas** `const`), et **renvoie une référence** `Vecteur&` vers l'objet courant via `return *this;`. Ce retour par référence autorise le chaînage `u += v += w`. `u += v` est interprété comme `u.operator+=(v)`.",
+    "concepts": ["operateur-affectation-compose", "operateur-membre"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "CODE_WRITE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Écris la classe `Fraction` complète : `operator+=` (forme canonique) **puis** `operator+` **implémenté à partir de** `operator+=`. Le `main` affiche la somme et vérifie que `f1` n'a pas changé.",
+    "payload": {
+      "spec": "Definir la classe Fraction avec deux attributs prives int num et den. Constructeur Fraction(int n = 0, int d = 1). Surcharger operator+= en forme canonique : num = num*autre.den + autre.num*den ; den = den*autre.den ; renvoie Fraction& via return *this. Surcharger operator+ const en l'IMPLEMENTANT a partir de operator+= : copier *this dans un local, lui appliquer +=, renvoyer la copie par valeur. Methode afficher() const qui ecrit num/den suivi d'un retour a la ligne. Ne pas modifier le main.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Fraction {\n    private:\n        int num, den;\n    public:\n        Fraction(int n = 0, int d = 1) : num(n), den(d) {}\n        // a completer : operator+= (forme canonique)\n        // a completer : operator+ implemente a partir de operator+=\n        void afficher() const { cout << num << \"/\" << den << endl; }\n};\n\nint main() {\n    int a, b, c, d;\n    cin >> a >> b >> c >> d;\n    Fraction f1(a, b), f2(c, d);\n    Fraction somme = f1 + f2;\n    somme.afficher();\n    f1.afficher();\n    return 0;\n}\n",
+      "tests": [
+        { "name": "demi plus tiers", "stdin": "1 2 1 3", "expectedStdout": "5/6\n1/2" },
+        { "name": "quart plus quart", "stdin": "1 4 1 4", "expectedStdout": "8/16\n1/4" },
+        { "name": "cache zero plus", "stdin": "0 1 5 7", "expectedStdout": "5/7\n0/1", "hidden": true }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Fraction {\n    private:\n        int num, den;\n    public:\n        Fraction(int n = 0, int d = 1) : num(n), den(d) {}\n        Fraction& operator+=(const Fraction& autre) {\n            num = num * autre.den + autre.num * den;\n            den = den * autre.den;\n            return *this;\n        }\n        Fraction operator+(const Fraction& autre) const {\n            Fraction resultat(*this);\n            resultat += autre;\n            return resultat;\n        }\n        void afficher() const { cout << num << \"/\" << den << endl; }\n};\n\nint main() {\n    int a, b, c, d;\n    cin >> a >> b >> c >> d;\n    Fraction f1(a, b), f2(c, d);\n    Fraction somme = f1 + f2;\n    somme.afficher();\n    f1.afficher();\n    return 0;\n}"
+    },
+    "explanation": "Le calcul d'addition n'est écrit **qu'une fois**, dans `operator+=` (qui modifie `*this` et renvoie `*this`). `operator+` le réutilise : il **copie** l'opérande de gauche (`Fraction resultat(*this)`), applique `+=` **sur la copie**, et renvoie la copie par valeur. Comme `operator+` est `const` et travaille sur une copie, `f1` reste intacte (`1/2` après `1/2 + 1/3 = 5/6`).",
+    "concepts": ["operateur-arithmetique", "operateur-affectation-compose"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "CODE_FIX",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Ce programme compile mais affiche `a=15` au lieu de `a=10` : l'opérateur `+` modifie son opérande de gauche. Corrige `operator+`.",
+    "payload": {
+      "spec": "La classe Compteur a un attribut prive int valeur et un constructeur Compteur(int v = 0). operator+ doit etre une fonction membre const qui ne modifie AUCUN operande et renvoie par valeur un NOUVEAU Compteur dont la valeur est la somme. get() renvoie valeur. Le main construit a(10) et b(5), calcule c = a + b et affiche a, b puis c.",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Compteur {\n    private:\n        int valeur;\n    public:\n        Compteur(int v = 0) : valeur(v) {}\n        Compteur operator+(const Compteur& autre) {\n            valeur += autre.valeur;\n            return *this;\n        }\n        int get() const { return valeur; }\n};\n\nint main() {\n    Compteur a(10), b(5);\n    Compteur c = a + b;\n    cout << \"a=\" << a.get() << endl;\n    cout << \"b=\" << b.get() << endl;\n    cout << \"c=\" << c.get() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "operandes intacts", "stdin": "", "expectedStdout": "a=10\nb=5\nc=15" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Compteur {\n    private:\n        int valeur;\n    public:\n        Compteur(int v = 0) : valeur(v) {}\n        Compteur operator+(const Compteur& autre) const {\n            return Compteur(valeur + autre.valeur);\n        }\n        int get() const { return valeur; }\n};\n\nint main() {\n    Compteur a(10), b(5);\n    Compteur c = a + b;\n    cout << \"a=\" << a.get() << endl;\n    cout << \"b=\" << b.get() << endl;\n    cout << \"c=\" << c.get() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : `valeur += autre.valeur;` modifie l'objet de gauche, puis `return *this;` le renvoie. Du coup `a + b` change `a` (10 devient 15). Un opérateur arithmétique ne doit **modifier aucun opérande** : il faut créer et renvoyer un **nouvel objet** — `return Compteur(valeur + autre.valeur);` — et marquer la méthode `const` pour garantir que `*this` reste intact.",
+    "concepts": ["operateur-arithmetique", "operateur-membre"]
+  },
+  {
+    "chapterSlug": "operateurs-arithmetiques",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Ce programme ne compile pas. L'opérateur raccourci `operator+=` a été marqué `const`. Corrige-le.",
+    "payload": {
+      "spec": "La classe Solde a un attribut prive int montant et un constructeur Solde(int m = 0). operator+= modifie *this (montant += autre.montant) : c'est un operateur raccourci, il ne peut donc PAS etre const. Il renvoie une reference Solde& via return *this. get() renvoie montant. Le main lit deux entiers, construit s et depot, fait s += depot et affiche s.get().",
+      "std": "c++17",
+      "compare": "trimmed",
+      "starterCode": "#include <iostream>\nusing namespace std;\n\nclass Solde {\n    private:\n        int montant;\n    public:\n        Solde(int m = 0) : montant(m) {}\n        Solde& operator+=(const Solde& autre) const {\n            montant += autre.montant;\n            return *this;\n        }\n        int get() const { return montant; }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Solde s(a), depot(b);\n    s += depot;\n    cout << s.get() << endl;\n    return 0;\n}\n",
+      "tests": [
+        { "name": "depot", "stdin": "100 40", "expectedStdout": "140" },
+        { "name": "depart a zero", "stdin": "0 250", "expectedStdout": "250" }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <iostream>\nusing namespace std;\n\nclass Solde {\n    private:\n        int montant;\n    public:\n        Solde(int m = 0) : montant(m) {}\n        Solde& operator+=(const Solde& autre) {\n            montant += autre.montant;\n            return *this;\n        }\n        int get() const { return montant; }\n};\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    Solde s(a), depot(b);\n    s += depot;\n    cout << s.get() << endl;\n    return 0;\n}"
+    },
+    "explanation": "Le bug : le `const` final sur `operator+=`. Un opérateur raccourci **modifie** l'objet courant ; une méthode `const` s'interdit de modifier `*this`. g++ refuse donc `montant += ...` (`assignment of member in read-only object`) et `return *this;` (`discards qualifiers`). La correction : **retirer le `const` final**. Les raccourcis `+= -= *= /=` ne sont jamais `const`.",
+    "concepts": ["operateur-affectation-compose", "operateur-membre"]
+  }
+]

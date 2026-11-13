@@ -1,0 +1,303 @@
+---
+title: "Vraisemblance et sélection de variables"
+slug: vraisemblance-selection
+order: 4
+estimatedReadMin: 20
+concepts: [maximum-de-vraisemblance, entropie-croisee, test-de-significativite, selection-de-variables, critere-aic-bic, regression-logistique, reseau-de-neurones]
+source: "ING2_GI_IA_RegLog_Slides.pdf"
+---
+
+## Estimer les paramètres du modèle
+
+Les sections précédentes ont posé la **forme** du modèle :
+`logit(p(x)) = a₀ + a₁x₁ + … + aₚxₚ`. Reste une question essentielle : **comment
+obtenir les coefficients `a₀, …, aₚ`** à partir des données d'apprentissage ?
+C'est le problème de l'**estimation des paramètres**.
+
+Le cours pose le cadre, sous le titre **Optimisation** : **l'estimation des
+paramètres inconnus du modèle `aᵢ` nécessite un algorithme d'optimisation simple
+et rapide. La fonction à optimiser est convexe.**
+
+Deux points importants ressortent de cet énoncé.
+
+- L'estimation est un problème d'**optimisation** : on cherche les coefficients
+  qui **optimisent** une certaine fonction des données.
+- La fonction à optimiser est **convexe**. C'est une propriété très favorable :
+  une fonction convexe ne possède **pas de minima locaux parasites**, ce qui rend
+  l'optimisation **simple et rapide** — l'algorithme converge vers la **bonne**
+  solution.
+
+> **À retenir** : estimer les coefficients `aᵢ` est un problème d'**optimisation**
+> résolu par un algorithme **simple et rapide**. La fonction à optimiser est
+> **convexe** — d'où une optimisation sans difficulté.
+
+## La log-vraisemblance et l'entropie croisée
+
+Quelle est cette fonction à optimiser ? Le cours la nomme : **il s'agit du log de
+la vraisemblance, ou entropie croisée.** Elle s'écrit, en notant `a = (a₀, a₁,
+…, aₚ)` le vecteur des paramètres :
+
+`E(a) = − Σᵢ [ yᵢ·ln p(xᵢ, a) + (1 − yᵢ)·ln(1 − p(xᵢ, a)) ]`
+
+la somme `Σᵢ` portant sur les **`n` exemples** de l'ensemble d'apprentissage,
+indexés `i = 1, …, n`. Décortiquons cette expression terme à terme.
+
+- `xᵢ` est le vecteur des variables explicatives du `i`-ème exemple, et `yᵢ` sa
+  **classe réelle**, valant `0` ou `1`.
+- `p(xᵢ, a)` est la **probabilité prédite** par le modèle (de paramètres `a`)
+  pour cet exemple : `P(Y = 1 | X = xᵢ)`.
+- Pour chaque exemple, **un seul** des deux termes du crochet survit, selon la
+  valeur de `yᵢ` :
+  - si `yᵢ = 1`, le terme `(1 − yᵢ)·ln(1 − p)` s'annule et il reste
+    `ln p(xᵢ, a)` ;
+  - si `yᵢ = 0`, le terme `yᵢ·ln p` s'annule et il reste `ln(1 − p(xᵢ, a))`.
+- Le **signe `−`** devant la somme **transforme une maximisation en
+  minimisation**.
+
+Le sens de cette fonction est le suivant. Pour un exemple bien prédit — `yᵢ = 1`
+avec `p(xᵢ, a)` proche de `1`, ou `yᵢ = 0` avec `p(xᵢ, a)` proche de `0` —, le
+logarithme retenu est proche de `ln(1) = 0` : la contribution à `E(a)` est
+**faible**. Pour un exemple **mal prédit**, le logarithme retenu est très
+négatif, donc, avec le signe `−`, la contribution à `E(a)` est **grande**. La
+fonction `E(a)` **mesure ainsi l'erreur globale** du modèle sur l'ensemble
+d'apprentissage.
+
+Le cours emploie **deux noms** pour `E(a)`, et il faut comprendre leur lien.
+
+| Point de vue | Nom de `E(a)` | Objectif sur `E(a)` |
+| --- | --- | --- |
+| **Statistique** | `−` log de la **vraisemblance** | Le log-vraisemblance est à **maximiser** |
+| **Apprentissage** | **Entropie croisée** (fonction de coût) | L'entropie croisée est à **minimiser** |
+
+Les deux désignent la **même fonction**. La **vraisemblance** est la probabilité,
+selon le modèle, d'observer les étiquettes réelles `y₁, …, yₙ` ; estimer les
+paramètres par **maximum de vraisemblance**, c'est choisir les `a` qui **rendent
+les données observées les plus probables**. L'**entropie croisée** est la **même
+chose vue comme une fonction de coût** à **minimiser** — d'où le signe `−` :
+**minimiser** `E(a)`, c'est **maximiser** la log-vraisemblance. Comme cette
+fonction est **convexe**, l'algorithme d'optimisation trouve sans peine le
+vecteur `a` optimal.
+
+> **À retenir** : on estime `a` en **optimisant** `E(a) = − Σᵢ [ yᵢ ln p(xᵢ,a) +
+> (1 − yᵢ) ln(1 − p(xᵢ,a)) ]` — le **log de la vraisemblance**, aussi appelé
+> **entropie croisée**. **Maximiser la vraisemblance** ⇔ **minimiser l'entropie
+> croisée**. La fonction est **convexe**.
+
+## Le test de significativité des coefficients
+
+Une fois les coefficients estimés, le cours pose une question de **fiabilité**,
+sous le titre **Test de significativité** : **comme pour tous modèles de
+prévision, les paramètres estimés dépendent de l'échantillon considéré comme base
+d'apprentissage.** Les `âᵢ` obtenus ne sont donc **pas** les vraies valeurs des
+coefficients : ce sont des **estimations**, qui auraient été légèrement
+différentes avec un autre échantillon. Cette **incertitude** doit être gérée.
+
+Le cours indique comment : **il est possible de gérer cette incertitude en
+construisant un intervalle de confiance pour chaque coefficient** :
+
+`[ âᵢ − z₁₋α/2·σ̂ᵢ ; âᵢ + z₁₋α/2·σ̂ᵢ ]`
+
+où, précise le cours, **`z₁₋α/2` est le quantile de la loi `N(0,1)`** (la loi
+normale centrée réduite) et **`σ̂ᵢ` est l'estimation de l'écart-type de `aᵢ`**.
+L'intervalle est **centré** sur l'estimation `âᵢ` ; sa **demi-largeur**
+`z₁₋α/2·σ̂ᵢ` dépend de l'incertitude `σ̂ᵢ` et du **niveau de confiance** choisi
+(via `α`). Le cours signale que c'est le **même principe que la régression
+linéaire**.
+
+De cet intervalle, le cours **déduit un test de significativité des
+coefficients** :
+
+`H₀ : aᵢ = 0`  &nbsp;&nbsp;contre&nbsp;&nbsp;  `H₁ : aᵢ ≠ 0`
+
+L'**hypothèse nulle `H₀`** est que le coefficient est **nul** — donc, comme l'a
+montré la section 3, que la variable `xᵢ` **n'a aucun effet** sur la chance que
+`Y = 1`. L'**hypothèse alternative `H₁`** est que le coefficient est **non nul**
+— la variable a un effet. Tester `H₀` contre `H₁` revient à se demander si la
+variable `xᵢ` est **significative**, c'est-à-dire si elle **mérite sa place** dans
+le modèle.
+
+> **À retenir** : les coefficients estimés **dépendent de l'échantillon**. On
+> gère cette incertitude par un **intervalle de confiance**
+> `[âᵢ − z₁₋α/2·σ̂ᵢ ; âᵢ + z₁₋α/2·σ̂ᵢ]` (`z₁₋α/2` quantile de `N(0,1)`, `σ̂ᵢ`
+> écart-type estimé). On en déduit le **test de significativité** `H₀ : aᵢ = 0`
+> contre `H₁ : aᵢ ≠ 0`.
+
+## Lire la sortie d'un ajustement
+
+En pratique, l'ajustement d'une régression logistique — en R, par la fonction
+`glm` avec `family = "binomial"` — produit un **tableau de coefficients** que le
+cours donne en exemple :
+
+```text
+Coefficients:
+                 Estimate Std. Error z value Pr(>|z|)
+(Intercept)      -39.0028    26.1820  -1.490    0.136
+Age                0.4399     0.2726   1.613    0.107
+Poids              0.1393     0.1249   1.115    0.265
+AlcoolImportante   5.9080     4.5373   1.302    0.193
+AlcoolModere       1.3350     3.6545   0.365    0.715
+```
+
+Ce tableau se lit colonne par colonne.
+
+- **`Estimate`** : la valeur estimée `âᵢ` de chaque coefficient.
+- **`Std. Error`** : l'écart-type estimé `σ̂ᵢ` du coefficient — l'**incertitude**
+  sur l'estimation.
+- **`z value`** : la statistique du test, rapport de l'estimation à son
+  écart-type.
+- **`Pr(>|z|)`** : la **p-valeur du test** `H₀ : aᵢ = 0`. C'est la colonne
+  décisive pour juger de la **significativité** : une p-valeur **faible** conduit
+  à **rejeter `H₀`** (coefficient significatif) ; une p-valeur **élevée** ne
+  permet **pas** de rejeter `H₀` (coefficient **non significatif**).
+
+Dans le tableau ci-dessus, **toutes** les p-valeurs sont **élevées** : aucune
+variable n'apparaît significative. C'est le point de départ de la **sélection du
+modèle**.
+
+> **À retenir** : la sortie d'un ajustement donne, par coefficient,
+> l'**`Estimate`** `âᵢ`, le **`Std. Error`** `σ̂ᵢ`, la **`z value`** et la
+> **p-valeur `Pr(>|z|)`**. La **p-valeur** juge la **significativité** :
+> **faible** ⇒ on rejette `H₀` (significatif) ; **élevée** ⇒ non significatif.
+
+## La sélection du modèle
+
+Toutes les variables disponibles ne sont pas forcément utiles. Le cours aborde
+donc la **sélection du modèle** — choisir le **meilleur** sous-ensemble de
+variables. Le principe est repris de la régression linéaire : **de même que pour
+la régression linéaire, on peut procéder à une sélection du meilleur modèle à
+l'aide d'une procédure pas à pas.**
+
+La règle de la procédure est la suivante : **on élimine successivement les
+variables non significatives du modèle de façon à minimiser le critère AIC (ou
+BIC).**
+
+- On part du modèle **complet**, avec toutes les variables.
+- On **retire** la variable la **moins significative** (p-valeur la plus élevée).
+- On réajuste le modèle et on observe le **critère AIC** (ou **BIC**).
+- On **répète** tant que le retrait d'une variable **fait baisser** le critère ;
+  on **s'arrête** lorsque le critère **remonte**.
+
+L'**AIC** (et le **BIC**) est un **critère de qualité** du modèle : la sélection
+cherche le modèle qui le **minimise**. Ce critère arbitre entre l'**ajustement
+aux données** et le **nombre de variables** : il pénalise les modèles trop
+chargés, évitant ainsi de conserver des variables inutiles.
+
+Le cours met en garde par un point subtil. La sortie `glm` indique, sous le
+tableau de coefficients, une ligne `AIC: …`. Le cours compare **deux modèles** :
+
+| Modèle | Coefficients | Critère `AIC` |
+| --- | --- | --- |
+| Modèle A | Coefficients **non significatifs** | `AIC` **minimal** (`19,523`) |
+| Modèle B | Coefficients **significatifs** | `AIC` **plus grand** (`19,666`) |
+
+On voit qu'un modèle peut avoir des **coefficients non significatifs** tout en
+atteignant l'**AIC le plus bas**, tandis qu'un autre, aux **coefficients
+significatifs**, a un **AIC légèrement plus grand**. Significativité des
+coefficients et minimalité de l'AIC ne **coïncident donc pas** toujours : le
+critère AIC privilégie la **qualité globale** du modèle, qui ne se réduit pas à
+la significativité de chaque coefficient pris isolément.
+
+Le cours signale enfin une précaution : **il est important de supprimer les
+variables une à une, car certaines peuvent être liées.** Des variables
+**corrélées** s'influencent mutuellement : retirer l'une modifie la
+significativité de l'autre. C'est pourquoi la procédure est **pas à pas** — un
+retrait, un réajustement, une réévaluation — et non un retrait massif. En
+pratique, une fonction dédiée (`step` en R) peut **automatiser** cette sélection.
+
+Une fois la sélection terminée, le cours rappelle l'étape de **validation** :
+**une fois le modèle sélectionné, on le valide sur une base test.** Le modèle
+retenu doit être éprouvé sur des données **non utilisées** pour l'apprentissage,
+afin de mesurer sa véritable capacité de **généralisation**.
+
+> **À retenir** : la **sélection du modèle** se fait par une procédure **pas à
+> pas** : on **retire** les variables **non significatives** une à une de façon à
+> **minimiser l'AIC (ou le BIC)**, en s'arrêtant quand le critère **remonte**.
+> On retire **une variable à la fois** car des variables peuvent être **liées**.
+> Le modèle retenu se **valide sur une base test**.
+
+## Deux caractérisations du modèle
+
+Le cours clôt le module en proposant **deux points de vue (au moins)** sur le
+modèle de régression logistique.
+
+**Modèle probabiliste.** Le premier point de vue est probabiliste : **`Y` est
+considérée comme une variable de Bernoulli**, ce que le cours écrit `Y | x ∼
+B(p(x))`, avec :
+
+`P(Y = 1 | x) = p(x)`  &nbsp;&nbsp;et&nbsp;&nbsp;  `P(Y = 0 | x) = 1 − p(x)`
+
+C'est le point de vue adopté depuis la section 1 : le modèle décrit la **loi**
+de la variable cible binaire.
+
+**Réseau de neurones.** Le second point de vue est celui qui fait le **pont vers
+le module suivant** : **on peut aussi considérer ce modèle comme un réseau de
+neurones à une seule couche et un seul neurone, avec la fonction de transfert
+LOGIT inverse** :
+
+`p(x) = 1 / (1 + e^{−f(X)})`  &nbsp;&nbsp;où&nbsp;&nbsp;  `f(X) = a₀ + a₁x₁ + a₂x₂ + … + aₚxₚ`
+
+Cette écriture est **capitale**. On y reconnaît la structure d'un **neurone
+formel** : une **combinaison linéaire** des entrées, `f(X) = a₀ + a₁x₁ + … +
+aₚxₚ`, suivie d'une **fonction de transfert** — ici le LOGIT inverse, la
+**sigmoïde**. Autrement dit, **un neurone à activation sigmoïde *est* exactement
+une régression logistique**. La régression logistique est ainsi la **brique
+élémentaire** des réseaux de neurones, objet du module suivant.
+
+> **À retenir** : le modèle admet **deux caractérisations**. **Probabiliste** :
+> `Y | x ∼ B(p(x))`, avec `P(Y=1|x) = p(x)` et `P(Y=0|x) = 1 − p(x)`. **Réseau
+> de neurones** : un **unique neurone**, à fonction de transfert **LOGIT
+> inverse**, `p(x) = 1/(1 + e^{−f(X)})` avec `f(X) = a₀ + a₁x₁ + … + aₚxₚ`.
+
+## Pourquoi la régression logistique reste très utilisée
+
+En conclusion, le cours souligne que **la régression logistique est un modèle
+relativement simple comparé à un réseau de neurones**, et explique pourquoi elle
+reste **très utilisée**, notamment en **épidémiologie** et en **marketing**, pour
+plusieurs raisons.
+
+- **Elle est robuste.**
+- **Elle est peu coûteuse en temps de calcul et passe bien à l'échelle des
+  données massives.**
+- **Elle est interprétable grâce au lien entre les coefficients et les *odds*** —
+  une qualité **particulièrement appréciée par le métier** : un coefficient se lit
+  directement comme un *odds-ratio* `exp(aᵢ)`, ce qu'aucun réseau de neurones
+  complexe ne permet aussi simplement.
+
+Le cours indique enfin les **extensions** de la méthode. **Il est possible
+d'étendre la méthode au cas où `Y` admet plus de deux classes** : on parle alors
+de **modèle logistique multinomial**. Si `Y` est une **mesure de comptage**
+(nombre de voitures à un feu rouge, nombre d'accidents par jour…), on parle de
+**régression log-linéaire**. Et, **de façon plus générale encore, ces modèles
+font partie de la famille des modèles linéaires généralisés (GLM)**.
+
+> **À retenir** : la régression logistique reste très utilisée car elle est
+> **robuste**, **peu coûteuse** (passage à l'échelle) et **interprétable** (lien
+> coefficients–*odds*). Elle s'étend au **multinomial** (`Y` à plus de deux
+> classes) et à la **régression log-linéaire** (`Y` de comptage) ; toutes ces
+> méthodes sont des **modèles linéaires généralisés (GLM)**.
+
+## Synthèse de la section
+
+Les coefficients `a = (a₀, …, aₚ)` du modèle s'estiment par **optimisation**
+d'une fonction **convexe** : `E(a) = − Σᵢ [ yᵢ ln p(xᵢ,a) + (1 − yᵢ) ln(1 −
+p(xᵢ,a)) ]`, le **log de la vraisemblance**, aussi nommé **entropie croisée** —
+**maximiser la vraisemblance** revient à **minimiser l'entropie croisée**. Les
+estimations dépendant de l'échantillon, on construit un **intervalle de
+confiance** `[âᵢ − z₁₋α/2·σ̂ᵢ ; âᵢ + z₁₋α/2·σ̂ᵢ]` et un **test de
+significativité** `H₀ : aᵢ = 0` contre `H₁ : aᵢ ≠ 0`, dont la **p-valeur**
+`Pr(>|z|)` juge si une variable mérite sa place. La **sélection du modèle**
+procède **pas à pas** : retrait des variables **non significatives** une à une
+(car elles peuvent être **liées**) pour **minimiser l'AIC (ou le BIC)**, arrêt
+quand le critère remonte, puis **validation sur une base test**. Le modèle admet
+deux caractérisations : **probabiliste** (`Y | x ∼ B(p(x))`) et **réseau de
+neurones** (un **unique neurone** à activation **sigmoïde**, `p(x) = 1/(1 +
+e^{−f(X)})`) — ce dernier point faisant le **pont** vers les réseaux de neurones.
+Robuste, peu coûteuse et **interprétable**, la régression logistique s'étend au
+**multinomial**, à la **régression log-linéaire**, et appartient aux **modèles
+linéaires généralisés (GLM)**.
+
+> **À retenir** : on estime `a` en **minimisant l'entropie croisée** `E(a)`
+> (= `−` log-vraisemblance), fonction **convexe**. Significativité par le test
+> `H₀ : aᵢ = 0` (**p-valeur**) ; **sélection pas à pas** minimisant l'**AIC/BIC**.
+> Le modèle est un **neurone à activation sigmoïde** — la brique des **réseaux de
+> neurones**.

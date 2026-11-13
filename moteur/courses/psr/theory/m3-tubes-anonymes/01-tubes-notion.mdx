@@ -1,0 +1,143 @@
+---
+title: "Notion de tube et lectures destructrices"
+slug: tubes-notion
+order: 1
+estimatedReadMin: 14
+concepts: [communication-inter-processus, tube, tube-anonyme, fifo-tube, lecture-destructrice, descripteur-fichier, extremite-lecture, extremite-ecriture, pipe-buf]
+source: "Cours 3 — Les tubes"
+---
+
+Les Modules 1 et 2 ont montré comment **créer** des processus (`fork`) et comment les **synchroniser** par signaux. Mais un signal ne transporte **pas de données** : il ne fait que prévenir. Pour qu'un processus en **renseigne** un autre — lui transmettre un texte, un résultat, un flux d'octets — il faut un véritable **canal de communication**. Le premier de ces canaux, et le plus utilisé, est le **tube** (en anglais *pipe*).
+
+## La communication inter-processus
+
+Par **communication inter-processus** (en anglais *IPC*, *Inter-Process Communication*) on désigne la situation suivante :
+
+- **plusieurs processus** s'exécutent sur la **même machine**, « simultanément » ;
+- ces processus ont besoin d'**échanger de l'information**.
+
+Le problème n'est pas anodin. On l'a vu au Module 2 : les **espaces d'adressage** des processus sont **étanches**. Un processus ne peut **pas** lire une variable d'un autre processus. Il faut donc passer par un mécanisme **fourni par le système**.
+
+Plusieurs moyens existent — fichiers ordinaires, tubes, files de messages, mémoire partagée, sockets. Ce module traite du **tube**, et plus précisément du **tube anonyme**.
+
+> ⚠️ Un signal **synchronise** mais ne **communique pas** de contenu : les signaux standard ne se mettent pas en file et ne transportent aucune donnée (Module 2). Dès qu'il s'agit de transmettre un **flux d'octets** entre processus, le signal ne suffit plus — il faut un tube.
+
+## Un air de déjà vu : le pipe du shell
+
+L'idée du tube n'est pas nouvelle pour qui a déjà utilisé un interpréteur de commandes. La commande shell :
+
+```text
+$ ps -a | wc -l
+```
+
+provoque la création de **deux processus** concurrents. Le caractère **`|`** (la « barre verticale », le *pipe*) installe entre eux un **tube** :
+
+- le premier processus (`ps -a`) **écrit** ses résultats dans le tube ;
+- le second processus (`wc -l`) **lit** dans ce tube.
+
+Le tube **mémorise** les informations le temps que le second processus les consomme. C'est exactement ce mécanisme que ce module va apprendre à **construire en C**, à la main.
+
+## Qu'est-ce qu'un tube ?
+
+> Un **tube** est un **moyen de communication entre deux processus** s'exécutant sur une **même machine**. C'est un **fichier particulier**, **géré par le noyau**, qui se comporte comme une **file de données en mémoire** (*FIFO*).
+
+Décortiquons cette définition, mot par mot.
+
+- **Fichier particulier** — un tube est « presque identique à un fichier ordinaire ». On y **lit** et on y **écrit** avec les mêmes primitives `read` et `write` que pour un fichier. Mais il n'a **pas de contenu sur disque** : c'est une structure **en mémoire**.
+- **Géré par le noyau** — le système est seul responsable du tube : il le **crée**, gère son **tampon interne**, assure la **synchronisation** des accès, et le **détruit** quand plus personne ne l'utilise.
+- **File de données (FIFO)** — un tube se comporte comme une **file d'attente** : *First In, First Out*. La **première donnée écrite** est la **première donnée lue**. C'est ce qui lui donne son aspect **unidirectionnel** : les octets sortent dans l'**ordre** où ils sont entrés.
+
+### Les deux familles de tubes
+
+Le système connaît **deux sortes** de tubes :
+
+| | **Tube anonyme** | **Tube nommé (FIFO)** |
+|---|---|---|
+| Nom dans le système de fichiers | aucun | un nom de fichier (type `p`) |
+| Processus qu'il peut relier | seulement des processus **apparentés** | des processus **quelconques** |
+| Création | `pipe()` | `mkfifo()` |
+
+Ce **Module 3** traite **uniquement du tube anonyme**. Le tube nommé fera l'objet du Module 4.
+
+## Le tube anonyme
+
+> Un **tube anonyme** est une **structure sans nom** : il n'a **aucune référence** dans le système de fichiers (c'est un « fichier anonyme »).
+
+N'ayant pas de nom, un tube anonyme ne peut être **désigné** que par les **descripteurs** qu'il a ouverts. Et seul un processus qui **possède** ces descripteurs peut s'en servir. Cela a une conséquence majeure, sur laquelle on reviendra longuement :
+
+> ⚠️ Un tube anonyme ne peut relier que des processus **apparentés** : le processus qui le crée et ses **descendants** créés **après** la création du tube. C'est le **lien de parenté obligatoire**. La raison est mécanique : un tube anonyme s'utilise par ses descripteurs, et le seul moyen pour un autre processus d'**hériter** de ces descripteurs est de **descendre** du créateur, par `fork`. Deux processus sans ancêtre commun n'ont **aucun moyen** de partager un tube anonyme.
+
+Un tube anonyme est aussi **détruit automatiquement** à la fin de son utilisation, c'est-à-dire quand le dernier descripteur ouvert dessus est fermé. Le programmeur n'a pas à le supprimer explicitement.
+
+## La structure d'un tube
+
+Un tube est caractérisé par quatre propriétés essentielles.
+
+### Deux extrémités
+
+Un tube possède **deux extrémités** : une pour **lire** dedans, une pour **écrire** dedans. Chacune est désignée par un **descripteur de fichier** — un entier, exactement comme pour un fichier ordinaire.
+
+- l'**extrémité de lecture** : on y **extrait** des octets ;
+- l'**extrémité d'écriture** : on y **dépose** des octets.
+
+Le tube occupe donc **au plus deux entrées** dans la table des fichiers ouverts : une pour la lecture, une pour l'écriture.
+
+Le noyau gère pour chaque tube **deux pointeurs automatiques** :
+
+- un **pointeur de lecture**, qui désigne le **premier caractère non encore lu** ;
+- un **pointeur d'écriture**, qui désigne le **premier emplacement libre**.
+
+L'écrivain dépose à la position du pointeur d'écriture, qui avance ; le lecteur extrait à la position du pointeur de lecture, qui avance à son tour. Le tube est ainsi vu comme une **bande** où l'on dépose à une extrémité et où l'on retire à l'autre.
+
+### Une taille limitée
+
+Un tube n'a **pas une capacité infinie**. Son tampon a une **taille bornée**, fixée par le système. La constante **`PIPE_BUF`**, définie dans l'en-tête **`<limits.h>`**, donne une garantie associée à cette capacité.
+
+Cette taille finie a une conséquence directe : si un écrivain dépose des données **plus vite** que le lecteur ne les consomme, le tube finit par se **remplir**. L'écrivain devra alors **attendre** — c'est le **blocage en écriture**, étudié au chapitre suivant.
+
+### La lecture est destructrice
+
+C'est **la** propriété la plus importante du tube, et le titre de ce chapitre.
+
+> Dans un tube, la lecture est **destructrice** : une information **ne peut être lue qu'une seule fois**. Les données lues par un processus **disparaissent** du tube.
+
+Quand un processus lit `n` octets dans un tube, ces `n` octets sont **retirés** du tube — le pointeur de lecture avance, l'espace est libéré pour de nouvelles écritures. Aucun autre processus ne pourra **relire** ces mêmes octets.
+
+C'est une différence **fondamentale** avec un fichier ordinaire :
+
+| | **Fichier ordinaire** | **Tube** |
+|---|---|---|
+| Lecture | **non destructrice** : on peut relire, revenir en arrière (`lseek`) | **destructrice** : lue une fois, l'information est perdue |
+| Plusieurs lecteurs | chacun lit **tout** le fichier | chaque octet va à **un seul** lecteur |
+| Accès | aléatoire (positionnable) | **séquentiel** strict (FIFO) |
+
+> ⚠️ Une donnée déposée dans un tube est consommée par **un seul** `read`, **une seule fois**. On ne peut pas la **relire**, ni se **repositionner** dans un tube avec `lseek` — c'est un flux séquentiel. Si **deux** processus lisent dans le même tube, chaque octet n'ira qu'à **l'un des deux**, de façon non prévisible. C'est pourquoi un tube est presque toujours utilisé avec **un seul lecteur** et **un seul écrivain** pour un sens de communication donné.
+
+### Le caractère half-duplex
+
+Un tube est un canal **half-duplex** : il permet la communication dans les **deux sens**, mais **une seule direction à la fois**.
+
+Concrètement : si deux processus PA et PB partagent un tube, PA **peut parler** à PB, et PB **peut parler** à PA — mais **pas en même temps**, et surtout **pas de façon fiable** dans les deux sens sur le même tube.
+
+> ⚠️ Vouloir faire dialoguer deux processus **dans les deux sens** sur **un seul** tube est un piège classique. Comme la lecture est destructrice et le tube partagé, un processus risque de **relire sa propre écriture** au lieu de lire la réponse de l'autre. Un seul tube sert donc un **sens unique**. Pour un dialogue **bidirectionnel**, il faut **deux tubes**, un par sens — on y reviendra au chapitre 2.
+
+## Le rôle du système
+
+Le tube est entièrement **pris en charge par le noyau**. C'est lui qui :
+
+- **crée** et **détruit** le tube ;
+- gère le **tampon en mémoire** et les **pointeurs** de lecture et d'écriture ;
+- assure la **synchronisation** des processus, dans les deux sens :
+  - il **bloque le lecteur** quand le tube est **vide** (rien à lire), en attendant qu'il se remplisse — tant qu'il existe encore un écrivain ;
+  - il **bloque l'écrivain** quand le tube est **plein**, en attendant que le lecteur fasse de la place.
+
+Le programmeur n'a donc **pas à gérer** lui-même cette synchronisation : il lui suffit d'appeler `read` et `write`, et le noyau **suspend** ou **réveille** les processus au bon moment. Le détail précis de ces blocages — et le mécanisme de **fin de fichier** — fait l'objet du chapitre suivant.
+
+> **À retenir**
+> - La **communication inter-processus** échange de l'information entre processus de la **même machine** ; les espaces d'adressage étant étanches, elle passe par un mécanisme du système — ici, le **tube** (*pipe*).
+> - Un **tube** est un **fichier particulier géré par le noyau**, sans contenu sur disque, qui se comporte comme une **file FIFO** en mémoire ; on y accède avec `read` et `write`.
+> - Il existe deux familles : le **tube anonyme** (sans nom, ce module) et le **tube nommé / FIFO** (Module 4).
+> - Un **tube anonyme** n'a **aucune référence** dans le système de fichiers ; il ne peut relier que des processus **apparentés** (le créateur et ses descendants créés après lui), car il s'utilise par des **descripteurs hérités**.
+> - Un tube a **deux extrémités** (lecture et écriture), chacune désignée par un **descripteur**, une **taille limitée** (`PIPE_BUF`, `<limits.h>`), et il est **half-duplex** (un sens à la fois).
+> - La **lecture dans un tube est destructrice** : une donnée n'est lue **qu'une seule fois**, puis disparaît ; on ne peut ni la relire, ni se repositionner (`lseek`).
+> - Le **noyau** assure seul la synchronisation : il **bloque le lecteur** sur tube vide et l'**écrivain** sur tube plein.

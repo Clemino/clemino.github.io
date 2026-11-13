@@ -1,0 +1,60 @@
+---
+title: Indexs Bitmap
+slug: indexs-bitmap
+order: 3
+estimatedReadMin: 6
+concepts: [index-bitmap, selectivite-index]
+source: "CM2, slides 16-17"
+---
+
+## Le principe Bitmap
+
+Là où le B-tree est inadapté (faible sélectivité), l'**index Bitmap** prend le relais. Il fonctionne en stockant, pour chaque valeur possible de la colonne, une **séquence de bits** (1 ou 0) indiquant les lignes qui contiennent cette valeur.
+
+### Exemple : colonne `Classe` sur une table Titanic
+
+| N° tuple | 12 | 11 | 10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Équipage  | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 1ère classe | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 | 0 | 1 |
+| 2ème classe | 0 | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 0 | 1 | 0 | 0 |
+| 3ème classe | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 1 | 0 |
+
+Une recherche `WHERE Classe = '2ème classe'` revient à lire la 3ᵉ ligne du bitmap et identifier les tuples actifs.
+
+## Caractéristiques
+
+- **Faible sélectivité = avantage** : moins il y a de valeurs distinctes, plus chaque bitmap est dense.
+- **NULL est une valeur comme une autre** : l'index Bitmap gère les NULL, contrairement au B-tree.
+- **Une mise à jour de la table reconstruit totalement l'index**. C'est ce qui le rend **inadapté aux tables fréquemment modifiées**.
+- Les opérations logiques (AND, OR, NOT) sur les bitmaps sont extrêmement rapides : intéressant pour les requêtes décisionnelles complexes.
+
+## Quand utiliser Bitmap ?
+
+Trois conditions doivent être réunies :
+
+1. **Faible sélectivité** des colonnes indexées (sexe, état, code pays, catégorie…).
+2. **Beaucoup de lignes** dans la table (plusieurs centaines de milliers ou millions).
+3. **Très peu d'activités de mise à jour** (typique des bases décisionnelles, datawarehouses).
+
+```sql
+CREATE BITMAP INDEX idx_classe ON Titanic(Classe);
+```
+
+> ⚠️ L'index Bitmap n'est disponible qu'en **édition Entreprise** d'Oracle. En Express Edition (XE), il est absent.
+
+## Comparaison rapide
+
+| Critère | B-tree | Bitmap |
+|---|---|---|
+| Sélectivité idéale | Forte (proche de 1) | Faible |
+| Gère NULL | Non | Oui |
+| Coût d'écriture | Maintenance arbre | Reconstruction totale |
+| Édition Oracle | Toutes | Entreprise uniquement |
+| Cas d'usage | OLTP, clés, dates | Décisionnel, datawarehouse |
+
+> **À retenir**
+> - Bitmap = un bit par ligne par valeur possible.
+> - Avantage : faible sélectivité, gère NULL, opérations AND/OR/NOT très rapides.
+> - Inconvénient : reconstruction totale à chaque MAJ → réservé aux tables peu modifiées.
+> - Nécessite Oracle Entreprise (pas en XE).

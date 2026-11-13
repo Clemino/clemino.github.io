@@ -1,0 +1,42 @@
+---
+title: "Registre et traçabilité"
+slug: registre-tracabilite
+order: 2
+estimatedReadMin: 7
+concepts: [registre-risques, trace-decision, integrite-journal]
+source: "Diapositives 7 à 9"
+---
+## Idée centrale
+
+Le **registre des risques** dit ce qui peut mal tourner et qui s'en occupe. La **trace** de chaque décision permet de la rejouer. L'**intégrité du journal** permet de croire cette trace.
+
+## Le registre des risques
+
+| Champ | Exemple pédagogique |
+|---|---|
+| Scénario et personne exposée | Piéton manqué la nuit, usager de la route |
+| Cause à vérifier | Couverture nocturne insuffisante dans les tests |
+| Cotation et incertitude | G = 5, P = 3, score = 15. Estimation à justifier |
+| Mesure et propriétaire | Limiter le domaine d'emploi. Responsable sécurité |
+| Preuve de clôture | Test nocturne indépendant et revue signée |
+
+Les « **5 pourquoi** » formulent des **hypothèses** de cause, qu'il faut encore vérifier.
+
+## La trace d'une décision
+
+- **Entrée** : identifiant pseudonymisé et version des données utiles.
+- **Modèle** : modèle, code, configuration et dépendances.
+- **Score et seuil** : par exemple 0,62 face à un seuil de 0,60, avec la règle appliquée.
+- **Décision** : action, date, acteur et éventuel réexamen.
+
+Pour un système RAG, on ajoute la **version du corpus**, les **passages récupérés**, le **gabarit** et les **paramètres de génération**.
+
+## Intégrité du journal et rejeu
+
+- **Empreinte** : SHA-256 identifie les octets d'un artefact.
+- **Ancrage** : une signature ou une référence de confiance, conservée séparément.
+- **Horodatage** : une preuve de date, selon le service et le cadre retenus.
+- **Sondage** : 20 dossiers tirés au hasard, puis comparaison et rejeu.
+
+> **À retenir**
+> Un sondage sans anomalie **réduit une incertitude**. Il ne prouve pas l'absence totale de falsification.

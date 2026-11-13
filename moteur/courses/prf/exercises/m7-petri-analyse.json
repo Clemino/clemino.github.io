@@ -1,0 +1,1285 @@
+[
+  {
+    "chapterSlug": "graphe-accessibilite",
+    "type": "PETRI_REACHABILITY",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Dans le graphe affiche, quel marquage est atteint depuis M1 par la transition `b` ?",
+    "payload": {
+      "places": [
+        {
+          "id": "p1",
+          "label": "1",
+          "tokens": 1,
+          "x": 120,
+          "y": 80
+        },
+        {
+          "id": "p2",
+          "label": "2",
+          "tokens": 0,
+          "x": 120,
+          "y": 280
+        },
+        {
+          "id": "p3",
+          "label": "3",
+          "tokens": 0,
+          "x": 360,
+          "y": 80
+        },
+        {
+          "id": "p4",
+          "label": "4",
+          "tokens": 0,
+          "x": 600,
+          "y": 80
+        },
+        {
+          "id": "p5",
+          "label": "5",
+          "tokens": 0,
+          "x": 600,
+          "y": 280
+        }
+      ],
+      "transitions": [
+        {
+          "id": "a",
+          "label": "a",
+          "x": 240,
+          "y": 170
+        },
+        {
+          "id": "b",
+          "label": "b",
+          "x": 360,
+          "y": 250
+        },
+        {
+          "id": "c",
+          "label": "c",
+          "x": 500,
+          "y": 170
+        },
+        {
+          "id": "d",
+          "label": "d",
+          "x": 360,
+          "y": 35
+        },
+        {
+          "id": "e",
+          "label": "e",
+          "x": 500,
+          "y": 320
+        }
+      ],
+      "arcs": [
+        {
+          "from": "p1",
+          "to": "a"
+        },
+        {
+          "from": "a",
+          "to": "p2"
+        },
+        {
+          "from": "a",
+          "to": "p3"
+        },
+        {
+          "from": "p2",
+          "to": "b"
+        },
+        {
+          "from": "b",
+          "to": "p4"
+        },
+        {
+          "from": "p3",
+          "to": "c"
+        },
+        {
+          "from": "c",
+          "to": "p5"
+        },
+        {
+          "from": "p4",
+          "to": "d"
+        },
+        {
+          "from": "p5",
+          "to": "d"
+        },
+        {
+          "from": "d",
+          "to": "p1"
+        },
+        {
+          "from": "p5",
+          "to": "e"
+        },
+        {
+          "from": "e",
+          "to": "p3"
+        }
+      ],
+      "graph": {
+        "nodes": [
+          {
+            "id": "m0",
+            "label": "M0",
+            "marking": {
+              "p1": 1,
+              "p2": 0,
+              "p3": 0,
+              "p4": 0,
+              "p5": 0
+            },
+            "x": 110,
+            "y": 180
+          },
+          {
+            "id": "m1",
+            "label": "M1",
+            "marking": {
+              "p1": 0,
+              "p2": 1,
+              "p3": 1,
+              "p4": 0,
+              "p5": 0
+            },
+            "x": 260,
+            "y": 80
+          },
+          {
+            "id": "m2",
+            "label": "M2",
+            "marking": {
+              "p1": 0,
+              "p2": 0,
+              "p3": 1,
+              "p4": 1,
+              "p5": 0
+            },
+            "x": 430,
+            "y": 80
+          },
+          {
+            "id": "m3",
+            "label": "M3",
+            "marking": {
+              "p1": 0,
+              "p2": 1,
+              "p3": 0,
+              "p4": 0,
+              "p5": 1
+            },
+            "x": 260,
+            "y": 280
+          },
+          {
+            "id": "m4",
+            "label": "M4",
+            "marking": {
+              "p1": 0,
+              "p2": 0,
+              "p3": 0,
+              "p4": 1,
+              "p5": 1
+            },
+            "x": 430,
+            "y": 280
+          }
+        ],
+        "edges": [
+          {
+            "from": "m0",
+            "to": "m1",
+            "transitionId": "a"
+          },
+          {
+            "from": "m1",
+            "to": "m2",
+            "transitionId": "b"
+          },
+          {
+            "from": "m1",
+            "to": "m3",
+            "transitionId": "c"
+          },
+          {
+            "from": "m2",
+            "to": "m4",
+            "transitionId": "c"
+          },
+          {
+            "from": "m3",
+            "to": "m4",
+            "transitionId": "b"
+          },
+          {
+            "from": "m3",
+            "to": "m1",
+            "transitionId": "e"
+          },
+          {
+            "from": "m4",
+            "to": "m2",
+            "transitionId": "e"
+          },
+          {
+            "from": "m4",
+            "to": "m0",
+            "transitionId": "d"
+          }
+        ]
+      },
+      "options": [
+        {
+          "id": "a",
+          "label": "M2 = (0,0,1,1,0)"
+        },
+        {
+          "id": "b",
+          "label": "M3 = (0,1,0,0,1)"
+        },
+        {
+          "id": "c",
+          "label": "M0 = (1,0,0,0,0)"
+        },
+        {
+          "id": "d",
+          "label": "Aucun marquage"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "L'arete M1 --b--> M2 est presente dans le graphe.",
+    "concepts": [
+      "reachability-graph",
+      "firing"
+    ]
+  },
+  {
+    "chapterSlug": "graphe-accessibilite",
+    "type": "PETRI_REACHABILITY",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Quel arc ramene vers le marquage initial M0 dans ce graphe ?",
+    "payload": {
+      "places": [
+        {
+          "id": "p1",
+          "label": "1",
+          "tokens": 1,
+          "x": 120,
+          "y": 80
+        },
+        {
+          "id": "p2",
+          "label": "2",
+          "tokens": 0,
+          "x": 120,
+          "y": 280
+        },
+        {
+          "id": "p3",
+          "label": "3",
+          "tokens": 0,
+          "x": 360,
+          "y": 80
+        },
+        {
+          "id": "p4",
+          "label": "4",
+          "tokens": 0,
+          "x": 600,
+          "y": 80
+        },
+        {
+          "id": "p5",
+          "label": "5",
+          "tokens": 0,
+          "x": 600,
+          "y": 280
+        }
+      ],
+      "transitions": [
+        {
+          "id": "a",
+          "label": "a",
+          "x": 240,
+          "y": 170
+        },
+        {
+          "id": "b",
+          "label": "b",
+          "x": 360,
+          "y": 250
+        },
+        {
+          "id": "c",
+          "label": "c",
+          "x": 500,
+          "y": 170
+        },
+        {
+          "id": "d",
+          "label": "d",
+          "x": 360,
+          "y": 35
+        },
+        {
+          "id": "e",
+          "label": "e",
+          "x": 500,
+          "y": 320
+        }
+      ],
+      "arcs": [
+        {
+          "from": "p1",
+          "to": "a"
+        },
+        {
+          "from": "a",
+          "to": "p2"
+        },
+        {
+          "from": "a",
+          "to": "p3"
+        },
+        {
+          "from": "p2",
+          "to": "b"
+        },
+        {
+          "from": "b",
+          "to": "p4"
+        },
+        {
+          "from": "p3",
+          "to": "c"
+        },
+        {
+          "from": "c",
+          "to": "p5"
+        },
+        {
+          "from": "p4",
+          "to": "d"
+        },
+        {
+          "from": "p5",
+          "to": "d"
+        },
+        {
+          "from": "d",
+          "to": "p1"
+        },
+        {
+          "from": "p5",
+          "to": "e"
+        },
+        {
+          "from": "e",
+          "to": "p3"
+        }
+      ],
+      "graph": {
+        "nodes": [
+          {
+            "id": "m0",
+            "label": "M0",
+            "marking": {
+              "p1": 1,
+              "p2": 0,
+              "p3": 0,
+              "p4": 0,
+              "p5": 0
+            },
+            "x": 110,
+            "y": 180
+          },
+          {
+            "id": "m1",
+            "label": "M1",
+            "marking": {
+              "p1": 0,
+              "p2": 1,
+              "p3": 1,
+              "p4": 0,
+              "p5": 0
+            },
+            "x": 260,
+            "y": 80
+          },
+          {
+            "id": "m2",
+            "label": "M2",
+            "marking": {
+              "p1": 0,
+              "p2": 0,
+              "p3": 1,
+              "p4": 1,
+              "p5": 0
+            },
+            "x": 430,
+            "y": 80
+          },
+          {
+            "id": "m3",
+            "label": "M3",
+            "marking": {
+              "p1": 0,
+              "p2": 1,
+              "p3": 0,
+              "p4": 0,
+              "p5": 1
+            },
+            "x": 260,
+            "y": 280
+          },
+          {
+            "id": "m4",
+            "label": "M4",
+            "marking": {
+              "p1": 0,
+              "p2": 0,
+              "p3": 0,
+              "p4": 1,
+              "p5": 1
+            },
+            "x": 430,
+            "y": 280
+          }
+        ],
+        "edges": [
+          {
+            "from": "m0",
+            "to": "m1",
+            "transitionId": "a"
+          },
+          {
+            "from": "m1",
+            "to": "m2",
+            "transitionId": "b"
+          },
+          {
+            "from": "m1",
+            "to": "m3",
+            "transitionId": "c"
+          },
+          {
+            "from": "m2",
+            "to": "m4",
+            "transitionId": "c"
+          },
+          {
+            "from": "m3",
+            "to": "m4",
+            "transitionId": "b"
+          },
+          {
+            "from": "m3",
+            "to": "m1",
+            "transitionId": "e"
+          },
+          {
+            "from": "m4",
+            "to": "m2",
+            "transitionId": "e"
+          },
+          {
+            "from": "m4",
+            "to": "m0",
+            "transitionId": "d"
+          }
+        ]
+      },
+      "options": [
+        {
+          "id": "a",
+          "label": "M4 --d--> M0"
+        },
+        {
+          "id": "b",
+          "label": "M2 --a--> M0"
+        },
+        {
+          "id": "c",
+          "label": "M0 --d--> M4"
+        },
+        {
+          "id": "d",
+          "label": "M3 --c--> M0"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le retour a M0 se fait depuis M4 par d.",
+    "concepts": [
+      "reachability-graph",
+      "resettable"
+    ]
+  },
+  {
+    "chapterSlug": "proprietes",
+    "type": "PETRI_PROPERTY",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Quelles proprietes sont vraies pour le cycle idle/busy ?",
+    "payload": {
+      "places": [
+        {
+          "id": "idle",
+          "label": "idle",
+          "tokens": 1,
+          "x": 160,
+          "y": 180
+        },
+        {
+          "id": "busy",
+          "label": "busy",
+          "tokens": 0,
+          "x": 560,
+          "y": 180
+        }
+      ],
+      "transitions": [
+        {
+          "id": "start",
+          "label": "start",
+          "x": 340,
+          "y": 105
+        },
+        {
+          "id": "finish",
+          "label": "finish",
+          "x": 340,
+          "y": 255
+        }
+      ],
+      "arcs": [
+        {
+          "from": "idle",
+          "to": "start"
+        },
+        {
+          "from": "start",
+          "to": "busy"
+        },
+        {
+          "from": "busy",
+          "to": "finish"
+        },
+        {
+          "from": "finish",
+          "to": "idle"
+        }
+      ],
+      "properties": [
+        {
+          "id": "bounded",
+          "label": "borne"
+        },
+        {
+          "id": "safe",
+          "label": "sauf (1-borne)"
+        },
+        {
+          "id": "dead",
+          "label": "possede un deadlock atteignable"
+        },
+        {
+          "id": "live",
+          "label": "transitions vivantes"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "bounded",
+        "safe",
+        "live"
+      ]
+    },
+    "explanation": "Le jeton alterne entre deux places ; aucune place ne depasse 1 et les deux transitions restent reactives dans le cycle.",
+    "concepts": [
+      "boundedness",
+      "safety",
+      "liveness"
+    ]
+  },
+  {
+    "chapterSlug": "proprietes",
+    "type": "PETRI_PROPERTY",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Quelles proprietes sont vraies pour ce reseau qui consomme la derniere ressource ?",
+    "payload": {
+      "places": [
+        {
+          "id": "p1",
+          "label": "p1",
+          "tokens": 1,
+          "x": 130,
+          "y": 180
+        },
+        {
+          "id": "p2",
+          "label": "p2",
+          "tokens": 0,
+          "x": 570,
+          "y": 180
+        }
+      ],
+      "transitions": [
+        {
+          "id": "t1",
+          "label": "t1",
+          "x": 310,
+          "y": 180
+        },
+        {
+          "id": "t2",
+          "label": "t2",
+          "x": 455,
+          "y": 180
+        }
+      ],
+      "arcs": [
+        {
+          "from": "p1",
+          "to": "t1"
+        },
+        {
+          "from": "t1",
+          "to": "p2"
+        },
+        {
+          "from": "p2",
+          "to": "t2"
+        }
+      ],
+      "properties": [
+        {
+          "id": "safe",
+          "label": "sauf"
+        },
+        {
+          "id": "dead",
+          "label": "deadlock atteignable"
+        },
+        {
+          "id": "live",
+          "label": "vivant"
+        },
+        {
+          "id": "unbounded",
+          "label": "non borne"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "safe",
+        "dead"
+      ]
+    },
+    "explanation": "Apres t1 puis t2, le marquage (0,0) est bloque. Les places ne depassent jamais 1 jeton.",
+    "concepts": [
+      "deadlock",
+      "safety"
+    ]
+  },
+  {
+    "chapterSlug": "proprietes",
+    "type": "PETRI_PROPERTY",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Producteur-consommateur avec tampon de capacite 2 : quelles proprietes sont vraies ?",
+    "payload": {
+      "places": [
+        {
+          "id": "prod",
+          "label": "producteur",
+          "tokens": 1,
+          "x": 110,
+          "y": 90
+        },
+        {
+          "id": "vide",
+          "label": "places libres",
+          "tokens": 2,
+          "x": 110,
+          "y": 270
+        },
+        {
+          "id": "plein",
+          "label": "items",
+          "tokens": 0,
+          "x": 610,
+          "y": 90
+        },
+        {
+          "id": "cons",
+          "label": "consommateur",
+          "tokens": 1,
+          "x": 610,
+          "y": 270
+        }
+      ],
+      "transitions": [
+        {
+          "id": "produire",
+          "label": "produire",
+          "x": 360,
+          "y": 120
+        },
+        {
+          "id": "consommer",
+          "label": "consommer",
+          "x": 360,
+          "y": 245
+        }
+      ],
+      "arcs": [
+        {
+          "from": "prod",
+          "to": "produire"
+        },
+        {
+          "from": "vide",
+          "to": "produire"
+        },
+        {
+          "from": "produire",
+          "to": "prod"
+        },
+        {
+          "from": "produire",
+          "to": "plein"
+        },
+        {
+          "from": "plein",
+          "to": "consommer"
+        },
+        {
+          "from": "cons",
+          "to": "consommer"
+        },
+        {
+          "from": "consommer",
+          "to": "cons"
+        },
+        {
+          "from": "consommer",
+          "to": "vide"
+        }
+      ],
+      "properties": [
+        {
+          "id": "bounded",
+          "label": "borne"
+        },
+        {
+          "id": "safe",
+          "label": "sauf"
+        },
+        {
+          "id": "dead",
+          "label": "deadlock atteignable"
+        },
+        {
+          "id": "conservative",
+          "label": "vide+plein conserve la capacite"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "bounded",
+        "conservative"
+      ]
+    },
+    "explanation": "`vide+plein=2` est conserve ; la place `vide` peut contenir 2 jetons donc le reseau n'est pas 1-borne.",
+    "concepts": [
+      "boundedness",
+      "safety",
+      "modeling"
+    ]
+  },
+  {
+    "chapterSlug": "invariants-modelisation",
+    "type": "PETRI_INVARIANT",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Quels vecteurs sont des P-invariants pour l'exclusion mutuelle ?",
+    "payload": {
+      "places": [
+        {
+          "id": "mutex",
+          "label": "mutex",
+          "tokens": 1,
+          "x": 360,
+          "y": 180
+        },
+        {
+          "id": "a_out",
+          "label": "A dehors",
+          "tokens": 1,
+          "x": 90,
+          "y": 90
+        },
+        {
+          "id": "a_in",
+          "label": "A dedans",
+          "tokens": 0,
+          "x": 90,
+          "y": 270
+        },
+        {
+          "id": "b_out",
+          "label": "B dehors",
+          "tokens": 1,
+          "x": 630,
+          "y": 90
+        },
+        {
+          "id": "b_in",
+          "label": "B dedans",
+          "tokens": 0,
+          "x": 630,
+          "y": 270
+        }
+      ],
+      "transitions": [
+        {
+          "id": "a_enter",
+          "label": "A entre",
+          "x": 220,
+          "y": 180
+        },
+        {
+          "id": "a_exit",
+          "label": "A sort",
+          "x": 220,
+          "y": 305
+        },
+        {
+          "id": "b_enter",
+          "label": "B entre",
+          "x": 500,
+          "y": 180
+        },
+        {
+          "id": "b_exit",
+          "label": "B sort",
+          "x": 500,
+          "y": 305
+        }
+      ],
+      "arcs": [
+        {
+          "from": "a_out",
+          "to": "a_enter"
+        },
+        {
+          "from": "mutex",
+          "to": "a_enter"
+        },
+        {
+          "from": "a_enter",
+          "to": "a_in"
+        },
+        {
+          "from": "a_in",
+          "to": "a_exit"
+        },
+        {
+          "from": "a_exit",
+          "to": "a_out"
+        },
+        {
+          "from": "a_exit",
+          "to": "mutex"
+        },
+        {
+          "from": "b_out",
+          "to": "b_enter"
+        },
+        {
+          "from": "mutex",
+          "to": "b_enter"
+        },
+        {
+          "from": "b_enter",
+          "to": "b_in"
+        },
+        {
+          "from": "b_in",
+          "to": "b_exit"
+        },
+        {
+          "from": "b_exit",
+          "to": "b_out"
+        },
+        {
+          "from": "b_exit",
+          "to": "mutex"
+        }
+      ],
+      "invariantType": "place",
+      "vectors": [
+        {
+          "id": "a",
+          "label": "a_out + a_in",
+          "values": {
+            "a_out": 1,
+            "a_in": 1,
+            "b_out": 0,
+            "b_in": 0,
+            "mutex": 0
+          }
+        },
+        {
+          "id": "b",
+          "label": "b_out + b_in",
+          "values": {
+            "a_out": 0,
+            "a_in": 0,
+            "b_out": 1,
+            "b_in": 1,
+            "mutex": 0
+          }
+        },
+        {
+          "id": "c",
+          "label": "mutex + a_in + b_in",
+          "values": {
+            "mutex": 1,
+            "a_in": 1,
+            "b_in": 1,
+            "a_out": 0,
+            "b_out": 0
+          }
+        },
+        {
+          "id": "d",
+          "label": "mutex seul",
+          "values": {
+            "mutex": 1,
+            "a_out": 0,
+            "a_in": 0,
+            "b_out": 0,
+            "b_in": 0
+          }
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Chaque processus est soit dehors soit dedans, et la ressource mutex est soit libre soit detenue par A ou B.",
+    "concepts": [
+      "p-invariant",
+      "modeling"
+    ]
+  },
+  {
+    "chapterSlug": "invariants-modelisation",
+    "type": "PETRI_INVARIANT",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Quels vecteurs sont des T-invariants pour le cycle idle/busy ?",
+    "payload": {
+      "places": [
+        {
+          "id": "idle",
+          "label": "idle",
+          "tokens": 1,
+          "x": 160,
+          "y": 180
+        },
+        {
+          "id": "busy",
+          "label": "busy",
+          "tokens": 0,
+          "x": 560,
+          "y": 180
+        }
+      ],
+      "transitions": [
+        {
+          "id": "start",
+          "label": "start",
+          "x": 340,
+          "y": 105
+        },
+        {
+          "id": "finish",
+          "label": "finish",
+          "x": 340,
+          "y": 255
+        }
+      ],
+      "arcs": [
+        {
+          "from": "idle",
+          "to": "start"
+        },
+        {
+          "from": "start",
+          "to": "busy"
+        },
+        {
+          "from": "busy",
+          "to": "finish"
+        },
+        {
+          "from": "finish",
+          "to": "idle"
+        }
+      ],
+      "invariantType": "transition",
+      "vectors": [
+        {
+          "id": "a",
+          "label": "start=1, finish=1",
+          "values": {
+            "start": 1,
+            "finish": 1
+          }
+        },
+        {
+          "id": "b",
+          "label": "start=1, finish=0",
+          "values": {
+            "start": 1,
+            "finish": 0
+          }
+        },
+        {
+          "id": "c",
+          "label": "start=2, finish=2",
+          "values": {
+            "start": 2,
+            "finish": 2
+          }
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "c"
+      ]
+    },
+    "explanation": "Un nombre egal de start et finish ramene le marquage.",
+    "concepts": [
+      "t-invariant"
+    ]
+  },
+  {
+    "chapterSlug": "invariants-modelisation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quel modele represente une exclusion mutuelle correcte ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une place ressource initialisee a 1, consommee a l'entree et rendue a la sortie."
+        },
+        {
+          "id": "b",
+          "label": "Deux transitions d'entree sans place commune."
+        },
+        {
+          "id": "c",
+          "label": "Une place ressource initialisee a 0 et jamais produite."
+        },
+        {
+          "id": "d",
+          "label": "Un arc direct entre deux places."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La place ressource garantit qu'un seul processus peut entrer.",
+    "concepts": [
+      "modeling",
+      "safety"
+    ]
+  },
+  {
+    "chapterSlug": "proprietes",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Sur un graphe d'accessibilite fini, comment reconnaitre un deadlock ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un noeud atteignable sans arete sortante."
+        },
+        {
+          "id": "b",
+          "label": "Une transition avec deux arcs entrants."
+        },
+        {
+          "id": "c",
+          "label": "Une place avec deux jetons dans M0."
+        },
+        {
+          "id": "d",
+          "label": "Une matrice d'incidence non nulle."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Sans arete sortante, aucune transition n'est franchissable.",
+    "concepts": [
+      "deadlock",
+      "reachability-graph"
+    ]
+  },
+  {
+    "chapterSlug": "invariants-modelisation",
+    "type": "PETRI_MATRIX",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Complete la matrice d'incidence du producteur-consommateur.",
+    "payload": {
+      "places": [
+        {
+          "id": "prod",
+          "label": "producteur",
+          "tokens": 1,
+          "x": 110,
+          "y": 90
+        },
+        {
+          "id": "vide",
+          "label": "places libres",
+          "tokens": 2,
+          "x": 110,
+          "y": 270
+        },
+        {
+          "id": "plein",
+          "label": "items",
+          "tokens": 0,
+          "x": 610,
+          "y": 90
+        },
+        {
+          "id": "cons",
+          "label": "consommateur",
+          "tokens": 1,
+          "x": 610,
+          "y": 270
+        }
+      ],
+      "transitions": [
+        {
+          "id": "produire",
+          "label": "produire",
+          "x": 360,
+          "y": 120
+        },
+        {
+          "id": "consommer",
+          "label": "consommer",
+          "x": 360,
+          "y": 245
+        }
+      ],
+      "arcs": [
+        {
+          "from": "prod",
+          "to": "produire"
+        },
+        {
+          "from": "vide",
+          "to": "produire"
+        },
+        {
+          "from": "produire",
+          "to": "prod"
+        },
+        {
+          "from": "produire",
+          "to": "plein"
+        },
+        {
+          "from": "plein",
+          "to": "consommer"
+        },
+        {
+          "from": "cons",
+          "to": "consommer"
+        },
+        {
+          "from": "consommer",
+          "to": "cons"
+        },
+        {
+          "from": "consommer",
+          "to": "vide"
+        }
+      ],
+      "matrix": "incidence"
+    },
+    "solution": {
+      "matrix": {
+        "prod": {
+          "produire": 0,
+          "consommer": 0
+        },
+        "vide": {
+          "produire": -1,
+          "consommer": 1
+        },
+        "plein": {
+          "produire": 1,
+          "consommer": -1
+        },
+        "cons": {
+          "produire": 0,
+          "consommer": 0
+        }
+      }
+    },
+    "explanation": "Produire convertit une place libre en item ; consommer fait l'inverse.",
+    "concepts": [
+      "incidence",
+      "modeling"
+    ]
+  }
+]

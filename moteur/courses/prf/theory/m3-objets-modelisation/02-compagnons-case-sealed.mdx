@@ -1,0 +1,33 @@
+---
+title: "Compagnons, case class et sealed"
+slug: compagnons-case-sealed
+order: 2
+estimatedReadMin: 11
+concepts: [companion, case-class, sealed, pattern-matching]
+source: "POO/Scala_03.pdf; POO/Scala_03_TD(1) (1).pdf"
+---
+## Objet compagnon
+
+Une classe et un objet de meme nom, dans le meme fichier, sont compagnons. L'objet compagnon porte souvent des methodes `apply` ou des fabriques.
+
+```scala
+class Fraction private (val n: Int, val d: Int)
+object Fraction:
+  def apply(n: Int, d: Int): Fraction = new Fraction(n, d)
+```
+
+## case class
+
+Une `case class` fournit automatiquement un constructeur `apply`, une egalite structurelle, `copy`, `toString` et un extracteur pour le pattern matching.
+
+```scala
+case class Etudiant(nom: String, note: Int)
+Etudiant("Ada", 20).copy(note = 19)
+```
+
+## sealed
+
+`sealed` rend les sous-types directs connus dans le fichier. Cela aide le compilateur et l'etudiant a verifier l'exhaustivite d'un `match`.
+
+> **A retenir**  
+> Pour modeliser des donnees algebriques, combine `sealed trait` et `case class`/`case object`.

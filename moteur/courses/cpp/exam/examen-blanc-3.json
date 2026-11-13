@@ -1,0 +1,274 @@
+{
+  "slug": "examen-blanc-3",
+  "title": "Examen blanc 3 — Partiel final de C++ objet",
+  "description": "Examen final de fin de semestre couvrant l'ensemble du programme, des modules SE1 à SE7 : paradigme objet, constructeurs, surcharge d'opérateurs, héritage et polymorphisme, flux et fichiers, exceptions, templates et STL. Seize questions de difficulté soutenue, à traiter en 120 minutes.",
+  "durationMinutes": 120,
+  "totalPoints": 20,
+  "exercises": [
+    {
+      "chapterSlug": "classes-objets",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Quel principe de la programmation objet consiste à protéger l'état interne d'un objet en n'exposant qu'une interface publique contrôlée ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Le polymorphisme" },
+          { "id": "b", "label": "L'encapsulation" },
+          { "id": "c", "label": "L'héritage" },
+          { "id": "d", "label": "La surcharge" }
+        ]
+      },
+      "solution": { "correct": ["b"] },
+      "explanation": "L'**encapsulation** protège l'état interne d'un objet : les attributs sont déclarés `private` et seule une interface publique contrôlée (méthodes, accesseurs) permet d'y accéder. C'est un pilier de la programmation objet, distinct de l'héritage (réutilisation) et du polymorphisme (liaison dynamique).",
+      "concepts": ["encapsulation", "membre-prive-public"]
+    },
+    {
+      "chapterSlug": "destructeur",
+      "type": "TRUE_FALSE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Un objet créé avec `new` voit son destructeur s'exécuter automatiquement quand le pointeur qui le désigne sort de portée.",
+      "payload": {},
+      "solution": { "value": false },
+      "explanation": "Faux : un objet créé sur le **tas** avec `new` n'est détruit que par un `delete` explicite. C'est le **pointeur** (variable locale sur la pile) qui est détruit en fin de portée, pas l'objet pointé. Oublier le `delete` provoque une fuite mémoire.",
+      "concepts": ["new-delete", "destructeur", "tas-vs-pile"]
+    },
+    {
+      "chapterSlug": "operateurs-arithmetiques",
+      "type": "MCQ_MULTI",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Une classe `Fraction` veut autoriser l'arithmétique mixte `2 * f` (un entier à gauche, une fraction à droite). Quelles affirmations sont correctes ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "L'opérateur * doit être une fonction non-membre." },
+          { "id": "b", "label": "En fonction membre, l'opérande de gauche serait *this : un int ne convient pas." },
+          { "id": "c", "label": "L'expression 2 * f se traduirait sinon en 2.operator*(f), ce qui est impossible." },
+          { "id": "d", "label": "Une fonction membre operator* suffit pour gérer 2 * f." },
+          { "id": "e", "label": "f * 2 fonctionne avec une fonction membre, pas 2 * f." }
+        ]
+      },
+      "solution": { "correct": ["a", "b", "c", "e"] },
+      "explanation": "Pour l'arithmétique **mixte** `2 * f`, l'opérateur doit être une fonction **non-membre** : en fonction membre, l'opérande de gauche est `*this`, donc forcément un objet de la classe — `2 * f` se traduirait en `2.operator*(f)`, impossible car `2` est un `int`. Une fonction membre ne gère que `f * 2` (où `f` est à gauche). Une fonction non-membre, dont les deux opérandes sont des paramètres, gère les deux sens.",
+      "concepts": ["arithmetique-mixte", "operateur-non-membre", "operateur-membre"]
+    },
+    {
+      "chapterSlug": "constructeurs",
+      "type": "FILL_BLANK",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Complète le constructeur de la classe dérivée `Etudiant` : il appelle le constructeur de la base `Personne` et initialise son propre attribut `id`.",
+      "payload": {
+        "template": "Etudiant(string nom, int id) : {{base}}(nom), id(id) {}",
+        "slots": [
+          { "id": "base", "width": "md" }
+        ]
+      },
+      "solution": {
+        "answers": { "base": "Personne" },
+        "caseSensitive": false
+      },
+      "explanation": "Le constructeur d'une classe dérivée appelle explicitement le constructeur de sa **classe de base** dans sa liste d'initialisation, en l'invoquant par son nom : `: Personne(nom), id(id)`. La partie base est ainsi initialisée avant la partie dérivée. Sans cet appel explicite, c'est le constructeur par défaut de la base qui serait invoqué.",
+      "concepts": ["ordre-construction-heritage", "liste-initialisation", "constructeur-parametre"]
+    },
+    {
+      "chapterSlug": "fonctions-templates",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Quelle est la sortie exacte de ce programme utilisant une fonction template ?",
+      "payload": {
+        "program": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nT maximum(T a, T b) {\n    return (a > b) ? a : b;\n}\n\nint main() {\n    cout << maximum(3, 8) << endl;\n    cout << maximum(2.5, 1.5) << endl;\n    cout << maximum('a', 'z') << endl;\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "8\n2.5\nz" },
+      "explanation": "La fonction template `maximum` est instanciée pour chaque type déduit des arguments : `maximum<int>(3, 8)` renvoie 8 ; `maximum<double>(2.5, 1.5)` renvoie 2.5 ; `maximum<char>('a', 'z')` renvoie `z` (comparaison des codes ASCII, 'z' > 'a'). Le compilateur déduit `T` sans qu'on l'indique.",
+      "concepts": ["fonction-template", "instanciation-template", "parametre-type"]
+    },
+    {
+      "chapterSlug": "try-catch-throw",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Quelle est la sortie exacte de ce programme ? La fonction `diviser` lève une exception en cas de division par zéro.",
+      "payload": {
+        "program": "#include <iostream>\nusing namespace std;\n\nint diviser(int a, int b) {\n    if (b == 0)\n        throw string(\"division par zero\");\n    return a / b;\n}\n\nint main() {\n    int paires[][2] = { {10, 2}, {7, 0}, {20, 4} };\n    for (int i = 0; i < 3; i++) {\n        try {\n            cout << diviser(paires[i][0], paires[i][1]) << endl;\n        }\n        catch (const string& msg) {\n            cout << \"erreur: \" << msg << endl;\n        }\n    }\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "5\nerreur: division par zero\n5" },
+      "explanation": "Première itération : 10 / 2 = 5. Deuxième : `diviser(7, 0)` lève une exception `string`, attrapée par le `catch`, qui affiche `erreur: division par zero`. Troisième : 20 / 4 = 5. Comme le `try/catch` est **dans** la boucle, l'exception d'un tour n'interrompt pas les suivants.",
+      "concepts": ["throw", "try-catch", "exception"]
+    },
+    {
+      "chapterSlug": "propagation",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Quelle est la sortie exacte de ce programme ? Observe ce qui se passe lors du déroulement de la pile.",
+      "payload": {
+        "program": "#include <iostream>\nusing namespace std;\n\nclass Ressource {\n    private:\n        int id;\n    public:\n        Ressource(int id) : id(id) { cout << \"ouvre \" << id << endl; }\n        ~Ressource() { cout << \"ferme \" << id << endl; }\n};\n\nvoid travailler() {\n    Ressource r(1);\n    cout << \"avant throw\" << endl;\n    throw 42;\n    cout << \"apres throw\" << endl;\n}\n\nint main() {\n    try {\n        travailler();\n    }\n    catch (int code) {\n        cout << \"rattrape \" << code << endl;\n    }\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "ouvre 1\navant throw\nferme 1\nrattrape 42" },
+      "explanation": "`travailler` construit `r` (`ouvre 1`), affiche `avant throw`, puis `throw 42` interrompt la fonction — la ligne `apres throw` n'est jamais exécutée. Pendant la **propagation**, le **déroulement de pile** détruit les objets locaux automatiques : le destructeur de `r` s'exécute (`ferme 1`). L'exception remonte au `catch` du `main` qui affiche `rattrape 42`.",
+      "concepts": ["propagation-pile", "deroulement-pile", "throw", "destructeur"]
+    },
+    {
+      "chapterSlug": "classes-abstraites",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Quelle est la sortie exacte de ce programme ? `Forme` est une classe abstraite parcourue via une collection polymorphe.",
+      "payload": {
+        "program": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Forme {\n    public:\n        virtual double aire() const = 0;\n        virtual ~Forme() {}\n};\n\nclass Rectangle : public Forme {\n    private:\n        double l, h;\n    public:\n        Rectangle(double l, double h) : l(l), h(h) {}\n        double aire() const override { return l * h; }\n};\n\nclass Carre : public Forme {\n    private:\n        double c;\n    public:\n        Carre(double c) : c(c) {}\n        double aire() const override { return c * c; }\n};\n\nint main() {\n    vector<Forme*> formes;\n    formes.push_back(new Rectangle(3, 4));\n    formes.push_back(new Carre(5));\n    double total = 0;\n    for (Forme* f : formes) {\n        total += f->aire();\n    }\n    cout << \"aire totale = \" << total << endl;\n    for (Forme* f : formes) delete f;\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "aire totale = 37" },
+      "explanation": "`Forme` contient la méthode virtuelle pure `aire() = 0` : elle est **abstraite** et ne sert que de type pour la collection polymorphe `vector<Forme*>`. Dans la boucle, `f->aire()` exécute par liaison dynamique la version du type réel : `Rectangle::aire()` (3 × 4 = 12) puis `Carre::aire()` (5 × 5 = 25). Total : 12 + 25 = 37.",
+      "concepts": ["classe-abstraite", "methode-virtuelle-pure", "collection-polymorphe", "polymorphisme"]
+    },
+    {
+      "chapterSlug": "conteneurs-stl",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Quelle est la sortie exacte de ce programme utilisant une `std::map` ?",
+      "payload": {
+        "program": "#include <iostream>\n#include <map>\n#include <string>\nusing namespace std;\n\nint main() {\n    map<string, int> stock;\n    stock[\"pomme\"] = 5;\n    stock[\"banane\"] = 3;\n    stock[\"cerise\"] = 8;\n    stock[\"banane\"] += 4;\n    for (map<string, int>::iterator it = stock.begin(); it != stock.end(); ++it) {\n        cout << it->first << \": \" << it->second << endl;\n    }\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "banane: 7\ncerise: 8\npomme: 5" },
+      "explanation": "Une `map` range ses paires **triées par clé** (ordre alphabétique des chaînes) : le parcours donne `banane`, `cerise`, `pomme` quel que soit l'ordre d'insertion. `stock[\"banane\"] += 4` ajoute 4 à la valeur existante : 3 + 4 = 7. `it->first` est la clé, `it->second` la valeur.",
+      "concepts": ["conteneur-stl", "vector-list-map", "iterateur"]
+    },
+    {
+      "chapterSlug": "std-exception",
+      "type": "CODE_WRITE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Écris la fonction `double racineCarree(double x)` qui calcule une racine carrée par la méthode de Héron et **lève `std::invalid_argument`** si `x` est négatif. Le `main` traite chaque valeur dans un `try/catch`.",
+      "payload": {
+        "spec": "Inclure <stdexcept>. Fonction double racineCarree(double x) : si x < 0, lever std::invalid_argument(\"nombre negatif\") ; sinon calculer la racine carree par la methode de Heron (50 iterations de r = (r + x/r) / 2 en partant de r = x) et la renvoyer. Le main est fourni : il appelle racineCarree dans un try et attrape invalid_argument en affichant 'erreur: ' suivi de e.what(). Ne pas modifier le main.",
+        "std": "c++17",
+        "compare": "trimmed",
+        "starterCode": "#include <iostream>\n#include <stdexcept>\nusing namespace std;\n\n// definis la fonction racineCarree ici\n\nint main() {\n    double valeurs[] = { 16.0, -4.0, 25.0 };\n    for (int i = 0; i < 3; i++) {\n        try {\n            cout << racineCarree(valeurs[i]) << endl;\n        }\n        catch (const invalid_argument& e) {\n            cout << \"erreur: \" << e.what() << endl;\n        }\n    }\n    return 0;\n}\n",
+        "tests": [
+          { "name": "carres parfaits et negatif", "stdin": "", "expectedStdout": "4\nerreur: nombre negatif\n5" }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <iostream>\n#include <stdexcept>\nusing namespace std;\n\ndouble racineCarree(double x) {\n    if (x < 0)\n        throw invalid_argument(\"nombre negatif\");\n    double r = x;\n    for (int i = 0; i < 50; i++)\n        r = (r + x / r) / 2;\n    return r;\n}\n\nint main() {\n    double valeurs[] = { 16.0, -4.0, 25.0 };\n    for (int i = 0; i < 3; i++) {\n        try {\n            cout << racineCarree(valeurs[i]) << endl;\n        }\n        catch (const invalid_argument& e) {\n            cout << \"erreur: \" << e.what() << endl;\n        }\n    }\n    return 0;\n}"
+      },
+      "explanation": "`racineCarree` lève une exception standard `std::invalid_argument` (dérivée de `logic_error`, elle-même de `std::exception`) quand l'argument est invalide. La méthode de Héron converge vite : 50 itérations donnent une racine exacte pour 16 (→ 4) et 25 (→ 5). Le `catch` récupère le message via `e.what()`, méthode virtuelle de `std::exception`.",
+      "concepts": ["std-exception", "throw", "methode-what", "try-catch"]
+    },
+    {
+      "chapterSlug": "fichiers-fstream",
+      "type": "CODE_WRITE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Écris un programme qui lit un entier `n` puis `n` scores entiers, les écrit dans le fichier `scores.txt` (un par ligne), puis relit ce fichier pour déterminer et afficher le **meilleur** score.",
+      "payload": {
+        "spec": "Lire un entier n, puis n entiers sur l'entree standard. Ouvrir scores.txt en ecriture avec un ofstream et y ecrire chaque score, un par ligne, puis fermer. Rouvrir scores.txt en lecture avec un ifstream, lire tous les scores et determiner le maximum. Afficher 'meilleur score = ' suivi du maximum. On suppose n >= 1.",
+        "std": "c++17",
+        "compare": "trimmed",
+        "starterCode": "#include <iostream>\n#include <fstream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    // ecris les n scores dans scores.txt, puis relis-les et affiche le meilleur\n    return 0;\n}\n",
+        "tests": [
+          { "name": "quatre scores", "stdin": "4\n12 45 23 8", "expectedStdout": "meilleur score = 45" },
+          { "name": "trois scores", "stdin": "3\n100 50 75", "expectedStdout": "meilleur score = 100" },
+          { "name": "un score", "stdin": "1\n7", "expectedStdout": "meilleur score = 7", "hidden": true }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <iostream>\n#include <fstream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    ofstream sortie(\"scores.txt\");\n    for (int i = 0; i < n; i++) {\n        int s;\n        cin >> s;\n        sortie << s << endl;\n    }\n    sortie.close();\n\n    ifstream entree(\"scores.txt\");\n    int score, maximum = 0;\n    bool premier = true;\n    while (entree >> score) {\n        if (premier || score > maximum) {\n            maximum = score;\n            premier = false;\n        }\n    }\n    entree.close();\n    cout << \"meilleur score = \" << maximum << endl;\n    return 0;\n}"
+      },
+      "explanation": "On écrit les scores dans `scores.txt` avec un `ofstream` (mode écriture), puis on rouvre le fichier avec un `ifstream`. La boucle `while (entree >> score)` lit tous les entiers jusqu'à la fin de fichier. Le drapeau `premier` garantit que le tout premier score lu initialise `maximum`, ce qui rend le programme correct même si tous les scores sont négatifs.",
+      "concepts": ["ifstream-ofstream-fstream", "mode-ouverture", "etat-flux"]
+    },
+    {
+      "chapterSlug": "classes-templates",
+      "type": "CODE_WRITE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Écris la **classe template** `Paire<T>` qui stocke deux valeurs du même type `T`, avec une méthode `plusGrand()`, une méthode `echanger()` et une méthode `afficher()`. Le `main` est fourni.",
+      "payload": {
+        "spec": "Classe template Paire parametree par un type T. Attributs prives : T premier, T second. Constructeur Paire(T p, T s). Methode T plusGrand() const : renvoie le plus grand des deux (operateur >). Methode void echanger() : echange premier et second. Methode void afficher() const : ecrit (premier, second) suivi d'un retour a la ligne. Ne pas modifier le main.",
+        "std": "c++17",
+        "compare": "trimmed",
+        "starterCode": "#include <iostream>\nusing namespace std;\n\n// definis la classe template Paire ici\n\nint main() {\n    Paire<int> pi(7, 3);\n    pi.afficher();\n    cout << \"max = \" << pi.plusGrand() << endl;\n    pi.echanger();\n    pi.afficher();\n\n    Paire<char> pc('b', 'm');\n    cout << \"max = \" << pc.plusGrand() << endl;\n    return 0;\n}\n",
+        "tests": [
+          { "name": "paire int et char", "stdin": "", "expectedStdout": "(7, 3)\nmax = 7\n(3, 7)\nmax = m" }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nclass Paire {\n    private:\n        T premier;\n        T second;\n    public:\n        Paire(T p, T s) : premier(p), second(s) {}\n        T plusGrand() const {\n            return (premier > second) ? premier : second;\n        }\n        void echanger() {\n            T tmp = premier;\n            premier = second;\n            second = tmp;\n        }\n        void afficher() const {\n            cout << \"(\" << premier << \", \" << second << \")\" << endl;\n        }\n};\n\nint main() {\n    Paire<int> pi(7, 3);\n    pi.afficher();\n    cout << \"max = \" << pi.plusGrand() << endl;\n    pi.echanger();\n    pi.afficher();\n\n    Paire<char> pc('b', 'm');\n    cout << \"max = \" << pc.plusGrand() << endl;\n    return 0;\n}"
+      },
+      "explanation": "La classe template `Paire` est paramétrée par `template <typename T>` : le type des données devient un paramètre. On l'instancie en indiquant le type entre chevrons — `Paire<int>` puis `Paire<char>`. Toutes les méthodes manipulent le type `T` de façon générique. `plusGrand` renvoie 7 pour `(7, 3)` ; après `echanger` la paire devient `(3, 7)` ; `plusGrand` sur `('b', 'm')` renvoie `m` (ASCII).",
+      "concepts": ["classe-template", "parametre-type", "instanciation-template"]
+    },
+    {
+      "chapterSlug": "copie-affectation",
+      "type": "CODE_FIX",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "Ce programme compile mais **plante à l'exécution**. La classe `Buffer` gère un tableau dynamique et l'objet `b` est créé par copie de `a`. Corrige la classe.",
+      "payload": {
+        "spec": "La classe Buffer gere un tableau dynamique d'entiers. Le constructeur Buffer(int taille) alloue le tableau et le remplit de 1 a taille. Le destructeur libere le tableau. La methode somme() renvoie la somme des elements. Le main cree a (taille 4), puis b par copie de a, et affiche les deux sommes (attendu : 10 et 10).",
+        "std": "c++17",
+        "compare": "trimmed",
+        "starterCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Buffer {\n    private:\n        int* data;\n        int n;\n    public:\n        Buffer(int taille) : n(taille) {\n            data = new int[n];\n            for (int i = 0; i < n; i++)\n                data[i] = i + 1;\n        }\n        ~Buffer() {\n            delete[] data;\n        }\n        int somme() const {\n            int s = 0;\n            for (int i = 0; i < n; i++)\n                s += data[i];\n            return s;\n        }\n};\n\nint main() {\n    Buffer a(4);\n    Buffer b = a;\n    cout << \"somme a = \" << a.somme() << endl;\n    cout << \"somme b = \" << b.somme() << endl;\n    return 0;\n}\n",
+        "tests": [
+          { "name": "copie sans plantage", "stdin": "", "expectedStdout": "somme a = 10\nsomme b = 10" }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Buffer {\n    private:\n        int* data;\n        int n;\n    public:\n        Buffer(int taille) : n(taille) {\n            data = new int[n];\n            for (int i = 0; i < n; i++)\n                data[i] = i + 1;\n        }\n        Buffer(const Buffer& autre) : n(autre.n) {\n            data = new int[n];\n            for (int i = 0; i < n; i++)\n                data[i] = autre.data[i];\n        }\n        ~Buffer() {\n            delete[] data;\n        }\n        int somme() const {\n            int s = 0;\n            for (int i = 0; i < n; i++)\n                s += data[i];\n            return s;\n        }\n};\n\nint main() {\n    Buffer a(4);\n    Buffer b = a;\n    cout << \"somme a = \" << a.somme() << endl;\n    cout << \"somme b = \" << b.somme() << endl;\n    return 0;\n}"
+      },
+      "explanation": "Le bug : la classe n'a **pas de constructeur de copie**. `Buffer b = a;` utilise alors la copie superficielle synthétisée, qui copie le **pointeur** `data` tel quel — `a` et `b` pointent la **même** zone mémoire. À la fin du `main`, les deux destructeurs font `delete[]` sur cette zone : double libération, donc plantage. Il faut ajouter un constructeur de copie qui alloue une **nouvelle** zone et recopie les valeurs (copie profonde).",
+      "concepts": ["constructeur-copie", "copie-superficielle", "copie-profonde", "regle-des-trois"]
+    },
+    {
+      "chapterSlug": "propagation",
+      "type": "CODE_FIX",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Ce programme doit afficher le message précis de chaque exception hors limites, mais il affiche `exception generale`. Corrige l'ordre des gestionnaires `catch`.",
+      "payload": {
+        "spec": "La fonction verifier(int age) leve std::out_of_range si age < 0 ou age > 150. Le main teste trois ages (25, -3, 200) dans un try/catch. Le resultat attendu affiche 'age 25 valide' puis le message precis ('hors limites: ...') pour chaque age invalide.",
+        "std": "c++17",
+        "compare": "trimmed",
+        "starterCode": "#include <iostream>\n#include <stdexcept>\n#include <string>\nusing namespace std;\n\nvoid verifier(int age) {\n    if (age < 0)\n        throw out_of_range(\"age negatif\");\n    if (age > 150)\n        throw out_of_range(\"age trop grand\");\n}\n\nint main() {\n    int ages[] = { 25, -3, 200 };\n    for (int i = 0; i < 3; i++) {\n        try {\n            verifier(ages[i]);\n            cout << \"age \" << ages[i] << \" valide\" << endl;\n        }\n        catch (const exception& e) {\n            cout << \"exception generale\" << endl;\n        }\n        catch (const out_of_range& e) {\n            cout << \"hors limites: \" << e.what() << endl;\n        }\n    }\n    return 0;\n}\n",
+        "tests": [
+          { "name": "messages precis", "stdin": "", "expectedStdout": "age 25 valide\nhors limites: age negatif\nhors limites: age trop grand" }
+        ]
+      },
+      "solution": {
+        "referenceCode": "#include <iostream>\n#include <stdexcept>\n#include <string>\nusing namespace std;\n\nvoid verifier(int age) {\n    if (age < 0)\n        throw out_of_range(\"age negatif\");\n    if (age > 150)\n        throw out_of_range(\"age trop grand\");\n}\n\nint main() {\n    int ages[] = { 25, -3, 200 };\n    for (int i = 0; i < 3; i++) {\n        try {\n            verifier(ages[i]);\n            cout << \"age \" << ages[i] << \" valide\" << endl;\n        }\n        catch (const out_of_range& e) {\n            cout << \"hors limites: \" << e.what() << endl;\n        }\n        catch (const exception& e) {\n            cout << \"exception generale\" << endl;\n        }\n    }\n    return 0;\n}"
+      },
+      "explanation": "Le bug : les `catch` sont dans le **mauvais ordre**. `out_of_range` dérive de `exception` ; placé en premier, `catch(const exception&)` intercepte **toutes** les exceptions, y compris les `out_of_range` — le gestionnaire spécifique n'est jamais atteint. Il faut ordonner les `catch` du type **le plus dérivé au plus général** : `out_of_range` d'abord, `exception` ensuite.",
+      "concepts": ["selection-catch-par-type", "std-exception", "try-catch"]
+    },
+    {
+      "chapterSlug": "exceptions-personnalisees",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Quelle est la sortie exacte de ce programme ? La classe `SoldeInsuffisant` est une exception personnalisée dérivée de `std::exception` qui redéfinit `what()`.",
+      "payload": {
+        "program": "#include <iostream>\n#include <exception>\n#include <string>\nusing namespace std;\n\nclass SoldeInsuffisant : public exception {\n    private:\n        string message;\n    public:\n        SoldeInsuffisant(int manque)\n            : message(\"retrait refuse, il manque \" + to_string(manque)) {}\n        const char* what() const noexcept override {\n            return message.c_str();\n        }\n};\n\nclass Compte {\n    private:\n        int solde;\n    public:\n        Compte(int s) : solde(s) {}\n        void retirer(int montant) {\n            if (montant > solde)\n                throw SoldeInsuffisant(montant - solde);\n            solde -= montant;\n            cout << \"retrait de \" << montant << \", solde \" << solde << endl;\n        }\n};\n\nint main() {\n    Compte c(100);\n    int retraits[] = { 30, 90, 40 };\n    for (int i = 0; i < 3; i++) {\n        try {\n            c.retirer(retraits[i]);\n        }\n        catch (const exception& e) {\n            cout << e.what() << endl;\n        }\n    }\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "retrait de 30, solde 70\nretrait refuse, il manque 20\nretrait de 40, solde 30" },
+      "explanation": "`SoldeInsuffisant` est une **exception personnalisée** : elle dérive de `std::exception` et redéfinit `what()` pour livrer son propre message. Premier retrait : 30 ≤ 100, le solde passe à 70. Deuxième : 90 > 70, `retirer` lève `SoldeInsuffisant(90 - 70)` ; le `catch (const exception&)` rattrape l'objet dérivé par référence à la base et `e.what()` renvoie par liaison dynamique `retrait refuse, il manque 20`. Troisième : 40 ≤ 70, le solde passe à 30. Le `try/catch` étant dans la boucle, l'exception du deuxième tour n'interrompt pas le troisième.",
+      "concepts": ["classe-exception-personnalisee", "std-exception", "methode-what", "throw"]
+    },
+    {
+      "chapterSlug": "algorithmes-foncteurs",
+      "type": "PREDICT_OUTPUT",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Quelle est la sortie exacte de ce programme ? Un `std::vector` d'objets est trié par `std::sort` avec un foncteur comparateur.",
+      "payload": {
+        "program": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <string>\nusing namespace std;\n\nstruct Produit {\n    string nom;\n    int prix;\n};\n\nclass ParPrixCroissant {\n    public:\n        bool operator()(const Produit& a, const Produit& b) const {\n            return a.prix < b.prix;\n        }\n};\n\nint main() {\n    vector<Produit> panier = {\n        { \"stylo\", 3 },\n        { \"cahier\", 5 },\n        { \"gomme\", 1 },\n        { \"regle\", 2 }\n    };\n    sort(panier.begin(), panier.end(), ParPrixCroissant());\n    for (const Produit& p : panier)\n        cout << p.nom << \" \" << p.prix << endl;\n    cout << \"le moins cher: \" << panier.front().nom << endl;\n    return 0;\n}"
+      },
+      "solution": { "expectedOutput": "gomme 1\nregle 2\nstylo 3\ncahier 5\nle moins cher: gomme" },
+      "explanation": "`std::sort` ne sait pas comparer deux `Produit` : on lui passe en troisième argument un objet **foncteur comparateur** `ParPrixCroissant()`, une classe surchargeant `operator()` qui renvoie `a.prix < b.prix`. Le vecteur est donc trié par prix **croissant** : gomme (1), regle (2), stylo (3), cahier (5). Après le tri, `panier.front()` est le premier élément, donc le produit le moins cher : `gomme`.",
+      "concepts": ["algorithme-stl", "tri-comparateur", "foncteur"]
+    }
+  ]
+}

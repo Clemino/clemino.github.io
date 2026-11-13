@@ -1,0 +1,70 @@
+---
+title: "Carnet d'ordres, spread et liquidité"
+slug: carnet-spread-liquidite
+order: 4
+estimatedReadMin: 10
+concepts: [carnet-ordres, priorite-prix-temps, spread, liquidite]
+source: "Varsity, module 1, chapitre 9 « The Bid and Ask price » ; AMF, « Choisir et passer un ordre de bourse »"
+---
+
+## Idée centrale
+
+Le prix affiché d'une action n'est pas un prix auquel tu peux forcément acheter. Le vrai prix se lit dans le **carnet d'ordres** : ce que les vendeurs demandent, ce que les acheteurs offrent, et en quelles quantités.
+
+## Lire un carnet d'ordres
+
+Le carnet affiche en général les cinq meilleures limites de chaque côté.
+
+| Acheteurs : quantité | Prix d'achat (bid) | Prix de vente (ask) | Vendeurs : quantité |
+|---|---|---|---|
+| 300 | 24,98 | 25,02 | 200 |
+| 500 | 24,96 | 25,04 | 400 |
+| 1 200 | 24,94 | 25,06 | 900 |
+
+- La **meilleure offre d'achat** (bid) est 24,98 € : c'est ce que tu obtiens si tu **vends** immédiatement.
+- La **meilleure offre de vente** (ask) est 25,02 € : c'est ce que tu paies si tu **achètes** immédiatement.
+- La **fourchette** ou **spread** est l'écart : 25,02 − 24,98 = 0,04 €.
+- Le **cours milieu** est la moyenne des deux : 25,00 €.
+
+### La priorité prix puis temps
+
+Les ordres sont servis d'abord par **prix** (le plus haut à l'achat, le plus bas à la vente), puis, à prix égal, par **heure d'arrivée**. Un ordre au marché passe avant tous les ordres limités.
+
+## Le spread, un coût caché
+
+Si tu achètes au marché puis revends immédiatement, tu perds le spread : tu achètes à 25,02 € et revends à 24,98 €. Pour 1 000 € investis, c'est 0,16 % perdu avant tout frais de courtage. Exprimé en pourcentage du cours milieu :
+
+```
+spread en % = (ask − bid) / cours milieu
+```
+
+Sur une grande valeur du CAC 40, le spread est souvent de l'ordre de 0,02 % à 0,05 %. Sur une petite valeur, il peut dépasser 1 %, ce qui rend le trading fréquent très coûteux.
+
+## Quand l'ordre « mange » le carnet
+
+Si tu achètes au marché **500** actions avec le carnet ci-dessus, la première limite ne suffit pas :
+
+- 200 actions à 25,02 € = 5 004 €
+- 300 actions à 25,04 € = 7 512 €
+- total : 12 516 € pour 500 actions, soit un **prix moyen de 25,032 €**
+
+Ton ordre a fait monter le prix contre toi. Cet effet s'appelle l'**impact de marché**. Il est négligeable pour un particulier sur une grande valeur, mais réel sur une petite.
+
+## La liquidité
+
+Un titre est **liquide** quand on peut acheter ou vendre rapidement une quantité importante sans faire bouger le prix. Les signes de liquidité :
+
+- un spread étroit ;
+- de grandes quantités aux meilleures limites ;
+- un volume quotidien élevé.
+
+La liquidité n'est jamais garantie : elle peut disparaître en période de panique, précisément quand tu veux sortir.
+
+> **À retenir**
+> Avant d'acheter une valeur, regarde son carnet : si le spread dépasse ce que tu espères gagner sur la plupart de tes trades, cette valeur n'est pas pour toi.
+
+## Pièges classiques
+
+- Calculer ses gains sur le dernier cours affiché au lieu du prix réellement obtenu.
+- Passer un gros ordre au marché sur une valeur peu liquide.
+- Oublier que le spread se paie à chaque aller-retour, en plus du courtage.

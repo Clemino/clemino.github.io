@@ -1,0 +1,329 @@
+---
+title: "Sémaphores POSIX"
+slug: semaphores-posix
+order: 5
+estimatedReadMin: 20
+concepts: [semaphore-posix, semaphore-h, sem-init, sem-wait, sem-post, sem-getvalue, sem-destroy, operation-p-v, semaphore-binaire, semaphore-compteur, semaphore-nomme, sem-open, probleme-synchronisation]
+source: "Cours 4 — Les threads POSIX (complété par TP5)"
+---
+
+Le mutex protège une section critique ; la variable de condition fait attendre un prédicat. Le **sémaphore** est un outil de synchronisation **plus général** : c'est un **compteur** que l'on incrémente et décrémente, et qui **bloque** un thread quand il tomberait en dessous de zéro. Avec lui, on résout aussi bien l'exclusion mutuelle que le comptage de ressources et la coordination de threads — comme le montre le **problème du dentiste** du TP5, traité en fin de chapitre.
+
+## Qu'est-ce qu'un sémaphore ?
+
+> Un **sémaphore** est un objet de synchronisation contenant une **valeur entière non négative**. Cette valeur représente, intuitivement, le **nombre d'unités disponibles** d'une ressource. Deux opérations le manipulent : l'une **prend** une unité (et **bloque** s'il n'y en a plus), l'autre **rend** une unité (et **réveille** un éventuel thread en attente).
+
+Le sémaphore POSIX est de type **`sem_t`**, déclaré dans l'en-tête :
+
+```c
+#include <semaphore.h>
+```
+
+Les deux opérations fondamentales portent des noms historiques, dus à leur inventeur Edsger Dijkstra :
+
+- **P** (de l'idée de « *prendre* » / *décrémenter*) — **décrémente** la valeur de 1. Si la valeur était déjà à **0**, le thread est **bloqué** jusqu'à ce qu'elle redevienne positive.
+- **V** (de l'idée de « *rendre* » / *incrémenter*) — **incrémente** la valeur de 1. Si des threads étaient bloqués en attente, **l'un d'eux est réveillé**.
+
+En POSIX, ces deux opérations s'appellent **`sem_wait`** (l'opération **P**) et **`sem_post`** (l'opération **V**). C'est tout le sémaphore : un compteur, un `wait` qui décrémente-ou-bloque, un `post` qui incrémente-et-réveille.
+
+## Les primitives POSIX
+
+### Initialiser : `sem_init`
+
+Un sémaphore **non nommé** s'initialise par :
+
+```c
+#include <semaphore.h>
+
+int sem_init(sem_t *sem, int partage, unsigned int valeur);
+```
+
+- **`sem`** — un pointeur vers la variable `sem_t` à initialiser ;
+- **`partage`** — indique la portée du sémaphore : **`0`** = partagé **entre les threads d'un même processus** (le cas usuel de ce module) ; une valeur **non nulle** = partagé **entre processus** (le sémaphore doit alors résider en mémoire partagée) ;
+- **`valeur`** — la **valeur initiale** du compteur.
+
+`sem_init` renvoie **`0`** en cas de succès, **`-1`** en cas d'échec (avec `errno` positionné — contrairement aux fonctions `pthread_`, les fonctions `sem_*` suivent la convention classique `-1` + `errno`).
+
+Le choix de la **valeur initiale** est **décisif** — il encode le rôle du sémaphore :
+
+- **valeur initiale `1`** → sémaphore **binaire**, utilisé pour l'**exclusion mutuelle** (au plus une unité disponible) ;
+- **valeur initiale `N`** → sémaphore **compteur**, autorisant **`N` accès simultanés** à une ressource ;
+- **valeur initiale `0`** → sémaphore de **synchronisation** : il démarre « vide », un thread qui fait `P` est bloqué d'emblée, jusqu'à ce qu'un autre thread fasse `V` — c'est un mécanisme de **rendez-vous** / signalisation.
+
+### Prendre : `sem_wait` (l'opération P)
+
+```c
+#include <semaphore.h>
+
+int sem_wait(sem_t *sem);
+```
+
+`sem_wait` réalise l'opération **P** :
+
+- si la valeur du sémaphore est **strictement positive**, elle est **décrémentée de 1** et le thread **continue** ;
+- si la valeur est **`0`**, le thread est **bloqué** (endormi, sans consommer de temps processeur) jusqu'à ce qu'un autre thread fasse un `sem_post` ; il décrémente alors et reprend.
+
+Il existe une variante **non bloquante**, **`sem_trywait`** : si la valeur est à `0`, elle revient **immédiatement** avec `-1` et `errno` valant **`EAGAIN`**, au lieu de bloquer.
+
+### Rendre : `sem_post` (l'opération V)
+
+```c
+#include <semaphore.h>
+
+int sem_post(sem_t *sem);
+```
+
+`sem_post` réalise l'opération **V** : elle **incrémente** la valeur du sémaphore de 1. Si un ou plusieurs threads étaient **bloqués** dans un `sem_wait` sur ce sémaphore, **l'un d'eux est réveillé**.
+
+> ⚠️ **`sem_post` mémorise**, contrairement au `signal` d'une variable de condition. Un `pthread_cond_signal` émis alors qu'aucun thread n'attend est **perdu**. Un `sem_post`, lui, **incrémente le compteur** même si personne n'attend : l'unité reste **disponible** pour un futur `sem_wait`. Cette **mémoire de l'événement** est une différence fondamentale entre sémaphore et variable de condition.
+
+### Consulter et détruire : `sem_getvalue`, `sem_destroy`
+
+```c
+#include <semaphore.h>
+
+int sem_getvalue(sem_t *sem, int *valeur);
+int sem_destroy(sem_t *sem);
+```
+
+- `sem_getvalue` range dans `*valeur` la **valeur courante** du sémaphore. Attention : cette valeur n'est qu'un **instantané**, qui peut être **déjà périmé** au moment où on l'examine (un autre thread a pu agir entre-temps). `sem_getvalue` sert au **débogage**, **jamais** à prendre une décision de synchronisation.
+- `sem_destroy` **détruit** un sémaphore non nommé initialisé par `sem_init`, libérant ses ressources. Aucun thread ne doit être bloqué dessus au moment de la destruction.
+
+Toutes ces fonctions renvoient **`0`** si succès, **`-1`** + `errno` si échec.
+
+## Sémaphore binaire ou sémaphore compteur
+
+Selon sa valeur initiale, un sémaphore joue **deux rôles** bien distincts.
+
+### Le sémaphore binaire (exclusion mutuelle)
+
+Un sémaphore initialisé à **`1`** ne prend que les valeurs **0** ou **1** : c'est un **sémaphore binaire**. Il joue alors le rôle d'un **verrou d'exclusion mutuelle**, exactement comme un mutex :
+
+```c
+#include <semaphore.h>
+
+sem_t verrou;
+
+/* initialisation : sem_init(&verrou, 0, 1);  -> valeur 1 */
+
+void section_critique(void) {
+    sem_wait(&verrou);        /* P : 1 -> 0 ; un 2e thread serait bloque ici */
+    /* ... acces a la donnee partagee : un seul thread a la fois ... */
+    sem_post(&verrou);        /* V : 0 -> 1 ; libere le verrou               */
+}
+```
+
+Tant qu'un thread est dans la section critique, le sémaphore vaut **0** ; tout autre thread qui fait `sem_wait` est **bloqué**. Le premier thread fait `sem_post` en sortant, le sémaphore repasse à **1**, un thread en attente est réveillé.
+
+> ⚠️ Un sémaphore binaire et un mutex se ressemblent, mais ils ne sont **pas identiques**. Un **mutex a un propriétaire** : seul le thread qui l'a verrouillé est censé le déverrouiller. Un **sémaphore n'a pas de propriétaire** : **n'importe quel** thread peut faire `sem_post`, même un thread qui n'a jamais fait `sem_wait`. C'est précisément cette absence de propriétaire qui rend le sémaphore apte à la **synchronisation entre threads** (un thread débloque un autre), là où le mutex est fait pour la **seule exclusion mutuelle**. Pour protéger une simple section critique, **préférez le mutex** ; réservez le sémaphore aux véritables besoins de comptage ou de signalisation.
+
+### Le sémaphore compteur (N accès simultanés)
+
+Un sémaphore initialisé à **`N`** (avec `N > 1`) autorise **jusqu'à `N` threads** à accéder simultanément à une ressource. Chaque `sem_wait` décrémente le compteur ; quand il atteint **0**, les `N` « jetons » sont distribués et le **(N+1)-ième** thread est **bloqué** — jusqu'à ce qu'un des `N` premiers rende son jeton par `sem_post`.
+
+C'est le modèle du **parking à N places**, du **pool de N connexions**, ou de la **salle d'attente à N sièges** : le sémaphore compte les **places libres**.
+
+## Sémaphores non nommés et sémaphores nommés
+
+POSIX offre **deux variétés** de sémaphores.
+
+- Le **sémaphore non nommé** (*unnamed*) — celui de tout ce qui précède. Il est représenté par une variable `sem_t` que **vous** déclarez (globale ou en mémoire partagée), et initialisée par **`sem_init`**. C'est la forme adaptée à la synchronisation **entre threads d'un même processus**.
+
+- Le **sémaphore nommé** (*named*) — il possède un **nom** dans le système (de la forme `"/mon_semaphore"`) et existe **indépendamment** de tout processus. On l'ouvre avec **`sem_open`**, ce qui permet à des **processus non apparentés** de partager le **même** sémaphore en l'ouvrant sous le même nom :
+
+```c
+#include <semaphore.h>
+#include <fcntl.h>      /* pour O_CREAT */
+#include <sys/stat.h>   /* pour les modes de permission */
+
+sem_t *sem_open(const char *nom, int oflag, ...);   /* ... = mode, valeur si O_CREAT */
+int    sem_close(sem_t *sem);                       /* ferme le sémaphore nommé      */
+int    sem_unlink(const char *nom);                 /* supprime son nom du système   */
+```
+
+Le parallèle est direct avec ce que le Module 4 a montré pour les tubes :
+
+| | Sémaphore **non nommé** | Sémaphore **nommé** |
+|---|---|---|
+| Création / ouverture | `sem_init` | `sem_open` |
+| Identification | une variable `sem_t` en mémoire | un **nom** (`"/xxx"`) dans le système |
+| Portée | threads d'un processus (ou mémoire partagée) | **processus non apparentés** |
+| Libération | `sem_destroy` | `sem_close` puis `sem_unlink` |
+
+Dans ce module, centré sur les **threads d'un même processus**, on utilise les sémaphores **non nommés** (`sem_init`). Les sémaphores nommés sont l'équivalent, pour l'IPC, des tubes nommés.
+
+## Le motif producteur / consommateur avec sémaphores
+
+Le TP5 propose le **producteur / consommateur** sur un tampon borné, résolu cette fois **avec des sémaphores** (et non des variables de condition). C'est un motif d'examen incontournable. On utilise **trois** sémaphores :
+
+- **`mutex`** — sémaphore **binaire** (valeur initiale **`1`**), pour protéger l'accès au tampon (section critique) ;
+- **`vide`** — sémaphore **compteur** (valeur initiale **`TAILLE`**), qui compte les **places libres** dans le tampon ;
+- **`plein`** — sémaphore **compteur** (valeur initiale **`0`**), qui compte les **éléments présents** dans le tampon.
+
+```c
+#include <pthread.h>
+#include <semaphore.h>
+#include <stdio.h>
+
+#define TAILLE 8
+#define N      20
+
+int  tampon[TAILLE];
+int  tete = 0, queue = 0;
+
+sem_t mutex;        /* binaire : protege le tampon          */
+sem_t vide;         /* compteur : nombre de places libres   */
+sem_t plein;        /* compteur : nombre d'elements presents */
+
+void *producteur(void *arg) {
+    (void) arg;
+    for (int i = 0; i < N; i++) {
+        sem_wait(&vide);                /* P(vide)  : attend une place libre */
+        sem_wait(&mutex);               /* P(mutex) : entre en section critique */
+
+        tampon[queue] = i;              /* depot dans le tampon */
+        queue = (queue + 1) % TAILLE;
+        printf("Produit %d\n", i);
+
+        sem_post(&mutex);               /* V(mutex) : sort de section critique  */
+        sem_post(&plein);               /* V(plein) : signale un element de plus */
+    }
+    return NULL;
+}
+
+void *consommateur(void *arg) {
+    (void) arg;
+    for (int i = 0; i < N; i++) {
+        sem_wait(&plein);               /* P(plein) : attend un element        */
+        sem_wait(&mutex);               /* P(mutex) : entre en section critique */
+
+        int valeur = tampon[tete];      /* retrait du tampon */
+        tete = (tete + 1) % TAILLE;
+        printf("        Consomme %d\n", valeur);
+
+        sem_post(&mutex);               /* V(mutex) : sort de section critique */
+        sem_post(&vide);                /* V(vide)  : signale une place libre  */
+    }
+    return NULL;
+}
+
+int main(void) {
+    pthread_t prod, cons;
+
+    sem_init(&mutex, 0, 1);             /* binaire  : 1 */
+    sem_init(&vide,  0, TAILLE);        /* compteur : TAILLE places libres au depart */
+    sem_init(&plein, 0, 0);             /* compteur : 0 element au depart */
+
+    pthread_create(&prod, NULL, producteur, NULL);
+    pthread_create(&cons, NULL, consommateur, NULL);
+    pthread_join(prod, NULL);
+    pthread_join(cons, NULL);
+
+    sem_destroy(&mutex);
+    sem_destroy(&vide);
+    sem_destroy(&plein);
+    return 0;
+}
+```
+
+Le mécanisme, étape par étape :
+
+- avant de déposer, le producteur fait `sem_wait(&vide)` : s'il **n'y a aucune place libre**, il est **bloqué** ;
+- avant de retirer, le consommateur fait `sem_wait(&plein)` : si le tampon est **vide**, il est **bloqué** ;
+- chaque dépôt fait `sem_post(&plein)` (un élément de plus), chaque retrait fait `sem_post(&vide)` (une place de plus).
+
+> ⚠️ **L'ordre des deux `sem_wait` est crucial.** Le producteur fait **`P(vide)` puis `P(mutex)`** — et **jamais** l'inverse. Imaginons l'ordre inversé : un producteur prend `mutex` (entre en section critique), puis trouve le tampon plein et **bloque** sur `P(vide)`… **en tenant toujours `mutex`**. Le consommateur, qui a besoin de `mutex` pour retirer un élément et libérer une place, **ne pourra jamais l'obtenir** : **interblocage**. La règle : on prend toujours le sémaphore de **comptage** (`vide` ou `plein`) **avant** le sémaphore d'**exclusion** (`mutex`), pour ne jamais s'endormir en tenant le verrou.
+
+## Un problème de synchronisation classique : le dentiste (TP5)
+
+Le TP5 propose un exercice de synthèse : simuler un **cabinet de dentiste**. Le **dentiste** est un thread, chaque **patient** est un thread, et le dentiste ne soigne **qu'un patient à la fois**. C'est un excellent cas d'usage des sémaphores de **synchronisation** (valeur initiale `0`).
+
+On utilise deux sémaphores, tous deux initialisés à **`0`** :
+
+- **`patients`** — un patient fait `V(patients)` pour **signaler son arrivée** ; le dentiste fait `P(patients)` pour **attendre** qu'un patient se présente ;
+- **`dentiste`** — le dentiste fait `V(dentiste)` pour signaler qu'il **reçoit** le patient ; le patient fait `P(dentiste)` pour **attendre** d'être reçu.
+
+```c
+#include <pthread.h>
+#include <semaphore.h>
+#include <stdio.h>
+#include <unistd.h>
+
+sem_t patients;     /* >0 : des patients attendent      */
+sem_t dentiste;     /* >0 : le dentiste recoit           */
+
+void *thread_dentiste(void *arg) {
+    (void) arg;
+    printf("Ouverture du cabinet.\n");
+    while (1) {
+        sem_wait(&patients);    /* P(patients) : attend un patient        */
+        sem_post(&dentiste);    /* V(dentiste) : recoit le patient         */
+        printf("Dentiste : je recois un nouveau patient\n");
+        sleep(2);               /* le dentiste soigne (2 secondes)         */
+        printf("Dentiste : Au suivant !\n");
+    }
+    return NULL;
+}
+
+void *thread_patient(void *arg) {
+    (void) arg;
+    sem_post(&patients);        /* V(patients) : informe le dentiste qu'il arrive */
+    sem_wait(&dentiste);        /* P(dentiste) : attend d'etre recu               */
+    printf("Patient  : Je rentre dans la piece et me fais soigner.\n");
+    return NULL;
+}
+
+int main(void) {
+    pthread_t t_dentiste;
+
+    sem_init(&patients, 0, 0);  /* 0 : aucun patient au depart   */
+    sem_init(&dentiste, 0, 0);  /* 0 : le dentiste n'a recu personne */
+
+    pthread_create(&t_dentiste, NULL, thread_dentiste, NULL);
+
+    /* chaque appui sur Entree fait arriver un patient */
+    while (1) {
+        pthread_t patient;
+        getchar();
+        printf("> Arrive d'un patient.\n");
+        pthread_create(&patient, NULL, thread_patient, NULL);
+        pthread_detach(patient);    /* patient autonome : pas de join */
+    }
+
+    pthread_join(t_dentiste, NULL);
+    return 0;
+}
+```
+
+Le raisonnement sur les **valeurs initiales** — explicitement demandé par le TP5 — est le cœur de l'exercice :
+
+- `patients` démarre à **`0`** : à l'ouverture, **aucun patient** n'attend, donc le `P(patients)` du dentiste le **bloque** d'emblée — le dentiste **dort** jusqu'au premier patient ;
+- `dentiste` démarre à **`0`** : un patient qui arrive fait `V(patients)` (réveillant le dentiste) puis `P(dentiste)` ; il est **bloqué** tant que le dentiste n'a pas fait `V(dentiste)`, c'est-à-dire tant qu'il n'a pas été **pris en charge**.
+
+L'enchaînement garantit que le patient n'« entre dans la pièce » qu'**après** que le dentiste l'a effectivement reçu, et que le dentiste **attend sans rien consommer** quand le cabinet est vide.
+
+> ⚠️ Le TP5 prolonge l'exercice avec une **salle d'attente à `NB_PLACES` sièges**. Une variable globale `en_attente` compte les patients assis ; chaque patient l'incrémente en s'installant, le dentiste la décrémente en recevant un patient. Comme `en_attente` est en **accès concurrent** (patients **et** dentiste la modifient), elle doit être placée en **section critique** : on ajoute un **troisième sémaphore**, binaire (valeur `1`), de type **mutex**. Si l'on incrémente / décrémente `en_attente` **sans** ce verrou, on retombe exactement sur la **condition de course** du chapitre 2.
+
+## Choisir le bon outil de synchronisation
+
+Le module a présenté **trois** mécanismes. Récapitulons leur domaine d'emploi :
+
+| Besoin | Outil recommandé |
+|---|---|
+| Protéger une **section critique** (exclusion mutuelle) | **mutex** |
+| **Attendre une condition arbitraire** sur des données partagées | **variable de condition** (+ mutex) |
+| **Compter** des unités d'une ressource (N places, N jetons) | **sémaphore compteur** |
+| **Signaler** un événement d'un thread à un autre (rendez-vous) | **sémaphore** initialisé à `0` |
+| Exclusion mutuelle **entre processus** non apparentés | **sémaphore nommé** (`sem_open`) |
+
+Aucun de ces outils n'est « meilleur » dans l'absolu : chacun correspond à un **besoin précis**. Le bon réflexe d'examen est d'**identifier le besoin** — exclusion ? attente conditionnelle ? comptage ? signalisation ? — puis de **choisir l'outil** qui lui correspond.
+
+> **À retenir**
+> - Un **sémaphore** (`sem_t`, en-tête `<semaphore.h>`) est un **compteur entier non négatif** ; deux opérations le manipulent : **P** (`sem_wait`) **décrémente ou bloque**, **V** (`sem_post`) **incrémente et réveille**.
+> - **`sem_init(&sem, partage, valeur)`** initialise un sémaphore non nommé ; `partage = 0` le réserve aux **threads d'un processus**. Les fonctions `sem_*` renvoient **`-1` + `errno`** en cas d'échec.
+> - La **valeur initiale** encode le rôle : **`1`** → sémaphore **binaire** (exclusion mutuelle) ; **`N`** → sémaphore **compteur** (`N` accès simultanés) ; **`0`** → **synchronisation** / signalisation entre threads.
+> - **`sem_wait`** (P) : décrémente si la valeur est `> 0`, sinon **bloque** le thread. **`sem_post`** (V) : incrémente et **réveille** un thread bloqué.
+> - Contrairement au `signal` d'une variable de condition, **`sem_post` mémorise** : un `post` émis sans attendeur laisse le compteur incrémenté pour un futur `wait`.
+> - Un sémaphore binaire **n'a pas de propriétaire** (n'importe quel thread peut faire `post`), au contraire du **mutex** ; pour une simple section critique, on **préfère le mutex**.
+> - Sémaphore **non nommé** (`sem_init` / `sem_destroy`) pour les threads d'un processus ; sémaphore **nommé** (`sem_open` / `sem_close` / `sem_unlink`) pour des **processus non apparentés**.
+> - Motifs de référence : **producteur / consommateur** (sémaphores `mutex`, `vide`, `plein` — toujours `P(comptage)` **avant** `P(mutex)`) et le **dentiste** du TP5 (sémaphores `patients` et `dentiste` à `0`, plus un mutex pour la salle d'attente).

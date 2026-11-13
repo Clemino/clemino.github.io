@@ -1,0 +1,28 @@
+---
+title: "Traits, generiques et variance"
+slug: traits-generiques
+order: 3
+estimatedReadMin: 13
+concepts: [trait, generic, variance, type-inference]
+source: "POO/Scala_03.pdf; POO/Scala_03_TD(1) (1).pdf"
+---
+## Traits
+
+Un trait decrit un comportement. Il peut contenir des signatures abstraites et des methodes concretes.
+
+```scala
+trait Mesurable:
+  def taille: Int
+  def vide: Boolean = taille == 0
+```
+
+## Types generiques
+
+Un type generique represente une famille de types. `List[Int]` et `List[String]` partagent la meme structure, mais pas le meme type exact.
+
+## Variance
+
+La variance indique comment le sous-typage se propage. `List[+A]` est covariante : une `List[Chien]` peut etre vue comme `List[Animal]` si `Chien <: Animal`. Les positions de lecture/ecriture expliquent pourquoi une boite mutable ne peut pas etre covariante sans danger.
+
+> **A retenir**  
+> La variance est un raisonnement de substituabilite : que peut-on lire, que peut-on ecrire, et quels appels restent valides ?

@@ -1,0 +1,133 @@
+---
+title: Fonctions templates
+slug: fonctions-templates
+order: 1
+estimatedReadMin: 10
+concepts: [fonction-template, parametre-type, instanciation-template]
+source: "Cours 7 — Templates & STL"
+---
+
+## Le même code, écrit une seule fois
+
+Imaginons une fonction qui renvoie le plus petit de deux entiers :
+
+```cpp
+int min(int a, int b) {
+    return (a < b ? a : b);
+}
+```
+
+Demain on en a besoin pour des `double`. Puis pour des `char`. Puis pour des objets `Personne`. Le **corps** de la fonction est pourtant rigoureusement identique : seul le **type** des paramètres change. Recopier ce corps une fois par type, c'est de la duplication pure — du code à maintenir en plusieurs exemplaires, des bugs à corriger partout, du temps de codage perdu.
+
+> Un **template** (patron) permet d'écrire une fonction — ou une classe — qui fonctionne pour **plusieurs types différents**, sans la réécrire. Le type devient un **paramètre** : on programme une fois, le compilateur fabrique ensuite une version par type réellement utilisé.
+
+C'est la **programmation générique** : on écrit un algorithme une fois, indépendamment du type des données. On y gagne sur trois plans annoncés par le cours :
+
+- **Performance** : le code généré est compact et aussi efficace qu'une version écrite à la main pour ce type ;
+- **Temps de codage** : un seul algorithme à écrire, un seul à tester ;
+- **Clarté** : l'intention (« le minimum de deux choses ») est exprimée une seule fois.
+
+## Déclarer une fonction template
+
+On préfixe la fonction par le mot-clé **`template`** suivi, entre chevrons `< >`, de la liste de ses **paramètres de type** :
+
+```cpp
+template <typename T>
+T min(const T& a, const T& b) {
+    return (a < b ? a : b);
+}
+```
+
+Lisons cette déclaration :
+
+- `template <typename T>` annonce : « ce qui suit est un patron ; `T` est un **paramètre de type**, un nom qui désignera un type encore inconnu ».
+- Dans le corps, `T` s'utilise **comme n'importe quel type** : type de retour, type de paramètre, type d'une variable locale.
+- Les paramètres sont passés en `const T&` (référence constante) : on évite une copie inutile si `T` est un type lourd, et on garantit qu'on ne modifie pas les arguments.
+
+> `typename` et `class` sont **strictement équivalents** ici : `template <typename T>` et `template <class T>` déclarent la même chose. Le mot `class` n'impose **pas** que `T` soit une classe — `T` peut très bien être `int`. Le cours utilise les deux ; `typename` est aujourd'hui le choix le plus courant car il dit clairement « un type ».
+
+## Le compilateur déduit le type : la déduction d'argument
+
+Le grand confort d'une fonction template : à l'appel, on **n'écrit pas** le type. Le compilateur le **déduit** des arguments fournis. C'est la **déduction d'argument template**.
+
+```cpp
+int    i1 = 3, i2 = 7;
+double d1 = 2.5, d2 = 9.1;
+
+int    petit_i = min(i1, i2);   // T déduit = int    -> min<int>
+double petit_d = min(d1, d2);   // T déduit = double -> min<double>
+```
+
+Le premier appel passe deux `int` : le compilateur en déduit `T = int` et fabrique la fonction `min<int>`. Le second passe deux `double` : il fabrique `min<double>`. Une seule définition source, deux fonctions réelles produites **à la compilation**.
+
+> ⚠️ La déduction exige des arguments **cohérents**. `min(3, 2.5)` mélange un `int` et un `double` : le compilateur ne peut pas décider si `T` vaut `int` ou `double`, et l'appel **échoue à la compilation**. Il faut soit aligner les types (`min(3.0, 2.5)`), soit forcer le type explicitement (voir ci-dessous).
+
+## Forcer le type : l'instanciation explicite
+
+On peut **imposer** le type au lieu de le laisser déduire, en l'écrivant entre chevrons après le nom de la fonction :
+
+```cpp
+double minimum1 = min<double>(d1, d2);   // on impose T = double
+int    minimum2 = min<int>(i1, i2);      // on impose T = int
+
+Personne pmin = min<Personne>(p1, p2);   // T = Personne
+```
+
+Le fait de fabriquer une version concrète du patron pour un type donné s'appelle **instancier** le template. `min<int>` est une **instanciation** du patron `min`. Préciser `<int>` explicitement sert quand la déduction est impossible ou ambiguë, ou simplement pour lever toute hésitation à la lecture.
+
+> Pour que `min<Personne>(p1, p2)` compile, l'expression `a < b` doit avoir un sens sur des `Personne`. Le corps du template utilise `operator<` : le type employé doit donc **fournir cet opérateur**. Si `Personne` ne surcharge pas `operator<`, l'instanciation échoue. Un template impose ainsi un **contrat implicite** : le type doit supporter toutes les opérations que le corps emploie.
+
+## Plusieurs paramètres de type
+
+Un template peut déclarer **plusieurs** paramètres de type, séparés par des virgules. Reprenons l'exemple du cours : une fonction qui calcule la moyenne d'un tableau, où le type des **éléments** et le type du **résultat** sont distincts.
+
+```cpp
+template <typename T1, typename T2>
+T2 calculerMoyenne(T1 tableau[], int taille) {
+    T2 somme = 0;
+    for (int i = 0; i < taille; ++i)
+        somme += tableau[i];
+    return somme / taille;
+}
+```
+
+Ici `T1` est le type des cases du tableau (par exemple `int`) et `T2` le type de l'accumulateur et du retour (par exemple `double`, pour ne pas perdre la partie décimale du quotient).
+
+> ⚠️ Le type `T2` doit être choisi avec soin : si l'accumulateur est un type **entier**, `somme / taille` effectue une **division entière** — le quotient est tronqué et la « moyenne » perd sa partie décimale. Pour une vraie moyenne, `T2` doit être un type à virgule flottante (`double`).
+
+À l'appel, `T1` se déduit du tableau, mais `T2` **n'apparaît dans aucun paramètre** : il ne peut pas être déduit. On doit donc le préciser explicitement :
+
+```cpp
+int tab[5] = {10, 20, 30, 40, 50};
+double avg = calculerMoyenne<int, double>(tab, 5);   // T1 = int, T2 = double
+```
+
+> Règle générale : un paramètre de type qui n'apparaît **pas** dans la liste des paramètres de la fonction ne peut **pas** être déduit ; il faut le fournir explicitement entre chevrons. On place d'abord les types déductibles, puis les non déductibles, pour pouvoir n'écrire que ce qui est nécessaire.
+
+## Paramètres non-type
+
+Les chevrons d'un template peuvent aussi recevoir une **valeur constante** connue à la compilation — un **paramètre non-type**, le plus souvent un entier. On le verra surtout sur les classes templates au chapitre suivant :
+
+```cpp
+template <typename T, int N>
+T premier(T tableau[]) {           // N = taille fixée à la compilation
+    return (N > 0) ? tableau[0] : T{};
+}
+```
+
+`T` est un type, `N` est un **entier**. Un paramètre non-type doit être une constante de compilation : on ne peut pas y passer une variable dont la valeur n'est connue qu'à l'exécution.
+
+## Où écrire une fonction template ?
+
+Le cours le précise dans ses exemples par le commentaire `// dans un fichier.h`. Une fonction template n'est **pas** du code ordinaire : c'est un **patron**. Tant qu'aucun type ne lui est appliqué, le compilateur ne génère **rien**. Il a besoin de voir la **définition complète** (le corps) au moment où il rencontre une instanciation.
+
+> ⚠️ Une fonction template se place **en entier dans le fichier d'en-tête (`.h`)** — déclaration **et** corps ensemble. Si on met seulement la déclaration dans le `.h` et le corps dans un `.cpp`, chaque fichier qui appelle le template voit la déclaration mais pas le corps : il ne peut rien instancier, et l'édition de liens échoue. Ce point sera repris et expliqué pour les classes templates.
+
+> **À retenir**
+> - Un **template** écrit une fonction valable pour **plusieurs types** : le type devient un paramètre, on code une fois — c'est la **programmation générique** (performance, temps de codage, clarté).
+> - `template <typename T>` (ou `template <class T>`, équivalent) déclare un **paramètre de type** `T`, utilisable comme n'importe quel type dans le corps.
+> - À l'appel, le compilateur **déduit** `T` des arguments ; les arguments doivent être de types cohérents, sinon la compilation échoue.
+> - On peut **forcer** le type — `min<int>(a, b)` : c'est l'**instanciation explicite**, obligatoire quand la déduction est impossible.
+> - Un template peut avoir **plusieurs paramètres de type** (`T1, T2`) ; un type qui n'apparaît dans aucun paramètre **doit** être précisé explicitement.
+> - Le type fourni doit supporter **toutes les opérations** que le corps emploie (`min` exige `operator<`).
+> - Une fonction template vit **entièrement dans le `.h`** — déclaration et corps ensemble — car le compilateur a besoin du corps pour instancier.

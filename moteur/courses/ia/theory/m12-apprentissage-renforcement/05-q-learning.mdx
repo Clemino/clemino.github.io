@@ -1,0 +1,289 @@
+---
+title: "Q-learning et exploration/exploitation"
+slug: q-learning
+order: 5
+estimatedReadMin: 25
+concepts: [methodes-model-free, q-learning, q-valeur, regle-de-mise-a-jour-q, facteur-d-apprentissage, exploration-exploitation-rl, epsilon-greedy, convergence-q-learning, gridworld]
+source: "Apprentissage_renforcement.pdf"
+---
+
+## Le principe du Q-learning
+
+La section précédente a montré que Value Iteration et Policy Iteration
+**supposent le modèle connu**. Le **Q-learning** est, lui, une méthode
+**model-free** : il **apprend une stratégie optimale sans passer par un
+modèle**. Le cours en donne le **principe** :
+
+> Il s'agit d'**évaluer la qualité de chaque action partant de chaque état**.
+
+Le cours précise cette idée de qualité :
+
+- la **qualité d'un couple état/action** est liée à la **récompense cumulée dans
+  le futur (à long terme)** lorsque l'agent **exécute l'action en partant de
+  l'état** et qu'**ensuite il se comporte de manière optimale** ;
+- l'**apprentissage consiste à affiner progressivement cette évaluation** à
+  l'aide de la **récompense `r` obtenue à chaque exécution de l'action à partir
+  de l'état**.
+
+L'esprit du Q-learning est donc différent de celui de Value Iteration. On ne
+calcule plus la valeur **d'un état** à partir d'un modèle connu : on **estime la
+qualité de chaque couple `(état, action)`**, et on **corrige** cette estimation
+au fil des **interactions réelles** avec l'environnement.
+
+> **À retenir** : le **Q-learning** est une méthode **model-free**. Son principe
+> est d'**évaluer la qualité de chaque couple `(état, action)`** — la
+> **récompense cumulée** si l'on exécute l'action puis se comporte de manière
+> optimale — et d'**affiner** cette évaluation grâce à la **récompense `r`**
+> reçue à chaque interaction.
+
+## La fonction Q
+
+Le cours formalise cette « qualité » par la **fonction `Q`**. Pour un état `s`
+et une action `a`, **`Q*(s, a)` représente la moyenne de la récompense cumulée
+lorsque l'agent est dans l'état `s`, qu'il exécute l'action `a`, puis se comporte
+de manière optimale**. On a donc :
+
+```text
+Q*(s, a) = R(s, a) + γ · Σ T(s, a, s′) · maxₐ′ Q*(s′, a′)
+```
+
+(somme sur les états successeurs `s′`).
+
+Lisons cette équation : la qualité de `(s, a)` = **la récompense immédiate**
+`R(s, a)` **plus** `γ` fois la **valeur moyenne de l'état d'arrivée `s′`** — et
+dans `s′`, comme l'agent se comporte **de manière optimale**, on prend la
+**meilleure** Q-valeur `maxₐ′ Q*(s′, a′)`.
+
+À partir de cette fonction, le cours montre qu'on **déduit la valeur optimale de
+chaque état et la stratégie optimale** :
+
+```text
+1.  V*(s)  = maxₐ Q*(s, a)
+2.  π*(s)  = argmaxₐ Q*(s, a)
+```
+
+La fonction `Q*` est donc **plus riche** que `V*` : connaître `Q*` donne **à la
+fois** `V*` (par un `max`) **et** `π*` (par un `argmax`), **sans avoir besoin du
+modèle** `T` ni `R` pour faire ce choix d'action.
+
+Le cours ajoute une **remarque** : comme on l'a fait pour la fonction `V`
+(valeur des états), on **pourrait définir la fonction `Qπ` pour une stratégie
+quelconque `π`**, puis considérer `Q*` comme **celle qui correspond à la
+stratégie optimale `π*`**.
+
+> **À retenir** : la **fonction `Q*(s, a)`** est la **moyenne de la récompense
+> cumulée** quand l'agent, en `s`, exécute `a` puis agit de manière optimale :
+> `Q*(s, a) = R(s, a) + γ · Σ T(s, a, s′) · maxₐ′ Q*(s′, a′)`. Elle **donne**
+> `V*(s) = maxₐ Q*(s, a)` et `π*(s) = argmaxₐ Q*(s, a)`.
+
+## L'algorithme Q-learning
+
+Le cours présente l'**algorithme Q-learning**. Il **consiste à apprendre la
+fonction `Q*`** (que l'on notera désormais simplement **`Q`**), pour ensuite en
+**déduire la stratégie optimale `π*`**. Il est **composé d'une suite d'étapes
+(ou épisodes)**, chacune se déroulant selon les étapes suivantes :
+
+```text
+Algorithme Q-learning — déroulement d'une étape
+
+1. L'agent observe son état s.
+2. Il choisit et exécute une action a.
+3. Il observe le nouvel état s′.
+4. Il reçoit une récompense immédiate r.
+5. Il met à jour la valeur de Q pour le couple (s, a).
+```
+
+L'algorithme est donc une **boucle d'interaction** : observer, agir, observer le
+résultat, recevoir la récompense, **corriger** l'estimation. Deux points
+restent à préciser et font l'objet des sections suivantes : **comment l'agent
+choisit l'action** (étape 2) et **quelle est la règle de mise à jour de `Q`**
+(étape 5).
+
+> **À retenir** : l'**algorithme Q-learning** apprend la fonction `Q` au fil
+> d'une suite d'**épisodes**. Chaque étape : (1) **observer** l'état `s`,
+> (2) **choisir et exécuter** une action `a`, (3) **observer** le nouvel état
+> `s′`, (4) **recevoir** la récompense `r`, (5) **mettre à jour** `Q(s, a)`.
+
+## Le choix de l'action : exploration et exploitation
+
+Le cours traite l'étape 2 : **comment l'agent choisit-il l'action à exécuter ?**
+Il doit **trouver un compromis entre les deux possibilités suivantes** :
+
+- l'**exploitation** : **choisir l'action qui (selon l'évaluation actuelle)
+  rapporte la récompense à long terme la plus importante**, c'est-à-dire celle
+  qui correspond à **la plus grande valeur de `Q(s, a)`** ;
+- l'**exploration** : **choisir une action au hasard**. L'objectif est
+  d'**explorer une direction qui n'a pas encore été essayée**.
+
+Pourquoi un **compromis** ? Si l'agent **exploite toujours**, il se contente de
+ce qu'il **croit déjà** être le mieux et risque de **ne jamais découvrir** une
+action meilleure qu'il n'a pas encore essayée. S'il **explore toujours**, il
+agit au hasard et **n'utilise jamais** ce qu'il a appris. Il faut donc **doser**
+les deux.
+
+Le cours indique que **l'algorithme aura un paramètre, noté `ε`, qui représente
+ce compromis**. Plus exactement, **`ε` représente la probabilité que l'on veut
+donner aux choix aléatoires d'une action**.
+
+| Possibilité | Action choisie | But |
+| --- | --- | --- |
+| **Exploitation** | L'action de **plus grande `Q(s, a)`** | **Utiliser** ce qui a été appris |
+| **Exploration** | Une action **au hasard** | **Découvrir** des directions non essayées |
+
+Cette règle de choix est la **stratégie ε-greedy** : avec la probabilité `ε`
+l'agent **explore** (action au hasard), sinon il **exploite** (action de plus
+grande `Q`).
+
+> **À retenir** : à l'étape 2, l'agent arbitre entre **exploitation** (l'action
+> de **plus grande `Q(s, a)`**, selon l'évaluation actuelle) et **exploration**
+> (une action **au hasard**, pour essayer du nouveau). Le paramètre **`ε`** est
+> la **probabilité d'un choix aléatoire** : c'est la stratégie **ε-greedy**.
+
+## La règle de mise à jour et le facteur d'apprentissage
+
+Le cours donne l'étape 5 : la **règle de mise à jour de la valeur de `Q`**.
+Cette règle est la suivante :
+
+```text
+Q(s, a) = Q(s, a) + α · ( r + γ · maxₐ′ Q(s′, a′) − Q(s, a) )
+```
+
+que l'on peut **aussi écrire** de la manière suivante :
+
+```text
+Q(s, a) = (1 − α) · Q(s, a) + α · ( r + γ · maxₐ′ Q(s′, a′) )
+```
+
+`α` est un **paramètre compris entre 0 et 1 appelé facteur d'apprentissage**
+(*learning rate*).
+
+Comprenons cette règle. Après avoir exécuté `a` en `s`, observé `s′` et reçu
+`r`, l'agent dispose d'une **nouvelle estimation** de la qualité de `(s, a)` :
+la quantité `r + γ · maxₐ′ Q(s′, a′)` — la récompense **réellement** reçue, plus
+`γ` fois la meilleure Q-valeur de l'état d'arrivée.
+
+- la **première écriture** fait apparaître la quantité
+  `r + γ · maxₐ′ Q(s′, a′) − Q(s, a)` : c'est l'**écart** entre la nouvelle
+  estimation et l'ancienne valeur `Q(s, a)`. On corrige `Q(s, a)` d'une
+  **fraction `α`** de cet écart ;
+- la **seconde écriture** montre que la valeur mise à jour est une **moyenne
+  pondérée** : une part `(1 − α)` de l'**ancienne valeur** et une part `α` de la
+  **nouvelle estimation**.
+
+Le **facteur d'apprentissage `α`** règle donc l'**amplitude de la correction** :
+proche de `0`, l'agent garde surtout son ancienne valeur (apprentissage **lent,
+prudent**) ; proche de `1`, il remplace presque entièrement l'ancienne valeur
+par la nouvelle estimation (apprentissage **rapide**, mais sensible au hasard).
+
+> **À retenir** : la **règle de mise à jour** du Q-learning est
+> `Q(s, a) = Q(s, a) + α · (r + γ · maxₐ′ Q(s′, a′) − Q(s, a))`, soit encore
+> `Q(s, a) = (1 − α) · Q(s, a) + α · (r + γ · maxₐ′ Q(s′, a′))` : une **moyenne
+> pondérée** de l'**ancienne valeur** et de la **nouvelle estimation**. Le
+> **facteur d'apprentissage `α ∈ [0, 1]`** règle l'**amplitude de la
+> correction**.
+
+## La convergence du Q-learning
+
+Le cours énonce les **résultats de convergence** du Q-learning. On note
+**`Qₙ(s, a)`** la valeur de la fonction `Q(s, a)` à la **`n`-ième itération** de
+l'algorithme. On distingue **deux cas**.
+
+### Le cas déterministe
+
+Dans le **cas déterministe**, il a été démontré que : **si chaque couple
+`(s, a)` est visité infiniment souvent**, alors
+
+```text
+limₙ→∞ Qₙ(s, a) = Q*(s, a)
+```
+
+La condition est claire : il faut que **toutes** les paires `(s, a)` soient
+essayées **un nombre illimité de fois**. C'est précisément ce que garantit
+l'**exploration** : sans elle, certains couples ne seraient jamais visités et
+leur Q-valeur n'atteindrait jamais `Q*`.
+
+### Le cas stochastique
+
+Dans le **cas stochastique**, **le résultat le plus connu considère un facteur
+d'apprentissage `α` dépendant du temps**. La mise à jour s'écrit alors :
+
+```text
+Qₙ(s, a) = Qₙ₋₁(s, a) + αₙ · ( rₙ + γ · maxₐ′ Qₙ₋₁(s′, a′) − Qₙ₋₁(s, a) )
+```
+
+On note **`nⁱ(s, a)`** le **numéro de l'itération où l'action `a` est exécutée à
+partir de l'état `s` pour la `i`-ième fois**. Le cours énonce que **si les
+conditions suivantes sont vérifiées** :
+
+1. **les récompenses `r` sont bornées** : il existe `R` tel que `|rₙ| ≤ R` pour
+   tout `n` ;
+2. la **fonction `α` vérifie les propriétés suivantes** :
+   - (a) pour tout `n`, `0 ≤ αₙ < 1` ;
+   - (b) pour tout `s`, `a`, `Σ αₙⁱ⁽ˢ,ᵃ⁾ = ∞` **et** `Σ (αₙⁱ⁽ˢ,ᵃ⁾)² < ∞`
+     (sommes sur `i` de 1 à l'infini) ;
+
+**alors, pour tout `s`, `a`, `Qₙ(s, a) → Q*(s, a)` lorsque `n → ∞`, avec une
+probabilité 1.**
+
+Le cours **reformule** la **condition nécessaire** pour la convergence :
+
+1. les **récompenses sont bornées** ;
+2. **tous les facteurs d'apprentissage sont compris entre 0 et 1** ;
+3. **chaque couple `(s, a)` est visité** (première somme `→ ∞`) ;
+4. pour chaque couple `(s, a)`, le **facteur d'apprentissage utilisé pour ce
+   couple décroît « d'une certaine manière »** : la **première somme `→ ∞`** et
+   la **deuxième somme reste bornée**.
+
+Le cours donne un **exemple de « bonnes valeurs de `αₙ` »**. On sait que la
+somme `Σ 1/nᵖ` (sur `n` de 1 à l'infini) **converge si `p > 1` et diverge si
+`p ≤ 1`**. On peut donc prendre :
+
+```text
+αₙ = 1 / nʷ        avec   1/2 < w ≤ 1
+```
+
+Vérifions que ce choix satisfait bien les deux exigences. Avec `αₙ = 1/nʷ` :
+
+| Somme | Exposant | Comportement | Exigence |
+| --- | --- | --- | --- |
+| `Σ αₙ = Σ 1/nʷ` | `w ≤ 1` | **diverge** (`→ ∞`) | première somme `→ ∞` ✔ |
+| `Σ αₙ² = Σ 1/n²ʷ` | `2w > 1` | **converge** (bornée) | deuxième somme bornée ✔ |
+
+Le cours résume ce qu'apporte la convergence : il a **présenté l'apprentissage
+par renforcement à travers son principe et ses spécificités, sa modélisation par
+les processus de décision markoviens, et plusieurs exemples d'algorithmes,
+notamment le Q-learning**.
+
+> **À retenir** : **convergence du Q-learning**. **Cas déterministe** : si
+> chaque couple `(s, a)` est **visité infiniment souvent**, `Qₙ(s, a) → Q*(s,
+> a)`. **Cas stochastique** : avec un `α` **dépendant du temps**, la convergence
+> (avec probabilité 1) exige des **récompenses bornées**, des `αₙ ∈ [0, 1[`, et
+> pour chaque couple `Σ αₙ = ∞` et `Σ αₙ² < ∞` — par exemple `αₙ = 1/nʷ` avec
+> `1/2 < w ≤ 1`.
+
+## Synthèse de la section
+
+Le **Q-learning** est une méthode **model-free** : il apprend une stratégie
+optimale **sans modèle**. Son principe est d'**évaluer la qualité de chaque
+couple `(état, action)`**, formalisée par la **fonction `Q*(s, a)`** — la
+récompense cumulée moyenne si l'agent exécute `a` en `s` puis agit de manière
+optimale, `Q*(s, a) = R(s, a) + γ · Σ T(s, a, s′) · maxₐ′ Q*(s′, a′)` — d'où
+l'on déduit `V*(s) = maxₐ Q*(s, a)` et `π*(s) = argmaxₐ Q*(s, a)`.
+L'**algorithme** est une suite d'**épisodes** ; chaque étape : **observer** `s`,
+**choisir et exécuter** `a`, **observer** `s′`, **recevoir** `r`, **mettre à
+jour** `Q(s, a)`. Le choix de l'action arbitre entre **exploitation** (la plus
+grande `Q`) et **exploration** (au hasard), via le paramètre **`ε`** —
+probabilité du choix aléatoire (stratégie **ε-greedy**). La **règle de mise à
+jour** est `Q(s, a) = Q(s, a) + α · (r + γ · maxₐ′ Q(s′, a′) − Q(s, a))`, soit
+une **moyenne pondérée** réglée par le **facteur d'apprentissage `α ∈ [0, 1]`**.
+La **convergence** est démontrée : dans le **cas déterministe**, si chaque
+couple `(s, a)` est visité **infiniment souvent** ; dans le **cas
+stochastique**, sous des conditions sur les **récompenses bornées** et sur les
+**facteurs `αₙ`** (`Σ αₙ = ∞`, `Σ αₙ² < ∞`, par exemple `αₙ = 1/nʷ` avec
+`1/2 < w ≤ 1`).
+
+> **À retenir** : le **Q-learning** apprend la **fonction `Q`** par interaction,
+> sans modèle. Il **observe / agit / met à jour** `Q(s, a)` avec la règle
+> `Q(s, a) = Q(s, a) + α · (r + γ · maxₐ′ Q(s′, a′) − Q(s, a))`, en arbitrant
+> par **ε-greedy** entre **exploration** et **exploitation**. Visiter chaque
+> couple `(s, a)` **infiniment souvent** garantit `Qₙ → Q*`.

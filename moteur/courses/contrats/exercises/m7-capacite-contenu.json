@@ -1,0 +1,1026 @@
+[
+ {
+  "chapterSlug": "capacite",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Pour une personne physique, la capacité de contracter est le principe.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Article 1145 : toute personne physique peut contracter, sauf en cas d'incapacité prévue par la loi.",
+  "hint": "L'incapacité doit être prévue par un texte.",
+  "concepts": [
+   "capacite"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 2 (p. 15)"
+ },
+ {
+  "chapterSlug": "capacite",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Qui est frappé d'une incapacité d'exercice ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Un commerçant en difficulté"
+    },
+    {
+     "id": "b",
+     "label": "Un mineur non émancipé"
+    },
+    {
+     "id": "c",
+     "label": "Une société commerciale"
+    },
+    {
+     "id": "d",
+     "label": "Le médecin de sa patiente en fin de vie"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "Les mineurs non émancipés et les majeurs protégés sont représentés ou assistés (art. 1146). Le médecin relève d'une incapacité de jouissance.",
+  "hint": "L'incapable d'exercice a le droit, mais ne l'exerce pas seul.",
+  "concepts": [
+   "incapacite"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 2 (p. 15)"
+ },
+ {
+  "chapterSlug": "capacite",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quelle interdiction l'article 909, exemple d'incapacité de jouissance, pose-t-il ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le majeur en curatelle doit être assisté pour vendre"
+    },
+    {
+     "id": "b",
+     "label": "Une société commerciale ne peut jamais recevoir de legs ni de donation"
+    },
+    {
+     "id": "c",
+     "label": "Le médecin de la dernière maladie ne peut recevoir de libéralité du malade"
+    },
+    {
+     "id": "d",
+     "label": "Le mineur ne peut vendre ses biens qu'avec ses représentants"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "L'incapacité de jouissance ne vise que des actes énumérés par la loi, comme celui-ci.",
+  "hint": "Elle vise un professionnel de santé et une personne malade.",
+  "concepts": [
+   "incapacite"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 2 (p. 15)"
+ },
+ {
+  "chapterSlug": "capacite",
+  "type": "MATCHING",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Associe chaque incapacité à son effet.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Incapacité d'exercice"
+    },
+    {
+     "id": "l1",
+     "label": "Incapacité de jouissance"
+    }
+   ],
+   "right": [
+    {
+     "id": "r0",
+     "label": "L'incapable est représenté pour agir"
+    },
+    {
+     "id": "r1",
+     "label": "Certains actes sont purement interdits"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1"
+   }
+  },
+  "explanation": "L'une organise la représentation, l'autre prive d'un droit pour des actes déterminés.",
+  "hint": "L'une prive de l'exercice d'un droit, l'autre du droit lui-même.",
+  "concepts": [
+   "incapacite"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 2 (p. 15)"
+ },
+ {
+  "chapterSlug": "contenu-licite",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Par quelles voies l'article 1162 contrôle-t-il la licéité du contrat ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Son prix et sa durée"
+    },
+    {
+     "id": "b",
+     "label": "Sa cause et son objet"
+    },
+    {
+     "id": "c",
+     "label": "Sa forme et sa date"
+    },
+    {
+     "id": "d",
+     "label": "Ses stipulations et son but"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Le contrat ne peut déroger à l'ordre public ni par ses stipulations, ni par son but.",
+  "hint": "La réforme a supprimé la cause, mais pas le contrôle de la finalité.",
+  "concepts": [
+   "contenu-licite"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 1, §1 (p. 15) ; TD n° 6, doc. 1 à 6"
+ },
+ {
+  "chapterSlug": "contenu-licite",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Un contrat peut être annulé pour but illicite même si l'une des parties l'ignorait.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Civ. 1re, 7 octobre 1998, puis l'article 1162 : que ce but ait été connu ou non par toutes les parties. La partie qui l'ignorait peut demander des dommages-intérêts.",
+  "hint": "Le TD n° 6 contient un arrêt de 1998 sur ce point.",
+  "concepts": [
+   "but-illicite"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 1, §1 (p. 15) ; TD n° 6, doc. 1 à 6"
+ },
+ {
+  "chapterSlug": "contenu-licite",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "À quelles conditions une clause de non-concurrence est-elle valable ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Elle est légitime et proportionnée"
+    },
+    {
+     "id": "b",
+     "label": "Elle est stipulée entre professionnels"
+    },
+    {
+     "id": "c",
+     "label": "Elle est limitée à un an"
+    },
+    {
+     "id": "d",
+     "label": "Elle est acceptée par écrit"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Elle restreint la liberté d'entreprendre : il faut des activités vraiment concurrentes, et une limite dans le temps et l'espace.",
+  "hint": "Elle doit être justifiée, et mesurée.",
+  "concepts": [
+   "clause-restrictive"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 1, §1 (p. 15) ; TD n° 6, doc. 1 à 6"
+ },
+ {
+  "chapterSlug": "contenu-licite",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Que juge Com., 27 mai 2021, sur une clause de non-sollicitation entre entreprises concurrentes ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Elle est nulle par principe"
+    },
+    {
+     "id": "b",
+     "label": "Elle n'est licite que si elle est proportionnée aux intérêts légitimes à protéger"
+    },
+    {
+     "id": "c",
+     "label": "Elle est toujours valable, n'étant pas une clause de non-concurrence"
+    },
+    {
+     "id": "d",
+     "label": "Elle est valable dès lors que des accords dérogatoires restent possibles entre les membres"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "Elle porte atteinte à la liberté du travail et à la liberté d'entreprendre : la cour d'appel devait rechercher si ces atteintes étaient proportionnées.",
+  "hint": "La Cour casse pour défaut de base légale.",
+  "concepts": [
+   "clause-restrictive"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 1, §1 (p. 15) ; TD n° 6, doc. 1 à 6"
+ },
+ {
+  "chapterSlug": "contenu-licite",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Selon 3e civ., 22 mars 2006, un bail d'habitation peut interdire au locataire d'héberger ses proches.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Au visa de l'article 8-1 de la Convention EDH, les clauses d'un bail ne peuvent priver le preneur de la possibilité d'héberger ses proches.",
+  "hint": "La Cour vise le droit au respect de la vie privée et familiale.",
+  "concepts": [
+   "droits-fondamentaux"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 1, §1 (p. 15) ; TD n° 6, doc. 1 à 6"
+ },
+ {
+  "chapterSlug": "contenu-licite",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque arrêt à son affaire.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Civ. 1re, 12 juillet 1989 (Pirmamod)"
+    },
+    {
+     "id": "l1",
+     "label": "Civ. 1re, 7 octobre 1998"
+    },
+    {
+     "id": "l2",
+     "label": "Ass. plén., 29 octobre 2004"
+    },
+    {
+     "id": "l3",
+     "label": "Civ. 1re, 29 octobre 2014"
+    }
+   ],
+   "right": [
+    {
+     "id": "r1",
+     "label": "Accord destiné à une déduction fiscale indue"
+    },
+    {
+     "id": "r0",
+     "label": "Vente de matériel d'occultisme pour le métier de devin"
+    },
+    {
+     "id": "r2",
+     "label": "Legs à la maîtresse d'un homme marié"
+    },
+    {
+     "id": "r3",
+     "label": "Assurance d'une exposition de cadavres"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2",
+    "l3": "r3"
+   }
+  },
+  "explanation": "Les quatre arrêts du TD n° 6 sur le but du contrat.",
+  "hint": "Cherche le métier interdit, le fisc, la relation adultère, puis le corps humain.",
+  "concepts": [
+   "but-illicite"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 1, §1 (p. 15) ; TD n° 6, doc. 1 à 6"
+ },
+ {
+  "chapterSlug": "contenu-licite",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Pourquoi le contrat d'assurance de l'exposition « Our Body », conclu avant la loi du 19 décembre 2008, est-il nul ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le respect du corps humain après la mort était déjà d'ordre public"
+    },
+    {
+     "id": "b",
+     "label": "La loi de 2008 est rétroactive"
+    },
+    {
+     "id": "c",
+     "label": "L'assureur connaissait le caractère illicite de l'exposition"
+    },
+    {
+     "id": "d",
+     "label": "L'exposition avait déjà été interdite par le juge au jour de la signature du contrat"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Le principe d'ordre public préexistait à l'article 16-1-1 : la cause du contrat était illicite dès sa conclusion.",
+  "hint": "La Cour ne fait pas rétroagir la loi.",
+  "concepts": [
+   "but-illicite"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 1, §1 (p. 15) ; TD n° 6, doc. 1 à 6"
+ },
+ {
+  "chapterSlug": "contenu-licite",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "La libéralité consentie à l'occasion d'une relation adultère est nulle comme contraire aux bonnes mœurs.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Ass. plén., 29 octobre 2004 : elle n'est pas nulle pour cette raison.",
+  "hint": "L'Assemblée plénière casse l'arrêt qui l'avait annulée.",
+  "concepts": [
+   "but-illicite"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 1, §1 (p. 15) ; TD n° 6, doc. 1 à 6"
+ },
+ {
+  "chapterSlug": "contenu-licite",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "La nullité d'un contrat illicite est rétroactive : chacun restitue ce qu'il a reçu.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Le cours ajoute que la partie fautive peut perdre son droit à restitution.",
+  "hint": "La nullité efface le contrat depuis l'origine.",
+  "concepts": [
+   "contenu-licite"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 1, §1 (p. 15) ; TD n° 6, doc. 1 à 6"
+ },
+ {
+  "chapterSlug": "contenu-certain",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Que se passe-t-il si la prestation promise est objectivement impossible ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le contrat est nul"
+    },
+    {
+     "id": "b",
+     "label": "Le contrat est valable, le débiteur devra des dommages-intérêts"
+    },
+    {
+     "id": "c",
+     "label": "Le contrat est suspendu"
+    },
+    {
+     "id": "d",
+     "label": "Le juge choisit une autre prestation"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "L'impossibilité objective entraîne la nullité ; l'impossibilité propre au débiteur relève de l'inexécution.",
+  "hint": "Impossible pour tout le monde, ou seulement pour le débiteur ?",
+  "concepts": [
+   "prestation-certaine"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 1, §2 (p. 16)"
+ },
+ {
+  "chapterSlug": "contenu-certain",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "La vente d'une chose future est nulle, puisque la chose n'existe pas au jour du contrat.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Article 1163 : la prestation peut être présente ou future ; il suffit qu'elle puisse exister.",
+  "hint": "Relis le premier alinéa de l'article 1163.",
+  "concepts": [
+   "prestation-certaine"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 1, §2 (p. 16)"
+ },
+ {
+  "chapterSlug": "contenu-certain",
+  "type": "MATCHING",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Associe chaque type de bien à un exemple.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Corps certain"
+    },
+    {
+     "id": "l1",
+     "label": "Chose de genre"
+    }
+   ],
+   "right": [
+    {
+     "id": "r0",
+     "label": "Cette voiture précise"
+    },
+    {
+     "id": "r1",
+     "label": "100 litres de vin"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1"
+   }
+  },
+  "explanation": "Le corps certain est individualisé ; la chose de genre se détermine par sa nature, sa qualité et sa quantité.",
+  "hint": "L'un est irremplaçable, l'autre se compte.",
+  "concepts": [
+   "prestation-certaine"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 1, §2 (p. 16)"
+ },
+ {
+  "chapterSlug": "contenu-certain",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quand une prestation est-elle déterminable ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Quand les parties s'engagent à se mettre d'accord plus tard, par un avenant signé de part et d'autre"
+    },
+    {
+     "id": "b",
+     "label": "Quand elle sera fixée par un expert choisi plus tard d'un commun accord"
+    },
+    {
+     "id": "c",
+     "label": "Quand on peut la déduire du contrat, des usages ou des relations antérieures, sans nouvel accord"
+    },
+    {
+     "id": "d",
+     "label": "Quand le juge peut la fixer à la place des parties"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Article 1163, alinéa 3. S'il faut un nouvel accord des parties, le contrat risque la nullité.",
+  "hint": "Le contrat doit se suffire à lui-même.",
+  "concepts": [
+   "prestation-certaine"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 1, §2 (p. 16)"
+ },
+ {
+  "chapterSlug": "contenu-certain",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Dans quels contrats le prix peut-il être fixé unilatéralement ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le contrat de prestation de service"
+    },
+    {
+     "id": "b",
+     "label": "Le contrat-cadre"
+    },
+    {
+     "id": "c",
+     "label": "La vente"
+    },
+    {
+     "id": "d",
+     "label": "Le contrat d'assurance"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "b"
+   ]
+  },
+  "explanation": "Articles 1164 et 1165. Pour la vente, l'article 1591 exige un prix déterminé.",
+  "hint": "Deux exceptions pour des relations qui s'inscrivent dans la durée.",
+  "concepts": [
+   "prix-unilateral"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 1, §2 (p. 16)"
+ },
+ {
+  "chapterSlug": "contenu-certain",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Celui qui fixe unilatéralement le prix doit le justifier dès qu'il le fixe.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Il doit le motiver en cas de contestation ; en cas d'abus, le juge peut accorder des dommages-intérêts.",
+  "hint": "La justification n'est due qu'à un moment précis.",
+  "concepts": [
+   "prix-unilateral"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 1, §2 (p. 16)"
+ },
+ {
+  "chapterSlug": "equilibre-contrat",
+  "type": "MCQ_SINGLE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Un particulier a vendu sa maison au tiers de sa valeur. Sur quel fondement peut-il agir ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'erreur sur la valeur"
+    },
+    {
+     "id": "b",
+     "label": "La contrepartie dérisoire, quel que soit le prix"
+    },
+    {
+     "id": "c",
+     "label": "L'imprévision"
+    },
+    {
+     "id": "d",
+     "label": "La lésion, puisqu'il a perdu plus des sept douzièmes"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "La lésion n'annule en principe pas le contrat, mais la vente d'immeuble est une exception : ici, le vendeur a perdu deux tiers, soit huit douzièmes.",
+  "hint": "Calcule la perte en douzièmes.",
+  "concepts": [
+   "lesion"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 2 (p. 16-17) ; TD n° 2, doc. 6 ; TD n° 6, doc. 7 et 8"
+ },
+ {
+  "chapterSlug": "equilibre-contrat",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "En principe, la lésion n'est pas une cause de nullité.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Article 1168 : sauf si la loi en dispose autrement (incapables, droits d'auteur, vente d'immeuble).",
+  "hint": "La liberté contractuelle inclut la liberté de fixer son prix.",
+  "concepts": [
+   "lesion"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 2 (p. 16-17) ; TD n° 2, doc. 6 ; TD n° 6, doc. 7 et 8"
+ },
+ {
+  "chapterSlug": "equilibre-contrat",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque notion à sa définition.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Lésion"
+    },
+    {
+     "id": "l1",
+     "label": "Imprévision"
+    },
+    {
+     "id": "l2",
+     "label": "Contrepartie dérisoire"
+    },
+    {
+     "id": "l3",
+     "label": "Contrepartie illusoire"
+    }
+   ],
+   "right": [
+    {
+     "id": "r3",
+     "label": "Une contrepartie qui semble exister mais est fictive"
+    },
+    {
+     "id": "r2",
+     "label": "Une contrepartie si faible qu'elle équivaut presque à une absence"
+    },
+    {
+     "id": "r1",
+     "label": "Un déséquilibre qui apparaît pendant l'exécution"
+    },
+    {
+     "id": "r0",
+     "label": "Un déséquilibre qui existe dès la conclusion"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2",
+    "l3": "r3"
+   }
+  },
+  "explanation": "Lésion et imprévision se distinguent par le moment du déséquilibre ; l'article 1169 vise la contrepartie illusoire ou dérisoire.",
+  "hint": "Pour les deux premières, tout est question de moment.",
+  "concepts": [
+   "lesion",
+   "imprevision",
+   "contrepartie-illusoire"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 2 (p. 16-17) ; TD n° 2, doc. 6 ; TD n° 6, doc. 7 et 8"
+ },
+ {
+  "chapterSlug": "equilibre-contrat",
+  "type": "ORDERING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Remets dans l'ordre les étapes de l'article 1195.",
+  "payload": {
+   "items": [
+    {
+     "id": "i1",
+     "label": "La partie demande une renégociation et continue d'exécuter"
+    },
+    {
+     "id": "i3",
+     "label": "Le juge révise le contrat ou y met fin"
+    },
+    {
+     "id": "i0",
+     "label": "Un changement imprévisible rend l'exécution excessivement onéreuse"
+    },
+    {
+     "id": "i2",
+     "label": "À défaut d'accord dans un délai raisonnable, une partie saisit le juge"
+    }
+   ]
+  },
+  "solution": {
+   "order": [
+    "i0",
+    "i1",
+    "i2",
+    "i3"
+   ]
+  },
+  "explanation": "La renégociation précède l'intervention du juge, qui n'intervient qu'à défaut d'accord.",
+  "hint": "Le juge n'intervient qu'en dernier.",
+  "concepts": [
+   "imprevision"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 2 (p. 16-17) ; TD n° 2, doc. 6 ; TD n° 6, doc. 7 et 8"
+ },
+ {
+  "chapterSlug": "equilibre-contrat",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Pendant la renégociation pour imprévision, la partie qui la demande peut suspendre ses paiements.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Article 1195 : elle continue à exécuter ses obligations durant la renégociation.",
+  "hint": "La force obligatoire continue de jouer.",
+  "concepts": [
+   "imprevision"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 2 (p. 16-17) ; TD n° 2, doc. 6 ; TD n° 6, doc. 7 et 8"
+ },
+ {
+  "chapterSlug": "equilibre-contrat",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Dans l'arrêt « point club vidéo » (Civ. 1re, 3 juillet 1996), pourquoi le contrat est-il annulé ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le prix de location était excessif"
+    },
+    {
+     "id": "b",
+     "label": "Le loueur avait commis un dol en cachant la petite taille de la commune"
+    },
+    {
+     "id": "c",
+     "label": "Il ne pouvait pas être exécuté selon l'économie voulue par les parties"
+    },
+    {
+     "id": "d",
+     "label": "Les cassettes n'avaient jamais été livrées"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Dans une commune de 1 314 habitants, l'exploitation était vouée à l'échec : pas de contrepartie réelle à l'obligation de payer.",
+  "hint": "Pense à la taille de la commune.",
+  "concepts": [
+   "contrepartie-illusoire"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 2 (p. 16-17) ; TD n° 2, doc. 6 ; TD n° 6, doc. 7 et 8"
+ },
+ {
+  "chapterSlug": "equilibre-contrat",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Selon Civ. 1re, 16 avril 1996, la vente en viager n'est nulle pour défaut d'aléa que si le vendeur meurt de la maladie dont il était atteint.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Il n'est pas nécessaire que le décès soit dû à cette maladie : il suffit que le débirentier ait connu la gravité de l'état de santé du vendeur.",
+  "hint": "Le débirentier était le médecin traitant.",
+  "concepts": [
+   "alea-rente-viagere"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3, section 2 (p. 16-17) ; TD n° 2, doc. 6 ; TD n° 6, doc. 7 et 8"
+ },
+ {
+  "chapterSlug": "td-seance-6",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Dans Com., 9 juin 2009, où la Cour situe-t-elle la cause de l'obligation d'une partie à un contrat synallagmatique ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Dans l'économie voulue par les parties"
+    },
+    {
+     "id": "b",
+     "label": "Dans l'obligation de l'autre partie"
+    },
+    {
+     "id": "c",
+     "label": "Dans le mobile déterminant de chaque partie"
+    },
+    {
+     "id": "d",
+     "label": "Dans la rentabilité de l'opération"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "C'est une conception objective de la cause, contraire au raisonnement de la cour d'appel, inspiré de l'arrêt de 1996.",
+  "hint": "Le visa est l'ancien article 1131.",
+  "concepts": [
+   "contrepartie-illusoire"
+  ],
+  "source": "TD n° 6, doc. 9"
+ },
+ {
+  "chapterSlug": "td-seance-6",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "L'arrêt Com., 9 juin 2009 est publié au Bulletin.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Il est inédit, ce qui limite sa portée.",
+  "hint": "Regarde la référence de l'arrêt dans la fiche.",
+  "concepts": [
+   "publication-arrets"
+  ],
+  "source": "TD n° 6, doc. 9"
+ },
+ {
+  "chapterSlug": "td-seance-6",
+  "type": "CASE_STUDY",
+  "difficulty": 3,
+  "points": 3,
+  "prompt": "Cas d'entraînement : licéité et équilibre.",
+  "payload": {
+   "scenario": "Tom achète le salon de coiffure de Lina. Le contrat interdit à Lina d'exercer la coiffure « partout en France pendant trente ans ».\n\nTom loue ensuite un appartement ; le bail lui interdit d'héberger quiconque, même sa mère, qui vient de s'installer chez lui.\n\nEnfin, Tom « vend » sa voiture à un ami pour un euro.",
+   "subQuestions": [
+    {
+     "id": "q1",
+     "type": "MCQ_SINGLE",
+     "prompt": "La clause interdisant à Lina d'exercer est-elle valable ?",
+     "payload": {
+      "options": [
+       {
+        "id": "a",
+        "label": "Oui, puisque Lina l'a signée"
+       },
+       {
+        "id": "b",
+        "label": "Non, elle est disproportionnée dans le temps et l'espace"
+       },
+       {
+        "id": "c",
+        "label": "Oui, la liberté contractuelle permet toute clause acceptée par les deux parties"
+       }
+      ]
+     }
+    },
+    {
+     "id": "q2",
+     "type": "TRUE_FALSE",
+     "prompt": "Le bailleur peut se fonder sur la clause pour faire partir la mère de Tom.",
+     "payload": {}
+    },
+    {
+     "id": "q3",
+     "type": "MCQ_SINGLE",
+     "prompt": "Que risque la vente de la voiture pour un euro ?",
+     "payload": {
+      "options": [
+       {
+        "id": "a",
+        "label": "La nullité pour prix dérisoire"
+       },
+       {
+        "id": "b",
+        "label": "Rien, le prix est libre"
+       },
+       {
+        "id": "c",
+        "label": "La rescision pour lésion"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  "solution": {
+   "subSolutions": [
+    {
+     "id": "q1",
+     "solution": {
+      "correct": [
+       "b"
+      ]
+     }
+    },
+    {
+     "id": "q2",
+     "solution": {
+      "value": false
+     }
+    },
+    {
+     "id": "q3",
+     "solution": {
+      "correct": [
+       "a"
+      ]
+     }
+    }
+   ]
+  },
+  "explanation": "Clause : une clause de non-concurrence n'est valable que si elle est légitime et proportionnée, limitée dans le temps et l'espace ; trente ans sur toute la France ne l'est pas.\n\nBail : les clauses d'un bail d'habitation ne peuvent priver le preneur de la possibilité d'héberger ses proches (3e civ., 22 mars 2006).\n\nVoiture : un contrat à titre onéreux dont la contrepartie est dérisoire au moment de sa formation est nul (art. 1169). La lésion, elle, ne concerne pas la vente de meubles.",
+  "hint": "Pour chaque situation, cherche la liberté ou l'équilibre en cause.",
+  "concepts": [
+   "clause-restrictive",
+   "droits-fondamentaux",
+   "contrepartie-illusoire"
+  ],
+  "source": "CM, Partie I, Titre 2, chap. 3 (p. 15-17) ; TD n° 6, doc. 5"
+ },
+ {
+  "chapterSlug": "td-seance-6",
+  "type": "WRITING",
+  "difficulty": 3,
+  "points": 4,
+  "prompt": "Commentaire d'entraînement : Com., 9 juin 2009 (TD n° 6, doc. 9). Rédige l'introduction et le plan détaillé.",
+  "payload": {
+   "modelAnswer": "Accroche : la cause a longtemps été la notion la plus discutée du droit des contrats, au point que la réforme de 2016 en a supprimé le mot.\n\nFaits et procédure : une association d'environ 300 membres loue pour un an un lot de cassettes et de DVD, à 3 100 euros par mois. Après avoir payé une partie du prix, elle demande l'annulation du contrat. La cour d'appel de Bordeaux annule pour absence de cause : l'engagement dépassait le double de l'actif de l'association et ne pouvait être exécuté selon l'économie voulue par les parties, faute de contrepartie réelle.\n\nQuestion de droit : dans un contrat synallagmatique, l'absence de rentabilité de l'opération pour l'une des parties prive-t-elle son obligation de cause ?\n\nSolution : cassation au visa de l'ancien article 1131 : la cause de l'obligation d'une partie à un contrat synallagmatique réside dans l'obligation contractée par l'autre.\n\nI. Le retour à une conception objective de la cause. A. La cause de l'obligation, contrepartie de l'obligation de l'autre partie. B. Le rejet de l'« économie voulue par les parties » (Civ. 1re, 3 juillet 1996).\n\nII. Une solution discutable et de portée limitée. A. La sécurité juridique contre la protection de celui qui s'engage au-delà de ses moyens. B. Un arrêt inédit, et un débat relancé par l'article 1169 (contrepartie illusoire ou dérisoire).",
+   "rubric": [
+    {
+     "id": "c0",
+     "label": "Les parties sont qualifiées : le loueur et l'association locataire"
+    },
+    {
+     "id": "c1",
+     "label": "Les motifs de la cour d'appel sont résumés, puisqu'il s'agit d'une cassation"
+    },
+    {
+     "id": "c2",
+     "label": "La question de droit porte sur la cause de l'obligation dans un contrat synallagmatique"
+    },
+    {
+     "id": "c3",
+     "label": "L'arrêt de 1996 est confronté à celui de 2009"
+    },
+    {
+     "id": "c4",
+     "label": "La portée tient compte du caractère inédit de l'arrêt et de l'article 1169"
+    },
+    {
+     "id": "c5",
+     "label": "Le plan est tiré de l'arrêt et les titres sont rédigés"
+    }
+   ]
+  },
+  "solution": {},
+  "explanation": "Ce corrigé n'est qu'un exemple d'entraînement : d'autres plans sont possibles.",
+  "concepts": [
+   "contrepartie-illusoire",
+   "plan-commentaire"
+  ],
+  "source": "TD n° 6, doc. 8 et 9 ; fascicule de méthodologie, p. 18-26"
+ }
+]

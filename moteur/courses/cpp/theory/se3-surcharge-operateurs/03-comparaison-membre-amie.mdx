@@ -1,0 +1,232 @@
+---
+title: Comparaison, membre vs amie
+slug: comparaison-membre-amie
+order: 3
+estimatedReadMin: 13
+concepts: [operateur-comparaison, operateur-membre, operateur-non-membre, fonction-amie, arithmetique-mixte]
+source: "Cours 3 — Surcharge d'opérateurs"
+---
+
+## Comparer deux objets
+
+On veut pouvoir écrire `if (z1 == z2)` sur deux `Complexe`, exactement comme sur des entiers. Il faut pour cela surcharger l'opérateur **`==`**. Comme pour tout opérateur, le compilateur **traduit** la comparaison en un **appel de fonction** :
+
+```cpp
+if (z1 == z2) { ... }              // ce que l'on écrit
+if (operator==(z1, z2)) { ... }    // ce que voit le compilateur
+```
+
+L'opérateur `==` se transforme en un appel à une fonction nommée `operator==` qui **renvoie un `bool`**.
+
+## Les six opérateurs de comparaison
+
+C++ compte **six** opérateurs de comparaison ; ils renvoient tous un `bool` :
+
+```text
+==   égal à            !=   différent de
+<    inférieur à       >    supérieur à
+<=   inférieur ou égal >=   supérieur ou égal
+```
+
+Le bon réflexe : **écrire un seul comparateur de fond**, puis **exprimer les cinq autres en fonction de lui**. Pour une `Duree` (heures, minutes), on peut tout déduire de `<` :
+
+```cpp
+bool operator==(const Duree& a, const Duree& b) { return !(a < b) && !(b < a); }
+bool operator!=(const Duree& a, const Duree& b) { return  (a < b) ||  (b < a); }
+bool operator> (const Duree& a, const Duree& b) { return   b < a; }
+bool operator<=(const Duree& a, const Duree& b) { return !(b < a); }
+bool operator>=(const Duree& a, const Duree& b) { return !(a < b); }
+```
+
+Un seul opérateur (`<`) porte la logique de comparaison ; corriger un bug ne se fait qu'à **un seul endroit**.
+
+## Le problème de l'encapsulation
+
+Écrivons `operator==` pour `Complexe` comme **fonction non-membre** :
+
+```cpp
+bool operator==(const Complexe& a, const Complexe& b) {
+    if (a.re == b.re && a.im == b.im)   // a.re, a.im : attributs PRIVÉS
+        return true;
+    else
+        return false;
+}
+```
+
+Cette fonction est **hors de la classe**. Or `re` et `im` sont **`private`** : une fonction non-membre **n'y a pas accès**. Le code **ne compile pas**.
+
+> Une fonction non-membre, par principe d'**encapsulation**, ne voit **pas** les attributs `private` d'une classe.
+
+Le cours présente **quatre solutions** à ce problème.
+
+## Solution 1 — passer par les accesseurs
+
+On rend les attributs lisibles via des **getters** publics, et la fonction non-membre les utilise :
+
+```cpp
+class Complexe {
+    public:
+        int getReel() const;
+        int getImag() const;
+};
+
+bool operator==(const Complexe& a, const Complexe& b) {
+    return a.getReel() == b.getReel()
+        && a.getImag() == b.getImag();
+}
+```
+
+Ça fonctionne, mais c'est **peu élégant** : il faut exposer un getter pour chaque attribut comparé, ce qui alourdit l'interface.
+
+## Solution 2 — déléguer à une méthode de la classe
+
+La classe fournit elle-même une **méthode membre** qui réalise la comparaison ; étant membre, elle accède **directement** aux attributs privés. La fonction-opérateur ne fait plus que **l'appeler** :
+
+```cpp
+class Complexe {
+    public:
+        bool estEgal(const Complexe& b) const;   // méthode membre
+};
+
+bool Complexe::estEgal(const Complexe& b) const {
+    return reel == b.reel && imaginaire == b.imaginaire;
+}
+
+// l'opérateur délègue à la méthode
+bool operator==(const Complexe& a, const Complexe& b) {
+    return a.estEgal(b);
+}
+```
+
+L'encapsulation est respectée : seule une **méthode de la classe** touche aux attributs.
+
+## Solution 3 — déclarer la fonction `friend`
+
+Le mot-clé **`friend`** donne à la fonction non-membre l'accès **direct** aux membres `private`. On l'a vu au cours 2 : une fonction **amie** lit les attributs comme si elle était membre, **sans en être une**.
+
+```cpp
+class Complexe {
+        int reel, imaginaire;
+    public:
+        Complexe(int r = 0, int i = 0);
+        // déclaration d'amitié : DANS la classe
+        friend bool operator==(const Complexe& a, const Complexe& b);
+};
+```
+
+```cpp
+// définition HORS de la classe (pas de Complexe::, pas de friend ici)
+bool operator==(const Complexe& a, const Complexe& b) {
+    return a.reel == b.reel && a.imaginaire == b.imaginaire;
+}
+```
+
+La fonction reste **non-membre** (deux paramètres explicites, pas de `this`), mais l'amitié lève la barrière de l'encapsulation. C'est concis et lisible.
+
+> ⚠️ `friend` **perce l'encapsulation** : à n'utiliser que lorsque c'est justifié. Scott Meyers résume : *« Whenever you can avoid friend functions, you should, because, much as in real life, friends are often more trouble than they're worth. »* Rappel des limites de l'amitié (cours 2) : elle n'est **ni héritée, ni transitive, ni réciproque**.
+
+## Solution 4 — faire de `operator==` une méthode membre
+
+La solution la plus directe : `operator==` **est** une **méthode** de la classe. Elle accède donc nativement aux attributs privés, sans `friend` ni getter. L'opérande de gauche devient `*this` ; il reste **un seul** paramètre :
+
+```cpp
+class Complexe {
+        int reel, imaginaire;
+    public:
+        Complexe(int r = 0, int i = 0);
+        bool operator==(const Complexe& a) const;   // membre : 1 paramètre
+};
+```
+
+```cpp
+bool Complexe::operator==(const Complexe& a) const {
+    return reel == a.reel && imaginaire == a.imaginaire;
+}
+```
+
+À l'usage, `z1 == z2` est interprété comme `z1.operator==(z2)`. Comparaison des deux formes :
+
+```cpp
+// MEMBRE : un paramètre, l'opérande gauche est *this
+bool operator==(const Complexe& a) const;
+// z1 == z2  ->  z1.operator==(z2)
+
+// NON-MEMBRE : deux paramètres
+bool operator==(const Complexe& a, const Complexe& b);
+// z1 == z2  ->  operator==(z1, z2)
+```
+
+## Membre, amie, ou libre : laquelle choisir ?
+
+Récapitulatif des options et de leur usage :
+
+| Forme | Accès au `private` | Paramètres (binaire) | Usage |
+|---|---|---|---|
+| Méthode **membre** | direct | 1 (droite) ; gauche = `*this` | l'opérande gauche est **toujours** un objet de la classe |
+| Fonction **amie** | direct (via `friend`) | 2 | non-membre nécessaire **et** besoin du `private` |
+| Fonction **libre** (getters/délégation) | indirect | 2 | non-membre, sans percer l'encapsulation |
+
+Le critère décisif est l'**opérande de gauche**. Si l'opérande gauche est toujours un objet de la classe, la forme **membre** est la plus simple. Mais dès qu'il peut être d'un **autre type**, la forme membre devient **impossible** — c'est le problème de l'arithmétique mixte.
+
+Une différence pratique sépare aussi les deux familles : **la façon de nommer les opérandes**. Dans une forme **non-membre** (amie ou libre), les **deux** opérandes sont des **paramètres explicites et nommés** — `a` et `b` ci-dessus — que l'on désigne librement dans le corps. Dans une forme **membre**, l'opérande de gauche n'est **pas** un paramètre : c'est l'objet courant, l'argument **implicite `*this`**, que l'on ne peut **ni nommer ni omettre** ; seul l'opérande de droite porte un nom. Pouvoir nommer **les deux** opérandes — et les traiter symétriquement — est un atout de lisibilité de la forme non-membre.
+
+## Arithmétique mixte : pourquoi `2 * objet` impose une fonction non-membre
+
+Reprenons `operator*` de `Fraction`, écrit en **fonction membre** :
+
+```cpp
+class Fraction {
+    public:
+        Fraction operator*(const Fraction& autre) const;   // membre
+};
+```
+
+On veut multiplier une fraction par un entier, dans les **deux sens** :
+
+```cpp
+Fraction f1(1, 8);
+Fraction res = f1 * 2;        // OK
+Fraction err = 2 * f1;        // ERREUR de compilation — pourquoi ?
+```
+
+La clé est la **traduction** que fait le compilateur. Pour un opérateur **membre**, l'opérande de **gauche** doit être l'objet sur lequel on appelle la méthode :
+
+```cpp
+res = f1 * 2;     ->   res = f1.operator*(2);    // OK : f1 est une Fraction,
+                                                 // 2 converti en Fraction(2)
+
+err = 2 * f1;     ->   err = (2).operator*(f1);  // IMPOSSIBLE : 2 est un int,
+                                                 // un int n'a pas de méthode operator*
+```
+
+`f1 * 2` fonctionne car `f1` est une `Fraction` et le constructeur `Fraction(int)` convertit `2`. Mais `2 * f1` exigerait d'appeler une **méthode sur l'entier `2`** — or `int` est un type fondamental, il **n'a pas** de méthode `operator*`. La forme membre ne sait gérer que le cas où la classe est **à gauche**.
+
+> C'est le problème de l'**arithmétique mixte** (*mixed-mode arithmetic*) : une opérande de gauche d'un **type différent** de la classe (ici un `int`) ne peut pas porter l'appel d'une méthode-opérateur.
+
+**La solution : une fonction non-membre.** Une fonction libre n'a pas d'objet courant ; **les deux** opérandes sont des paramètres, sur un **pied d'égalité** :
+
+```cpp
+// fonction NON-MEMBRE : deux paramètres, aucun privilégié
+Fraction operator*(const Fraction& lho, const Fraction& rho) {
+    return Fraction(lho.getNumerateur()   * rho.getNumerateur(),
+                    lho.getDenominateur() * rho.getDenominateur());
+}
+```
+
+Désormais le compilateur traduit **les deux sens** en `operator*(a, b)`, et la **conversion implicite** `int → Fraction` joue indifféremment à gauche ou à droite :
+
+```cpp
+Fraction res = f1 * 2;        // operator*(f1, Fraction(2))   OK
+Fraction bis = 2 * f1;        // operator*(Fraction(2), f1)   OK
+```
+
+> **Règle pratique.** Un opérateur **binaire** qui doit accepter un type **autre** que la classe **à gauche** (`2 * objet`, `3 + complexe`...) **doit** être une fonction **non-membre**. Si elle a besoin des attributs privés, on la déclare `friend`. Les opérateurs purement « classe op classe » et les opérateurs d'affectation (`=`, `+=`...) restent au contraire naturellement **membres**.
+
+> **À retenir**
+> - Surcharger `==` (et `!= < > <= >=`) permet d'écrire `if (z1 == z2)` ; ces opérateurs renvoient un **`bool`**.
+> - Bonne pratique : écrire **un seul** comparateur de fond et **déduire les cinq autres** de lui.
+> - Une fonction **non-membre** n'accède **pas** aux attributs `private` : quatre solutions — **accesseurs**, **délégation** à une méthode, **`friend`**, ou faire de l'opérateur une **méthode membre**.
+> - **Membre** : opérande gauche = `*this`, **un** paramètre. **Non-membre** : **deux** paramètres explicites.
+> - Une fonction **amie** est non-membre mais accède au `private` ; `friend` perce l'encapsulation — à utiliser avec parcimonie.
+> - **Arithmétique mixte** : `2 * objet` échoue en forme membre, car `2` (un `int`) ne peut pas porter l'appel `(2).operator*(...)`.
+> - Un opérateur binaire qui doit accepter un **autre type à gauche** **doit** être une fonction **non-membre** (`friend` si besoin du `private`).

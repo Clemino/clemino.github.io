@@ -1,0 +1,274 @@
+---
+title: "Entraînement et régularisation"
+slug: entrainement-regularisation
+order: 4
+estimatedReadMin: 22
+concepts: [dropout, optimiseur, epoch-batch-size, sur-apprentissage, architecture-cnn, reseau-convolutif, retropropagation]
+source: "Slides_ConvNet.pdf"
+---
+
+## La couche dropout
+
+Le cours signale qu'**au fil de leur développement, une nouvelle couche est
+venue s'ajouter aux réseaux de convolution : c'est la couche dropout.**
+
+Son **mécanisme** est simple :
+
+> Dans une couche **dropout**, les sorties de la couche précédente sont **mises à
+> `0` avec une probabilité `p`** et **copiées telles quelles avec une
+> probabilité `1 − p`**.
+
+Le cours en précise une conséquence importante : **les neurones dont la sortie
+est mise à `0` ne participent ni à la phase feedforward ni à la
+rétropropagation.** Pendant l'étape concernée, ces neurones sont, en quelque
+sorte, **désactivés** : ils n'interviennent ni dans le calcul des sorties, ni
+dans la mise à jour des paramètres.
+
+Le cours énonce enfin l'**objectif** de cette couche : **la couche dropout a
+comme objectif de réduire à la fois le sur-apprentissage et la complexité de
+l'apprentissage.**
+
+> ⚠️ Le paramètre `p` du dropout est un **hyperparamètre** : dans les programmes
+> Keras des TP, on lit `Dropout(0.25)` après un bloc convolution-pooling et
+> `Dropout(0.5)` après une couche dense — des valeurs choisies par le
+> concepteur.
+
+> **À retenir** : la couche **dropout** met les sorties de la couche précédente
+> à **`0` avec probabilité `p`** (et les copie avec probabilité `1 − p`). Les
+> neurones mis à `0` ne participent **ni au feedforward ni à la
+> rétropropagation**. Objectif : **réduire le sur-apprentissage** et la
+> **complexité de l'apprentissage**.
+
+## Le sur-apprentissage
+
+La couche dropout vise à combattre le **sur-apprentissage**. C'est une situation
+où le réseau **colle trop aux exemples d'apprentissage** et **perd sa capacité à
+généraliser** à des données nouvelles.
+
+Le réseau apprend alors « par cœur » les particularités — voire le bruit — du
+jeu d'apprentissage, au lieu d'en dégager des **régularités** utiles sur des
+données qu'il n'a jamais vues. Le **dropout** lutte contre ce phénomène : en
+**désactivant aléatoirement** des neurones, il empêche le réseau de trop
+**spécialiser** ses neurones sur les exemples d'apprentissage, et le pousse vers
+une représentation plus **robuste**.
+
+C'est aussi ce que rappellent les notes de TP sur Keras : le rôle des couches
+**Dropout** est **d'éviter le sur-apprentissage** en mettant à `0` une fraction
+des entrées **durant chaque étape de l'apprentissage**.
+
+> **À retenir** : le **sur-apprentissage** est le fait, pour un réseau, de
+> **coller trop** aux exemples d'apprentissage et de **mal généraliser**. Le
+> **dropout** le combat en **désactivant aléatoirement** des neurones, ce qui
+> rend la représentation plus **robuste**.
+
+## L'apprentissage dans les ConvNet
+
+Comment un réseau convolutif **apprend-il** ses paramètres ? Le cours est
+clair : **dans les réseaux convolutifs, l'apprentissage se fait par la
+rétropropagation, comme dans les réseaux standards.**
+
+Il n'y a donc **pas** d'algorithme d'apprentissage nouveau : c'est la
+**rétropropagation** du module précédent — feedforward pour calculer les
+sorties, puis passe arrière pour mettre à jour poids et biais par **descente du
+gradient** — qui s'applique. Les paramètres à apprendre sont les **poids des
+filtres** et les **poids et biais des couches entièrement connectées**.
+
+> **À retenir** : un ConvNet **apprend par rétropropagation**, exactement comme
+> un réseau standard : une passe **feedforward**, puis une passe **arrière** de
+> mise à jour des paramètres par **descente du gradient**.
+
+## Les optimiseurs
+
+La rétropropagation appliquée à un réseau profond a toutefois un défaut : son
+**coût**. Le cours l'explique : **le coût très élevé de la rétropropagation a
+conduit à introduire des outils qu'on appelle les optimiseurs.**
+
+> Le **rôle** d'un **optimiseur** est de **réduire le coût** de
+> l'apprentissage.
+
+Le cours donne un exemple d'optimiseur : **Adam**. C'est exactement
+l'optimiseur utilisé dans les programmes Keras des travaux pratiques
+(`optimizer='adam'`).
+
+Le **choix d'un optimiseur** fait partie de la préparation de l'apprentissage :
+les notes de TP indiquent que, lors de la **compilation** d'un réseau Keras, le
+programmeur précise notamment **l'algorithme utilisé pour l'apprentissage** —
+par exemple **adam** (une version de la descente du gradient) ou **Adadelta**.
+
+> **À retenir** : la rétropropagation d'un réseau profond ayant un **coût très
+> élevé**, on lui adjoint un **optimiseur** (par exemple **Adam**), dont le rôle
+> est de **réduire le coût** de l'apprentissage.
+
+## Epochs et batch size
+
+L'apprentissage d'un ConvNet — comme celui de tout réseau de neurones — utilise
+**la descente du gradient dans sa version stochastique**. Deux
+**hyperparamètres** la pilotent : **epochs** et **batch size**. Les notes de TP
+sur Keras les définissent précisément.
+
+**La batch size (taille de lot).** Les exemples d'apprentissage sont utilisés
+**« par vague »**. **Les poids et les biais des neurones sont mis à jour après
+chaque vague.** **C'est la taille de ces vagues que l'on appelle la batch
+size.** On retrouve ici la **version mini-batch** de la rétropropagation, vue au
+module précédent : la mise à jour intervient tous les `mb` exemples, `mb` étant
+la **taille du mini-batch**.
+
+**Le paramètre epochs.** C'est un paramètre **en rapport avec le nombre
+d'itérations de l'algorithme de la descente du gradient dans sa version
+stochastique.**
+
+La commande `model.fit` de Keras lance l'apprentissage à partir de ces
+paramètres. Les TP recommandent d'ailleurs **d'entraîner le réseau en testant
+plusieurs valeurs des hyperparamètres `epochs` et `batch_size`** — ce sont des
+hyperparamètres, donc à régler par **essais successifs**.
+
+| Hyperparamètre | Définition |
+| --- | --- |
+| **Batch size** | Taille des **vagues** d'exemples ; les poids et biais sont mis à jour **après chaque vague** |
+| **Epochs** | Paramètre lié au **nombre d'itérations** de la descente du gradient **stochastique** |
+
+> **À retenir** : la **batch size** est la taille des **vagues** d'exemples
+> traitées avant chaque mise à jour des poids et des biais ; le nombre
+> d'**epochs** est lié au **nombre d'itérations** de la descente du gradient
+> **stochastique**. Ce sont des **hyperparamètres**, réglés par **essais**.
+
+## L'apprentissage en Keras
+
+Les notes de TP décrivent les **cinq étapes** d'un programme Keras manipulant un
+réseau. Le code suivant est à **lire** :
+
+```python
+# 1. Lecture des données  -> (x_train, y_train), (x_test, y_test)
+
+# 2. Construction du réseau, couche par couche (model.add)
+#    Conv2D, MaxPooling2D, Dropout, Flatten, Dense...
+
+# 3. Compilation : préparation de l'apprentissage
+convnet.compile(loss='categorical_crossentropy',
+                optimizer='adam',
+                metrics=['accuracy'])
+
+# 4. Apprentissage : batch size et epochs
+convnet.fit(x_train, y_train, batch_size=10, epochs=200, verbose=2)
+
+# 5. Évaluation
+score = convnet.evaluate(x_test, y_test, verbose=2)
+print('Test accuracy:', score[1])
+```
+
+Les cinq étapes sont : **lecture des données**, **construction** du réseau (par
+`model.add`), **compilation** (`model.compile` — préparation de l'apprentissage,
+où l'on fixe la **fonction de perte**, l'**optimiseur** et la **métrique**),
+**apprentissage** (`model.fit` — avec **batch size** et **epochs**), et
+**évaluation** (`model.evaluate`). La compilation précise la **façon dont
+l'erreur est évaluée** (par exemple `categorical_crossentropy` ou
+`binary_crossentropy`), l'**algorithme d'apprentissage** (par exemple `adam`) et
+le **critère de performance** (par exemple l'**accuracy**, la précision).
+
+> **À retenir** : un programme **Keras** comporte **cinq étapes** — lecture des
+> données, **construction** (`model.add`), **compilation** (`model.compile` :
+> perte, **optimiseur**, métrique), **apprentissage** (`model.fit` : **batch
+> size**, **epochs**), **évaluation** (`model.evaluate`).
+
+## Définir entièrement un réseau convolutif
+
+Le cours **récapitule** tout ce dont on a besoin pour **définir entièrement un
+réseau CNN**. Il faut :
+
+- **définir la suite de couches**, avec pour chacune son **type** et ses
+  **caractéristiques** ;
+- **choisir le nombre de filtres et leurs formes pour chaque couche de
+  convolution** — ces choix **dépendent du type d'images à traiter** (exemple :
+  pour la **reconnaissance des chiffres manuscrits**, on a l'habitude de prendre
+  des **filtres de taille `5 × 5`**) ;
+- **choisir la taille des carrés ainsi que la fonction à utiliser dans chaque
+  couche pooling** ;
+- **choisir le paramètre `p` de la (ou des) couche(s) dropout éventuelle(s)** ;
+- **appliquer la descente du gradient pour l'apprentissage des différents
+  coefficients et biais**, comme pour les réseaux ordinaires — **il y a souvent
+  besoin, avant de lancer l'apprentissage, de choisir un optimiseur**.
+
+On retrouve la distinction du module précédent : la plupart de ces choix sont
+des **hyperparamètres** (suite de couches, nombre et forme des filtres, taille
+et fonction de pooling, `p` du dropout, optimiseur), fixés par le **concepteur**
+selon le **type de données** ; seuls les **poids et biais** sont des
+**paramètres** appris par la **descente du gradient**.
+
+> **À retenir** : définir un **CNN** exige de fixer la **suite de couches** et
+> leurs caractéristiques, le **nombre et la forme des filtres** (selon les
+> images — par ex. `5 × 5` pour les chiffres manuscrits), la **taille et la
+> fonction de pooling**, le **`p` du dropout**, et de choisir un **optimiseur**
+> avant de lancer la **descente du gradient**.
+
+## Des ConvNet de dimensions différentes
+
+Le cours signale enfin que les ConvNet ne se limitent **pas** aux tableaux à
+deux dimensions.
+
+- **De la même manière qu'on a des couches de convolution de dimension `2`, on
+  peut en avoir de dimension `1`**, utilisables par exemple **en traitement du
+  signal**.
+- **Le cas des images en couleurs (RGB) conduit à utiliser des couches d'entrée
+  à trois tableaux de neurones et des filtres de dimension `3`.**
+
+Une image en couleurs est en effet décrite par **trois canaux** — rouge, vert,
+bleu (**RGB**) ; sa couche d'entrée comporte donc **trois tableaux**, et les
+filtres sont eux aussi de **dimension `3`**. C'est exactement le cas du dataset
+**CIFAR-10** traité dans les travaux pratiques (images en couleurs).
+
+> **À retenir** : les ConvNet existent en **dimension `1`** (par exemple en
+> **traitement du signal**) comme en dimension `2`. Pour les **images en
+> couleurs (RGB)**, la couche d'entrée a **trois tableaux** de neurones et les
+> filtres sont de **dimension `3`**.
+
+## Conclusion du module
+
+Le cours conclut : **on a introduit l'apprentissage profond à travers l'un des
+réseaux les plus utilisés, le réseau de neurones convolutif.** Il en retient les
+**caractéristiques et avantages** :
+
+- **l'existence de plusieurs types de couches**, dont le principal est celui des
+  couches de **convolution** ;
+- des **connexions locales** (entre couches successives) et des **poids
+  partagés**, et, **comme conséquence, la réduction du nombre de paramètres**.
+
+Ces deux points résument l'apport d'un ConvNet : en exploitant la **structure
+spatiale** des données par des **connexions locales** et des **poids partagés**,
+il atteint, avec **bien moins de paramètres** qu'un réseau totalement connecté,
+des architectures **profondes** efficaces pour la **vision par ordinateur**.
+
+> **À retenir** : le module a introduit l'**apprentissage profond** via le
+> **réseau convolutif**. Ses atouts : **plusieurs types de couches** (la
+> **convolution** au premier rang), des **connexions locales** et des **poids
+> partagés**, d'où une **réduction du nombre de paramètres**.
+
+## Synthèse de la section
+
+La couche **dropout** met les sorties de la couche précédente à **`0` avec
+probabilité `p`** (et les copie avec probabilité `1 − p`) ; les neurones mis à
+`0` ne participent **ni au feedforward ni à la rétropropagation**. Son objectif
+est de **réduire le sur-apprentissage** — le fait de **coller trop** aux
+exemples et de **mal généraliser** — et la **complexité de l'apprentissage**.
+L'apprentissage d'un ConvNet se fait par **rétropropagation**, comme pour un
+réseau standard ; le **coût très élevé** de celle-ci a conduit à introduire les
+**optimiseurs** (par exemple **Adam**), dont le rôle est de **réduire ce coût**.
+Deux hyperparamètres pilotent la descente du gradient **stochastique** : la
+**batch size** (taille des **vagues** d'exemples, après lesquelles les poids et
+biais sont mis à jour) et le nombre d'**epochs** (lié au **nombre
+d'itérations**). Un programme **Keras** comporte cinq étapes — lecture,
+**construction**, **compilation**, **apprentissage** (`fit`), **évaluation**.
+**Définir entièrement un CNN** demande de fixer la **suite de couches**, le
+**nombre et la forme des filtres** (selon les images — `5 × 5` pour les chiffres
+manuscrits), la **taille et la fonction de pooling**, le **`p` du dropout**, et
+un **optimiseur** avant la **descente du gradient**. Les ConvNet existent en
+**dimension `1`** (traitement du **signal**) comme en dimension `2`, et, pour
+les images **en couleurs (RGB)**, la couche d'entrée a **trois tableaux** et les
+filtres sont de **dimension `3`**. Le module a ainsi présenté l'**apprentissage
+profond** via le **ConvNet**, dont les atouts sont les **connexions locales**,
+les **poids partagés** et la **réduction du nombre de paramètres**.
+
+> **À retenir** : un ConvNet **apprend par rétropropagation** assistée d'un
+> **optimiseur** ; **batch size** et **epochs** règlent la descente du gradient
+> stochastique. Le **dropout** combat le **sur-apprentissage**. Par ses
+> **connexions locales** et ses **poids partagés**, le réseau convolutif réduit
+> fortement le **nombre de paramètres**.

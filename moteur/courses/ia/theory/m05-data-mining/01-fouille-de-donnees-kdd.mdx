@@ -1,0 +1,194 @@
+---
+title: "Fouille de données et processus KDD"
+slug: fouille-de-donnees-kdd
+order: 1
+estimatedReadMin: 13
+concepts: [fouille-de-donnees, processus-kdd, modele, motif, prediction, explication-comprehension]
+source: "Slides_Intro_DM_2425.pdf"
+---
+
+## De quoi s'agit-il ? La fouille de données
+
+Le terme anglais **Data Mining** se traduit le plus souvent par **fouille de
+données**. C'est par cette traduction que s'ouvre le module, et elle dit déjà
+l'essentiel : il s'agit de **fouiller** — de chercher — quelque chose dans les
+données.
+
+Plus précisément, **la fouille de données consiste à rechercher des régularités,
+des motifs, dans de grandes quantités de données**. Trois mots méritent d'être
+soulignés dans cette définition :
+
+- **régularités / motifs** : ce que l'on cherche n'est pas une donnée isolée mais
+  une **structure récurrente**, une tendance, une dépendance qui se répète ;
+- **grandes quantités** : la fouille de données s'applique à des **volumes
+  importants** de données, là où l'œil humain ne peut plus voir seul ce qui se
+  répète ;
+- **données** : la matière première est un ensemble de **données brutes**, c'est-à-
+  dire telles qu'elles ont été collectées.
+
+On peut donc résumer la fouille de données par une transformation : on part de
+**données brutes** et l'on obtient des **régularités**, c'est-à-dire un **modèle**.
+
+```
+Données brutes  --- Data Mining --->  Régularités / Modèle
+```
+
+> **À retenir** : la **fouille de données** (Data Mining) consiste à **rechercher
+> des régularités, des motifs**, dans de **grandes quantités de données** brutes.
+> Elle transforme des **données brutes** en **régularités**.
+
+## Modèle et motif : les formes des régularités
+
+Les régularités extraites des données **peuvent prendre différentes formes** — le
+cours cite explicitement l'exemple des **règles**. Pour désigner ces régularités,
+deux termes sont employés tout au long du module :
+
+- le **modèle** — en anglais **model** ;
+- le **motif** — en anglais **pattern**.
+
+Ces deux mots renvoient à la même idée : la **régularité extraite des données**.
+C'est ce **modèle** (ou ce motif) qui constitue le **résultat** de la fouille de
+données. Selon la technique employée, il pourra prendre des formes très variées —
+un ensemble de **règles**, un **arbre de décision**, un ensemble de **probabilités**,
+un ensemble de **clusters**… Les sections et modules suivants en présenteront
+plusieurs ; pour l'instant, il suffit de retenir que **fouiller les données, c'est
+en extraire un modèle**.
+
+| Terme français | Terme anglais | Signification |
+| --- | --- | --- |
+| **Modèle** | model | Régularité extraite des données |
+| **Motif** | pattern | Régularité extraite des données |
+
+> **À retenir** : les régularités extraites prennent **différentes formes** (par
+> exemple des **règles**) ; on les désigne par les termes **modèle** (*model*) ou
+> **motif** (*pattern*).
+
+## Une seconde définition : extraire l'implicite et l'utile
+
+Le cours propose une **seconde formulation** de l'objectif de la fouille de données,
+plus riche que la première. On peut définir cet objectif comme :
+
+> *« l'extraction à partir de données brutes d'informations **implicites**,
+> initialement **cachées / inconnues**, et potentiellement **utiles**. »*
+
+Cette définition ajoute **trois qualificatifs** essentiels aux informations que l'on
+cherche :
+
+- **implicites** : elles ne sont **pas affichées** telles quelles dans les données ;
+  il faut les **mettre au jour** ;
+- **cachées / inconnues** au départ : on **ne les connaît pas** avant de fouiller —
+  la fouille de données est bien une **découverte**, pas une simple consultation ;
+- **potentiellement utiles** : l'information extraite doit pouvoir **servir** à
+  quelque chose ; on cherche une connaissance **exploitable**, pas n'importe quelle
+  régularité.
+
+Les deux définitions ne se contredisent pas : la première décrit **ce que l'on
+fait** (chercher des régularités dans beaucoup de données), la seconde précise **la
+nature de ce que l'on trouve** (une information cachée, implicite et utile).
+
+> ⚠️ La fouille de données ne se contente pas de *lire* les données : elle en
+> **extrait** une information **implicite, initialement inconnue et potentiellement
+> utile**. C'est une **découverte**, et non une simple consultation.
+
+## À quoi sert un modèle : prédiction, explication
+
+Une fois les régularités extraites — une fois le **modèle** obtenu —, à quoi
+peut-il servir ? Le cours distingue **deux grands usages** du modèle.
+
+**La prédiction.** Le modèle sert à **prévoir ce qui se passera dans de nouvelles
+situations**. C'est l'usage tourné vers l'**avenir** et vers les **cas nouveaux** :
+on a appris une régularité sur des données passées, on s'en sert pour anticiper sur
+des données à venir. Selon le contexte, cet usage prend d'autres noms : on parle
+aussi de **reconnaissance** ou de **décision**.
+
+**L'explication et la compréhension.** Le modèle sert ici à **expliquer les données**
+— à **aider à les comprendre**. C'est l'usage tourné vers la **connaissance** : le
+modèle ne sert pas seulement à prévoir, il rend les données **intelligibles**, il
+éclaire les régularités qui les gouvernent.
+
+| Usage du modèle | But | Autres dénominations |
+| --- | --- | --- |
+| **Prédiction** | Prévoir ce qui se passera dans de **nouvelles situations** | Reconnaissance, décision |
+| **Explication / compréhension** | **Expliquer** les données, **aider à les comprendre** | — |
+
+Ces deux usages ne s'excluent pas : un même modèle peut **à la fois** servir à
+prédire et aider à comprendre. Mais la distinction est utile : selon le besoin, on
+ne privilégiera pas forcément le même type de modèle.
+
+> **À retenir** : un **modèle** sert à **prédire** (prévoir de **nouvelles
+> situations** — d'où *reconnaissance*, *décision*) et/ou à **expliquer** les
+> données (aider à les **comprendre**).
+
+## L'extraction n'est qu'une étape : le processus KDD
+
+L'extraction de régularités dont on vient de parler **ne se fait pas isolément**.
+Le cours insiste sur ce point : l'extraction proprement dite **fait partie d'un
+processus plus global**. Ce processus comporte notamment les **étapes suivantes**,
+qui s'enchaînent dans l'ordre :
+
+1. **Prétraitement des données** — préparer les données brutes (les nettoyer, gérer
+   les valeurs manquantes…) ;
+2. **Transformation des données si besoin** — modifier la forme des données quand
+   c'est nécessaire ;
+3. **Extraction des régularités** — l'étape de fouille proprement dite, qui produit
+   le modèle ;
+4. **Interprétation des régularités** — donner du sens aux régularités obtenues.
+
+```
+Prétraitement → Transformation (si besoin) → Extraction → Interprétation
+```
+
+Ce processus global porte un nom : on l'appelle **Knowledge Discovery in Databases**
+(**KDD**), c'est-à-dire la **découverte de connaissances dans les bases de
+données**. La fouille de données, comprise comme la **seule extraction**, n'en est
+donc que la **troisième étape**.
+
+> **À retenir** : l'extraction des régularités s'inscrit dans un **processus global**
+> en quatre étapes — **prétraitement → transformation (si besoin) → extraction →
+> interprétation** — appelé **KDD** (*Knowledge Discovery in Databases*).
+
+## Data Mining et KDD : deux termes parfois confondus
+
+Le cours signale enfin une **subtilité de vocabulaire**. La distinction entre
+*fouille de données* et *KDD* n'est pas toujours nette.
+
+En effet, **il arrive qu'on considère que le Data Mining ne se limite pas à
+l'extraction**, et qu'il **comprend par exemple la transformation des données**.
+Dans cette vision élargie, le Data Mining recouvre plusieurs étapes du processus, et
+non la seule extraction. C'est pour cette raison **qu'on confond parfois DM et
+KDD** : selon l'auteur, le terme *Data Mining* désigne tantôt la **seule étape
+d'extraction**, tantôt **l'ensemble du processus**.
+
+| Acception | Ce que recouvre « Data Mining » |
+| --- | --- |
+| **Sens restreint** | La **seule étape d'extraction** des régularités |
+| **Sens élargi** | **Plusieurs étapes** du processus (par exemple la transformation), d'où la **confusion avec le KDD** |
+
+Il faut donc, à la lecture d'un texte, **rester attentif au sens** donné au terme :
+strictement, l'extraction n'est qu'une étape du KDD ; mais l'usage courant assimile
+souvent les deux.
+
+> ⚠️ **DM et KDD sont parfois confondus** : le *Data Mining* désigne tantôt la
+> **seule extraction**, tantôt — quand on lui rattache des étapes comme la
+> transformation — **tout le processus**. Le contexte fixe le sens.
+
+## Synthèse de la section
+
+La **fouille de données** (*Data Mining*) consiste à **rechercher des régularités,
+des motifs, dans de grandes quantités de données** brutes ; on peut aussi la définir
+comme l'**extraction d'informations implicites, initialement cachées / inconnues, et
+potentiellement utiles**. Les régularités extraites prennent **différentes formes**
+(par exemple des règles) et se nomment **modèle** (*model*) ou **motif** (*pattern*).
+Ce modèle sert à **prédire** (prévoir de nouvelles situations — reconnaissance,
+décision) et/ou à **expliquer** les données pour aider à les **comprendre**.
+L'extraction n'est qu'**une étape** d'un **processus global**, le **KDD**
+(*Knowledge Discovery in Databases*), qui enchaîne **prétraitement → transformation
+(si besoin) → extraction → interprétation**. Enfin, parce qu'on rattache parfois au
+*Data Mining* d'autres étapes que la seule extraction, **DM et KDD sont parfois
+confondus**.
+
+> **À retenir** : fouille de données = **chercher des régularités** (extraire
+> l'**implicite, le caché, l'utile**) ; le résultat est un **modèle / motif** servant
+> à **prédire** ou **expliquer** ; l'extraction est **une étape** du processus
+> **KDD** (prétraitement, transformation, extraction, interprétation) — DM et KDD
+> étant **parfois confondus**.

@@ -1,0 +1,169 @@
+---
+title: "Chaîner des processus (pipeline)"
+slug: pipeline
+order: 4
+estimatedReadMin: 16
+concepts: [pipeline, redirection, dup2, pipe-fork, fermeture-extremites, exec, eof-tube]
+source: "Cours 3 — Les tubes"
+---
+
+Ce chapitre rassemble tout ce que le module a construit — `pipe`, `fork`, `dup2`, `close`, `exec` — pour réaliser l'objectif final : reproduire en C le **pipeline** du shell, c'est-à-dire la commande `cmd1 | cmd2`. On y verra que la difficulté n'est pas dans une primitive nouvelle, mais dans la **discipline de fermeture** des descripteurs.
+
+## Qu'est-ce qu'un pipeline ?
+
+Un **pipeline** est un **enchaînement de processus** reliés par des tubes : la **sortie** de l'un devient l'**entrée** du suivant. C'est ce que désigne la barre verticale `|` du shell :
+
+```text
+$ ps -a | wc -l
+```
+
+Cette ligne crée **deux processus concurrents**, reliés par **un tube** :
+
+- `ps -a` **écrit** son résultat sur sa sortie standard, qui est **redirigée vers le tube** ;
+- `wc -l` **lit** son entrée standard, qui est **redirigée depuis le tube** ;
+- le tube **mémorise** les octets le temps que `wc` les consomme.
+
+Ni `ps` ni `wc` n'ont été écrits pour communiquer entre eux. Chacun se contente de lire `stdin` et d'écrire `stdout`. C'est le **shell** qui, *autour* d'eux, installe le tube et **redirige** leurs descripteurs standard. Notre but : faire **exactement** ce travail de shell.
+
+## L'ingrédient nº 1 : la redirection croisée
+
+Le cœur d'un pipeline `cmd1 | cmd2` tient en une phrase :
+
+> Il faut **rediriger la sortie standard de `cmd1` vers l'extrémité d'écriture du tube**, et **rediriger l'entrée standard de `cmd2` vers l'extrémité de lecture du tube**.
+
+On obtient ainsi une **redirection croisée** : ce que `cmd1` croit envoyer à l'écran part en réalité dans le tube, et ce que `cmd2` croit lire au clavier provient en réalité du tube.
+
+Concrètement, dans deux fils créés après un `pipe(fd)` commun :
+
+- le fils qui exécutera `cmd1` fait **`dup2(fd[1], STDOUT_FILENO)`** ;
+- le fils qui exécutera `cmd2` fait **`dup2(fd[0], STDIN_FILENO)`**.
+
+C'est tout le mécanisme du chapitre 3, appliqué de part et d'autre du même tube.
+
+## L'ingrédient nº 2 : la discipline de fermeture
+
+Voici le point qui fait échouer la plupart des premières tentatives de pipeline.
+
+Après `pipe(fd)` **puis deux `fork`**, le tube possède **six** descripteurs ouverts dessus : `fd[0]` et `fd[1]` dans le **père**, `fd[0]` et `fd[1]` dans le **fils 1**, `fd[0]` et `fd[1]` dans le **fils 2**. Or, pour que le pipeline fonctionne, il ne doit en rester **qu'un seul d'écriture** (celui du fils 1) et **qu'un seul de lecture** (celui du fils 2). **Les quatre autres doivent être fermés.**
+
+Pourquoi est-ce **non négociable** ? Parce que le second processus du pipeline doit **détecter la fin de fichier** pour s'arrêter. Reprenons la règle du chapitre 2 :
+
+> `read` ne renvoie **`0` (fin de fichier)** que lorsque **tous** les descripteurs en **écriture** du tube sont fermés. Tant qu'**un seul** `fd[1]` subsiste — même oublié dans un processus qui ne s'en sert pas — la fin de fichier **n'arrive jamais**, et `cmd2` (typiquement un `wc`, un `sort`…) **bloque indéfiniment** au lieu de terminer.
+
+Il faut donc traquer **chaque** `fd[1]` parasite :
+
+- le **père** doit fermer **son** `fd[1]` (et son `fd[0]`) — il ne participe pas au transfert ;
+- le **fils 2** (le lecteur) doit fermer **son** `fd[1]` — il ne fait que lire ;
+- le **fils 1** (l'écrivain) ne garde son `fd[1]` que le temps de la redirection, puis ferme le **doublon** laissé par `dup2`.
+
+Symétriquement, les `fd[0]` inutiles doivent être fermés pour que le **`SIGPIPE`** fonctionne correctement côté écrivain.
+
+> ⚠️ **Le piège nº 1 du pipeline : le père qui ne ferme pas ses extrémités.** Le processus père crée le tube, fait les `fork`, puis attend ses fils par `wait`. Mais il a **lui aussi** `fd[0]` et `fd[1]` ouverts. S'il **oublie de fermer son `fd[1]`**, il reste « un écrivain » du point de vue du noyau : le fils lecteur ne verra **jamais** la fin de fichier, son `read` ne rendra jamais `0`, il ne se terminera **jamais** — et le père, qui l'attend, **se fige avec lui**. Le père, même s'il n'écrit ni ne lit, **doit fermer les deux extrémités du tube**.
+
+## L'ingrédient nº 3 : `exec` après la redirection
+
+Une fois la redirection posée et les descripteurs fermés, chaque fils lance **son** programme par `exec` (Module 1). Et comme on l'a vu au chapitre 3, **`exec` conserve la table des descripteurs** : la redirection installée par `dup2` reste **active** dans le programme recouvert.
+
+L'ordre, dans **chaque fils**, est donc strict et immuable :
+
+1. **`dup2`** — rediriger le descripteur standard concerné sur l'extrémité de tube ;
+2. **`close`** de **tous** les descripteurs de tube devenus inutiles (le doublon de `dup2` **et** l'autre extrémité) ;
+3. **`exec`** — lancer le vrai programme.
+
+Si `exec` échoue, le code qui le suit s'exécute : on y appelle `perror` puis `exit` pour ne pas laisser un fils « fantôme » continuer le code du père.
+
+## Le pipeline complet : `cmd1 | cmd2`
+
+Voici le programme complet qui reproduit `cmd1 | cmd2`, en assemblant les trois ingrédients. C'est le **patron de référence** du module — il faut savoir le réécrire.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+/* Reproduit en C le pipeline shell :  cmd1 | cmd2
+   Exemple d'usage equivalent a :      ls -l | wc -l                */
+int main(void) {
+    int fd[2];
+
+    if (pipe(fd) == -1) { perror("pipe"); exit(EXIT_FAILURE); }
+
+    /* ---------- fils 1 : execute cmd1, ECRIT dans le tube ---------- */
+    pid_t f1 = fork();
+    if (f1 == -1) { perror("fork"); exit(EXIT_FAILURE); }
+    if (f1 == 0) {
+        dup2(fd[1], STDOUT_FILENO);   /* sa sortie standard -> ecriture du tube  */
+        close(fd[0]);                 /* il ne lit pas dans le tube              */
+        close(fd[1]);                 /* doublon de dup2 : a fermer              */
+        execlp("ls", "ls", "-l", (char *) NULL);
+        perror("execlp ls");          /* atteint seulement si exec echoue        */
+        exit(EXIT_FAILURE);
+    }
+
+    /* ---------- fils 2 : execute cmd2, LIT dans le tube ------------ */
+    pid_t f2 = fork();
+    if (f2 == -1) { perror("fork"); exit(EXIT_FAILURE); }
+    if (f2 == 0) {
+        dup2(fd[0], STDIN_FILENO);    /* son entree standard -> lecture du tube  */
+        close(fd[1]);                 /* il n'ecrit pas dans le tube             */
+        close(fd[0]);                 /* doublon de dup2 : a fermer              */
+        execlp("wc", "wc", "-l", (char *) NULL);
+        perror("execlp wc");
+        exit(EXIT_FAILURE);
+    }
+
+    /* ---------- le pere : ne transfere rien ----------------------- */
+    close(fd[0]);                     /* INDISPENSABLE : sinon fils 2 ne voit    */
+    close(fd[1]);                     /* jamais la fin de fichier et bloque      */
+
+    waitpid(f1, NULL, 0);             /* attend la fin des deux fils             */
+    waitpid(f2, NULL, 0);
+    return 0;
+}
+```
+
+## Le déroulement, pas à pas
+
+Suivons la **vie des descripteurs**, c'est la meilleure façon de comprendre.
+
+1. **`pipe(fd)`** — le tube est créé. Le père possède `fd[0]` et `fd[1]`.
+2. **premier `fork`** — le fils 1 hérite de `fd[0]` et `fd[1]`. Le tube a maintenant **4** descripteurs.
+3. **second `fork`** — le fils 2 hérite à son tour. Le tube a maintenant **6** descripteurs.
+4. **dans le fils 1** : `dup2(fd[1], STDOUT_FILENO)` fait pointer le descripteur 1 sur l'écriture du tube ; puis `close(fd[0])` et `close(fd[1])` retirent les deux descripteurs hérités devenus inutiles. Le fils 1 n'a plus, vers le tube, que le descripteur **1** (en écriture). `execlp` lance `ls -l` : ses `printf` partent dans le tube.
+5. **dans le fils 2** : `dup2(fd[0], STDIN_FILENO)` fait pointer le descripteur 0 sur la lecture du tube ; `close(fd[1])` et `close(fd[0])` retirent les héritages inutiles. Le fils 2 n'a plus, vers le tube, que le descripteur **0** (en lecture). `execlp` lance `wc -l` : son entrée provient du tube.
+6. **dans le père** : `close(fd[0])` et `close(fd[1])` retirent les **deux** descripteurs du père.
+
+Faisons le **bilan** des descripteurs encore ouverts sur le tube :
+
+- en **écriture** : seul le descripteur 1 du **fils 1** → **un seul écrivain** ;
+- en **lecture** : seul le descripteur 0 du **fils 2** → **un seul lecteur**.
+
+C'est l'**état idéal**. Conséquence directe : quand `ls` se termine, son unique descripteur d'écriture se ferme (à la fin du processus). Il n'existe alors **plus aucun** descripteur d'écriture → le `read` de `wc` rend **`0`** → `wc` détecte la **fin de fichier**, affiche son compte, et se termine **proprement**. Le père, libéré de ses deux `waitpid`, se termine à son tour.
+
+> ⚠️ **Faites le compte des descripteurs.** À la fin de la phase de fermeture, exactement **un** descripteur d'écriture et **un** descripteur de lecture doivent rester ouverts sur le tube. **Un** descripteur d'écriture en trop → pas de fin de fichier, `cmd2` se fige. **Un** descripteur de lecture en trop fausse le déclenchement de `SIGPIPE`. La méthode sûre : pour **chaque** processus (père inclus), se demander « utilise-t-il `fd[0]` ? `fd[1]` ? » et **fermer tout ce qui n'est pas utilisé**.
+
+## Les erreurs classiques à éviter
+
+Trois fautes reviennent sans cesse dans l'écriture d'un pipeline. Les connaître, c'est les éviter.
+
+> ⚠️ **Faute 1 — le père ne ferme pas ses descripteurs.** C'est la plus fréquente. Le père a créé le tube avant les `fork` ; il en a donc une copie de chaque extrémité. S'il ne les ferme pas, son `fd[1]` maintient « un écrivain » en vie et **bloque** la fin de fichier du lecteur. Le programme se **fige** sur le `waitpid`. **Le père doit fermer `fd[0]` et `fd[1]`**, même s'il ne s'en sert jamais.
+
+> ⚠️ **Faute 2 — fermer après le `exec`.** Le code placé **après** un `execlp` réussi **ne s'exécute pas** : `exec` a remplacé tout le programme. Les `close` doivent donc être faits **avant** le `exec`. Tout `close` écrit après le `execlp` est **mort** — il ne servira que si `exec` **échoue**.
+
+> ⚠️ **Faute 3 — créer le tube après le `fork`.** `fork` ne duplique que les descripteurs **déjà ouverts**. Un `pipe()` appelé après le `fork` crée un tube qui n'existe que dans **un** processus : il ne relie rien. L'ordre **`pipe` d'abord, `fork` ensuite** est absolu.
+
+## Et au-delà de deux commandes ?
+
+Le shell sait enchaîner plus de deux commandes : `cmd1 | cmd2 | cmd3 | ...`. Le principe se **généralise** sans difficulté : il faut **un tube entre chaque paire** de commandes voisines. Pour `cmd1 | cmd2 | cmd3`, on crée **deux** tubes ; `cmd2`, au milieu, voit son **entrée** redirigée depuis le premier tube **et** sa **sortie** redirigée vers le second.
+
+La logique reste **identique** — `pipe`, `fork`, `dup2`, `close`, `exec` — mais la **discipline de fermeture** devient encore plus exigeante : avec N tubes, chaque processus doit fermer **toutes** les extrémités qui ne le concernent pas. Le moindre descripteur oublié quelque part suffit à figer le pipeline. La règle ne change pas, seul le nombre de `close` à ne pas oublier augmente.
+
+> **À retenir**
+> - Un **pipeline** enchaîne des processus reliés par des tubes : la **sortie** de l'un alimente l'**entrée** du suivant ; c'est le `|` du shell.
+> - Pour `cmd1 | cmd2` : **redirection croisée** — la **sortie** de `cmd1` vers `fd[1]` (`dup2(fd[1], STDOUT_FILENO)`), l'**entrée** de `cmd2` depuis `fd[0]` (`dup2(fd[0], STDIN_FILENO)`).
+> - Schéma de référence : **`pipe` → `fork` (×2) → dans chaque fils : `dup2` + `close` + `exec` → dans le père : `close` des deux extrémités + `waitpid`**.
+> - Après `pipe` + deux `fork`, le tube a **6** descripteurs ; il ne doit en rester qu'**un en écriture** (fils 1) et **un en lecture** (fils 2). **Tous les autres — y compris les deux du père — doivent être fermés.**
+> - Sans cette **discipline de fermeture**, le lecteur ne voit **jamais la fin de fichier** et le pipeline **se fige**.
+> - Trois fautes classiques : le **père qui ne ferme pas** ses extrémités, les `close` **placés après le `exec`** (donc morts), le **`pipe` créé après le `fork`** (donc inutile).
+> - Le schéma se **généralise** à N commandes : un **tube par paire** voisine, mais la même rigueur de fermeture.

@@ -1,0 +1,200 @@
+---
+title: "Sur-apprentissage des arbres"
+slug: surapprentissage-arbres
+order: 3
+estimatedReadMin: 17
+concepts: [sur-apprentissage, generalisation, elagage, critere-d-arret, arbre-de-decision, jeu-de-test, methode-d-ensemble]
+source: "ING2_GI_ML_Tree_SLIDES.pdf, DM_Slides_DT.pdf"
+---
+
+## Pourquoi les arbres sur-apprennent
+
+Le module précédent a défini le **sur-apprentissage** : un modèle qui réussit
+**sur ses exemples d'apprentissage** mais **échoue sur des données nouvelles**,
+parce qu'il a **trop collé** aux particularités du jeu d'apprentissage au lieu
+d'en dégager les régularités. L'enjeu d'un bon modèle est la **généralisation**.
+
+Les arbres de décision y sont **particulièrement exposés**. Le bilan du cours
+est sans détour : les arbres « sont **très sensibles au bruit**, **instables** et
+ont **tendance à sur-apprendre les données** ». Pourquoi cette fragilité ?
+
+Un algorithme de construction comme C4.5 ou CART, **laissé sans contrainte**,
+décompose les nœuds **jusqu'à ce que toutes les feuilles soient pures**. Or, pour
+rendre **pure** une feuille, l'algorithme finit par créer des **branches qui
+n'isolent qu'un ou deux exemples** — souvent des exemples **bruités** ou
+**atypiques**. L'arbre **mémorise** alors ces exemples particuliers : il
+**classe parfaitement** l'ensemble d'apprentissage, mais a appris des **détails**
+qui ne se reproduiront pas sur des données nouvelles.
+
+C'est aussi la raison de l'**instabilité** signalée par le cours : un petit
+changement dans l'ensemble d'apprentissage — quelques exemples en plus ou en
+moins — peut suffire à modifier un test près de la racine, et donc à
+**bouleverser tout l'arbre**.
+
+> **À retenir** : un arbre développé **jusqu'à des feuilles pures** crée des
+> branches qui isolent quelques exemples **bruités** ou **atypiques** : il
+> **mémorise** au lieu de **généraliser**. C'est pourquoi les arbres sont
+> **instables**, **sensibles au bruit** et sujets au **sur-apprentissage**.
+
+## Erreur d'ajustement et erreur de prévision
+
+Pour **diagnostiquer** le sur-apprentissage, il faut distinguer **deux erreurs**,
+mesurées sur **deux ensembles différents** — comme l'imposait la règle du module
+précédent : on n'évalue pas un modèle sur ses propres exemples d'apprentissage.
+
+- L'**erreur d'ajustement** (ou erreur d'apprentissage) est la proportion
+  d'exemples de l'**ensemble d'apprentissage** que l'arbre classe **mal**.
+- L'**erreur de prévision** (ou erreur de test) est la proportion d'exemples de
+  l'**ensemble de test** — des exemples **non vus** — que l'arbre classe **mal**.
+
+Le **symptôme** du sur-apprentissage est un **écart** entre ces deux erreurs :
+une erreur d'ajustement **très faible** (voire nulle) **accompagnée** d'une
+erreur de prévision **nettement plus élevée**. Un arbre complet, développé
+jusqu'au bout, a typiquement une **erreur d'ajustement nulle** — il classe
+parfaitement ses exemples d'apprentissage — ce qui ne prouve **rien** sur sa
+capacité à généraliser.
+
+| Erreur | Ensemble | Ce qu'elle mesure |
+| --- | --- | --- |
+| **Erreur d'ajustement** | Apprentissage | À quel point l'arbre **colle** aux exemples appris |
+| **Erreur de prévision** | Test (exemples non vus) | La véritable **capacité de généralisation** |
+
+> ⚠️ Une **erreur d'ajustement nulle** ne prouve rien : un arbre complet classe
+> toujours parfaitement ses exemples d'apprentissage. Le **sur-apprentissage**
+> se reconnaît à l'**écart** entre une erreur d'ajustement **faible** et une
+> erreur de prévision **élevée**.
+
+## Un exemple chiffré : arbre complet contre arbre élagué
+
+Un exercice du cours rend ce diagnostic concret. On considère des images en noir
+et blanc codées sur **4 pixels** `(x₁, x₂, x₃, x₄)` (pixel noir = 1, blanc = 0),
+réparties en **deux classes**, avec une base d'apprentissage de **12 images** et
+une base de test de **6 images**.
+
+Un **arbre complet** est construit sur les 12 images d'apprentissage en
+partageant les nœuds selon les variables `X₂`, puis `X₃`, puis `X₁`. Cet arbre
+développe une branche jusqu'à une feuille `E = {8}` ne contenant **qu'une seule
+observation**. On en propose ensuite un **arbre élagué**, obtenu en **coupant**
+ce sous-arbre : il ne garde que le premier partage, selon `X₂`, et remplace les
+sous-arbres par des feuilles.
+
+Les deux arbres sont alors évalués :
+
+| Arbre | Erreur d'ajustement (12 images) | Erreur sur la base de test (6 images) |
+| --- | --- | --- |
+| **Arbre complet** | `0` (nulle) | `2 / 6` |
+| **Arbre élagué** | `1 / 12` | `1 / 6` |
+
+Le verdict du cours : « L'arbre complet a une erreur d'ajustement **nulle** alors
+que l'arbre élagué a une erreur d'ajustement de **1/12**. » Mais **sur la base de
+test**, l'arbre **élagué** commet **moins d'erreurs** (`1` contre `2`).
+
+C'est exactement la signature du sur-apprentissage : l'arbre complet est
+**meilleur sur l'apprentissage** (erreur nulle) mais **moins bon sur le test**.
+Et le cours conclut : « On **préférera l'arbre avec une seule variable
+explicative** car les feuilles ont un **effectif plus important**. C'est
+**embêtant d'avoir une feuille avec une seule observation**. »
+
+> **À retenir** : sur l'exemple des images, l'**arbre complet** a une erreur
+> d'ajustement **nulle** mais une **erreur de test plus grande** que l'arbre
+> **élagué** — illustration directe du **sur-apprentissage**. On préfère l'arbre
+> élagué : ses **feuilles ont un effectif plus important**.
+
+## L'élagage comme réponse au sur-apprentissage
+
+La leçon de cet exemple est générale : pour lutter contre le sur-apprentissage,
+on **réduit la taille de l'arbre**. C'est le rôle de l'**élagage**, présenté à la
+section précédente : **supprimer les sous-arbres trop spécifiques** — ceux qui
+n'isolent que des exemples particuliers — et les **remplacer par des feuilles**.
+
+L'effet recherché est double :
+
+- les **feuilles** obtenues ont un **effectif plus important** — elles reposent
+  sur plus d'exemples, donc sur des **régularités** plutôt que sur des cas
+  isolés ;
+- l'arbre **généralise mieux** : son erreur de prévision **diminue**, même si
+  son erreur d'ajustement **augmente légèrement**.
+
+C'est pourquoi l'élagage **accepte délibérément** une **petite erreur
+d'ajustement** (l'arbre élagué de l'exemple a une erreur de `1/12`, là où l'arbre
+complet avait `0`) : cette dégradation **sur l'apprentissage** s'accompagne d'une
+**amélioration sur le test** — le seul critère qui compte.
+
+On peut aussi **prévenir** la croissance excessive en agissant sur le **critère
+d'arrêt** (section 2) : fixer une **profondeur maximale** raisonnable ou une
+**taille minimale de nœud** suffisante empêche l'arbre de créer des feuilles à
+un seul exemple. Élaguer revient à corriger l'arbre **après** sa construction ;
+régler le critère d'arrêt revient à le contraindre **pendant** sa construction.
+
+> **À retenir** : l'**élagage** combat le sur-apprentissage en **supprimant les
+> sous-arbres trop spécifiques** : il **accepte une petite erreur d'ajustement**
+> en échange d'une **meilleure généralisation** (erreur de prévision plus
+> faible). On peut aussi **prévenir** la sur-croissance via le **critère
+> d'arrêt** (profondeur, taille minimale de nœud).
+
+## Quand un arbre complexe n'est pas en sur-apprentissage
+
+Attention toutefois : **un arbre complexe n'est pas toujours en
+sur-apprentissage**. Le cours le souligne sur un autre exemple, où un arbre
+construit sur un jeu de données simulé devient **profond et complexe** — et
+**pourtant ne sur-apprend pas**.
+
+L'explication tient à la **géométrie des frontières** (section 2) : un arbre ne
+sait découper l'espace que par des frontières **perpendiculaires aux axes**.
+Lorsque la **vraie frontière** entre deux classes est **oblique**, l'arbre doit
+**empiler de nombreux nœuds** — autant de « marches d'escalier » — pour
+l'approcher. L'arbre est alors **gros** non parce qu'il mémorise du bruit, mais
+parce que la frontière à représenter **exige** beaucoup de tests.
+
+La taille de l'arbre **seule** ne suffit donc pas à conclure. Le **seul juge
+fiable** du sur-apprentissage reste la **comparaison des erreurs** : si l'erreur
+de prévision **reste proche** de l'erreur d'ajustement, il n'y a **pas de
+sur-apprentissage**, même pour un arbre profond ; c'est l'**écart** entre les
+deux qui le révèle.
+
+> ⚠️ Un arbre **complexe** n'est pas forcément en sur-apprentissage : une
+> **frontière oblique** exige beaucoup de nœuds (frontières « en escalier »).
+> Seul l'**écart entre erreur d'ajustement et erreur de prévision** — et non la
+> taille de l'arbre — permet de conclure.
+
+## Au-delà de l'élagage : les forêts aléatoires
+
+L'élagage n'est pas la **seule** réponse au sur-apprentissage des arbres. Le
+cours en mentionne une **seconde**, qui sera l'objet des deux dernières sections
+du module : les **forêts aléatoires** — des « arbres adaptés au bagging ».
+
+L'idée, développée en section 4, est d'**agréger de nombreux arbres** plutôt que
+de se fier à un seul. Un arbre isolé étant **instable**, on construit **beaucoup
+d'arbres** sur des variantes de l'ensemble d'apprentissage et l'on **combine**
+leurs prédictions. C'est une **méthode d'ensemble** : la **moyenne** (ou le
+**vote**) de nombreux modèles instables est, elle, **stable** — et bien moins
+sujette au sur-apprentissage qu'aucun des arbres pris isolément.
+
+> **À retenir** : il existe **deux** réponses au sur-apprentissage des arbres —
+> l'**élagage** d'un arbre unique, et les **forêts aléatoires**, qui **agrègent
+> de nombreux arbres** instables pour obtenir un modèle **stable** (section 4).
+
+## Synthèse de la section
+
+Les arbres de décision sont **particulièrement sujets au sur-apprentissage** :
+développés jusqu'à des **feuilles pures**, ils créent des branches qui
+**isolent quelques exemples bruités** — ils **mémorisent** au lieu de
+**généraliser** — d'où leur **instabilité**. On **diagnostique** ce défaut en
+comparant **deux erreurs** : l'**erreur d'ajustement** (sur l'apprentissage) et
+l'**erreur de prévision** (sur le test) ; le sur-apprentissage se reconnaît à
+leur **écart** — erreur d'ajustement faible, erreur de prévision élevée. L'exemple
+des images à 4 pixels le montre : l'arbre **complet** (erreur d'ajustement nulle)
+est **moins bon en test** que l'arbre **élagué**, qu'on **préfère** car ses
+**feuilles** ont un **effectif plus important**. La parade est l'**élagage** —
+supprimer les sous-arbres **trop spécifiques**, quitte à **accepter une petite
+erreur d'ajustement** pour gagner en **généralisation** — ou un **critère
+d'arrêt** plus strict. Mais un arbre **complexe** n'est pas toujours en
+sur-apprentissage : une **frontière oblique** exige beaucoup de nœuds. Au-delà de
+l'élagage, les **forêts aléatoires** offrent une seconde réponse, par
+**agrégation** de nombreux arbres.
+
+> **À retenir** : les arbres **sur-apprennent** facilement (feuilles à un
+> exemple, **instabilité**) ; on le **diagnostique** par l'**écart** entre
+> erreur d'**ajustement** et erreur de **prévision**, et on le **corrige** par
+> l'**élagage** (ou un critère d'arrêt strict), ou encore par les **forêts
+> aléatoires**.

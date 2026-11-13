@@ -1,0 +1,261 @@
+---
+title: "Odds, log-odds et interprétation des coefficients"
+slug: odds-coefficients
+order: 3
+estimatedReadMin: 19
+concepts: [cote-odds, log-odds, fonction-logit, rapport-de-cotes, interpretation-des-coefficients, regression-logistique]
+source: "ING2_GI_IA_RegLog_Slides.pdf"
+---
+
+## Un exemple pour fixer les idées
+
+Avant d'introduire les *odds*, le cours déroule un **exemple** qui servira de fil
+rouge à toute la section : la **présence d'une maladie en fonction de l'âge**,
+avec le modèle estimé :
+
+`logit( p(x) ) = −10,07 + 0,18·x`
+
+Ici `x` est l'**âge** du patient. La section 2 a montré comment passer du LOGIT à
+la probabilité et comment prédire la classe. Appliquons-le.
+
+- **Patient de `60` ans.** `logit(p(x)) = −10,07 + 0,18 × 60 = 0,73`, **d'où
+  `p(60) = 0,67`**.
+- **Patient de `80` ans.** `logit(p(x)) = −10,07 + 0,18 × 80 = 4,33`, **d'où
+  `p(80) = 0,99`**.
+
+Dans les **deux cas**, `p(x) > 0,5` : par la frontière de décision, on **conclut
+à la présence de la maladie**. Mais le cours note une nuance : **dans le deuxième
+cas, le diagnostic est plus probable** — `p(80) = 0,99` est bien plus proche de
+`1` que `p(60) = 0,67`, donc la décision y est plus **confortable**.
+
+| Âge `x` | `logit(p(x)) = −10,07 + 0,18·x` | `p(x)` | Décision |
+| --- | --- | --- | --- |
+| `60` ans | `0,73` | `0,67` | Présence de la maladie |
+| `80` ans | `4,33` | `0,99` | Présence de la maladie (diagnostic **plus probable**) |
+
+> **À retenir** : sur l'exemple `logit(p(x)) = −10,07 + 0,18·x` (maladie selon
+> l'âge), un patient de `60` ans a `p(60) = 0,67` et un patient de `80` ans
+> `p(80) = 0,99` : **maladie prédite dans les deux cas**, mais le diagnostic est
+> **plus probable à `80` ans**.
+
+## La cote (*odds*)
+
+Le cours introduit alors une grandeur centrale : **la régression logistique
+s'intéresse au rapport**
+
+`odds = p(x) / (1 − p(x)) = P(Y = 1 | X = x) / P(Y = 0 | X = x)`
+
+L'*odds* est le **rapport** de la probabilité de la **classe positive** sur celle
+de la **classe négative**. Le cours le nomme et l'explique : **ce rapport
+s'appelle *odds*, c'est-à-dire un rapport de chance. Un individu avec un *odds* =
+2 a deux fois plus de chance d'avoir la caractéristique décrite par `Y` que de ne
+pas l'avoir.**
+
+L'*odds* fournit une **règle de décision** équivalente à la frontière `0,5` :
+
+> **Décision par l'*odds*.** Si `odds > 1` alors `Ŷ = 1` ; si `odds < 1` alors
+> `Ŷ = 0`.
+
+Cette règle est **cohérente** avec celle de la section 2. En effet, `odds > 1`
+signifie `p(x) > 1 − p(x)`, donc `p(x) > 0,5` ; et `odds < 1` signifie
+`p(x) < 0,5`. Comparer l'*odds* à `1` revient exactement à comparer `p(x)` à
+`0,5`.
+
+Le cours reprend l'exemple maladie–âge pour donner une **lecture concrète** de
+l'*odds*.
+
+- **Patient de `60` ans.** `odds(60) = 2` : il a **`2` fois plus de chance**
+  d'avoir la maladie que de ne pas l'avoir.
+- **Patient de `80` ans.** `odds(80) = 75` : il a **`75` fois plus de chance**
+  d'avoir la maladie que de ne pas l'avoir.
+
+| Âge `x` | `odds(x) = p(x)/(1−p(x))` | Lecture |
+| --- | --- | --- |
+| `60` ans | `2` | `2` fois plus de chance d'avoir la maladie que de ne pas l'avoir |
+| `80` ans | `75` | `75` fois plus de chance d'avoir la maladie que de ne pas l'avoir |
+
+L'*odds* exprime donc le résultat **non plus en probabilité, mais en rapport de
+chances** — un langage particulièrement parlant, notamment en épidémiologie.
+
+> **À retenir** : l'***odds*** est le **rapport de chance**
+> `odds = p(x)/(1−p(x)) = P(Y=1|x)/P(Y=0|x)`. La décision se fait par
+> `odds > 1 ⇒ Ŷ = 1`, `odds < 1 ⇒ Ŷ = 0`. Un `odds = 2` signifie **`2` fois
+> plus de chance** d'avoir la caractéristique que de ne pas l'avoir.
+
+## Le log-odds : le LOGIT est le logarithme de l'*odds*
+
+Le cours relie maintenant l'*odds* au modèle. La régression logistique modélise
+par une régression linéaire le **LOGIT** de `p(x)` :
+
+`logit( p(x) ) = a₀ + a₁x`
+
+Or, **par définition de la fonction LOGIT**, le cours observe que **cela revient
+à modéliser le logarithme de l'*odds*** :
+
+`logit( p(x) ) = ln( p(x) / (1 − p(x)) ) = ln(odds) = a₀ + a₁x`
+
+Le raisonnement est immédiat : le LOGIT de `p(x)` est, par sa définition même, le
+**logarithme** du rapport `p(x)/(1−p(x))` — c'est-à-dire le **logarithme de
+l'*odds***. Cette quantité `ln(odds)` porte le nom de **log-odds**.
+
+On obtient ainsi une lecture **éclairante** du modèle : la régression logistique
+**modélise le log-odds par une régression linéaire**. La partie linéaire
+`a₀ + a₁x` n'est ni la probabilité, ni l'*odds*, mais le **logarithme de
+l'*odds***.
+
+> **À retenir** : **par définition du LOGIT**, modéliser `logit(p(x))` revient à
+> modéliser le **logarithme de l'*odds*** :
+> `logit(p(x)) = ln(p(x)/(1−p(x))) = ln(odds) = a₀ + a₁x`. La régression
+> logistique modélise le **log-odds** par une régression **linéaire**.
+
+## Interpréter le coefficient `a₁`
+
+Cette lecture en log-odds change le **sens** des coefficients. Le cours
+l'énonce : **le coefficient `a₁` ne représente plus une pente, mais une
+augmentation ou une diminution de chance quand `x` varie.**
+
+En régression linéaire ordinaire, `a₁` est la **pente** : la variation de la
+sortie pour une unité de `x`. Ici, la régression linéaire porte sur le
+**log-odds**, pas sur `p(x)` ; `a₁` mesure donc la variation du **log-odds** —
+et, à travers lui, l'évolution de la **chance**.
+
+Le cours formalise cela en considérant une variable `X` qui passe d'une valeur
+`x₀` à une valeur `x₁` ; l'*odds* passe corrélativement de `odds₀` à `odds₁` :
+
+`X(ω) : x₀ → x₁`  &nbsp;&nbsp;et&nbsp;&nbsp;  `odds₀ → odds₁`
+
+On calcule alors la **différence des log-odds** :
+
+`ln( odds₁ / odds₀ ) = ln(odds₁) − ln(odds₀) = (a₀ + a₁x₁) − (a₀ + a₁x₀) = a₁·(x₁ − x₀)`
+
+Le détail est instructif : en faisant la différence, l'**intercept `a₀`
+disparaît**, et il reste `a₁·(x₁ − x₀)`. La variation du log-odds **ne dépend que
+de `a₁`** et de l'écart `x₁ − x₀`.
+
+Le cours en tire la **règle d'interprétation** : **si on considère un
+accroissement `x₁ > x₀`, les chances que `Y(ω) = 1` augmentent si et seulement si
+`a₁ > 0`.**
+
+- Si `a₁ > 0` : pour un accroissement de `x`, le log-odds **augmente**, donc
+  l'*odds* augmente, donc la **chance** d'observer `Y = 1` **augmente**.
+- Si `a₁ < 0` : pour un accroissement de `x`, la chance d'observer `Y = 1`
+  **diminue**.
+- Si `a₁ = 0` : la variable `x` n'a **aucun effet** sur la chance.
+
+| Signe de `a₁` | Effet d'un accroissement de `x` sur la chance que `Y = 1` |
+| --- | --- |
+| `a₁ > 0` | La chance **augmente** |
+| `a₁ < 0` | La chance **diminue** |
+| `a₁ = 0` | **Aucun effet** |
+
+> **À retenir** : avec la régression sur le **log-odds**, `a₁` n'est **plus une
+> pente** mais une **variation de chance**. La différence des log-odds vaut
+> `ln(odds₁/odds₀) = a₁·(x₁ − x₀)` (l'**intercept disparaît**) : pour un
+> accroissement de `x`, la chance que `Y = 1` **augmente si et seulement si
+> `a₁ > 0`**.
+
+## Le rapport de cotes (*odds-ratio*)
+
+Le cours nomme le rapport apparu ci-dessus : **le rapport `odds₁ / odds₀` est
+appelé l'*odds-ratio* (OR)**. C'est le **rapport de cotes** entre deux situations
+— ici, entre la valeur `x₁` et la valeur `x₀` de la variable explicative.
+
+Le cas le plus parlant est celui d'un **accroissement d'une unité** de `x`, soit
+`x₁ − x₀ = 1`. La relation `ln(odds₁/odds₀) = a₁·(x₁ − x₀)` donne alors
+`ln(odds₁/odds₀) = a₁`, c'est-à-dire :
+
+`odds-ratio = odds₁ / odds₀ = exp(a₁)`
+
+L'*odds-ratio* d'un accroissement unitaire de `x` est donc **`exp(a₁)`** : le
+**facteur** par lequel l'*odds* est multiplié quand `x` augmente de `1`.
+
+Le cours illustre sur l'exemple maladie–âge, avec `logit(p(x)) = −10,07 +
+0,18·x`. **Le coefficient `a₁ = 0,18`, d'où `exp(a₁) = 1,2`. Si on augmente
+l'âge d'une année, le risque de présenter la maladie augmente de `1,2`.**
+Autrement dit, **chaque année supplémentaire multiplie l'*odds* de la maladie par
+`1,2`**.
+
+Le cours signale aussitôt une **limite** importante de la méthode : **cette
+augmentation est la même quel que soit l'âge ; c'est une limitation de la
+régression logistique.** Le facteur `exp(a₁)` étant **constant**, le modèle
+suppose qu'une année de plus a **le même effet multiplicatif** sur l'*odds* à
+`30` ans qu'à `70` ans — ce qui n'est pas toujours réaliste.
+
+| Notion | Formule | Sur l'exemple (`a₁ = 0,18`) |
+| --- | --- | --- |
+| *Odds-ratio* (accroissement de `1`) | `exp(a₁)` | `exp(0,18) = 1,2` |
+| Interprétation | Facteur multiplicatif de l'*odds* par unité de `x` | `+1` an ⇒ *odds* **×`1,2`** |
+| Limite | Facteur **constant** | Même effet quel que soit l'âge |
+
+> **À retenir** : le **rapport de cotes (*odds-ratio*)** `odds₁/odds₀` vaut, pour
+> un accroissement d'**une unité** de `x`, **`exp(a₁)`** : le facteur
+> multiplicatif de l'*odds*. Sur l'exemple, `exp(0,18) = 1,2` (+1 an ⇒ *odds*
+> ×`1,2`). Ce facteur est **constant** — une **limitation** de la méthode.
+
+## Généralisation à plusieurs variables explicatives
+
+Tout ce qui précède reposait sur une **seule** variable `x`. Le cours indique
+qu'**il est possible d'introduire plusieurs variables explicatives `X₁, …, Xₚ`**.
+Le modèle devient :
+
+`logit( p(x) ) = a₀ + a₁x₁ + a₂x₂ + … + aₚxₚ`
+
+La partie linéaire est désormais une **combinaison linéaire** de toutes les
+variables explicatives. L'interprétation des coefficients reste la même : chaque
+`aᵢ` mesure l'effet de la variable `xᵢ` sur le log-odds, et `exp(aᵢ)` est
+l'*odds-ratio* associé à un accroissement unitaire de `xᵢ`.
+
+**Variables qualitatives.** Le cours précise le traitement d'un attribut
+qualitatif : **si une variable explicative est qualitative avec `k` modalités
+`m₁, …, m_k`, alors on introduit `(k − 1)` variables indicatrices des
+modalités** :
+
+`logit( p(x) ) = a₀ + a₁·𝟙_{m₁} + a₂·𝟙_{m₂} + … + a_{k−1}·𝟙_{m_{k−1}}`
+
+Chaque `𝟙_{mⱼ}` est une **variable indicatrice** valant `1` si l'individu
+présente la modalité `mⱼ`, `0` sinon. On en introduit `k − 1` et non `k` : une
+modalité sert de **référence**, son effet étant absorbé par l'intercept `a₀`.
+
+Le cours donne un exemple : la maladie en fonction de l'**âge**, du **poids** et
+de la **consommation d'alcool** (modalités *Importante*, *Modérée*, *Absence*).
+L'ajustement, obtenu en R par `glm(Maladie ~ Age + Poids + Alcool, family =
+"binomial")`, produit le modèle :
+
+`logit(p(x)) = −39,0 + 0,4·Age + 0,14·Poids + 5,9·𝟙_Importante + 1,3·𝟙_Modérée`
+
+L'alcool, qualitatif à trois modalités, donne `3 − 1 = 2` indicatrices
+(*Importante* et *Modérée*) ; la modalité *Absence* est la référence.
+
+**Interactions.** Le cours note enfin qu'**il est possible d'introduire des
+interactions de variables explicatives** :
+
+`logit( p(x) ) = a₀ + a₁x₁ + a₂x₂ + a₁₂·x₁x₂`
+
+Le terme `a₁₂·x₁x₂`, produit de deux variables, permet de modéliser un effet
+**croisé** : l'effet de `x₁` peut alors dépendre de la valeur de `x₂`.
+
+> **À retenir** : avec plusieurs variables,
+> `logit(p(x)) = a₀ + a₁x₁ + … + aₚxₚ`. Une variable **qualitative** à `k`
+> modalités est codée par **`k − 1` variables indicatrices** `𝟙_{mⱼ}` (une
+> modalité de référence). On peut aussi ajouter des **interactions** `a₁₂·x₁x₂`.
+
+## Synthèse de la section
+
+L'*odds* est le **rapport de chance** `odds = p(x)/(1−p(x)) = P(Y=1|x)/P(Y=0|x)`
+— un `odds = 2` valant « `2` fois plus de chance d'avoir la caractéristique que
+de ne pas l'avoir » ; on décide par `odds > 1 ⇒ Ŷ = 1`. **Par définition du
+LOGIT**, modéliser `logit(p(x))` revient à modéliser le **log-odds** :
+`logit(p(x)) = ln(odds) = a₀ + a₁x`. Dès lors, `a₁` n'est **plus une pente** mais
+une **variation de chance** : `ln(odds₁/odds₀) = a₁·(x₁ − x₀)`, et la chance que
+`Y = 1` **augmente si et seulement si `a₁ > 0`**. Le rapport `odds₁/odds₀` est
+l'**odds-ratio** ; pour un accroissement d'**une unité**, il vaut **`exp(a₁)`**
+(sur l'exemple, `exp(0,18) = 1,2`), facteur **constant** — une **limitation** de
+la méthode. Le modèle se **généralise** à `p` variables,
+`logit(p(x)) = a₀ + a₁x₁ + … + aₚxₚ`, une variable **qualitative** à `k`
+modalités étant codée par **`k − 1` indicatrices** ; on peut aussi ajouter des
+**interactions** `a₁₂·x₁x₂`.
+
+> **À retenir** : `odds = p/(1−p)` ; `logit(p) = ln(odds) = a₀ + a₁x` (le
+> **log-odds**). `a₁` mesure une **variation de chance** (chance ↑ ⇔ `a₁ > 0`) ;
+> l'**odds-ratio** d'un `+1` de `x` est **`exp(a₁)`**. Modèle multivarié :
+> `logit(p) = a₀ + Σ aᵢxᵢ`, qualitatif codé en `k − 1` indicatrices.

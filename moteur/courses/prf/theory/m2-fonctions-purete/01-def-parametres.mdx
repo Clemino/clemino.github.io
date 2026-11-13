@@ -1,0 +1,40 @@
+---
+title: "def, parametres et contrats"
+slug: def-parametres
+order: 1
+estimatedReadMin: 12
+concepts: [purete, require, by-value, by-name]
+source: "Fonction/Fonction/Scala_02.pdf; Fonction/Fonction/functions.pdf"
+---
+## Definir une fonction
+
+Une fonction Scala se lit comme une relation entre des arguments et un resultat. Le type de retour peut etre infere, mais l'ecrire clarifie les fonctions publiques et les fonctions recursives.
+
+```scala
+def aireDisque(r: Double): Double = math.Pi * r * r
+```
+
+`require` encode une precondition.
+
+```scala
+def racine(x: Double): Double =
+  require(x >= 0)
+  math.sqrt(x)
+```
+
+## Parametres par valeur et par nom
+
+Un parametre par valeur est evalue avant l'appel. Un parametre par nom (`=> A`) est reevalue a chaque utilisation.
+
+```scala
+def deuxFois(x: => Int) = x + x
+```
+
+Si `x` a un effet, cet effet se produit deux fois.
+
+## Parametres nommes et valeurs par defaut
+
+Les parametres par defaut rendent les appels plus lisibles, et les parametres nommes evitent les erreurs de position.
+
+> **A retenir**  
+> Avant de calculer, identifie : arguments, type de retour, purete, preconditions et mode d'evaluation.

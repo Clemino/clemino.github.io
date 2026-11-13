@@ -1,0 +1,67 @@
+---
+title: "Blockchain et bitcoin"
+slug: blockchain-bitcoin
+order: 1
+estimatedReadMin: 11
+concepts: [blockchain, bitcoin, preuve-de-travail, double-depense, cle-privee]
+source: "Satoshi Nakamoto, « Bitcoin : un système de monnaie électronique pair-à-pair » (livre blanc, traduction française, bitcoin.org)"
+---
+
+## Idée centrale
+
+Bitcoin répond à une question précise : comment deux personnes peuvent-elles s'échanger de la monnaie électronique **sans passer par une banque**, tout en étant sûres que personne ne dépense deux fois la même somme ? Sa réponse, la **blockchain avec preuve de travail**, a donné naissance à tout l'univers des crypto-actifs.
+
+## Le problème de la double dépense
+
+Un fichier numérique se copie à l'infini. Si une « pièce » électronique n'est qu'un fichier, rien n'empêche son propriétaire de l'envoyer à deux personnes. C'est le problème de la **double dépense**.
+
+La solution classique est un **tiers de confiance** : la banque tient le registre des soldes et refuse la deuxième dépense. Le livre blanc de Bitcoin propose de remplacer ce tiers par un **registre public** partagé par tous les participants du réseau, sur lequel ils se mettent d'accord sans se faire confiance.
+
+## Comment fonctionne la chaîne
+
+### Des transactions signées
+
+Chaque utilisateur possède une paire de clés :
+
+- une **clé publique**, dont dérive son adresse, que l'on peut communiquer pour recevoir des bitcoins ;
+- une **clé privée**, secrète, qui sert à **signer** les transactions.
+
+Envoyer des bitcoins, c'est signer avec sa clé privée une transaction qui les transfère vers l'adresse du destinataire. Le livre blanc décrit une pièce comme une **chaîne de signatures numériques**. Conséquence directe : **qui détient la clé privée détient les fonds**. Perdre sa clé, c'est perdre ses bitcoins ; se la faire voler, c'est se les faire voler, sans recours.
+
+### Des blocs horodatés et chaînés
+
+Les transactions sont regroupées en **blocs**. Chaque bloc contient l'empreinte (le hachage) du bloc précédent. Modifier une transaction ancienne changerait l'empreinte de son bloc, donc celle de tous les blocs suivants : la falsification se voit immédiatement. C'est ce « serveur d'horodatage » distribué qui donne son nom à la **blockchain** (chaîne de blocs).
+
+### La preuve de travail
+
+Pour ajouter un bloc, un participant, le **mineur**, doit trouver par essais successifs un nombre qui donne au hachage du bloc une forme rare. Cette recherche coûte beaucoup de calcul, donc d'électricité. La règle de consensus est simple : **la chaîne la plus longue**, celle qui a demandé le plus de travail, fait foi.
+
+Pour réécrire l'histoire, un attaquant devrait refaire le travail de tous les blocs concernés et rattraper la chaîne honnête. Le livre blanc montre que c'est hors de portée tant que les nœuds honnêtes contrôlent la majorité de la puissance de calcul. Au-delà, on parle d'**attaque des 51 %**.
+
+### L'incitation
+
+Le mineur qui trouve un bloc reçoit :
+
+- une **récompense** en bitcoins nouvellement créés ;
+- les **frais** des transactions incluses dans le bloc.
+
+La récompense est divisée par deux tous les 210 000 blocs, soit environ tous les quatre ans (le **halving**). Elle est de 3,125 bitcoins par bloc depuis avril 2024. Cette règle plafonne l'offre totale à **21 millions** de bitcoins.
+
+## Ce que Bitcoin est et n'est pas
+
+| Bitcoin est | Bitcoin n'est pas |
+|---|---|
+| Un registre public, consultable par tous | Anonyme : les transactions sont publiques, seules les identités sont masquées derrière des adresses |
+| Un actif à offre limitée | Un actif stable : son prix varie très fortement |
+| Transférable sans intermédiaire | Réversible : une transaction confirmée ne s'annule pas |
+
+Le bitcoin ne verse ni dividende ni coupon. Son prix dépend uniquement de ce que d'autres acheteurs sont prêts à payer : il n'a pas de valeur fondamentale calculable comme une action.
+
+> **À retenir**
+> La sécurité de Bitcoin repose sur deux secrets : celui du réseau (la preuve de travail, très coûteuse à contrefaire) et le tien (ta clé privée). Le premier est solide ; le second dépend entièrement de toi.
+
+## Pièges classiques
+
+- Croire que les transactions Bitcoin sont anonymes : toutes sont publiques et traçables.
+- Penser qu'une transaction envoyée par erreur peut être annulée par « Bitcoin » : il n'existe aucun service client.
+- Confondre la blockchain (la technologie) et le bitcoin (un actif qui l'utilise).

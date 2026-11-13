@@ -1,0 +1,194 @@
+---
+title: États du flux et positionnement
+slug: etats-positionnement
+order: 3
+estimatedReadMin: 10
+concepts: [etat-flux, eof-fail-bad, tellg-seekg]
+source: "Cours 5 — Gestion des entrées/sorties"
+---
+
+## Une opération sur un flux peut échouer
+
+Lire dans un fichier n'est pas une opération sûre : le fichier peut être absent, contenir un texte mal formé, ou être déjà arrivé à sa fin. Un flux **mémorise** donc en permanence un **état** qui résume si les dernières opérations ont réussi.
+
+> Il est conseillé, **avant toute opération** sur un flux, de **tester son état** : on saura ainsi si la lecture ou l'écriture précédente a réussi.
+
+Ne pas tester l'état conduit à des bugs sournois : le programme continue avec des valeurs non lues, sans la moindre alerte.
+
+## Les quatre indicateurs d'état
+
+Un flux expose quatre méthodes qui renvoient chacune un `bool` et renseignent sur son état :
+
+| Méthode | Renvoie `true` quand... |
+|---|---|
+| **`good()`** | tout va bien — **aucun** problème, le flux est utilisable |
+| **`eof()`** | la **fin de fichier** a été atteinte (*end of file*) |
+| **`fail()`** | la dernière opération a **échoué** : erreur d'E/S **ou** erreur de **format** |
+| **`bad()`** | une erreur **grave** d'E/S s'est produite (flux corrompu) |
+
+Détaillons-les, du plus large au plus précis :
+
+- **`good()`** est l'indicateur **le plus général**. Il renvoie `true` tant que **rien** ne va mal — c'est-à-dire `false` dès que l'une des autres méthodes renverrait `true`.
+
+- **`eof()`** signale qu'un fichier ouvert en lecture a **atteint sa fin**. Il devient `true` lorsqu'une lecture a tenté de dépasser le dernier octet.
+
+- **`fail()`** renvoie `true` dans les mêmes cas que `bad()`, **mais aussi** en cas d'**erreur de format** : par exemple lire un entier alors que le fichier contient des lettres. C'est l'indicateur le plus utile au quotidien.
+
+```cpp
+int n;
+std::cin >> n;          // l'utilisateur tape "abc"
+if (std::cin.fail()) {
+    std::cerr << "Ce n'est pas un entier !\n";
+}
+```
+
+- **`bad()`** signale une erreur **grave** : écrire dans un fichier qui n'est pas ouvert en écriture, ou un flux physiquement corrompu. C'est une erreur dont on ne peut généralement pas se remettre.
+
+## Tester le flux directement dans une condition
+
+C'est l'idiome le plus important du chapitre.
+
+> Un flux peut être **testé directement** dans une condition (`if`, `while`) : il s'évalue comme **vrai** tant que tout va bien, et comme **faux** dès qu'une opération échoue.
+
+Le flux se convertit donc en `bool` : `if (fichier)` équivaut à `if (!fichier.fail())`. Cette conversion combinée au fait que `>>` **renvoie le flux** permet une boucle de lecture d'une grande élégance :
+
+```cpp
+std::ifstream entree("nombres.txt");
+int n;
+while (entree >> n) {           // tant que la lecture d'un entier réussit
+    std::cout << n << "\n";
+}
+entree.close();
+```
+
+Décortiquons `while (entree >> n)` :
+
+1. `entree >> n` tente de lire un entier et **renvoie le flux** `entree` ;
+2. ce flux est **converti en `bool`** par le `while` ;
+3. tant que la lecture réussit, le test est `vrai` et la boucle continue ;
+4. à la fin du fichier (ou sur une donnée mal formée), la lecture échoue, le flux devient `faux`, la boucle **s'arrête**.
+
+> ⚠️ Préférer `while (entree >> n)` à `while (!entree.eof())`. Avec `eof()`, la dernière itération **lit après la fin** du fichier : `eof()` n'est vrai qu'**après** une lecture infructueuse, si bien que le corps de boucle s'exécute une fois de trop, avec une valeur invalide. La forme `while (entree >> n)` teste la lecture **elle-même** et s'arrête au bon moment.
+
+Le même idiome vaut pour `getline` :
+
+```cpp
+std::string ligne;
+while (std::getline(entree, ligne)) {   // forme correcte de parcours ligne par ligne
+    std::cout << ligne << "\n";
+}
+```
+
+## Réarmer un flux : `clear()`
+
+Une fois qu'un flux est passé en état d'échec — `fail()` est `true` — **toutes** les opérations suivantes sont **ignorées**, même si elles seraient valides. Le flux reste « bloqué » dans son état d'erreur.
+
+Pour le **réarmer**, on appelle **`clear()`** : cette méthode **remet l'état à `good`** et autorise de nouveau les opérations.
+
+```cpp
+#include <limits>           // pour std::numeric_limits
+
+int n;
+std::cin >> n;              // l'utilisateur tape "abc" : fail() devient true
+if (std::cin.fail()) {
+    std::cin.clear();       // on réarme le flux
+    // on jette toute la saisie fautive restante, jusqu'au saut de ligne inclus
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "Recommencez : ";
+    std::cin >> n;          // nouvelle tentative, maintenant possible
+}
+```
+
+> ⚠️ `clear()` **ne corrige pas** la cause de l'erreur : il efface seulement l'**indicateur**. Si du texte fautif reste dans le flux, la prochaine lecture échouera de nouveau. Il faut donc, après `clear()`, **vider** le contenu invalide avec `ignore()`. Attention : `ignore()` **sans argument ne jette qu'un caractère** ; la forme `ignore(std::numeric_limits<std::streamsize>::max(), '\n')` vide **toute** la ligne restante.
+
+## Signaler une erreur depuis son propre `operator>>`
+
+Jusqu'ici, on a **lu** l'état du flux. Mais une classe qui définit son propre `operator>>` (cours 3) doit aussi pouvoir le **modifier** : si le flux contient une donnée **mal formée** pour le format attendu, l'extracteur doit **signaler l'échec** au lieu de renvoyer silencieusement un objet à moitié construit.
+
+> Pour signaler un format invalide depuis un `operator>>` personnalisé, on **positionne soi-même** l'indicateur `failbit` du flux avec **`setstate(std::ios::failbit)`**. Le flux passe alors en état d'échec : tout test `if (flux)` ou `while (flux >> obj)` le détectera, exactement comme pour une lecture standard ratée.
+
+```cpp
+#include <iostream>
+
+class Duree {           // une durée saisie au format "h:m"
+        int heures = 0;
+        int minutes = 0;
+    public:
+        friend std::istream& operator>>(std::istream& is, Duree& d);
+};
+
+std::istream& operator>>(std::istream& is, Duree& d) {
+    int h, m;
+    char sep;
+    is >> h >> sep >> m;            // on attend : un entier, ':', un entier
+    // format invalide : lecture ratée, séparateur faux, ou valeurs absurdes
+    if (!is || sep != ':' || h < 0 || m < 0 || m > 59) {
+        is.setstate(std::ios::failbit);   // on signale l'échec au flux
+        return is;
+    }
+    d.heures = h;
+    d.minutes = m;
+    return is;
+}
+```
+
+Grâce à `setstate(std::ios::failbit)`, l'appelant utilise l'extracteur de `Duree` **comme n'importe quel `>>`** : `if (std::cin >> maDuree)` est faux dès que la saisie ne respecte pas le format. L'extracteur s'intègre ainsi parfaitement aux idiomes de test du flux vus plus haut.
+
+## Connaître la position courante : `tellg` et `tellp`
+
+Un flux de fichier maintient un **curseur** : la position de l'octet où aura lieu la prochaine opération. Deux méthodes renvoient cette position, comptée en **octets depuis le début du fichier** :
+
+- **`tellg()`** — position du curseur de **lecture** (le `g` est pour *get*) ;
+- **`tellp()`** — position du curseur d'**écriture** (le `p` est pour *put*).
+
+```cpp
+std::ifstream entree("donnees.txt");
+std::cout << "Position de depart : " << entree.tellg() << "\n";   // 0
+std::string mot;
+entree >> mot;
+std::cout << "Position apres lecture : " << entree.tellg() << "\n";  // après le mot lu
+```
+
+## Se déplacer dans le fichier : `seekg` et `seekp`
+
+Pour **déplacer** le curseur à une position précise, on utilise :
+
+- **`seekg(pos, mode)`** — déplace le curseur de **lecture** (*seek get*) ;
+- **`seekp(pos, mode)`** — déplace le curseur d'**écriture** (*seek put*).
+
+Le premier argument `pos` est un **numéro d'octet** ; le second, `mode`, indique **à partir d'où** ce numéro est compté :
+
+| Mode | Le déplacement est compté depuis... |
+|---|---|
+| `std::ios::beg` | le **début** du fichier (*begin*) |
+| `std::ios::cur` | la **position courante** (*current*) |
+| `std::ios::end` | la **fin** du fichier (*end*) |
+
+```cpp
+std::ifstream entree("donnees.txt");
+
+entree.seekg(0, std::ios::beg);    // se placer au tout début
+entree.seekg(10, std::ios::beg);   // se placer sur le 10e octet
+entree.seekg(5, std::ios::cur);    // avancer de 5 octets depuis ici
+entree.seekg(0, std::ios::end);    // se placer juste après le dernier octet
+```
+
+Une application classique de `seekg` combinée à `tellg` : **calculer la taille** d'un fichier. On se place à la fin, on lit la position, qui vaut le nombre total d'octets :
+
+```cpp
+std::ifstream f("donnees.txt", std::ios::binary);
+f.seekg(0, std::ios::end);          // aller à la fin
+long taille = f.tellg();            // position de la fin = taille du fichier
+f.seekg(0, std::ios::beg);          // revenir au début pour lire
+std::cout << "Le fichier fait " << taille << " octets.\n";
+```
+
+> ⚠️ Atteindre la fin du fichier positionne l'indicateur `eof()`. Pour relire un fichier après l'avoir parcouru entièrement, il ne suffit pas de `seekg(0, std::ios::beg)` : il faut **d'abord** appeler `clear()` pour réarmer le flux, sinon le curseur ne bougera pas.
+
+> **À retenir**
+> - Un flux **mémorise un état** ; il faut le **tester avant toute opération** pour savoir si la lecture/écriture précédente a réussi.
+> - Quatre indicateurs : **`good()`** (tout va bien), **`eof()`** (fin de fichier), **`fail()`** (échec d'E/S **ou de format**), **`bad()`** (erreur grave). `good()` est `false` dès qu'un autre est `true`.
+> - Un flux **se teste directement** dans une condition (vrai = tout va bien). Combiné au fait que `>>` renvoie le flux, cela donne l'idiome **`while (fichier >> x)`**, préférable à `while (!fichier.eof())` qui lit une fois de trop.
+> - **`clear()`** réarme un flux passé en échec — mais il faut ensuite **vider** la donnée fautive (`ignore()`), car `clear()` n'efface que l'indicateur.
+> - Un `operator>>` personnalisé signale un format invalide en posant lui-même `failbit` avec **`setstate(std::ios::failbit)`** ; le flux passe en échec et tout test `while (flux >> obj)` le détecte.
+> - **`tellg()`/`tellp()`** donnent la position courante (octet depuis le début) ; **`seekg(pos, mode)`/`seekp(pos, mode)`** déplacent le curseur, avec `mode` valant `std::ios::beg`, `std::ios::cur` ou `std::ios::end`.

@@ -1,0 +1,1399 @@
+[
+  {
+    "chapterSlug": "donnees-sequentielles-rnn",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un réseau de neurones récurrent (RNN) s'obtient à partir d'un réseau de neurones en autorisant les cycles : la sortie d'une couche peut être renvoyée vers son entrée.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Le cours énonce le pas décisif : si l'on relâche l'interdiction des cycles propre aux réseaux feedforward, on obtient les RNN. La sortie d'une couche, de plusieurs couches ou de tout le réseau peut être renvoyée vers l'entrée pour calculer la sortie suivante.",
+    "concepts": [
+      "reseau-recurrent",
+      "recurrence"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "donnees-sequentielles-rnn",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Quelle est la différence essentielle entre le réseau de Jordan (1986) et le réseau d'Elman (1990) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Jordan recopie la sortie précédente Yᵗ⁻¹ ; Elman recopie l'état caché précédent Hᵗ⁻¹"
+        },
+        {
+          "id": "b",
+          "label": "Jordan recopie l'état caché précédent ; Elman recopie la sortie précédente"
+        },
+        {
+          "id": "c",
+          "label": "Jordan a deux couches ; Elman en a quatre"
+        },
+        {
+          "id": "d",
+          "label": "Jordan utilise softmax ; Elman utilise tanh"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le réseau de Jordan ajoute des unités d'état à la couche d'entrée, qui recopient la sortie précédente Yᵗ⁻¹. Le réseau d'Elman ajoute des unités de contexte, qui recopient l'état caché précédent Hᵗ⁻¹. Tous deux ont trois couches et utilisent une connexion « un pour un » de poids fixe 1,0.",
+    "concepts": [
+      "reseau-recurrent",
+      "etat-cache"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "donnees-sequentielles-rnn",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi ces affirmations sur le dépliage (déroulement) d'un RNN dans le temps, lesquelles sont correctes selon le cours ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Déplier un RNN, c'est le représenter comme une chaîne de copies du même réseau, une par instant t"
+        },
+        {
+          "id": "b",
+          "label": "Les blocs dépliés partagent tous les mêmes poids et biais"
+        },
+        {
+          "id": "c",
+          "label": "Le dépliage crée de nouveaux paramètres, un jeu par instant"
+        },
+        {
+          "id": "d",
+          "label": "Chaque bloc déplié reçoit l'entrée xₜ et l'état caché hₜ₋₁ du bloc précédent"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "d"
+      ]
+    },
+    "explanation": "Déplier un RNN, c'est le voir comme une séquence de copies du même réseau (une par t). Ces copies partagent les mêmes poids et biais : le dépliage ne crée aucun nouveau paramètre, il représente seulement le déroulement temporel. Chaque copie reçoit xₜ et hₜ₋₁.",
+    "concepts": [
+      "depliage-temporel",
+      "reseau-recurrent"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "donnees-sequentielles-rnn",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un RNN à une couche cachée traite une séquence X¹, …, Xᵀ. Pour chaque instant t, il calcule un état caché Hᵗ. Si la séquence d'entrée comporte 7 vecteurs, combien d'états cachés le RNN calcule-t-il au total lors d'un passage avant ?",
+    "payload": {
+      "placeholder": "ex. 7",
+      "hint": "Le RNN calcule un état caché Hᵗ par instant t = 1, …, T."
+    },
+    "solution": {
+      "value": 7,
+      "absTol": 0.001
+    },
+    "explanation": "Un RNN calcule un état caché par instant de la séquence : pour T = 7 vecteurs d'entrée, il produit 7 états cachés H¹, …, H⁷. Le dépliage le montre comme une chaîne de 7 copies du même réseau.",
+    "concepts": [
+      "depliage-temporel",
+      "etat-cache"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "donnees-sequentielles-rnn",
+    "type": "FIGURE_INTERPRET",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "La figure montre l'architecture en couches d'un RNN conventionnel (entrée, cachée, sortie). Lisez-la et répondez.",
+    "payload": {
+      "figure": {
+        "kind": "nn-diagram",
+        "layers": [
+          {
+            "neurons": 3,
+            "role": "input",
+            "label": "Couche d'entrée (Xᵗ)"
+          },
+          {
+            "neurons": 4,
+            "role": "hidden",
+            "label": "Couche cachée récurrente (Hᵗ)"
+          },
+          {
+            "neurons": 2,
+            "role": "output",
+            "label": "Couche de sortie (Yᵗ)"
+          }
+        ],
+        "caption": "Les trois couches d'un RNN conventionnel"
+      },
+      "caption": "Architecture d'un RNN",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quelle couche porte les connexions récurrentes (la boucle vers elle-même) ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "La couche cachée"
+              },
+              {
+                "id": "b",
+                "label": "La couche d'entrée"
+              },
+              {
+                "id": "c",
+                "label": "La couche de sortie"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Combien de neurones compte la couche cachée de ce réseau ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 4"
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 4,
+            "absTol": 0.001
+          }
+        }
+      ]
+    },
+    "explanation": "Dans un RNN conventionnel, c'est la couche cachée qui est récurrente : son état Hᵗ est réinjecté pour calculer Hᵗ⁺¹. La figure montre une couche cachée de 4 neurones, entre une couche d'entrée de 3 et une couche de sortie de 2 neurones.",
+    "concepts": [
+      "reseau-recurrent",
+      "etat-cache"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "donnees-sequentielles-rnn",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans le réseau de Jordan comme dans le réseau d'Elman, la connexion qui recopie une valeur vers les unités ajoutées à l'entrée est dite « un pour un ». Quel est son poids ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un poids fixe de 1,0, non entraînable"
+        },
+        {
+          "id": "b",
+          "label": "Un poids appris par rétropropagation"
+        },
+        {
+          "id": "c",
+          "label": "Un poids tiré au hasard à chaque instant"
+        },
+        {
+          "id": "d",
+          "label": "Un poids égal à l'état caché précédent"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le cours précise que la connexion « un pour un » qui relie les unités de sortie (Jordan) ou les unités cachées (Elman) aux unités ajoutées à l'entrée a un poids fixe de 1,0. Elle recopie simplement la valeur, sans la pondérer ; seules les autres connexions sont entraînables.",
+    "concepts": [
+      "reseau-recurrent",
+      "etat-cache"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "donnees-sequentielles-rnn",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remettez dans l'ordre les étapes du raisonnement du cours qui mène des réseaux feedforward aux réseaux récurrents.",
+    "payload": {
+      "items": [
+        {
+          "id": "a",
+          "label": "On constate que les réseaux standards et convolutifs traitent une entrée et une sortie de taille fixe"
+        },
+        {
+          "id": "b",
+          "label": "On note qu'ils n'autorisent pas les cycles : l'information va dans une seule direction"
+        },
+        {
+          "id": "c",
+          "label": "On relâche cette interdiction des cycles"
+        },
+        {
+          "id": "d",
+          "label": "On obtient les réseaux récurrents (RNN), capables de traiter des séquences"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Le cours part des limites des réseaux feedforward (taille fixe), relève qu'ils interdisent les cycles, puis relâche cette interdiction : on obtient les RNN, adaptés aux séquences. C'est le « pas décisif » décrit dans la section.",
+    "concepts": [
+      "reseau-recurrent",
+      "donnees-sequentielles"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "etat-cache-bptt",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Avec n, m, p le nombre de neurones des couches d'entrée, cachée et de sortie, associez chaque matrice ou biais à sa dimension.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Matrice U (entrée → caché)"
+        },
+        {
+          "id": "l2",
+          "label": "Matrice V (récurrente, caché → caché)"
+        },
+        {
+          "id": "l3",
+          "label": "Matrice W (caché → sortie)"
+        },
+        {
+          "id": "l4",
+          "label": "Biais Bʰ (couche cachée)"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "(m, n)"
+        },
+        {
+          "id": "r2",
+          "label": "(m, m)"
+        },
+        {
+          "id": "r3",
+          "label": "(p, m)"
+        },
+        {
+          "id": "r4",
+          "label": "vecteur de dimension m"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4"
+      }
+    },
+    "explanation": "U est de dimension (m, n) : elle relie n entrées aux m neurones cachés. V est carrée (m, m) : elle relie la couche cachée à elle-même. W est (p, m) : elle relie les m neurones cachés aux p sorties. Le biais Bʰ a une composante par neurone caché, donc dimension m.",
+    "concepts": [
+      "reseau-recurrent",
+      "etat-cache"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "etat-cache-bptt",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On déplie un neurone récurrent (1 entrée, 1 neurone caché) sur 2 instants, avec l'activation sigmoïde : hₜ = σ(u·xₜ + v·hₜ₋₁ + b). Les poids sont u = 2, v = 1, b = 0 ; l'état initial est h₀ = 0 et la séquence est x₁ = 0, x₂ = 0. Calculez h₁ puis h₂. Rappel : σ(0) = 0,5.",
+    "payload": {
+      "description": "À chaque instant : a = u·xₜ + v·hₜ₋₁ + b, puis hₜ = σ(a) = 1 / (1 + e⁻ᵃ). Comme les entrées sont nulles, seul le terme récurrent v·hₜ₋₁ agit.",
+      "cells": [
+        {
+          "id": "h1",
+          "label": "h₁",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "h2",
+          "label": "h₂ (arrondir à 0,01)",
+          "kind": "number",
+          "placeholder": "0"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "h1",
+          "expected": 0.5,
+          "absTol": 0.01
+        },
+        {
+          "id": "h2",
+          "expected": 0.6225,
+          "absTol": 0.01
+        }
+      ]
+    },
+    "explanation": "h₁ = σ(2·0 + 1·0 + 0) = σ(0) = 0,5. h₂ = σ(2·0 + 1·0,5 + 0) = σ(0,5) ≈ 0,6225. Même avec des entrées nulles, le terme récurrent v·hₜ₋₁ fait évoluer l'état caché d'un instant à l'autre.",
+    "concepts": [
+      "recurrence",
+      "etat-cache",
+      "fonction-sigmoide"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "etat-cache-bptt",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Pour un instant t, l'état caché vaut hᵗ = tanh(0,5) ≈ 0,4621. La couche de sortie calcule yᵗ = w·hᵗ + bᵒ avec une activation linéaire, w = 2 et bᵒ = 0,3. Calculez la sortie yᵗ (arrondir à 0,01).",
+    "payload": {
+      "placeholder": "ex. 1,22",
+      "hint": "yᵗ = w·hᵗ + bᵒ = 2·0,4621 + 0,3."
+    },
+    "solution": {
+      "value": 1.2242,
+      "absTol": 0.02
+    },
+    "explanation": "Avec une activation linéaire, la sortie est directement la somme pondérée : yᵗ = w·hᵗ + bᵒ = 2·0,4621 + 0,3 ≈ 1,2242. La seconde équation du RNN calcule Yᵗ à partir du seul état caché courant Hᵗ.",
+    "concepts": [
+      "reseau-recurrent",
+      "etat-cache"
+    ],
+    "source": "Exo_RNN2.py"
+  },
+  {
+    "chapterSlug": "etat-cache-bptt",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Qu'est-ce que la rétropropagation dans le temps (BPTT) ajoute par rapport à la rétropropagation ordinaire ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une seconde direction de propagation : des instants t vers les instants t − 1"
+        },
+        {
+          "id": "b",
+          "label": "Le remplacement de la descente de gradient par une recherche aléatoire"
+        },
+        {
+          "id": "c",
+          "label": "La suppression du calcul des dérivées partielles"
+        },
+        {
+          "id": "d",
+          "label": "L'ajout de nouvelles couches cachées à chaque itération"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La rétropropagation ordinaire propage l'erreur de la sortie vers l'entrée. La BPTT ajoute une seconde direction : comme Hᵗ dépend de Hᵗ⁻¹, l'erreur doit aussi remonter le temps, des instants t vers t − 1, le long du RNN déplié.",
+    "concepts": [
+      "retropropagation-dans-le-temps",
+      "descente-de-gradient"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "etat-cache-bptt",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Le code Keras ci-dessous, issu des TP, construit un RNN pour la prédiction d'une série temporelle (cours d'une action). Lisez-le et répondez.",
+    "payload": {
+      "code": "from keras.models import Sequential\nfrom keras.layers import Dense, SimpleRNN\n\n# RNN pour prediction de serie temporelle\ninput_shape = (time_steps - 1, 1)   # time_steps = 10\nhidden_units = 3\noutput_units = 1\n\nrnn = Sequential()\nrnn.add(SimpleRNN(hidden_units, input_shape=input_shape,\n                  activation='tanh'))\nrnn.add(Dense(units=output_units, activation='linear'))\n\nrnn.compile(loss='mean_squared_error', optimizer='adam')",
+      "language": "keras",
+      "caption": "Un RNN Keras pour MSFT.csv",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Combien de paramètres entraînables contient la couche SimpleRNN ? L'entrée a 1 caractéristique (d_in = 1) et la couche a 3 unités (d_h = 3). Formule : d_h·(d_in + d_h + 1).",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 15",
+            "hint": "3·(1 + 3 + 1)."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quelle est la longueur de la séquence présentée en entrée de la couche SimpleRNN ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "9 pas de temps (time_steps − 1)"
+              },
+              {
+                "id": "b",
+                "label": "10 pas de temps"
+              },
+              {
+                "id": "c",
+                "label": "3 pas de temps"
+              },
+              {
+                "id": "d",
+                "label": "1 pas de temps"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Pourquoi la couche Dense de sortie utilise-t-elle l'activation 'linear' et la perte 'mean_squared_error' ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Parce qu'on prédit une valeur réelle (régression d'une série temporelle)"
+              },
+              {
+                "id": "b",
+                "label": "Parce qu'on classe la séquence en deux catégories"
+              },
+              {
+                "id": "c",
+                "label": "Parce que la couche récurrente exige toujours une sortie linéaire"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 15,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "Une couche SimpleRNN a d_h·(d_in + d_h + 1) paramètres : ici 3·(1 + 3 + 1) = 15. L'input_shape (time_steps − 1, 1) avec time_steps = 10 donne une séquence de 9 pas de temps. La couche de sortie prédit une valeur réelle (cours d'une action) : on utilise donc une activation linéaire et l'erreur quadratique, typiques d'une régression.",
+    "concepts": [
+      "serie-temporelle",
+      "reseau-recurrent"
+    ],
+    "source": "Exo_RNN2.py"
+  },
+  {
+    "chapterSlug": "etat-cache-bptt",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un neurone récurrent calcule hᵗ = ReLU(u·xᵗ + v·hᵗ⁻¹ + b) avec u = 2, v = 1 et b = 0,5. À l'instant t, l'entrée vaut xᵗ = -1 et l'état caché précédent hᵗ⁻¹ = 2. Calculez hᵗ.",
+    "payload": {
+      "placeholder": "ex. 0,5",
+      "hint": "Somme = 2·(−1) + 1·2 + 0,5, puis appliquer ReLU = max(0, ·)."
+    },
+    "solution": {
+      "value": 0.5,
+      "absTol": 0.001
+    },
+    "explanation": "Somme pondérée = 2·(−1) + 1·2 + 0,5 = −2 + 2 + 0,5 = 0,5. ReLU(0,5) = max(0 ; 0,5) = 0,5. Ici la somme est positive, donc ReLU la laisse inchangée.",
+    "concepts": [
+      "recurrence",
+      "etat-cache"
+    ],
+    "source": "Exo_RNN1.py"
+  },
+  {
+    "chapterSlug": "etat-cache-bptt",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "À chaque itération, la descente de gradient calcule une dérivée partielle de E par poids et par biais. Soit un RNN avec n = 3 neurones d'entrée, m = 4 neurones cachés et p = 2 neurones de sortie. Combien de dérivées partielles l'algorithme doit-il calculer (poids U, V, W et biais Bʰ, Bᵒ) ?",
+    "payload": {
+      "placeholder": "ex. 42",
+      "hint": "U : m·n. V : m·m. W : p·m. Bʰ : m. Bᵒ : p. Total = m·n + m·m + p·m + m + p."
+    },
+    "solution": {
+      "value": 42,
+      "absTol": 0.001
+    },
+    "explanation": "Il faut une dérivée partielle par paramètre. U : m·n = 4·3 = 12. V : m·m = 4·4 = 16. W : p·m = 2·4 = 8. Bʰ : m = 4. Bᵒ : p = 2. Total = 12 + 16 + 8 + 4 + 2 = 42 dérivées partielles.",
+    "concepts": [
+      "descente-de-gradient",
+      "retropropagation-dans-le-temps"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Lors de la BPTT, plus une dépendance est longue, plus le gradient traverse de maillons ; multiplié à chaque maillon par des facteurs petits, il tend vers 0 : c'est la disparition du gradient.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "C'est exactement le mécanisme décrit par le cours. Le gradient doit remonter la chaîne du RNN déplié. S'il est multiplié à chaque maillon par des facteurs petits, il tend vers 0 (disparition) ; par des facteurs grands, il explose. Dans les deux cas, les dépendances longues ne sont plus apprises correctement.",
+    "concepts": [
+      "gradient-evanescent",
+      "retropropagation-dans-le-temps"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Complétez la description de l'état de cellule d'un LSTM.",
+    "payload": {
+      "template": "Chaque cellule LSTM possède un état cₜ, aussi appelé {{s1}}, qui évolue dans le temps. Il se calcule par cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ {{s2}}. Le coefficient fₜ dose la part de l'{{s3}} information conservée. Lorsque fₜ est proche de {{s4}}, la cellule garde intégralement son ancien état.",
+      "slots": [
+        {
+          "id": "s1",
+          "width": "sm",
+          "placeholder": "mot"
+        },
+        {
+          "id": "s2",
+          "width": "sm",
+          "placeholder": "symbole"
+        },
+        {
+          "id": "s3",
+          "width": "sm",
+          "placeholder": "mot"
+        },
+        {
+          "id": "s4",
+          "width": "sm",
+          "placeholder": "nombre"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": [
+          "mémoire",
+          "memoire"
+        ],
+        "s2": [
+          "c̃ₜ",
+          "c~ₜ",
+          "c̃t",
+          "c~t",
+          "candidat"
+        ],
+        "s3": [
+          "ancienne",
+          "ancien"
+        ],
+        "s4": "1"
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "L'état de cellule cₜ, aussi appelé mémoire, vaut cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ c̃ₜ : un mélange dosé d'ancienne mémoire (part fₜ) et de nouveauté (part iₜ sur le candidat c̃ₜ). Quand fₜ est proche de 1, la cellule garde intégralement son ancien état ; proche de 0, elle l'oublie.",
+    "concepts": [
+      "lstm",
+      "etat-de-cellule",
+      "porte-cellule"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "La sortie d'une cellule LSTM vaut hₜ = oₜ ∗ tanh(cₜ). À l'instant t, la porte de sortie vaut oₜ = 0,5 et l'état de cellule cₜ = 2,1. Calculez la sortie hₜ (arrondir à 0,01).",
+    "payload": {
+      "placeholder": "ex. 0,49",
+      "hint": "Calculer d'abord tanh(2,1), puis multiplier par 0,5."
+    },
+    "solution": {
+      "value": 0.4852,
+      "absTol": 0.02
+    },
+    "explanation": "hₜ = oₜ ∗ tanh(cₜ) = 0,5 · tanh(2,1) ≈ 0,5 · 0,9705 ≈ 0,4852. La sortie est l'état de cellule passé par une tangente hyperbolique, puis filtré par la porte de sortie oₜ.",
+    "concepts": [
+      "lstm",
+      "etat-de-cellule",
+      "porte-cellule"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Les portes d'un LSTM se calculent par une somme pondérée suivie d'une sigmoïde. La porte d'oubli vaut Fₜ = σ(W_xf·Xₜ + W_hf·Hₜ₋₁ + B_f). On donne W_xf = 1, Xₜ = 1, W_hf = 2, Hₜ₋₁ = 0 et B_f = 0. Calculez la valeur de la porte d'oubli (arrondir à 0,01).",
+    "payload": {
+      "placeholder": "ex. 0,73",
+      "hint": "Argument = 1·1 + 2·0 + 0 = 1, puis appliquer σ. Rappel : σ(1) ≈ 0,731."
+    },
+    "solution": {
+      "value": 0.731,
+      "absTol": 0.02
+    },
+    "explanation": "Argument = W_xf·Xₜ + W_hf·Hₜ₋₁ + B_f = 1·1 + 2·0 + 0 = 1. Donc Fₜ = σ(1) ≈ 0,731. La sigmoïde garantit une valeur entre 0 et 1, exactement ce qu'exige le rôle d'une porte.",
+    "concepts": [
+      "lstm",
+      "porte-cellule",
+      "fonction-sigmoide"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Une couche LSTM possède 4·d_h·(d_in + d_h + 1) paramètres (quatre jeux de poids : trois portes + le candidat). Combien de paramètres a une couche LSTM de 20 unités recevant une entrée de dimension 10 (d_in = 10, d_h = 20) ?",
+    "payload": {
+      "placeholder": "ex. 2480",
+      "hint": "4·20·(10 + 20 + 1)."
+    },
+    "solution": {
+      "value": 2480,
+      "absTol": 0.001
+    },
+    "explanation": "Nombre de paramètres = 4·d_h·(d_in + d_h + 1) = 4·20·(10 + 20 + 1) = 4·20·31 = 2480. Le facteur 4 vient des quatre équations du LSTM (portes d'oubli, d'entrée, de sortie, et état candidat), chacune avec ses propres poids et biais.",
+    "concepts": [
+      "lstm",
+      "porte-cellule"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Le code Keras ci-dessous, inspiré de la génération de texte caractère par caractère, construit un réseau à base de LSTM. Lisez-le et répondez. On suppose que le texte utilise un vocabulaire de len(chars) = 50 caractères.",
+    "payload": {
+      "code": "from keras.models import Sequential\nfrom keras.layers import LSTM, Dense\n\n# seqlen = 40, len(chars) = 50\nmodel = Sequential()\nmodel.add(LSTM(128, input_shape=(seqlen, len(chars))))\nmodel.add(Dense(len(chars), activation='softmax'))\n\nmodel.compile(optimizer='adam', loss='categorical_crossentropy')",
+      "language": "keras",
+      "caption": "Un LSTM pour la génération de texte",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quel type de cellule récurrente cette première couche utilise-t-elle, et combien d'unités a-t-elle ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Une cellule LSTM, 128 unités"
+              },
+              {
+                "id": "b",
+                "label": "Une cellule SimpleRNN, 128 unités"
+              },
+              {
+                "id": "c",
+                "label": "Une cellule GRU, 50 unités"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Combien de paramètres entraînables contient la couche LSTM ? L'entrée a d_in = 50 caractéristiques et la couche d_h = 128 unités. Formule : 4·d_h·(d_in + d_h + 1).",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 91648",
+            "hint": "4·128·(50 + 128 + 1)."
+          }
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Pourquoi la couche Dense de sortie utilise-t-elle l'activation 'softmax' et la perte 'categorical_crossentropy' ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "On prédit le caractère suivant : softmax donne une distribution de probabilité sur les caractères du vocabulaire"
+              },
+              {
+                "id": "b",
+                "label": "On prédit une valeur réelle continue"
+              },
+              {
+                "id": "c",
+                "label": "Softmax est imposé par la couche LSTM"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 91648,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "La couche LSTM(128, ...) est une cellule LSTM de 128 unités. Son nombre de paramètres vaut 4·d_h·(d_in + d_h + 1) = 4·128·(50 + 128 + 1) = 4·128·179 = 91648. La couche de sortie prédit le caractère suivant parmi 50 : softmax produit une distribution de probabilité et categorical_crossentropy est la perte adaptée à cette classification.",
+    "concepts": [
+      "lstm",
+      "generation-de-texte",
+      "softmax"
+    ],
+    "source": "forTextGen2.py"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "NUMERIC",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Une couche LSTM possède 4·d_h·(d_in + d_h + 1) paramètres. Combien de paramètres a une couche LSTM de 64 unités recevant une entrée de dimension 32 (d_in = 32, d_h = 64) ?",
+    "payload": {
+      "placeholder": "ex. 24832",
+      "hint": "4·64·(32 + 64 + 1)."
+    },
+    "solution": {
+      "value": 24832,
+      "absTol": 0.001
+    },
+    "explanation": "Nombre de paramètres = 4·d_h·(d_in + d_h + 1) = 4·64·(32 + 64 + 1) = 4·64·97 = 24832. Le facteur 4 vient des quatre jeux de poids du LSTM : les trois portes (oubli, entrée, sortie) et l'état candidat.",
+    "concepts": [
+      "lstm",
+      "porte-cellule"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Une cellule LSTM met à jour son état par cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ c̃ₜ. À l'instant t : la porte d'oubli vaut fₜ = 0,3, l'état précédent cₜ₋₁ = 5, la porte d'entrée iₜ = 0,9 et l'état candidat c̃ₜ = -2. Calculez le nouvel état de cellule cₜ.",
+    "payload": {
+      "placeholder": "ex. -0,3",
+      "hint": "cₜ = 0,3·5 + 0,9·(−2)."
+    },
+    "solution": {
+      "value": -0.3,
+      "absTol": 0.001
+    },
+    "explanation": "cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ c̃ₜ = 0,3·5 + 0,9·(−2) = 1,5 − 1,8 = −0,3. La cellule ne conserve que 30 % de son ancienne mémoire et intègre 90 % d'un candidat négatif, d'où un état final négatif.",
+    "concepts": [
+      "lstm",
+      "etat-de-cellule",
+      "porte-cellule"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "ALGO_TRACE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "On déroule l'état de cellule d'un LSTM (scalaire) sur 3 instants : cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ c̃ₜ. L'état initial est c₀ = 0. Instant 1 : f₁ = 0, i₁ = 1, c̃₁ = 3. Instant 2 : f₂ = 0,5, i₂ = 1, c̃₂ = 1. Instant 3 : f₃ = 1, i₃ = 0, c̃₃ = 9. Calculez c₁, c₂ et c₃.",
+    "payload": {
+      "description": "À chaque instant : cₜ = fₜ ∗ cₜ₋₁ + iₜ ∗ c̃ₜ. Calculer c₁, puis c₂ à partir de c₁, puis c₃ à partir de c₂. Observer l'effet des portes d'oubli f et d'entrée i.",
+      "cells": [
+        {
+          "id": "c1",
+          "label": "c₁",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "c2",
+          "label": "c₂",
+          "kind": "number",
+          "placeholder": "0"
+        },
+        {
+          "id": "c3",
+          "label": "c₃",
+          "kind": "number",
+          "placeholder": "0"
+        }
+      ]
+    },
+    "solution": {
+      "cells": [
+        {
+          "id": "c1",
+          "expected": 3,
+          "absTol": 0.001
+        },
+        {
+          "id": "c2",
+          "expected": 2.5,
+          "absTol": 0.001
+        },
+        {
+          "id": "c3",
+          "expected": 2.5,
+          "absTol": 0.001
+        }
+      ]
+    },
+    "explanation": "c₁ = 0·0 + 1·3 = 3 (la porte d'oubli f₁ = 0 efface l'état initial, la porte d'entrée i₁ = 1 prend tout le candidat). c₂ = 0,5·3 + 1·1 = 1,5 + 1 = 2,5. c₃ = 1·2,5 + 0·9 = 2,5 (f₃ = 1 garde tout l'ancien état, i₃ = 0 ignore le candidat). Les portes commandent entièrement la mémoire.",
+    "concepts": [
+      "lstm",
+      "etat-de-cellule",
+      "porte-cellule"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "lstm-gru",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Parmi ces affirmations sur le LSTM et le GRU, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le LSTM et le GRU répondent au problème du gradient évanescent"
+        },
+        {
+          "id": "b",
+          "label": "Le GRU a moins de portes et moins de paramètres que le LSTM"
+        },
+        {
+          "id": "c",
+          "label": "Le LSTM a moins de paramètres qu'un neurone de RNN standard"
+        },
+        {
+          "id": "d",
+          "label": "Ce sont tous deux des variantes de RNN à neurones « à portes »"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "d"
+      ]
+    },
+    "explanation": "Le LSTM et le GRU sont des variantes de RNN à neurones « à portes », conçues pour contourner le gradient évanescent ; le GRU est plus simple (moins de portes, moins de paramètres). En revanche, un neurone de LSTM a bien plus de paramètres qu'un neurone de RNN standard — c'est le prix de sa sophistication —, donc l'affirmation c est fausse.",
+    "concepts": [
+      "lstm",
+      "gru",
+      "gradient-evanescent"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque type de problème Seq2Seq à un exemple typique donné par le cours.",
+    "payload": {
+      "left": [
+        {
+          "id": "l1",
+          "label": "Plusieurs-à-plusieurs (séquence → séquence)"
+        },
+        {
+          "id": "l2",
+          "label": "Plusieurs-à-un (séquence → un seul élément)"
+        },
+        {
+          "id": "l3",
+          "label": "Un-à-plusieurs (un seul élément → séquence)"
+        }
+      ],
+      "right": [
+        {
+          "id": "r1",
+          "label": "Traduction automatique"
+        },
+        {
+          "id": "r2",
+          "label": "Analyse des sentiments"
+        },
+        {
+          "id": "r3",
+          "label": "Image captioning (légendage d'image)"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "Plusieurs-à-plusieurs : une séquence en entrée, une séquence en sortie, comme la traduction automatique. Plusieurs-à-un : la sortie ne contient qu'un élément, comme l'analyse des sentiments (positif/négatif). Un-à-plusieurs : une seule entrée produit une séquence, comme l'image captioning (image → suite de mots).",
+    "concepts": [
+      "donnees-sequentielles",
+      "encodeur-decodeur"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Dans l'exemple de prédiction du mot suivant, la couche de sortie produit, via softmax, des logits z = (z₁, z₂, z₃) = (1, 2, 0) pour un mini-vocabulaire de 3 mots. La probabilité du mot k vaut exp(zₖ) / Σ exp(z_k′). Calculez la probabilité du mot 2 (arrondir à 0,001). On donne e¹ ≈ 2,718, e² ≈ 7,389, e⁰ = 1.",
+    "payload": {
+      "placeholder": "ex. 0,665",
+      "hint": "Probabilité = e² / (e¹ + e² + e⁰) = 7,389 / (2,718 + 7,389 + 1)."
+    },
+    "solution": {
+      "value": 0.6652,
+      "absTol": 0.01
+    },
+    "explanation": "Somme des exponentielles = e¹ + e² + e⁰ ≈ 2,718 + 7,389 + 1 = 11,107. Probabilité du mot 2 = e² / 11,107 ≈ 7,389 / 11,107 ≈ 0,665. Le softmax transforme les logits en probabilités dont la somme vaut 1.",
+    "concepts": [
+      "softmax",
+      "generation-de-texte"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Remettez dans l'ordre les étapes du fonctionnement d'une architecture encodeur-décodeur pour traduire une phrase.",
+    "payload": {
+      "items": [
+        {
+          "id": "a",
+          "label": "La séquence d'entrée (phrase à traduire) est mise à l'entrée de l'encodeur"
+        },
+        {
+          "id": "b",
+          "label": "L'encodeur traite la séquence et la synthétise en un vecteur-contexte"
+        },
+        {
+          "id": "c",
+          "label": "Le vecteur-contexte est envoyé à l'entrée du décodeur"
+        },
+        {
+          "id": "d",
+          "label": "Le décodeur produit la séquence de sortie (la traduction)"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Dans un encodeur-décodeur, la phrase à traduire entre dans l'encodeur, qui la synthétise en un vecteur-contexte ; ce vecteur est transmis au décodeur, qui produit la traduction. L'architecture sépare la compréhension (encodeur) de la production (décodeur).",
+    "concepts": [
+      "encodeur-decodeur",
+      "donnees-sequentielles"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "FILL_BLANK",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Complétez la description du transformeur et de son rapport aux RNN.",
+    "payload": {
+      "template": "Le transformeur est une architecture servant à traiter des données {{s1}}. Il est basé sur le mécanisme d'{{s2}}, qu'il utilise sans passer par les {{s3}}. Conçu pour le passage à l'échelle grâce à son fonctionnement {{s4}}, il abandonne la récurrence tout en gardant l'attention.",
+      "slots": [
+        {
+          "id": "s1",
+          "width": "md",
+          "placeholder": "mot"
+        },
+        {
+          "id": "s2",
+          "width": "sm",
+          "placeholder": "mot"
+        },
+        {
+          "id": "s3",
+          "width": "sm",
+          "placeholder": "sigle"
+        },
+        {
+          "id": "s4",
+          "width": "sm",
+          "placeholder": "mot"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "s1": [
+          "séquentielles",
+          "sequentielles"
+        ],
+        "s2": "attention",
+        "s3": [
+          "RNN",
+          "RNNs",
+          "réseaux récurrents",
+          "reseaux recurrents"
+        ],
+        "s4": [
+          "parallèle",
+          "parallele"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Le transformeur traite des données séquentielles ; il est fondé sur l'attention, mais sans passer par les RNN. Conçu pour le passage à l'échelle grâce à son fonctionnement parallèle, il abandonne la récurrence (traitement élément après élément) tout en gardant l'attention. C'est l'architecture des grands modèles de langage actuels.",
+    "concepts": [
+      "transformeur",
+      "mecanisme-d-attention"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Le code Keras ci-dessous prépare les données pour la génération de texte caractère par caractère (extrait inspiré de forTextGen2.py). Lisez-le et répondez.",
+    "payload": {
+      "code": "# text : chaine de caracteres, chars : liste des caracteres distincts\nseqlen = 40\nstep = 3\nsentences = []\nnext_chars = []\nfor i in range(0, len(text) - seqlen):\n    sentences.append(text[i : i + seqlen])\n    next_chars.append(text[i + seqlen])\n\n# encodage one-hot\nx = np.zeros((len(sentences), seqlen, len(chars)), dtype=bool)\ny = np.zeros((len(sentences), len(chars)), dtype=bool)",
+      "language": "python",
+      "caption": "Préparation des exemples pour un LSTM de génération de texte",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Que contient chaque exemple construit dans la boucle ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Une séquence de 40 caractères et le caractère qui la suit"
+              },
+              {
+                "id": "b",
+                "label": "Une image et son étiquette"
+              },
+              {
+                "id": "c",
+                "label": "Deux phrases complètes à traduire l'une dans l'autre"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Si le texte contient len(text) = 1000 caractères, combien d'exemples la boucle range(0, len(text) - seqlen) construit-elle ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 960",
+            "hint": "len(text) − seqlen = 1000 − 40."
+          }
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Que représente la troisième dimension len(chars) du tableau x d'entrée ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "La taille de l'encodage one-hot : un caractère est un vecteur de taille len(chars)"
+              },
+              {
+                "id": "b",
+                "label": "Le nombre d'époques d'entraînement"
+              },
+              {
+                "id": "c",
+                "label": "Le nombre de couches du réseau"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 960,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "Chaque exemple est une paire (séquence de seqlen = 40 caractères, caractère suivant). La boucle range(0, len(text) − seqlen) produit len(text) − seqlen = 1000 − 40 = 960 exemples. Le tableau x a la forme (nb_exemples, seqlen, len(chars)) : la dernière dimension est la taille du vecteur one-hot, un par caractère du vocabulaire.",
+    "concepts": [
+      "generation-de-texte",
+      "donnees-sequentielles"
+    ],
+    "source": "forTextGen2.py"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Le pseudo-code ci-dessous décrit la génération d'un caractère par un LSTM entraîné (comme dans forTextGen2.py). Le réseau prédit le caractère le plus probable. Donnez la valeur affichée par la dernière instruction.",
+    "payload": {
+      "program": "# y_pred : distribution de probabilite predite par le LSTM\n# indices_char : index -> caractere\ny_pred = [0.05, 0.10, 0.70, 0.15]   # 4 caracteres\nindices_char = {0: 'a', 1: 'b', 2: 'c', 3: 'd'}\nnext_index = argmax(y_pred)         # index de la proba maximale\nnext_char = indices_char[next_index]\nprint(next_char)"
+    },
+    "solution": {
+      "expectedOutput": "c"
+    },
+    "explanation": "argmax(y_pred) renvoie l'index de la probabilité maximale. Ici la plus grande valeur est 0,70, à l'index 2. indices_char[2] = 'c'. Le caractère prédit, et donc affiché, est 'c'. C'est la stratégie de génération du code forTextGen2.py (next_index = np.argmax(y_pred)).",
+    "concepts": [
+      "generation-de-texte",
+      "softmax"
+    ],
+    "source": "forTextGen2.py"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Selon le cours, à quoi sert le vecteur-contexte dans une architecture encodeur-décodeur ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il est la synthèse de la séquence d'entrée produite par l'encodeur, transmise au décodeur"
+        },
+        {
+          "id": "b",
+          "label": "Il contient les poids appris du décodeur"
+        },
+        {
+          "id": "c",
+          "label": "Il est la séquence de sortie déjà traduite"
+        },
+        {
+          "id": "d",
+          "label": "Il remplace la fonction de perte pendant l'apprentissage"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Dans un encodeur-décodeur, l'encodeur traite la séquence d'entrée et la synthétise sous la forme d'un vecteur-contexte. Ce vecteur est ensuite envoyé à l'entrée du décodeur, qui produit la séquence de sortie. Le vecteur-contexte est donc le pont entre la compréhension de l'entrée et la production de la sortie.",
+    "concepts": [
+      "encodeur-decodeur",
+      "donnees-sequentielles"
+    ],
+    "source": "Slides_RNN_2526.pdf"
+  },
+  {
+    "chapterSlug": "applications-rnn-transformers",
+    "type": "CODE_ANALYSIS",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Le code Keras ci-dessous, du type de celui de la génération de texte caractère par caractère, construit un réseau à base de LSTM. Lisez-le et répondez. Le texte utilise un vocabulaire de len(chars) = 27 caractères.",
+    "payload": {
+      "code": "from keras.models import Sequential\nfrom keras.layers import LSTM, Dense\n\n# seqlen = 40, len(chars) = 27\nmodel = Sequential()\nmodel.add(LSTM(100, input_shape=(seqlen, len(chars))))\nmodel.add(Dense(len(chars), activation='softmax'))\n\nmodel.compile(optimizer='adam', loss='categorical_crossentropy')",
+      "language": "keras",
+      "caption": "Un LSTM pour la génération de texte",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "NUMERIC",
+          "prompt": "Combien de paramètres entraînables contient la couche LSTM ? L'entrée a d_in = 27 caractéristiques et la couche d_h = 100 unités. Formule : 4·d_h·(d_in + d_h + 1).",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 51200",
+            "hint": "4·100·(27 + 100 + 1)."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "NUMERIC",
+          "prompt": "Combien de neurones la couche Dense de sortie possède-t-elle ?",
+          "weight": 1,
+          "payload": {
+            "placeholder": "ex. 27",
+            "hint": "Dense(len(chars), ...) avec len(chars) = 27."
+          }
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Que représente une sortie de la couche softmax pour cette tâche ?",
+          "weight": 1,
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "La probabilité que le caractère suivant soit un caractère donné du vocabulaire"
+              },
+              {
+                "id": "b",
+                "label": "La valeur réelle du cours d'une action"
+              },
+              {
+                "id": "c",
+                "label": "Le nombre de couches du réseau"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "value": 51200,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": 27,
+            "absTol": 0.001
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "La couche LSTM a 4·d_h·(d_in + d_h + 1) = 4·100·(27 + 100 + 1) = 4·100·128 = 51200 paramètres. La couche Dense de sortie a len(chars) = 27 neurones, un par caractère du vocabulaire. Avec softmax, chaque sortie est la probabilité que le caractère suivant soit le caractère correspondant.",
+    "concepts": [
+      "lstm",
+      "generation-de-texte",
+      "softmax"
+    ],
+    "source": "forTextGen2.py"
+  }
+]

@@ -1,0 +1,40 @@
+---
+title: "Option, tuples et controles"
+slug: option-tuples-if
+order: 3
+estimatedReadMin: 11
+concepts: [option, tuple, instruction-vs-expression, pattern-matching]
+source: "Intro/Intro/Scala_01_TD.pdf; Intro/Intro/suite_serie1.txt"
+---
+## Eviter les valeurs absentes implicites
+
+Le cours utilise `Option` pour representer explicitement une absence. Une division protegee peut renvoyer `Some(resultat)` ou `None`, au lieu de cacher un cas invalide.
+
+```scala
+def inverse(x: Double): Option[Double] =
+  if (x == 0) None else Some(1 / x)
+```
+
+## Tuples
+
+Un tuple regroupe quelques valeurs sans creer de classe dediee.
+
+```scala
+val point = (3, 4)
+point._1 // 3
+```
+
+Le tuple est pratique pour des resultats temporaires, mais une `case class` devient preferable des que les champs ont un sens metier.
+
+## Conditions et pattern matching
+
+`if` est une expression. `match` l'est aussi : chaque branche produit une valeur. Pour `Option`, le raisonnement ferme est : `Some(x)` si la valeur existe, `None` sinon.
+
+```scala
+val message = inverse(2) match
+  case Some(v) => v.toString
+  case None    => "impossible"
+```
+
+> **A retenir**  
+> `Option` oblige a traiter le cas absent ; c'est un outil de raisonnement, pas seulement une structure de donnees.

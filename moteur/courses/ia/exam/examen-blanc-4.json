@@ -1,0 +1,409 @@
+{
+  "slug": "examen-blanc-4",
+  "title": "Examen blanc 4 — Synthèse transversale",
+  "description": "Partiel blanc chronométré de synthèse couvrant les treize modules du cours. Quatre grandes parties sont échantillonnées : l'IA classique (recherche dans les espaces d'états et A*, jeux à deux joueurs et minimax/alpha-bêta, optimisation stochastique et recuit simulé), le machine learning (fouille de données et métriques, arbres de décision et forêts aléatoires, classifieur bayésien naïf, régression logistique), le deep learning (réseaux de neurones, ConvNet, réseaux récurrents et LSTM) et les sujets avancés (apprentissage par renforcement, traitement du langage naturel). Inspiré du mélange des sept examens passés : questions de cours, traces d'algorithmes et calculs appliqués — l'examen complet à passer pour confirmer la maîtrise de tout le programme avant le partiel.",
+  "durationMinutes": 120,
+  "totalPoints": 20,
+  "exercises": [
+    {
+      "chapterSlug": "qu-est-ce-que-l-ia",
+      "type": "ORDERING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Ordonnez les notions de la chaîne de concepts emboîtés de l'IA, du concept le plus général au plus spécifique.",
+      "payload": {
+        "items": [
+          { "id": "ml", "label": "Machine learning" },
+          { "id": "ia", "label": "Intelligence artificielle" },
+          { "id": "dl", "label": "Deep learning" },
+          { "id": "rn", "label": "Réseaux de neurones" },
+          { "id": "llm", "label": "LLM" },
+          { "id": "gen", "label": "IA générative" }
+        ]
+      },
+      "solution": { "order": ["ia", "ml", "rn", "dl", "gen", "llm"] },
+      "explanation": "Le cours présente la chaîne emboîtée : Intelligence artificielle → Machine learning → Réseaux de neurones → Deep learning → IA générative → LLM. Chaque notion est incluse dans la précédente.",
+      "concepts": ["intelligence-artificielle", "apprentissage-automatique", "reseau-de-neurones", "apprentissage-profond", "ia-generative", "grand-modele-de-langage"],
+      "source": "Intro_IA_Slides1.pdf"
+    },
+    {
+      "chapterSlug": "algorithme-a-star",
+      "type": "ALGO_TRACE",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "On applique A* au graphe ci-dessous. Les arêtes portent leur coût, chaque nœud porte sa valeur heuristique h. Départ : S. But : G. Donnez les valeurs de g calculées par A* pour les nœuds du chemin solution, l'ordre dans lequel A* développe les états (les retire de la file Actif) jusqu'à atteindre G, et le coût total de la solution.",
+      "payload": {
+        "description": "Coûts des arêtes : S→A = 2, S→B = 5, A→C = 4, B→C = 1, A→G = 8, C→G = 3. Heuristiques : h(S) = 6, h(A) = 5, h(B) = 3, h(C) = 3, h(G) = 0.",
+        "figure": {
+          "kind": "search-tree",
+          "nodes": [
+            { "id": "S", "label": "S", "h": 6 },
+            { "id": "A", "label": "A", "h": 5 },
+            { "id": "B", "label": "B", "h": 3 },
+            { "id": "C", "label": "C", "h": 3 },
+            { "id": "G", "label": "G", "h": 0 }
+          ],
+          "edges": [
+            { "from": "S", "to": "A", "cost": 2 },
+            { "from": "S", "to": "B", "cost": 5 },
+            { "from": "A", "to": "C", "cost": 4 },
+            { "from": "B", "to": "C", "cost": 1 },
+            { "from": "A", "to": "G", "cost": 8 },
+            { "from": "C", "to": "G", "cost": 3 }
+          ],
+          "startId": "S",
+          "goalIds": ["G"],
+          "caption": "Graphe d'états pour A*"
+        },
+        "cells": [
+          { "id": "gC", "label": "g(C) (coût minimal pour atteindre C)", "kind": "number" },
+          { "id": "gG", "label": "g(G) (coût total de la solution)", "kind": "number" },
+          { "id": "ordre", "label": "Ordre de développement des états jusqu'à atteindre G inclus", "kind": "text" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "gC", "expected": 6 },
+          { "id": "gG", "expected": 9 },
+          { "id": "ordre", "expected": "S, A, B, C, G", "accepted": ["S,A,B,C,G", "S A B C G"] }
+        ],
+        "caseSensitive": false,
+        "stripAccents": true
+      },
+      "explanation": "Initialisation : Actif = [S], g(S) = 0, f(S) = 0+6 = 6. On développe S : A (g = 2, f = 2+5 = 7) et B (g = 5, f = 5+3 = 8) — A est strictement meilleur. On développe A : C (g = 2+4 = 6, f = 6+3 = 9) et G (g = 2+8 = 10, f = 10+0 = 10). Actif : [B(8), C(9), G(10)]. On développe B : C est ré-atteint par g = 5+1 = 6, identique — pas d'amélioration. Actif : [C(9), G(10)]. On développe C : G ré-atteint par g = 6+3 = 9, f = 9 < 10 : on retient ce meilleur chemin. Actif : [G(9)]. On développe G : état but atteint. A* développe S, A, B, C, G (ordre unique à chaque étape, aucune égalité de f). Chemin solution : S→A→C→G, coût g(G) = 9.",
+      "concepts": ["algorithme-a-etoile", "fonction-g", "fonction-f"],
+      "source": "Intro_IA_slides2.pdf"
+    },
+    {
+      "chapterSlug": "heuristiques",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Une heuristique est dite MINORANTE (ou admissible) si :",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "h(e) ≤ h*(e) : elle ne surestime jamais le coût restant" },
+          { "id": "b", "label": "h(e) ≥ h*(e) : elle ne sous-estime jamais le coût restant" },
+          { "id": "c", "label": "h(e_f) = 0 pour tout état final" },
+          { "id": "d", "label": "h(e) est toujours un nombre entier" }
+        ],
+        "shuffle": true
+      },
+      "solution": { "correct": ["a"] },
+      "explanation": "Une heuristique minorante (admissible) sous-estime systématiquement le coût restant : h(e) ≤ h*(e). C'est cette propriété qui permet à A* de garantir une solution de coût minimal.",
+      "concepts": ["heuristique-minorante", "fonction-h-etoile"],
+      "source": "Intro_IA_slides2.pdf"
+    },
+    {
+      "chapterSlug": "minimax",
+      "type": "ALGO_TRACE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "On considère un arbre de jeu à 3 niveaux : racine = niveau 1 (joueur Max), niveau 2 = nœuds Min, feuilles = niveau 3. Chaque nœud non terminal a 3 fils. Les feuilles valent, de gauche à droite : 6, 1, 8, 2, 9, 4, 7, 3, 5. Donnez la valeur des trois nœuds Min puis la valeur minimax de la racine.",
+      "payload": {
+        "description": "Niveau 2 = nœuds Min (minimum des 3 feuilles correspondantes). Racine = nœud Max (maximum des 3 nœuds Min).",
+        "cells": [
+          { "id": "m1", "label": "Valeur du 1er nœud Min (feuilles 6, 1, 8)", "kind": "number" },
+          { "id": "m2", "label": "Valeur du 2e nœud Min (feuilles 2, 9, 4)", "kind": "number" },
+          { "id": "m3", "label": "Valeur du 3e nœud Min (feuilles 7, 3, 5)", "kind": "number" },
+          { "id": "racine", "label": "Valeur minimax de la racine", "kind": "number" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "m1", "expected": 1 },
+          { "id": "m2", "expected": 2 },
+          { "id": "m3", "expected": 3 },
+          { "id": "racine", "expected": 3 }
+        ]
+      },
+      "explanation": "Niveau 2 (nœuds Min) : min(6, 1, 8) = 1 ; min(2, 9, 4) = 2 ; min(7, 3, 5) = 3. Racine (nœud Max) : max(1, 2, 3) = 3. La valeur minimax de la racine est 3 : c'est le score garanti à Max si les deux joueurs jouent de manière optimale.",
+      "concepts": ["algorithme-minimax", "valeur-minimax", "noeud-max", "noeud-min"],
+      "source": "TD_Jeux_2J"
+    },
+    {
+      "chapterSlug": "elagage-alpha-beta",
+      "type": "NUMERIC",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "On considère un arbre à 3 niveaux : racine = joueur Max, chaque nœud non terminal a 3 fils, feuilles de gauche à droite : 5, 6, 2, 8, 1, 3, 4, 9, 7. On applique l'élagage alpha-bêta en explorant les fils de gauche à droite. Combien de feuilles, au total, ne sont PAS explorées (sont élaguées) ?",
+      "payload": { "placeholder": "ex. 1", "hint": "Le 1er nœud Min vaut min(5, 6, 2) = 2 ; cela fixe α = 2 à la racine. Examinez ensuite les 2e et 3e nœuds Min, feuille par feuille." },
+      "solution": { "value": 1, "absTol": 0.001 },
+      "explanation": "Le 1er nœud Min explore 5, 6, 2 et vaut 2 ; la racine Max obtient α = 2. Le 2e nœud Min explore sa 1re feuille 8 (> α, on continue), puis sa 2e feuille 1 : 1 ≤ α = 2, on coupe — la feuille 3 n'est pas explorée (1 feuille élaguée). Le 3e nœud Min explore 4 (> 2), 9 (> 2), 7 : aucune coupure. Au total, 1 feuille n'est pas explorée. La valeur de la racine reste max(2, ≤1, 4) = 4, identique à minimax.",
+      "concepts": ["elagage-alpha-beta", "coupure-alpha-beta", "ordre-des-coups"],
+      "source": "TD_Jeux_2J"
+    },
+    {
+      "chapterSlug": "critere-de-metropolis",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Dans le recuit simulé (minimisation), un voisin dégradant a une variation de coût Δf = 12 ; la température vaut T = 30. Calculez la probabilité d'acceptation par le critère de Metropolis : exp(−Δf/T). Donnez le résultat arrondi au millième.",
+      "payload": { "placeholder": "ex. 0.670", "hint": "exp(−12/30) = exp(−0,4)." },
+      "solution": { "value": 0.67, "absTol": 0.003 },
+      "explanation": "Δf = 12 et T = 30, donc −Δf/T = −0,4. La probabilité d'acceptation vaut exp(−0,4) ≈ 0,670. À température suffisamment élevée, un voisin dégradant garde une chance notable d'être accepté, ce qui permet de sortir d'un optimum local.",
+      "concepts": ["critere-de-metropolis", "temperature", "recuit-simule"],
+      "source": "Optimisationstochastique-1.pdf"
+    },
+    {
+      "chapterSlug": "voyageur-de-commerce",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Le problème du voyageur de commerce est NP-complet, et l'algorithme naïf énumère (n−1)! tournées. Qu'est-ce que cela implique ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Aucun algorithme polynomial exact connu ne le résout : l'algorithme naïf, en (n−1)!, est exponentiel et inutilisable dès que n grandit" },
+          { "id": "b", "label": "Il existe un algorithme polynomial exact bien connu pour le résoudre" },
+          { "id": "c", "label": "Le problème n'a jamais de solution" },
+          { "id": "d", "label": "La solution se trouve toujours en temps constant" }
+        ],
+        "shuffle": true
+      },
+      "solution": { "correct": ["a"] },
+      "explanation": "Le TSP étant NP-complet, aucun algorithme polynomial exact n'est connu. L'algorithme naïf, qui énumère les (n−1)! tournées, a un coût exponentiel : inutilisable dès que le nombre de villes grandit. C'est ce qui justifie le recours à des métaheuristiques comme le recuit simulé.",
+      "concepts": ["probleme-du-voyageur-de-commerce", "metaheuristique"],
+      "source": "Voyageur de commerce TSP.pdf"
+    },
+    {
+      "chapterSlug": "evaluation-metriques",
+      "type": "FIGURE_INTERPRET",
+      "difficulty": 3,
+      "points": 2,
+      "prompt": "La matrice de confusion ci-dessous évalue un classifieur à 3 classes sur 75 exemples de test (lignes : classe réelle ; colonnes : classe prédite). Lisez-la et répondez aux sous-questions.",
+      "payload": {
+        "figure": {
+          "kind": "confusion-matrix",
+          "classes": ["A", "B", "C"],
+          "matrix": [
+            [20, 3, 2],
+            [2, 18, 5],
+            [1, 4, 20]
+          ],
+          "caption": "Matrice de confusion 3 × 3 (75 exemples de test)"
+        },
+        "caption": "Classifieur à 3 classes, jeu de test de 75 exemples",
+        "subQuestions": [
+          {
+            "id": "q1",
+            "type": "NUMERIC",
+            "prompt": "Quelle est l'accuracy globale du classifieur ? Donnez un nombre entre 0 et 1, arrondi au centième.",
+            "weight": 1,
+            "payload": { "hint": "Accuracy = somme de la diagonale / somme totale." }
+          },
+          {
+            "id": "q2",
+            "type": "NUMERIC",
+            "prompt": "Quel est le rappel (recall) pour la classe B ? Arrondissez au centième.",
+            "weight": 1,
+            "payload": { "hint": "Recall(B) = exemples B bien classés / total des exemples réellement B (ligne B)." }
+          },
+          {
+            "id": "q3",
+            "type": "MCQ_SINGLE",
+            "prompt": "Combien d'exemples du jeu de test sont mal classés au total ?",
+            "weight": 1,
+            "payload": {
+              "options": [
+                { "id": "a", "label": "17 (toutes les cases hors diagonale)" },
+                { "id": "b", "label": "58 (la somme de la diagonale)" },
+                { "id": "c", "label": "0 : aucun exemple n'est mal classé" }
+              ]
+            }
+          }
+        ]
+      },
+      "solution": {
+        "subSolutions": [
+          { "id": "q1", "solution": { "value": 0.77, "absTol": 0.01 } },
+          { "id": "q2", "solution": { "value": 0.72, "absTol": 0.01 } },
+          { "id": "q3", "solution": { "correct": ["a"] } }
+        ]
+      },
+      "explanation": "La diagonale vaut 20 + 18 + 20 = 58 ; le total est 75. Accuracy = 58 / 75 ≈ 0,77. Recall(B) = 18 / (2 + 18 + 5) = 18 / 25 = 0,72 : sur les 25 exemples réellement B, 18 sont bien classés. Les exemples mal classés sont les cases hors diagonale : 3 + 2 + 2 + 5 + 1 + 4 = 17 (soit aussi 75 − 58).",
+      "concepts": ["matrice-de-confusion", "taux-de-bonne-classification", "rappel"],
+      "source": "Slides_Intro_DM_2425.pdf"
+    },
+    {
+      "chapterSlug": "criteres-decoupage",
+      "type": "NUMERIC",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "On construit un arbre de décision. Un nœud contient 3 objets positifs et 1 objet négatif. Calculez l'entropie de ce nœud, Ent = −Σ pᵢ·log₂(pᵢ), arrondie au millième (logarithme en base 2).",
+      "payload": { "placeholder": "ex. 0.811", "hint": "Ent = −(3/4)·log₂(3/4) − (1/4)·log₂(1/4)." },
+      "solution": { "value": 0.811, "absTol": 0.005 },
+      "explanation": "Les proportions sont p₊ = 3/4 et p₋ = 1/4. Ent = −(3/4)·log₂(3/4) − (1/4)·log₂(1/4) ≈ −0,75·(−0,415) − 0,25·(−2) ≈ 0,311 + 0,5 = 0,811. L'entropie mesure le désordre du nœud : nulle si le nœud est pur, maximale (1) si la distribution est uniforme.",
+      "concepts": ["entropie", "critere-de-decoupage"],
+      "source": "ING2_GI_ML_Tree_TD_Corr.pdf"
+    },
+    {
+      "chapterSlug": "bagging-forets",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Quel fait, propre au bagging, rend possible la procédure Out-Of-Bag — l'estimation de l'erreur d'une forêt aléatoire sans jeu de test séparé ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Les échantillons bootstrap n'utilisent pas toutes les observations : certaines ne sont pas tirées pour un arbre donné" },
+          { "id": "b", "label": "Tous les arbres sont entraînés sur exactement les mêmes données" },
+          { "id": "c", "label": "Chaque arbre est élagué jusqu'à une seule feuille" },
+          { "id": "d", "label": "La forêt ne contient qu'un seul arbre" }
+        ],
+        "shuffle": true
+      },
+      "solution": { "correct": ["a"] },
+      "explanation": "Comme chaque arbre est construit sur un échantillon bootstrap (tirage avec remise), certaines observations ne sont pas tirées pour cet arbre. Ces observations « out-of-bag » servent à évaluer l'arbre qui ne les a pas vues : on obtient une estimation interne de l'erreur, l'erreur OOB, sans jeu de test séparé.",
+      "concepts": ["echantillon-out-of-bag", "echantillon-bootstrap", "erreur-oob"],
+      "source": "Slides_RF_DM.pdf"
+    },
+    {
+      "chapterSlug": "prediction-instance",
+      "type": "ALGO_TRACE",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Sur un jeu de 10 courriels (5 spam, 5 légitimes ; Pr(spam) = Pr(legitime) = 0,5), un classifieur bayésien naïf classe un courriel d décrit par « Mot promo = oui » et « Lien externe = non ». Probabilités conditionnelles : Pr(Mot=oui/spam) = 3/4, Pr(Lien=non/spam) = 1/2, Pr(Mot=oui/legitime) = 1/4, Pr(Lien=non/legitime) = 1/2. Calculez les produits par classe, la probabilité Pr(d), la probabilité a posteriori Pr(spam/d), et indiquez la classe prédite.",
+      "payload": {
+        "description": "Hypothèse d'indépendance : Pr(d/C) = Pr(Mot=oui/C)·Pr(Lien=non/C). Produit par classe = Pr(C)·Pr(d/C). Pr(d) = somme des produits. Pr(spam/d) = produit(spam) / Pr(d). Règle de décision : C = arg Max des produits.",
+        "cells": [
+          { "id": "prodS", "label": "Produit pour spam : Pr(spam)·Pr(Mot=oui/spam)·Pr(Lien=non/spam)", "kind": "number", "placeholder": "0.000" },
+          { "id": "prodL", "label": "Produit pour legitime : Pr(legitime)·Pr(Mot=oui/leg.)·Pr(Lien=non/leg.)", "kind": "number", "placeholder": "0.000" },
+          { "id": "prD", "label": "Pr(d) = produit(spam) + produit(legitime)", "kind": "number", "placeholder": "0.000" },
+          { "id": "post", "label": "Probabilité a posteriori Pr(spam/d), arrondie au millième", "kind": "number", "placeholder": "0.000" },
+          { "id": "classe", "label": "Classe prédite pour d (spam ou legitime)", "kind": "text", "placeholder": "?" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "prodS", "expected": 0.1875, "absTol": 0.005 },
+          { "id": "prodL", "expected": 0.0625, "absTol": 0.005 },
+          { "id": "prD", "expected": 0.25, "absTol": 0.005 },
+          { "id": "post", "expected": 0.75, "absTol": 0.005 },
+          { "id": "classe", "expected": "spam", "accepted": ["spam", "Spam", "classe spam"] }
+        ],
+        "caseSensitive": false,
+        "stripAccents": true
+      },
+      "explanation": "Produit spam = Pr(spam)·Pr(Mot=oui/spam)·Pr(Lien=non/spam) = 0,5 · 0,75 · 0,5 = 0,1875. Produit legitime = 0,5 · 0,25 · 0,5 = 0,0625. Par le théorème des probabilités totales, Pr(d) = 0,1875 + 0,0625 = 0,25. Probabilité a posteriori Pr(spam/d) = 0,1875 / 0,25 = 0,75. Le produit est plus grand pour spam (0,1875 > 0,0625) : le classifieur prédit la classe spam.",
+      "concepts": ["prediction-bayesienne", "hypothese-d-independance", "theoreme-des-probabilites-totales"],
+      "source": "Slides_Bayes.pdf"
+    },
+    {
+      "chapterSlug": "sigmoide-frontiere",
+      "type": "ALGO_TRACE",
+      "difficulty": 3,
+      "points": 1,
+      "prompt": "Un modèle de régression logistique s'écrit logit(p(x)) = −4 + 0,1·x. On veut prédire la classe Ŷ pour une instance d'abscisse x = 30. Calculez le logit, la probabilité p(x), puis donnez la classe prédite (0 ou 1).",
+      "payload": {
+        "description": "Étapes : (1) logit = −4 + 0,1·x ; (2) p(x) = 1 / (1 + e^(−logit)) ; (3) classe prédite Ŷ = 1 si p(x) ≥ 0,5, sinon Ŷ = 0.",
+        "cells": [
+          { "id": "logit", "label": "logit(p(x)) = −4 + 0,1·30", "kind": "number", "placeholder": "0.0" },
+          { "id": "prob", "label": "p(x) = 1 / (1 + e^(−logit)), arrondie au millième", "kind": "number", "placeholder": "0.000" },
+          { "id": "classe", "label": "Classe prédite Ŷ (0 ou 1)", "kind": "text", "placeholder": "?" }
+        ]
+      },
+      "solution": {
+        "cells": [
+          { "id": "logit", "expected": -1, "absTol": 0.01 },
+          { "id": "prob", "expected": 0.269, "absTol": 0.003 },
+          { "id": "classe", "expected": "0", "accepted": ["0", "Y=0", "Ŷ=0", "classe 0"] }
+        ],
+        "caseSensitive": false,
+        "stripAccents": true
+      },
+      "explanation": "logit = −4 + 0,1·30 = −4 + 3 = −1. Puis p(x) = 1 / (1 + e^(−(−1))) = 1 / (1 + e¹) ≈ 0,269. Comme p(x) = 0,269 < 0,5, la frontière de décision donne la classe prédite Ŷ = 0.",
+      "concepts": ["frontiere-de-decision", "fonction-sigmoide", "prediction"],
+      "source": "ING2_GI_IA_RegLog_Slides.pdf"
+    },
+    {
+      "chapterSlug": "poids-et-biais",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Un réseau de neurones totalement connecté a l'architecture 10 → 5 → 5 → 1 (réseau du type rencontré dans les examens « IA Sem 1 »). Calculez le nombre total de paramètres (poids + biais).",
+      "payload": { "placeholder": "ex. 91", "hint": "Pour chaque couche : (neurones de la couche précédente + 1) × neurones. La couche d'entrée n'a aucun paramètre." },
+      "solution": { "value": 91, "absTol": 0.001 },
+      "explanation": "1ʳᵉ couche cachée : (10+1)×5 = 55. 2ᵉ couche cachée : (5+1)×5 = 30. Couche de sortie : (5+1)×1 = 6. La couche d'entrée ne calcule rien : 0 paramètre. Total = 55 + 30 + 6 = 91. (Détail : 50 + 25 + 5 = 80 poids et 5 + 5 + 1 = 11 biais, soit 91 paramètres.)",
+      "concepts": ["nombre-de-parametres", "couche-de-neurones", "biais"],
+      "source": "RNA_HSe_Fr_2324.pdf"
+    },
+    {
+      "chapterSlug": "couche-convolution",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Une couche Conv2D applique 32 filtres de taille 3 × 3 à une entrée à 1 canal (image en niveaux de gris). Combien de paramètres (poids + biais) cette couche doit-elle apprendre ?",
+      "payload": { "placeholder": "ex. 320", "hint": "Nombre de paramètres d'une Conv2D = (F·F·C_in + 1)·n_filtres ; le +1 est le biais par filtre." },
+      "solution": { "value": 320, "absTol": 0.001 },
+      "explanation": "(F·F·C_in + 1)·n_filtres = (3·3·1 + 1)·32 = (9 + 1)·32 = 10·32 = 320. Chaque filtre compte 9 poids plus 1 biais ; il y a 32 filtres. Le partage des poids rend une couche de convolution bien plus économe qu'une couche totalement connectée.",
+      "concepts": ["nombre-de-parametres", "couche-de-convolution"],
+      "source": "DL_Exo4_Corr.py"
+    },
+    {
+      "chapterSlug": "lstm-gru",
+      "type": "MATCHING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Associez chaque porte d'une cellule LSTM à son rôle, d'après le cours.",
+      "payload": {
+        "left": [
+          { "id": "l1", "label": "Porte d'oubli (forget), fₜ" },
+          { "id": "l2", "label": "Porte d'entrée (input), iₜ" },
+          { "id": "l3", "label": "Porte de sortie (output), oₜ" }
+        ],
+        "right": [
+          { "id": "r1", "label": "Quelle part de l'ancien état cₜ₋₁ garder" },
+          { "id": "r2", "label": "Quelle part du nouvel état candidat c̃ₜ intégrer" },
+          { "id": "r3", "label": "Quelle part de l'état sortira de la cellule" }
+        ]
+      },
+      "solution": { "pairs": { "l1": "r1", "l2": "r2", "l3": "r3" } },
+      "explanation": "La porte d'oubli fₜ contrôle la part de l'ancien état cₜ₋₁ conservée. La porte d'entrée iₜ contrôle la part du nouvel état candidat c̃ₜ intégrée. La porte de sortie oₜ contrôle la part de l'état qui sortira de la cellule, via hₜ = oₜ ∗ tanh(cₜ). Ces portes donnent au LSTM une mémoire à plus long terme que le RNN conventionnel.",
+      "concepts": ["lstm", "porte-cellule", "etat-de-cellule"],
+      "source": "Slides_RNN_2526.pdf"
+    },
+    {
+      "chapterSlug": "politique-gain-actualise",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Le gain actualisé est G = r₀ + γ·r₁ + γ²·r₂ + … En suivant une politique, l'agent obtient la suite de récompenses immédiates r₀ = 1, r₁ = 2, r₂ = 3 (puis 0 ensuite). Avec un facteur d'actualisation γ = 0,5, calculez le gain actualisé G.",
+      "payload": { "placeholder": "ex. 2.75", "hint": "G = 1 + 0,5·2 + 0,5²·3 = 1 + 1 + 0,75." },
+      "solution": { "value": 2.75, "absTol": 0.001 },
+      "explanation": "G = r₀ + γ·r₁ + γ²·r₂ = 1 + 0,5·2 + 0,25·3 = 1 + 1 + 0,75 = 2,75. Chaque récompense est pondérée par une puissance de γ d'autant plus petite que l'étape est lointaine.",
+      "concepts": ["gain-actualise", "facteur-d-actualisation"],
+      "source": "Apprentissage_renforcement.pdf"
+    },
+    {
+      "chapterSlug": "q-learning",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Le principe Exploitation/Exploration apparaît à la fois dans le Q-learning et dans le recuit simulé. Quelle affirmation le décrit correctement ?",
+      "payload": {
+        "options": [
+          { "id": "a", "label": "Exploiter, c'est utiliser ce qu'on croit être le meilleur ; explorer, c'est essayer autre chose pour découvrir éventuellement mieux — il faut doser les deux" },
+          { "id": "b", "label": "Exploiter et explorer désignent la même opération sous deux noms" },
+          { "id": "c", "label": "Explorer signifie toujours choisir l'action de plus grande valeur" },
+          { "id": "d", "label": "Un bon algorithme doit toujours exploiter et ne jamais explorer" }
+        ],
+        "shuffle": true
+      },
+      "solution": { "correct": ["a"] },
+      "explanation": "Exploiter, c'est utiliser ce qu'on a déjà appris (l'action de plus grande Q dans le Q-learning, la descente vers le creux courant dans le recuit simulé). Explorer, c'est essayer autre chose (une action au hasard via ε-greedy, l'acceptation d'un voisin dégradant via le critère de Metropolis). Toujours exploiter risque de rater une meilleure solution ; toujours explorer n'utilise jamais ce qui est appris — il faut donc doser les deux.",
+      "concepts": ["exploration-exploitation-rl", "epsilon-greedy", "exploration-exploitation"],
+      "source": "Apprentissage_renforcement.pdf"
+    },
+    {
+      "chapterSlug": "pretraitement-representation",
+      "type": "NUMERIC",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Le cours définit un n-gramme comme une séquence de n mots consécutifs. Combien de trigrammes (n = 3) de mots peut-on extraire de la phrase « le chat noir mange la souris » (6 mots) ?",
+      "payload": { "placeholder": "ex. 4", "hint": "Pour T mots, le nombre de n-grammes vaut T − n + 1." },
+      "solution": { "value": 4, "absTol": 0 },
+      "explanation": "La phrase a 6 mots. Le nombre de trigrammes est T − n + 1 = 6 − 3 + 1 = 4. Ce sont : « le chat noir », « chat noir mange », « noir mange la », « mange la souris ».",
+      "concepts": ["n-gramme"],
+      "source": "Intro_NLP.pdf"
+    }
+  ]
+}

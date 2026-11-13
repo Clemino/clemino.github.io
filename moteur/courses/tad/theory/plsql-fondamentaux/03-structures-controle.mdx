@@ -1,0 +1,85 @@
+---
+title: Structures de contrôle
+slug: structures-controle
+order: 3
+estimatedReadMin: 5
+concepts: [plsql-if, plsql-loop]
+source: "CM5, slides 11-14"
+---
+
+## Instruction conditionnelle
+
+```sql
+IF cond1 THEN
+   trt1;
+ELSIF cond2 THEN
+   trt2;
+ELSIF cond3 THEN
+   trt3;
+ELSE
+   trt4;
+END IF;
+```
+
+> ⚠️ Le mot-clé est `ELSIF`, **pas** `ELSEIF` ni `ELSE IF`. Et `END IF;` (deux mots, en fin de bloc).
+
+## Boucles
+
+### Boucle de base : `LOOP`
+
+```sql
+LOOP
+  trt;
+  EXIT WHEN condition;     -- sortie conditionnelle
+  -- ou EXIT;               -- sortie inconditionnelle
+END LOOP;
+```
+
+### Boucle FOR (bornée)
+
+```sql
+FOR v_it IN 1..10 LOOP
+  trt;
+END LOOP;
+```
+
+`v_it` est une variable locale au `FOR`, qu'on n'a pas besoin de déclarer dans le `DECLARE`. Sa valeur est lecture seule à l'intérieur du `LOOP`.
+
+On peut inverser le sens avec `REVERSE` :
+
+```sql
+FOR v_it IN REVERSE 1..10 LOOP
+  ...
+END LOOP;
+```
+
+### Boucle WHILE
+
+```sql
+WHILE condition LOOP
+  trt;
+END LOOP;
+```
+
+### Boucle FOR sur curseur (cf. CM6)
+
+```sql
+FOR v_ligne IN mon_curseur LOOP
+  -- v_ligne.col1, v_ligne.col2, ...
+END LOOP;
+```
+
+Très pratique : ouvre, parcourt et ferme automatiquement le curseur.
+
+## Quel choix de boucle ?
+
+- **FOR borné** quand on connaît la plage d'itération (indices d'un tableau, dates, énumération).
+- **WHILE** quand la sortie dépend d'une **condition** évaluée à l'entrée.
+- **LOOP + EXIT WHEN** quand on doit exécuter au moins une fois et tester la sortie au milieu.
+- **FOR sur curseur** pour parcourir le résultat d'un `SELECT`.
+
+> **À retenir**
+> - `IF ... ELSIF ... ELSE ... END IF;` (jamais `ELSEIF`).
+> - 4 formes de boucle : `LOOP`, `FOR ... IN [REVERSE] a..b`, `WHILE`, `FOR ... IN curseur`.
+> - `EXIT WHEN cond` sort d'une `LOOP`.
+> - La variable d'itération `FOR` n'est pas à déclarer.

@@ -1,0 +1,153 @@
+---
+title: "Ouverture, blocage et sens de communication"
+slug: fifo-ouverture
+order: 2
+estimatedReadMin: 17
+concepts: [open-fifo, rendez-vous-ouverture, o-nonblock, enxio-fifo, eof-tube, sigpipe-epipe, tube-blocage, lecture-destructrice, communication-bidirectionnelle, unlink-fifo]
+source: "Cours 3 — Les tubes nommés (FIFO)"
+---
+
+Le chapitre précédent a **créé** un tube nommé avec `mkfifo`. Reste à l'**utiliser**. Et c'est ici qu'apparaît la propriété la plus caractéristique — et la plus piégeuse — du FIFO : le **rendez-vous à l'ouverture**. Comprendre ce blocage de `open` est la clé de tout le module.
+
+## Ouvrir un FIFO : la primitive `open`
+
+Un tube anonyme naissait **déjà ouvert** : `pipe()` rendait directement les deux descripteurs. Un tube **nommé**, lui, n'est au départ qu'un **fichier** dans l'arborescence. Pour s'en servir, un processus doit l'**ouvrir** — exactement comme un fichier ordinaire — avec l'appel système **`open()`**, déclaré dans **`<fcntl.h>`** :
+
+```c
+#include <fcntl.h>
+
+int open(const char *pathname, int flags);
+```
+
+- **`pathname`** — le **chemin** du FIFO, celui qui a été passé à `mkfifo` ;
+- **`flags`** — le **mode d'ouverture**.
+
+`open` renvoie un **descripteur de fichier** (un entier) correspondant au mode demandé, ou **`-1`** en cas d'échec (`errno` positionné). Le processus qui ouvre doit évidemment **posséder les droits** correspondants sur le FIFO.
+
+Sur un FIFO, le mode d'ouverture est presque toujours **l'un de ces deux** :
+
+- **`O_RDONLY`** — ouverture en **lecture seule** : on obtient une extrémité de **lecture** ;
+- **`O_WRONLY`** — ouverture en **écriture seule** : on obtient une extrémité d'**écriture**.
+
+```c
+int fd_lecture  = open("monTube", O_RDONLY);   /* pour LIRE dans le FIFO   */
+int fd_ecriture = open("monTube", O_WRONLY);   /* pour ECRIRE dans le FIFO */
+```
+
+> ⚠️ Un FIFO est **half-duplex** : on l'ouvre **soit** en lecture **soit** en écriture pour un sens donné. L'ouverture en lecture/écriture (`O_RDWR`) sur un FIFO n'a **pas de sémantique portable** définie par POSIX — son comportement dépend du système. **Ne l'utilisez pas.** Un processus qui doit à la fois lire *et* écrire ouvre le FIFO **deux fois** (un descripteur `O_RDONLY`, un descripteur `O_WRONLY`), ou utilise **deux FIFO** distincts.
+
+Une fois le descripteur obtenu, **tout se passe comme avec un tube anonyme** : on lit avec `read(fd, buf, nb)`, on écrit avec `write(fd, buf, nb)`, on ferme avec `close(fd)`. Les primitives, et leur sémantique, sont rigoureusement les mêmes (Module 3).
+
+## Le cœur du chapitre : le rendez-vous à l'ouverture
+
+Voici le point **essentiel**, celui qui distingue vraiment l'ouverture d'un FIFO de celle d'un fichier ordinaire.
+
+> **Par défaut, l'appel `open` sur un FIFO est BLOQUANT** :
+> - un `open` en **lecture** (`O_RDONLY`) **bloque** tant qu'aucun processus n'a ouvert le FIFO en **écriture** ;
+> - un `open` en **écriture** (`O_WRONLY`) **bloque** tant qu'aucun processus n'a ouvert le FIFO en **lecture**.
+
+Autrement dit, `open` ne **revient** que lorsque la **paire** est formée : il faut **un lecteur ET un écrivain** présents pour que les deux `open` se débloquent **ensemble**. Tant qu'un seul côté s'est présenté, il **attend** l'autre.
+
+Ce mécanisme porte un nom : c'est le **rendez-vous**.
+
+> Le blocage de `open` permet à deux processus de **se synchroniser** : il établit un **rendez-vous** en un point précis de leur exécution. Le premier arrivé **patiente** jusqu'à ce que le second se présente ; à cet instant, les deux `open` reviennent **simultanément**, et les processus repartent **synchronisés**. C'est une synchronisation **gratuite**, offerte par l'ouverture elle-même.
+
+C'est exactement pour cela que, dans le chapitre précédent, l'**ordre de lancement** des deux programmes (`ecrivain` et `lecteur`) était **indifférent** :
+
+- si l'**écrivain** démarre en premier, son `open(O_WRONLY)` **bloque** : il attend, gelé, dans `open` ;
+- quand le **lecteur** démarre et fait `open(O_RDONLY)`, le rendez-vous est complet : les **deux** `open` reviennent au même instant ;
+- et **réciproquement** si le lecteur démarre en premier.
+
+Le FIFO + son rendez-vous d'ouverture **absorbent** la différence de timing : peu importe qui arrive d'abord, ils s'attendent.
+
+### Schéma du rendez-vous
+
+```text
+   Processus A                FIFO "echange"               Processus B
+       |                                                       |
+  open("echange",                                          (pas encore lance)
+   O_WRONLY)  ........... BLOQUE : aucun lecteur ...........
+       |  attend                                               |
+       |                                                  open("echange",
+       | <........ RENDEZ-VOUS : la paire est formee .....  O_RDONLY)
+       |                                                       |
+  open revient  <............................................> open revient
+       |                                                       |
+   write(...)  ----------> [ tampon du tube ] ----------->  read(...)
+```
+
+> ⚠️ **L'interblocage classique du FIFO.** Si **deux** processus veulent dialoguer dans les **deux sens** via deux FIFO, l'**ordre des `open`** doit être pensé. Imaginez : le processus A fait `open(FIFO1, O_WRONLY)` puis `open(FIFO2, O_RDONLY)` ; le processus B fait, **dans le même ordre**, `open(FIFO1, O_WRONLY)` puis `open(FIFO2, O_RDONLY)`. Alors **les deux** bloquent sur le **premier** `open` en écriture, chacun attendant un lecteur sur FIFO1 — lecteur qui n'arrivera jamais, puisque l'autre est lui aussi coincé en amont. C'est un **interblocage** (*deadlock*). La parade : **croiser** l'ordre des ouvertures — si A ouvre `(FIFO1 en écriture, FIFO2 en lecture)`, B doit ouvrir `(FIFO1 en lecture, FIFO2 en écriture)` —, ou bien recourir à `O_NONBLOCK`.
+
+## Modifier le comportement : le drapeau `O_NONBLOCK`
+
+Le blocage de `open` est le comportement **par défaut**. On peut le **désactiver** en ajoutant le drapeau **`O_NONBLOCK`** au mode d'ouverture, par un OU binaire :
+
+```c
+int fd = open("monTube", O_RDONLY | O_NONBLOCK);   /* ouverture NON bloquante */
+```
+
+(Sur d'anciens systèmes, on rencontre le drapeau équivalent `O_NDELAY` ; **`O_NONBLOCK`** est la forme **normalisée POSIX**, à privilégier.)
+
+Avec `O_NONBLOCK`, `open` **ne bloque plus** — mais son effet n'est **pas le même** selon le sens, et il faut le connaître **exactement** :
+
+| `open` avec `O_NONBLOCK` | Comportement |
+|---|---|
+| **`O_RDONLY \| O_NONBLOCK`** | **réussit immédiatement**, même si aucun écrivain n'est encore présent ; renvoie un descripteur de lecture valide |
+| **`O_WRONLY \| O_NONBLOCK`** | si **aucun lecteur** n'a ouvert le FIFO : **échoue** aussitôt, renvoie `-1` avec `errno == ENXIO` |
+| **`O_WRONLY \| O_NONBLOCK`** | si un lecteur est **déjà présent** : **réussit immédiatement** |
+
+> ⚠️ L'effet de `O_NONBLOCK` est **asymétrique**. En **lecture**, il rend `open` **toujours immédiat** (on obtient le descripteur, le tube sera simplement vide tant que personne n'écrit). En **écriture**, il transforme l'attente en **erreur** : sans lecteur déjà présent, `open(O_WRONLY | O_NONBLOCK)` **échoue** avec **`errno == ENXIO`**. La logique : un écrivain sans lecteur écrirait « dans le vide » ; plutôt que de le faire patienter, le système le **refuse** tout de suite. Toujours **tester le retour** de `open` quand on emploie `O_NONBLOCK`.
+
+`O_NONBLOCK` ne se contente pas de changer l'ouverture : il **reste attaché** au descripteur et rend **aussi** les `read` et `write` ultérieurs non bloquants (un `read` sur tube vide renverra `-1` avec `errno == EAGAIN` au lieu d'attendre — mais uniquement **tant qu'il reste au moins un écrivain** ; sans aucun écrivain, le `read` rend `0` comme d'habitude, signalant la fin de fichier). Pour la plupart des usages — et pour tous les exemples de ce module — on **garde le mode bloquant par défaut** : c'est lui qui offre le précieux rendez-vous.
+
+## Lire et écrire dans un FIFO : sémantique
+
+Une fois la paire formée et les descripteurs obtenus, `read` et `write` se comportent **exactement** comme sur un tube anonyme. On rappelle ici les points décisifs, transposés au FIFO.
+
+### Le blocage de `read` et `write`
+
+Le noyau **synchronise** lecteur et écrivain, dans les deux sens :
+
+- **`read` sur FIFO vide** est **bloquant** : le lecteur est endormi jusqu'à l'arrivée de données — **tant qu'il reste au moins un écrivain** ;
+- **`write` sur FIFO plein** est **bloquant** : le FIFO ayant une **taille bornée**, l'écrivain trop rapide est endormi jusqu'à ce que le lecteur fasse de la place.
+
+Et, comme toujours, `read` rend les octets **disponibles** au moment de l'appel — **pas forcément** le nombre demandé. La valeur de retour de `read` doit **toujours** être exploitée.
+
+### La fin de fichier : `read` renvoie `0`
+
+> Un `read` sur un FIFO vide renvoie **`0` (fin de fichier)** lorsque **tous les descripteurs en écriture** ouverts sur ce FIFO ont été **fermés**. Tant qu'un seul écrivain subsiste, le `read` **continue de bloquer** au lieu de rendre `0`.
+
+C'est la règle du Module 3, **inchangée**. Conséquence pratique : un processus serveur qui lit en boucle verra son `read` rendre `0` quand le **dernier client** aura fermé son extrémité d'écriture — c'est ainsi qu'il détecte la fin d'un dialogue.
+
+> ⚠️ Avec un FIFO, un cas **subtil** apparaît : un `read` peut rendre `0`, puis un **nouvel** écrivain ouvre le FIFO, et un `read` suivant rend **de nouveau** des données. Contrairement à un fichier, un FIFO peut donc « revivre ». Un serveur doit en tenir compte : recevoir `0` ne signifie pas *forcément* « plus jamais de données », mais *« plus aucun écrivain pour l'instant »*. Le chapitre suivant exploite précisément cette propriété pour qu'un serveur enchaîne les clients.
+
+### `SIGPIPE` et `EPIPE` : écrire sans lecteur
+
+Le cas **symétrique** vaut lui aussi pour le FIFO :
+
+> Écrire (`write`) dans un FIFO dont **tous les descripteurs en lecture sont fermés** déclenche le signal **`SIGPIPE`** sur l'écrivain. Action par défaut : **terminaison** du processus (*« Broken pipe »*). Si `SIGPIPE` est intercepté ou ignoré, le `write` revient `-1` avec **`errno == EPIPE`**.
+
+Un serveur qui répond à un client parti entre-temps doit donc se prémunir contre `SIGPIPE` — typiquement en l'**ignorant** (`signal(SIGPIPE, SIG_IGN)`) et en testant le retour de `write`.
+
+## Pourquoi l'ordre de lancement est indifférent
+
+On peut maintenant **répondre rigoureusement** à la question posée par l'exercice du TP : *« L'ordre de lancement des deux programmes est indifférent — pourquoi ? »*
+
+Parce que **chaque `open` bloquant joue le rôle d'un point de rendez-vous** :
+
+1. le **premier** programme lancé arrive à son `open` ; comme la paire n'est pas formée, il **bloque** — il ne fait rien d'autre, il **attend** ;
+2. le **second** programme arrive à son `open` complémentaire ; la paire est alors complète ;
+3. les **deux** `open` se débloquent **au même instant** ; les deux processus, désormais **synchronisés**, échangent leurs données.
+
+Le rendez-vous **gomme** l'écart de timing : que l'écrivain précède le lecteur ou l'inverse, le premier patiente, le second le rejoint. C'est une propriété **offerte gratuitement** par la sémantique bloquante de `open` sur un FIFO — et c'est précisément ce qui rend les tubes nommés si commodes pour un schéma **client/serveur**, sujet du chapitre suivant.
+
+> ⚠️ Cette belle propriété a une **contrepartie**. Le même blocage qui synchronise si bien **deux** processus devient un **interblocage** dès que les ouvertures sont **mal ordonnées** (cf. le piège du dialogue bidirectionnel plus haut). Le rendez-vous d'ouverture est un outil **puissant mais tranchant** : il faut **toujours** réfléchir à *qui ouvre quoi, dans quel ordre*.
+
+> **À retenir**
+> - On utilise un FIFO en l'**ouvrant** avec **`open(pathname, flags)`** (`<fcntl.h>`) — `O_RDONLY` pour lire, `O_WRONLY` pour écrire ; retour : un **descripteur**, ou `-1` si échec. Un FIFO est **half-duplex** : pas de `O_RDWR` portable.
+> - **Rendez-vous d'ouverture** : par défaut, `open` sur un FIFO est **bloquant**. `open` en **lecture** attend qu'un **écrivain** se présente ; `open` en **écriture** attend qu'un **lecteur** se présente. Les deux `open` reviennent **ensemble**, synchronisant les processus.
+> - C'est pourquoi, pour un échange simple, **l'ordre de lancement des programmes est indifférent** : le premier arrivé **attend** le second dans son `open`.
+> - **`O_NONBLOCK`** désactive ce blocage, de façon **asymétrique** : `O_RDONLY | O_NONBLOCK` **réussit toujours** immédiatement ; `O_WRONLY | O_NONBLOCK` **échoue** avec **`errno == ENXIO`** s'il n'y a **aucun lecteur**.
+> - `read` / `write` se comportent comme sur un tube anonyme : `read` **bloque** sur FIFO vide (tant qu'il reste un écrivain) et renvoie **`0`** quand **tous** les écrivains ont fermé ; `write` sur FIFO sans **aucun lecteur** déclenche **`SIGPIPE`** / `EPIPE`.
+> - Un FIFO peut « revivre » : après un `read` ayant rendu `0`, un nouvel écrivain peut rouvrir le tube — un serveur exploite cela pour enchaîner ses clients.
+> - **Piège** : des ouvertures mal ordonnées dans un dialogue **bidirectionnel** provoquent un **interblocage** ; il faut **croiser** l'ordre des `open` entre les deux processus.

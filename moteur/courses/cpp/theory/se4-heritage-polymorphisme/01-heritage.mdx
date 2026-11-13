@@ -1,0 +1,253 @@
+---
+title: Héritage
+slug: heritage
+order: 1
+estimatedReadMin: 11
+concepts: [heritage, classe-base-derivee, ordre-construction-heritage, acces-protected]
+source: "Cours 4 — Héritage & Polymorphisme"
+---
+
+## Le problème : des classes qui se ressemblent
+
+Supposons une application de gestion universitaire. On y manipule des **personnes** (un nom, un prénom) et des **étudiants**. Mais un étudiant **est aussi une personne** : il a un nom, un prénom... **plus** un numéro d'étudiant.
+
+Sans outil dédié, on recopierait dans `Etudiant` tout le code déjà écrit dans `Personne` (les attributs `nom`, `prenom`, leurs accesseurs...). Cette duplication est coûteuse : un correctif sur `Personne` doit être reporté à la main dans `Etudiant`, et tout oubli devient un bug.
+
+L'**héritage** résout exactement ce problème : il permet d'**ajouter des propriétés à une classe existante** pour en obtenir une nouvelle, plus précise — sans rien recopier.
+
+## La relation « est-un »
+
+> L'héritage modélise la relation **« est-un »** (*is-a*) : la classe dérivée **est une sorte de** la classe de base.
+
+Le test est simple : si l'on peut dire « un X **est un** Y », alors `X` peut hériter de `Y`.
+
+- Un étudiant **est une** personne → `Etudiant` hérite de `Personne`.
+- Un cercle **est une** forme → `Cercle` hérite de `Forme`.
+- Un triangle **est une** forme → `Triangle` hérite de `Forme`.
+
+L'héritage permet ainsi de **spécialiser** une classe. La classe dérivée possède tout ce qu'a la classe de base, **plus** ce qui lui est spécifique.
+
+> ⚠️ L'héritage n'est **pas** la bonne relation quand X **possède** un Y (relation « a-un », *has-a*). Une voiture **a un** moteur : `Voiture` ne doit pas hériter de `Moteur`, elle doit **contenir** un attribut de type `Moteur` (c'est la **composition**). N'utiliser l'héritage que pour un véritable « est-un ».
+
+## Classe de base et classe dérivée
+
+L'héritage met en jeu deux classes :
+
+- la **classe de base**, dite aussi **classe parente** ou classe mère (`Personne`, `Forme`) ;
+- la **classe dérivée**, dite aussi **classe fille** (`Etudiant`, `Cercle`).
+
+> La classe dérivée **hérite** de **tous les membres** — données **et** méthodes — de la classe de base.
+
+La syntaxe de dérivation place, après le nom de la classe dérivée, le caractère `:` suivi d'un **mode d'héritage** (ici `public`) et du nom de la classe de base :
+
+```cpp
+class Personne {
+    private:
+        std::string nom;
+    public:
+        Personne() = default;
+        Personne(std::string n) : nom(n) {}
+        std::string getNom() const { return nom; }
+};
+
+class Etudiant : public Personne {   // Etudiant dérive de Personne
+    private:
+        std::string id;
+    public:
+        std::string getId() const { return id; }
+};
+```
+
+Un objet `Etudiant` contient donc **deux** parties : la **sous-partie `Personne`** (l'attribut `nom`) et la partie propre à `Etudiant` (l'attribut `id`). Du code extérieur peut appeler `getNom()` sur un `Etudiant` **comme si la méthode lui appartenait** : elle est héritée.
+
+```cpp
+Etudiant e;
+e.getNom();   // méthode héritée de Personne — utilisable directement
+e.getId();    // méthode propre à Etudiant
+```
+
+## Ce que permet l'héritage
+
+L'héritage offre **trois** apports complémentaires :
+
+1. **la réutilisation** du code déjà écrit : la classe dérivée profite gratuitement de tout le code de la base ;
+2. **l'ajout** de nouvelles fonctionnalités : la classe dérivée déclare ses propres attributs et méthodes ;
+3. **la modification** d'un comportement existant : la classe dérivée peut **redéfinir** une méthode héritée (étudiée au chapitre suivant).
+
+```cpp
+class Personne {
+    private:
+        std::string nom;
+    public:
+        Personne(std::string n) : nom(n) {}
+        void afficher() const { std::cout << nom << std::endl; }
+};
+
+class Etudiant : public Personne {
+    private:
+        std::string id;
+    public:
+        std::string getId() const { return id; }    // ajout d'une fonctionnalité
+        void afficher() const {                      // modification d'un comportement
+            Personne::afficher();                    // réutilisation du code de la base
+            std::cout << id << std::endl;
+        }
+};
+```
+
+La notation **`Personne::afficher()`** appelle explicitement la version de la **classe de base**, en préfixant le nom de la méthode par celui de la classe et l'opérateur de résolution de portée `::`. C'est ainsi qu'une méthode redéfinie **réutilise** le travail déjà fait par la base au lieu de tout réécrire.
+
+## Constructeur et destructeur sous héritage
+
+Un objet dérivé contient une sous-partie de la classe de base ; cette sous-partie doit être **construite avant** le reste.
+
+> Lors de la construction d'un objet dérivé, le **constructeur de la classe de base** est appelé **avant** celui de la classe dérivée.
+
+Deux cas se présentent pour ce constructeur de base :
+
+- soit le constructeur dérivé **appelle explicitement** un constructeur de la classe de base ;
+- soit, à défaut, le **constructeur par défaut** de la classe de base est appelé **automatiquement** — et si ce constructeur par défaut **n'existe pas**, le compilateur **émet une erreur**.
+
+À la destruction, c'est l'**inverse** :
+
+> Les destructeurs sont appelés dans l'**ordre inverse** des constructeurs : la classe **dérivée** est détruite **avant** la classe de base.
+
+L'objet se construit donc « de la base vers le sommet » et se détruit « du sommet vers la base ».
+
+## Appeler le constructeur de base depuis la liste d'initialisation
+
+Pour passer des arguments au constructeur de la classe de base, on **l'invoque dans la liste d'initialisation** du constructeur dérivé — en écrivant le **nom de la classe de base** suivi des arguments, avant l'initialisation des attributs propres :
+
+```cpp
+class Personne {
+    private:
+        std::string nom;
+    public:
+        Personne(std::string n) : nom(n) {}
+};
+
+class Etudiant : public Personne {
+    private:
+        std::string id;
+    public:
+        // appel du constructeur de base, puis init de l'attribut propre
+        Etudiant(std::string nom, std::string id) : Personne(nom), id(id) {}
+};
+```
+
+Dans `Etudiant(std::string nom, std::string id) : Personne(nom), id(id)` :
+
+- `Personne(nom)` appelle le constructeur de la **classe de base** et lui transmet `nom` — c'est lui qui initialise la sous-partie `Personne` ;
+- `id(id)` initialise l'attribut **propre** à `Etudiant`.
+
+C'est nécessaire dès que la classe de base **n'a pas** de constructeur par défaut, ou simplement quand la classe dérivée doit **transmettre** des données à la base.
+
+> ⚠️ L'appel au constructeur de base ne peut se faire que **dans la liste d'initialisation**, et il y figure **en premier**, avant les attributs. Même si on l'écrit après dans le code, les attributs propres sont toujours initialisés **après** la sous-partie de base.
+
+## Les trois modes d'héritage
+
+Le mot-clé qui suit le `:` est le **mode de dérivation**. Il en existe **trois** :
+
+```cpp
+class ClasseDerivee : public    ClasseBase { /* ... */ };
+class ClasseDerivee : protected ClasseBase { /* ... */ };
+class ClasseDerivee : private   ClasseBase { /* ... */ };
+```
+
+Le mode de dérivation détermine **comment le statut d'accès** des membres hérités est transformé dans la classe dérivée :
+
+| Mode de dérivation | Statut dans la base | Statut dans la dérivée |
+|---|---|---|
+| **`public`** | `public` | `public` |
+| | `protected` | `protected` |
+| | `private` | inaccessible |
+| **`protected`** | `public` | `protected` |
+| | `protected` | `protected` |
+| | `private` | inaccessible |
+| **`private`** | `public` | `private` |
+| | `protected` | `private` |
+| | `private` | inaccessible |
+
+Lecture du tableau :
+
+- L'héritage **`public`** **conserve** le statut des membres : `public` reste `public`, `protected` reste `protected`. C'est l'héritage qui exprime la relation « est-un » et c'est, de très loin, **le mode le plus courant**.
+- L'héritage **`protected`** ramène les membres `public` au niveau `protected`.
+- L'héritage **`private`** ramène **tous** les membres hérités au niveau `private` : ils ne seront plus accessibles aux classes qui dériveraient à leur tour.
+- Dans **tous les cas**, les membres **`private`** de la base restent **inaccessibles** à la classe dérivée. C'est le sens même de `private` : un attribut privé n'est lisible que par sa propre classe, **même pas** par ses filles.
+
+Avec l'héritage `protected` ci-dessous, la méthode `getNom()` héritée — `public` dans `Personne` — devient `protected` dans `Etudiant`, donc inaccessible depuis l'extérieur :
+
+```cpp
+class Etudiant : protected Personne {
+    // getNom() est ici protected : utilisable DANS Etudiant,
+    // mais e.getNom() depuis main() ne compilerait PAS
+};
+```
+
+> En pratique, sauf besoin précis, on écrit toujours `class Derivee : public Base`. Oublier le mot `public` est une erreur fréquente : `class Etudiant : Personne` correspond, pour une `class`, à un héritage `private` implicite — ce qui rompt la relation « est-un ».
+
+## Le spécificateur d'accès `protected`
+
+On a vu (cours 1) deux spécificateurs : `private` (accessible seulement dans la classe) et `public` (accessible partout). L'héritage en introduit un **troisième** : **`protected`**.
+
+> Un membre **`protected`** est accessible **dans la classe elle-même** et **dans ses classes dérivées**, mais **pas** depuis le code extérieur.
+
+C'est un intermédiaire entre `private` et `public` :
+
+| Spécificateur | Classe elle-même | Classes dérivées | Code extérieur |
+|---|---|---|---|
+| `private` | oui | **non** | non |
+| `protected` | oui | **oui** | non |
+| `public` | oui | oui | oui |
+
+`protected` sert exactement à exposer un attribut **aux classes filles** tout en le cachant au reste du programme :
+
+```cpp
+class Forme {
+    protected:
+        std::string nom;     // accessible dans Forme ET dans ses dérivées
+    public:
+        Forme(std::string n) : nom(n) {}
+};
+
+class Cercle : public Forme {
+    private:
+        double rayon;
+    public:
+        Cercle(double r) : Forme("cercle"), rayon(r) {}
+        void afficher() const {
+            std::cout << nom << " de rayon " << rayon << std::endl;
+            // 'nom' est protected : Cercle, classe dérivée, y a accès
+        }
+};
+```
+
+Si `nom` avait été `private` dans `Forme`, la méthode `Cercle::afficher()` **ne compilerait pas** : une classe dérivée n'accède **jamais** au `private` de sa base.
+
+> ⚠️ `protected` reste un assouplissement de l'encapsulation : exposer un attribut aux classes filles, c'est leur permettre de le modifier sans contrôle. La règle prudente est de garder les attributs `private` et de n'exposer en `protected` que ce qui est réellement nécessaire à la spécialisation.
+
+## Héritage simple et héritage multiple
+
+L'héritage vu jusqu'ici est **simple** : une classe dérivée a **une seule** classe de base. Les hiérarchies de classes se construisent ainsi en chaîne ou en arbre — par exemple `Cercle` dérive de `Ellipse`, qui pourrait elle-même dériver d'une `Forme`.
+
+C++ autorise aussi l'**héritage multiple** : une classe peut hériter de **plusieurs** classes de base, listées après le `:` et séparées par des virgules :
+
+```cpp
+class A { /* ... */ };
+class B { /* ... */ };
+
+class C : public A, public B {   // C hérite de A ET de B
+    /* ... */
+};
+```
+
+Une instance de `C` possède **à la fois** les données et les fonctions membres de `A` et de `B`. L'ordre des constructeurs suit l'ordre de déclaration : à la création d'un objet `C`, le constructeur de `A` est appelé en premier, **puis** celui de `B` ; à la destruction, l'ordre est **inversé** (destructeur de `B`, puis de `A`).
+
+> **À retenir**
+> - L'**héritage** ajoute des propriétés à une classe existante pour en obtenir une plus précise : il modélise la relation **« est-un »** (un `Etudiant` **est une** `Personne`).
+> - La classe **dérivée** hérite de **tous les membres** (données et méthodes) de la classe **de base**. Syntaxe : `class Derivee : public Base`.
+> - L'héritage permet la **réutilisation**, l'**ajout** de fonctionnalités et la **modification** de comportements ; `Base::methode()` appelle explicitement la version de la base.
+> - Le constructeur de la **base** est appelé **avant** celui de la dérivée ; les destructeurs sont appelés dans l'**ordre inverse**.
+> - On appelle le constructeur de base dans la **liste d'initialisation** : `Etudiant(...) : Personne(nom), id(id) {}` ; à défaut, le constructeur **par défaut** de la base est requis.
+> - Trois **modes d'héritage** : `public` (conserve les statuts, mode usuel), `protected` et `private` (restreignent les statuts hérités). Le `private` de la base reste **toujours** inaccessible aux filles.
+> - **`protected`** : membre accessible dans la classe **et ses dérivées**, mais pas depuis l'extérieur — intermédiaire entre `private` et `public`.

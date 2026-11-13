@@ -1,0 +1,213 @@
+---
+title: "Le classifieur bayésien naïf"
+slug: classifieur-bayesien-naif
+order: 2
+estimatedReadMin: 18
+concepts: [classifieur-bayesien-naif, hypothese-d-independance, probabilite-a-posteriori, vraisemblance, theoreme-des-probabilites-totales, attribut, classe]
+source: "Slides_Bayes.pdf"
+---
+
+## Le problème posé par l'algorithme
+
+La section précédente a établi la formule de base. Le cours décrit maintenant
+l'**algorithme** du classifieur, en posant d'abord le problème de façon précise.
+
+> **Données du problème.** On considère :
+>
+> - une **instance `d`** définie par les valeurs `a₁, …, aₚ` de ses attributs
+>   `A₁, …, Aₚ` ;
+> - `m` **classes** `C₁, …, Cₘ`.
+>
+> On veut **calculer la probabilité que `d` appartienne à la classe `Cⱼ`**, où
+> `Cⱼ ∈ {C₁, …, Cₘ}` — c'est-à-dire `Pr(Cⱼ / d)`.
+
+Tout est dit dans cet énoncé. Une instance n'est rien d'autre qu'un **`p`-uplet
+de valeurs d'attributs** `(a₁, …, aₚ)`. Le classifieur dispose d'un nombre
+**fini** de classes `C₁, …, Cₘ`. Et la grandeur à calculer est, pour chaque
+classe `Cⱼ`, la **probabilité conditionnelle `Pr(Cⱼ / d)`** : la probabilité que
+l'instance `d` appartienne à `Cⱼ`.
+
+> **À retenir** : une instance `d` est décrite par les valeurs `a₁, …, aₚ` de
+> ses attributs `A₁, …, Aₚ` ; il y a `m` classes `C₁, …, Cₘ`. L'algorithme doit
+> **calculer `Pr(Cⱼ/d)`** — la probabilité que `d` appartienne à la classe `Cⱼ`
+> — pour chaque classe.
+
+## Appliquer le théorème de Bayes
+
+Pour calculer `Pr(Cⱼ / d)`, le cours **applique la première formule de Bayes**
+vue à la section 1. En prenant `A = Cⱼ` et `B = d` :
+
+`Pr(Cⱼ / d) = Pr(d / Cⱼ) · Pr(Cⱼ) / Pr(d)`
+
+L'instance `d` est le `p`-uplet `(A₁ = a₁, …, Aₚ = aₚ)`. En remplaçant `d` par
+cette description, la formule s'écrit, comme dans le cours :
+
+`Pr(Cⱼ / d) = Pr(A₁ = a₁, …, Aₚ = aₚ / Cⱼ) · Pr(Cⱼ) / Pr(A₁ = a₁, …, Aₚ = aₚ)`
+
+Le cours en tire la **feuille de route** de l'algorithme. Pour obtenir
+`Pr(Cⱼ / d)`, il faut **calculer (ou estimer) trois quantités** :
+
+| Quantité | Ce qu'elle représente |
+| --- | --- |
+| `Pr(Cⱼ)` | La probabilité qu'une instance appartienne à la classe `Cⱼ` |
+| `Pr(d / Cⱼ)` | La probabilité d'observer l'instance `d` parmi celles de classe `Cⱼ` |
+| `Pr(d)` | La probabilité d'observer l'instance `d` |
+
+Les trois sous-sections qui suivent traitent ces trois quantités l'une après
+l'autre : d'abord `Pr(Cⱼ)`, puis `Pr(d / Cⱼ)` — c'est ici qu'intervient
+l'hypothèse « naïve » —, enfin `Pr(d)`.
+
+> **À retenir** : en appliquant le théorème de Bayes,
+> `Pr(Cⱼ/d) = Pr(d/Cⱼ)·Pr(Cⱼ) / Pr(d)`. L'algorithme doit donc **calculer ou
+> estimer trois quantités** : `Pr(Cⱼ)`, `Pr(d/Cⱼ)` et `Pr(d)`.
+
+## Première quantité : la probabilité a priori `Pr(Cⱼ)`
+
+La première quantité, `Pr(Cⱼ)`, est, dit le cours, **la probabilité qu'une
+instance appartienne à `Cⱼ`**. C'est une probabilité « avant toute
+observation » : elle ne dépend d'aucun attribut, seulement de la classe. On
+l'appelle la probabilité **a priori** de la classe.
+
+Comment l'obtenir ? On l'**estime à l'aide de l'ensemble d'apprentissage `D`**.
+L'idée est directe : `Pr(Cⱼ)` est approchée par la **proportion des éléments
+(exemples) de `D` appartenant à `Cⱼ`** :
+
+`Pr(Cⱼ) ≃ (Nombre d'exemples de la classe Cⱼ) / (Nombre total d'exemples dans
+l'ensemble d'apprentissage)`
+
+Si, par exemple, `40` exemples sur `100` portent la classe `Cⱼ`, on estime
+`Pr(Cⱼ) ≃ 0,40`. C'est une **fréquence observée** : on regarde, dans les
+données disponibles, **à quelle fréquence** la classe apparaît. La section 3
+revient en détail sur ce principe d'estimation par les fréquences.
+
+> **À retenir** : `Pr(Cⱼ)` est la probabilité **a priori** qu'une instance
+> appartienne à `Cⱼ`. On l'**estime** par la **proportion d'exemples de classe
+> `Cⱼ`** dans l'ensemble d'apprentissage `D`.
+
+## Deuxième quantité : l'hypothèse d'indépendance et `Pr(d / Cⱼ)`
+
+La deuxième quantité, `Pr(d / Cⱼ) = Pr(A₁ = a₁, …, Aₚ = aₚ / Cⱼ)`, est la
+**probabilité d'observer toute la combinaison de valeurs `(a₁, …, aₚ)`** parmi
+les instances de classe `Cⱼ`. C'est ici que le classifieur devient **naïf**.
+
+Estimer directement `Pr(A₁ = a₁, …, Aₚ = aₚ / Cⱼ)` reviendrait à compter, parmi
+les exemples de classe `Cⱼ`, ceux qui présentent **exactement** la combinaison
+`(a₁, …, aₚ)` sur **tous les attributs à la fois**. Une telle combinaison
+complète est, en pratique, **rarement présente** dans l'ensemble
+d'apprentissage : il y a un très grand nombre de combinaisons possibles, et
+chacune n'apparaît que très peu — voire pas du tout. L'estimation directe est
+donc inopérante.
+
+La **solution** du classifieur bayésien naïf est une **hypothèse
+simplificatrice**, celle qui lui donne son nom.
+
+> **Hypothèse d'indépendance (« naïve »).** Si nous **supposons que les
+> attributs sont indépendants**, nous avons :
+>
+> `Pr(A₁ = a₁, …, Aₚ = aₚ / Cⱼ) = Πᵢ Pr(Aᵢ = aᵢ / Cⱼ)`
+
+Autrement dit, la probabilité de la **combinaison complète** est égale au
+**produit** des probabilités conditionnelles **attribut par attribut**. Le
+symbole `Π` désigne le produit : `Πᵢ Pr(Aᵢ = aᵢ / Cⱼ)` est le produit, pour `i`
+allant de `1` à `p`, des termes `Pr(Aᵢ = aᵢ / Cⱼ)`.
+
+L'intérêt est considérable. Au lieu d'estimer **une** probabilité portant sur
+une combinaison rare de `p` valeurs, on n'a plus qu'à estimer `p` probabilités
+**simples** `Pr(Aᵢ = aᵢ / Cⱼ)` — une par attribut. Or chacune, ne portant que
+sur **un seul attribut**, est facile à estimer : il suffit de regarder, parmi
+les exemples de classe `Cⱼ`, la proportion de ceux pour lesquels `Aᵢ = aᵢ` (la
+section 3 détaille ce calcul).
+
+C'est cette hypothèse qui rend le classifieur **« naïf »** : elle est
+**rarement exacte** en pratique — des attributs réels sont souvent corrélés —
+mais elle **rend les calculs réalisables** et conduit, le plus souvent, à des
+résultats de bonne qualité.
+
+> ⚠️ L'hypothèse d'indépendance des attributs est **rarement vérifiée
+> exactement** sur des données réelles. C'est une **approximation** assumée :
+> elle est ce qui rend le classifieur calculable — et ce qui justifie le
+> qualificatif **naïf**.
+
+> **À retenir** : `Pr(d/Cⱼ)` porte sur une **combinaison complète** de valeurs,
+> trop rare pour être estimée directement. L'**hypothèse d'indépendance** des
+> attributs la **factorise en produit** :
+> `Pr(A₁=a₁, …, Aₚ=aₚ/Cⱼ) = Πᵢ Pr(Aᵢ=aᵢ/Cⱼ)`. On ne calcule plus que `p`
+> probabilités **simples**.
+
+## Troisième quantité : `Pr(d)` et le théorème des probabilités totales
+
+Reste la troisième quantité, `Pr(d) = Pr(A₁ = a₁, …, Aₚ = aₚ)` : la probabilité
+d'observer l'instance `d`, **sans rien supposer de sa classe**. Le cours
+l'obtient grâce au **théorème des probabilités totales**.
+
+> **Théorème des probabilités totales.** Nous avons :
+>
+> `Pr(d) = Pr(A₁ = a₁, …, Aₚ = aₚ) = Σⱼ Pr(A₁ = a₁, …, Aₚ = aₚ / Cⱼ) · Pr(Cⱼ)`
+
+L'idée est intuitive. Une instance `d` appartient **forcément à l'une des `m`
+classes** `C₁, …, Cₘ` — les classes recouvrent tous les cas possibles. La
+probabilité d'observer `d` est donc la **somme**, sur **toutes les classes**, de
+la probabilité d'observer `d` **au sein de chaque classe** `Pr(d / Cⱼ)`,
+**pondérée** par la probabilité de cette classe `Pr(Cⱼ)`.
+
+Le symbole `Σⱼ` désigne la somme pour `j` allant de `1` à `m`. On remarque que
+`Pr(d)` se calcule **uniquement à partir des deux quantités précédentes** :
+chaque terme de la somme est un produit `Pr(d / Cⱼ) · Pr(Cⱼ)`. Il n'y a donc
+**rien de nouveau à estimer** pour obtenir `Pr(d)` — il suffit de **sommer**,
+sur toutes les classes, les produits déjà calculés.
+
+> **À retenir** : `Pr(d)` s'obtient par le **théorème des probabilités
+> totales** : `Pr(d) = Σⱼ Pr(d/Cⱼ)·Pr(Cⱼ)` — la somme, sur **toutes les
+> classes**, des produits `Pr(d/Cⱼ)·Pr(Cⱼ)`. Aucune estimation supplémentaire
+> n'est requise.
+
+## L'algorithme assemblé
+
+On peut maintenant rassembler les pièces. Le cours résume : **en utilisant les
+trois valeurs** `Pr(Cⱼ)`, `Pr(d / Cⱼ)` et `Pr(d)`, on calcule, **pour chaque
+classe `Cⱼ`** :
+
+`Pr(Cⱼ / d) = Pr(d / Cⱼ) · Pr(Cⱼ) / Pr(d)`
+
+Le déroulement complet de l'algorithme est donc le suivant.
+
+1. **Estimer les probabilités a priori** `Pr(Cⱼ)` de chaque classe, par leur
+   fréquence dans `D`.
+2. **Estimer les probabilités conditionnelles** `Pr(Aᵢ = aᵢ / Cⱼ)` de chaque
+   valeur d'attribut, puis en former le **produit** `Pr(d / Cⱼ) = Πᵢ Pr(Aᵢ =
+   aᵢ / Cⱼ)` grâce à l'hypothèse d'indépendance.
+3. **Calculer `Pr(d)`** par le théorème des probabilités totales, en sommant les
+   produits `Pr(d / Cⱼ) · Pr(Cⱼ)` sur toutes les classes.
+4. **Calculer `Pr(Cⱼ / d)`** pour chaque classe par la formule de Bayes
+   ci-dessus — la probabilité **a posteriori** de chaque classe.
+
+Le résultat est, pour chaque classe `Cⱼ`, une probabilité `Pr(Cⱼ / d)`. La
+**section 4** montrera que, pour **prédire** la classe de `d`, il suffira de
+retenir **la plus probable** — et que le dénominateur `Pr(d)`, identique pour
+toutes les classes, pourra alors être ignoré.
+
+> **À retenir** : l'algorithme bayésien naïf **estime** `Pr(Cⱼ)` et les
+> `Pr(Aᵢ=aᵢ/Cⱼ)`, en **déduit** `Pr(d/Cⱼ)` par produit et `Pr(d)` par la somme
+> totale, puis **calcule** `Pr(Cⱼ/d) = Pr(d/Cⱼ)·Pr(Cⱼ)/Pr(d)` pour chaque
+> classe.
+
+## Synthèse de la section
+
+L'algorithme du classifieur bayésien naïf part d'une **instance `d`** décrite
+par les valeurs `a₁, …, aₚ` de ses attributs et de `m` **classes** `C₁, …, Cₘ` ;
+il doit calculer `Pr(Cⱼ / d)` pour chaque classe. La **formule de Bayes** la
+réécrit `Pr(Cⱼ/d) = Pr(d/Cⱼ)·Pr(Cⱼ)/Pr(d)`, ramenant le travail à **trois
+quantités**. La **probabilité a priori `Pr(Cⱼ)`** s'estime par la **proportion**
+d'exemples de classe `Cⱼ` dans `D`. La **vraisemblance `Pr(d/Cⱼ)`**, qui porte
+sur une combinaison complète trop rare pour être estimée telle quelle, est
+factorisée grâce à l'**hypothèse d'indépendance** — le trait **naïf** du
+classifieur — en un **produit** `Πᵢ Pr(Aᵢ=aᵢ/Cⱼ)` de probabilités simples.
+Enfin **`Pr(d)`** s'obtient sans estimation nouvelle, par le **théorème des
+probabilités totales** `Pr(d) = Σⱼ Pr(d/Cⱼ)·Pr(Cⱼ)`. L'algorithme combine ces
+trois quantités pour produire, pour chaque classe, sa **probabilité a
+posteriori** `Pr(Cⱼ/d)`.
+
+> **À retenir** : `Pr(Cⱼ/d) = Pr(d/Cⱼ)·Pr(Cⱼ)/Pr(d)`, avec `Pr(Cⱼ)` estimée
+> par fréquence, `Pr(d/Cⱼ) = Πᵢ Pr(Aᵢ=aᵢ/Cⱼ)` par l'**hypothèse
+> d'indépendance**, et `Pr(d) = Σⱼ Pr(d/Cⱼ)·Pr(Cⱼ)` par les **probabilités
+> totales**.

@@ -1,0 +1,280 @@
+[
+  {
+    "chapterSlug": "notion-transaction",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quelles opérations constituent une transaction au sens strict ?",
+    "payload": { "options": [
+      { "id": "a", "label": "SELECT, INSERT, UPDATE, DELETE" },
+      { "id": "b", "label": "INSERT, UPDATE, DELETE" },
+      { "id": "c", "label": "CREATE, ALTER, DROP" },
+      { "id": "d", "label": "BEGIN, COMMIT, ROLLBACK" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Une transaction est un ensemble d'opérations du LMD : INSERT, UPDATE, DELETE. SELECT n'est pas une opération LMD.",
+    "concepts": ["transaction"]
+  },
+  {
+    "chapterSlug": "notion-transaction",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une transaction commence implicitement au début d'une session ou à la fin d'une transaction précédente.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Oracle démarre automatiquement une transaction dès la première instruction LMD.",
+    "concepts": ["transaction"]
+  },
+  {
+    "chapterSlug": "notion-transaction",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une transaction se termine toujours par COMMIT ou ROLLBACK.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Soit elle est validée (COMMIT), soit annulée (ROLLBACK). Pas d'état intermédiaire après terminaison.",
+    "concepts": ["transaction", "commit", "rollback"]
+  },
+  {
+    "chapterSlug": "acid",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Que signifie le « A » de ACID ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Asynchrone" },
+      { "id": "b", "label": "Atomicité" },
+      { "id": "c", "label": "Auto-commit" },
+      { "id": "d", "label": "Approbation" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "ACID = Atomicité, Cohérence, Isolation, Durabilité.",
+    "concepts": ["acid-atomicite"]
+  },
+  {
+    "chapterSlug": "acid",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Associez chaque propriété ACID à sa définition.",
+    "payload": {
+      "left": [
+        { "id": "A", "label": "Atomicité" },
+        { "id": "C", "label": "Cohérence" },
+        { "id": "I", "label": "Isolation" },
+        { "id": "D", "label": "Durabilité" }
+      ],
+      "right": [
+        { "id": "tout", "label": "Une transaction est complètement validée ou complètement annulée" },
+        { "id": "inv", "label": "Une transaction ne laisse pas la base dans un état incohérent" },
+        { "id": "noview", "label": "Une transaction en cours ne voit pas les autres transactions en cours" },
+        { "id": "perm", "label": "Les modifications validées ne disparaissent pas" }
+      ]
+    },
+    "solution": { "pairs": { "A": "tout", "C": "inv", "I": "noview", "D": "perm" } },
+    "explanation": "A = tout ou rien. C = pas d'invariant violé. I = isolation des transactions concurrentes. D = persistance après commit.",
+    "concepts": ["acid-atomicite", "acid-coherence", "acid-isolation", "acid-durabilite"]
+  },
+  {
+    "chapterSlug": "acid",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pour démarrer une transaction en lecture seule cohérente :",
+    "payload": { "options": [
+      { "id": "a", "label": "SET TRANSACTION READ ONLY;" },
+      { "id": "b", "label": "BEGIN READ ONLY;" },
+      { "id": "c", "label": "START TRANSACTION READ;" },
+      { "id": "d", "label": "LOCK FOR READ;" }
+    ]},
+    "solution": { "correct": ["a"] },
+    "explanation": "SET TRANSACTION READ ONLY : aucune écriture possible, et les commits d'autres transactions ne perturbent pas les lectures.",
+    "concepts": ["set-transaction-readonly", "acid-isolation"]
+  },
+  {
+    "chapterSlug": "acid",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pendant un SELECT, le SGBD affiche les données validées par les transactions précédentes plus les modifications de la transaction courante, mais pas les modifications non commitées d'autres transactions.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "C'est précisément la propriété d'isolation.",
+    "concepts": ["acid-isolation"]
+  },
+  {
+    "chapterSlug": "commit-rollback-savepoint",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Que fait COMMIT ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Annule toutes les opérations" },
+      { "id": "b", "label": "Valide définitivement toutes les opérations de la transaction" },
+      { "id": "c", "label": "Sauvegarde un jalon" },
+      { "id": "d", "label": "Pose un verrou" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "COMMIT valide définitivement la transaction, libère les verrous, écrit dans les Redo Log.",
+    "concepts": ["commit"]
+  },
+  {
+    "chapterSlug": "commit-rollback-savepoint",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "Quelles instructions provoquent un COMMIT implicite ?",
+    "payload": { "options": [
+      { "id": "a", "label": "CREATE TABLE" },
+      { "id": "b", "label": "ALTER TABLE" },
+      { "id": "c", "label": "INSERT" },
+      { "id": "d", "label": "DROP" },
+      { "id": "e", "label": "GRANT" },
+      { "id": "f", "label": "SELECT" }
+    ]},
+    "solution": { "correct": ["a", "b", "d", "e"] },
+    "explanation": "Toutes les instructions LDD (CREATE, ALTER, DROP, TRUNCATE) et les commandes de droits (GRANT, REVOKE) provoquent un COMMIT implicite.",
+    "concepts": ["commit"]
+  },
+  {
+    "chapterSlug": "commit-rollback-savepoint",
+    "type": "TRACE_EXECUTION",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Considérez le script PL/SQL suivant exécuté dans une seule session. Quel sera l'état final des INSERTs validés ? Listez-les dans l'ordre d'exécution.\n\n```sql\nBEGIN\n  INSERT INTO ... VALUES (1);   -- A\n  INSERT INTO ... VALUES (2);   -- B\n  INSERT INTO ... VALUES (3);   -- C\n  ROLLBACK;\n  INSERT INTO ... VALUES (4);   -- D\n  INSERT INTO ... VALUES (5);   -- E\n  SAVEPOINT s1;\n  INSERT INTO ... VALUES (6);   -- F\n  ROLLBACK TO s1;\n  COMMIT;\nEND;\n```",
+    "payload": { "format": "text" },
+    "solution": { "expectedOutput": "4, 5" },
+    "explanation": "Après ROLLBACK : A, B, C annulés. D, E ajoutés. SAVEPOINT s1 puis F. ROLLBACK TO s1 annule F. COMMIT valide D et E. Réponse : 4, 5.",
+    "concepts": ["commit", "rollback", "savepoint"]
+  },
+  {
+    "chapterSlug": "commit-rollback-savepoint",
+    "type": "TRUE_FALSE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Une procédure stockée doit toujours valider sa transaction avec COMMIT à la fin de son exécution.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Faux. La validation est à la charge du code appelant, sauf si la procédure est explicitement PRAGMA AUTONOMOUS_TRANSACTION.",
+    "concepts": ["commit", "pragma-autonomous"]
+  },
+  {
+    "chapterSlug": "concurrence",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quand Oracle pose-t-il un verrou sur une ligne ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Lors d'un SELECT" },
+      { "id": "b", "label": "Lors d'une modification (UPDATE / DELETE / INSERT avec contrainte)" },
+      { "id": "c", "label": "Au début de la session" },
+      { "id": "d", "label": "Jamais, Oracle utilise du MVCC sans verrouillage" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Chaque mise à jour d'une ligne pose un verrou de ligne jusqu'à la fin de la transaction.",
+    "concepts": ["verrouillage-ligne"]
+  },
+  {
+    "chapterSlug": "concurrence",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Un verrou de ligne est libéré à la fin de la transaction qui l'a posé.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Le verrou est libéré par COMMIT ou ROLLBACK.",
+    "concepts": ["verrouillage-ligne", "blocage"]
+  },
+  {
+    "chapterSlug": "concurrence",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 2,
+    "prompt": "En cas d'interblocage (deadlock), que fait Oracle ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Il attend indéfiniment qu'une des transactions cède" },
+      { "id": "b", "label": "Il annule l'une des opérations et débloque l'autre transaction" },
+      { "id": "c", "label": "Il annule complètement les deux transactions" },
+      { "id": "d", "label": "Il alerte l'administrateur sans agir" }
+    ]},
+    "solution": { "correct": ["b"] },
+    "explanation": "Oracle détecte le deadlock et annule une opération (pas toute la transaction), retournant l'erreur ORA-00060.",
+    "concepts": ["deadlock"]
+  },
+  {
+    "chapterSlug": "concurrence",
+    "type": "ORDERING",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Voici un scénario d'interblocage. Ordonnez les étapes telles qu'Oracle les traite :",
+    "payload": {
+      "items": [
+        { "id": "1", "label": "T1 met à jour L1 : L1 verrouillée par T1" },
+        { "id": "2", "label": "T2 met à jour L2 : L2 verrouillée par T2" },
+        { "id": "3", "label": "T1 met à jour L2 : T1 bloquée" },
+        { "id": "4", "label": "T2 met à jour L1 : T2 bloquée" },
+        { "id": "5", "label": "Oracle annule la MAJ de L2 par T1 ; T1 est débloquée" }
+      ]
+    },
+    "solution": { "order": ["1", "2", "3", "4", "5"] },
+    "explanation": "Le deadlock se forme aux étapes 3 et 4. Oracle annule l'opération pendante de l'une des transactions (ici T1 sur L2).",
+    "concepts": ["deadlock", "verrouillage-ligne"]
+  },
+  {
+    "chapterSlug": "concurrence",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Que signifie OLTP ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Online Transaction Processing" },
+      { "id": "b", "label": "Open Logical Transfer Protocol" },
+      { "id": "c", "label": "Offline Table Partitioning" },
+      { "id": "d", "label": "Oracle Logical Trigger Plan" }
+    ]},
+    "solution": { "correct": ["a"] },
+    "explanation": "OLTP = Online Transaction Processing : architecture pour transactions temps réel à fort volume.",
+    "concepts": ["oltp"]
+  },
+  {
+    "chapterSlug": "concurrence",
+    "type": "RUBRIC_OPEN",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Expliquez pourquoi un blocage temporaire entre deux transactions n'est pas nécessairement un deadlock, et comment distinguer les deux situations.",
+    "payload": {
+      "rubric": [
+        { "id": "blocage", "description": "Définit le blocage simple", "keywords": ["blocage", "attend", "verrou"], "weight": 2 },
+        { "id": "deadlock", "description": "Définit le deadlock comme circulaire", "keywords": ["circulaire", "mutuellement", "interblocage", "deadlock"], "weight": 2 },
+        { "id": "fin-trans", "description": "Mentionne que le blocage simple se résout en fin de transaction", "keywords": ["fin", "commit", "libér", "rollback"], "weight": 1 },
+        { "id": "detection", "description": "Mentionne la détection automatique par Oracle (ORA-00060)", "keywords": ["détection", "Oracle", "ORA-00060", "détecte", "automatique"], "weight": 1 }
+      ],
+      "minWords": 60
+    },
+    "solution": { "modelAnswer": "Un blocage simple survient quand une transaction T2 tente de modifier une ligne déjà verrouillée par T1. T2 attend simplement la fin de T1 (COMMIT ou ROLLBACK) pour reprendre. C'est une situation transitoire, normale. Un deadlock est un blocage circulaire : T1 attend une ressource détenue par T2, et T2 attend une ressource détenue par T1. Aucune ne peut continuer. Oracle détecte automatiquement ce cas et annule l'une des opérations pendantes (erreur ORA-00060) pour débloquer le système, contrairement au blocage simple qui se résout naturellement." },
+    "explanation": "Bonne réponse : blocage simple = attend la fin d'une transaction concurrente ; deadlock = attente mutuelle ; Oracle détecte le deadlock et annule une opération.",
+    "concepts": ["blocage", "deadlock"]
+  },
+  {
+    "chapterSlug": "schema-synonyme",
+    "type": "SQL_DDL",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Créez un synonyme public `Client` pointant vers `bob.t_client`.",
+    "payload": {
+      "requiredElements": [
+        { "kind": "keyword", "keyword": "CREATE", "description": "CREATE" },
+        { "kind": "keyword", "keyword": "PUBLIC", "description": "PUBLIC" },
+        { "kind": "keyword", "keyword": "SYNONYM", "description": "SYNONYM" },
+        { "kind": "keyword", "keyword": "Client", "description": "Nom du synonyme" },
+        { "kind": "keyword", "keyword": "FOR", "description": "FOR" },
+        { "kind": "keyword", "keyword": "bob.t_client", "description": "Objet cible" }
+      ]
+    },
+    "solution": { "ddl": "CREATE PUBLIC SYNONYM Client FOR bob.t_client;" },
+    "explanation": "Syntaxe : CREATE [PUBLIC] SYNONYM nom FOR proprietaire.objet;",
+    "concepts": ["synonyme"]
+  }
+]

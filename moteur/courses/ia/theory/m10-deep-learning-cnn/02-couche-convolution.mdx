@@ -1,0 +1,273 @@
+---
+title: "La couche de convolution"
+slug: couche-convolution
+order: 2
+estimatedReadMin: 24
+concepts: [couche-de-convolution, filtre-noyau, carte-de-caracteristiques, padding, stride, dimension-de-sortie-convolution, fonction-relu, reseau-convolutif]
+source: "Slides_ConvNet.pdf"
+---
+
+## La convolution de deux tableaux
+
+Le cœur d'un réseau convolutif est l'opération de **convolution**. Le cours en
+donne la **définition** précise.
+
+> **Définition.** Étant donné un tableau `T` de taille `n × n` et un tableau `W`
+> de taille `m × m`, avec `m ≤ n`, la **convolution de `T` par `W`** est le
+> tableau `Conv` défini comme suit :
+> - `Conv` est de taille `n − m + 1 × n − m + 1` ;
+> - `Conv(i, j) = Σₖ₌₀ᵐ⁻¹ Σₗ₌₀ᵐ⁻¹ W(k, l) ∗ T(i + k, j + l)`.
+
+Écrivons la formule de calcul d'un coefficient sous une forme isolée :
+
+```text
+Conv(i, j) = Σₖ₌₀ᵐ⁻¹ Σₗ₌₀ᵐ⁻¹ W(k, l) ∗ T(i + k, j + l)
+```
+
+La somme porte donc sur les **`m × m` coefficients** du tableau `W`. Le tableau
+`Conv` produit est **plus petit** que `T` : sa taille est `n − m + 1` dans
+chaque dimension.
+
+**De manière plus visuelle**, le cours explique comment calculer `Conv(i, j)` :
+
+1. **Poser `W` au-dessus de `T`** de manière à faire coïncider `W(0, 0)` avec
+   `T(i, j)`.
+2. **Multiplier chaque élément de `W` par celui de `T` avec lequel il
+   coïncide.**
+3. **Additionner tous les produits.**
+
+Autrement dit, on **fait glisser** le petit tableau `W` sur le grand tableau
+`T`, et pour chaque position on calcule une **somme de produits terme à terme**.
+Le résultat de cette somme est un coefficient du tableau `Conv`.
+
+> **À retenir** : la **convolution** d'un tableau `T` (`n × n`) par un tableau
+> `W` (`m × m`, `m ≤ n`) produit un tableau `Conv` de taille
+> **`n − m + 1 × n − m + 1`**, avec
+> `Conv(i, j) = Σₖ Σₗ W(k, l) ∗ T(i + k, j + l)`. Visuellement : on **pose `W`
+> sur `T`**, on **multiplie terme à terme**, on **additionne**.
+
+## Le filtre : un détecteur de motif
+
+Le tableau `W` porte un nom : **le tableau `W` est appelé filtre, ou noyau, ou
+encore template.**
+
+Le cours en donne le **rôle** : **l'objectif de cette opération est en général
+de détecter des parties de l'image `T` semblables au template `W`.** Le filtre
+joue donc le rôle d'un **modèle** (template) ; la convolution **mesure**, en
+chaque position, à quel point l'image **ressemble** à ce modèle. Là où l'image
+contient un motif proche du filtre, le coefficient de `Conv` est élevé : le
+filtre **détecte** ce motif.
+
+> **À retenir** : le tableau `W` de la convolution est un **filtre** (ou
+> **noyau**, ou **template**). Son rôle est de **détecter** dans l'image les
+> **parties semblables** au modèle qu'il représente.
+
+## De la convolution à la couche de convolution
+
+La convolution étant définie, le cours passe à la **couche de convolution**.
+
+> Une **couche de convolution** est définie à l'aide de la convolution de la
+> couche qui la précède **par un filtre contenant des poids `wₖ,ₗ`**.
+
+Plus exactement, en notant `y` la **sortie des neurones d'une couche de
+convolution** et `x` celle de la **couche précédente**, on a :
+
+```text
+y(i, j) = σ( b + Σₖ₌₀ᵗ⁻¹ Σₗ₌₀ᵗ⁻¹ wₖ,ₗ ∗ xᵢ₊ₖ,ⱼ₊ₗ )
+```
+
+avec :
+
+- **`b` est le biais** ;
+- **`wₖ,ₗ` est le poids associé au neurone `(i + k, j + l)`** ;
+- **`σ` est une fonction d'activation** (par exemple la fonction **sigmoïde**).
+
+On reconnaît la structure d'un neurone du module précédent — une **somme
+pondérée** suivie d'une **fonction d'activation** — mais avec deux différences
+majeures :
+
+- la somme ne porte **pas** sur tous les neurones de la couche précédente, mais
+  seulement sur un **carré `t × t`** ;
+- les poids `wₖ,ₗ` sont ceux d'un **filtre**.
+
+Le filtre fait ici une taille `t × t` (le carré de la couche précédente auquel
+chaque neurone est connecté).
+
+> **À retenir** : une **couche de convolution** est la convolution de la couche
+> précédente par un **filtre de poids `wₖ,ₗ`** : la sortie du neurone `(i, j)`
+> est `y(i, j) = σ(b + Σₖ Σₗ wₖ,ₗ ∗ xᵢ₊ₖ,ⱼ₊ₗ)`, avec `b` le **biais** et `σ`
+> une **fonction d'activation**.
+
+## Poids partagés et cartes de caractéristiques
+
+Le cours souligne **deux propriétés essentielles** des couches de convolution.
+
+**1. Poids partagés.** **Les coefficients `wₖₗ` et `b` sont communs à tous les
+neurones du tableau.** L'idée est donc de **détecter le même motif à tous les
+emplacements** du tableau contenant les entrées. Un seul filtre, avec son seul
+biais, sert pour **toute** la couche : c'est le **partage des poids (weight
+sharing)**.
+
+Cette propriété a une conséquence importante, sur laquelle le cours reviendra :
+elle **réduit fortement le nombre de paramètres**, puisqu'un filtre `t × t` ne
+compte que `t × t` poids (plus un biais), quelle que soit la taille de la couche.
+
+**2. Plusieurs tableaux par couche.** **Une couche de convolution ne contient
+pas un seul tableau de neurones, mais plusieurs.** **Chacun de ces tableaux est
+défini à l'aide d'un filtre différent.** Cela permet de **détecter des motifs
+différents dans un même tableau d'entrée**. Chaque tableau résultant est une
+**carte de caractéristiques** : une couche de convolution produit **autant de
+cartes que de filtres**.
+
+Le cours en déduit les **hyperparamètres** d'une couche de convolution :
+
+- **le nombre de filtres** ;
+- **la forme et la taille de chacun d'entre eux**.
+
+> **À retenir** : dans une couche de convolution, les poids `wₖₗ` et le biais
+> `b` sont **partagés** par tous les neurones d'un même tableau (mêmes
+> détecteurs partout). Une couche contient **plusieurs tableaux**, un **par
+> filtre**, pour détecter **plusieurs motifs** : ce sont les **cartes de
+> caractéristiques**. Hyperparamètres : **nombre de filtres**, **forme et
+> taille** de chacun.
+
+## Padding et stride
+
+Au-delà de la définition de base, deux **hyperparamètres** permettent de
+contrôler le comportement d'une convolution : le **padding** et le **stride**.
+
+**Le padding (remplissage).** Le tableau `Conv` produit par la convolution est
+plus petit que l'entrée (`n − m + 1` au lieu de `n`). Le **padding** consiste à
+**ajouter des bordures autour de l'entrée** — en général des **zéros** —, ce qui
+permet notamment de **conserver la taille** du tableau à la sortie. On note `P`
+la largeur du padding.
+
+> ⚠️ Le code Keras des travaux pratiques illustre directement le padding :
+> `Conv2D(32, (3, 3), padding='same', ...)` demande un padding qui **conserve la
+> taille** ; sans l'option `padding`, la convolution **réduit** le tableau.
+
+**Le stride (pas).** La convolution de base fait glisser le filtre **case par
+case**. Le **stride** est le **pas de déplacement** du filtre. On note `S` ce
+pas. Avec un stride supérieur à `1`, le filtre **« saute »** des positions : le
+tableau de sortie est alors **plus petit** — c'est un **sous-échantillonnage**.
+
+> **À retenir** : le **padding `P`** ajoute des **bordures** (souvent des zéros)
+> autour de l'entrée, ce qui permet notamment de **conserver la taille** en
+> sortie. Le **stride `S`** est le **pas de déplacement** du filtre ; un pas
+> `> 1` **sous-échantillonne** le tableau de sortie.
+
+## La dimension de sortie d'une convolution
+
+Padding et stride modifient la taille du tableau produit. La **dimension de
+sortie** d'une convolution se calcule par une formule générale. En notant `W` la
+**taille de l'entrée** (dans une dimension), `F` la **taille du filtre**, `P` le
+**padding** et `S` le **stride**, la taille de la sortie est :
+
+```text
+(W − F + 2P) / S + 1
+```
+
+Cette formule **englobe** la définition de base donnée plus haut.
+
+- **Sans padding ni stride** (`P = 0`, `S = 1`), elle redonne `W − F + 1` —
+  exactement la taille `n − m + 1` de la définition de la convolution.
+- **Avec un padding `P`**, le terme `2P` (une bordure de chaque côté) **agrandit**
+  l'entrée effective, donc la sortie.
+- **Avec un stride `S > 1`**, la division par `S` **réduit** la sortie : le
+  filtre saute des positions.
+
+> ⚠️ La formule `(W − F + 2P)/S + 1` doit produire un **entier**. Les valeurs de
+> `F`, `P` et `S` doivent être choisies de façon cohérente avec la taille
+> d'entrée `W` ; sinon la convolution n'est pas définie proprement sur tout le
+> tableau.
+
+> **À retenir** : la **dimension de sortie** d'une convolution est
+> **`(W − F + 2P)/S + 1`**, où `W` est la taille d'**entrée**, `F` celle du
+> **filtre**, `P` le **padding** et `S` le **stride**. Sans padding ni stride,
+> elle se réduit à `W − F + 1`.
+
+## La fonction d'activation ReLU
+
+Les couches de convolution **reprennent les fonctions d'activation** utilisées
+dans les réseaux standards (sigmoïde, tangente hyperbolique…), mais le cours
+signale qu'un ConvNet y **ajoute une nouvelle fonction** : la **fonction
+ReLU**.
+
+**ReLU** signifie **Rectified Linear Units**. Son objectif est de **« corriger »
+les sorties des neurones**, **par exemple en prenant le max entre `0` et la
+valeur de la sortie** :
+
+```text
+ReLU(x) = max(0, x)
+```
+
+Le cours donne **deux indications** :
+
+- **la fonction ReLU a été introduite à l'origine pour accélérer
+  l'apprentissage** ;
+- **il existe plusieurs variantes de la fonction ReLU.**
+
+Dans les programmes Keras des travaux pratiques, c'est précisément cette
+fonction qui est utilisée pour les couches de convolution : `activation='relu'`.
+
+> **À retenir** : un ConvNet ajoute aux activations classiques la fonction
+> **ReLU (Rectified Linear Units)**, qui **corrige** la sortie d'un neurone, par
+> exemple `ReLU(x) = max(0, x)`. Elle a été introduite pour **accélérer
+> l'apprentissage** et possède **plusieurs variantes**.
+
+## Lire une couche de convolution en Keras
+
+Le cours s'appuie, pour les travaux pratiques, sur la bibliothèque **Keras**.
+Une couche de convolution s'y déclare avec `Conv2D`. Le code suivant est à
+**lire** :
+
+```python
+from keras.models import Sequential
+from keras.layers import Conv2D
+
+convnet = Sequential()
+# 32 filtres de taille 3x3, activation ReLU, entrée 28x28x1
+convnet.add(Conv2D(32, kernel_size=(3, 3),
+                   activation='relu',
+                   input_shape=(28, 28, 1)))
+```
+
+On y retrouve **exactement** les hyperparamètres énoncés par le cours :
+
+- le **nombre de filtres** : `32` — donc `32` cartes de caractéristiques en
+  sortie ;
+- la **taille du filtre** : `kernel_size=(3, 3)` ;
+- la **fonction d'activation** : `activation='relu'`.
+
+L'option `padding='same'` (vue dans les TP sur CIFAR-10) ajoute, elle, le
+**padding** qui conserve la taille du tableau.
+
+> **À retenir** : en **Keras**, une couche de convolution est une couche
+> `Conv2D`, paramétrée par le **nombre de filtres**, la **taille du filtre**
+> (`kernel_size`), la **fonction d'activation** et, éventuellement, le
+> **padding** — c'est-à-dire les **hyperparamètres** définis par le cours.
+
+## Synthèse de la section
+
+La **convolution** d'un tableau `T` (`n × n`) par un tableau `W` (`m × m`,
+`m ≤ n`) produit un tableau `Conv` de taille **`n − m + 1`** dans chaque
+dimension, avec `Conv(i, j) = Σₖ Σₗ W(k, l) ∗ T(i + k, j + l)` : on **pose `W`
+sur `T`**, on **multiplie terme à terme**, on **additionne**. Le tableau `W` est
+un **filtre (noyau, template)**, dont le rôle est de **détecter les parties de
+l'image semblables** à ce modèle. Une **couche de convolution** est la
+convolution de la couche précédente par un filtre de poids `wₖ,ₗ` :
+`y(i, j) = σ(b + Σₖ Σₗ wₖ,ₗ ∗ xᵢ₊ₖ,ⱼ₊ₗ)`, avec `b` le **biais** et `σ` une
+**activation**. Deux propriétés clés : les poids et le biais sont **partagés**
+par tous les neurones d'un tableau (mêmes détecteurs partout), et une couche
+contient **plusieurs tableaux** — un **par filtre** —, les **cartes de
+caractéristiques**. Les **hyperparamètres** sont le **nombre de filtres** et
+leur **forme/taille**, auxquels s'ajoutent le **padding `P`** (bordures, qui
+peut conserver la taille) et le **stride `S`** (pas, qui peut
+sous-échantillonner). La **dimension de sortie** vaut **`(W − F + 2P)/S + 1`**.
+Un ConvNet ajoute la fonction d'activation **ReLU** (`max(0, x)`), introduite
+pour **accélérer l'apprentissage**.
+
+> **À retenir** : la **couche de convolution** applique un **filtre** (poids
+> **partagés**) à un carré `t × t` de la couche précédente, produisant une
+> **carte de caractéristiques** par filtre. Sa sortie a pour dimension
+> **`(W − F + 2P)/S + 1`** ; son activation typique est la **ReLU**.

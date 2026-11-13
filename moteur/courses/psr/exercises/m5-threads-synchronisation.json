@@ -1,0 +1,1961 @@
+[
+  {
+    "chapterSlug": "threads-notion",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Deux threads appartiennent au même processus. Lequel de ces éléments est PROPRE à chaque thread (chacun a le sien), et non partagé ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La pile d'exécution — donc les variables locales et les paramètres de fonction."
+        },
+        {
+          "id": "b",
+          "label": "Les variables globales du programme."
+        },
+        {
+          "id": "c",
+          "label": "Le tas, c'est-à-dire la mémoire allouée par malloc."
+        },
+        {
+          "id": "d",
+          "label": "Le PID du processus."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "C'est le point fondamental du chapitre. Au sein d'un même processus, les threads **partagent presque tout** : les **variables globales**, les variables `static`, le **tas** (`malloc`), les descripteurs de fichiers, et le **PID** (un thread n'a pas de PID propre). En revanche, **chaque thread possède en propre** : sa **pile d'exécution** (*stack*) — donc ses **variables locales** et ses paramètres de fonction —, ses **registres** processeur et son **identifiant de thread** (TID). La réponse (a) est donc le seul élément privé. (b), (c) et (d) sont tous partagés par l'ensemble des threads.",
+    "concepts": [
+      "pile-thread",
+      "memoire-partagee-threads",
+      "thread-vs-processus"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "threads-notion",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Si le thread principal d'un processus se termine par `return` (ou par `exit()`), tout le processus se termine — et tous les autres threads encore actifs sont tués brutalement.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai — c'est un classique d'examen. Si le **thread principal** (celui qui exécute `main`) se termine par `return` ou par `exit()`, **tout le processus se termine**, et **tous les autres threads sont tués d'un coup**, même s'ils n'avaient pas fini leur travail. Pour que le thread principal **finisse sa fonction** tout en **laissant vivre** les autres threads, il faut terminer le `main` par **`pthread_exit(NULL)`** — et surtout pas par `return` ni `exit()`. Avec `pthread_exit(NULL)`, le processus ne s'éteint que lorsque le **dernier** thread a terminé.",
+    "concepts": [
+      "pthread-exit",
+      "fonction-thread"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "threads-notion",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur la création d'un thread POSIX en C.",
+    "payload": {
+      "template": "Les fonctions des threads POSIX sont déclarées dans l'en-tête {{c1}}, et tout programme qui les utilise doit être compilé avec l'option {{c2}}. On crée un thread avec l'appel {{c3}}, dont le troisième paramètre est la fonction à exécuter ; sa signature est imposée : elle reçoit et renvoie un {{c4}}. Cet appel renvoie la valeur {{c5}} en cas de succès.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "md",
+          "placeholder": "en-tête"
+        },
+        {
+          "id": "c2",
+          "width": "sm",
+          "hint": "l'option de compilation obligatoire"
+        },
+        {
+          "id": "c3",
+          "width": "md"
+        },
+        {
+          "id": "c4",
+          "width": "sm",
+          "hint": "le type pointeur générique"
+        },
+        {
+          "id": "c5",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "<pthread.h>",
+          "pthread.h"
+        ],
+        "c2": [
+          "-pthread",
+          "-lpthread"
+        ],
+        "c3": [
+          "pthread_create",
+          "pthread_create()"
+        ],
+        "c4": [
+          "void *",
+          "void*"
+        ],
+        "c5": [
+          "0",
+          "zero",
+          "zéro"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Les threads POSIX sont normalisés par la bibliothèque **pthreads** : toutes ses fonctions, types et constantes sont déclarés dans **`<pthread.h>`**. L'option de compilation **`-pthread`** est **obligatoire** : elle règle à la fois le compilateur et l'éditeur de liens ; l'oublier provoque des erreurs *undefined reference to `pthread_create`*. On crée un thread avec **`pthread_create(&tid, attr, func, arg)`**. Le troisième paramètre, `func`, est la fonction de thread : sa signature est **imposée** — elle prend un argument **`void *`** et renvoie un **`void *`**. Enfin, contrairement aux appels système habituels, `pthread_create` renvoie **`0`** en cas de **succès** (et le code d'erreur lui-même, non nul, en cas d'échec — sans positionner `errno`).",
+    "concepts": [
+      "bibliotheque-pthread",
+      "option-pthread",
+      "pthread-create",
+      "fonction-thread"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "threads-notion",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque fonction des threads POSIX au rôle qu'elle remplit.",
+    "payload": {
+      "left": [
+        {
+          "id": "create",
+          "label": "Crée un nouveau thread exécutant une fonction donnée"
+        },
+        {
+          "id": "join",
+          "label": "Suspend le thread appelant jusqu'à la fin d'un thread précis, et récupère sa valeur de retour"
+        },
+        {
+          "id": "exit",
+          "label": "Termine le thread appelant en renvoyant une valeur"
+        },
+        {
+          "id": "self",
+          "label": "Renvoie l'identifiant (TID) du thread appelant"
+        },
+        {
+          "id": "detach",
+          "label": "Place un thread dans l'état détaché : ses ressources seront libérées automatiquement"
+        }
+      ],
+      "right": [
+        {
+          "id": "r-create",
+          "label": "pthread_create()"
+        },
+        {
+          "id": "r-join",
+          "label": "pthread_join()"
+        },
+        {
+          "id": "r-exit",
+          "label": "pthread_exit()"
+        },
+        {
+          "id": "r-self",
+          "label": "pthread_self()"
+        },
+        {
+          "id": "r-detach",
+          "label": "pthread_detach()"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "create": "r-create",
+        "join": "r-join",
+        "exit": "r-exit",
+        "self": "r-self",
+        "detach": "r-detach"
+      }
+    },
+    "explanation": "**`pthread_create`** crée un nouveau thread et lui fait exécuter la fonction passée en troisième argument. **`pthread_join`** est l'équivalent de `waitpid` pour les threads : elle **suspend** le thread appelant jusqu'à la **terminaison** d'un thread *précis* (on doit spécifier son `tid`) et **récupère** sa valeur de retour. **`pthread_exit`** **termine le thread appelant** en renvoyant une valeur `void *` — c'est l'équivalent de `return` dans la fonction de thread. **`pthread_self`** renvoie le **TID** du thread appelant (l'analogue de `getpid()`). **`pthread_detach`** place un thread dans l'état **détaché** : ses ressources (pile, code de retour) seront libérées **automatiquement** à sa fin, mais il ne pourra plus être joint.",
+    "concepts": [
+      "pthread-create",
+      "pthread-join",
+      "pthread-exit",
+      "pthread-self",
+      "pthread-detach"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "threads-notion",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Un programme crée trois threads de calcul, attend leur fin, récupère leurs résultats, puis se termine proprement. Remettez les étapes dans l'ordre.",
+    "payload": {
+      "items": [
+        {
+          "id": "decl",
+          "label": "Déclarer un tableau de pthread_t pour mémoriser les identifiants des threads"
+        },
+        {
+          "id": "create",
+          "label": "Dans une boucle, appeler pthread_create pour lancer chacun des trois threads"
+        },
+        {
+          "id": "run",
+          "label": "Les threads s'exécutent en parallèle, chacun exécutant sa fonction de thread"
+        },
+        {
+          "id": "join",
+          "label": "Dans une boucle, appeler pthread_join sur chaque thread pour attendre sa fin"
+        },
+        {
+          "id": "use",
+          "label": "Exploiter les valeurs de retour récupérées par les pthread_join"
+        },
+        {
+          "id": "ret",
+          "label": "Le thread principal fait return : tous les threads sont déjà finis, le processus se termine proprement"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "decl",
+        "create",
+        "run",
+        "join",
+        "use",
+        "ret"
+      ]
+    },
+    "explanation": "On **déclare** d'abord le tableau de `pthread_t` qui mémorisera les identifiants — `pthread_create` a besoin de l'adresse d'une variable `pthread_t` à remplir. On **crée** ensuite les trois threads dans une boucle. Une fois créés, les threads **s'exécutent en parallèle** du thread principal. Le `main` appelle alors **`pthread_join`** sur chaque thread : il se **suspend** jusqu'à la fin de chacun et **récupère** sa valeur de retour. Ces valeurs récupérées peuvent enfin être **exploitées**. Comme tous les threads ont été joints, le **`return`** final du `main` ne tue plus rien : ils sont déjà terminés, le processus s'éteint proprement. Sans les `pthread_join`, ce `return` aurait tué les threads **avant** la fin de leur calcul.",
+    "concepts": [
+      "pthread-create",
+      "pthread-join",
+      "fonction-thread"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "threads-notion",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Un programme crée un grand nombre de threads. Parmi ces affirmations sur les threads joignables et détachés, lesquelles sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Avec les attributs par défaut (attr = NULL), un thread est créé joignable."
+        },
+        {
+          "id": "b",
+          "label": "Un thread joignable terminé mais jamais joint conserve sa pile et son code de retour : créer beaucoup de tels threads peut saturer la mémoire."
+        },
+        {
+          "id": "c",
+          "label": "Un thread détaché libère automatiquement ses ressources dès qu'il se termine, sans qu'aucun pthread_join ne soit nécessaire."
+        },
+        {
+          "id": "d",
+          "label": "On peut appeler pthread_join sur un thread détaché pour récupérer sa valeur de retour."
+        },
+        {
+          "id": "e",
+          "label": "pthread_detach échoue si le thread visé est déjà détaché."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "e"
+      ]
+    },
+    "explanation": "(a) Vrai : avec `attr = NULL`, le thread créé est **joignable** (non détaché). (b) Vrai : un thread **joignable terminé** doit être **joint** ; tant qu'il ne l'est pas, le système **conserve** sa **pile** et son **code de retour** — exactement comme un processus zombie attend un `wait`. En créer beaucoup sans jamais les joindre **sature** la mémoire. (c) Vrai : un thread **détaché** libère **automatiquement** ses ressources à sa fin — aucun `pthread_join` requis, pas de risque de saturation. (e) Vrai : `pthread_detach` **échoue** si le thread n'existe pas ou s'il est **déjà détaché**. (d) est **faux** : `pthread_join` sur un thread **détaché échoue** — un thread détaché ne peut plus être joint, c'est précisément la contrepartie du détachement.",
+    "concepts": [
+      "thread-joignable",
+      "thread-detache",
+      "pthread-detach",
+      "pthread-join"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "threads-notion",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Ce programme crée quatre threads ; chacun reçoit un entier de 1 à 4 et renvoie son carré. Le thread principal joint chaque thread, additionne les carrés récupérés, puis affiche le total. Quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <pthread.h>\n#include <stdio.h>\n\nvoid *carre(void *arg) {\n    long n = (long) arg;\n    return (void *) (n * n);\n}\n\nint main(void) {\n    pthread_t thr[4];\n    void *ret;\n\n    for (long i = 1; i <= 4; i++)\n        pthread_create(&thr[i - 1], NULL, carre, (void *) i);\n\n    long total = 0;\n    for (int i = 1; i <= 4; i++) {\n        pthread_join(thr[i - 1], &ret);\n        total += (long) ret;\n    }\n    printf(\"somme des carres = %ld\\n\", total);\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "somme des carres = 30"
+    },
+    "explanation": "Chaque thread reçoit un entier `n` (de 1 à 4) converti en `void *`, et **renvoie** `n * n` — faire `return valeur;` dans la fonction de thread équivaut à `pthread_exit(valeur)`. Le thread principal appelle **`pthread_join`** sur chacun des quatre threads : il se **suspend** jusqu'à leur fin et **récupère** chaque valeur de retour dans `ret`. Il additionne donc les carrés : 1 + 4 + 9 + 16 = **30**. La sortie est **déterministe** car le seul `printf` a lieu dans le `main`, **après** que les quatre `pthread_join` ont garanti que tous les calculs sont terminés : l'ordre d'exécution des threads n'a aucune influence sur le total.",
+    "concepts": [
+      "pthread-create",
+      "pthread-join",
+      "pthread-exit"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "threads-notion",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Écrivez un programme C qui reçoit un entier N en premier argument de la ligne de commande, crée N threads, et passe à chacun son numéro d'ordre (0 à N-1). Chaque thread affiche `Thread <numéro>`. Le thread principal attend la fin de tous les threads, puis affiche `Total : <N> threads`. L'ordre d'affichage des threads n'a pas d'importance.",
+    "payload": {
+      "spec": "Le programme inclut <pthread.h>, <stdio.h>, <stdlib.h>. Il lit N avec atol(argv[1]). Il alloue un tableau de N pthread_t (par exemple avec calloc). La fonction de thread a la signature void *f(void *) : elle récupère son numéro d'ordre avec long num = (long) arg, puis affiche la ligne 'Thread <num>'. Dans main : une boucle crée les N threads avec pthread_create, en passant le numéro d'ordre converti en void * — (void *) i — comme argument (NE PAS passer &i). Une seconde boucle appelle pthread_join sur chacun des N threads. Après avoir joint tous les threads, le programme affiche la ligne 'Total : <N> threads'. Comme l'ordre d'exécution des threads est imprévisible, l'ordre des lignes 'Thread <num>' n'est pas garanti — la comparaison se fait par ensemble de lignes.",
+      "std": "gnu11",
+      "compare": "sorted-lines",
+      "starterCode": "#include <pthread.h>\n#include <stdio.h>\n#include <stdlib.h>\n\n/* Chaque thread affiche 'Thread <son numero d'ordre>'. */\nvoid *fonction_thread(void *arg) {\n    /* recuperer le numero d'ordre passe en argument, puis l'afficher */\n    return NULL;\n}\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s N\\n\", argv[0]); return 1; }\n    long n = atol(argv[1]);\n\n    /* 1. allouer un tableau de n pthread_t */\n\n    /* 2. creer les n threads, en passant a chacun son numero d'ordre */\n\n    /* 3. joindre les n threads */\n\n    /* 4. afficher 'Total : <n> threads' */\n\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "trois threads",
+          "stdin": "",
+          "args": [
+            "3"
+          ],
+          "expectedStdout": "Thread 0\nThread 1\nThread 2\nTotal : 3 threads",
+          "compare": "sorted-lines"
+        },
+        {
+          "name": "cinq threads",
+          "stdin": "",
+          "args": [
+            "5"
+          ],
+          "expectedStdout": "Thread 0\nThread 1\nThread 2\nThread 3\nThread 4\nTotal : 5 threads",
+          "compare": "sorted-lines"
+        },
+        {
+          "name": "un seul thread",
+          "stdin": "",
+          "args": [
+            "1"
+          ],
+          "expectedStdout": "Thread 0\nTotal : 1 threads",
+          "compare": "sorted-lines"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <pthread.h>\n#include <stdio.h>\n#include <stdlib.h>\n\nvoid *fonction_thread(void *arg) {\n    long num = (long) arg;\n    printf(\"Thread %ld\\n\", num);\n    return NULL;\n}\n\nint main(int argc, char *argv[]) {\n    if (argc < 2) { fprintf(stderr, \"usage: %s N\\n\", argv[0]); return 1; }\n    long n = atol(argv[1]);\n\n    pthread_t *thr = calloc(n, sizeof(pthread_t));\n    if (thr == NULL) { perror(\"calloc\"); return 1; }\n\n    for (long i = 0; i < n; i++) {\n        if (pthread_create(&thr[i], NULL, fonction_thread, (void *) i) != 0) {\n            fprintf(stderr, \"Erreur dans pthread_create\\n\");\n            return 1;\n        }\n    }\n\n    for (long i = 0; i < n; i++)\n        pthread_join(thr[i], NULL);\n\n    printf(\"Total : %ld threads\\n\", n);\n    free(thr);\n    return 0;\n}"
+    },
+    "explanation": "La fonction de thread a la signature imposée **`void *f(void *)`**. Elle récupère son numéro d'ordre par `long num = (long) arg` — on utilise `long` car, sur les systèmes 64 bits, un `long` a la même taille qu'un pointeur, ce qui rend la conversion sûre. La première boucle crée les N threads avec `pthread_create(&thr[i], NULL, fonction_thread, (void *) i)` : on passe **la valeur** `i` convertie en `void *`, et **jamais** `&i` — passer l'adresse d'une variable de boucle qui change est le **piège de l'argument partagé** (tous les threads liraient la même variable). La seconde boucle **joint** les N threads : `pthread_join` garantit qu'ils sont **tous terminés** avant le `printf` final, qui produit donc `Total : N threads` après toutes les lignes `Thread <num>`. L'ordre d'exécution des threads étant imprévisible, l'ordre des lignes `Thread <num>` n'est pas garanti — d'où la comparaison par ensemble de lignes.",
+    "concepts": [
+      "pthread-create",
+      "pthread-join",
+      "fonction-thread"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "threads-notion",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme lance 4 threads ; chaque thread effectue un petit travail puis marque sa case du tableau `pret` à 1. Le thread principal devrait afficher `threads termines : 4`. En réalité il affiche `threads termines : 0`. Trouvez et corrigez l'erreur.",
+    "payload": {
+      "spec": "Le programme déclare un tableau global int pret[4] initialisé implicitement à 0. La fonction travailleur reçoit son indice, simule un travail avec usleep(50000), puis met pret[indice] = 1. main crée les 4 threads, puis calcule la somme du tableau pret et affiche 'threads termines : <somme>'. Le bug : main NE joint PAS les threads. Il calcule la somme et l'affiche IMMÉDIATEMENT après la boucle de création — alors que les threads, ralentis par usleep, n'ont pas encore eu le temps de s'exécuter ni de marquer leur case. La somme lue vaut donc 0. La correction consiste à AJOUTER, entre la boucle de création et le calcul de la somme, une boucle de pthread_join sur chacun des 4 threads : for (int i = 0; i < NB; i++) pthread_join(thr[i], NULL); — pthread_join suspend le thread principal jusqu'à la fin de chaque thread, garantissant que toutes les cases sont marquées avant la lecture. La sortie attendue est la ligne 'threads termines : 4'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <pthread.h>\n#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n\n#define NB 4\n\nint pret[NB];   /* chaque thread y depose 1 quand il a fini son travail */\n\nvoid *travailleur(void *arg) {\n    long i = (long) arg;\n    usleep(50000);          /* simule un travail un peu long */\n    pret[i] = 1;\n    return NULL;\n}\n\nint main(void) {\n    pthread_t thr[NB];\n\n    for (long i = 0; i < NB; i++)\n        pthread_create(&thr[i], NULL, travailleur, (void *) i);\n\n    /* le resultat est lu ici */\n\n    int total = 0;\n    for (int i = 0; i < NB; i++)\n        total += pret[i];\n\n    printf(\"threads termines : %d\\n\", total);\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "les 4 threads sont bien attendus",
+          "stdin": "",
+          "expectedStdout": "threads termines : 4",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <pthread.h>\n#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n\n#define NB 4\n\nint pret[NB];   /* chaque thread y depose 1 quand il a fini son travail */\n\nvoid *travailleur(void *arg) {\n    long i = (long) arg;\n    usleep(50000);          /* simule un travail un peu long */\n    pret[i] = 1;\n    return NULL;\n}\n\nint main(void) {\n    pthread_t thr[NB];\n\n    for (long i = 0; i < NB; i++)\n        pthread_create(&thr[i], NULL, travailleur, (void *) i);\n\n    for (int i = 0; i < NB; i++)\n        pthread_join(thr[i], NULL);\n\n    int total = 0;\n    for (int i = 0; i < NB; i++)\n        total += pret[i];\n\n    printf(\"threads termines : %d\\n\", total);\n    return 0;\n}"
+    },
+    "explanation": "Le programme **oublie d'attendre les threads**. Après la boucle de création, le thread principal calcule aussitôt la somme du tableau `pret` — mais les threads, ralentis par `usleep(50000)`, **n'ont pas encore eu le temps** de s'exécuter et de marquer leur case. La somme lue vaut donc **0**, et le `main` se termine par `return` — ce qui **tue** au passage les threads encore actifs. La correction : intercaler une boucle de **`pthread_join`** entre la création et la lecture du résultat — `for (int i = 0; i < NB; i++) pthread_join(thr[i], NULL);`. `pthread_join` **suspend** le thread principal jusqu'à la **terminaison** de chaque thread : on a alors la **garantie** que les quatre cases sont marquées avant de lire le tableau. Le total vaut alors `4`. C'est la règle générale : **on joint les threads avant de lire le résultat de leur travail**.",
+    "concepts": [
+      "pthread-join",
+      "pthread-create",
+      "memoire-partagee-threads"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "partage-donnees",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Comment définit-on une condition de course (race condition) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un défaut où le résultat du programme dépend de l'ordre d'exécution non maîtrisé de plusieurs threads accédant à une donnée partagée."
+        },
+        {
+          "id": "b",
+          "label": "Une situation où plusieurs threads sont bloqués pour toujours, chacun attendant un verrou tenu par un autre."
+        },
+        {
+          "id": "c",
+          "label": "Le ralentissement d'un programme dû à la création d'un trop grand nombre de threads."
+        },
+        {
+          "id": "d",
+          "label": "Une erreur de compilation provoquée par l'oubli de l'option -pthread."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Une **condition de course** (*race condition*) est un défaut où le **résultat** d'un programme dépend de l'**ordre d'exécution** non maîtrisé de plusieurs threads (ou processus) accédant à une **donnée partagée**. Sa signature : deux exécutions du **même programme**, avec les **mêmes entrées**, peuvent produire des **résultats différents**. (b) décrit l'**interblocage** (*deadlock*) — un problème distinct, propre aux verrous, étudié au chapitre suivant. (c) décrit une simple perte de performance, pas une condition de course. (d) est une erreur de l'éditeur de liens, sans rapport avec la concurrence.",
+    "concepts": [
+      "condition-course",
+      "acces-concurrent",
+      "non-determinisme"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "partage-donnees",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Une variable locale ordinaire (non `static`) d'une fonction de thread, comme le `int i` d'une boucle, doit être protégée contre les accès concurrents au même titre qu'une variable globale.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux. Une **variable locale ordinaire** (non `static`) d'une fonction de thread est allouée sur la **pile** du thread — et **chaque thread a sa propre pile**. Chaque thread possède donc sa **propre copie** de cette variable : aucune collision n'est possible, **aucune protection n'est nécessaire**. Un `int i` de boucle, ou un `long num` reçu en argument, est **privé au thread**. Sont en revanche exposées les données **réellement partagées et modifiées** : les **variables globales**, les variables **`static`** locales, et la mémoire du **tas** (`malloc`) dont l'adresse est connue de plusieurs threads. On ne place en section critique que ces données communes — jamais les variables locales.",
+    "concepts": [
+      "pile-thread",
+      "memoire-partagee-threads",
+      "section-critique"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "partage-donnees",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Parmi ces données manipulées par les threads d'un même processus, lesquelles sont exposées aux conditions de course (donc à protéger si au moins un thread les modifie) ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une variable globale modifiée par plusieurs threads."
+        },
+        {
+          "id": "b",
+          "label": "Une variable static locale à une fonction, modifiée par plusieurs threads."
+        },
+        {
+          "id": "c",
+          "label": "Une zone allouée par malloc dont l'adresse est connue de plusieurs threads, et qu'ils modifient."
+        },
+        {
+          "id": "d",
+          "label": "Une variable locale ordinaire (non static) propre à un thread."
+        },
+        {
+          "id": "e",
+          "label": "Une variable globale uniquement lue par tous les threads, jamais modifiée après le lancement."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Sont exposées les données à la fois **partagées** et **modifiées** par au moins un thread. (a) Vrai : une **variable globale** est partagée par construction ; modifiée par plusieurs threads, c'est le cas d'école de la course. (b) Vrai : une variable **`static`** locale est elle aussi partagée par tous les threads — sa portée est locale mais sa durée de vie est globale. (c) Vrai : la mémoire du **tas** (`malloc`) dont l'adresse circule entre threads est partagée ; modifiée, elle est exposée. (d) est **faux** : une variable **locale ordinaire** est sur la pile du thread, **privée** — aucune collision possible. (e) est **faux** : une lecture seule **ne suffit pas** à créer une course ; il faut **« au moins un écrivain »**. Une donnée partagée jamais modifiée après le lancement ne provoque **pas** de course.",
+    "concepts": [
+      "memoire-partagee-threads",
+      "acces-concurrent",
+      "condition-course"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "partage-donnees",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur le cœur du problème : pourquoi `compteur++` est dangereux entre threads.",
+    "payload": {
+      "template": "Une instruction comme compteur++ n'est pas {{c1}} : au niveau du processeur, elle se décompose en trois étapes — {{c2}} la valeur en mémoire vers un registre, modifier le registre, puis {{c3}} le registre en mémoire. L'ordonnanceur peut interrompre un thread entre ces étapes : c'est ce qui crée la condition de course. La portion de code qui accède à la donnée partagée et ne doit être exécutée que par un seul thread à la fois s'appelle une {{c4}}, et la propriété à garantir sur elle s'appelle l'{{c5}}.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm",
+          "hint": "« d'un seul tenant », indivisible"
+        },
+        {
+          "id": "c2",
+          "width": "sm",
+          "hint": "première étape : lecture-..."
+        },
+        {
+          "id": "c3",
+          "width": "sm",
+          "hint": "troisième étape"
+        },
+        {
+          "id": "c4",
+          "width": "md"
+        },
+        {
+          "id": "c5",
+          "width": "md"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "atomique"
+        ],
+        "c2": [
+          "lire",
+          "charger"
+        ],
+        "c3": [
+          "ecrire",
+          "écrire",
+          "ranger",
+          "stocker"
+        ],
+        "c4": [
+          "section critique"
+        ],
+        "c5": [
+          "exclusion mutuelle"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Une opération est **atomique** si elle s'exécute **« d'un seul tenant »** : rien ne peut s'intercaler en son milieu. Or `compteur++` (ou `compteur = compteur + 1`) **n'est pas atomique** : au niveau du processeur, elle suit un schéma **lecture–modification–écriture** en trois étapes — **lire** la valeur de la mémoire vers un **registre**, **modifier** le registre (ajouter 1), puis **écrire** le registre dans la mémoire. L'**ordonnanceur** peut **interrompre** un thread entre deux de ces étapes pour donner la main à un autre : le second thread lit alors une valeur **périmée**, et c'est exactement la **condition de course**. La portion de code accédant à la donnée partagée, qui ne doit être exécutée que par **un seul thread à la fois**, s'appelle une **section critique** ; la propriété à garantir sur elle est l'**exclusion mutuelle** — au plus un thread à la fois dans la section critique.",
+    "concepts": [
+      "operation-non-atomique",
+      "condition-course",
+      "section-critique",
+      "exclusion-mutuelle"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "partage-donnees",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "La variable partagée `compteur` vaut 5. Deux threads A et B exécutent chacun `compteur++` ; le résultat attendu est 7. Remettez dans l'ordre l'entrelacement malheureux qui aboutit à 6 (une mise à jour perdue).",
+    "payload": {
+      "items": [
+        {
+          "id": "a-load",
+          "label": "Thread A lit compteur depuis la mémoire : son registre vaut 5"
+        },
+        {
+          "id": "b-load",
+          "label": "L'ordonnanceur bascule sur B ; Thread B lit compteur : son registre vaut 5 aussi (valeur périmée)"
+        },
+        {
+          "id": "b-add",
+          "label": "Thread B ajoute 1 dans son registre : il obtient 6"
+        },
+        {
+          "id": "b-store",
+          "label": "Thread B écrit 6 en mémoire : compteur vaut 6"
+        },
+        {
+          "id": "a-add",
+          "label": "L'ordonnanceur rebascule sur A ; Thread A ajoute 1 à son vieux 5 : il obtient 6"
+        },
+        {
+          "id": "a-store",
+          "label": "Thread A écrit 6 en mémoire : compteur vaut 6 — l'incrément de B a été écrasé"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "a-load",
+        "b-load",
+        "b-add",
+        "b-store",
+        "a-add",
+        "a-store"
+      ]
+    },
+    "explanation": "L'entrelacement fatal : **A lit** `compteur` (5) dans son registre, puis l'ordonnanceur **l'interrompt** avant qu'il ait fini. **B lit** à son tour `compteur` — qui vaut **toujours 5** : B travaille sur une valeur **périmée**. B **ajoute 1** (6) et **écrit** 6 en mémoire. L'ordonnanceur **rebascule sur A**, qui reprend là où il s'était arrêté : il **ajoute 1 à son vieux 5** (et non au 6 actuel), obtient 6, et **écrit 6**. Le résultat final est **6 au lieu de 7** : l'incrément de B a été **écrasé** — c'est une **perte de mise à jour** (*lost update*). La cause : `compteur++` n'est **pas atomique**, et B a lu la variable **pendant** que A travaillait encore dessus. Si A avait terminé ses trois étapes avant que B ne commence, le résultat aurait été 7.",
+    "concepts": [
+      "operation-non-atomique",
+      "condition-course",
+      "perte-de-maj"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "partage-donnees",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque terme du vocabulaire de la concurrence à sa définition.",
+    "payload": {
+      "left": [
+        {
+          "id": "course",
+          "label": "Défaut où le résultat dépend de l'ordre d'exécution non maîtrisé des threads"
+        },
+        {
+          "id": "atomique",
+          "label": "Qualifie une opération qui s'exécute d'un seul tenant, sans qu'aucune autre ne s'intercale"
+        },
+        {
+          "id": "critique",
+          "label": "Portion de code accédant à une ressource partagée, à exécuter par un seul thread à la fois"
+        },
+        {
+          "id": "perte",
+          "label": "Conséquence typique d'une course : une écriture calculée sur une donnée périmée en écrase une autre"
+        },
+        {
+          "id": "nondet",
+          "label": "Caractère d'un programme dont deux exécutions identiques peuvent donner des résultats différents"
+        }
+      ],
+      "right": [
+        {
+          "id": "r-course",
+          "label": "Condition de course"
+        },
+        {
+          "id": "r-atomique",
+          "label": "Opération atomique"
+        },
+        {
+          "id": "r-critique",
+          "label": "Section critique"
+        },
+        {
+          "id": "r-perte",
+          "label": "Perte de mise à jour"
+        },
+        {
+          "id": "r-nondet",
+          "label": "Non-déterminisme"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "course": "r-course",
+        "atomique": "r-atomique",
+        "critique": "r-critique",
+        "perte": "r-perte",
+        "nondet": "r-nondet"
+      }
+    },
+    "explanation": "Une **condition de course** est un défaut où le **résultat** dépend de l'**ordre d'exécution** non maîtrisé des threads accédant à une donnée partagée. Une opération est **atomique** si elle s'exécute **d'un seul tenant** — rien ne peut s'intercaler en son milieu (`compteur++` n'est *pas* atomique). Une **section critique** est la portion de code qui accède à une **ressource partagée** et ne doit être exécutée que par **un seul thread à la fois**. La **perte de mise à jour** (*lost update*) est la conséquence typique d'une course : un thread écrit une valeur calculée sur une donnée **périmée** et **écrase** le travail d'un autre. Le **non-déterminisme** est le caractère d'un programme dont deux exécutions **identiques** peuvent donner des **résultats différents** — ce qui rend les bogues de concurrence intermittents et difficiles à reproduire.",
+    "concepts": [
+      "condition-course",
+      "operation-non-atomique",
+      "section-critique",
+      "perte-de-maj",
+      "non-determinisme"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "partage-donnees",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 2,
+    "prompt": "Un programme concurrent qui a donné le bon résultat plusieurs milliers de fois de suite est, de ce fait, prouvé correct vis-à-vis des conditions de course.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Faux — et c'est précisément ce qui rend les conditions de course **redoutables**. Une course produit un bogue **non déterministe** et **intermittent** : les entrelacements malheureux sont **rares**, donc le programme peut donner le **bon résultat** des milliers de fois, puis **échouer** une fois — sur une autre machine, sous une autre charge système, ou simplement « par malchance ». Un bogue qui ne se reproduit **pas à volonté** est extrêmement difficile à diagnostiquer. La règle d'or : **ne jamais conclure qu'un code concurrent est correct parce qu'il a « marché plusieurs fois »**. Seule une **synchronisation explicite** (mutex, sémaphore…) prouve la correction — pas l'observation répétée.",
+    "concepts": [
+      "non-determinisme",
+      "condition-course"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "partage-donnees",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Cinq threads ajoutent chacun, dans une boucle de 1 000 000 de tours, une même valeur à une variable globale non protégée. Pourquoi le total affiché est-il toujours INFÉRIEUR au total attendu, et jamais supérieur ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Parce que chaque collision (deux threads écrivant à partir d'une même valeur lue) fait que deux incréments se confondent en un seul : on ne peut que perdre des additions, jamais en gagner."
+        },
+        {
+          "id": "b",
+          "label": "Parce que l'ordonnanceur n'exécute jamais complètement le cinquième thread."
+        },
+        {
+          "id": "c",
+          "label": "Parce que la variable globale déborde (overflow) et repart de zéro."
+        },
+        {
+          "id": "d",
+          "label": "Parce que pthread_join soustrait la valeur de retour de chaque thread au total."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le mécanisme de la course est une **perte de mise à jour**. Quand deux threads lisent la variable à la **même valeur** périmée, calculent chacun leur incrément et l'écrivent, la **seconde écriture écrase la première** : deux additions distinctes se **confondent en une seule** — un incrément est **perdu**. Une collision ne peut donc que **retrancher** des additions au total, **jamais en ajouter** : le résultat est **toujours inférieur ou égal** à l'attendu, jamais supérieur. Plus il y a de collisions, plus le total chute. (b) est faux : tous les threads s'exécutent ; ils se gênent, mais aucun n'est ignoré. (c) est faux : avec un `long` et ces valeurs, il n'y a aucun débordement — et un débordement ne donnerait pas un déficit régulier. (d) est faux : `pthread_join` ne fait qu'**attendre** un thread, elle ne modifie aucune variable globale. À noter : pour **observer** ce bogue de façon fiable, il faut **beaucoup d'itérations** (1 000 000) et une compilation **sans optimisation** (`-O0`).",
+    "concepts": [
+      "perte-de-maj",
+      "condition-course",
+      "operation-non-atomique"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "partage-donnees",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme lance 5 threads ; chacun incrémente 1 000 000 de fois une variable globale `compteur`. Le total attendu est donc 5 × 1 000 000 = 5 000 000. En réalité, le programme affiche un total faux, qui varie d'une exécution à l'autre. Corrigez le programme pour qu'il affiche systématiquement le bon total.",
+    "payload": {
+      "spec": "Le programme déclare une variable globale long compteur = 0. La fonction incrementer fait, dans une boucle de NB_TOURS = 1000000 tours, compteur = compteur + 1. main crée 5 threads exécutant incrementer, les joint tous, puis affiche 'compteur = <valeur>'. Le bug est une CONDITION DE COURSE : l'instruction compteur = compteur + 1 n'est pas atomique (elle se décompose en lire / modifier / écrire), et les 5 threads y accèdent en concurrence sans aucune protection. Des incréments sont perdus, le total est faux et varie à chaque exécution. La correction consiste à protéger la SECTION CRITIQUE par un MUTEX : déclarer un mutex global initialisé statiquement — pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; — puis, dans la boucle de incrementer, encadrer l'instruction compteur = compteur + 1 par pthread_mutex_lock(&mutex); ... pthread_mutex_unlock(&mutex);. Ainsi un seul thread à la fois exécute l'incrément : les trois étapes lire/modifier/écrire ne s'entrelacent plus, la perte de mise à jour devient impossible, et le total vaut systématiquement 5000000. Compiler sans optimisation (-O0) est nécessaire pour observer la course d'origine. Le mutex doit être verrouillé puis déverrouillé à chaque tour de boucle, autour du seul accès à la donnée partagée.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <pthread.h>\n#include <stdio.h>\n#include <stdlib.h>\n\n#define NB_THREADS 5\n#define NB_TOURS   1000000\n\nlong compteur = 0;       /* variable GLOBALE partagee */\n\nvoid *incrementer(void *arg) {\n    (void) arg;\n    for (int i = 0; i < NB_TOURS; i++) {\n        compteur = compteur + 1;    /* acces concurrent NON protege */\n    }\n    return NULL;\n}\n\nint main(void) {\n    pthread_t thr[NB_THREADS];\n\n    for (int i = 0; i < NB_THREADS; i++)\n        pthread_create(&thr[i], NULL, incrementer, NULL);\n\n    for (int i = 0; i < NB_THREADS; i++)\n        pthread_join(thr[i], NULL);\n\n    printf(\"compteur = %ld\\n\", compteur);\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le total est systematiquement correct",
+          "stdin": "",
+          "expectedStdout": "compteur = 5000000",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <pthread.h>\n#include <stdio.h>\n#include <stdlib.h>\n\n#define NB_THREADS 5\n#define NB_TOURS   1000000\n\nlong compteur = 0;       /* variable GLOBALE partagee */\npthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;\n\nvoid *incrementer(void *arg) {\n    (void) arg;\n    for (int i = 0; i < NB_TOURS; i++) {\n        pthread_mutex_lock(&mutex);\n        compteur = compteur + 1;    /* section critique protegee */\n        pthread_mutex_unlock(&mutex);\n    }\n    return NULL;\n}\n\nint main(void) {\n    pthread_t thr[NB_THREADS];\n\n    for (int i = 0; i < NB_THREADS; i++)\n        pthread_create(&thr[i], NULL, incrementer, NULL);\n\n    for (int i = 0; i < NB_THREADS; i++)\n        pthread_join(thr[i], NULL);\n\n    pthread_mutex_destroy(&mutex);\n    printf(\"compteur = %ld\\n\", compteur);\n    return 0;\n}"
+    },
+    "explanation": "Le défaut est une **condition de course**. L'instruction `compteur = compteur + 1` **n'est pas atomique** : elle se décompose en **lire** la valeur, **modifier** un registre, **écrire** le résultat. Les 5 threads exécutent ce schéma en **concurrence**, sans protection : l'ordonnanceur les interrompt entre les étapes, deux threads lisent la même valeur périmée, et l'un **écrase** l'incrément de l'autre — une **perte de mise à jour**. Le total est donc faux et **varie** à chaque exécution. La correction : protéger la **section critique** — l'accès à `compteur` — par un **mutex**. On déclare un mutex global initialisé statiquement, `pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;`, et on encadre l'instruction par `pthread_mutex_lock(&mutex)` / `pthread_mutex_unlock(&mutex)`. Comme **un seul thread à la fois** peut tenir le verrou, les trois étapes `lire / modifier / écrire` se déroulent **sans qu'aucun autre thread ne s'intercale** : la perte de mise à jour devient **impossible**, et le total vaut **systématiquement 5 000 000**.",
+    "concepts": [
+      "condition-course",
+      "operation-non-atomique",
+      "section-critique",
+      "mutex",
+      "exclusion-mutuelle"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "mutex",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un mutex (type `pthread_mutex_t`) possède exactement deux états. Lesquels ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Libre (non pris par aucun thread) ou verrouillé (pris par un seul thread)."
+        },
+        {
+          "id": "b",
+          "label": "Joignable ou détaché."
+        },
+        {
+          "id": "c",
+          "label": "Ouvert en lecture ou ouvert en écriture."
+        },
+        {
+          "id": "d",
+          "label": "Actif ou zombie."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le mot **mutex** est la contraction de **MUT**ual **EX**clusion. C'est un **objet de verrouillage** qui possède **exactement deux états** : **libre** (*unlocked*) — il n'est pris par aucun thread — ou **verrouillé** (*locked*) — il est pris par **un** thread, son **propriétaire**. **Un seul thread** peut tenir un mutex donné à la fois ; tout autre thread qui tente de verrouiller un mutex déjà tenu est **bloqué** jusqu'à sa libération. (b) décrit les deux états d'un **thread**, pas d'un mutex. (c) décrit des modes d'ouverture de fichier. (d) « zombie » est un état de **processus**. Seul (a) décrit les deux états d'un mutex.",
+    "concepts": [
+      "mutex",
+      "exclusion-mutuelle"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "mutex",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un mutex ne peut être détruit par `pthread_mutex_destroy` que s'il est déverrouillé (libre) ; détruire un mutex encore tenu par un thread est un comportement indéfini.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Vrai. `pthread_mutex_destroy` libère les ressources d'un mutex, mais une règle **impérative** l'accompagne : le mutex doit alors être **déverrouillé** (libre). Détruire un mutex qu'un thread **tient encore** — ou sur lequel un thread est **bloqué** — est un **comportement indéfini** au sens de POSIX. En pratique, on détruit un mutex en **fin de programme**, typiquement **après** avoir joint tous les threads qui l'utilisaient : on a alors la garantie que plus personne ne le tient. La même prudence vaut pour un mutex initialisé par `PTHREAD_MUTEX_INITIALIZER` : on ne le détruit qu'une fois sûr qu'aucun thread ne s'en sert plus.",
+    "concepts": [
+      "pthread-mutex-destroy",
+      "mutex"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "mutex",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur l'emploi d'un mutex pour protéger une section critique.",
+    "payload": {
+      "template": "Un mutex global se déclare et s'initialise en une seule ligne grâce à la constante {{c1}}. Pour protéger une section critique, un thread appelle {{c2}} juste avant d'y entrer : si le mutex est déjà tenu, le thread est {{c3}} jusqu'à sa libération. Après la section critique, le thread appelle {{c4}} pour libérer le mutex. Règle d'or : à tout lock doit correspondre un {{c5}}, sur tous les chemins de sortie.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "lg",
+          "placeholder": "constante d'initialisation"
+        },
+        {
+          "id": "c2",
+          "width": "md"
+        },
+        {
+          "id": "c3",
+          "width": "sm",
+          "hint": "endormi, mis en attente"
+        },
+        {
+          "id": "c4",
+          "width": "md"
+        },
+        {
+          "id": "c5",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "PTHREAD_MUTEX_INITIALIZER"
+        ],
+        "c2": [
+          "pthread_mutex_lock",
+          "pthread_mutex_lock()"
+        ],
+        "c3": [
+          "bloque",
+          "bloqué",
+          "endormi"
+        ],
+        "c4": [
+          "pthread_mutex_unlock",
+          "pthread_mutex_unlock()"
+        ],
+        "c5": [
+          "unlock",
+          "pthread_mutex_unlock",
+          "deverrouillage",
+          "déverrouillage"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Un mutex **global** se déclare et s'initialise en une ligne avec la constante **`PTHREAD_MUTEX_INITIALIZER`** : `pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;` — le mutex est prêt dès le démarrage, aucune fonction à appeler. Pour protéger une section critique, le thread appelle **`pthread_mutex_lock`** **avant** d'y entrer : si le mutex est libre, il le verrouille et continue ; s'il est **déjà tenu**, le thread est **bloqué** (endormi) jusqu'à la libération. **Après** la section critique, il appelle **`pthread_mutex_unlock`** pour libérer le mutex et réveiller un éventuel thread en attente. La règle d'or : à **tout `lock`** doit correspondre un **`unlock`**, sur **tous les chemins de sortie** (y compris les retours d'erreur) — sinon le mutex reste verrouillé pour toujours et tous les autres threads se bloquent.",
+    "concepts": [
+      "mutex-init-statique",
+      "pthread-mutex-lock",
+      "pthread-mutex-unlock",
+      "exclusion-mutuelle"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "mutex",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque élément de l'API des mutex POSIX à sa description.",
+    "payload": {
+      "left": [
+        {
+          "id": "init",
+          "label": "Constante qui initialise un mutex global avec les attributs par défaut, dès la compilation"
+        },
+        {
+          "id": "lock",
+          "label": "Verrouille le mutex ; bloque le thread appelant si le mutex est déjà tenu"
+        },
+        {
+          "id": "unlock",
+          "label": "Déverrouille le mutex et réveille un éventuel thread en attente"
+        },
+        {
+          "id": "trylock",
+          "label": "Tente de verrouiller sans jamais bloquer ; renvoie EBUSY si le mutex est occupé"
+        },
+        {
+          "id": "destroy",
+          "label": "Détruit un mutex devenu inutile (le mutex doit être déverrouillé)"
+        }
+      ],
+      "right": [
+        {
+          "id": "r-init",
+          "label": "PTHREAD_MUTEX_INITIALIZER"
+        },
+        {
+          "id": "r-lock",
+          "label": "pthread_mutex_lock()"
+        },
+        {
+          "id": "r-unlock",
+          "label": "pthread_mutex_unlock()"
+        },
+        {
+          "id": "r-trylock",
+          "label": "pthread_mutex_trylock()"
+        },
+        {
+          "id": "r-destroy",
+          "label": "pthread_mutex_destroy()"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "init": "r-init",
+        "lock": "r-lock",
+        "unlock": "r-unlock",
+        "trylock": "r-trylock",
+        "destroy": "r-destroy"
+      }
+    },
+    "explanation": "**`PTHREAD_MUTEX_INITIALIZER`** est la **constante** qui initialise un mutex global avec les attributs par défaut, **dès la compilation** — la méthode à privilégier pour un mutex global. **`pthread_mutex_lock`** **verrouille** le mutex ; si le mutex est déjà tenu, elle **bloque** le thread appelant jusqu'à sa libération. **`pthread_mutex_unlock`** **déverrouille** le mutex et **réveille** un éventuel thread en attente. **`pthread_mutex_trylock`** tente le verrouillage **sans jamais bloquer** : elle renvoie `0` si le verrou est obtenu, et le code d'erreur **`EBUSY`** si le mutex est déjà occupé. **`pthread_mutex_destroy`** **détruit** un mutex devenu inutile — le mutex devant impérativement être **déverrouillé** au moment de la destruction.",
+    "concepts": [
+      "mutex-init-statique",
+      "pthread-mutex-lock",
+      "pthread-mutex-unlock",
+      "pthread-mutex-trylock",
+      "pthread-mutex-destroy"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "mutex",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "À propos de l'interblocage (deadlock) avec des mutex, quelles affirmations sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Verrouiller deux fois le même mutex dans le même thread, sans le déverrouiller entre-temps, bloque ce thread définitivement."
+        },
+        {
+          "id": "b",
+          "label": "Deux threads qui verrouillent deux mutex A et B dans des ordres opposés risquent un interblocage croisé."
+        },
+        {
+          "id": "c",
+          "label": "Imposer à tous les threads de verrouiller les mutex dans le même ordre rend l'interblocage croisé impossible."
+        },
+        {
+          "id": "d",
+          "label": "Un thread qui ne tient jamais qu'un seul mutex à la fois ne peut pas participer à un interblocage croisé."
+        },
+        {
+          "id": "e",
+          "label": "L'interblocage est détecté et résolu automatiquement par le système, qui déverrouille l'un des mutex."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "(a) Vrai : c'est l'interblocage le plus simple. Le **deuxième `lock`** voit le mutex **déjà tenu** — par le thread appelant lui-même — et **bloque** ce thread en attendant une libération qui ne viendra jamais. Le thread est **figé définitivement**. (b) Vrai : c'est l'**interblocage croisé** — chacun tient un mutex et attend celui que l'autre détient. (c) Vrai : un **ordre de verrouillage** cohérent et identique pour tous les threads rend l'interblocage croisé **impossible** — aucun thread ne peut tenir B en attendant A. C'est la parade de référence. (d) Vrai : un thread qui ne tient **qu'un** verrou à la fois ne peut **jamais** participer à un interblocage croisé. (e) est **faux** : le système **ne détecte ni ne résout** l'interblocage — les threads restent **bloqués pour toujours**, le programme est figé. La prévention est entièrement à la charge du programmeur.",
+    "concepts": [
+      "interblocage",
+      "ordre-de-verrouillage",
+      "pthread-mutex-lock"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "mutex",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Deux threads et deux mutex A et B. Le thread 1 verrouille A puis B ; le thread 2 verrouille B puis A. Remettez dans l'ordre les étapes du scénario qui mène à l'interblocage.",
+    "payload": {
+      "items": [
+        {
+          "id": "t1a",
+          "label": "Le thread 1 verrouille le mutex A (libre) : il tient A"
+        },
+        {
+          "id": "t2b",
+          "label": "Le thread 2 verrouille le mutex B (libre) : il tient B"
+        },
+        {
+          "id": "t1b",
+          "label": "Le thread 1 demande le mutex B : il est bloqué, car B est tenu par le thread 2"
+        },
+        {
+          "id": "t2a",
+          "label": "Le thread 2 demande le mutex A : il est bloqué, car A est tenu par le thread 1"
+        },
+        {
+          "id": "fige",
+          "label": "Chacun attend un verrou que seul l'autre, lui-même bloqué, pourrait libérer : le programme est figé pour toujours"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "t1a",
+        "t2b",
+        "t1b",
+        "t2a",
+        "fige"
+      ]
+    },
+    "explanation": "Le scénario fatal de l'**interblocage croisé** : le **thread 1 verrouille A** et le **thread 2 verrouille B** — chacun tient **un** mutex, tout va bien jusque-là. Puis le **thread 1 demande B** : B étant tenu par le thread 2, le thread 1 est **bloqué**. Le **thread 2 demande A** : A étant tenu par le thread 1, le thread 2 est **bloqué** lui aussi. Désormais **chacun attend un verrou** que **seul l'autre, lui-même bloqué, pourrait libérer** : plus aucun thread ne peut progresser, le programme est **figé pour toujours**. La parade : imposer un **ordre de verrouillage** identique pour tous les threads (par exemple toujours A avant B) — ainsi, aucun thread ne peut tenir B en attendant A, et l'interblocage croisé devient impossible.",
+    "concepts": [
+      "interblocage",
+      "ordre-de-verrouillage",
+      "pthread-mutex-lock"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "mutex",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Ce programme lance trois threads de pas 1, 2 et 3 ; chacun ajoute son pas à la variable globale `total`, 100 000 fois, en protégeant l'accès par un mutex. Le thread principal joint les trois threads puis affiche le total. Quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <pthread.h>\n#include <stdio.h>\n\n#define NB_THREADS 3\n#define NB_TOURS   100000\n\nlong total = 0;\npthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;\n\nvoid *ajouter(void *arg) {\n    long pas = (long) arg;\n    for (int i = 0; i < NB_TOURS; i++) {\n        pthread_mutex_lock(&mutex);\n        total = total + pas;\n        pthread_mutex_unlock(&mutex);\n    }\n    return NULL;\n}\n\nint main(void) {\n    pthread_t thr[NB_THREADS];\n    long pas[NB_THREADS] = {1, 2, 3};\n\n    for (int i = 0; i < NB_THREADS; i++)\n        pthread_create(&thr[i], NULL, ajouter, (void *) pas[i]);\n\n    for (int i = 0; i < NB_THREADS; i++)\n        pthread_join(thr[i], NULL);\n\n    pthread_mutex_destroy(&mutex);\n    printf(\"total = %ld\\n\", total);\n    return 0;\n}"
+    },
+    "solution": {
+      "expectedOutput": "total = 600000"
+    },
+    "explanation": "Chaque thread ajoute son **pas** à `total`, **100 000 fois**. Le thread de pas 1 ajoute donc 100 000, celui de pas 2 ajoute 200 000, celui de pas 3 ajoute 300 000 : le total attendu est 100 000 + 200 000 + 300 000 = **600 000**. Et ce résultat est **garanti** — donc la sortie est **déterministe** — parce que l'accès à `total` est **protégé par un mutex** : entre `pthread_mutex_lock` et `pthread_mutex_unlock`, **un seul thread à la fois** exécute `total = total + pas`. Les trois étapes `lire / modifier / écrire` se déroulent sans qu'aucun autre thread ne s'intercale : **aucune perte de mise à jour** n'est possible. De plus, le `printf` a lieu **après** les trois `pthread_join`, donc après que tous les ajouts sont terminés. La sortie est invariablement `total = 600000`.",
+    "concepts": [
+      "mutex",
+      "pthread-mutex-lock",
+      "pthread-mutex-unlock",
+      "exclusion-mutuelle"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "mutex",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Écrivez un programme C qui lance 4 threads. Chaque thread incrémente 500 000 fois une variable globale `compteur`. L'accès à `compteur` doit être protégé par un mutex pour éviter toute condition de course. Le thread principal joint les 4 threads, puis affiche `compteur = 2000000`.",
+    "payload": {
+      "spec": "Le programme inclut <pthread.h>, <stdio.h>, <stdlib.h>. Il déclare une variable globale long compteur = 0 et un mutex global initialisé statiquement : pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;. La fonction de thread (signature void *f(void *)) fait, dans une boucle de 500000 tours, l'incrément protégé : pthread_mutex_lock(&mutex); compteur = compteur + 1; pthread_mutex_unlock(&mutex);. Dans main : une boucle crée 4 threads avec pthread_create. Une seconde boucle appelle pthread_join sur chacun des 4 threads. Après avoir joint tous les threads, le programme détruit le mutex avec pthread_mutex_destroy(&mutex) puis affiche la ligne 'compteur = <valeur>'. Comme l'accès est protégé et que les 4 threads sont joints avant l'affichage, le résultat est systématiquement 4 * 500000 = 2000000. Le verrou doit être pris puis rendu à chaque tour, autour du seul accès à compteur, pour que la section critique reste minimale.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <pthread.h>\n#include <stdio.h>\n#include <stdlib.h>\n\n#define NB_THREADS 4\n#define NB_TOURS   500000\n\n/* TODO : declarer la variable globale compteur et le mutex qui la protege */\n\nvoid *incrementer(void *arg) {\n    (void) arg;\n    /* TODO : boucle de NB_TOURS tours ; chaque tour incremente compteur\n       sous la protection du mutex (lock avant, unlock apres) */\n    return NULL;\n}\n\nint main(void) {\n    pthread_t thr[NB_THREADS];\n\n    /* 1. creer les NB_THREADS threads */\n\n    /* 2. joindre les NB_THREADS threads */\n\n    /* 3. detruire le mutex, puis afficher 'compteur = <valeur>' */\n\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le compteur protege vaut 2000000",
+          "stdin": "",
+          "expectedStdout": "compteur = 2000000",
+          "compare": "trimmed"
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <pthread.h>\n#include <stdio.h>\n#include <stdlib.h>\n\n#define NB_THREADS 4\n#define NB_TOURS   500000\n\nlong compteur = 0;\npthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;\n\nvoid *incrementer(void *arg) {\n    (void) arg;\n    for (int i = 0; i < NB_TOURS; i++) {\n        pthread_mutex_lock(&mutex);\n        compteur = compteur + 1;\n        pthread_mutex_unlock(&mutex);\n    }\n    return NULL;\n}\n\nint main(void) {\n    pthread_t thr[NB_THREADS];\n\n    for (int i = 0; i < NB_THREADS; i++) {\n        if (pthread_create(&thr[i], NULL, incrementer, NULL) != 0) {\n            fprintf(stderr, \"Erreur dans pthread_create\\n\");\n            return 1;\n        }\n    }\n\n    for (int i = 0; i < NB_THREADS; i++)\n        pthread_join(thr[i], NULL);\n\n    pthread_mutex_destroy(&mutex);\n    printf(\"compteur = %ld\\n\", compteur);\n    return 0;\n}"
+    },
+    "explanation": "On déclare la donnée partagée `long compteur = 0` et le **mutex** qui la protège, initialisé statiquement : `pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;`. La fonction de thread exécute, 500 000 fois, l'incrément **encadré** par `pthread_mutex_lock(&mutex)` et `pthread_mutex_unlock(&mutex)` : c'est le **schéma type** `lock → section critique → unlock`. Comme **un seul thread à la fois** peut tenir le verrou, l'instruction `compteur = compteur + 1` — qui n'est **pas atomique** — s'exécute sans qu'aucun autre thread ne s'intercale : **aucune perte de mise à jour** n'est possible. Le `main` crée les 4 threads, puis les **joint tous** : le `printf` final a donc lieu après les 4 × 500 000 = **2 000 000** incréments, et la section critique est gardée **minimale** (seul l'accès à `compteur` est verrouillé). Le résultat est invariablement `compteur = 2000000`. On **détruit** enfin le mutex, désormais libre.",
+    "concepts": [
+      "mutex",
+      "mutex-init-statique",
+      "pthread-mutex-lock",
+      "pthread-mutex-unlock",
+      "exclusion-mutuelle"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "mutex",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme utilise deux mutex A et B ; deux threads les verrouillent tous les deux. Le programme devrait afficher `termine sans interblocage`, mais il se fige : il ne se termine jamais. Trouvez la cause et corrigez-la.",
+    "payload": {
+      "spec": "Le programme déclare deux mutex globaux A et B (initialisés par PTHREAD_MUTEX_INITIALIZER). thread1 verrouille A, attend un peu (usleep), puis verrouille B, et déverrouille les deux. thread2 verrouille B, attend un peu, puis verrouille A, et déverrouille les deux. main crée les deux threads, les joint, et affiche 'termine sans interblocage'. Le bug est un INTERBLOCAGE CROISÉ provoqué par un ORDRE DE VERROUILLAGE incohérent : thread1 prend les mutex dans l'ordre A puis B, alors que thread2 les prend dans l'ordre INVERSE B puis A. Scénario fatal : thread1 tient A et attend B ; thread2 tient B et attend A ; chacun attend un verrou que seul l'autre pourrait libérer — le programme est figé pour toujours, et pthread_join ne revient jamais. La correction consiste à imposer le MÊME ordre de verrouillage aux deux threads : faire en sorte que thread2 verrouille lui aussi A AVANT B (donc remplacer, dans thread2, le lock de B suivi du lock de A par un lock de A suivi d'un lock de B — et symétriquement déverrouiller B puis A). Une fois les deux threads alignés sur l'ordre A puis B, aucun thread ne peut tenir B en attendant A : l'interblocage croisé devient impossible et le programme affiche 'termine sans interblocage'.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <pthread.h>\n#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n\npthread_mutex_t A = PTHREAD_MUTEX_INITIALIZER;\npthread_mutex_t B = PTHREAD_MUTEX_INITIALIZER;\n\nvoid *thread1(void *arg) {\n    (void) arg;\n    pthread_mutex_lock(&A);\n    usleep(100000);\n    pthread_mutex_lock(&B);     /* ordre : A puis B */\n    pthread_mutex_unlock(&B);\n    pthread_mutex_unlock(&A);\n    return NULL;\n}\n\nvoid *thread2(void *arg) {\n    (void) arg;\n    pthread_mutex_lock(&B);\n    usleep(100000);\n    pthread_mutex_lock(&A);     /* ordre INVERSE : B puis A */\n    pthread_mutex_unlock(&A);\n    pthread_mutex_unlock(&B);\n    return NULL;\n}\n\nint main(void) {\n    pthread_t t1, t2;\n    pthread_create(&t1, NULL, thread1, NULL);\n    pthread_create(&t2, NULL, thread2, NULL);\n    pthread_join(t1, NULL);\n    pthread_join(t2, NULL);\n    printf(\"termine sans interblocage\\n\");\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le programme se termine sans se figer",
+          "stdin": "",
+          "expectedStdout": "termine sans interblocage",
+          "compare": "trimmed",
+          "timeoutMs": 3000
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <pthread.h>\n#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n\npthread_mutex_t A = PTHREAD_MUTEX_INITIALIZER;\npthread_mutex_t B = PTHREAD_MUTEX_INITIALIZER;\n\nvoid *thread1(void *arg) {\n    (void) arg;\n    pthread_mutex_lock(&A);\n    usleep(100000);\n    pthread_mutex_lock(&B);     /* ordre : A puis B */\n    pthread_mutex_unlock(&B);\n    pthread_mutex_unlock(&A);\n    return NULL;\n}\n\nvoid *thread2(void *arg) {\n    (void) arg;\n    pthread_mutex_lock(&A);     /* MEME ordre : A puis B */\n    usleep(100000);\n    pthread_mutex_lock(&B);\n    pthread_mutex_unlock(&B);\n    pthread_mutex_unlock(&A);\n    return NULL;\n}\n\nint main(void) {\n    pthread_t t1, t2;\n    pthread_create(&t1, NULL, thread1, NULL);\n    pthread_create(&t2, NULL, thread2, NULL);\n    pthread_join(t1, NULL);\n    pthread_join(t2, NULL);\n    printf(\"termine sans interblocage\\n\");\n    return 0;\n}"
+    },
+    "explanation": "Le programme souffre d'un **interblocage croisé** (*deadlock*) dû à un **ordre de verrouillage incohérent**. `thread1` prend les mutex dans l'ordre **A puis B**, mais `thread2` les prend dans l'ordre **inverse, B puis A**. Le scénario fatal : `thread1` verrouille A, `thread2` verrouille B ; puis `thread1` demande B (tenu par `thread2`) → **bloqué**, et `thread2` demande A (tenu par `thread1`) → **bloqué** lui aussi. Chacun attend un verrou que **seul l'autre, lui-même bloqué, pourrait libérer** : le programme est **figé pour toujours**, `pthread_join` ne revient jamais (le `usleep` ne fait qu'élargir la fenêtre et rendre le blocage systématique). La correction : imposer le **même ordre de verrouillage** aux deux threads. On aligne `thread2` sur l'ordre **A puis B** (verrouiller A avant B, et déverrouiller B avant A). Une fois les deux threads alignés, **aucun** ne peut tenir B en attendant A : l'interblocage croisé devient **impossible**. C'est la parade de référence — un **ordre de verrouillage** identique pour tous les threads.",
+    "concepts": [
+      "interblocage",
+      "ordre-de-verrouillage",
+      "pthread-mutex-lock",
+      "pthread-mutex-unlock"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "conditions",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un thread tient le mutex et appelle `pthread_cond_wait(&cond, &mutex)`. Que fait exactement cette fonction au moment de l'appel ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Elle libère le mutex et endort le thread, ces deux actions étant réalisées de façon atomique ; au réveil, elle re-verrouille le mutex avant de revenir."
+        },
+        {
+          "id": "b",
+          "label": "Elle endort le thread sans toucher au mutex : le mutex reste verrouillé pendant tout le sommeil."
+        },
+        {
+          "id": "c",
+          "label": "Elle détruit le mutex puis le recrée à l'identique au réveil du thread."
+        },
+        {
+          "id": "d",
+          "label": "Elle renvoie immédiatement une erreur, car on ne doit jamais tenir le mutex avant d'appeler cond_wait."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "`pthread_cond_wait` exige que le thread appelant **tienne déjà le mutex**. Elle effectue alors **trois actions** : (1) elle **libère le mutex**, (2) elle **endort** le thread sur la variable de condition — et ces **deux premières actions sont atomiques** (indissociables) — puis, plus tard, au réveil, (3) elle **re-verrouille le mutex** avant de revenir. Quand `cond_wait` rend la main, le thread **tient de nouveau le mutex**, comme avant l'appel. (b) est faux : si le mutex restait verrouillé pendant le sommeil, le thread qui doit rendre la condition vraie ne pourrait jamais entrer en section critique — blocage garanti. (c) n'a aucun sens. (d) est faux : tenir le mutex avant l'appel est **obligatoire**, pas interdit. L'atomicité « libérer + s'endormir » est ce qui empêche un réveil d'être perdu entre les deux étapes.",
+    "concepts": [
+      "pthread-cond-wait",
+      "mutex-condition-couple",
+      "variable-condition"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "conditions",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Affirmation : « Un `pthread_cond_signal` émis alors qu'aucun thread n'est endormi sur la variable de condition est perdu : le signal n'est pas mémorisé. »",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "**Vrai.** Une variable de condition **ne mémorise rien** : ce n'est ni un compteur, ni un drapeau, juste un **point de rendez-vous**. Si `pthread_cond_signal` (ou `pthread_cond_broadcast`) est appelé alors qu'**aucun thread n'attend**, l'appel n'a **aucun effet** et le « signal » est **définitivement perdu**. C'est une différence fondamentale avec le **sémaphore** : un `sem_post` émis sans attendeur **incrémente quand même le compteur**, et l'unité reste disponible pour un futur `sem_wait`. C'est précisément parce qu'un signal peut être perdu que le test du prédicat et l'émission du signal doivent être faits **sous le même mutex** : on garantit ainsi qu'un thread sur le point d'attendre ne « rate » pas un signal.",
+    "concepts": [
+      "pthread-cond-signal",
+      "variable-condition"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "conditions",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur l'emploi correct d'une variable de condition.",
+    "payload": {
+      "template": "Une variable de condition est de type {{c1}} et s'utilise toujours couplée à un {{c2}}. Pour attendre, un thread tient d'abord le mutex, puis teste le prédicat dans une boucle {{c3}} — jamais un simple if — et appelle {{c4}} tant que le prédicat est faux. Pour réveiller un seul thread en attente, on appelle {{c5}} ; pour les réveiller tous, on appelle {{c6}}.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "md",
+          "placeholder": "type C"
+        },
+        {
+          "id": "c2",
+          "width": "sm"
+        },
+        {
+          "id": "c3",
+          "width": "sm",
+          "hint": "le mot-clé de boucle"
+        },
+        {
+          "id": "c4",
+          "width": "lg"
+        },
+        {
+          "id": "c5",
+          "width": "lg"
+        },
+        {
+          "id": "c6",
+          "width": "lg"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "pthread_cond_t"
+        ],
+        "c2": [
+          "mutex"
+        ],
+        "c3": [
+          "while"
+        ],
+        "c4": [
+          "pthread_cond_wait",
+          "pthread_cond_wait()"
+        ],
+        "c5": [
+          "pthread_cond_signal",
+          "pthread_cond_signal()"
+        ],
+        "c6": [
+          "pthread_cond_broadcast",
+          "pthread_cond_broadcast()"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Une variable de condition est de type **`pthread_cond_t`** (en-tête `<pthread.h>`) ; elle est **toujours couplée à un mutex** — le couple (mutex + cond) protège **et** synchronise la même donnée partagée. Le schéma d'attente correct : prendre le mutex, puis tester le prédicat dans une boucle **`while`** (jamais un `if` : à cause des **réveils parasites** autorisés par POSIX, et parce que la condition peut redevenir fausse avant le réveil effectif), et appeler **`pthread_cond_wait`** tant que le prédicat est faux. Pour réveiller **un seul** thread en attente, on utilise **`pthread_cond_signal`** ; pour les réveiller **tous**, **`pthread_cond_broadcast`**.",
+    "concepts": [
+      "variable-condition",
+      "mutex-condition-couple",
+      "predicat-while",
+      "pthread-cond-wait",
+      "pthread-cond-signal",
+      "pthread-cond-broadcast"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "conditions",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque élément lié aux variables de condition à sa description.",
+    "payload": {
+      "left": [
+        {
+          "id": "type",
+          "label": "Le type C d'une variable de condition"
+        },
+        {
+          "id": "init",
+          "label": "Constante qui initialise statiquement une variable de condition globale"
+        },
+        {
+          "id": "wait",
+          "label": "Libère le mutex, endort le thread, puis re-verrouille le mutex au réveil"
+        },
+        {
+          "id": "signal",
+          "label": "Réveille au moins un thread endormi sur la variable de condition"
+        },
+        {
+          "id": "broadcast",
+          "label": "Réveille tous les threads endormis sur la variable de condition"
+        },
+        {
+          "id": "destroy",
+          "label": "Libère les ressources d'une variable de condition devenue inutile"
+        }
+      ],
+      "right": [
+        {
+          "id": "r-type",
+          "label": "pthread_cond_t"
+        },
+        {
+          "id": "r-init",
+          "label": "PTHREAD_COND_INITIALIZER"
+        },
+        {
+          "id": "r-wait",
+          "label": "pthread_cond_wait()"
+        },
+        {
+          "id": "r-signal",
+          "label": "pthread_cond_signal()"
+        },
+        {
+          "id": "r-broadcast",
+          "label": "pthread_cond_broadcast()"
+        },
+        {
+          "id": "r-destroy",
+          "label": "pthread_cond_destroy()"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "type": "r-type",
+        "init": "r-init",
+        "wait": "r-wait",
+        "signal": "r-signal",
+        "broadcast": "r-broadcast",
+        "destroy": "r-destroy"
+      }
+    },
+    "explanation": "**`pthread_cond_t`** est le **type C** d'une variable de condition (en-tête `<pthread.h>`). **`PTHREAD_COND_INITIALIZER`** initialise statiquement, dès la compilation, une variable de condition **globale** avec les attributs par défaut. **`pthread_cond_wait`** est l'opération d'attente : elle **libère le mutex** et **endort** le thread (atomiquement), puis **re-verrouille le mutex** au réveil. **`pthread_cond_signal`** réveille **au moins un** thread en attente ; **`pthread_cond_broadcast`** les réveille **tous**. **`pthread_cond_destroy`** libère les ressources d'une variable de condition devenue inutile (aucun thread ne doit y être en attente au moment de la destruction).",
+    "concepts": [
+      "variable-condition",
+      "cond-init",
+      "pthread-cond-wait",
+      "pthread-cond-signal",
+      "pthread-cond-broadcast"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "conditions",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Remettez dans l'ordre les étapes du motif d'attente correct d'un thread sur une variable de condition (cas où le prédicat est faux à l'arrivée).",
+    "payload": {
+      "items": [
+        {
+          "id": "lock",
+          "label": "Le thread verrouille le mutex"
+        },
+        {
+          "id": "test",
+          "label": "Il teste le prédicat dans un while ; le prédicat est faux"
+        },
+        {
+          "id": "wait",
+          "label": "Il appelle pthread_cond_wait : le mutex est libéré et le thread s'endort (atomiquement)"
+        },
+        {
+          "id": "wakeup",
+          "label": "Un autre thread modifie les données et émet un signal ; le thread dormant est réveillé"
+        },
+        {
+          "id": "relock",
+          "label": "pthread_cond_wait re-verrouille le mutex avant de revenir, et le while re-teste le prédicat"
+        },
+        {
+          "id": "act",
+          "label": "Le prédicat est désormais vrai : le thread traite la donnée, puis déverrouille le mutex"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "lock",
+        "test",
+        "wait",
+        "wakeup",
+        "relock",
+        "act"
+      ]
+    },
+    "explanation": "Le motif d'attente correct : (1) le thread **verrouille le mutex** — indispensable, car le prédicat porte sur des données partagées ; (2) il **teste le prédicat** dans une boucle **`while`** et le trouve **faux** ; (3) il appelle **`pthread_cond_wait`**, qui **libère le mutex** et **endort** le thread de façon **atomique** ; (4) plus tard, un autre thread **modifie les données** et émet un **signal**, ce qui **réveille** le dormant ; (5) `pthread_cond_wait` **re-verrouille le mutex** avant de revenir, et le **`while` re-teste** le prédicat (protection contre les réveils parasites et les conditions redevenues fausses) ; (6) le prédicat étant maintenant **vrai**, le thread **traite** la donnée puis **déverrouille** le mutex. C'est l'enchaînement de référence du chapitre.",
+    "concepts": [
+      "variable-condition",
+      "predicat-while",
+      "pthread-cond-wait",
+      "mutex-condition-couple"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "conditions",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "`pthread_cond_wait` doit toujours être placée dans une boucle `while (! prédicat)` et jamais dans un simple `if`. Quelles affirmations justifient correctement cette règle ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La norme POSIX autorise les réveils parasites : pthread_cond_wait peut revenir sans qu'aucun signal n'ait été émis ; le while re-teste alors le prédicat et rendort le thread si besoin."
+        },
+        {
+          "id": "b",
+          "label": "Entre le réveil d'un thread et le moment où il re-verrouille le mutex, un autre thread réveillé en même temps a pu consommer la ressource ; le prédicat peut donc être redevenu faux."
+        },
+        {
+          "id": "c",
+          "label": "Avec un broadcast, plusieurs threads peuvent se réveiller pour un seul élément disponible ; seul un while permet aux threads en trop de re-tester le prédicat et de se rendormir."
+        },
+        {
+          "id": "d",
+          "label": "Le while est nécessaire parce que pthread_cond_wait ne re-verrouille jamais le mutex toute seule."
+        },
+        {
+          "id": "e",
+          "label": "Sans le while, le programme ne compilerait pas : le compilateur exige une boucle autour de cond_wait."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "(a) **Vrai** : POSIX autorise explicitement les **réveils parasites** (*spurious wakeups*) — `pthread_cond_wait` peut revenir **sans** qu'aucun `signal`/`broadcast` n'ait été émis. Le **`while`** re-teste le prédicat et **rendort** le thread si la condition est encore fausse. (b) **Vrai** : entre le **réveil** d'un thread et le moment où il **re-verrouille le mutex**, un autre thread réveillé en même temps a pu **s'emparer** de la ressource ; le prédicat peut donc être **redevenu faux**. (c) **Vrai** : un `broadcast` réveille **tous** les threads en attente alors qu'un **seul** élément peut être disponible ; le `while` permet aux threads « en trop » de **re-tester** et de **se rendormir** au lieu de traiter une ressource inexistante. (d) est **faux** : `pthread_cond_wait` **re-verrouille bien le mutex** elle-même avant de revenir. (e) est **faux** : un `if` compile parfaitement — c'est une **erreur logique**, pas une erreur de syntaxe, et c'est ce qui la rend dangereuse.",
+    "concepts": [
+      "predicat-while",
+      "reveil-parasite",
+      "pthread-cond-wait",
+      "pthread-cond-broadcast"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "conditions",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Ce programme lance 4 threads « ouvrier » d'identifiants 1, 2, 3, 4. Chaque ouvrier attend, sous le mutex, que `feu_vert` passe à 1, puis ajoute son identifiant à `arrives`. Le thread principal affiche `feu_vert`, met `feu_vert` à 1 et fait un `broadcast`, joint les 4 ouvriers, puis affiche `arrives`. Quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <pthread.h>\n#include <stdio.h>\n\n#define NB_OUVRIERS 4\n\nint feu_vert = 0;\nint arrives = 0;\n\npthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;\npthread_cond_t depart = PTHREAD_COND_INITIALIZER;\n\nvoid *ouvrier(void *arg) {\n    long id = (long) arg;\n    pthread_mutex_lock(&mutex);\n    while (feu_vert == 0)\n        pthread_cond_wait(&depart, &mutex);\n    arrives = arrives + id;\n    pthread_mutex_unlock(&mutex);\n    return NULL;\n}\n\nint main(void) {\n    pthread_t thr[NB_OUVRIERS];\n\n    for (long i = 1; i <= NB_OUVRIERS; i++)\n        pthread_create(&thr[i - 1], NULL, ouvrier, (void *) i);\n\n    printf(\"Avant le depart : feu_vert = %d\\n\", feu_vert);\n\n    pthread_mutex_lock(&mutex);\n    feu_vert = 1;\n    pthread_cond_broadcast(&depart);\n    pthread_mutex_unlock(&mutex);\n\n    for (int i = 0; i < NB_OUVRIERS; i++)\n        pthread_join(thr[i], NULL);\n\n    printf(\"Apres le depart : arrives = %d\\n\", arrives);\n    pthread_mutex_destroy(&mutex);\n    pthread_cond_destroy(&depart);\n    return 0;\n}\n"
+    },
+    "solution": {
+      "expectedOutput": "Avant le depart : feu_vert = 0\nApres le depart : arrives = 10"
+    },
+    "explanation": "La sortie est **déterministe** car les deux `printf` du `main` encadrent des points de synchronisation stricts. **Première ligne** : `feu_vert` n'est mis à 1 qu'**après** le premier `printf`, donc ce `printf` lit forcément `feu_vert = 0` → `Avant le depart : feu_vert = 0`. **Ensuite**, le `main` met `feu_vert = 1` et fait `pthread_cond_broadcast` : tous les ouvriers, qu'ils soient déjà endormis sur la condition ou qu'ils arrivent après, voient le prédicat `feu_vert == 0` **faux** et exécutent — **sous le mutex**, donc l'un après l'autre — `arrives = arrives + id`. Aucune mise à jour n'est perdue. Comme le second `printf` a lieu **après les 4 `pthread_join`**, tous les ajouts sont terminés : `arrives` vaut `1 + 2 + 3 + 4 = 10` → `Apres le depart : arrives = 10`. La sortie est invariablement ces deux lignes.",
+    "concepts": [
+      "variable-condition",
+      "pthread-cond-wait",
+      "pthread-cond-broadcast",
+      "predicat-while"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "conditions",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Écrivez un programme producteur/consommateur synchronisé par une variable de condition. Le producteur dépose les entiers 1 à 50, un à la fois, dans la variable partagée `donnee` ; le consommateur les retire et les additionne dans `somme`. Le drapeau `pret` vaut 1 quand une donnée est disponible, 0 sinon. Le programme doit afficher `somme = 1275`.",
+    "payload": {
+      "spec": "Le programme inclut <pthread.h> et <stdio.h>. Variables globales : int donnee = 0, int pret = 0, un mutex et une variable de condition initialises statiquement (PTHREAD_MUTEX_INITIALIZER, PTHREAD_COND_INITIALIZER). Le producteur, pour i de 1 a 50 : prend le mutex ; tant que pret == 1, attend sur la condition (cond_wait) ; pose donnee = i et pret = 1 ; signale la condition ; rend le mutex. Le consommateur recoit un long* (l'accumulateur somme) ; pour i de 0 a 49 : prend le mutex ; tant que pret == 0, attend sur la condition ; fait *somme += donnee et pret = 0 ; signale la condition ; rend le mutex. Chaque pthread_cond_wait est OBLIGATOIREMENT dans une boucle while testant le predicat, et est appele en tenant le mutex. main cree les deux threads (en passant &somme au consommateur), joint les deux, detruit le mutex et la variable de condition, puis affiche 'somme = <valeur>'. Comme le producteur depose 50 valeurs et que le consommateur les retire toutes avant le join, le total vaut 1+2+...+50 = 1275.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <pthread.h>\n#include <stdio.h>\n\n#define N 50\n\nint donnee = 0;\nint pret = 0;     /* 0 : aucune donnee a consommer ; 1 : une donnee disponible */\n\npthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;\npthread_cond_t cond = PTHREAD_COND_INITIALIZER;\n\nvoid *producteur(void *arg) {\n    (void) arg;\n    /* TODO : pour i de 1 a N :\n         - prendre le mutex\n         - tant que pret == 1, attendre sur cond (place libre)\n         - poser donnee = i, mettre pret = 1\n         - signaler cond, rendre le mutex */\n    return NULL;\n}\n\nvoid *consommateur(void *arg) {\n    long *somme = (long *) arg;\n    (void) somme;\n    /* TODO : pour i de 0 a N-1 :\n         - prendre le mutex\n         - tant que pret == 0, attendre sur cond (rien a consommer)\n         - faire *somme += donnee, mettre pret = 0\n         - signaler cond, rendre le mutex */\n    return NULL;\n}\n\nint main(void) {\n    pthread_t prod, cons;\n    long somme = 0;\n\n    /* 1. creer le thread producteur et le thread consommateur\n          (passer &somme au consommateur) */\n\n    /* 2. joindre les deux threads */\n\n    /* 3. detruire le mutex et la variable de condition,\n          puis afficher 'somme = <valeur>' */\n\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "la somme produite/consommee vaut 1275",
+          "stdin": "",
+          "expectedStdout": "somme = 1275",
+          "compare": "trimmed",
+          "timeoutMs": 5000
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <pthread.h>\n#include <stdio.h>\n\n#define N 50\n\nint donnee = 0;\nint pret = 0;\n\npthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;\npthread_cond_t cond = PTHREAD_COND_INITIALIZER;\n\nvoid *producteur(void *arg) {\n    (void) arg;\n    for (int i = 1; i <= N; i++) {\n        pthread_mutex_lock(&mutex);\n        while (pret == 1)\n            pthread_cond_wait(&cond, &mutex);\n        donnee = i;\n        pret = 1;\n        pthread_cond_signal(&cond);\n        pthread_mutex_unlock(&mutex);\n    }\n    return NULL;\n}\n\nvoid *consommateur(void *arg) {\n    long *somme = (long *) arg;\n    for (int i = 0; i < N; i++) {\n        pthread_mutex_lock(&mutex);\n        while (pret == 0)\n            pthread_cond_wait(&cond, &mutex);\n        *somme += donnee;\n        pret = 0;\n        pthread_cond_signal(&cond);\n        pthread_mutex_unlock(&mutex);\n    }\n    return NULL;\n}\n\nint main(void) {\n    pthread_t prod, cons;\n    long somme = 0;\n\n    pthread_create(&prod, NULL, producteur, NULL);\n    pthread_create(&cons, NULL, consommateur, &somme);\n\n    pthread_join(prod, NULL);\n    pthread_join(cons, NULL);\n\n    pthread_mutex_destroy(&mutex);\n    pthread_cond_destroy(&cond);\n    printf(\"somme = %ld\\n\", somme);\n    return 0;\n}\n"
+    },
+    "explanation": "C'est le motif **producteur / consommateur** réduit à une case unique. Une **variable de condition** partagée et un **mutex** synchronisent l'accès au couple `(donnee, pret)`. **Producteur** : sous le mutex, il attend dans un `while (pret == 1)` qu'une éventuelle donnée précédente ait été consommée ; il pose `donnee = i`, met `pret = 1`, **signale** la condition (pour réveiller le consommateur), puis rend le mutex. **Consommateur** : sous le mutex, il attend dans un `while (pret == 0)` qu'une donnée soit disponible ; il l'additionne, remet `pret = 0`, **signale** (pour réveiller le producteur), puis rend le mutex. Les deux points clés : chaque `pthread_cond_wait` est **dans une boucle `while`** testant le prédicat (jamais un `if`) et est appelé **en tenant le mutex**. Comme les 50 valeurs 1..50 sont toutes produites puis consommées avant les `pthread_join`, le total est invariablement `1 + 2 + ... + 50 = 1275`.",
+    "concepts": [
+      "variable-condition",
+      "producteur-consommateur",
+      "pthread-cond-wait",
+      "pthread-cond-signal",
+      "predicat-while",
+      "mutex-condition-couple"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "conditions",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme producteur/consommateur devrait afficher `somme = 820`, mais il se fige : il ne se termine jamais. Le consommateur reste bloqué dans `pthread_cond_wait`. Trouvez la cause et corrigez-la.",
+    "payload": {
+      "spec": "Le programme est un producteur/consommateur sur un tampon circulaire de N = 40 cases, protege par un mutex et synchronise par une variable de condition non_vide. Le producteur depose les entiers 1 a 40 (une legere temporisation usleep simule le cout de production) ; le consommateur retire les 40 elements et les additionne dans somme, puis main affiche 'somme = <valeur>'. Le consommateur attend correctement : il teste le predicat dans une boucle while (nb == 0) et appelle pthread_cond_wait en tenant le mutex. LE BUG est dans le producteur : apres avoir depose un element (nb++), il NE REVEILLE PAS le consommateur — il manque l'appel pthread_cond_signal(&non_vide) avant le pthread_mutex_unlock. Consequence : le consommateur trouve le tampon vide, s'endort dans cond_wait, et comme aucun signal n'est jamais emis, il dort POUR TOUJOURS ; pthread_join ne revient jamais, le programme est fige. La correction consiste a AJOUTER, dans le producteur, l'appel pthread_cond_signal(&non_vide) juste apres nb++ et avant pthread_mutex_unlock, afin de reveiller le consommateur a chaque depot. Une fois le signal en place, le consommateur est reveille, retire les 40 elements, et le programme affiche 'somme = 820' (1+2+...+40).",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <pthread.h>\n#include <stdio.h>\n#include <unistd.h>\n\n#define N 40\n\nint file[N];\nint nb = 0;\nint tete = 0, queue = 0;\n\npthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;\npthread_cond_t non_vide = PTHREAD_COND_INITIALIZER;\n\nvoid *producteur(void *arg) {\n    (void) arg;\n    for (int i = 1; i <= N; i++) {\n        usleep(2000);                       /* la production prend du temps */\n        pthread_mutex_lock(&mutex);\n        file[queue] = i;\n        queue = (queue + 1) % N;\n        nb++;\n        /* BUG : on a depose un element mais on NE reveille PAS le consommateur */\n        pthread_mutex_unlock(&mutex);\n    }\n    return NULL;\n}\n\nvoid *consommateur(void *arg) {\n    long *somme = (long *) arg;\n    for (int i = 0; i < N; i++) {\n        pthread_mutex_lock(&mutex);\n        while (nb == 0)\n            pthread_cond_wait(&non_vide, &mutex);\n        *somme += file[tete];\n        tete = (tete + 1) % N;\n        nb--;\n        pthread_mutex_unlock(&mutex);\n    }\n    return NULL;\n}\n\nint main(void) {\n    pthread_t prod, cons;\n    long somme = 0;\n\n    pthread_create(&cons, NULL, consommateur, &somme);\n    pthread_create(&prod, NULL, producteur, NULL);\n\n    pthread_join(prod, NULL);\n    pthread_join(cons, NULL);\n\n    pthread_mutex_destroy(&mutex);\n    pthread_cond_destroy(&non_vide);\n    printf(\"somme = %ld\\n\", somme);\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le programme se termine et affiche somme = 820",
+          "stdin": "",
+          "expectedStdout": "somme = 820",
+          "compare": "trimmed",
+          "timeoutMs": 3000
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <pthread.h>\n#include <stdio.h>\n#include <unistd.h>\n\n#define N 40\n\nint file[N];\nint nb = 0;\nint tete = 0, queue = 0;\n\npthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;\npthread_cond_t non_vide = PTHREAD_COND_INITIALIZER;\n\nvoid *producteur(void *arg) {\n    (void) arg;\n    for (int i = 1; i <= N; i++) {\n        usleep(2000);                       /* la production prend du temps */\n        pthread_mutex_lock(&mutex);\n        file[queue] = i;\n        queue = (queue + 1) % N;\n        nb++;\n        pthread_cond_signal(&non_vide);     /* on reveille le consommateur */\n        pthread_mutex_unlock(&mutex);\n    }\n    return NULL;\n}\n\nvoid *consommateur(void *arg) {\n    long *somme = (long *) arg;\n    for (int i = 0; i < N; i++) {\n        pthread_mutex_lock(&mutex);\n        while (nb == 0)\n            pthread_cond_wait(&non_vide, &mutex);\n        *somme += file[tete];\n        tete = (tete + 1) % N;\n        nb--;\n        pthread_mutex_unlock(&mutex);\n    }\n    return NULL;\n}\n\nint main(void) {\n    pthread_t prod, cons;\n    long somme = 0;\n\n    pthread_create(&cons, NULL, consommateur, &somme);\n    pthread_create(&prod, NULL, producteur, NULL);\n\n    pthread_join(prod, NULL);\n    pthread_join(cons, NULL);\n\n    pthread_mutex_destroy(&mutex);\n    pthread_cond_destroy(&non_vide);\n    printf(\"somme = %ld\\n\", somme);\n    return 0;\n}\n"
+    },
+    "explanation": "Le programme se fige à cause d'un **signal manquant**. Le producteur dépose bien un élément (`nb++`), mais il **oublie de réveiller** le consommateur : il manque l'appel **`pthread_cond_signal(&non_vide)`** avant le `pthread_mutex_unlock`. Or une variable de condition **ne mémorise rien** : si le consommateur s'est endormi dans `pthread_cond_wait` parce que le tampon était vide, et qu'**aucun signal n'est jamais émis**, il **dort pour toujours**. Le `pthread_join` du producteur revient (le producteur, lui, termine sa boucle), mais le `pthread_join` du consommateur **ne revient jamais** : le programme est figé. La correction : **ajouter `pthread_cond_signal(&non_vide)`** dans le producteur, juste après `nb++` et avant `pthread_mutex_unlock`, pour **réveiller le consommateur** à chaque dépôt. Règle générale : **tout thread qui rend un prédicat vrai doit signaler** la variable de condition associée — sinon les threads en attente ne seront jamais réveillés. Une fois le signal en place, le consommateur retire les 40 éléments et le programme affiche `somme = 820` (1 + 2 + ... + 40).",
+    "concepts": [
+      "variable-condition",
+      "pthread-cond-signal",
+      "pthread-cond-wait",
+      "producteur-consommateur"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "semaphores-posix",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Un thread appelle `sem_wait(&s)` sur un sémaphore `s` dont la valeur courante est `0`. Que se passe-t-il ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le thread est bloqué (endormi) jusqu'à ce qu'un autre thread fasse sem_post ; il décrémente alors et continue."
+        },
+        {
+          "id": "b",
+          "label": "La valeur du sémaphore devient -1 et le thread continue immédiatement."
+        },
+        {
+          "id": "c",
+          "label": "sem_wait renvoie aussitôt 0 sans rien faire, car le sémaphore est déjà vide."
+        },
+        {
+          "id": "d",
+          "label": "Le programme s'arrête sur une erreur fatale, un sémaphore ne devant jamais valoir 0."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "`sem_wait` réalise l'opération **P**. Si la valeur du sémaphore est **strictement positive**, elle est **décrémentée** et le thread continue. Mais si la valeur est **`0`**, il n'y a **aucune unité disponible** : le thread est **bloqué** (endormi, sans consommer de temps processeur) jusqu'à ce qu'un autre thread fasse un **`sem_post`** ; le thread décrémente alors et reprend. (b) est faux : un sémaphore POSIX ne descend **jamais sous zéro** — c'est un entier **non négatif** ; au lieu de passer à -1, le thread **bloque**. (c) est faux : `sem_wait` **bloque**, elle ne revient pas immédiatement (c'est `sem_trywait` qui reviendrait aussitôt avec `-1` et `errno = EAGAIN`). (d) est faux : la valeur `0` est parfaitement normale — elle signifie simplement « plus d'unité disponible ».",
+    "concepts": [
+      "sem-wait",
+      "operation-p-v",
+      "semaphore-posix"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "semaphores-posix",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Affirmation : « Un `sem_post` émis alors qu'aucun thread n'est bloqué sur le sémaphore est sans effet : comme un signal de variable de condition, il est perdu. »",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "**Faux.** Contrairement au `pthread_cond_signal` d'une variable de condition, **`sem_post` mémorise toujours**. Un `sem_post` **incrémente la valeur du compteur**, qu'un thread soit en attente ou non. Si aucun thread n'est bloqué, l'unité n'est pas « perdue » : la valeur reste **incrémentée** et l'unité reste **disponible** pour un futur `sem_wait`, qui pourra alors la consommer sans bloquer. Cette **mémoire de l'événement** est une différence **fondamentale** entre le sémaphore et la variable de condition : un `pthread_cond_signal` sans attendeur est, lui, définitivement perdu. C'est ce qui rend le sémaphore particulièrement adapté à la **signalisation** entre threads, où l'événement ne doit pas être manqué.",
+    "concepts": [
+      "sem-post",
+      "operation-p-v",
+      "semaphore-posix"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "semaphores-posix",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Complétez ce résumé sur les sémaphores POSIX non nommés.",
+    "payload": {
+      "template": "Un sémaphore non nommé est de type {{c1}}, déclaré dans l'en-tête {{c2}}. On l'initialise avec la fonction {{c3}}, dont le deuxième argument vaut {{c4}} pour un sémaphore partagé entre les threads d'un même processus. L'opération P, qui décrémente le compteur ou bloque s'il vaut zéro, s'appelle {{c5}} ; l'opération V, qui incrémente le compteur et réveille un thread bloqué, s'appelle {{c6}}.",
+      "slots": [
+        {
+          "id": "c1",
+          "width": "sm",
+          "placeholder": "type C"
+        },
+        {
+          "id": "c2",
+          "width": "md",
+          "placeholder": "<...>"
+        },
+        {
+          "id": "c3",
+          "width": "md"
+        },
+        {
+          "id": "c4",
+          "width": "sm",
+          "hint": "un chiffre"
+        },
+        {
+          "id": "c5",
+          "width": "md"
+        },
+        {
+          "id": "c6",
+          "width": "md"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "c1": [
+          "sem_t"
+        ],
+        "c2": [
+          "<semaphore.h>",
+          "semaphore.h"
+        ],
+        "c3": [
+          "sem_init",
+          "sem_init()"
+        ],
+        "c4": [
+          "0"
+        ],
+        "c5": [
+          "sem_wait",
+          "sem_wait()"
+        ],
+        "c6": [
+          "sem_post",
+          "sem_post()"
+        ]
+      },
+      "caseSensitive": false,
+      "stripAccents": true
+    },
+    "explanation": "Un sémaphore non nommé est de type **`sem_t`**, déclaré dans l'en-tête **`<semaphore.h>`**. On l'initialise avec **`sem_init(&sem, partage, valeur)`** ; le deuxième argument, `partage`, vaut **`0`** pour un sémaphore partagé **entre les threads d'un même processus** (le cas usuel de ce module) — une valeur non nulle le réserverait au partage **entre processus**. L'opération **P** — décrémenter le compteur, ou **bloquer** s'il vaut zéro — s'appelle **`sem_wait`**. L'opération **V** — **incrémenter** le compteur et **réveiller** un éventuel thread bloqué — s'appelle **`sem_post`**. Ces noms P et V sont historiques (dus à Edsger Dijkstra).",
+    "concepts": [
+      "semaphore-posix",
+      "semaphore-h",
+      "sem-init",
+      "sem-wait",
+      "sem-post",
+      "operation-p-v"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "semaphores-posix",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Associez chaque primitive ou notion des sémaphores POSIX à sa description.",
+    "payload": {
+      "left": [
+        {
+          "id": "init",
+          "label": "Initialise un sémaphore non nommé avec une valeur de départ"
+        },
+        {
+          "id": "wait",
+          "label": "Opération P : décrémente le compteur, ou bloque le thread s'il vaut 0"
+        },
+        {
+          "id": "post",
+          "label": "Opération V : incrémente le compteur et réveille un thread bloqué"
+        },
+        {
+          "id": "getvalue",
+          "label": "Lit la valeur courante du sémaphore (utile au débogage seulement)"
+        },
+        {
+          "id": "destroy",
+          "label": "Détruit un sémaphore non nommé initialisé par sem_init"
+        },
+        {
+          "id": "binaire",
+          "label": "Rôle d'un sémaphore initialisé à 1 : exclusion mutuelle"
+        }
+      ],
+      "right": [
+        {
+          "id": "r-init",
+          "label": "sem_init()"
+        },
+        {
+          "id": "r-wait",
+          "label": "sem_wait()"
+        },
+        {
+          "id": "r-post",
+          "label": "sem_post()"
+        },
+        {
+          "id": "r-getvalue",
+          "label": "sem_getvalue()"
+        },
+        {
+          "id": "r-destroy",
+          "label": "sem_destroy()"
+        },
+        {
+          "id": "r-binaire",
+          "label": "sémaphore binaire"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "init": "r-init",
+        "wait": "r-wait",
+        "post": "r-post",
+        "getvalue": "r-getvalue",
+        "destroy": "r-destroy",
+        "binaire": "r-binaire"
+      }
+    },
+    "explanation": "**`sem_init`** initialise un sémaphore non nommé en lui donnant une **valeur de départ** (et une portée via le paramètre `partage`). **`sem_wait`** est l'opération **P** : elle **décrémente** le compteur, ou **bloque** le thread si le compteur vaut `0`. **`sem_post`** est l'opération **V** : elle **incrémente** le compteur et **réveille** un éventuel thread bloqué. **`sem_getvalue`** **lit la valeur courante** du sémaphore — mais cette valeur n'est qu'un **instantané** potentiellement périmé : elle sert au **débogage**, jamais à décider d'une synchronisation. **`sem_destroy`** **détruit** un sémaphore non nommé initialisé par `sem_init`. Enfin, un sémaphore initialisé à **`1`** est un **sémaphore binaire** : il joue le rôle d'un verrou d'**exclusion mutuelle**.",
+    "concepts": [
+      "sem-init",
+      "sem-wait",
+      "sem-post",
+      "sem-getvalue",
+      "sem-destroy",
+      "semaphore-binaire",
+      "operation-p-v"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "semaphores-posix",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Dans le motif producteur/consommateur à trois sémaphores (`mutex` binaire, `vide` = places libres, `plein` = éléments présents), remettez dans l'ordre les opérations qu'effectue le producteur pour déposer un élément.",
+    "payload": {
+      "items": [
+        {
+          "id": "pvide",
+          "label": "sem_wait(&vide) : attendre qu'une place libre soit disponible"
+        },
+        {
+          "id": "pmutex",
+          "label": "sem_wait(&mutex) : entrer en section critique"
+        },
+        {
+          "id": "depot",
+          "label": "Déposer l'élément dans le tampon et avancer l'indice d'écriture"
+        },
+        {
+          "id": "vmutex",
+          "label": "sem_post(&mutex) : sortir de la section critique"
+        },
+        {
+          "id": "vplein",
+          "label": "sem_post(&plein) : signaler qu'un élément de plus est présent"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "pvide",
+        "pmutex",
+        "depot",
+        "vmutex",
+        "vplein"
+      ]
+    },
+    "explanation": "Le producteur procède dans cet ordre précis : (1) **`sem_wait(&vide)`** — il attend qu'une **place libre** soit disponible (si le tampon est plein, il bloque ici) ; (2) **`sem_wait(&mutex)`** — il **entre en section critique** ; (3) il **dépose l'élément** dans le tampon et avance l'indice d'écriture ; (4) **`sem_post(&mutex)`** — il **sort de la section critique** ; (5) **`sem_post(&plein)`** — il signale qu'un **élément de plus** est présent (ce qui peut réveiller le consommateur). Le point **crucial** est l'ordre des deux `sem_wait` : on prend le sémaphore de **comptage** (`vide`) **avant** le sémaphore d'**exclusion** (`mutex`). L'ordre inverse — `P(mutex)` puis `P(vide)` — provoquerait un **interblocage** : le producteur s'endormirait sur `vide` **en tenant `mutex`**, et le consommateur ne pourrait jamais obtenir `mutex` pour libérer une place.",
+    "concepts": [
+      "producteur-consommateur",
+      "sem-wait",
+      "sem-post",
+      "semaphore-binaire",
+      "semaphore-compteur"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "semaphores-posix",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "À propos du choix de la valeur initiale d'un sémaphore (troisième argument de `sem_init`), quelles affirmations sont correctes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une valeur initiale de 1 donne un sémaphore binaire, utilisable pour l'exclusion mutuelle."
+        },
+        {
+          "id": "b",
+          "label": "Une valeur initiale N > 1 donne un sémaphore compteur, qui autorise jusqu'à N accès simultanés à une ressource."
+        },
+        {
+          "id": "c",
+          "label": "Une valeur initiale de 0 donne un sémaphore de synchronisation : un thread qui fait sem_wait est bloqué d'emblée, jusqu'à ce qu'un autre fasse sem_post."
+        },
+        {
+          "id": "d",
+          "label": "La valeur initiale n'a aucune importance : le sémaphore s'ajuste tout seul au premier sem_wait."
+        },
+        {
+          "id": "e",
+          "label": "Un sémaphore peut être initialisé avec une valeur négative pour autoriser des « dettes » d'unités."
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Le **troisième argument** de `sem_init` est la **valeur initiale** du compteur, et elle **encode le rôle** du sémaphore. (a) **Vrai** : une valeur **`1`** donne un **sémaphore binaire** (valeurs 0 ou 1), utilisable comme verrou d'**exclusion mutuelle**. (b) **Vrai** : une valeur **`N > 1`** donne un **sémaphore compteur** autorisant jusqu'à **`N` accès simultanés** (modèle du parking à N places). (c) **Vrai** : une valeur **`0`** donne un sémaphore de **synchronisation** — il démarre « vide », un `sem_wait` bloque **d'emblée** jusqu'à ce qu'un autre thread fasse `sem_post` : c'est un mécanisme de **rendez-vous**. (d) est **faux** : la valeur initiale est **décisive** — elle détermine entièrement le comportement. (e) est **faux** : le paramètre `valeur` est de type `unsigned int` ; un sémaphore est un entier **non négatif**, une valeur initiale négative est impossible.",
+    "concepts": [
+      "sem-init",
+      "semaphore-binaire",
+      "semaphore-compteur",
+      "probleme-synchronisation"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "semaphores-posix",
+    "type": "PREDICT_OUTPUT",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Ce programme utilise deux sémaphores `etape1` et `etape2`, tous deux initialisés à 0, pour enchaîner trois affichages. Le thread `etoile` attend `etape1` ; le thread `lune` attend `etape2`. Le `main` affiche `Soleil` puis débloque `etape1`. Quelle est la sortie exacte ?",
+    "payload": {
+      "program": "#include <pthread.h>\n#include <semaphore.h>\n#include <stdio.h>\n\nsem_t etape1;\nsem_t etape2;\n\nvoid *etoile(void *arg) {\n    (void) arg;\n    sem_wait(&etape1);                  /* attend le feu vert de main */\n    printf(\"Etoile\\n\");\n    sem_post(&etape2);                  /* libere la lune */\n    return NULL;\n}\n\nvoid *lune(void *arg) {\n    (void) arg;\n    sem_wait(&etape2);                  /* attend que l'etoile ait fini */\n    printf(\"Lune\\n\");\n    return NULL;\n}\n\nint main(void) {\n    pthread_t t_etoile, t_lune;\n\n    sem_init(&etape1, 0, 0);\n    sem_init(&etape2, 0, 0);\n\n    pthread_create(&t_etoile, NULL, etoile, NULL);\n    pthread_create(&t_lune, NULL, lune, NULL);\n\n    printf(\"Soleil\\n\");\n    sem_post(&etape1);                  /* feu vert pour l'etoile */\n\n    pthread_join(t_etoile, NULL);\n    pthread_join(t_lune, NULL);\n\n    sem_destroy(&etape1);\n    sem_destroy(&etape2);\n    printf(\"Fin\\n\");\n    return 0;\n}\n"
+    },
+    "solution": {
+      "expectedOutput": "Soleil\nEtoile\nLune\nFin"
+    },
+    "explanation": "Les deux sémaphores valent **`0`** au départ, ce qui force un **enchaînement strict**. Le thread `etoile` fait `sem_wait(&etape1)` : `etape1` valant 0, il est **bloqué d'emblée**. Le thread `lune` fait `sem_wait(&etape2)` : il est **bloqué** lui aussi. Le `main` affiche donc **`Soleil`** en premier — aucun autre thread ne peut afficher quoi que ce soit — puis fait `sem_post(&etape1)`. Cela **réveille `etoile`**, qui affiche **`Etoile`**, puis fait `sem_post(&etape2)`. Cela **réveille `lune`**, qui affiche **`Lune`**. Enfin le `main`, après avoir joint les deux threads, affiche **`Fin`**. L'ordre est **entièrement déterminé** par la chaîne de sémaphores `main → etoile → lune`, puis par les `pthread_join` : la sortie est invariablement `Soleil`, `Etoile`, `Lune`, `Fin`.",
+    "concepts": [
+      "semaphore-posix",
+      "sem-init",
+      "sem-wait",
+      "sem-post",
+      "probleme-synchronisation"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "semaphores-posix",
+    "type": "CODE_WRITE",
+    "difficulty": 2,
+    "points": 3,
+    "prompt": "Écrivez un programme producteur/consommateur sur un tampon circulaire de 4 cases, synchronisé par TROIS sémaphores : `mutex` (binaire), `vide` (places libres) et `plein` (éléments présents). Le producteur dépose les entiers 1 à 60 ; le consommateur les retire et les additionne dans `somme`. Le programme doit afficher `somme = 1830`.",
+    "payload": {
+      "spec": "Le programme inclut <pthread.h>, <semaphore.h> et <stdio.h>. Constantes TAILLE = 4 et N = 60. Variables globales : int tampon[TAILLE], int tete = 0, int queue = 0, et trois sem_t : mutex, vide, plein. Dans main, on initialise les trois semaphores avec sem_init : mutex a 1 (binaire, exclusion mutuelle), vide a TAILLE (toutes les places sont libres au depart), plein a 0 (aucun element present). Le producteur, pour i de 1 a 60 : sem_wait(&vide) puis sem_wait(&mutex) ; tampon[queue] = i et queue = (queue + 1) % TAILLE ; sem_post(&mutex) puis sem_post(&plein). IMPORTANT : on prend toujours le semaphore de comptage (vide) AVANT le semaphore d'exclusion (mutex), jamais l'inverse. Le consommateur recoit un long* (l'accumulateur somme) ; pour i de 0 a 59 : sem_wait(&plein) puis sem_wait(&mutex) ; *somme += tampon[tete] et tete = (tete + 1) % TAILLE ; sem_post(&mutex) puis sem_post(&vide). main cree les deux threads (en passant &somme au consommateur), joint les deux, detruit les trois semaphores avec sem_destroy, puis affiche 'somme = <valeur>'. Le total vaut 1+2+...+60 = 1830.",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <pthread.h>\n#include <semaphore.h>\n#include <stdio.h>\n\n#define TAILLE 4\n#define N      60\n\nint tampon[TAILLE];\nint tete = 0, queue = 0;\n\nsem_t mutex;     /* binaire  : protege le tampon          */\nsem_t vide;      /* compteur : nombre de places libres    */\nsem_t plein;     /* compteur : nombre d'elements presents */\n\nvoid *producteur(void *arg) {\n    (void) arg;\n    /* TODO : pour i de 1 a N :\n         - P(vide)  : attendre une place libre\n         - P(mutex) : entrer en section critique\n         - tampon[queue] = i ; queue = (queue + 1) % TAILLE\n         - V(mutex) : sortir de section critique\n         - V(plein) : signaler un element de plus */\n    return NULL;\n}\n\nvoid *consommateur(void *arg) {\n    long *somme = (long *) arg;\n    (void) somme;\n    /* TODO : pour i de 0 a N-1 :\n         - P(plein) : attendre un element\n         - P(mutex) : entrer en section critique\n         - *somme += tampon[tete] ; tete = (tete + 1) % TAILLE\n         - V(mutex) : sortir de section critique\n         - V(vide)  : signaler une place libre */\n    return NULL;\n}\n\nint main(void) {\n    pthread_t prod, cons;\n    long somme = 0;\n\n    /* 1. initialiser les trois semaphores :\n          mutex a 1, vide a TAILLE, plein a 0 */\n\n    /* 2. creer le thread producteur et le thread consommateur\n          (passer &somme au consommateur) */\n\n    /* 3. joindre les deux threads */\n\n    /* 4. detruire les trois semaphores, puis afficher 'somme = <valeur>' */\n\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "la somme produite/consommee vaut 1830",
+          "stdin": "",
+          "expectedStdout": "somme = 1830",
+          "compare": "trimmed",
+          "timeoutMs": 5000
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <pthread.h>\n#include <semaphore.h>\n#include <stdio.h>\n\n#define TAILLE 4\n#define N      60\n\nint tampon[TAILLE];\nint tete = 0, queue = 0;\n\nsem_t mutex;\nsem_t vide;\nsem_t plein;\n\nvoid *producteur(void *arg) {\n    (void) arg;\n    for (int i = 1; i <= N; i++) {\n        sem_wait(&vide);\n        sem_wait(&mutex);\n        tampon[queue] = i;\n        queue = (queue + 1) % TAILLE;\n        sem_post(&mutex);\n        sem_post(&plein);\n    }\n    return NULL;\n}\n\nvoid *consommateur(void *arg) {\n    long *somme = (long *) arg;\n    for (int i = 0; i < N; i++) {\n        sem_wait(&plein);\n        sem_wait(&mutex);\n        *somme += tampon[tete];\n        tete = (tete + 1) % TAILLE;\n        sem_post(&mutex);\n        sem_post(&vide);\n    }\n    return NULL;\n}\n\nint main(void) {\n    pthread_t prod, cons;\n    long somme = 0;\n\n    sem_init(&mutex, 0, 1);\n    sem_init(&vide, 0, TAILLE);\n    sem_init(&plein, 0, 0);\n\n    pthread_create(&prod, NULL, producteur, NULL);\n    pthread_create(&cons, NULL, consommateur, &somme);\n\n    pthread_join(prod, NULL);\n    pthread_join(cons, NULL);\n\n    sem_destroy(&mutex);\n    sem_destroy(&vide);\n    sem_destroy(&plein);\n    printf(\"somme = %ld\\n\", somme);\n    return 0;\n}\n"
+    },
+    "explanation": "C'est le motif **producteur / consommateur** de référence, résolu avec **trois sémaphores**. **`mutex`** (initialisé à **`1`**, binaire) protège l'accès au tampon — la **section critique**. **`vide`** (initialisé à **`TAILLE`**) compte les **places libres** : toutes le sont au départ. **`plein`** (initialisé à **`0`**) compte les **éléments présents** : aucun au départ. Le **producteur** fait `sem_wait(&vide)` (il bloque si le tampon est plein), puis `sem_wait(&mutex)` ; il dépose l'élément ; puis `sem_post(&mutex)` et `sem_post(&plein)`. Le **consommateur** fait `sem_wait(&plein)` (il bloque si le tampon est vide), puis `sem_wait(&mutex)` ; il retire l'élément ; puis `sem_post(&mutex)` et `sem_post(&vide)`. Le point **crucial** : on prend toujours le sémaphore de **comptage** (`vide`/`plein`) **avant** le sémaphore d'**exclusion** (`mutex`) — sinon un thread s'endormirait en tenant `mutex`, provoquant un **interblocage**. Les 60 valeurs 1..60 étant toutes produites puis consommées avant les `pthread_join`, le total est invariablement `1 + 2 + ... + 60 = 1830`.",
+    "concepts": [
+      "semaphore-posix",
+      "producteur-consommateur",
+      "sem-init",
+      "sem-wait",
+      "sem-post",
+      "semaphore-binaire",
+      "semaphore-compteur"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  },
+  {
+    "chapterSlug": "semaphores-posix",
+    "type": "CODE_FIX",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "Ce programme producteur/consommateur à trois sémaphores devrait afficher `somme = 1830`, mais il se fige : il ne se termine jamais. Trouvez la cause et corrigez-la.",
+    "payload": {
+      "spec": "Le programme est un producteur/consommateur sur un tampon circulaire de TAILLE = 4 cases, synchronise par trois semaphores : mutex (binaire, initialise a 1), vide (places libres, initialise a TAILLE) et plein (elements presents, initialise a 0). Le producteur depose les entiers 1 a 60 ; le consommateur les retire (une legere temporisation usleep simule le cout de consommation) et les additionne dans somme ; main affiche 'somme = <valeur>'. LE BUG est dans l'ORDRE des deux sem_wait du producteur : il fait sem_wait(&mutex) PUIS sem_wait(&vide), c'est-a-dire qu'il prend le semaphore d'exclusion AVANT le semaphore de comptage. Scenario fatal : le producteur, plus rapide, remplit les 4 cases ; a l'iteration suivante il fait sem_wait(&mutex) (il obtient le mutex, mutex passe a 0) puis sem_wait(&vide) — mais vide vaut 0 (tampon plein), donc il se BLOQUE en tenant toujours mutex. Le consommateur, pour retirer un element et liberer une place, doit faire sem_wait(&mutex) : mutex valant 0, il se bloque lui aussi. Le producteur attend vide (que seul le consommateur peut incrementer), le consommateur attend mutex (que seul le producteur peut liberer) : INTERBLOCAGE, le programme est fige pour toujours. La correction consiste a INVERSER les deux premieres lignes du producteur pour faire sem_wait(&vide) AVANT sem_wait(&mutex) : on prend toujours le semaphore de comptage avant le semaphore d'exclusion, afin de ne jamais s'endormir en tenant le mutex. Une fois l'ordre corrige, le programme affiche 'somme = 1830' (1+2+...+60).",
+      "std": "gnu11",
+      "compare": "trimmed",
+      "starterCode": "#include <pthread.h>\n#include <semaphore.h>\n#include <stdio.h>\n#include <unistd.h>\n\n#define TAILLE 4\n#define N      60\n\nint tampon[TAILLE];\nint tete = 0, queue = 0;\n\nsem_t mutex;\nsem_t vide;\nsem_t plein;\n\nvoid *producteur(void *arg) {\n    (void) arg;\n    for (int i = 1; i <= N; i++) {\n        sem_wait(&mutex);               /* BUG : mutex pris AVANT vide */\n        sem_wait(&vide);\n        tampon[queue] = i;\n        queue = (queue + 1) % TAILLE;\n        sem_post(&mutex);\n        sem_post(&plein);\n    }\n    return NULL;\n}\n\nvoid *consommateur(void *arg) {\n    long *somme = (long *) arg;\n    for (int i = 0; i < N; i++) {\n        usleep(1000);                   /* la consommation prend du temps */\n        sem_wait(&plein);\n        sem_wait(&mutex);\n        *somme += tampon[tete];\n        tete = (tete + 1) % TAILLE;\n        sem_post(&mutex);\n        sem_post(&vide);\n    }\n    return NULL;\n}\n\nint main(void) {\n    pthread_t prod, cons;\n    long somme = 0;\n\n    sem_init(&mutex, 0, 1);\n    sem_init(&vide, 0, TAILLE);\n    sem_init(&plein, 0, 0);\n\n    pthread_create(&prod, NULL, producteur, NULL);\n    pthread_create(&cons, NULL, consommateur, &somme);\n\n    pthread_join(prod, NULL);\n    pthread_join(cons, NULL);\n\n    sem_destroy(&mutex);\n    sem_destroy(&vide);\n    sem_destroy(&plein);\n    printf(\"somme = %ld\\n\", somme);\n    return 0;\n}\n",
+      "tests": [
+        {
+          "name": "le programme se termine et affiche somme = 1830",
+          "stdin": "",
+          "expectedStdout": "somme = 1830",
+          "compare": "trimmed",
+          "timeoutMs": 3000
+        }
+      ]
+    },
+    "solution": {
+      "referenceCode": "#include <pthread.h>\n#include <semaphore.h>\n#include <stdio.h>\n#include <unistd.h>\n\n#define TAILLE 4\n#define N      60\n\nint tampon[TAILLE];\nint tete = 0, queue = 0;\n\nsem_t mutex;\nsem_t vide;\nsem_t plein;\n\nvoid *producteur(void *arg) {\n    (void) arg;\n    for (int i = 1; i <= N; i++) {\n        sem_wait(&vide);                /* comptage AVANT exclusion */\n        sem_wait(&mutex);\n        tampon[queue] = i;\n        queue = (queue + 1) % TAILLE;\n        sem_post(&mutex);\n        sem_post(&plein);\n    }\n    return NULL;\n}\n\nvoid *consommateur(void *arg) {\n    long *somme = (long *) arg;\n    for (int i = 0; i < N; i++) {\n        usleep(1000);                   /* la consommation prend du temps */\n        sem_wait(&plein);\n        sem_wait(&mutex);\n        *somme += tampon[tete];\n        tete = (tete + 1) % TAILLE;\n        sem_post(&mutex);\n        sem_post(&vide);\n    }\n    return NULL;\n}\n\nint main(void) {\n    pthread_t prod, cons;\n    long somme = 0;\n\n    sem_init(&mutex, 0, 1);\n    sem_init(&vide, 0, TAILLE);\n    sem_init(&plein, 0, 0);\n\n    pthread_create(&prod, NULL, producteur, NULL);\n    pthread_create(&cons, NULL, consommateur, &somme);\n\n    pthread_join(prod, NULL);\n    pthread_join(cons, NULL);\n\n    sem_destroy(&mutex);\n    sem_destroy(&vide);\n    sem_destroy(&plein);\n    printf(\"somme = %ld\\n\", somme);\n    return 0;\n}\n"
+    },
+    "explanation": "Le programme se fige à cause d'un **interblocage** dû au **mauvais ordre des deux `sem_wait`** du producteur. Le producteur fait **`sem_wait(&mutex)` puis `sem_wait(&vide)`** — il prend le sémaphore d'**exclusion avant** le sémaphore de **comptage**. Scénario fatal : le producteur remplit les 4 cases du tampon ; à l'itération suivante il fait `sem_wait(&mutex)` (il **obtient** `mutex`, qui passe à 0), puis `sem_wait(&vide)` — mais `vide` vaut **0** (tampon plein), donc il se **bloque en tenant toujours `mutex`**. Le consommateur, pour retirer un élément et libérer une place, doit faire `sem_wait(&mutex)` : `mutex` valant 0, il se **bloque** lui aussi. Le producteur attend `vide` (que **seul le consommateur** peut incrémenter), le consommateur attend `mutex` (que **seul le producteur** peut libérer) : **interblocage**, le programme est figé pour toujours. La correction : **inverser** les deux premières lignes du producteur pour faire **`sem_wait(&vide)` avant `sem_wait(&mutex)`**. La règle, qui élimine ce blocage : on prend toujours le sémaphore de **comptage** (`vide`/`plein`) **avant** le sémaphore d'**exclusion** (`mutex`), pour ne **jamais s'endormir en tenant le verrou**. Une fois l'ordre corrigé, le programme affiche `somme = 1830` (1 + 2 + ... + 60).",
+    "concepts": [
+      "producteur-consommateur",
+      "sem-wait",
+      "sem-post",
+      "semaphore-binaire",
+      "probleme-synchronisation"
+    ],
+    "source": "Cours 4 — Les threads POSIX"
+  }
+]

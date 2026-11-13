@@ -1,0 +1,1501 @@
+[
+ {
+  "chapterSlug": "controle-administratif",
+  "type": "MATCHING",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Associe chaque recours à son destinataire.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Recours gracieux"
+    },
+    {
+     "id": "l1",
+     "label": "Recours hiérarchique"
+    }
+   ],
+   "right": [
+    {
+     "id": "r1",
+     "label": "Le supérieur de l'auteur"
+    },
+    {
+     "id": "r0",
+     "label": "L'auteur de la décision"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1"
+   }
+  },
+  "explanation": "Ce sont les deux recours administratifs.",
+  "hint": "Gracieux et hiérarchique : le second vise un niveau au-dessus.",
+  "concepts": [
+   "controle-administratif"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 1"
+ },
+ {
+  "chapterSlug": "controle-administratif",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Qu'est-ce que le déféré préfectoral ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Une sanction du maire"
+    },
+    {
+     "id": "b",
+     "label": "Une tutelle sur les communes"
+    },
+    {
+     "id": "c",
+     "label": "L'annulation directe par le préfet d'un acte local qu'il estime illégal, sans passer par le juge"
+    },
+    {
+     "id": "d",
+     "label": "La saisine du juge administratif par le préfet contre un acte local"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Il remplace l'ancienne tutelle.",
+  "hint": "Depuis la décentralisation, le préfet ne peut plus décider seul.",
+  "concepts": [
+   "deferre-prefectoral"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 1"
+ },
+ {
+  "chapterSlug": "controle-administratif",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "L'État exerce encore une tutelle sur les actes des collectivités territoriales.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Depuis la décentralisation, c'est un contrôle de légalité.",
+  "hint": "La décentralisation a changé ce contrôle.",
+  "concepts": [
+   "controle-administratif"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 1"
+ },
+ {
+  "chapterSlug": "controle-administratif",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quel est l'effet d'un recours gracieux sur le délai de recours contentieux ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Il le suspend : le délai reprend là où il s'était arrêté, à partir de la réponse"
+    },
+    {
+     "id": "b",
+     "label": "Il le proroge : un nouveau délai court à partir de la réponse"
+    },
+    {
+     "id": "c",
+     "label": "Il le raccourcit"
+    },
+    {
+     "id": "d",
+     "label": "Il n'a aucun effet"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "Cet effet ne joue qu'une fois.",
+  "hint": "Le cours distingue prorogation et suspension.",
+  "concepts": [
+   "controle-administratif"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 1"
+ },
+ {
+  "chapterSlug": "controle-administratif",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "L'effet prorogatoire d'un recours administratif ne joue qu'une fois.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "On ne peut pas enchaîner les recours.",
+  "hint": "On ne peut pas repousser le délai à l'infini.",
+  "concepts": [
+   "controle-administratif"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 1"
+ },
+ {
+  "chapterSlug": "ordres-juridictionnels",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quelle décision constitutionnalise une réserve de compétence au juge administratif ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Blanco (1873)"
+    },
+    {
+     "id": "b",
+     "label": "Conseil de la concurrence (1987)"
+    },
+    {
+     "id": "c",
+     "label": "Bergoend (2013)"
+    },
+    {
+     "id": "d",
+     "label": "Nicolo (1989)"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "CC, 23 janvier 1987.",
+  "hint": "C'est une décision du Conseil constitutionnel de 1987.",
+  "concepts": [
+   "noyau-dur"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "ordres-juridictionnels",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quelles matières sont réservées par nature au juge judiciaire ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La voie de fait"
+    },
+    {
+     "id": "b",
+     "label": "Le contentieux de la légalité des décrets"
+    },
+    {
+     "id": "c",
+     "label": "L'atteinte à la liberté individuelle"
+    },
+    {
+     "id": "d",
+     "label": "Le fonctionnement du service public de la justice judiciaire"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "c",
+    "d"
+   ]
+  },
+  "explanation": "Ce sont les exceptions au noyau dur.",
+  "hint": "Le juge judiciaire reste gardien de certaines libertés.",
+  "concepts": [
+   "noyau-dur"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "ordres-juridictionnels",
+  "type": "MCQ_MULTI",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Selon Bergoend, quels effets peut avoir la voie de fait ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'extinction d'un droit de propriété"
+    },
+    {
+     "id": "b",
+     "label": "Une simple atteinte à la propriété"
+    },
+    {
+     "id": "c",
+     "label": "Un retard de l'administration"
+    },
+    {
+     "id": "d",
+     "label": "Une atteinte à la liberté individuelle"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "d"
+   ]
+  },
+  "explanation": "La simple atteinte à la propriété ne suffit plus.",
+  "hint": "Bergoend a resserré la notion.",
+  "concepts": [
+   "voie-de-fait"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "ordres-juridictionnels",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "L'implantation sans titre d'un poteau électrique sur un terrain privé est une voie de fait.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "C'est un ouvrage public, ce qui ne constitue pas un acte manifestement insusceptible d'être rattaché à un pouvoir de l'administration.",
+  "hint": "Un poteau affecté au service de l'électricité : quelle est sa nature juridique ?",
+  "concepts": [
+   "voie-de-fait"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "ordres-juridictionnels",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Selon Panizzon, qui répare une emprise irrégulière sans extinction du droit de propriété ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le juge administratif"
+    },
+    {
+     "id": "b",
+     "label": "Le préfet"
+    },
+    {
+     "id": "c",
+     "label": "Le Tribunal des conflits"
+    },
+    {
+     "id": "d",
+     "label": "Le juge judiciaire"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Le juge judiciaire ne reste compétent qu'en cas d'extinction du droit.",
+  "hint": "Panizzon ne réserve qu'un cas au juge judiciaire : l'extinction du droit.",
+  "concepts": [
+   "emprise-irreguliere"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "ordres-juridictionnels",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "À quelle condition le législateur peut-il créer un bloc de compétence ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Seulement au profit du juge administratif, jamais au profit du juge judiciaire"
+    },
+    {
+     "id": "b",
+     "label": "Avec l'accord du Tribunal des conflits"
+    },
+    {
+     "id": "c",
+     "label": "Dans l'intérêt d'une bonne administration de la justice"
+    },
+    {
+     "id": "d",
+     "label": "Après une révision constitutionnelle"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "C'est ce que prévoit la décision de 1987.",
+  "hint": "La décision de 1987 fixe l'objectif de ces blocs.",
+  "concepts": [
+   "blocs-competence"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "ordres-juridictionnels",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Le juge judiciaire peut parfois être compétent pour juger l'administration.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Le dualisme n'est pas une frontière absolue.",
+  "hint": "Pense à la voie de fait ou aux SPIC.",
+  "concepts": [
+   "dualisme"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "ordres-juridictionnels",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Une commune gère son domaine privé. Quel juge est compétent pour un litige lié à cette gestion ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le juge judiciaire"
+    },
+    {
+     "id": "b",
+     "label": "Le préfet"
+    },
+    {
+     "id": "c",
+     "label": "Le Conseil constitutionnel"
+    },
+    {
+     "id": "d",
+     "label": "Le juge administratif"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Quand l'administration agit dans le domaine privé, le juge judiciaire est compétent.",
+  "hint": "La compétence suit le fond : le domaine est-il public ou privé ?",
+  "concepts": [
+   "dualisme"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "ordres-juridictionnels",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque arrêt à son apport.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Conseil de la concurrence"
+    },
+    {
+     "id": "l1",
+     "label": "Bergoend"
+    },
+    {
+     "id": "l2",
+     "label": "Panizzon"
+    }
+   ],
+   "right": [
+    {
+     "id": "r1",
+     "label": "Définition resserrée de la voie de fait"
+    },
+    {
+     "id": "r2",
+     "label": "Réparation de l'emprise irrégulière"
+    },
+    {
+     "id": "r0",
+     "label": "Réserve de compétence du juge administratif"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2"
+   }
+  },
+  "explanation": "Trois décisions clés de la séance 10.",
+  "hint": "Trois décisions de la séance 10, sur la compétence et la propriété.",
+  "concepts": [
+   "voie-de-fait"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "conflits-questions-prejudicielles",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque procédure à sa situation.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Conflit positif"
+    },
+    {
+     "id": "l1",
+     "label": "Conflit négatif"
+    },
+    {
+     "id": "l2",
+     "label": "Règlement au fond"
+    }
+   ],
+   "right": [
+    {
+     "id": "r0",
+     "label": "Le préfet revendique la compétence administrative"
+    },
+    {
+     "id": "r2",
+     "label": "Deux jugements contradictoires aboutissent à un déni de justice"
+    },
+    {
+     "id": "r1",
+     "label": "Aucune juridiction ne veut du litige"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2"
+   }
+  },
+  "explanation": "Le Tribunal des conflits tranche dans les trois cas.",
+  "hint": "Demande-toi qui revendique le litige, et si un juge l'a déjà tranché.",
+  "concepts": [
+   "conflits"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "conflits-questions-prejudicielles",
+  "type": "ORDERING",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Remets dans l'ordre le conflit positif.",
+  "payload": {
+   "items": [
+    {
+     "id": "i1",
+     "label": "Le préfet adresse un déclinatoire de compétence"
+    },
+    {
+     "id": "i4",
+     "label": "Le Tribunal des conflits tranche"
+    },
+    {
+     "id": "i2",
+     "label": "Le juge rejette le déclinatoire"
+    },
+    {
+     "id": "i0",
+     "label": "Le litige est porté devant le juge judiciaire"
+    },
+    {
+     "id": "i3",
+     "label": "Le préfet élève le conflit"
+    }
+   ]
+  },
+  "solution": {
+   "order": [
+    "i0",
+    "i1",
+    "i2",
+    "i3",
+    "i4"
+   ]
+  },
+  "explanation": "C'est la procédure classique.",
+  "hint": "Tout part du préfet, qui s'adresse d'abord au juge saisi.",
+  "concepts": [
+   "conflits"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "conflits-questions-prejudicielles",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel arrêt illustre le règlement au fond par le Tribunal des conflits ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Blanco"
+    },
+    {
+     "id": "b",
+     "label": "Rosay"
+    },
+    {
+     "id": "c",
+     "label": "Bergoend"
+    },
+    {
+     "id": "d",
+     "label": "Motsch"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b"
+   ]
+  },
+  "explanation": "TC, 1933.",
+  "hint": "C'est une décision de 1933, sur un accident de la route.",
+  "concepts": [
+   "conflits"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "conflits-questions-prejudicielles",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quel juge n'a pas à poser de question préjudicielle au juge administratif ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le conseil de prud'hommes"
+    },
+    {
+     "id": "b",
+     "label": "Le tribunal de commerce"
+    },
+    {
+     "id": "c",
+     "label": "Le juge civil"
+    },
+    {
+     "id": "d",
+     "label": "Le juge pénal"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "d"
+   ]
+  },
+  "explanation": "Il a la plénitude de compétence.",
+  "hint": "Ce juge a la plénitude de compétence.",
+  "concepts": [
+   "questions-prejudicielles"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "conflits-questions-prejudicielles",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Le juge civil doit interpréter un acte réglementaire. Que fait-il ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Il se déclare incompétent"
+    },
+    {
+     "id": "b",
+     "label": "Il pose une question au juge administratif"
+    },
+    {
+     "id": "c",
+     "label": "Il l'interprète lui-même"
+    },
+    {
+     "id": "d",
+     "label": "Il saisit le Tribunal des conflits"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "L'acte est général et impersonnel : il peut l'interpréter seul.",
+  "hint": "Un acte général et impersonnel peut être lu comme une norme.",
+  "concepts": [
+   "questions-prejudicielles"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "conflits-questions-prejudicielles",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Le juge civil doit interpréter un acte individuel. Que fait-il ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Il pose une question au juge administratif"
+    },
+    {
+     "id": "b",
+     "label": "Il saisit la CJUE"
+    },
+    {
+     "id": "c",
+     "label": "Il abroge l'acte"
+    },
+    {
+     "id": "d",
+     "label": "Il l'interprète lui-même, comme pour un acte réglementaire"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Il est incompétent pour le faire.",
+  "hint": "Pour un acte individuel, la règle est plus stricte que pour un règlement.",
+  "concepts": [
+   "questions-prejudicielles"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "conflits-questions-prejudicielles",
+  "type": "MCQ_MULTI",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Selon SCEA du Chéneau, quand le juge civil peut-il apprécier lui-même la légalité d'un acte ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Dans tous les cas"
+    },
+    {
+     "id": "b",
+     "label": "Lorsqu'une jurisprudence établie montre que la contestation peut être accueillie"
+    },
+    {
+     "id": "c",
+     "label": "Lorsque le préfet est d'accord"
+    },
+    {
+     "id": "d",
+     "label": "Lorsque le droit de l'Union européenne est en cause"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "b",
+    "d"
+   ]
+  },
+  "explanation": "Ce sont les deux exceptions.",
+  "hint": "L'arrêt pose deux exceptions, dont une liée à l'Union européenne.",
+  "concepts": [
+   "cheneau"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "conflits-questions-prejudicielles",
+  "type": "TRUE_FALSE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Le juge judiciaire peut apprécier la conformité d'un arrêté ministériel au droit de l'Union, sans question préjudicielle.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Le principe d'effectivité le permet.",
+  "hint": "Pense au principe d'effectivité du droit de l'Union.",
+  "concepts": [
+   "cheneau"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "conflits-questions-prejudicielles",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Le Tribunal des conflits tranche habituellement le fond des litiges.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Il tranche la compétence, le fond n'étant jugé que très rarement.",
+  "hint": "Sa mission normale porte sur la compétence.",
+  "concepts": [
+   "conflits"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "juridictions-administratives",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quelle est la juridiction de droit commun en premier ressort ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le Tribunal des conflits"
+    },
+    {
+     "id": "b",
+     "label": "La cour administrative d'appel"
+    },
+    {
+     "id": "c",
+     "label": "Le tribunal administratif"
+    },
+    {
+     "id": "d",
+     "label": "Le Conseil d'État"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Le Conseil d'État n'y statue que dans des cas précis.",
+  "hint": "Pense au premier degré, avant l'appel.",
+  "concepts": [
+   "juridictions-administratives"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §2"
+ },
+ {
+  "chapterSlug": "juridictions-administratives",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Devant qui conteste-t-on un décret ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le Conseil constitutionnel"
+    },
+    {
+     "id": "b",
+     "label": "Le tribunal administratif"
+    },
+    {
+     "id": "c",
+     "label": "Directement devant le Conseil d'État"
+    },
+    {
+     "id": "d",
+     "label": "La cour administrative d'appel"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "Il est compétent en premier ressort.",
+  "hint": "Certains actes vont directement à la plus haute juridiction.",
+  "concepts": [
+   "juridictions-administratives"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §2"
+ },
+ {
+  "chapterSlug": "juridictions-administratives",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Le double degré de juridiction a valeur constitutionnelle.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Il n'a ni valeur constitutionnelle ni valeur conventionnelle.",
+  "hint": "Dans certains cas, on va directement en cassation.",
+  "concepts": [
+   "juridictions-administratives"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §2"
+ },
+ {
+  "chapterSlug": "juridictions-administratives",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Dans quels cas le Conseil d'État statue-t-il en appel ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Tous les litiges fiscaux"
+    },
+    {
+     "id": "b",
+     "label": "Les recours contre les décrets"
+    },
+    {
+     "id": "c",
+     "label": "Le référé-liberté"
+    },
+    {
+     "id": "d",
+     "label": "Le contentieux des élections municipales"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c",
+    "d"
+   ]
+  },
+  "explanation": "Ce sont les deux hypothèses du cours.",
+  "hint": "Le cours donne deux hypothèses, dont une en matière électorale.",
+  "concepts": [
+   "juridictions-administratives"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §2"
+ },
+ {
+  "chapterSlug": "juridictions-administratives",
+  "type": "MATCHING",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Associe chaque degré à sa juridiction de droit commun.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Premier ressort"
+    },
+    {
+     "id": "l1",
+     "label": "Appel"
+    },
+    {
+     "id": "l2",
+     "label": "Cassation"
+    }
+   ],
+   "right": [
+    {
+     "id": "r0",
+     "label": "Tribunal administratif"
+    },
+    {
+     "id": "r2",
+     "label": "Conseil d'État"
+    },
+    {
+     "id": "r1",
+     "label": "Cour administrative d'appel"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2"
+   }
+  },
+  "explanation": "Le Conseil d'État est la juridiction suprême.",
+  "hint": "Il y a trois degrés, et une juridiction pour chacun.",
+  "concepts": [
+   "juridictions-administratives"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 1, §2"
+ },
+ {
+  "chapterSlug": "recours-contentieux",
+  "type": "MATCHING",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Associe chaque recours aux pouvoirs du juge.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Recours pour excès de pouvoir"
+    },
+    {
+     "id": "l1",
+     "label": "Plein contentieux"
+    }
+   ],
+   "right": [
+    {
+     "id": "r0",
+     "label": "Annuler ou rejeter"
+    },
+    {
+     "id": "r1",
+     "label": "Réformer et condamner"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1"
+   }
+  },
+  "explanation": "C'est le critère de classification.",
+  "hint": "La classification suit les pouvoirs du juge.",
+  "concepts": [
+   "rep"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 2"
+ },
+ {
+  "chapterSlug": "recours-contentieux",
+  "type": "MCQ_MULTI",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quelles sont les conditions de recevabilité d'un recours ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "S'adresser à la juridiction compétente"
+    },
+    {
+     "id": "b",
+     "label": "Respecter le délai"
+    },
+    {
+     "id": "c",
+     "label": "Avoir saisi le préfet"
+    },
+    {
+     "id": "d",
+     "label": "Avoir un intérêt à agir"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "b",
+    "d"
+   ]
+  },
+  "explanation": "Ces trois conditions sont à vérifier.",
+  "hint": "Le cours en donne trois.",
+  "concepts": [
+   "recevabilite"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 2"
+ },
+ {
+  "chapterSlug": "recours-contentieux",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel est le délai de droit commun du recours contentieux ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Deux mois"
+    },
+    {
+     "id": "b",
+     "label": "Un mois"
+    },
+    {
+     "id": "c",
+     "label": "Six mois"
+    },
+    {
+     "id": "d",
+     "label": "Un an"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Il court à compter de la publication ou de la notification.",
+  "hint": "Il court à compter de la publication ou de la notification.",
+  "concepts": [
+   "recevabilite"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 2"
+ },
+ {
+  "chapterSlug": "recours-contentieux",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Une décision individuelle est notifiée sans mention des voies et délais. Quel délai s'applique ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Cinq ans"
+    },
+    {
+     "id": "b",
+     "label": "Deux mois"
+    },
+    {
+     "id": "c",
+     "label": "Un délai raisonnable d'un an"
+    },
+    {
+     "id": "d",
+     "label": "Aucun délai : le recours reste ouvert sans limite de temps"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "C'est la solution de Czabaj.",
+  "hint": "Pense à l'arrêt Czabaj, qui évite un recours ouvert sans fin.",
+  "concepts": [
+   "recevabilite"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 2"
+ },
+ {
+  "chapterSlug": "recours-contentieux",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "L'avocat n'est pas obligatoire en excès de pouvoir.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Il l'est en revanche en plein contentieux.",
+  "hint": "Le cours distingue selon le type de recours.",
+  "concepts": [
+   "rep"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 2"
+ },
+ {
+  "chapterSlug": "recours-contentieux",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque moyen à sa catégorie.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Incompétence de l'auteur"
+    },
+    {
+     "id": "l1",
+     "label": "Vice de forme"
+    },
+    {
+     "id": "l2",
+     "label": "Erreur de droit"
+    },
+    {
+     "id": "l3",
+     "label": "Détournement de pouvoir"
+    }
+   ],
+   "right": [
+    {
+     "id": "r1",
+     "label": "Légalité interne"
+    },
+    {
+     "id": "r0",
+     "label": "Légalité externe"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r0",
+    "l2": "r1",
+    "l3": "r1"
+   }
+  },
+  "explanation": "Classer ses moyens, c'est structurer sa copie.",
+  "hint": "Externe : ce qui entoure l'acte. Interne : ce qu'il contient.",
+  "concepts": [
+   "legalite-externe"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 2"
+ },
+ {
+  "chapterSlug": "recours-contentieux",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quelle est l'illégalité la plus grave ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le détournement de pouvoir"
+    },
+    {
+     "id": "b",
+     "label": "Le vice de forme"
+    },
+    {
+     "id": "c",
+     "label": "L'incompétence"
+    },
+    {
+     "id": "d",
+     "label": "L'erreur matérielle"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Le but de l'acte n'est pas l'intérêt général.",
+  "hint": "Le cours la présente comme une atteinte au but de l'acte.",
+  "concepts": [
+   "legalite-interne"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 2"
+ },
+ {
+  "chapterSlug": "recours-contentieux",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "En recours pour excès de pouvoir, on peut invoquer sa situation personnelle pour contester la légalité de l'acte.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "C'est la légalité objective qui compte.",
+  "hint": "Le recours pour excès de pouvoir porte sur l'acte, pas sur ta situation.",
+  "concepts": [
+   "rep"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 2"
+ },
+ {
+  "chapterSlug": "recours-contentieux",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quelle autorité ont les décisions du juge de l'excès de pouvoir ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Aucune autorité"
+    },
+    {
+     "id": "b",
+     "label": "L'autorité relative"
+    },
+    {
+     "id": "c",
+     "label": "L'autorité absolue de la chose jugée"
+    },
+    {
+     "id": "d",
+     "label": "Une autorité limitée aux parties"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "c"
+   ]
+  },
+  "explanation": "L'acte annulé disparaît pour tous.",
+  "hint": "Quand un acte est annulé, il disparaît pour qui ?",
+  "concepts": [
+   "rep"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 2"
+ },
+ {
+  "chapterSlug": "recours-contentieux",
+  "type": "FILL_BLANK",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Complète la liste de la légalité externe.",
+  "payload": {
+   "template": "La légalité externe porte sur la compétence, la {{a}} et la {{b}}.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "md"
+    },
+    {
+     "id": "b",
+     "width": "md"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "forme",
+     "procédure"
+    ],
+    "b": [
+     "procédure",
+     "forme"
+    ]
+   }
+  },
+  "explanation": "Ce sont les moyens extérieurs au contenu.",
+  "hint": "Pense à ce qui entoure l'acte, sans toucher à son contenu.",
+  "concepts": [
+   "legalite-externe"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 2"
+ },
+ {
+  "chapterSlug": "td-seance-10",
+  "type": "CASE_STUDY",
+  "difficulty": 3,
+  "points": 3,
+  "prompt": "Cas de la séance 10. Réponds question par question.",
+  "payload": {
+   "scenario": "M. Dupond possède un terrain en friche. Il découvre qu'ERDF édifie une ligne électrique et que deux poteaux sont implantés sur sa parcelle, sans décision ni convention. Il dit ne plus pouvoir vendre au même prix, mais reconnaît ne pas être totalement dépossédé. Il parle de voie de fait et veut obtenir le retrait des poteaux et une réparation.\n\nPar ailleurs, une ministre a pris un arrêté rendant des cotisations obligatoires, en contradiction avec le droit de l'Union européenne. Saisi d'un litige entre personnes privées sur le remboursement de ces cotisations, le juge judiciaire apprécie lui-même la régularité de l'arrêté. La ministre conteste ce pouvoir.",
+   "subQuestions": [
+    {
+     "id": "q1",
+     "type": "TRUE_FALSE",
+     "prompt": "L'implantation des poteaux est une voie de fait.",
+     "payload": {}
+    },
+    {
+     "id": "q2",
+     "type": "MCQ_SINGLE",
+     "prompt": "Quelle qualification retenir ?",
+     "payload": {
+      "options": [
+       {
+        "id": "a",
+        "label": "Une expropriation"
+       },
+       {
+        "id": "b",
+        "label": "Un acte de gouvernement"
+       },
+       {
+        "id": "c",
+        "label": "Une emprise irrégulière"
+       }
+      ]
+     }
+    },
+    {
+     "id": "q3",
+     "type": "MCQ_SINGLE",
+     "prompt": "Quel juge peut ordonner le retrait des poteaux ?",
+     "payload": {
+      "options": [
+       {
+        "id": "a",
+        "label": "Le juge judiciaire"
+       },
+       {
+        "id": "b",
+        "label": "Le Tribunal des conflits"
+       },
+       {
+        "id": "c",
+        "label": "Le juge administratif"
+       }
+      ]
+     }
+    },
+    {
+     "id": "q4",
+     "type": "MCQ_SINGLE",
+     "prompt": "Quel juge répare le préjudice, sans extinction du droit de propriété ?",
+     "payload": {
+      "options": [
+       {
+        "id": "a",
+        "label": "Le juge judiciaire"
+       },
+       {
+        "id": "b",
+        "label": "Le juge administratif"
+       }
+      ]
+     }
+    },
+    {
+     "id": "q5",
+     "type": "TRUE_FALSE",
+     "prompt": "Le juge judiciaire pouvait apprécier lui-même l'arrêté au regard du droit de l'Union.",
+     "payload": {}
+    }
+   ]
+  },
+  "solution": {
+   "subSolutions": [
+    {
+     "id": "q1",
+     "solution": {
+      "value": false
+     }
+    },
+    {
+     "id": "q2",
+     "solution": {
+      "correct": [
+       "c"
+      ]
+     }
+    },
+    {
+     "id": "q3",
+     "solution": {
+      "correct": [
+       "c"
+      ]
+     }
+    },
+    {
+     "id": "q4",
+     "solution": {
+      "correct": [
+       "b"
+      ]
+     }
+    },
+    {
+     "id": "q5",
+     "solution": {
+      "value": true
+     }
+    }
+   ]
+  },
+  "explanation": "Poteaux : selon Bergoend, l'implantation sans titre d'un ouvrage public ne se rattache pas à un acte manifestement insusceptible de relever d'un pouvoir de l'administration, et n'éteint pas le droit de propriété. Il n'y a pas de voie de fait. Il y a une emprise irrégulière : le juge administratif ordonne le déplacement (Bergoend) et répare (Panizzon).\n\nArrêté : selon SCEA du Chéneau, le juge civil peut, en cas de droit de l'Union, statuer sans question préjudicielle. La ministre a tort.",
+  "hint": "Bergoend pour la voie de fait, Panizzon pour la réparation, Chéneau pour l'arrêté.",
+  "concepts": [
+   "voie-de-fait",
+   "emprise-irreguliere",
+   "cheneau"
+  ],
+  "source": "Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "td-seance-10",
+  "type": "WRITING",
+  "difficulty": 3,
+  "points": 4,
+  "prompt": "Rédige en syllogisme la réponse à la question : l'occupation du terrain de M. Dupond est-elle une voie de fait ou une emprise irrégulière, et quel juge est compétent ? Reprends le cas guidé.",
+  "payload": {
+   "modelAnswer": "Majeure : il n'y a voie de fait que si l'administration a procédé à l'exécution forcée irrégulière d'une décision, ou a pris une décision manifestement insusceptible d'être rattachée à un pouvoir lui appartenant, portant atteinte à la liberté individuelle ou aboutissant à l'extinction d'un droit de propriété (TC, 2013, Bergoend). Le juge administratif est compétent pour le déplacement d'un ouvrage public, et pour la réparation, sauf extinction du droit de propriété (TC, 2013, Panizzon).\n\nMineure : ici, les poteaux électriques sont affectés au service public de la distribution d'électricité : ce sont des ouvrages publics. Leur implantation sans titre se rattache à un pouvoir de l'administration, et M. Dupond reconnaît ne pas être dépossédé de son droit.\n\nConclusion : il n'y a pas de voie de fait, mais une emprise irrégulière. Le juge administratif est compétent pour faire cesser l'occupation et réparer le préjudice.",
+   "rubric": [
+    {
+     "id": "c0",
+     "label": "Les deux branches de la voie de fait sont exposées"
+    },
+    {
+     "id": "c1",
+     "label": "L'arrêt Bergoend est cité"
+    },
+    {
+     "id": "c2",
+     "label": "Le poteau est qualifié d'ouvrage public"
+    },
+    {
+     "id": "c3",
+     "label": "L'absence d'extinction du droit de propriété est démontrée"
+    },
+    {
+     "id": "c4",
+     "label": "Panizzon est utilisé pour la réparation"
+    },
+    {
+     "id": "c5",
+     "label": "La conclusion donne le juge compétent pour les deux demandes"
+    }
+   ]
+  },
+  "solution": {},
+  "explanation": "Le corrigé n'est pas officiel.",
+  "concepts": [
+   "voie-de-fait",
+   "syllogisme"
+  ],
+  "source": "Fascicule de TD, séance 10"
+ }
+]

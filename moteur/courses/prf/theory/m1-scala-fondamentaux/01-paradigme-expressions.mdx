@@ -1,0 +1,31 @@
+---
+title: "Paradigme fonctionnel et expressions"
+slug: paradigme-expressions
+order: 1
+estimatedReadMin: 10
+concepts: [expression, instruction-vs-expression, purete, side-effect]
+source: "Intro/Intro/Scala_01 (3).pdf; Intro/Intro/basics_scala.pdf"
+---
+## Idee centrale
+
+Le cours presente Scala comme un langage hybride, mais la discipline PRF demande de raisonner d'abord par **expressions**. Une expression produit une valeur ; une instruction est surtout utile par l'effet qu'elle provoque. En Scala, `if`, les blocs et les appels de fonctions sont des expressions.
+
+```scala
+val signe = if (n >= 0) "positif" else "negatif"
+```
+
+La valeur de `signe` se lit sans simuler une suite d'affectations. C'est ce style qui rend les programmes plus faciles a tester et a prouver.
+
+## Ce que tu dois savoir reconnaitre
+
+- `println(x)` a le type `Unit` : l'affichage est un effet de bord.
+- Une expression pure peut etre remplacee par sa valeur sans changer le programme.
+- Une expression avec mutation, entree-sortie ou hasard n'est pas pure.
+- Le resultat d'un bloc est la derniere expression du bloc.
+
+## Pieges classiques
+
+Ne confonds pas le type d'une expression et ce qu'elle affiche. Ne confonds pas non plus `=` dans une definition et une affectation imperative : `val x = ...` cree une liaison, pas une case modifiee plus tard.
+
+> **A retenir**  
+> Pour viser une copie solide, transforme chaque question Scala en question de valeur, de type, puis d'effets observables.

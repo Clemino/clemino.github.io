@@ -1,0 +1,103 @@
+---
+title: Création d'indexs en pratique
+slug: creation-indexs
+order: 4
+estimatedReadMin: 7
+concepts: [index-btree, index-bitmap, index-fonction, index-inverse]
+source: "CM2, slides 18-19"
+---
+
+## Index B-tree standard
+
+L'index B-tree est le **type par défaut** d'Oracle :
+
+```sql
+CREATE [UNIQUE] INDEX nomIndex
+  ON nom_table (colonne [ASC|DESC], ...);
+```
+
+La clause **`UNIQUE`** impose que toutes les valeurs indexées soient distinctes (utilisée implicitement par Oracle pour les clés primaires et les contraintes UNIQUE).
+
+```sql
+-- Index simple
+CREATE INDEX idx_titre ON Film(titre);
+
+-- Index unique sur deux colonnes
+CREATE UNIQUE INDEX idx_nom_prenom ON Personne(nom, prenom);
+
+-- Index en ordre décroissant
+CREATE INDEX idx_date_desc ON Commande(date_cmd DESC);
+```
+
+## Index B-tree inversé (REVERSE)
+
+```sql
+CREATE INDEX idx_x ON Table_x(col REVERSE);
+```
+
+Les **clés sont inversées** avant indexation : la valeur `'abc'` est stockée comme `'cba'`. Cela répartit les insertions sur tout l'arbre quand les nouvelles valeurs sont monotones croissantes (typique d'un numéro de séquence) — utile pour **éviter les hotspots** de blocs en environnement RAC ou multi-thread intensif.
+
+Pour annuler l'inversion d'un index existant :
+
+```sql
+ALTER INDEX idx_x REBUILD NOREVERSE;
+```
+
+## Index par fonction
+
+On peut indexer sur la **valeur de retour d'une fonction** :
+
+```sql
+CREATE INDEX idx_upper_nom ON Client(UPPER(nom));
+```
+
+Cette technique permet d'accélérer des `WHERE` qui appliquent une fonction sur une colonne :
+
+```sql
+SELECT * FROM Client WHERE UPPER(nom) = 'DUPONT';  -- utilise l'index
+```
+
+> ⚠️ La fonction doit être **déterministe** : pour des entrées identiques, elle doit toujours renvoyer la même sortie. Quand on définit une fonction PL/SQL pour ce type d'index, on doit explicitement le déclarer :
+>
+> ```sql
+> CREATE FUNCTION ma_fct(...) RETURN VARCHAR2 DETERMINISTIC IS ...;
+> ```
+>
+> ⚠️ `SYSDATE` n'est **pas déterministe** : impossible de l'utiliser dans un index par fonction.
+
+## Index Bitmap
+
+Disponible en édition Entreprise :
+
+```sql
+CREATE BITMAP INDEX idx_etat ON Commande(etat);
+```
+
+## Index composite (multi-colonnes)
+
+Un index sur plusieurs colonnes accélère les requêtes qui filtrent **dans l'ordre** déclaré :
+
+```sql
+CREATE INDEX idx_nom_prenom ON Personne(nom, prenom);
+-- accélère :
+SELECT * FROM Personne WHERE nom = 'Dupont' AND prenom = 'Marie';
+SELECT * FROM Personne WHERE nom = 'Dupont';
+-- mais PAS :
+SELECT * FROM Personne WHERE prenom = 'Marie';   -- la 1ère colonne n'est pas filtrée
+```
+
+## Modifier ou supprimer un index
+
+```sql
+ALTER INDEX idx_x REBUILD;       -- reconstruction (utile après nombreuses MAJ)
+ALTER INDEX idx_x RENAME TO idx_y;
+DROP INDEX idx_x;
+```
+
+> **À retenir**
+> - `CREATE [UNIQUE] INDEX nom ON table(col ASC|DESC, ...)` : syntaxe de base.
+> - `REVERSE` : inversion de clé pour répartir les inserts monotones.
+> - `CREATE INDEX ... ON table(fonction(col))` : index par fonction (fonction déterministe obligatoire).
+> - `CREATE BITMAP INDEX` : édition Entreprise seulement.
+> - Un index composite suit l'**ordre** des colonnes : `(a,b)` ne sert pas une requête qui filtre seulement sur `b`.
+> - `SYSDATE` n'est pas déterministe et ne peut pas servir à un index par fonction.
