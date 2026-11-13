@@ -65,4 +65,4 @@ Projet `cours`, connexion par Google uniquement.
 - `sources/<id>/` garde les documents d'origine de chaque matière et une version texte de chacun, avec des repères `[page N]`.
 - `CLAUDE.md` renvoie Claude Code vers `docs/` pour répondre à une question de cours à partir des sources et suivre ce qui reste à faire, et vers le skill `creer-une-matiere` pour créer une matière proposée.
 - `cd moteur && COURSE=<id> pnpm check:quality` compare une matière à Droit administratif et Droit des contrats, et refuse une nouvelle matière qui n'atteint pas leur niveau.
-- `scripts/proposals.mjs` récupère, crée ou refuse les matières proposées. Il lit la clé secrète de Supabase dans `.env.local`, ignoré par git, ou dans les variables d'environnement de claude.ai/code.
+- `scripts/proposals.mjs` récupère, crée ou refuse les matières proposées. Il lit la clé secrète de Supabase dans `.env.local`, ignoré par git ; dans claude.ai/code, un secret réseau de l'environnement l'ajoute aux requêtes vers Supabase.

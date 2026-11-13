@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Handles the course proposals sent from the library.
- * Needs SUPABASE_SECRET_KEY, in .env.local at the root of this repository or in the environment.
+ * Needs SUPABASE_SECRET_KEY in .env.local at the root of this repository. In claude.ai/code,
+ * the key is a network secret instead: the proxy adds it to requests to Supabase.
  *
  *   node scripts/proposals.mjs list
  *   node scripts/proposals.mjs download <proposal-id> <course-id>
@@ -36,12 +37,18 @@ function readEnv() {
 const env = readEnv()
 const BASE_URL = env.SUPABASE_URL ?? "https://fcxrvoloiuicbgbqjoco.supabase.co"
 const SECRET_KEY = env.SUPABASE_SECRET_KEY
+// Set to "true" in claude.ai/code sessions, where the key never enters the VM.
+const REMOTE = env.CLAUDE_CODE_REMOTE === "true"
 
 async function api(pathname, init = {}) {
-  if (!SECRET_KEY) fail("SUPABASE_SECRET_KEY manque : dans .env.local sur le PC, ou dans les variables d'environnement de claude.ai/code (voir le skill creer-une-matiere).")
+  if (!SECRET_KEY && !REMOTE) fail("SUPABASE_SECRET_KEY manque dans .env.local (voir le skill creer-une-matiere).")
   // Secret keys go on the apikey header only: the gateway rejects them as a bearer token.
-  const response = await fetch(BASE_URL + pathname, { ...init, headers: { apikey: SECRET_KEY, ...init.headers } })
-  if (!response.ok) fail(`${init.method ?? "GET"} ${pathname} : ${response.status} ${await response.text()}`)
+  const key = SECRET_KEY ? { apikey: SECRET_KEY } : {}
+  const response = await fetch(BASE_URL + pathname, { ...init, headers: { ...key, ...init.headers } })
+  if (!response.ok) {
+    const advice = REMOTE && response.status === 401 ? "\nDans claude.ai/code, la clé est un secret réseau de l'environnement (voir le skill creer-une-matiere)." : ""
+    fail(`${init.method ?? "GET"} ${pathname} : ${response.status} ${await response.text()}${advice}`)
+  }
   return response
 }
 
