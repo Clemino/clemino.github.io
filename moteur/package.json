@@ -14,6 +14,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "check:content": "tsx scripts/check-content.ts",
+    "check:quality": "tsx scripts/check-quality.ts",
     "pretest": "tsx scripts/select-course.ts && tsx scripts/build-course-index.ts",
     "precheck:content": "tsx scripts/select-course.ts",
     "publish:course": "bash scripts/publish-course.sh",
