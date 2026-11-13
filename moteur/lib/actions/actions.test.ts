@@ -11,7 +11,7 @@ import {
 } from "@/lib/actions/progression"
 import { gradeConcept } from "@/lib/actions/review"
 import type { Exercise } from "@/lib/course"
-import { EMPTY_PROGRESS, useProgressStore } from "@/lib/store"
+import { EMPTY_PROGRESS, PROGRESS_KEY, useProgressStore } from "@/lib/store"
 
 const mcq = (id: string, over: Partial<Exercise> = {}): Exercise => ({
   id,
@@ -168,11 +168,11 @@ describe("gradeConcept", () => {
 describe("persistence", () => {
   it("writes progress to the browser and restores it", async () => {
     markSectionRead("c1/s")
-    expect(localStorage.getItem("admin-progress")).toContain("c1/s")
+    expect(localStorage.getItem(PROGRESS_KEY)).toContain("c1/s")
 
     useProgressStore.setState({ sectionsRead: {} }, false)
     localStorage.setItem(
-      "admin-progress",
+      PROGRESS_KEY,
       JSON.stringify({
         state: { ...EMPTY_PROGRESS, sectionsRead: { x: "t" } },
         version: 1,
