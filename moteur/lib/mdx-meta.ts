@@ -27,6 +27,7 @@ export function parseFrontmatter(mdx: string): Record<string, unknown> {
 
 /** Minutes to read the section text; markup such as table rules is not counted as words. */
 export function readingMinutes(mdx: string): number {
-  const words = mdx.replace(FRONTMATTER, "").match(/[\p{L}\p{N}]+/gu)?.length ?? 0
+  const words =
+    mdx.replace(FRONTMATTER, "").match(/[\p{L}\p{N}]+/gu)?.length ?? 0
   return Math.max(1, Math.round(words / WORDS_PER_MINUTE))
 }

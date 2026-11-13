@@ -30,7 +30,14 @@ export type RawExercise = {
 
 export type CourseFiles = {
   modules: { slug: string; chapters: { slug: string; sections: string[] }[] }[]
-  sections: { moduleSlug: string; chapterSlug: string; file: string; written: boolean; source: string | null; concepts: string[] }[]
+  sections: {
+    moduleSlug: string
+    chapterSlug: string
+    file: string
+    written: boolean
+    source: string | null
+    concepts: string[]
+  }[]
   concepts: { slug: string; summary?: string }[]
   /** exercises/*.json: the practice exercises of each chapter */
   exercises: RawExercise[]
@@ -67,14 +74,26 @@ function readJsonFiles<T>(dir: string): T[] {
 }
 
 export async function readCourse(dir: string): Promise<CourseFiles> {
-  const { MODULES } = (await import(pathToFileURL(path.join(dir, "modules.ts")).href)) as { MODULES: CourseFiles["modules"] }
-  const modules = MODULES.map((m) => ({ slug: m.slug, chapters: m.chapters.map((c) => ({ slug: c.slug, sections: c.sections })) }))
+  const { MODULES } = (await import(
+    pathToFileURL(path.join(dir, "modules.ts")).href
+  )) as { MODULES: CourseFiles["modules"] }
+  const modules = MODULES.map((m) => ({
+    slug: m.slug,
+    chapters: m.chapters.map((c) => ({ slug: c.slug, sections: c.sections })),
+  }))
   const sections = modules.flatMap((m) =>
     m.chapters.flatMap((c) =>
       c.sections.map((file) => {
         const mdxPath = path.join(dir, "theory", m.slug, `${file}.mdx`)
         if (!fs.existsSync(mdxPath)) {
-          return { moduleSlug: m.slug, chapterSlug: c.slug, file, written: false, source: null, concepts: [] }
+          return {
+            moduleSlug: m.slug,
+            chapterSlug: c.slug,
+            file,
+            written: false,
+            source: null,
+            concepts: [],
+          }
         }
         const meta = parseFrontmatter(fs.readFileSync(mdxPath, "utf8"))
         return {
@@ -85,15 +104,19 @@ export async function readCourse(dir: string): Promise<CourseFiles> {
           source: (meta.source as string | undefined) || null,
           concepts: (meta.concepts as string[] | undefined) ?? [],
         }
-      }),
-    ),
+      })
+    )
   )
   return {
     modules,
     sections,
-    concepts: JSON.parse(fs.readFileSync(path.join(dir, "concepts.json"), "utf8")),
+    concepts: JSON.parse(
+      fs.readFileSync(path.join(dir, "concepts.json"), "utf8")
+    ),
     exercises: readJsonFiles<RawExercise[]>(path.join(dir, "exercises")).flat(),
-    exams: readJsonFiles<{ slug: string; exercises: RawExercise[] }>(path.join(dir, "exam")).map((e) => ({
+    exams: readJsonFiles<{ slug: string; exercises: RawExercise[] }>(
+      path.join(dir, "exam")
+    ).map((e) => ({
       slug: e.slug,
       exercises: e.exercises,
     })),
@@ -106,13 +129,25 @@ const label = (e: RawExercise) => `${e.chapterSlug} · ${e.prompt.slice(0, 60)}`
 function correctIsLongest(e: RawExercise): boolean {
   const options: { id: string; label: string }[] = e.payload.options
   const correct = options.find((o) => o.id === e.solution.correct[0])
-  return !!correct && options.every((o) => o === correct || o.label.length < correct.label.length)
+  return (
+    !!correct &&
+    options.every((o) => o === correct || o.label.length < correct.label.length)
+  )
 }
 
 export function measureQuality(course: CourseFiles): QualityMetrics {
-  const moduleOf = new Map(course.modules.flatMap((m) => m.chapters.map((c) => [c.slug, m.slug] as const)))
+  const moduleOf = new Map(
+    course.modules.flatMap((m) =>
+      m.chapters.map((c) => [c.slug, m.slug] as const)
+    )
+  )
   const auto = course.exercises.filter((e) => !isSelfGraded(e.type))
-  const everyAuto = [...auto, ...course.exams.flatMap((x) => x.exercises.filter((e) => !isSelfGraded(e.type)))]
+  const everyAuto = [
+    ...auto,
+    ...course.exams.flatMap((x) =>
+      x.exercises.filter((e) => !isSelfGraded(e.type))
+    ),
+  ]
   const written = course.sections.filter((s) => s.written)
   const chapters = course.modules.flatMap((m) => m.chapters)
 
@@ -127,73 +162,123 @@ export function measureQuality(course: CourseFiles): QualityMetrics {
   const mcq = course.exercises.filter((e) => e.type === "MCQ_SINGLE")
   const trueFalse = course.exercises.filter((e) => e.type === "TRUE_FALSE")
   const inSections = new Set(written.flatMap((s) => s.concepts))
-  const inExercises = new Set([...course.exercises, ...course.exams.flatMap((x) => x.exercises)].flatMap((e) => e.concepts ?? []))
+  const inExercises = new Set(
+    [...course.exercises, ...course.exams.flatMap((x) => x.exercises)].flatMap(
+      (e) => e.concepts ?? []
+    )
+  )
 
-  const coverage = course.exams.map((x) => ({ slug: x.slug, modules: new Set(x.exercises.map((e) => moduleOf.get(e.chapterSlug))) }))
-  const best = coverage.reduce<(typeof coverage)[number] | null>((a, b) => (!a || b.modules.size > a.modules.size ? b : a), null)
+  const coverage = course.exams.map((x) => ({
+    slug: x.slug,
+    modules: new Set(x.exercises.map((e) => moduleOf.get(e.chapterSlug))),
+  }))
+  const best = coverage.reduce<(typeof coverage)[number] | null>(
+    (a, b) => (!a || b.modules.size > a.modules.size ? b : a),
+    null
+  )
 
   return {
     autoPerModule,
     typesPerModule,
-    chaptersWithoutSection: chapters.filter((c) => !written.some((s) => s.chapterSlug === c.slug)).map((c) => c.slug),
-    chaptersWithoutExercise: chapters.filter((c) => !course.exercises.some((e) => e.chapterSlug === c.slug)).map((c) => c.slug),
-    missingSections: course.sections.filter((s) => !s.written).map((s) => `${s.moduleSlug}/${s.file}`),
+    chaptersWithoutSection: chapters
+      .filter((c) => !written.some((s) => s.chapterSlug === c.slug))
+      .map((c) => c.slug),
+    chaptersWithoutExercise: chapters
+      .filter((c) => !course.exercises.some((e) => e.chapterSlug === c.slug))
+      .map((c) => c.slug),
+    missingSections: course.sections
+      .filter((s) => !s.written)
+      .map((s) => `${s.moduleSlug}/${s.file}`),
     mcqSingle: mcq.length,
     mcqLongestCorrect: mcq.filter(correctIsLongest).length,
     trueFalse: trueFalse.length,
     trueFalseTrue: trueFalse.filter((e) => e.solution.value === true).length,
     withoutHint: everyAuto.filter((e) => !e.hint?.trim()).map(label),
     withoutSource: everyAuto.filter((e) => !e.source?.trim()).map(label),
-    sectionsWithoutSource: written.filter((s) => !s.source?.trim()).map((s) => `${s.moduleSlug}/${s.file}`),
-    conceptsWithoutSummary: course.concepts.filter((c) => !c.summary?.trim()).map((c) => c.slug),
-    conceptsWithoutSection: course.concepts.filter((c) => !inSections.has(c.slug)).map((c) => c.slug),
-    conceptsWithoutExercise: course.concepts.filter((c) => !inExercises.has(c.slug)).map((c) => c.slug),
+    sectionsWithoutSource: written
+      .filter((s) => !s.source?.trim())
+      .map((s) => `${s.moduleSlug}/${s.file}`),
+    conceptsWithoutSummary: course.concepts
+      .filter((c) => !c.summary?.trim())
+      .map((c) => c.slug),
+    conceptsWithoutSection: course.concepts
+      .filter((c) => !inSections.has(c.slug))
+      .map((c) => c.slug),
+    conceptsWithoutExercise: course.concepts
+      .filter((c) => !inExercises.has(c.slug))
+      .map((c) => c.slug),
     bestExam: {
       slug: best?.slug ?? null,
-      missingModules: course.modules.filter((m) => !best?.modules.has(m.slug)).map((m) => m.slug),
+      missingModules: course.modules
+        .filter((m) => !best?.modules.has(m.slug))
+        .map((m) => m.slug),
     },
   }
 }
 
-const percent = (part: number, total: number) => `${Math.round((100 * part) / total)} %`
-const list = (items: string[]) => items.slice(0, 5).join(" ; ") + (items.length > 5 ? ` ; et ${items.length - 5} autres` : "")
+const percent = (part: number, total: number) =>
+  `${Math.round((100 * part) / total)} %`
+const list = (items: string[]) =>
+  items.slice(0, 5).join(" ; ") +
+  (items.length > 5 ? ` ; et ${items.length - 5} autres` : "")
 
 export function qualityErrors(m: QualityMetrics): string[] {
   const t = QUALITY_THRESHOLDS
   const errors: string[] = []
   for (const [slug, n] of Object.entries(m.autoPerModule)) {
     if (n < t.minAutoPerModule) {
-      errors.push(`Module ${slug} : ${n} exercices auto-corrigés, il en faut au moins ${t.minAutoPerModule} pour l'examen de passage.`)
+      errors.push(
+        `Module ${slug} : ${n} exercices auto-corrigés, il en faut au moins ${t.minAutoPerModule} pour l'examen de passage.`
+      )
     }
   }
   for (const [slug, n] of Object.entries(m.typesPerModule)) {
-    if (n < t.minTypesPerModule) errors.push(`Module ${slug} : ${n} types d'exercices auto-corrigés, il en faut au moins ${t.minTypesPerModule}.`)
+    if (n < t.minTypesPerModule)
+      errors.push(
+        `Module ${slug} : ${n} types d'exercices auto-corrigés, il en faut au moins ${t.minTypesPerModule}.`
+      )
   }
-  for (const slug of m.chaptersWithoutSection) errors.push(`Chapitre ${slug} : aucune section de cours rédigée.`)
-  for (const slug of m.chaptersWithoutExercise) errors.push(`Chapitre ${slug} : aucun exercice.`)
-  for (const s of m.missingSections) errors.push(`Section ${s} : prévue dans modules.ts mais pas rédigée.`)
+  for (const slug of m.chaptersWithoutSection)
+    errors.push(`Chapitre ${slug} : aucune section de cours rédigée.`)
+  for (const slug of m.chaptersWithoutExercise)
+    errors.push(`Chapitre ${slug} : aucun exercice.`)
+  for (const s of m.missingSections)
+    errors.push(`Section ${s} : prévue dans modules.ts mais pas rédigée.`)
   if (m.mcqSingle && m.mcqLongestCorrect / m.mcqSingle > t.maxLongestCorrect) {
     errors.push(
-      `QCM : la bonne réponse est la plus longue dans ${m.mcqLongestCorrect} sur ${m.mcqSingle} (${percent(m.mcqLongestCorrect, m.mcqSingle)}), au plus ${t.maxLongestCorrect * 100} %.`,
+      `QCM : la bonne réponse est la plus longue dans ${m.mcqLongestCorrect} sur ${m.mcqSingle} (${percent(m.mcqLongestCorrect, m.mcqSingle)}), au plus ${t.maxLongestCorrect * 100} %.`
     )
   }
   const trueShare = m.trueFalse ? m.trueFalseTrue / m.trueFalse : null
-  if (trueShare !== null && (trueShare < t.trueShare[0] || trueShare > t.trueShare[1])) {
+  if (
+    trueShare !== null &&
+    (trueShare < t.trueShare[0] || trueShare > t.trueShare[1])
+  ) {
     errors.push(
-      `Vrai ou faux : « vrai » est la réponse dans ${m.trueFalseTrue} sur ${m.trueFalse} (${percent(m.trueFalseTrue, m.trueFalse)}), il faut entre ${t.trueShare[0] * 100} et ${t.trueShare[1] * 100} %.`,
+      `Vrai ou faux : « vrai » est la réponse dans ${m.trueFalseTrue} sur ${m.trueFalse} (${percent(m.trueFalseTrue, m.trueFalse)}), il faut entre ${t.trueShare[0] * 100} et ${t.trueShare[1] * 100} %.`
     )
   }
-  if (m.withoutHint.length) errors.push(`${m.withoutHint.length} exercice(s) sans indice (hint) : ${list(m.withoutHint)}`)
-  if (m.withoutSource.length) errors.push(`${m.withoutSource.length} exercice(s) sans source : ${list(m.withoutSource)}`)
-  for (const s of m.sectionsWithoutSource) errors.push(`Section ${s} : sans source.`)
-  for (const slug of m.conceptsWithoutSummary) errors.push(`Notion ${slug} : sans résumé.`)
-  for (const slug of m.conceptsWithoutSection) errors.push(`Notion ${slug} : absente de toutes les sections.`)
-  for (const slug of m.conceptsWithoutExercise) errors.push(`Notion ${slug} : absente de tous les exercices.`)
+  if (m.withoutHint.length)
+    errors.push(
+      `${m.withoutHint.length} exercice(s) sans indice (hint) : ${list(m.withoutHint)}`
+    )
+  if (m.withoutSource.length)
+    errors.push(
+      `${m.withoutSource.length} exercice(s) sans source : ${list(m.withoutSource)}`
+    )
+  for (const s of m.sectionsWithoutSource)
+    errors.push(`Section ${s} : sans source.`)
+  for (const slug of m.conceptsWithoutSummary)
+    errors.push(`Notion ${slug} : sans résumé.`)
+  for (const slug of m.conceptsWithoutSection)
+    errors.push(`Notion ${slug} : absente de toutes les sections.`)
+  for (const slug of m.conceptsWithoutExercise)
+    errors.push(`Notion ${slug} : absente de tous les exercices.`)
   if (m.bestExam.missingModules.length) {
     errors.push(
       m.bestExam.slug
         ? `L'examen le plus complet (${m.bestExam.slug}) ne couvre pas les modules : ${m.bestExam.missingModules.join(", ")}.`
-        : `Aucun examen : il en faut un qui couvre tous les modules (${m.bestExam.missingModules.join(", ")}).`,
+        : `Aucun examen : il en faut un qui couvre tous les modules (${m.bestExam.missingModules.join(", ")}).`
     )
   }
   return errors

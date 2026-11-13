@@ -24,16 +24,23 @@ describe("readingMinutes", () => {
   })
 
   it("ignores the frontmatter with Windows line endings", () => {
-    expect(readingMinutes(longFrontmatter.replaceAll("\n", "\r\n") + words(250))).toBe(1)
+    expect(
+      readingMinutes(longFrontmatter.replaceAll("\n", "\r\n") + words(250))
+    ).toBe(1)
   })
 
   it("does not count table markup as words", () => {
-    expect(readingMinutes(frontmatter + "| --- |\n".repeat(100) + words(200))).toBe(1)
+    expect(
+      readingMinutes(frontmatter + "| --- |\n".repeat(100) + words(200))
+    ).toBe(1)
   })
 })
 
 describe("parseFrontmatter", () => {
   it("reads the metadata of a section", () => {
-    expect(parseFrontmatter(frontmatter + "x")).toEqual({ title: "T", source: "CM, p. 1" })
+    expect(parseFrontmatter(frontmatter + "x")).toEqual({
+      title: "T",
+      source: "CM, p. 1",
+    })
   })
 })

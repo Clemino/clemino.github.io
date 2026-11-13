@@ -3,25 +3,70 @@ import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { describe, expect, it } from "vitest"
-import { measureQuality, qualityErrors, readCourse, type CourseFiles, type RawExercise } from "@/lib/quality"
+import {
+  measureQuality,
+  qualityErrors,
+  readCourse,
+  type CourseFiles,
+  type RawExercise,
+} from "@/lib/quality"
 
 let count = 0
-function exercise(type: RawExercise["type"], payload: unknown, solution: unknown, chapterSlug = "c1"): RawExercise {
+function exercise(
+  type: RawExercise["type"],
+  payload: unknown,
+  solution: unknown,
+  chapterSlug = "c1"
+): RawExercise {
   count++
-  return { chapterSlug, type, prompt: `Question ${count}`, payload, solution, hint: "Rappel", source: "CM, p. 1", concepts: ["k1"] }
+  return {
+    chapterSlug,
+    type,
+    prompt: `Question ${count}`,
+    payload,
+    solution,
+    hint: "Rappel",
+    source: "CM, p. 1",
+    concepts: ["k1"],
+  }
 }
 const mcq = (correctIsLongest: boolean, chapterSlug?: string) =>
   exercise(
     "MCQ_SINGLE",
-    { options: [{ id: "a", label: correctIsLongest ? "la plus longue de toutes" : "oui" }, { id: "b", label: "moyenne" }, { id: "c", label: "aussi" }] },
+    {
+      options: [
+        {
+          id: "a",
+          label: correctIsLongest ? "la plus longue de toutes" : "oui",
+        },
+        { id: "b", label: "moyenne" },
+        { id: "c", label: "aussi" },
+      ],
+    },
     { correct: ["a"] },
-    chapterSlug,
+    chapterSlug
   )
-const trueFalse = (value: boolean, chapterSlug?: string) => exercise("TRUE_FALSE", {}, { value }, chapterSlug)
+const trueFalse = (value: boolean, chapterSlug?: string) =>
+  exercise("TRUE_FALSE", {}, { value }, chapterSlug)
 const matching = (chapterSlug?: string) =>
-  exercise("MATCHING", { left: [{ id: "l", label: "L" }], right: [{ id: "r", label: "R" }] }, { pairs: { l: "r" } }, chapterSlug)
+  exercise(
+    "MATCHING",
+    { left: [{ id: "l", label: "L" }], right: [{ id: "r", label: "R" }] },
+    { pairs: { l: "r" } },
+    chapterSlug
+  )
 const ordering = (chapterSlug?: string) =>
-  exercise("ORDERING", { items: [{ id: "x", label: "X" }, { id: "y", label: "Y" }] }, { order: ["x", "y"] }, chapterSlug)
+  exercise(
+    "ORDERING",
+    {
+      items: [
+        { id: "x", label: "X" },
+        { id: "y", label: "Y" },
+      ],
+    },
+    { order: ["x", "y"] },
+    chapterSlug
+  )
 
 /** 15 auto-graded exercises of 4 types, 1 QCM in 4 with the longest answer, 2 « vrai » in 4. */
 const practice = (chapterSlug?: string) => [
@@ -45,7 +90,16 @@ const practice = (chapterSlug?: string) => [
 function goodCourse(): CourseFiles {
   return {
     modules: [{ slug: "m1", chapters: [{ slug: "c1", sections: ["01-a"] }] }],
-    sections: [{ moduleSlug: "m1", chapterSlug: "c1", file: "01-a", written: true, source: "CM, p. 1", concepts: ["k1"] }],
+    sections: [
+      {
+        moduleSlug: "m1",
+        chapterSlug: "c1",
+        file: "01-a",
+        written: true,
+        source: "CM, p. 1",
+        concepts: ["k1"],
+      },
+    ],
     concepts: [{ slug: "k1", summary: "Résumé" }],
     exercises: practice(),
     exams: [{ slug: "final", exercises: [mcq(false)] }],
@@ -54,8 +108,18 @@ function goodCourse(): CourseFiles {
 
 /** Adds a module whose single chapter has a written section. */
 function addModule(course: CourseFiles, slug: string, chapterSlug: string) {
-  course.modules.push({ slug, chapters: [{ slug: chapterSlug, sections: ["01-x"] }] })
-  course.sections.push({ moduleSlug: slug, chapterSlug, file: "01-x", written: true, source: "CM, p. 2", concepts: ["k1"] })
+  course.modules.push({
+    slug,
+    chapters: [{ slug: chapterSlug, sections: ["01-x"] }],
+  })
+  course.sections.push({
+    moduleSlug: slug,
+    chapterSlug,
+    file: "01-x",
+    written: true,
+    source: "CM, p. 2",
+    concepts: ["k1"],
+  })
 }
 
 const errorsOf = (course: CourseFiles) => qualityErrors(measureQuality(course))
@@ -75,14 +139,23 @@ describe("qualityErrors", () => {
 
   it("asks for 4 types of auto-graded exercises per module", () => {
     const course = goodCourse()
-    course.exercises = course.exercises.map((e) => (e.type === "ORDERING" ? matching() : e))
+    course.exercises = course.exercises.map((e) =>
+      e.type === "ORDERING" ? matching() : e
+    )
     expect(anyError(course, "types")).toBe(true)
   })
 
   it("rejects a chapter without exercise", () => {
     const course = goodCourse()
     course.modules[0].chapters.push({ slug: "c2", sections: ["02-b"] })
-    course.sections.push({ moduleSlug: "m1", chapterSlug: "c2", file: "02-b", written: true, source: "CM, p. 3", concepts: ["k1"] })
+    course.sections.push({
+      moduleSlug: "m1",
+      chapterSlug: "c2",
+      file: "02-b",
+      written: true,
+      source: "CM, p. 3",
+      concepts: ["k1"],
+    })
     expect(anyError(course, "c2")).toBe(true)
   })
 
@@ -95,7 +168,12 @@ describe("qualityErrors", () => {
 
   it("rejects a planned section that is not written", () => {
     const course = goodCourse()
-    course.sections[0] = { ...course.sections[0], written: false, source: null, concepts: [] }
+    course.sections[0] = {
+      ...course.sections[0],
+      written: false,
+      source: null,
+      concepts: [],
+    }
     expect(anyError(course, "01-a")).toBe(true)
   })
 
@@ -107,7 +185,9 @@ describe("qualityErrors", () => {
 
   it("rejects true or false questions that are almost all true", () => {
     const course = goodCourse()
-    course.exercises = course.exercises.map((e) => (e.type === "TRUE_FALSE" ? trueFalse(true) : e))
+    course.exercises = course.exercises.map((e) =>
+      e.type === "TRUE_FALSE" ? trueFalse(true) : e
+    )
     expect(anyError(course, "vrai")).toBe(true)
   })
 
@@ -160,32 +240,71 @@ describe("readCourse", () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quality-"))
     fs.writeFileSync(
       path.join(dir, "modules.ts"),
-      'export const MODULES = [{ slug: "m1", chapters: [{ slug: "c1", sections: ["01-a", "02-b"] }] }]\n',
+      'export const MODULES = [{ slug: "m1", chapters: [{ slug: "c1", sections: ["01-a", "02-b"] }] }]\n'
     )
     fs.mkdirSync(path.join(dir, "theory", "m1"), { recursive: true })
-    fs.writeFileSync(path.join(dir, "theory", "m1", "01-a.mdx"), '---\ntitle: "A"\nsource: "CM, p. 1"\nconcepts: [k1]\n---\nTexte\n')
-    fs.writeFileSync(path.join(dir, "concepts.json"), '[{ "slug": "k1", "label": "K1", "summary": "Résumé" }]')
+    fs.writeFileSync(
+      path.join(dir, "theory", "m1", "01-a.mdx"),
+      '---\ntitle: "A"\nsource: "CM, p. 1"\nconcepts: [k1]\n---\nTexte\n'
+    )
+    fs.writeFileSync(
+      path.join(dir, "concepts.json"),
+      '[{ "slug": "k1", "label": "K1", "summary": "Résumé" }]'
+    )
 
     const course = await readCourse(dir)
 
     expect(course.sections).toEqual([
-      { moduleSlug: "m1", chapterSlug: "c1", file: "01-a", written: true, source: "CM, p. 1", concepts: ["k1"] },
-      { moduleSlug: "m1", chapterSlug: "c1", file: "02-b", written: false, source: null, concepts: [] },
+      {
+        moduleSlug: "m1",
+        chapterSlug: "c1",
+        file: "01-a",
+        written: true,
+        source: "CM, p. 1",
+        concepts: ["k1"],
+      },
+      {
+        moduleSlug: "m1",
+        chapterSlug: "c1",
+        file: "02-b",
+        written: false,
+        source: null,
+        concepts: [],
+      },
     ])
     expect(measureQuality(course).missingSections).toEqual(["m1/02-b"])
   })
 })
 
 describe.each([
-  { id: "admin", minAuto: 19, minTypes: 5, longest: [31, 141], vrai: [39, 88], missing: 2 },
-  { id: "contrats", minAuto: 20, minTypes: 5, longest: [19, 77], vrai: [29, 64], missing: 3 },
-])("the measures of $id", ({ id, minAuto, minTypes, longest, vrai, missing }) => {
-  it("match the reference figures of the design", async () => {
-    const m = measureQuality(await readCourse(path.join(process.cwd(), "courses", id)))
-    expect(Math.min(...Object.values(m.autoPerModule))).toBe(minAuto)
-    expect(Math.min(...Object.values(m.typesPerModule))).toBe(minTypes)
-    expect([m.mcqLongestCorrect, m.mcqSingle]).toEqual(longest)
-    expect([m.trueFalseTrue, m.trueFalse]).toEqual(vrai)
-    expect(m.bestExam.missingModules).toHaveLength(missing)
-  })
-})
+  {
+    id: "admin",
+    minAuto: 19,
+    minTypes: 5,
+    longest: [31, 141],
+    vrai: [39, 88],
+    missing: 2,
+  },
+  {
+    id: "contrats",
+    minAuto: 20,
+    minTypes: 5,
+    longest: [19, 77],
+    vrai: [29, 64],
+    missing: 3,
+  },
+])(
+  "the measures of $id",
+  ({ id, minAuto, minTypes, longest, vrai, missing }) => {
+    it("match the reference figures of the design", async () => {
+      const m = measureQuality(
+        await readCourse(path.join(process.cwd(), "courses", id))
+      )
+      expect(Math.min(...Object.values(m.autoPerModule))).toBe(minAuto)
+      expect(Math.min(...Object.values(m.typesPerModule))).toBe(minTypes)
+      expect([m.mcqLongestCorrect, m.mcqSingle]).toEqual(longest)
+      expect([m.trueFalseTrue, m.trueFalse]).toEqual(vrai)
+      expect(m.bestExam.missingModules).toHaveLength(missing)
+    })
+  }
+)
