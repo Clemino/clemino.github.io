@@ -2,6 +2,7 @@
 import fs from "node:fs"
 import { describe, expect, it } from "vitest"
 import { GATE_SIZE } from "@/lib/course"
+import { readingMinutes } from "@/lib/mdx-meta"
 import {
   exerciseId,
   getCatalog,
@@ -54,6 +55,11 @@ describe("catalog", () => {
       expect(mod.gatePoolIds.length).toBeGreaterThan(GATE_SIZE)
       expect(mod.gatePoolIds.every((id) => ids.has(id))).toBe(true)
     }
+  })
+
+  it("derives reading time from the section text", () => {
+    const section = modules[0].chapters[0].sections[0]
+    expect(section.estimatedReadMin).toBe(readingMinutes(fs.readFileSync(`content/${section.mdxPath}`, "utf8")))
   })
 
   it("exposes an index without any exercise content", () => {

@@ -5,6 +5,7 @@ import { MODULES } from "@/content/modules"
 import { isSelfGraded, type ConceptInfo, type CourseIndex, type ExamInfo, type Exercise } from "@/lib/course"
 import { answerTexts } from "@/lib/validators/canonical"
 import { normalize } from "@/lib/validators/normalize"
+import { parseFrontmatter, readingMinutes } from "@/lib/mdx-meta"
 import type {
   AnyPayload,
   AnySolution,
@@ -95,30 +96,6 @@ function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(filePath, "utf8")) as T
 }
 
-function parseFrontmatter(mdx: string): Record<string, unknown> {
-  const m = mdx.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/)
-  if (!m) return {}
-  const meta: Record<string, unknown> = {}
-  for (const line of m[1].split(/\r?\n/)) {
-    const kv = line.match(/^([a-zA-Z_]+):\s*(.+)$/)
-    if (!kv) continue
-    const [, key, raw] = kv
-    if (key === "concepts") {
-      meta[key] = raw
-        .trim()
-        .replace(/^\[|\]$/g, "")
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean)
-    } else if (key === "order" || key === "estimatedReadMin") {
-      meta[key] = Number(raw)
-    } else {
-      meta[key] = raw.trim().replace(/^"|"$/g, "")
-    }
-  }
-  return meta
-}
-
 function hash(text: string): string {
   return createHash("sha1").update(text).digest("hex")
 }
@@ -156,7 +133,8 @@ function loadCatalog(contentDir: string): Catalog {
         const mdxPath = `theory/${mod.slug}/${sectionFile}.mdx`
         const fullPath = path.join(contentDir, mdxPath)
         if (!fs.existsSync(fullPath)) return []
-        const meta = parseFrontmatter(fs.readFileSync(fullPath, "utf8"))
+        const mdx = fs.readFileSync(fullPath, "utf8")
+        const meta = parseFrontmatter(mdx)
         const slug = (meta.slug as string) ?? sectionFile
         return [
           {
@@ -165,7 +143,7 @@ function loadCatalog(contentDir: string): Catalog {
             order: i + 1,
             title: (meta.title as string) ?? sectionFile,
             mdxPath,
-            estimatedReadMin: (meta.estimatedReadMin as number) ?? 5,
+            estimatedReadMin: readingMinutes(mdx),
             concepts: (meta.concepts as string[]) ?? [],
             source: (meta.source as string) ?? null,
           },
