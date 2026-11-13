@@ -14,7 +14,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "check:content": "tsx scripts/check-content.ts",
-    "pretest": "tsx scripts/select-course.ts",
+    "pretest": "tsx scripts/select-course.ts && tsx scripts/build-course-index.ts",
     "precheck:content": "tsx scripts/select-course.ts",
     "publish:course": "bash scripts/publish-course.sh",
     "gen:ohlc": "tsx scripts/generate-ohlc.ts"

@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import localFont from "next/font/local"
 
 import "./globals.css"
 import { CourseAccess } from "@/components/chrome/CourseAccess"
@@ -11,8 +11,9 @@ import { CommandPalette } from "@/components/chrome/CommandPalette"
 import { ProgressHydrator } from "@/components/use-progress"
 import { cn } from "@/lib/utils"
 
-const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans", display: "swap" })
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" })
+// Local files: the build must not depend on Google Fonts being reachable.
+const geistSans = localFont({ src: "./fonts/geist.woff2", weight: "100 900", variable: "--font-geist-sans", display: "swap" })
+const geistMono = localFont({ src: "./fonts/geist-mono.woff2", weight: "100 900", variable: "--font-geist-mono", display: "swap" })
 
 export const metadata: Metadata = {
   title: COURSE.title,

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Usage: pnpm publish:course <id> [site-folder]
-# Builds one course and copies it into the local clemino.github.io repository. Nothing is pushed.
+# Builds one course and copies it into site/<id>/ of this repository. Nothing is pushed.
 set -euo pipefail
 
 course="$1"
-site="${2:-../../clemino.github.io}"
+site="${2:-../site}"
 
 COURSE="$course" pnpm build
 # Segment prefetch files are 84% of a build, and navigation works without them.

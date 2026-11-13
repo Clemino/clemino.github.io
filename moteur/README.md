@@ -13,11 +13,11 @@ L'appli est entièrement statique : le contenu est lu au build. La progression r
 
 ## Publier un cours
 
-`pnpm publish:course <id>` construit le cours et le copie dans le dossier `<id>/` du dépôt local `clemino.github.io`. Rien n'est poussé.
+`pnpm publish:course <id>` construit le cours et le copie dans `site/<id>/` de ce dépôt. Rien n'est poussé.
 
 ## Ajouter un cours
 
-Créer `courses/<id>/` avec `course.ts` (nom, logo, textes), `modules.ts`, `concepts.json`, `exercises/`, `exam/` et `theory/`, puis l'ajouter à `LIBRARY` dans `cours/index.html` du site, avec sa catégorie.
+Suivre le skill `creer-une-matiere` (`.claude/skills/creer-une-matiere/` à la racine du dépôt) : il décrit le format de `courses/<id>/`, les contrôles de qualité et la publication.
 
 ## Exercices de code
 
