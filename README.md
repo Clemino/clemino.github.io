@@ -23,11 +23,24 @@ docs/                   Consignes pour Claude et liste des choses à faire
 .github/workflows/      Publication du site et réveil de Supabase
 ```
 
+## Commandes
+
+Depuis `moteur/` :
+
+```bash
+pnpm install
+COURSE=<id> pnpm dev              # ouvre une matière en local
+COURSE=<id> pnpm check:content    # chaque solution passe son correcteur
+COURSE=<id> pnpm check:quality    # la matière atteint le niveau d'Admin et de Contrats
+COURSE=<id> pnpm test
+pnpm publish:course <id>          # écrit la matière dans site/<id>/
+```
+
 ## Publication
 
-- Chaque push sur `main` publie le dossier `site/` avec `.github/workflows/deploy.yml`. Le reste du dépôt n'est pas mis en ligne. Si une publication expire (« Timeout reached »), la relancer avec `gh workflow run deploy.yml --ref main`.
-- Un cours se rédige dans `moteur/courses/<id>/` et se génère avec `cd moteur && pnpm publish:course <id>`, qui l'écrit dans `site/<id>/`. Il s'ajoute ensuite à `LIBRARY` dans `site/cours/index.html`, avec sa catégorie, la couleur de sa carte et son icône. Tout se fait depuis ce dépôt, sur le PC de Clément comme dans claude.ai/code : `apps-revision`, sur le PC, n'est plus utilisé.
-- Ne jamais changer l'`id` d'un cours : les matières suivies, les accès et la progression pointent dessus.
+- Chaque push sur `main` publie `site/` avec `.github/workflows/deploy.yml` ; le reste du dépôt n'est pas mis en ligne. Si une publication expire (« Timeout reached »), la relancer avec `gh workflow run deploy.yml --ref main`.
+- Une matière se rédige dans `moteur/courses/<id>/`, se publie avec `pnpm publish:course <id>`, puis s'ajoute à `LIBRARY` dans `site/cours/index.html`, avec sa catégorie, la couleur de sa carte et son icône. Le skill `creer-une-matiere` mène tout le parcours, sur le PC comme dans claude.ai/code.
+- Ne jamais changer l'`id` d'une matière : les matières suivies, les accès et la progression pointent dessus.
 
 ## Cours
 
@@ -58,11 +71,10 @@ Projet `cours`, connexion par Google uniquement.
 | `course_proposals` | Matières proposées, avec leurs PDF dans l'espace de stockage privé `proposals` |
 
 - Les règles de Supabase empêchent de suivre une matière sans y avoir accès, et cachent celles dont l'accès a été retiré ; la progression reste enregistrée. Elles sont dans `supabase/acces-par-personne.sql`.
+- La clé secrète, qui sert à `scripts/proposals.mjs`, est dans `.env.local` sur le PC (ignoré par git), et dans un secret réseau de l'environnement claude.ai/code. Elle ne doit apparaître nulle part ailleurs.
 - `.github/workflows/supabase-keepalive.yml` réveille le projet deux fois par semaine : sans activité, l'offre gratuite le met en pause.
 
-## Sources et Claude
+## Claude Code
 
-- `sources/<id>/` garde les documents d'origine de chaque matière et une version texte de chacun, avec des repères `[page N]`.
-- `CLAUDE.md` renvoie Claude Code vers `docs/` pour répondre à une question de cours à partir des sources et suivre ce qui reste à faire, et vers le skill `creer-une-matiere` pour créer une matière proposée.
-- `cd moteur && COURSE=<id> pnpm check:quality` compare une matière à Droit administratif et Droit des contrats, et refuse une nouvelle matière qui n'atteint pas leur niveau.
-- `scripts/proposals.mjs` récupère, crée ou refuse les matières proposées. Il lit la clé secrète de Supabase dans `.env.local`, ignoré par git ; dans claude.ai/code, un secret réseau de l'environnement l'ajoute aux requêtes vers Supabase.
+- `CLAUDE.md` renvoie Claude vers `docs/questions-de-cours.md` pour répondre à une question de cours, vers `docs/a-faire.md` pour ce qui reste à faire, et vers le skill `creer-une-matiere` pour créer une matière proposée.
+- `sources/<id>/` garde les documents d'origine de chaque matière et une version texte de chacun, avec des repères `[page N]` pour citer la page.
