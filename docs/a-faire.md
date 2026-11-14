@@ -36,7 +36,6 @@ Demandé par Clément le 10 novembre 2026.
 
 Relevé le 10 novembre 2026. Le moteur est commun aux cours : corriger dans `moteur/`, puis republier chaque cours avec `pnpm publish:course <id>`. Le contenu des cours n'est pas concerné : il vient des documents de chaque matière.
 
-- [ ] **Rendre la navigation utilisable sur téléphone.** À 390 px de large, la barre du haut d'un cours fait 826 px : Révision, Examens blancs, Stats, Réglages, Se déconnecter et le thème sortent de l'écran, sans menu. Sur une page de théorie, il n'y a plus ni barre ni menu.
 - [ ] **Un bouton pour changer de thème.** Le thème ne se change qu'avec la touche d (« Appuie sur d » dans Réglages), impossible sans clavier. Le bouton flottant « ⌘ K » affiche un raccourci Mac (Ctrl+K ailleurs) et cache du texte sur téléphone.
 - [ ] **Traduire ce qui reste en anglais et retirer le jargon** : « toggle theme », « Press d to toggle theme », « gate » (« débloquer le gate », « gate — » dans Statistiques), « done », « SM-2 spaced repetition », « ease 2.50 · int 0j », « 1 exos ».
 - [ ] **Un chapitre vide ne doit pas paraître terminé.** Un chapitre sans théorie ni exercice s'affiche « done », car 0 sur 0 compte comme fini, et le quiz de validation demande de finir des exercices qui n'existent pas (Trading, modules 4 à 15). L'afficher « à venir ».

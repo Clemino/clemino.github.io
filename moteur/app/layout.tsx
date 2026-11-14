@@ -8,6 +8,7 @@ import { COURSE } from "@/content/course"
 import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { CommandPalette } from "@/components/chrome/CommandPalette"
+import { MobileNav } from "@/components/chrome/MobileNav"
 import { ProgressHydrator } from "@/components/use-progress"
 import { cn } from "@/lib/utils"
 
@@ -48,6 +49,7 @@ export default function RootLayout({
         >
           <CourseAccess />
           <ProgressHydrator />
+          <MobileNav />
           <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
           <CommandPalette />
           <Toaster position="bottom-right" />

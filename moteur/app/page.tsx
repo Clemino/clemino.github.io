@@ -36,7 +36,7 @@ export default function HomePage() {
         }}
       />
 
-      <header className="relative border-b border-[var(--border)] bg-[var(--bg-0)]/80 backdrop-blur">
+      <header className="relative hidden border-b border-[var(--border)] bg-[var(--bg-0)]/80 backdrop-blur md:block">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
             <div className="flex size-7 items-center justify-center rounded-md bg-[var(--accent)] text-[var(--accent-fg)]">
