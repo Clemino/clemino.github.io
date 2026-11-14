@@ -9,7 +9,7 @@
  *   node scripts/proposals.mjs done <proposal-id> <course-id>
  *   node scripts/proposals.mjs reject <proposal-id>
  */
-import { execFileSync } from "node:child_process"
+import { execFileSync, spawnSync } from "node:child_process"
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
@@ -39,6 +39,15 @@ const BASE_URL = env.SUPABASE_URL ?? "https://fcxrvoloiuicbgbqjoco.supabase.co"
 const SECRET_KEY = env.SUPABASE_SECRET_KEY
 // Set to "true" in claude.ai/code sessions, where the key never enters the VM.
 const REMOTE = env.CLAUDE_CODE_REMOTE === "true"
+
+// The claude.ai/code VM reaches Supabase only through its proxy, which fetch ignores unless NODE_USE_ENV_PROXY is set.
+if (REMOTE && process.env.NODE_USE_ENV_PROXY !== "1") {
+  const { status } = spawnSync(process.execPath, process.argv.slice(1), {
+    stdio: "inherit",
+    env: { ...process.env, NODE_USE_ENV_PROXY: "1" },
+  })
+  process.exit(status ?? 1)
+}
 
 async function api(pathname, init = {}) {
   if (!SECRET_KEY && !REMOTE) fail("SUPABASE_SECRET_KEY manque dans .env.local (voir le skill creer-une-matiere).")
