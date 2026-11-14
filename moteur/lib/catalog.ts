@@ -2,7 +2,13 @@ import { createHash } from "node:crypto"
 import fs from "node:fs"
 import path from "node:path"
 import { MODULES } from "@/content/modules"
-import { isSelfGraded, type ConceptInfo, type CourseIndex, type ExamInfo, type Exercise } from "@/lib/course"
+import {
+  isSelfGraded,
+  type ConceptInfo,
+  type CourseIndex,
+  type ExamInfo,
+  type Exercise,
+} from "@/lib/course"
 import { answerTexts } from "@/lib/validators/canonical"
 import { normalize } from "@/lib/validators/normalize"
 import { parseFrontmatter, readingMinutes } from "@/lib/mdx-meta"
@@ -86,7 +92,9 @@ const isAutoGraded = (e: Exercise) => !isSelfGraded(e.type)
 
 /** True when the text repeats most of the answer's words, so it cannot be shown after a wrong try. */
 function givesAwayAnswer(text: string, answer: string): boolean {
-  const words = normalize(answer).split(/\W+/).filter((w) => w.length > 3)
+  const words = normalize(answer)
+    .split(/\W+/)
+    .filter((w) => w.length > 3)
   const haystack = normalize(text)
   if (!words.length) return haystack.includes(normalize(answer))
   return words.filter((w) => haystack.includes(w)).length / words.length >= 0.6
@@ -166,7 +174,10 @@ function loadCatalog(contentDir: string): Catalog {
     const answers = answerTexts(ex.type, ex.payload, ex.solution)
     for (const slug of ex.concepts ?? []) {
       const concept = conceptsBySlug.get(slug)
-      if (concept?.summary && !answers.some((a) => givesAwayAnswer(concept.summary!, a))) {
+      if (
+        concept?.summary &&
+        !answers.some((a) => givesAwayAnswer(concept.summary!, a))
+      ) {
         return `**${concept.label}** : ${concept.summary}`
       }
     }
@@ -178,9 +189,12 @@ function loadCatalog(contentDir: string): Catalog {
     if (!home) throw new Error(`Unknown chapter ${ex.chapterSlug} in ${scope}`)
     let id = exerciseId(scope, ex.prompt)
     // Same wording on another program or figure: the payload tells them apart.
-    if (seenIds.has(id)) id = exerciseId(scope, ex.prompt + JSON.stringify(ex.payload))
     if (seenIds.has(id))
-      throw new Error(`Duplicate exercise in ${scope}: ${ex.prompt.slice(0, 60)}`)
+      id = exerciseId(scope, ex.prompt + JSON.stringify(ex.payload))
+    if (seenIds.has(id))
+      throw new Error(
+        `Duplicate exercise in ${scope}: ${ex.prompt.slice(0, 60)}`
+      )
     seenIds.add(id)
     const exercise: Exercise = {
       id,
@@ -222,7 +236,9 @@ function loadCatalog(contentDir: string): Catalog {
     .map((file) => {
       const exam = readJson<ExamJson>(path.join(examDir, file))
       // Self-graded questions stay available in their chapter, but cannot be marked here.
-      const exercises = exam.exercises.map((ex) => addExercise(exam.slug, ex)).filter(isAutoGraded)
+      const exercises = exam.exercises
+        .map((ex) => addExercise(exam.slug, ex))
+        .filter(isAutoGraded)
       return {
         slug: exam.slug,
         title: exam.title,
@@ -235,7 +251,9 @@ function loadCatalog(contentDir: string): Catalog {
     .sort((a, b) => b.slug.localeCompare(a.slug))
 
   for (const m of modules) {
-    m.gatePoolIds = m.chapters.flatMap((c) => c.exercises.filter(isAutoGraded).map((e) => e.id))
+    m.gatePoolIds = m.chapters.flatMap((c) =>
+      c.exercises.filter(isAutoGraded).map((e) => e.id)
+    )
   }
 
   return { modules, exams, concepts }

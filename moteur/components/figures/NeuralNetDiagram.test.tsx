@@ -35,7 +35,9 @@ describe("NeuralNetDiagram", () => {
   })
 
   it("affiche la légende quand elle est fournie", () => {
-    render(<NeuralNetDiagram layers={layers} caption="Perceptron multicouche" />)
+    render(
+      <NeuralNetDiagram layers={layers} caption="Perceptron multicouche" />
+    )
     expect(screen.getByText("Perceptron multicouche")).toBeInTheDocument()
   })
 })

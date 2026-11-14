@@ -10,12 +10,12 @@ export function validateCaseStudy(
   payload: CaseStudyPayload,
   solution: CaseStudySolution,
   submission: CaseStudySubmission | null | undefined,
-  explanation: string,
+  explanation: string
 ): ValidationResult {
   return aggregateSubQuestions(
     payload.subQuestions,
     solution.subSolutions,
     submission?.answers ?? {},
-    explanation,
+    explanation
   )
 }

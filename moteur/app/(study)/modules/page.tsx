@@ -16,7 +16,8 @@ export default function ModulesPage() {
           <h1 className="mt-1 font-mono text-3xl tracking-tight">Modules</h1>
         </div>
         <div className="font-mono text-xs text-[var(--fg-2)]">
-          {modules.filter((m) => m.completed).length} / {modules.length} complétés
+          {modules.filter((m) => m.completed).length} / {modules.length}{" "}
+          complétés
         </div>
       </div>
 
@@ -27,7 +28,7 @@ export default function ModulesPage() {
             href={m.unlocked ? `/modules/${m.slug}` : "#"}
             aria-disabled={!m.unlocked}
             className={
-              "group relative card-elevated block p-5 transition-all " +
+              "group card-elevated relative block p-5 transition-all " +
               (m.unlocked
                 ? "hover:border-[var(--border-strong)]"
                 : "cursor-not-allowed opacity-60")
@@ -35,19 +36,25 @@ export default function ModulesPage() {
           >
             <div className="flex items-start justify-between">
               <div className="flex items-baseline gap-3">
-                <span className="font-mono text-xs tabular-nums text-[var(--fg-3)]">
+                <span className="font-mono text-xs text-[var(--fg-3)] tabular-nums">
                   {String(m.order).padStart(2, "0")}
                 </span>
                 {m.completed ? (
-                  <Badge className="bg-[var(--accent-dim)] text-[var(--accent)] hover:bg-[var(--accent-dim)] font-mono text-[10px]">
+                  <Badge className="bg-[var(--accent-dim)] font-mono text-[10px] text-[var(--accent)] hover:bg-[var(--accent-dim)]">
                     <CheckIcon className="size-3" /> passé
                   </Badge>
                 ) : m.unlocked ? (
-                  <Badge variant="outline" className="border-[var(--border-strong)] font-mono text-[10px]">
+                  <Badge
+                    variant="outline"
+                    className="border-[var(--border-strong)] font-mono text-[10px]"
+                  >
                     en cours
                   </Badge>
                 ) : (
-                  <Badge variant="outline" className="border-[var(--border)] font-mono text-[10px] text-[var(--fg-3)]">
+                  <Badge
+                    variant="outline"
+                    className="border-[var(--border)] font-mono text-[10px] text-[var(--fg-3)]"
+                  >
                     <LockIcon className="size-3" /> verrouillé
                   </Badge>
                 )}

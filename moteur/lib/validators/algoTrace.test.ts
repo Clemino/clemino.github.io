@@ -62,7 +62,9 @@ describe("validateAlgoTrace", () => {
   // --- Cellule numérique — absTol ---
   it("accepte une valeur numérique dans la tolérance absolue (absTol)", () => {
     const r = validateAlgoTrace(
-      { cells: [{ id: "v1", label: "Valeur minimax", kind: "number" as const }] },
+      {
+        cells: [{ id: "v1", label: "Valeur minimax", kind: "number" as const }],
+      },
       { cells: [{ id: "v1", expected: 10, absTol: 1 }] },
       { values: { v1: "10.5" } },
       ""
@@ -228,8 +230,18 @@ describe("validateAlgoTrace", () => {
   // --- reveal.canonicalSolution lisible ---
   it("inclut une canonicalSolution lisible (label = expected)", () => {
     const r = validateAlgoTrace(
-      { cells: [{ id: "n1", label: "Nœud A" }, { id: "n2", label: "Nœud B" }] },
-      { cells: [{ id: "n1", expected: "ouvert" }, { id: "n2", expected: 5 }] },
+      {
+        cells: [
+          { id: "n1", label: "Nœud A" },
+          { id: "n2", label: "Nœud B" },
+        ],
+      },
+      {
+        cells: [
+          { id: "n1", expected: "ouvert" },
+          { id: "n2", expected: 5 },
+        ],
+      },
       { values: { n1: "ouvert", n2: "5" } },
       "explication test"
     )

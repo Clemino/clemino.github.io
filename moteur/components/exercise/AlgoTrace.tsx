@@ -16,7 +16,8 @@ export function AlgoTrace({
   disabled: boolean
 }) {
   const safeValues = values ?? {}
-  const update = (id: string, val: string) => onChange({ ...safeValues, [id]: val })
+  const update = (id: string, val: string) =>
+    onChange({ ...safeValues, [id]: val })
 
   return (
     <div className="space-y-4">
@@ -49,11 +50,13 @@ export function AlgoTrace({
               value={safeValues[cell.id] ?? ""}
               onChange={(e) => update(cell.id, e.target.value)}
               disabled={disabled}
-              placeholder={cell.placeholder ?? (cell.kind === "number" ? "0" : "…")}
+              placeholder={
+                cell.placeholder ?? (cell.kind === "number" ? "0" : "…")
+              }
               autoComplete="off"
               spellCheck={false}
               className={cn(
-                "rounded-md border border-[var(--border)] bg-[var(--bg-2)] px-3 py-1.5 font-mono text-[13px] text-[var(--fg-0)] outline-none transition-colors",
+                "rounded-md border border-[var(--border)] bg-[var(--bg-2)] px-3 py-1.5 font-mono text-[13px] text-[var(--fg-0)] transition-colors outline-none",
                 "focus-visible:ring-2 focus-visible:ring-[var(--accent)] disabled:opacity-50",
                 cell.kind === "number" ? "w-36" : "w-full"
               )}

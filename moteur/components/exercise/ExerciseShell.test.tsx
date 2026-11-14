@@ -53,8 +53,12 @@ const answer = async (label: string) => {
 
 describe("ExerciseShell", () => {
   it("links to the course instead of revealing the solution", () => {
-    render(<ExerciseShell exercise={exercise} courseHref="/cours?exercice=e1" />)
-    expect(screen.getByRole("link", { name: "Revoir le cours" })).toHaveAttribute("href", "/cours?exercice=e1")
+    render(
+      <ExerciseShell exercise={exercise} courseHref="/cours?exercice=e1" />
+    )
+    expect(
+      screen.getByRole("link", { name: "Revoir le cours" })
+    ).toHaveAttribute("href", "/cours?exercice=e1")
     expect(screen.queryByText(/Révéler/)).toBeNull()
   })
 
@@ -72,7 +76,11 @@ describe("ExerciseShell", () => {
   it("leads to the next chapter once the last exercise of a finished chapter is right", async () => {
     render(<ExerciseShell exercise={exercise} courseHref="/cours" />)
     await answer("Cadot")
-    expect(screen.getByText("Explication qui cite la solution.")).toBeInTheDocument()
-    expect(screen.getAllByRole("link", { name: /Chapitre suivant/ })[0]).toHaveAttribute("href", "/modules/m1/chapter/c2")
+    expect(
+      screen.getByText("Explication qui cite la solution.")
+    ).toBeInTheDocument()
+    expect(
+      screen.getAllByRole("link", { name: /Chapitre suivant/ })[0]
+    ).toHaveAttribute("href", "/modules/m1/chapter/c2")
   })
 })

@@ -38,7 +38,12 @@ export function GateRunner({
       return
     }
     startTransition(async () => {
-      await submitAttempt({ exercise: current, submission, source: "GATE", runId })
+      await submitAttempt({
+        exercise: current,
+        submission,
+        source: "GATE",
+        runId,
+      })
       setSubmission(null)
       if (isLast) {
         submitGateRun(runId, threshold)
@@ -60,12 +65,16 @@ export function GateRunner({
         </span>
       </div>
       <div className="h-1 overflow-hidden rounded-full bg-[var(--bg-2)]">
-        <div className="h-full bg-[var(--accent)] transition-all" style={{ width: `${progress}%` }} />
+        <div
+          className="h-full bg-[var(--accent)] transition-all"
+          style={{ width: `${progress}%` }}
+        />
       </div>
 
-      <div className="mt-8 card-elevated p-6">
+      <div className="card-elevated mt-8 p-6">
         <div className="mono-label mb-2">
-          {EXERCISE_LABELS[current.type]} · ★{current.difficulty} · {current.points}pt
+          {EXERCISE_LABELS[current.type]} · ★{current.difficulty} ·{" "}
+          {current.points}pt
         </div>
         <div className="prose-tad text-[15px] leading-relaxed text-[var(--fg-0)]">
           <PromptRenderer source={current.prompt} />
@@ -87,7 +96,11 @@ export function GateRunner({
           Pas de feedback intermédiaire · seuil {Math.round(threshold * 100)}%
         </span>
         <Button onClick={handleNext} disabled={pending || !submission}>
-          {pending ? <Loader2Icon className="size-4 animate-spin" /> : <ArrowRightIcon className="size-4" />}
+          {pending ? (
+            <Loader2Icon className="size-4 animate-spin" />
+          ) : (
+            <ArrowRightIcon className="size-4" />
+          )}
           {isLast ? "Soumettre le gate" : "Question suivante"}
         </Button>
       </div>

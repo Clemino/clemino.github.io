@@ -20,8 +20,12 @@ const baseTheme = EditorView.theme({
   },
   ".cm-activeLine": { backgroundColor: "transparent" },
   ".cm-activeLineGutter": { backgroundColor: "transparent" },
-  ".cm-selectionBackground, ::selection": { backgroundColor: "var(--accent-dim) !important" },
-  "&.cm-focused .cm-selectionBackground": { backgroundColor: "var(--accent-dim) !important" },
+  ".cm-selectionBackground, ::selection": {
+    backgroundColor: "var(--accent-dim) !important",
+  },
+  "&.cm-focused .cm-selectionBackground": {
+    backgroundColor: "var(--accent-dim) !important",
+  },
   ".cm-cursor": { borderColor: "var(--accent)" },
 })
 
@@ -45,7 +49,9 @@ export function CodeEditorBox({
   return (
     <div className="overflow-hidden rounded-md border border-[var(--border)]">
       <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-2)] px-3 py-1.5">
-        <span className="font-mono text-[10px] uppercase tracking-wider text-[var(--fg-2)]">Code</span>
+        <span className="font-mono text-[10px] tracking-wider text-[var(--fg-2)] uppercase">
+          Code
+        </span>
         <span className="font-mono text-[10px] text-[var(--fg-3)]">
           {lines} ligne{lines > 1 ? "s" : ""}
         </span>

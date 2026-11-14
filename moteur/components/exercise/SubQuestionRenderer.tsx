@@ -23,7 +23,12 @@ type Pay = Record<string, any>
  * Restricted to the 6 SubQuestionType primitive types — mirrors ExerciseRenderer
  * prop wiring so T1.5 (FIGURE_INTERPRET) can reuse it without modification.
  */
-export function SubQuestionRenderer({ subQuestion, answer, onChange, disabled }: Props) {
+export function SubQuestionRenderer({
+  subQuestion,
+  answer,
+  onChange,
+  disabled,
+}: Props) {
   const sub = answer as Sub | undefined
   const pay = subQuestion.payload as Pay | null
 
@@ -87,7 +92,8 @@ export function SubQuestionRenderer({ subQuestion, answer, onChange, disabled }:
       const exhaustive: never = subQuestion.type
       return (
         <div className="text-sm text-[var(--error)]">
-          {"Type de sous-question non supporté : "}{String(exhaustive)}
+          {"Type de sous-question non supporté : "}
+          {String(exhaustive)}
         </div>
       )
     }

@@ -1,4 +1,8 @@
-import { validateMcqSingle, validateMcqMulti, validateTrueFalse } from "./choice"
+import {
+  validateMcqSingle,
+  validateMcqMulti,
+  validateTrueFalse,
+} from "./choice"
 import { validateFillBlank } from "./fillBlank"
 import { validateNumeric } from "./numeric"
 import { validatePredictOutput } from "./predictOutput"
@@ -27,7 +31,7 @@ export function aggregateSubQuestions(
   subQuestions: SubQuestion[],
   subSolutions: SubSolution[],
   answers: Record<string, AnySubmission>,
-  explanation: string,
+  explanation: string
 ): ValidationResult {
   let weightedScore = 0
   let totalWeight = 0
@@ -79,7 +83,7 @@ export function aggregateSubQuestions(
           subQ.payload as never,
           (subSol?.solution ?? { correct: [] }) as never,
           answer as never,
-          "",
+          ""
         )
         break
       case "MCQ_MULTI":
@@ -87,7 +91,7 @@ export function aggregateSubQuestions(
           subQ.payload as never,
           (subSol?.solution ?? { correct: [] }) as never,
           answer as never,
-          "",
+          ""
         )
         break
       case "TRUE_FALSE":
@@ -95,7 +99,7 @@ export function aggregateSubQuestions(
           subQ.payload as never,
           (subSol?.solution ?? { value: true }) as never,
           answer as never,
-          "",
+          ""
         )
         break
       case "FILL_BLANK":
@@ -103,7 +107,7 @@ export function aggregateSubQuestions(
           subQ.payload as never,
           (subSol?.solution ?? { answers: {} }) as never,
           answer as never,
-          "",
+          ""
         )
         break
       case "NUMERIC":
@@ -111,7 +115,7 @@ export function aggregateSubQuestions(
           subQ.payload as never,
           (subSol?.solution ?? { value: 0 }) as never,
           answer as never,
-          "",
+          ""
         )
         break
       case "PREDICT_OUTPUT":
@@ -119,7 +123,7 @@ export function aggregateSubQuestions(
           subQ.payload as never,
           (subSol?.solution ?? { expectedOutput: "" }) as never,
           answer as never,
-          "",
+          ""
         )
         break
     }

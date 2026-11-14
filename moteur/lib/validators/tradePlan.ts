@@ -26,18 +26,27 @@ export function validateTradePlan(
   payload: TradePlanPayload,
   solution: TradePlanSolution,
   submission: TradePlanSubmission,
-  explanation: string,
+  explanation: string
 ): ValidationResult {
   const cur = payload.currency ?? "€"
   const ref = solution.reference
   const canonicalSolution = `Entrée ${ref.entry} · Stop ${ref.stop} · Objectif ${ref.target} · Taille ${ref.size}`
-  const v = Object.fromEntries(FIELDS.map((f) => [f, parse(submission?.values?.[f])])) as TradePlanFields
+  const v = Object.fromEntries(
+    FIELDS.map((f) => [f, parse(submission?.values?.[f])])
+  ) as TradePlanFields
 
   if (FIELDS.some((f) => !Number.isFinite(v[f]) || v[f] <= 0)) {
     return {
       passed: false,
       score: 0,
-      feedback: [{ ok: false, criterion: "Plan incomplet", detail: "Entrée, stop, objectif et taille doivent être des nombres positifs." }],
+      feedback: [
+        {
+          ok: false,
+          criterion: "Plan incomplet",
+          detail:
+            "Entrée, stop, objectif et taille doivent être des nombres positifs.",
+        },
+      ],
       reveal: { canonicalSolution, explanation },
     }
   }
@@ -50,7 +59,9 @@ export function validateTradePlan(
   const idealSize = riskPerUnit > 0 ? budget / riskPerUnit : 0
   const sizeTol = solution.sizeTol ?? 1
 
-  const sidesOk = long ? v.stop < v.entry && v.target > v.entry : v.stop > v.entry && v.target < v.entry
+  const sidesOk = long
+    ? v.stop < v.entry && v.target > v.entry
+    : v.stop > v.entry && v.target < v.entry
   const feedback: ValidationCriterion[] = [
     {
       ok: sidesOk,
@@ -78,11 +89,17 @@ export function validateTradePlan(
 
   if (solution.entryRange) {
     const [min, max] = solution.entryRange
-    feedback.push({ ok: v.entry >= min - EPS && v.entry <= max + EPS, criterion: `Entrée conforme au scénario (entre ${min} et ${max})` })
+    feedback.push({
+      ok: v.entry >= min - EPS && v.entry <= max + EPS,
+      criterion: `Entrée conforme au scénario (entre ${min} et ${max})`,
+    })
   }
   if (solution.stopRange) {
     const [min, max] = solution.stopRange
-    feedback.push({ ok: v.stop >= min - EPS && v.stop <= max + EPS, criterion: `Stop placé selon le scénario (entre ${min} et ${max})` })
+    feedback.push({
+      ok: v.stop >= min - EPS && v.stop <= max + EPS,
+      criterion: `Stop placé selon le scénario (entre ${min} et ${max})`,
+    })
   }
 
   const okCount = feedback.filter((c) => c.ok).length

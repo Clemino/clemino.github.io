@@ -20,10 +20,15 @@ function parseTriggerHeader(code: string) {
   }
   const tail = m[5]
   const forEachRow = /FOR\s+EACH\s+ROW/i.test(tail)
-  const whenMatch = tail.match(/WHEN\s*\(\s*([\s\S]+?)\s*\)\s*(?:DECLARE|BEGIN|$)/i)
+  const whenMatch = tail.match(
+    /WHEN\s*\(\s*([\s\S]+?)\s*\)\s*(?:DECLARE|BEGIN|$)/i
+  )
   return {
     name: m[1].replace(/["]/g, "").toUpperCase(),
-    timing: m[2].toUpperCase().replace(/\s+/g, " ") as "BEFORE" | "AFTER" | "INSTEAD OF",
+    timing: m[2].toUpperCase().replace(/\s+/g, " ") as
+      | "BEFORE"
+      | "AFTER"
+      | "INSTEAD OF",
     events,
     table: m[4].replace(/["]/g, "").toUpperCase(),
     forEachRow,
@@ -35,7 +40,7 @@ export function validatePlsqlTrigger(
   payload: PlsqlTriggerPayload,
   solution: PlsqlTriggerSolution,
   submission: PlsqlTriggerSubmission,
-  explanation: string,
+  explanation: string
 ): ValidationResult {
   const required = payload.required ?? {}
   const code = submission.code ?? ""
@@ -61,7 +66,8 @@ export function validatePlsqlTrigger(
 
   if (parsed) {
     if (required.triggerName) {
-      const ok = parsed.name.toUpperCase() === required.triggerName.toUpperCase()
+      const ok =
+        parsed.name.toUpperCase() === required.triggerName.toUpperCase()
       feedback.push({
         ok,
         criterion: `Nom du trigger « ${required.triggerName} »`,
@@ -69,7 +75,9 @@ export function validatePlsqlTrigger(
       })
     }
     if (required.timing) {
-      const ok = parsed.timing.replace(/\s+/g, "") === required.timing.replace(/\s+/g, "")
+      const ok =
+        parsed.timing.replace(/\s+/g, "") ===
+        required.timing.replace(/\s+/g, "")
       feedback.push({
         ok,
         criterion: `Timing ${required.timing}`,
@@ -81,7 +89,9 @@ export function validatePlsqlTrigger(
       feedback.push({
         ok,
         criterion: `Événements ${required.events.join("/")}`,
-        detail: ok ? "Tous présents." : `Manquant(s) : ${required.events.filter((e) => !parsed.events.includes(e)).join(", ")}`,
+        detail: ok
+          ? "Tous présents."
+          : `Manquant(s) : ${required.events.filter((e) => !parsed.events.includes(e)).join(", ")}`,
       })
     }
     if (required.table) {
@@ -96,7 +106,9 @@ export function validatePlsqlTrigger(
       const ok = parsed.forEachRow === required.forEachRow
       feedback.push({
         ok,
-        criterion: required.forEachRow ? "FOR EACH ROW présent" : "Trigger niveau instruction (sans FOR EACH ROW)",
+        criterion: required.forEachRow
+          ? "FOR EACH ROW présent"
+          : "Trigger niveau instruction (sans FOR EACH ROW)",
         detail: ok ? "OK." : required.forEachRow ? "Manquant." : "À retirer.",
       })
     }
@@ -125,12 +137,19 @@ export function validatePlsqlTrigger(
   feedback.push({
     ok: hasBlock,
     criterion: "Bloc BEGIN ... END présent",
-    detail: hasBlock ? "OK." : "Le corps du trigger doit être encadré par BEGIN / END;",
+    detail: hasBlock
+      ? "OK."
+      : "Le corps du trigger doit être encadré par BEGIN / END;",
   })
 
   const okCount = feedback.filter((f) => f.ok).length
   const score = feedback.length ? okCount / feedback.length : 0
   const passed = score >= 0.9 && parsed !== null
 
-  return { passed, score, feedback, reveal: { canonicalSolution: solution.code, explanation } }
+  return {
+    passed,
+    score,
+    feedback,
+    reveal: { canonicalSolution: solution.code, explanation },
+  }
 }

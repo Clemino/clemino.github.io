@@ -22,7 +22,13 @@ const TONES = {
 }
 
 // Graded by reading the answer: naming what is missing helps without giving the answer away.
-const LISTS_MISSING_POINTS = ["SQL_DDL", "PLSQL_BLOCK", "PLSQL_TRIGGER", "PLSQL_PROCEDURE", "RUBRIC_OPEN"]
+const LISTS_MISSING_POINTS = [
+  "SQL_DDL",
+  "PLSQL_BLOCK",
+  "PLSQL_TRIGGER",
+  "PLSQL_PROCEDURE",
+  "RUBRIC_OPEN",
+]
 
 export function FeedbackDialog({
   exercise,
@@ -46,8 +52,12 @@ export function FeedbackDialog({
   const tone = passed ? "success" : score > 0 ? "warning" : "error"
   const ToneIcon = TONES[tone]
   // A wrong answer only gets the hint: the explanation would give the answer away.
-  const reminder = passed || isSelfGraded(exercise.type) ? exercise.explanation : exercise.hint
-  const missing = !passed && LISTS_MISSING_POINTS.includes(exercise.type) ? result.feedback.filter((f) => !f.ok) : []
+  const reminder =
+    passed || isSelfGraded(exercise.type) ? exercise.explanation : exercise.hint
+  const missing =
+    !passed && LISTS_MISSING_POINTS.includes(exercise.type)
+      ? result.feedback.filter((f) => !f.ok)
+      : []
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -60,19 +70,35 @@ export function FeedbackDialog({
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <ToneIcon className="size-5 shrink-0" style={{ color: `var(--${tone})` }} />
-            {passed ? "Bonne réponse" : score > 0 ? `Presque : ${Math.round(score * 100)} %` : "Pas encore"}
+            <ToneIcon
+              className="size-5 shrink-0"
+              style={{ color: `var(--${tone})` }}
+            />
+            {passed
+              ? "Bonne réponse"
+              : score > 0
+                ? `Presque : ${Math.round(score * 100)} %`
+                : "Pas encore"}
           </DialogTitle>
           <DialogDescription asChild>
             <div className="space-y-2 text-sm leading-relaxed text-[var(--fg-1)]">
               <div className="mono-label">Rappel de cours</div>
-              <PromptRenderer source={reminder ?? "Relis le cours de ce chapitre, puis réessaie."} />
+              <PromptRenderer
+                source={
+                  reminder ?? "Relis le cours de ce chapitre, puis réessaie."
+                }
+              />
               {missing.length > 0 && (
                 <ul className="list-disc space-y-1 pl-4">
                   {missing.map((f) => (
                     <li key={f.criterion}>
                       {f.criterion}
-                      {f.detail && <span className="text-[var(--fg-2)]"> — {f.detail}</span>}
+                      {f.detail && (
+                        <span className="text-[var(--fg-2)]">
+                          {" "}
+                          — {f.detail}
+                        </span>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -80,7 +106,9 @@ export function FeedbackDialog({
             </div>
           </DialogDescription>
         </DialogHeader>
-        {passed && exercise.source && <p className="mono-label">Source : {exercise.source}</p>}
+        {passed && exercise.source && (
+          <p className="mono-label">Source : {exercise.source}</p>
+        )}
         <DialogFooter>
           {!passed && (
             <Button variant="outline" asChild>

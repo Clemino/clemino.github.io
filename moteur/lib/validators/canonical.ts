@@ -71,18 +71,31 @@ const describeMatrix = (matrix: Record<string, Record<string, number>>) =>
     .join("\n")
 
 const describeTrace = (output: string | string[][]) =>
-  typeof output === "string" ? output : output.map((row) => row.join(" | ")).join("\n")
+  typeof output === "string"
+    ? output
+    : output.map((row) => row.join(" | ")).join("\n")
 
-const describePlan = (plan: Partial<Record<keyof TradePlanFields, string | number>>) =>
+const describePlan = (
+  plan: Partial<Record<keyof TradePlanFields, string | number>>
+) =>
   `Entrée ${plan.entry ?? "—"} ; stop ${plan.stop ?? "—"} ; objectif ${plan.target ?? "—"} ; taille ${plan.size ?? "—"}`
 
-function describeChartAnswer(payload: ChartReadPayload, candle?: number, price?: number, selected?: string): string {
-  if (payload.mode === "candle") return candle === undefined ? "—" : `Bougie ${candle}`
+function describeChartAnswer(
+  payload: ChartReadPayload,
+  candle?: number,
+  price?: number,
+  selected?: string
+): string {
+  if (payload.mode === "candle")
+    return candle === undefined ? "—" : `Bougie ${candle}`
   if (payload.mode === "price") return price === undefined ? "—" : String(price)
   return selected ? labels(payload.options ?? [], [selected]) : "—"
 }
 
-function describeSubSolutions(subQuestions: SubQuestion[], subSolutions: SubSolution[]): string {
+function describeSubSolutions(
+  subQuestions: SubQuestion[],
+  subSolutions: SubSolution[]
+): string {
   return subQuestions
     .map((q, i) => {
       const sub = subSolutions.find((s) => s.id === q.id)
@@ -91,28 +104,47 @@ function describeSubSolutions(subQuestions: SubQuestion[], subSolutions: SubSolu
     .join("\n")
 }
 
-function describeSubAnswers(subQuestions: SubQuestion[], answers: Record<string, AnySubmission>): string {
-  return subQuestions.map((q, i) => `Q${i + 1}. ${describeSubmission(q.type, q.payload, answers[q.id])}`).join("\n")
+function describeSubAnswers(
+  subQuestions: SubQuestion[],
+  answers: Record<string, AnySubmission>
+): string {
+  return subQuestions
+    .map(
+      (q, i) =>
+        `Q${i + 1}. ${describeSubmission(q.type, q.payload, answers[q.id])}`
+    )
+    .join("\n")
 }
 
 /** Expected answers a reminder must not quote, since a wrong try only shows the reminder. */
-export function answerTexts(type: ExerciseType, payload: AnyPayload, solution: AnySolution): string[] {
+export function answerTexts(
+  type: ExerciseType,
+  payload: AnyPayload,
+  solution: AnySolution
+): string[] {
   if (type === "MCQ_SINGLE" || type === "MCQ_MULTI") {
     const { options } = payload as McqPayload
     const { correct } = solution as McqSolution
     return options.filter((o) => correct.includes(o.id)).map((o) => o.label)
   }
-  if (type === "FILL_BLANK") return Object.values((solution as FillBlankSolution).answers).flat()
+  if (type === "FILL_BLANK")
+    return Object.values((solution as FillBlankSolution).answers).flat()
   return []
 }
 
 /** Readable expected answer, for screens that show a correction without a submission. */
-export function canonicalSolution(type: ExerciseType, payload: AnyPayload, solution: AnySolution): string {
+export function canonicalSolution(
+  type: ExerciseType,
+  payload: AnyPayload,
+  solution: AnySolution
+): string {
   switch (type) {
     case "MCQ_SINGLE":
     case "MCQ_MULTI": {
       const { options } = payload as McqPayload
-      return (solution as McqSolution).correct.map((id) => options.find((o) => o.id === id)?.label ?? id).join(" ; ")
+      return (solution as McqSolution).correct
+        .map((id) => options.find((o) => o.id === id)?.label ?? id)
+        .join(" ; ")
     }
     case "TRUE_FALSE":
       return (solution as TrueFalseSolution).value ? "Vrai" : "Faux"
@@ -123,19 +155,28 @@ export function canonicalSolution(type: ExerciseType, payload: AnyPayload, solut
     case "ORDERING": {
       const { items } = payload as OrderingPayload
       return (solution as OrderingSolution).order
-        .map((id, i) => `${i + 1}. ${items.find((it) => it.id === id)?.label ?? id}`)
+        .map(
+          (id, i) =>
+            `${i + 1}. ${items.find((it) => it.id === id)?.label ?? id}`
+        )
         .join("\n")
     }
     case "MATCHING": {
       const { left, right } = payload as MatchingPayload
       return Object.entries((solution as MatchingSolution).pairs)
-        .map(([l, r]) => `${left.find((x) => x.id === l)?.label ?? l} ↔ ${right.find((x) => x.id === r)?.label ?? r}`)
+        .map(
+          ([l, r]) =>
+            `${left.find((x) => x.id === l)?.label ?? l} ↔ ${right.find((x) => x.id === r)?.label ?? r}`
+        )
         .join("\n")
     }
     case "CASE_STUDY":
     case "CODE_ANALYSIS":
     case "FIGURE_INTERPRET":
-      return describeSubSolutions((payload as CaseStudyPayload).subQuestions, (solution as CaseStudySolution).subSolutions)
+      return describeSubSolutions(
+        (payload as CaseStudyPayload).subQuestions,
+        (solution as CaseStudySolution).subSolutions
+      )
     case "WRITING":
       return "Voir le corrigé type de l'exercice."
     case "PREDICT_OUTPUT":
@@ -147,21 +188,39 @@ export function canonicalSolution(type: ExerciseType, payload: AnyPayload, solut
     case "ALGO_TRACE": {
       const { cells } = payload as AlgoTracePayload
       return (solution as AlgoTraceSolution).cells
-        .map((c) => `${cells.find((cell) => cell.id === c.id)?.label ?? c.id} : ${c.expected}`)
+        .map(
+          (c) =>
+            `${cells.find((cell) => cell.id === c.id)?.label ?? c.id} : ${c.expected}`
+        )
         .join("\n")
     }
     case "PETRI_ENABLED_TRANSITIONS":
-      return (solution as PetriEnabledTransitionsSolution).enabledTransitionIds.join(", ") || "Aucune"
+      return (
+        (solution as PetriEnabledTransitionsSolution).enabledTransitionIds.join(
+          ", "
+        ) || "Aucune"
+      )
     case "PETRI_FIRE_SEQUENCE":
-      return describeMarking((solution as PetriFireSequenceSolution).finalMarking)
+      return describeMarking(
+        (solution as PetriFireSequenceSolution).finalMarking
+      )
     case "PETRI_MATRIX":
       return describeMatrix((solution as PetriMatrixSolution).matrix)
     case "PETRI_PROPERTY":
-      return labels((payload as PetriPropertyPayload).properties, (solution as McqSolution).correct)
+      return labels(
+        (payload as PetriPropertyPayload).properties,
+        (solution as McqSolution).correct
+      )
     case "PETRI_INVARIANT":
-      return labels((payload as PetriInvariantPayload).vectors, (solution as McqSolution).correct)
+      return labels(
+        (payload as PetriInvariantPayload).vectors,
+        (solution as McqSolution).correct
+      )
     case "PETRI_REACHABILITY":
-      return labels((payload as PetriReachabilityPayload).options, (solution as McqSolution).correct)
+      return labels(
+        (payload as PetriReachabilityPayload).options,
+        (solution as McqSolution).correct
+      )
     case "CODE_WRITE":
     case "CODE_FIX":
       return (solution as CodeSolution).referenceCode
@@ -177,7 +236,12 @@ export function canonicalSolution(type: ExerciseType, payload: AnyPayload, solut
       return (solution as RubricSolution).modelAnswer
     case "CHART_READ": {
       const { candles, price, correct } = solution as ChartReadSolution
-      return describeChartAnswer(payload as ChartReadPayload, candles?.[0], price, correct)
+      return describeChartAnswer(
+        payload as ChartReadPayload,
+        candles?.[0],
+        price,
+        correct
+      )
     }
     case "TRADE_PLAN":
       return describePlan((solution as TradePlanSolution).reference)
@@ -185,16 +249,24 @@ export function canonicalSolution(type: ExerciseType, payload: AnyPayload, solut
 }
 
 /** What the student answered, in the same wording as the expected answer. */
-export function describeSubmission(type: ExerciseType, payload: AnyPayload, submission?: AnySubmission): string {
+export function describeSubmission(
+  type: ExerciseType,
+  payload: AnyPayload,
+  submission?: AnySubmission
+): string {
   if (!submission) return "Non répondu"
   switch (type) {
     case "MCQ_SINGLE":
     case "MCQ_MULTI":
-      return canonicalSolution(type, payload, { correct: (submission as McqSubmission).selected })
+      return canonicalSolution(type, payload, {
+        correct: (submission as McqSubmission).selected,
+      })
     case "TRUE_FALSE":
       return canonicalSolution(type, payload, submission as TrueFalseSubmission)
     case "FILL_BLANK":
-      return canonicalSolution(type, payload, { answers: (submission as FillBlankSubmission).values })
+      return canonicalSolution(type, payload, {
+        answers: (submission as FillBlankSubmission).values,
+      })
     case "ORDERING":
       return canonicalSolution(type, payload, submission as OrderingSubmission)
     case "MATCHING":
@@ -202,7 +274,10 @@ export function describeSubmission(type: ExerciseType, payload: AnyPayload, subm
     case "CASE_STUDY":
     case "CODE_ANALYSIS":
     case "FIGURE_INTERPRET":
-      return describeSubAnswers((payload as CaseStudyPayload).subQuestions, (submission as CaseStudySubmission).answers)
+      return describeSubAnswers(
+        (payload as CaseStudyPayload).subQuestions,
+        (submission as CaseStudySubmission).answers
+      )
     case "WRITING":
       return (submission as WritingSubmission).text
     case "PREDICT_OUTPUT":
@@ -214,20 +289,37 @@ export function describeSubmission(type: ExerciseType, payload: AnyPayload, subm
     case "ALGO_TRACE": {
       const { cells } = payload as AlgoTracePayload
       const { values } = submission as AlgoTraceSubmission
-      return cells.map((cell) => `${cell.label} : ${values[cell.id] ?? "—"}`).join("\n")
+      return cells
+        .map((cell) => `${cell.label} : ${values[cell.id] ?? "—"}`)
+        .join("\n")
     }
     case "PETRI_ENABLED_TRANSITIONS":
-      return (submission as PetriEnabledTransitionsSubmission).selectedTransitionIds.join(", ") || "Aucune"
+      return (
+        (
+          submission as PetriEnabledTransitionsSubmission
+        ).selectedTransitionIds.join(", ") || "Aucune"
+      )
     case "PETRI_FIRE_SEQUENCE":
-      return describeMarking((submission as PetriFireSequenceSubmission).marking)
+      return describeMarking(
+        (submission as PetriFireSequenceSubmission).marking
+      )
     case "PETRI_MATRIX":
       return describeMatrix((submission as PetriMatrixSubmission).matrix)
     case "PETRI_PROPERTY":
-      return labels((payload as PetriPropertyPayload).properties, (submission as McqSubmission).selected)
+      return labels(
+        (payload as PetriPropertyPayload).properties,
+        (submission as McqSubmission).selected
+      )
     case "PETRI_INVARIANT":
-      return labels((payload as PetriInvariantPayload).vectors, (submission as McqSubmission).selected)
+      return labels(
+        (payload as PetriInvariantPayload).vectors,
+        (submission as McqSubmission).selected
+      )
     case "PETRI_REACHABILITY":
-      return labels((payload as PetriReachabilityPayload).options, (submission as McqSubmission).selected)
+      return labels(
+        (payload as PetriReachabilityPayload).options,
+        (submission as McqSubmission).selected
+      )
     case "CODE_WRITE":
     case "CODE_FIX":
       return (submission as CodeSubmission).code
@@ -243,7 +335,12 @@ export function describeSubmission(type: ExerciseType, payload: AnyPayload, subm
       return (submission as RubricSubmission).text
     case "CHART_READ": {
       const { candle, price, selected } = submission as ChartReadSubmission
-      return describeChartAnswer(payload as ChartReadPayload, candle, price, selected)
+      return describeChartAnswer(
+        payload as ChartReadPayload,
+        candle,
+        price,
+        selected
+      )
     }
     case "TRADE_PLAN":
       return describePlan((submission as TradePlanSubmission).values)

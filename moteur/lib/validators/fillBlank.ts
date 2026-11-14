@@ -22,7 +22,11 @@ export function validateFillBlank(
   const feedback = slots.map((slot) => {
     const userValue = values[slot.id] ?? ""
     const expected = answers[slot.id]
-    const expectedList = Array.isArray(expected) ? expected : expected ? [expected] : []
+    const expectedList = Array.isArray(expected)
+      ? expected
+      : expected
+        ? [expected]
+        : []
     const matches = expectedList.some(
       (e) =>
         normalize(userValue, { caseSensitive, stripAccents }) ===

@@ -39,9 +39,7 @@ describe("GridWorld", () => {
   })
 
   it("affiche la légende quand elle est fournie", () => {
-    render(
-      <GridWorld rows={2} cols={3} cells={cells} caption="Grille 2×3" />,
-    )
+    render(<GridWorld rows={2} cols={3} cells={cells} caption="Grille 2×3" />)
     expect(screen.getByText("Grille 2×3")).toBeInTheDocument()
   })
 })

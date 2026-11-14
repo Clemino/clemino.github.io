@@ -51,7 +51,9 @@ describe("catalog", () => {
 
   it("offers each gate more questions than it draws, all from the module", () => {
     for (const mod of modules) {
-      const ids = new Set(mod.chapters.flatMap((c) => c.exercises.map((e) => e.id)))
+      const ids = new Set(
+        mod.chapters.flatMap((c) => c.exercises.map((e) => e.id))
+      )
       expect(mod.gatePoolIds.length).toBeGreaterThan(GATE_SIZE)
       expect(mod.gatePoolIds.every((id) => ids.has(id))).toBe(true)
     }
@@ -59,7 +61,9 @@ describe("catalog", () => {
 
   it("derives reading time from the section text", () => {
     const section = modules[0].chapters[0].sections[0]
-    expect(section.estimatedReadMin).toBe(readingMinutes(fs.readFileSync(`content/${section.mdxPath}`, "utf8")))
+    expect(section.estimatedReadMin).toBe(
+      readingMinutes(fs.readFileSync(`content/${section.mdxPath}`, "utf8"))
+    )
   })
 
   it("exposes an index without any exercise content", () => {

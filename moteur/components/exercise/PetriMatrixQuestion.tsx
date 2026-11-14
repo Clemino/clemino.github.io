@@ -17,10 +17,16 @@ export function PetriMatrixQuestion({
 }) {
   return (
     <div className="space-y-4">
-      <PetriNetViewer places={payload.places} transitions={payload.transitions} arcs={payload.arcs} marking={payload.marking} />
+      <PetriNetViewer
+        places={payload.places}
+        transitions={payload.transitions}
+        arcs={payload.arcs}
+        marking={payload.marking}
+      />
       <div>
         <div className="mono-label mb-2">
-          Completer la matrice {payload.matrix === "incidence" ? "C = Post - Pre" : payload.matrix}
+          Completer la matrice{" "}
+          {payload.matrix === "incidence" ? "C = Post - Pre" : payload.matrix}
         </div>
         <MatrixGrid
           places={payload.places}

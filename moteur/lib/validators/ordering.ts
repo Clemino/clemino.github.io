@@ -21,10 +21,15 @@ export function validateOrdering(
     return {
       passed: true,
       score: 1,
-      feedback: [{ ok: true, criterion: "Ordre exact", detail: "Séquence correcte." }],
+      feedback: [
+        { ok: true, criterion: "Ordre exact", detail: "Séquence correcte." },
+      ],
       reveal: {
         canonicalSolution: expected
-          .map((id, i) => `${i + 1}. ${payload.items.find((it) => it.id === id)?.label ?? id}`)
+          .map(
+            (id, i) =>
+              `${i + 1}. ${payload.items.find((it) => it.id === id)?.label ?? id}`
+          )
           .join("\n"),
         explanation,
       },
@@ -39,11 +44,18 @@ export function validateOrdering(
     passed: false,
     score,
     feedback: [
-      { ok: false, criterion: "Ordre exact", detail: `${okCount}/${expected.length} éléments à la bonne position.` },
+      {
+        ok: false,
+        criterion: "Ordre exact",
+        detail: `${okCount}/${expected.length} éléments à la bonne position.`,
+      },
     ],
     reveal: {
       canonicalSolution: expected
-        .map((id, i) => `${i + 1}. ${payload.items.find((it) => it.id === id)?.label ?? id}`)
+        .map(
+          (id, i) =>
+            `${i + 1}. ${payload.items.find((it) => it.id === id)?.label ?? id}`
+        )
         .join("\n"),
       explanation,
     },

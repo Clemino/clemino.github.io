@@ -9,26 +9,46 @@ describe("validateNumeric", () => {
   })
 
   it("réussit pour une valeur dans la tolérance absolue", () => {
-    const r = validateNumeric({}, { value: 100, absTol: 5 }, { value: "103" }, "")
+    const r = validateNumeric(
+      {},
+      { value: 100, absTol: 5 },
+      { value: "103" },
+      ""
+    )
     expect(r.passed).toBe(true)
     expect(r.score).toBe(1)
   })
 
   it("échoue pour une valeur hors tolérance absolue", () => {
-    const r = validateNumeric({}, { value: 100, absTol: 5 }, { value: "110" }, "")
+    const r = validateNumeric(
+      {},
+      { value: 100, absTol: 5 },
+      { value: "110" },
+      ""
+    )
     expect(r.passed).toBe(false)
     expect(r.score).toBe(0)
   })
 
   it("réussit pour une valeur dans la tolérance relative", () => {
     // |215 - 200| = 15 ≤ relTol(0.1) × |200| = 20 => dans la tolérance relative => réussit
-    const r = validateNumeric({}, { value: 200, relTol: 0.1 }, { value: "215" }, "")
+    const r = validateNumeric(
+      {},
+      { value: 200, relTol: 0.1 },
+      { value: "215" },
+      ""
+    )
     expect(r.passed).toBe(true)
     expect(r.score).toBe(1)
   })
 
   it("échoue pour une valeur hors tolérance relative", () => {
-    const r = validateNumeric({}, { value: 200, relTol: 0.1 }, { value: "225" }, "")
+    const r = validateNumeric(
+      {},
+      { value: 200, relTol: 0.1 },
+      { value: "225" },
+      ""
+    )
     expect(r.passed).toBe(false)
     expect(r.score).toBe(0)
   })
@@ -92,10 +112,20 @@ describe("validateNumeric", () => {
   // Fix 3a: target = 0 avec relTol — seul absTol peut valider (relTol·|0| = 0)
   it("cible 0 avec relTol : seul absTol détermine la tolérance", () => {
     // valeur dans absTol => réussit
-    const pass = validateNumeric({}, { value: 0, relTol: 0.1, absTol: 0.5 }, { value: "0.3" }, "")
+    const pass = validateNumeric(
+      {},
+      { value: 0, relTol: 0.1, absTol: 0.5 },
+      { value: "0.3" },
+      ""
+    )
     expect(pass.passed).toBe(true)
     // valeur hors absTol => échoue (relTol ne peut pas compenser car relTol·|0| = 0)
-    const fail = validateNumeric({}, { value: 0, relTol: 0.1, absTol: 0.5 }, { value: "1.0" }, "")
+    const fail = validateNumeric(
+      {},
+      { value: 0, relTol: 0.1, absTol: 0.5 },
+      { value: "1.0" },
+      ""
+    )
     expect(fail.passed).toBe(false)
   })
 

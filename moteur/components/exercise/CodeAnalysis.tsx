@@ -1,7 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import type { AnySubmission, CodeAnalysisPayload, CodeAnalysisSubmission } from "@/lib/validators/types"
+import type {
+  AnySubmission,
+  CodeAnalysisPayload,
+  CodeAnalysisSubmission,
+} from "@/lib/validators/types"
 import { CodeBlock } from "./CodeBlock"
 import { PromptRenderer } from "./PromptRenderer"
 import { SubQuestionRenderer } from "./SubQuestionRenderer"
@@ -19,7 +23,7 @@ export function CodeAnalysis({
 }) {
   // Manage answers record locally; merge with parent via onChange
   const [answers, setAnswers] = useState<Record<string, AnySubmission>>(
-    submission?.answers ?? {},
+    submission?.answers ?? {}
   )
 
   const updateAnswer = (id: string, value: AnySubmission) => {
@@ -38,7 +42,9 @@ export function CodeAnalysis({
           showLineNumbers
         />
         {payload.caption && (
-          <p className="mt-2 text-xs text-[var(--fg-3)] italic">{payload.caption}</p>
+          <p className="mt-2 text-xs text-[var(--fg-3)] italic">
+            {payload.caption}
+          </p>
         )}
       </div>
 
@@ -47,10 +53,10 @@ export function CodeAnalysis({
         {payload.subQuestions.map((subQ, i) => (
           <div
             key={subQ.id}
-            className="rounded-md border border-[var(--border)] bg-[var(--bg-1)] p-4 space-y-3"
+            className="space-y-3 rounded-md border border-[var(--border)] bg-[var(--bg-1)] p-4"
           >
             <div className="flex items-start gap-2">
-              <span className="shrink-0 font-mono text-[10px] text-[var(--fg-3)] mt-0.5">
+              <span className="mt-0.5 shrink-0 font-mono text-[10px] text-[var(--fg-3)]">
                 Q{i + 1}.
               </span>
               <div className="text-[14px] leading-relaxed text-[var(--fg-0)]">

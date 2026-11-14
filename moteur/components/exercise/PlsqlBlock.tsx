@@ -2,7 +2,15 @@
 
 import { SqlEditorBox } from "./SqlEditorBox"
 
-export function PlsqlBlock({ value, onChange, disabled }: { value: string; onChange: (v: string) => void; disabled: boolean }) {
+export function PlsqlBlock({
+  value,
+  onChange,
+  disabled,
+}: {
+  value: string
+  onChange: (v: string) => void
+  disabled: boolean
+}) {
   return (
     <SqlEditorBox
       value={value}

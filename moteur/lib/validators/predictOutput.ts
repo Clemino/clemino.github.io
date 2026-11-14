@@ -10,7 +10,7 @@ export function validatePredictOutput(
   _payload: PredictOutputPayload,
   solution: PredictOutputSolution,
   submission: PredictOutputSubmission,
-  explanation: string,
+  explanation: string
 ): ValidationResult {
   const expected = normalize(solution.expectedOutput ?? "")
   const submitted = normalize(submission?.output ?? "")
@@ -22,7 +22,9 @@ export function validatePredictOutput(
       {
         ok,
         criterion: "Sortie attendue",
-        detail: ok ? "Sortie identique au programme." : "La sortie prédite diffère de la sortie réelle.",
+        detail: ok
+          ? "Sortie identique au programme."
+          : "La sortie prédite diffère de la sortie réelle.",
       },
     ],
     reveal: { canonicalSolution: solution.expectedOutput ?? "", explanation },

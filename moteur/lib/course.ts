@@ -55,7 +55,8 @@ export const EXERCISE_LABELS: Record<ExerciseType, string> = {
 }
 
 /** These answers are checked by the student against a reference, not by the site. */
-export const isSelfGraded = (type: ExerciseType) => type === "WRITING" || type === "CODE_WRITE" || type === "CODE_FIX"
+export const isSelfGraded = (type: ExerciseType) =>
+  type === "WRITING" || type === "CODE_WRITE" || type === "CODE_FIX"
 
 export type CourseChapter = {
   slug: string

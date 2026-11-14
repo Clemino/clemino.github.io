@@ -40,7 +40,11 @@ export function ConceptDrillRunner({
       return
     }
     startTransition(async () => {
-      const res = await submitAttempt({ exercise: current, submission, source: "REVIEW" })
+      const res = await submitAttempt({
+        exercise: current,
+        submission,
+        source: "REVIEW",
+      })
       setResult(res)
       setDialogOpen(true)
       setScores([...scores, res.score])
@@ -68,7 +72,7 @@ export function ConceptDrillRunner({
   return (
     <div>
       <div className="mb-3 flex items-baseline justify-between">
-        <span className="font-mono text-xs tabular-nums text-[var(--fg-2)]">
+        <span className="font-mono text-xs text-[var(--fg-2)] tabular-nums">
           {index + 1} / {exercises.length}
         </span>
         <div className="flex gap-1">
@@ -83,7 +87,7 @@ export function ConceptDrillRunner({
                     : "bg-[var(--error)]"
                   : i === index
                     ? "bg-[var(--fg-2)]"
-                    : "bg-[var(--bg-3)]",
+                    : "bg-[var(--bg-3)]"
               )}
             />
           ))}
@@ -91,12 +95,18 @@ export function ConceptDrillRunner({
       </div>
 
       <div className="h-1 overflow-hidden rounded-full bg-[var(--bg-2)]">
-        <div className="h-full bg-[var(--accent)] transition-all" style={{ width: `${progress}%` }} />
+        <div
+          className="h-full bg-[var(--accent)] transition-all"
+          style={{ width: `${progress}%` }}
+        />
       </div>
 
-      <div className="mt-6 card-elevated p-6">
+      <div className="card-elevated mt-6 p-6">
         <div className="mb-3 flex items-center gap-2">
-          <Badge variant="outline" className="border-[var(--border-strong)] font-mono text-[10px]">
+          <Badge
+            variant="outline"
+            className="border-[var(--border-strong)] font-mono text-[10px]"
+          >
             {EXERCISE_LABELS[current.type]}
           </Badge>
           <span className="font-mono text-[10px] text-[var(--fg-3)]">
@@ -124,7 +134,10 @@ export function ConceptDrillRunner({
           result={result}
           open={dialogOpen}
           onOpenChange={setDialogOpen}
-          next={{ label: isLast ? "Terminer la révision" : "Suivant", onClick: handleNext }}
+          next={{
+            label: isLast ? "Terminer la révision" : "Suivant",
+            onClick: handleNext,
+          }}
           courseHref={`/modules/${current.moduleSlug}/chapter/${current.chapterSlug}`}
         />
       )}
@@ -132,12 +145,20 @@ export function ConceptDrillRunner({
       <div className="mt-4 flex items-center justify-end gap-2">
         {result ? (
           <Button onClick={handleNext} disabled={pending}>
-            {pending ? <Loader2Icon className="size-4 animate-spin" /> : <ArrowRightIcon className="size-4" />}
+            {pending ? (
+              <Loader2Icon className="size-4 animate-spin" />
+            ) : (
+              <ArrowRightIcon className="size-4" />
+            )}
             {isLast ? "Terminer la révision" : "Suivant"}
           </Button>
         ) : (
           <Button onClick={handleVerify} disabled={pending || !submission}>
-            {pending ? <Loader2Icon className="size-4 animate-spin" /> : <CheckCircle2Icon className="size-4" />}
+            {pending ? (
+              <Loader2Icon className="size-4 animate-spin" />
+            ) : (
+              <CheckCircle2Icon className="size-4" />
+            )}
             Vérifier
           </Button>
         )}

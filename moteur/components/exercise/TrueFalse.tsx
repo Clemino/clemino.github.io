@@ -14,8 +14,21 @@ export function TrueFalse({
 }) {
   return (
     <div className="grid grid-cols-2 gap-3">
-      <Btn label="Vrai" active={value === true} accent disabled={disabled} onClick={() => onChange(true)} icon={<CheckIcon className="size-5" />} />
-      <Btn label="Faux" active={value === false} disabled={disabled} onClick={() => onChange(false)} icon={<XIcon className="size-5" />} />
+      <Btn
+        label="Vrai"
+        active={value === true}
+        accent
+        disabled={disabled}
+        onClick={() => onChange(true)}
+        icon={<CheckIcon className="size-5" />}
+      />
+      <Btn
+        label="Faux"
+        active={value === false}
+        disabled={disabled}
+        onClick={() => onChange(false)}
+        icon={<XIcon className="size-5" />}
+      />
     </div>
   )
 }
@@ -47,7 +60,7 @@ function Btn({
             ? "border-[var(--accent)] bg-[var(--accent-dim)]/30 text-[var(--accent)]"
             : "border-[var(--fg-1)] bg-[var(--bg-2)] text-[var(--fg-0)]"
           : "border-[var(--border)] bg-[var(--bg-1)] text-[var(--fg-1)] hover:bg-[var(--bg-2)]",
-        disabled && "cursor-not-allowed opacity-80",
+        disabled && "cursor-not-allowed opacity-80"
       )}
     >
       {icon}

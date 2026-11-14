@@ -7,12 +7,20 @@ import { getAllChapters, getChapter } from "@/lib/catalog"
 
 export function generateStaticParams() {
   return getAllChapters().flatMap(({ moduleSlug, chapter }) =>
-    chapter.exercises.map((e) => ({ moduleSlug, chapterSlug: chapter.slug, exerciseId: e.id })),
+    chapter.exercises.map((e) => ({
+      moduleSlug,
+      chapterSlug: chapter.slug,
+      exerciseId: e.id,
+    }))
   )
 }
 
 export default async function ExercisePage(props: {
-  params: Promise<{ moduleSlug: string; chapterSlug: string; exerciseId: string }>
+  params: Promise<{
+    moduleSlug: string
+    chapterSlug: string
+    exerciseId: string
+  }>
 }) {
   const { moduleSlug, chapterSlug, exerciseId } = await props.params
   const chapter = getChapter(moduleSlug, chapterSlug)
@@ -21,7 +29,8 @@ export default async function ExercisePage(props: {
   const idx = chapter.exercises.findIndex((e) => e.id === exerciseId)
   if (idx === -1) notFound()
   const exercise = chapter.exercises[idx]
-  const next = idx < chapter.exercises.length - 1 ? chapter.exercises[idx + 1] : null
+  const next =
+    idx < chapter.exercises.length - 1 ? chapter.exercises[idx + 1] : null
 
   return (
     <AccessGuard moduleSlug={moduleSlug} chapterSlug={chapterSlug}>
@@ -34,7 +43,7 @@ export default async function ExercisePage(props: {
         </Link>
 
         <div className="mt-3 mb-8 flex items-baseline justify-between border-b border-[var(--border)] pb-3">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--fg-3)]">
+          <span className="font-mono text-[10px] tracking-widest text-[var(--fg-3)] uppercase">
             Exercice {idx + 1} / {chapter.exercises.length}
           </span>
         </div>

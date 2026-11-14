@@ -37,7 +37,12 @@ export function CommandPalette() {
     const onKey = (e: KeyboardEvent) => {
       if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || e.key === "/") {
         const target = e.target as HTMLElement
-        if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) {
+        if (
+          target &&
+          (target.tagName === "INPUT" ||
+            target.tagName === "TEXTAREA" ||
+            target.isContentEditable)
+        ) {
           if (e.key === "/") return
         }
         e.preventDefault()
@@ -54,16 +59,35 @@ export function CommandPalette() {
   }
 
   const grouped = React.useMemo(() => {
-    const g: Record<"modules" | "chapters" | "exams", CmdNavItem[]> = { modules: [], chapters: [], exams: [] }
+    const g: Record<"modules" | "chapters" | "exams", CmdNavItem[]> = {
+      modules: [],
+      chapters: [],
+      exams: [],
+    }
     for (const m of modules) {
       if (!m.unlocked) continue
-      g.modules.push({ id: `mod-${m.slug}`, label: m.title, hint: `Module ${m.order}`, href: `/modules/${m.slug}` })
+      g.modules.push({
+        id: `mod-${m.slug}`,
+        label: m.title,
+        hint: `Module ${m.order}`,
+        href: `/modules/${m.slug}`,
+      })
       for (const c of m.chapters) {
-        g.chapters.push({ id: `ch-${c.slug}`, label: c.title, hint: m.title, href: `/modules/${m.slug}/chapter/${c.slug}` })
+        g.chapters.push({
+          id: `ch-${c.slug}`,
+          label: c.title,
+          hint: m.title,
+          href: `/modules/${m.slug}/chapter/${c.slug}`,
+        })
       }
     }
     for (const e of courseIndex.exams) {
-      g.exams.push({ id: `ex-${e.slug}`, label: e.title, hint: `${e.durationMinutes} min`, href: `/exam/${e.slug}` })
+      g.exams.push({
+        id: `ex-${e.slug}`,
+        label: e.title,
+        hint: `${e.durationMinutes} min`,
+        href: `/exam/${e.slug}`,
+      })
     }
     return g
   }, [modules])
@@ -74,7 +98,7 @@ export function CommandPalette() {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Ouvrir le palette de commandes"
-        className="fixed bottom-4 right-4 z-30 inline-flex items-center gap-2 rounded-md border border-[var(--border)] bg-[var(--bg-1)] px-3 py-2 font-mono text-xs text-[var(--fg-2)] shadow-md hover:bg-[var(--bg-2)]"
+        className="fixed right-4 bottom-4 z-30 inline-flex items-center gap-2 rounded-md border border-[var(--border)] bg-[var(--bg-1)] px-3 py-2 font-mono text-xs text-[var(--fg-2)] shadow-md hover:bg-[var(--bg-2)]"
       >
         <CommandIcon className="size-3.5" />
         <span>K</span>
@@ -83,11 +107,17 @@ export function CommandPalette() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-[10vh]" onClick={() => setOpen(false)}>
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" aria-hidden />
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-[10vh]"
+      onClick={() => setOpen(false)}
+    >
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        aria-hidden
+      />
       <div
         className={cn(
-          "relative w-full max-w-xl overflow-hidden rounded-lg border border-[var(--border-strong)] bg-[var(--bg-1)] shadow-2xl",
+          "relative w-full max-w-xl overflow-hidden rounded-lg border border-[var(--border-strong)] bg-[var(--bg-1)] shadow-2xl"
         )}
         onClick={(e) => e.stopPropagation()}
       >
@@ -104,36 +134,83 @@ export function CommandPalette() {
 
             {grouped.modules.length > 0 && (
               <Command.Group heading="Modules" className="mb-2">
-                <CmdGroupHeading icon={<LayersIcon className="size-3" />}>Modules</CmdGroupHeading>
+                <CmdGroupHeading icon={<LayersIcon className="size-3" />}>
+                  Modules
+                </CmdGroupHeading>
                 {grouped.modules.map((it) => (
-                  <CmdItem key={it.id} value={it.label} onSelect={() => navigate(it.href)} icon={it.icon ?? <LayersIcon className="size-3.5" />} label={it.label} hint={it.hint} />
+                  <CmdItem
+                    key={it.id}
+                    value={it.label}
+                    onSelect={() => navigate(it.href)}
+                    icon={it.icon ?? <LayersIcon className="size-3.5" />}
+                    label={it.label}
+                    hint={it.hint}
+                  />
                 ))}
               </Command.Group>
             )}
 
             {grouped.chapters.length > 0 && (
               <Command.Group heading="Chapitres">
-                <CmdGroupHeading icon={<BookOpenIcon className="size-3" />}>Chapitres</CmdGroupHeading>
+                <CmdGroupHeading icon={<BookOpenIcon className="size-3" />}>
+                  Chapitres
+                </CmdGroupHeading>
                 {grouped.chapters.map((it) => (
-                  <CmdItem key={it.id} value={`${it.label} ${it.hint ?? ""}`} onSelect={() => navigate(it.href)} icon={<FileTextIcon className="size-3.5" />} label={it.label} hint={it.hint} />
+                  <CmdItem
+                    key={it.id}
+                    value={`${it.label} ${it.hint ?? ""}`}
+                    onSelect={() => navigate(it.href)}
+                    icon={<FileTextIcon className="size-3.5" />}
+                    label={it.label}
+                    hint={it.hint}
+                  />
                 ))}
               </Command.Group>
             )}
 
             {grouped.exams.length > 0 && (
               <Command.Group heading="Partiels">
-                <CmdGroupHeading icon={<FlagIcon className="size-3" />}>Partiels</CmdGroupHeading>
+                <CmdGroupHeading icon={<FlagIcon className="size-3" />}>
+                  Partiels
+                </CmdGroupHeading>
                 {grouped.exams.map((it) => (
-                  <CmdItem key={it.id} value={it.label} onSelect={() => navigate(it.href)} icon={<TrophyIcon className="size-3.5" />} label={it.label} hint={it.hint} />
+                  <CmdItem
+                    key={it.id}
+                    value={it.label}
+                    onSelect={() => navigate(it.href)}
+                    icon={<TrophyIcon className="size-3.5" />}
+                    label={it.label}
+                    hint={it.hint}
+                  />
                 ))}
               </Command.Group>
             )}
 
             <Command.Group heading="Actions">
-              <CmdGroupHeading icon={<SettingsIcon className="size-3" />}>Actions</CmdGroupHeading>
-              <CmdItem value="revision review concepts" onSelect={() => navigate("/review")} icon={<RepeatIcon className="size-3.5" />} label="Révision" hint="/review" />
-              <CmdItem value="stats statistiques" onSelect={() => navigate("/stats")} icon={<TrophyIcon className="size-3.5" />} label="Statistiques" hint="/stats" />
-              <CmdItem value="settings réglages" onSelect={() => navigate("/settings")} icon={<SettingsIcon className="size-3.5" />} label="Réglages" hint="/settings" />
+              <CmdGroupHeading icon={<SettingsIcon className="size-3" />}>
+                Actions
+              </CmdGroupHeading>
+              <CmdItem
+                value="revision review concepts"
+                onSelect={() => navigate("/review")}
+                icon={<RepeatIcon className="size-3.5" />}
+                label="Révision"
+                hint="/review"
+              />
+              <CmdItem
+                value="stats statistiques"
+                onSelect={() => navigate("/stats")}
+                icon={<TrophyIcon className="size-3.5" />}
+                label="Statistiques"
+                hint="/stats"
+              />
+              <CmdItem
+                value="settings réglages"
+                onSelect={() => navigate("/settings")}
+                icon={<SettingsIcon className="size-3.5" />}
+                label="Réglages"
+                hint="/settings"
+              />
               <CmdItem
                 value="theme dark light toggle thème"
                 onSelect={() => {
@@ -147,10 +224,13 @@ export function CommandPalette() {
             </Command.Group>
           </Command.List>
 
-          <div className="border-t border-[var(--border)] bg-[var(--bg-0)] px-4 py-2 flex items-center justify-between text-[10px] font-mono text-[var(--fg-3)]">
+          <div className="flex items-center justify-between border-t border-[var(--border)] bg-[var(--bg-0)] px-4 py-2 font-mono text-[10px] text-[var(--fg-3)]">
             <span>↑↓ naviguer · ↵ valider</span>
             <span>
-              <kbd className="rounded border border-[var(--border)] bg-[var(--bg-2)] px-1 py-0.5">esc</kbd> fermer
+              <kbd className="rounded border border-[var(--border)] bg-[var(--bg-2)] px-1 py-0.5">
+                esc
+              </kbd>{" "}
+              fermer
             </span>
           </div>
         </Command>
@@ -159,9 +239,15 @@ export function CommandPalette() {
   )
 }
 
-function CmdGroupHeading({ children, icon }: { children: React.ReactNode; icon: React.ReactNode }) {
+function CmdGroupHeading({
+  children,
+  icon,
+}: {
+  children: React.ReactNode
+  icon: React.ReactNode
+}) {
   return (
-    <div className="flex items-center gap-1.5 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-[var(--fg-3)]">
+    <div className="flex items-center gap-1.5 px-2 py-1 font-mono text-[10px] tracking-widest text-[var(--fg-3)] uppercase">
       {icon}
       {children}
     </div>
@@ -187,10 +273,12 @@ function CmdItem({
       onSelect={onSelect}
       className={cn(
         "flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm",
-        "data-[selected=true]:bg-[var(--accent)] data-[selected=true]:text-[var(--accent-fg)]",
+        "data-[selected=true]:bg-[var(--accent)] data-[selected=true]:text-[var(--accent-fg)]"
       )}
     >
-      <span className="text-[var(--fg-2)] data-[selected=true]:text-[var(--accent-fg)]">{icon}</span>
+      <span className="text-[var(--fg-2)] data-[selected=true]:text-[var(--accent-fg)]">
+        {icon}
+      </span>
       <span className="flex-1 truncate">{label}</span>
       {hint && (
         <span className="font-mono text-[10px] text-[var(--fg-3)] data-[selected=true]:text-[var(--accent-fg)]/80">

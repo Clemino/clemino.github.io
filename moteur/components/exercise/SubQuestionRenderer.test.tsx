@@ -26,7 +26,7 @@ describe("SubQuestionRenderer — MCQ_SINGLE", () => {
         answer={undefined}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("Option Alpha")).toBeInTheDocument()
     expect(screen.getByText("Option Beta")).toBeInTheDocument()
@@ -54,7 +54,7 @@ describe("SubQuestionRenderer — MCQ_MULTI", () => {
         answer={undefined}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("Choix X")).toBeInTheDocument()
     expect(screen.getByText("Choix Y")).toBeInTheDocument()
@@ -77,7 +77,7 @@ describe("SubQuestionRenderer — TRUE_FALSE", () => {
         answer={undefined}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("Vrai")).toBeInTheDocument()
     expect(screen.getByText("Faux")).toBeInTheDocument()
@@ -105,7 +105,7 @@ describe("SubQuestionRenderer — FILL_BLANK", () => {
         answer={undefined}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     const inputs = screen.getAllByRole("textbox")
     expect(inputs.length).toBeGreaterThanOrEqual(2)

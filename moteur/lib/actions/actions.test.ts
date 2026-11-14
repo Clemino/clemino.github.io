@@ -123,7 +123,12 @@ describe("exam", () => {
 describe("attempt history", () => {
   it("keeps the student's answer for gates only", async () => {
     const exercise = mcq("g")
-    await submitAttempt({ exercise, submission: right, source: "GATE", runId: "r" })
+    await submitAttempt({
+      exercise,
+      submission: right,
+      source: "GATE",
+      runId: "r",
+    })
     await submitAttempt({ exercise, submission: right })
     const [gate, practice] = store().attempts.slice(-2)
     expect(gate.submission).toEqual(right)

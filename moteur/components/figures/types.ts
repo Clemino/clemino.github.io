@@ -125,7 +125,12 @@ export type FigureSpec =
       highlightCols?: number[]
       caption?: string
     }
-  | { kind: "confusion-matrix"; classes: string[]; matrix: number[][]; caption?: string }
+  | {
+      kind: "confusion-matrix"
+      classes: string[]
+      matrix: number[][]
+      caption?: string
+    }
   | { kind: "nn-diagram"; layers: NnLayer[]; caption?: string }
   | {
       kind: "training-curve"
@@ -134,7 +139,13 @@ export type FigureSpec =
       yLabel?: string
       caption?: string
     }
-  | { kind: "grid-world"; rows: number; cols: number; cells: GridCell[]; caption?: string }
+  | {
+      kind: "grid-world"
+      rows: number
+      cols: number
+      cells: GridCell[]
+      caption?: string
+    }
   | {
       kind: "candlestick"
       candles: Candle[]

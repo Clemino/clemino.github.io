@@ -22,12 +22,18 @@ export function validateMatching(
     const ok = submittedRight === expectedRight
     if (ok) okCount += 1
     const leftLabel = payload.left.find((l) => l.id === leftId)?.label ?? leftId
-    const expectedLabel = payload.right.find((r) => r.id === expectedRight)?.label ?? expectedRight
-    const submittedLabel = payload.right.find((r) => r.id === submittedRight)?.label ?? submittedRight ?? "—"
+    const expectedLabel =
+      payload.right.find((r) => r.id === expectedRight)?.label ?? expectedRight
+    const submittedLabel =
+      payload.right.find((r) => r.id === submittedRight)?.label ??
+      submittedRight ??
+      "—"
     return {
       ok,
       criterion: `« ${leftLabel} »`,
-      detail: ok ? `↔ ${expectedLabel}` : `Attendu ↔ ${expectedLabel}, reçu ↔ ${submittedLabel}`,
+      detail: ok
+        ? `↔ ${expectedLabel}`
+        : `Attendu ↔ ${expectedLabel}, reçu ↔ ${submittedLabel}`,
     }
   })
 
@@ -41,9 +47,11 @@ export function validateMatching(
     reveal: {
       canonicalSolution: leftIds
         .map((leftId) => {
-          const leftLabel = payload.left.find((l) => l.id === leftId)?.label ?? leftId
+          const leftLabel =
+            payload.left.find((l) => l.id === leftId)?.label ?? leftId
           const rightLabel =
-            payload.right.find((r) => r.id === expected[leftId])?.label ?? expected[leftId]
+            payload.right.find((r) => r.id === expected[leftId])?.label ??
+            expected[leftId]
           return `${leftLabel} ↔ ${rightLabel}`
         })
         .join("\n"),

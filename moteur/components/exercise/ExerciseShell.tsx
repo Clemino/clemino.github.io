@@ -3,7 +3,14 @@
 import { useEffect, useState, useTransition } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { ArrowRightIcon, BookOpenIcon, CheckCircle2Icon, Loader2Icon, RefreshCwIcon, SkipForwardIcon } from "lucide-react"
+import {
+  ArrowRightIcon,
+  BookOpenIcon,
+  CheckCircle2Icon,
+  Loader2Icon,
+  RefreshCwIcon,
+  SkipForwardIcon,
+} from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -27,8 +34,22 @@ export type ExerciseShellProps = {
   source?: AttemptSource
 }
 
-export function ExerciseShell({ exercise, nextExerciseId, courseHref, source = "PRACTICE" }: ExerciseShellProps) {
-  const { id: exerciseId, type, difficulty, points, prompt, payload, moduleSlug, chapterSlug } = exercise
+export function ExerciseShell({
+  exercise,
+  nextExerciseId,
+  courseHref,
+  source = "PRACTICE",
+}: ExerciseShellProps) {
+  const {
+    id: exerciseId,
+    type,
+    difficulty,
+    points,
+    prompt,
+    payload,
+    moduleSlug,
+    chapterSlug,
+  } = exercise
   const router = useRouter()
   const { passedExercises, modules, chapters } = useProgress()
   const alreadyPassed = passedExercises.has(exerciseId)
@@ -42,7 +63,10 @@ export function ExerciseShell({ exercise, nextExerciseId, courseHref, source = "
   const chapterHref = `/modules/${moduleSlug}/chapter/${chapterSlug}`
   const mod = modules.find((m) => m.slug === moduleSlug)
   const next = nextExerciseId
-    ? { href: `${chapterHref}/exercises/${nextExerciseId}`, label: "Exercice suivant" }
+    ? {
+        href: `${chapterHref}/exercises/${nextExerciseId}`,
+        label: "Exercice suivant",
+      }
     : mod && chapters[chapterSlug]?.completed
       ? nextStepAfterChapter(mod, chapterSlug)
       : { href: chapterHref, label: "Retour au chapitre" }
@@ -69,7 +93,11 @@ export function ExerciseShell({ exercise, nextExerciseId, courseHref, source = "
 
   const handleSkip = () => {
     skipExercise(exerciseId)
-    router.push(nextExerciseId ? `${chapterHref}/exercises/${nextExerciseId}` : chapterHref)
+    router.push(
+      nextExerciseId
+        ? `${chapterHref}/exercises/${nextExerciseId}`
+        : chapterHref
+    )
   }
 
   const handleRetry = () => {
@@ -83,17 +111,24 @@ export function ExerciseShell({ exercise, nextExerciseId, courseHref, source = "
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <Badge variant="outline" className="border-[var(--border-strong)] font-mono text-[10px]">
+          <Badge
+            variant="outline"
+            className="border-[var(--border-strong)] font-mono text-[10px]"
+          >
             {EXERCISE_LABELS[type]}
           </Badge>
-          <span className="font-mono text-[10px] text-[var(--fg-3)]">★{difficulty} · {points}pt</span>
+          <span className="font-mono text-[10px] text-[var(--fg-3)]">
+            ★{difficulty} · {points}pt
+          </span>
           {alreadyPassed && (
-            <Badge className="bg-[var(--accent-dim)] text-[var(--accent)] hover:bg-[var(--accent-dim)] font-mono text-[10px]">
+            <Badge className="bg-[var(--accent-dim)] font-mono text-[10px] text-[var(--accent)] hover:bg-[var(--accent-dim)]">
               passé
             </Badge>
           )}
         </div>
-        <span className="font-mono text-[10px] text-[var(--fg-3)]">#{exerciseId.slice(0, 8)}</span>
+        <span className="font-mono text-[10px] text-[var(--fg-3)]">
+          #{exerciseId.slice(0, 8)}
+        </span>
       </div>
 
       <div className="card-elevated p-6">
@@ -145,7 +180,11 @@ export function ExerciseShell({ exercise, nextExerciseId, courseHref, source = "
             </>
           ) : (
             <Button onClick={handleSubmit} disabled={pending || !submission}>
-              {pending ? <Loader2Icon className="size-4 animate-spin" /> : <CheckCircle2Icon className="size-4" />}
+              {pending ? (
+                <Loader2Icon className="size-4 animate-spin" />
+              ) : (
+                <CheckCircle2Icon className="size-4" />
+              )}
               Vérifier
             </Button>
           )}

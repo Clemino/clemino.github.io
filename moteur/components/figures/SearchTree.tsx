@@ -24,7 +24,7 @@ type Placed = { node: SearchNode; x: number; y: number }
 function layout(
   nodes: SearchNode[],
   edges: SearchEdge[],
-  startId?: string,
+  startId?: string
 ): Map<string, Placed> {
   const byId = new Map(nodes.map((n) => [n.id, n]))
   const childrenOf = new Map<string, string[]>()
@@ -45,7 +45,9 @@ function layout(
     seen.add(id)
     maxDepth = Math.max(maxDepth, depth)
     const node = byId.get(id)!
-    const kids = (childrenOf.get(id) ?? []).filter((k) => !seen.has(k) && byId.has(k))
+    const kids = (childrenOf.get(id) ?? []).filter(
+      (k) => !seen.has(k) && byId.has(k)
+    )
     let x: number
     if (kids.length === 0) {
       x = cursor.x

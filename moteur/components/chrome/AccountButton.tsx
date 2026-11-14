@@ -12,7 +12,9 @@ export function AccountButton() {
   useEffect(() => {
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => setEmail(session?.user.email ?? null))
+    } = supabase.auth.onAuthStateChange((_event, session) =>
+      setEmail(session?.user.email ?? null)
+    )
     return () => subscription.unsubscribe()
   }, [])
 
@@ -26,7 +28,12 @@ export function AccountButton() {
 
   if (email) {
     return (
-      <Button variant="ghost" size="sm" onClick={() => void supabase.auth.signOut({ scope: "local" })} title={email}>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => void supabase.auth.signOut({ scope: "local" })}
+        title={email}
+      >
         <LogOutIcon className="size-3.5" />
         Se déconnecter
       </Button>

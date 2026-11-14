@@ -13,7 +13,9 @@ const matrix = [
 
 describe("ConfusionMatrix", () => {
   it("rend la matrice sans erreur", () => {
-    const { container } = render(<ConfusionMatrix classes={classes} matrix={matrix} />)
+    const { container } = render(
+      <ConfusionMatrix classes={classes} matrix={matrix} />
+    )
     expect(container.querySelector("table")).toBeInTheDocument()
   })
 
@@ -31,7 +33,7 @@ describe("ConfusionMatrix", () => {
 
   it("met en évidence la diagonale avec l'accent", () => {
     const { container } = render(
-      <ConfusionMatrix classes={classes} matrix={matrix} />,
+      <ConfusionMatrix classes={classes} matrix={matrix} />
     )
     const bodyRows = container.querySelectorAll("tbody tr")
     // first data cell of the first row is on the diagonal
@@ -41,7 +43,7 @@ describe("ConfusionMatrix", () => {
 
   it("affiche la légende quand elle est fournie", () => {
     render(
-      <ConfusionMatrix classes={classes} matrix={matrix} caption="Évaluation" />,
+      <ConfusionMatrix classes={classes} matrix={matrix} caption="Évaluation" />
     )
     expect(screen.getByText("Évaluation")).toBeInTheDocument()
   })

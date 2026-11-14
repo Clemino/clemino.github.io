@@ -32,7 +32,10 @@ export function ResetProgressButton() {
           setConfirm(false)
           resetProgressEverywhere().then(
             () => toast.success("Progression réinitialisée"),
-            () => toast.error("Réinitialisation incomplète : réessaie une fois connecté à internet."),
+            () =>
+              toast.error(
+                "Réinitialisation incomplète : réessaie une fois connecté à internet."
+              )
           )
         }}
       >

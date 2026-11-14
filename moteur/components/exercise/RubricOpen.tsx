@@ -26,7 +26,13 @@ export function RubricOpen({
       <div className="flex items-center justify-between font-mono text-[10px] text-[var(--fg-3)]">
         <span>{words} mots</span>
         {payload.minWords && (
-          <span className={words < payload.minWords ? "text-[var(--warning)]" : "text-[var(--success)]"}>
+          <span
+            className={
+              words < payload.minWords
+                ? "text-[var(--warning)]"
+                : "text-[var(--success)]"
+            }
+          >
             min {payload.minWords}
           </span>
         )}

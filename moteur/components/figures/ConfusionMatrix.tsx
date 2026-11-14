@@ -22,7 +22,7 @@ export function ConfusionMatrix({
         {/* vertical "Réel" axis label */}
         <div className="flex items-center">
           <span
-            className="font-mono text-[10px] uppercase tracking-wider text-[var(--fg-2)]"
+            className="font-mono text-[10px] tracking-wider text-[var(--fg-2)] uppercase"
             style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
           >
             Réel
@@ -31,7 +31,7 @@ export function ConfusionMatrix({
 
         <div>
           {/* horizontal "Prédit" axis label */}
-          <div className="mb-1 text-center font-mono text-[10px] uppercase tracking-wider text-[var(--fg-2)]">
+          <div className="mb-1 text-center font-mono text-[10px] tracking-wider text-[var(--fg-2)] uppercase">
             Prédit
           </div>
 
@@ -72,7 +72,10 @@ export function ConfusionMatrix({
                                 color: "var(--fg-0)",
                                 fontWeight: 700,
                               }
-                            : { backgroundColor: "var(--bg-1)", color: "var(--fg-1)" }
+                            : {
+                                backgroundColor: "var(--bg-1)",
+                                color: "var(--fg-1)",
+                              }
                         }
                       >
                         {value}

@@ -9,8 +9,20 @@ afterEach(cleanup)
 const root: GameTreeNode = {
   type: "max",
   children: [
-    { type: "min", children: [{ type: "leaf", value: 3 }, { type: "leaf", value: 7 }] },
-    { type: "min", children: [{ type: "leaf", value: 2 }, { type: "leaf", value: 9 }] },
+    {
+      type: "min",
+      children: [
+        { type: "leaf", value: 3 },
+        { type: "leaf", value: 7 },
+      ],
+    },
+    {
+      type: "min",
+      children: [
+        { type: "leaf", value: 2 },
+        { type: "leaf", value: 9 },
+      ],
+    },
   ],
 }
 
@@ -41,9 +53,7 @@ describe("GameTree", () => {
     // not a "?" placeholder or "undefined".
     const noValueRoot: GameTreeNode = {
       type: "max",
-      children: [
-        { type: "min", children: [{ type: "leaf", value: 1 }] },
-      ],
+      children: [{ type: "min", children: [{ type: "leaf", value: 1 }] }],
     }
     const { container } = render(<GameTree root={noValueRoot} />)
     expect(container.querySelector("svg")).toBeInTheDocument()

@@ -67,7 +67,7 @@ export function GridWorld({
               >
                 {wall ? (
                   <span
-                    className="font-mono text-[10px] uppercase tracking-wide text-[var(--fg-3)]"
+                    className="font-mono text-[10px] tracking-wide text-[var(--fg-3)] uppercase"
                     aria-label="mur"
                   >
                     mur
@@ -107,7 +107,7 @@ export function GridWorld({
 
                 {start && (
                   <span
-                    className="absolute left-[3px] top-[2px] font-mono text-[8px] uppercase tracking-wide text-[var(--info)]"
+                    className="absolute top-[2px] left-[3px] font-mono text-[8px] tracking-wide text-[var(--info)] uppercase"
                     aria-label="départ"
                   >
                     départ
@@ -115,7 +115,7 @@ export function GridWorld({
                 )}
               </div>
             )
-          }),
+          })
         )}
       </div>
     </FigureFrame>

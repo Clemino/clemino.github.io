@@ -6,10 +6,14 @@ import type {
   ValidationResult,
 } from "./types"
 
-function tableEqual(a: string[][], b: string[][]): { ok: boolean; mismatchAt?: { row: number; col: number } } {
+function tableEqual(
+  a: string[][],
+  b: string[][]
+): { ok: boolean; mismatchAt?: { row: number; col: number } } {
   if (a.length !== b.length) return { ok: false }
   for (let r = 0; r < a.length; r++) {
-    if (a[r].length !== b[r].length) return { ok: false, mismatchAt: { row: r, col: 0 } }
+    if (a[r].length !== b[r].length)
+      return { ok: false, mismatchAt: { row: r, col: 0 } }
     for (let c = 0; c < a[r].length; c++) {
       if (normalize(a[r][c]) !== normalize(b[r][c])) {
         return { ok: false, mismatchAt: { row: r, col: c } }
@@ -23,7 +27,7 @@ export function validateTrace(
   payload: TracePayload,
   solution: TraceSolution,
   submission: TraceSubmission,
-  explanation: string,
+  explanation: string
 ): ValidationResult {
   if (payload.format === "table") {
     const expected = solution.expectedOutput as string[][]

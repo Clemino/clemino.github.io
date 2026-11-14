@@ -7,7 +7,9 @@ export function generateStaticParams() {
   return getCatalog().modules.map((m) => ({ moduleSlug: m.slug }))
 }
 
-export default async function ModulePage(props: { params: Promise<{ moduleSlug: string }> }) {
+export default async function ModulePage(props: {
+  params: Promise<{ moduleSlug: string }>
+}) {
   const { moduleSlug } = await props.params
   if (!getModule(moduleSlug)) notFound()
 

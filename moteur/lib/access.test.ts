@@ -11,7 +11,13 @@ vi.mock("@/content/course", () => ({ COURSE: { id: "admin" } }))
 vi.mock("@/lib/supabase", () => ({
   supabase: {
     auth: { getSession: async () => ({ data: { session: db.session } }) },
-    from: () => ({ select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: db.row, error: db.error }) }) }) }),
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          maybeSingle: async () => ({ data: db.row, error: db.error }),
+        }),
+      }),
+    }),
   },
 }))
 

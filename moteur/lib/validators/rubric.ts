@@ -11,7 +11,7 @@ export function validateRubric(
   payload: RubricPayload,
   solution: RubricSolution,
   submission: RubricSubmission,
-  explanation: string,
+  explanation: string
 ): ValidationResult {
   const text = submission.text ?? ""
   const trimmed = text.trim()
@@ -30,7 +30,9 @@ export function validateRubric(
   let earned = 0
 
   const feedback: ValidationCriterion[] = payload.rubric.map((criterion) => {
-    const matched = criterion.keywords.filter((kw) => containsWord(text, kw)).length
+    const matched = criterion.keywords.filter((kw) =>
+      containsWord(text, kw)
+    ).length
     // Keywords are synonyms: a good answer uses one of them, not half of the list.
     const required = criterion.minMatches ?? 1
     const ratio = Math.min(1, matched / Math.max(1, required))
@@ -57,5 +59,10 @@ export function validateRubric(
   const score = totalWeight > 0 ? earned / totalWeight : 0
   const passed = score >= 0.7
 
-  return { passed, score, feedback, reveal: { canonicalSolution: solution.modelAnswer, explanation } }
+  return {
+    passed,
+    score,
+    feedback,
+    reveal: { canonicalSolution: solution.modelAnswer, explanation },
+  }
 }

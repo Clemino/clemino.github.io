@@ -41,8 +41,14 @@ export function nextStepAfterChapter(
   const current = mod.chapters.find((c) => c.slug === chapterSlug)
   const next = mod.chapters.find((c) => c.order === (current?.order ?? 0) + 1)
   return next
-    ? { href: `/modules/${mod.slug}/chapter/${next.slug}`, label: "Chapitre suivant" }
-    : { href: `/modules/${mod.slug}/gate`, label: "Passer le quiz de validation" }
+    ? {
+        href: `/modules/${mod.slug}/chapter/${next.slug}`,
+        label: "Chapitre suivant",
+      }
+    : {
+        href: `/modules/${mod.slug}/gate`,
+        label: "Passer le quiz de validation",
+      }
 }
 
 /**
@@ -78,7 +84,8 @@ export function computeProgress(
         c.sectionIds.length + c.exerciseIds.length > 0
       const unlocked = c.order === 1 || previousChapterCompleted
       // An unwritten chapter must not lock the written ones after it.
-      previousChapterCompleted = c.sectionIds.length + c.exerciseIds.length > 0 ? completed : unlocked
+      previousChapterCompleted =
+        c.sectionIds.length + c.exerciseIds.length > 0 ? completed : unlocked
       return { ...c, unlocked, completed, sectionsRead, exercisesPassed }
     })
 
@@ -86,7 +93,9 @@ export function computeProgress(
       (r) => r.moduleSlug === m.slug && r.endedAt
     )
     // A skipped module has a passed gate without score.
-    const scores = gateScores.flatMap((r) => (r.score === null ? [] : [r.score]))
+    const scores = gateScores.flatMap((r) =>
+      r.score === null ? [] : [r.score]
+    )
     const unlocked = m.order === 1 || previousModuleCompleted
     const completed = gateScores.some((r) => r.passed)
     previousModuleCompleted = completed

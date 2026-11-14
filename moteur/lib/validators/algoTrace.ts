@@ -27,7 +27,9 @@ export function validateAlgoTrace(
     // Determine if this is a numeric comparison:
     // - payload cell has kind === "number", OR
     // - solution's expected value is a number
-    const isNumeric = payloadCell?.kind === "number" || typeof cellSolution.expected === "number"
+    const isNumeric =
+      payloadCell?.kind === "number" ||
+      typeof cellSolution.expected === "number"
 
     let ok = false
 
@@ -37,7 +39,10 @@ export function validateAlgoTrace(
       const parsed = Number(cleaned)
 
       if (cleaned !== "" && !isNaN(parsed)) {
-        const toleranceOpts = { absTol: cellSolution.absTol, relTol: cellSolution.relTol }
+        const toleranceOpts = {
+          absTol: cellSolution.absTol,
+          relTol: cellSolution.relTol,
+        }
         const primaryTarget =
           typeof cellSolution.expected === "number"
             ? cellSolution.expected

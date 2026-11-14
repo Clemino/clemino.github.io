@@ -22,32 +22,49 @@ const exercise: Exercise = {
   source: "CM",
 }
 
-const show = (passed: boolean, score: number, onRetry: (() => void) | undefined = vi.fn()) =>
+const show = (
+  passed: boolean,
+  score: number,
+  onRetry: (() => void) | undefined = vi.fn()
+) =>
   render(
     <FeedbackDialog
       exercise={exercise}
-      result={{ passed, score, feedback: [], reveal: { canonicalSolution: "Cadot", explanation: "" } }}
+      result={{
+        passed,
+        score,
+        feedback: [],
+        reveal: { canonicalSolution: "Cadot", explanation: "" },
+      }}
       open
       onOpenChange={vi.fn()}
       onRetry={onRetry}
       next={{ href: "/suite", label: "Exercice suivant" }}
       courseHref="/cours"
-    />,
+    />
   )
 
 describe("FeedbackDialog", () => {
   it("hides the answer after a wrong attempt and offers the course", () => {
     show(false, 0)
-    expect(screen.getByText("Repense à la fin du XIXe siècle.")).toBeInTheDocument()
+    expect(
+      screen.getByText("Repense à la fin du XIXe siècle.")
+    ).toBeInTheDocument()
     expect(screen.queryByText(/Cadot/)).toBeNull()
-    expect(screen.getByRole("link", { name: "Revoir le cours" })).toHaveAttribute("href", "/cours")
-    expect(screen.getByRole("button", { name: "Réessayer" })).toBeInTheDocument()
+    expect(
+      screen.getByRole("link", { name: "Revoir le cours" })
+    ).toHaveAttribute("href", "/cours")
+    expect(
+      screen.getByRole("button", { name: "Réessayer" })
+    ).toBeInTheDocument()
   })
 
   it("shows the explanation and the next step after a right answer", () => {
     show(true, 1)
     expect(screen.getByText("La bonne réponse est Cadot.")).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: "Exercice suivant" })).toHaveAttribute("href", "/suite")
+    expect(
+      screen.getByRole("link", { name: "Exercice suivant" })
+    ).toHaveAttribute("href", "/suite")
   })
 
   it("is green when validated, orange when partial and red when wrong", () => {
@@ -65,12 +82,17 @@ describe("FeedbackDialog", () => {
     render(
       <FeedbackDialog
         exercise={exercise}
-        result={{ passed: false, score: 0, feedback: [], reveal: { canonicalSolution: "Cadot", explanation: "" } }}
+        result={{
+          passed: false,
+          score: 0,
+          feedback: [],
+          reveal: { canonicalSolution: "Cadot", explanation: "" },
+        }}
         open
         onOpenChange={vi.fn()}
         next={{ onClick: vi.fn(), label: "Suivant" }}
         courseHref="/cours"
-      />,
+      />
     )
     expect(screen.getByRole("button", { name: "Suivant" })).toBeInTheDocument()
     expect(screen.queryByRole("button", { name: "Réessayer" })).toBeNull()

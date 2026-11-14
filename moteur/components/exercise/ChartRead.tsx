@@ -1,7 +1,10 @@
 "use client"
 
 import { CandlestickChart } from "@/components/figures/CandlestickChart"
-import type { ChartReadPayload, ChartReadSubmission } from "@/lib/validators/types"
+import type {
+  ChartReadPayload,
+  ChartReadSubmission,
+} from "@/lib/validators/types"
 import { McqQuestion } from "./McqQuestion"
 
 const INPUT_CLASS =
@@ -30,9 +33,19 @@ export function ChartRead({
     const selected = submission?.candle ?? null
     return (
       <div className="space-y-2">
-        <CandlestickChart {...chartProps} pick={{ mode: "candle", selected, onPick: (candle) => onChange({ candle }), disabled }} />
+        <CandlestickChart
+          {...chartProps}
+          pick={{
+            mode: "candle",
+            selected,
+            onPick: (candle) => onChange({ candle }),
+            disabled,
+          }}
+        />
         <p className="font-mono text-xs text-[var(--fg-2)]">
-          {selected ? `Bougie sélectionnée : n°${selected}` : "Clique sur une bougie du graphique."}
+          {selected
+            ? `Bougie sélectionnée : n°${selected}`
+            : "Clique sur une bougie du graphique."}
         </p>
       </div>
     )
@@ -42,9 +55,20 @@ export function ChartRead({
     const selected = submission?.price ?? null
     return (
       <div className="space-y-2">
-        <CandlestickChart {...chartProps} pick={{ mode: "price", selected, onPick: (price) => onChange({ price }), disabled }} />
+        <CandlestickChart
+          {...chartProps}
+          pick={{
+            mode: "price",
+            selected,
+            onPick: (price) => onChange({ price }),
+            disabled,
+          }}
+        />
         <div className="flex items-center gap-2">
-          <label htmlFor="chart-read-price" className="text-xs text-[var(--fg-2)]">
+          <label
+            htmlFor="chart-read-price"
+            className="text-xs text-[var(--fg-2)]"
+          >
             Clique sur le graphique ou saisis le prix :
           </label>
           <input

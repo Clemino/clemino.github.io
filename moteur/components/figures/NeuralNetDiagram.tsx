@@ -49,34 +49,38 @@ export function NeuralNetDiagram({
         aria-label="Diagramme de réseau de neurones"
       >
         {/* edges between consecutive layers */}
-        {layers.slice(0, -1).flatMap((layer, li) =>
-          Array.from({ length: layer.neurons }).flatMap((_, a) =>
-            Array.from({ length: layers[li + 1].neurons }).map((__, b) => (
-              <line
-                key={`e-${li}-${a}-${b}`}
-                x1={xOf(li) + R}
-                y1={yOf(li, a)}
-                x2={xOf(li + 1) - R}
-                y2={yOf(li + 1, b)}
-                stroke="var(--border)"
-                strokeWidth={1}
-              />
-            )),
-          ),
-        )}
+        {layers
+          .slice(0, -1)
+          .flatMap((layer, li) =>
+            Array.from({ length: layer.neurons }).flatMap((_, a) =>
+              Array.from({ length: layers[li + 1].neurons }).map((__, b) => (
+                <line
+                  key={`e-${li}-${a}-${b}`}
+                  x1={xOf(li) + R}
+                  y1={yOf(li, a)}
+                  x2={xOf(li + 1) - R}
+                  y2={yOf(li + 1, b)}
+                  stroke="var(--border)"
+                  strokeWidth={1}
+                />
+              ))
+            )
+          )}
 
         {/* neurons + layer labels */}
         {layers.map((layer, li) => {
           const role = layer.role
           const label =
-            layer.label ?? (role ? `Couche ${ROLE_LABEL[role]}` : `Couche ${li + 1}`)
+            layer.label ??
+            (role ? `Couche ${ROLE_LABEL[role]}` : `Couche ${li + 1}`)
           const fill =
             role === "input"
               ? "var(--bg-3)"
               : role === "output"
                 ? "var(--accent-dim)"
                 : "var(--bg-2)"
-          const stroke = role === "output" ? "var(--accent)" : "var(--border-strong)"
+          const stroke =
+            role === "output" ? "var(--accent)" : "var(--border-strong)"
           return (
             <g key={`layer-${li}`}>
               {Array.from({ length: layer.neurons }).map((_, n) => (

@@ -36,7 +36,7 @@ function layout(
   node: DecisionTreeNode,
   depth: number,
   edgeLabel: string | undefined,
-  cursor: { x: number },
+  cursor: { x: number }
 ): Placed {
   const branches = node.branches ?? []
   if (branches.length === 0) {
@@ -44,7 +44,9 @@ function layout(
     cursor.x += NODE_W + H_GAP
     return { node, x, depth, edgeLabel, children: [] }
   }
-  const children = branches.map((b) => layout(b.child, depth + 1, b.edgeLabel, cursor))
+  const children = branches.map((b) =>
+    layout(b.child, depth + 1, b.edgeLabel, cursor)
+  )
   const x = (children[0].x + children[children.length - 1].x) / 2
   return { node, x, depth, edgeLabel, children }
 }
@@ -123,7 +125,7 @@ export function DecisionTree({
                 )}
               </g>
             )
-          }),
+          })
         )}
 
         {all.map((p, i) => {

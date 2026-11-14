@@ -13,10 +13,19 @@ const payload = {
 describe("WritingExercise", () => {
   it("hides the model answer until the student asks for it", () => {
     const onChange = vi.fn()
-    render(<WritingExercise payload={payload} submission={null} onChange={onChange} disabled={false} />)
+    render(
+      <WritingExercise
+        payload={payload}
+        submission={null}
+        onChange={onChange}
+        disabled={false}
+      />
+    )
     expect(screen.queryByText("Le corrigé détaillé")).toBeNull()
 
-    fireEvent.change(screen.getByLabelText("Ta copie"), { target: { value: "Ma copie" } })
+    fireEvent.change(screen.getByLabelText("Ta copie"), {
+      target: { value: "Ma copie" },
+    })
     fireEvent.click(screen.getByRole("button"))
     expect(onChange).toHaveBeenCalledWith({ text: "Ma copie", checked: [] })
   })
@@ -29,11 +38,14 @@ describe("WritingExercise", () => {
         submission={{ text: "Ma copie", checked: ["a"] }}
         onChange={onChange}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("Le corrigé détaillé")).toBeTruthy()
 
     fireEvent.click(screen.getByLabelText("Un plan en deux parties"))
-    expect(onChange).toHaveBeenCalledWith({ text: "Ma copie", checked: ["a", "b"] })
+    expect(onChange).toHaveBeenCalledWith({
+      text: "Ma copie",
+      checked: ["a", "b"],
+    })
   })
 })

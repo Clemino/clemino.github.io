@@ -35,7 +35,7 @@ describe("DecisionTree", () => {
 
   it("rend une feuille seule sans erreur", () => {
     const { container } = render(
-      <DecisionTree root={{ type: "leaf", label: "Oui" }} />,
+      <DecisionTree root={{ type: "leaf", label: "Oui" }} />
     )
     expect(container.querySelector("svg")).toBeInTheDocument()
   })

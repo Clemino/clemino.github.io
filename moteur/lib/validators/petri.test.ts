@@ -26,7 +26,7 @@ describe("validateurs Petri", () => {
       payload,
       { enabledTransitionIds: ["t1"] },
       { selectedTransitionIds: ["t1"] },
-      "ok",
+      "ok"
     )
     expect(result.passed).toBe(true)
   })
@@ -36,7 +36,7 @@ describe("validateurs Petri", () => {
       { ...payload, sequence: ["t1"] },
       { finalMarking: { p1: 0, p2: 1 } },
       { marking: { p1: 0, p2: 0 } },
-      "ok",
+      "ok"
     )
     expect(result.passed).toBe(false)
     expect(result.score).toBe(0.5)
@@ -47,7 +47,7 @@ describe("validateurs Petri", () => {
       { ...payload, matrix: "incidence" },
       { matrix: { p1: { t1: -1, t2: 1 }, p2: { t1: 1, t2: -1 } } },
       { matrix: { p1: { t1: -1, t2: 1 }, p2: { t1: 1, t2: -1 } } },
-      "ok",
+      "ok"
     )
     expect(result.passed).toBe(true)
   })
@@ -64,7 +64,7 @@ describe("validateurs Petri", () => {
       },
       { correct: ["a"] },
       { selected: ["a"] },
-      "ok",
+      "ok"
     )
     expect(result.passed).toBe(true)
   })

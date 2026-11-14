@@ -7,9 +7,16 @@ export const CODE_CHECKS = [
 ]
 
 /** Nothing can compile on a static site: the score is the student's own check against the reference. */
-export function validateCode(solution: CodeSolution, submission: CodeSubmission, explanation: string): ValidationResult {
+export function validateCode(
+  solution: CodeSolution,
+  submission: CodeSubmission,
+  explanation: string
+): ValidationResult {
   const checked = new Set(submission.checked)
-  const feedback = CODE_CHECKS.map((c) => ({ ok: checked.has(c.id), criterion: c.label }))
+  const feedback = CODE_CHECKS.map((c) => ({
+    ok: checked.has(c.id),
+    criterion: c.label,
+  }))
   const score = feedback.filter((f) => f.ok).length / feedback.length
   return {
     passed: score === 1,

@@ -1,6 +1,10 @@
 "use client"
 
-import type { PetriArc, PetriPlace, PetriTransition } from "@/lib/validators/types"
+import type {
+  PetriArc,
+  PetriPlace,
+  PetriTransition,
+} from "@/lib/validators/types"
 import { cn } from "@/lib/utils"
 
 export type PetriNetViewerProps = {
@@ -13,7 +17,14 @@ export type PetriNetViewerProps = {
   className?: string
 }
 
-type NodePos = { id: string; label: string; x: number; y: number; kind: "place" | "transition"; tokens?: number }
+type NodePos = {
+  id: string
+  label: string
+  x: number
+  y: number
+  kind: "place" | "transition"
+  tokens?: number
+}
 
 export function PetriNetViewer({
   places,
@@ -30,10 +41,27 @@ export function PetriNetViewer({
   const enabled = new Set(enabledTransitionIds)
 
   return (
-    <div className={cn("rounded-md border border-[var(--border)] bg-[var(--bg-0)] p-3", className)}>
-      <svg viewBox="0 0 720 360" role="img" aria-label="Reseau de Petri" className="h-auto w-full">
+    <div
+      className={cn(
+        "rounded-md border border-[var(--border)] bg-[var(--bg-0)] p-3",
+        className
+      )}
+    >
+      <svg
+        viewBox="0 0 720 360"
+        role="img"
+        aria-label="Reseau de Petri"
+        className="h-auto w-full"
+      >
         <defs>
-          <marker id="petri-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+          <marker
+            id="petri-arrow"
+            markerWidth="10"
+            markerHeight="10"
+            refX="8"
+            refY="3"
+            orient="auto"
+          >
             <path d="M0,0 L0,6 L8,3 z" fill="var(--fg-2)" />
           </marker>
         </defs>
@@ -64,7 +92,11 @@ export function PetriNetViewer({
                 markerEnd="url(#petri-arrow)"
               />
               {(arc.weight ?? 1) > 1 && (
-                <text x={midX + 6} y={midY - 6} className="fill-[var(--fg-1)] font-mono text-[14px]">
+                <text
+                  x={midX + 6}
+                  y={midY - 6}
+                  className="fill-[var(--fg-1)] font-mono text-[14px]"
+                >
                   {arc.weight}
                 </text>
               )}
@@ -82,7 +114,7 @@ export function PetriNetViewer({
               selected={selected.has(node.id)}
               enabled={enabled.has(node.id)}
             />
-          ),
+          )
         )}
       </svg>
     </div>
@@ -93,24 +125,55 @@ function PlaceNode({ node }: { node: NodePos }) {
   const tokens = node.tokens ?? 0
   return (
     <g>
-      <circle cx={node.x} cy={node.y} r="28" fill="var(--bg-1)" stroke="var(--border-strong)" strokeWidth="2" />
+      <circle
+        cx={node.x}
+        cy={node.y}
+        r="28"
+        fill="var(--bg-1)"
+        stroke="var(--border-strong)"
+        strokeWidth="2"
+      />
       {tokens <= 5 ? (
         tokenPositions(tokens).map(([dx, dy], i) => (
-          <circle key={i} cx={node.x + dx} cy={node.y + dy} r="4" fill="var(--accent)" />
+          <circle
+            key={i}
+            cx={node.x + dx}
+            cy={node.y + dy}
+            r="4"
+            fill="var(--accent)"
+          />
         ))
       ) : (
-        <text x={node.x} y={node.y + 5} textAnchor="middle" className="fill-[var(--accent)] font-mono text-[15px]">
+        <text
+          x={node.x}
+          y={node.y + 5}
+          textAnchor="middle"
+          className="fill-[var(--accent)] font-mono text-[15px]"
+        >
           {tokens}
         </text>
       )}
-      <text x={node.x} y={node.y + 48} textAnchor="middle" className="fill-[var(--fg-1)] font-mono text-[13px]">
+      <text
+        x={node.x}
+        y={node.y + 48}
+        textAnchor="middle"
+        className="fill-[var(--fg-1)] font-mono text-[13px]"
+      >
         {node.label}
       </text>
     </g>
   )
 }
 
-function TransitionNode({ node, selected, enabled }: { node: NodePos; selected: boolean; enabled: boolean }) {
+function TransitionNode({
+  node,
+  selected,
+  enabled,
+}: {
+  node: NodePos
+  selected: boolean
+  enabled: boolean
+}) {
   return (
     <g>
       <rect
@@ -119,11 +182,22 @@ function TransitionNode({ node, selected, enabled }: { node: NodePos; selected: 
         width="24"
         height="60"
         rx="3"
-        fill={selected ? "var(--accent)" : enabled ? "var(--accent-dim)" : "var(--bg-2)"}
+        fill={
+          selected
+            ? "var(--accent)"
+            : enabled
+              ? "var(--accent-dim)"
+              : "var(--bg-2)"
+        }
         stroke={selected || enabled ? "var(--accent)" : "var(--border-strong)"}
         strokeWidth="2"
       />
-      <text x={node.x} y={node.y + 50} textAnchor="middle" className="fill-[var(--fg-1)] font-mono text-[13px]">
+      <text
+        x={node.x}
+        y={node.y + 50}
+        textAnchor="middle"
+        className="fill-[var(--fg-1)] font-mono text-[13px]"
+      >
         {node.label}
       </text>
     </g>
@@ -133,7 +207,7 @@ function TransitionNode({ node, selected, enabled }: { node: NodePos; selected: 
 function layoutNodes(
   places: PetriPlace[],
   transitions: PetriTransition[],
-  marking?: Record<string, number>,
+  marking?: Record<string, number>
 ): NodePos[] {
   const nodes: NodePos[] = []
   const placeFallback = distribute(places.length, 120, 280)
@@ -169,8 +243,29 @@ function distribute(count: number, min: number, max: number): number[] {
 function tokenPositions(count: number): Array<[number, number]> {
   if (count <= 0) return []
   if (count === 1) return [[0, 0]]
-  if (count === 2) return [[-7, 0], [7, 0]]
-  if (count === 3) return [[0, -8], [-8, 7], [8, 7]]
-  if (count === 4) return [[-8, -8], [8, -8], [-8, 8], [8, 8]]
-  return [[0, 0], [-10, -9], [10, -9], [-10, 9], [10, 9]]
+  if (count === 2)
+    return [
+      [-7, 0],
+      [7, 0],
+    ]
+  if (count === 3)
+    return [
+      [0, -8],
+      [-8, 7],
+      [8, 7],
+    ]
+  if (count === 4)
+    return [
+      [-8, -8],
+      [8, -8],
+      [-8, 8],
+      [8, 8],
+    ]
+  return [
+    [0, 0],
+    [-10, -9],
+    [10, -9],
+    [-10, 9],
+    [10, 9],
+  ]
 }

@@ -10,12 +10,12 @@ export function validateFigureInterpret(
   payload: FigureInterpretPayload,
   solution: FigureInterpretSolution,
   submission: FigureInterpretSubmission | null | undefined,
-  explanation: string,
+  explanation: string
 ): ValidationResult {
   return aggregateSubQuestions(
     payload.subQuestions,
     solution.subSolutions,
     submission?.answers ?? {},
-    explanation,
+    explanation
   )
 }

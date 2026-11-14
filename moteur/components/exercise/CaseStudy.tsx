@@ -1,7 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import type { AnySubmission, CaseStudyPayload, CaseStudySubmission } from "@/lib/validators/types"
+import type {
+  AnySubmission,
+  CaseStudyPayload,
+  CaseStudySubmission,
+} from "@/lib/validators/types"
 import { PromptRenderer } from "./PromptRenderer"
 import { SubQuestionRenderer } from "./SubQuestionRenderer"
 
@@ -16,7 +20,9 @@ export function CaseStudy({
   onChange: (s: CaseStudySubmission) => void
   disabled: boolean
 }) {
-  const [answers, setAnswers] = useState<Record<string, AnySubmission>>(submission?.answers ?? {})
+  const [answers, setAnswers] = useState<Record<string, AnySubmission>>(
+    submission?.answers ?? {}
+  )
 
   const updateAnswer = (id: string, value: AnySubmission) => {
     const next = { ...answers, [id]: value }
@@ -32,9 +38,14 @@ export function CaseStudy({
 
       <div className="space-y-6">
         {payload.subQuestions.map((subQ, i) => (
-          <div key={subQ.id} className="space-y-3 rounded-md border border-[var(--border)] bg-[var(--bg-1)] p-4">
+          <div
+            key={subQ.id}
+            className="space-y-3 rounded-md border border-[var(--border)] bg-[var(--bg-1)] p-4"
+          >
             <div className="flex items-start gap-2">
-              <span className="mt-0.5 shrink-0 font-mono text-[10px] text-[var(--fg-3)]">Q{i + 1}.</span>
+              <span className="mt-0.5 shrink-0 font-mono text-[10px] text-[var(--fg-3)]">
+                Q{i + 1}.
+              </span>
               <div className="text-[14px] leading-relaxed text-[var(--fg-0)]">
                 <PromptRenderer source={subQ.prompt} />
               </div>

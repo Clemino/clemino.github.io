@@ -19,7 +19,9 @@ export function GateRun({
   const runId = useSearchParams().get("run")
   const { data } = useProgress()
   const run = data.gateRuns.find((r) => r.id === runId)
-  const exercises = (run?.exerciseIds ?? []).flatMap((id) => pool.filter((e) => e.id === id))
+  const exercises = (run?.exerciseIds ?? []).flatMap((id) =>
+    pool.filter((e) => e.id === id)
+  )
 
   let redirectTo: string | null = null
   if (data.hydrated) {

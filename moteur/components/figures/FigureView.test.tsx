@@ -13,7 +13,10 @@ const cases: { spec: FigureSpec; expect: string }[] = [
       kind: "game-tree",
       root: {
         type: "max",
-        children: [{ type: "leaf", value: 4 }, { type: "leaf", value: 8 }],
+        children: [
+          { type: "leaf", value: 4 },
+          { type: "leaf", value: 8 },
+        ],
       },
     },
     expect: "Arbre de jeu",
@@ -37,7 +40,9 @@ const cases: { spec: FigureSpec; expect: string }[] = [
       root: {
         type: "attribute",
         label: "Temps",
-        branches: [{ edgeLabel: "soleil", child: { type: "leaf", label: "Oui" } }],
+        branches: [
+          { edgeLabel: "soleil", child: { type: "leaf", label: "Oui" } },
+        ],
       },
     },
     expect: "Arbre de décision",
@@ -108,8 +113,13 @@ describe("FigureView", () => {
   it("transmet la légende à la figure rendue", () => {
     render(
       <FigureView
-        spec={{ kind: "data-table", columns: ["A"], rows: [[1]], caption: "Ma légende" }}
-      />,
+        spec={{
+          kind: "data-table",
+          columns: ["A"],
+          rows: [[1]],
+          caption: "Ma légende",
+        }}
+      />
     )
     expect(screen.getByText("Ma légende")).toBeInTheDocument()
   })

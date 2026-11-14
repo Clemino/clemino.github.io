@@ -26,7 +26,10 @@ const net: PetriNet = {
 
 describe("Petri core", () => {
   it("calcule les transitions franchissables avec les poids", () => {
-    expect(enabledTransitions(net, { p1: 1, p2: 0, p3: 2 })).toEqual(["t1", "t2"])
+    expect(enabledTransitions(net, { p1: 1, p2: 0, p3: 2 })).toEqual([
+      "t1",
+      "t2",
+    ])
     expect(enabledTransitions(net, { p1: 0, p2: 0, p3: 1 })).toEqual([])
   })
 
@@ -46,7 +49,10 @@ describe("Petri core", () => {
 
   it("verifie des invariants simples", () => {
     const cycle: PetriNet = {
-      places: [{ id: "idle", tokens: 1 }, { id: "busy", tokens: 0 }],
+      places: [
+        { id: "idle", tokens: 1 },
+        { id: "busy", tokens: 0 },
+      ],
       transitions: [{ id: "start" }, { id: "finish" }],
       arcs: [
         { from: "idle", to: "start" },

@@ -31,15 +31,19 @@ describe("DataTable", () => {
 
   it("applique un fond aux lignes surlignées", () => {
     const { container } = render(
-      <DataTable columns={columns} rows={rows} highlightRows={[0]} />,
+      <DataTable columns={columns} rows={rows} highlightRows={[0]} />
     )
     const bodyRows = container.querySelectorAll("tbody tr")
-    expect((bodyRows[0] as HTMLElement).style.backgroundColor).toBe("var(--accent-dim)")
+    expect((bodyRows[0] as HTMLElement).style.backgroundColor).toBe(
+      "var(--accent-dim)"
+    )
     expect((bodyRows[1] as HTMLElement).style.backgroundColor).toBe("")
   })
 
   it("affiche la légende quand elle est fournie", () => {
-    render(<DataTable columns={columns} rows={rows} caption="Jeu d'apprentissage" />)
+    render(
+      <DataTable columns={columns} rows={rows} caption="Jeu d'apprentissage" />
+    )
     expect(screen.getByText("Jeu d'apprentissage")).toBeInTheDocument()
   })
 })

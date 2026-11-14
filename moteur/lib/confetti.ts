@@ -5,7 +5,9 @@ import confetti from "canvas-confetti"
 // Lime-themed confetti for successful validations.
 export function celebratePass() {
   if (typeof window === "undefined") return
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches
   if (reducedMotion) return
 
   const colors = ["#bef264", "#a3e635", "#84cc16", "#dde6f8"]
@@ -43,7 +45,9 @@ export function celebratePass() {
 
 export function celebrateGate() {
   if (typeof window === "undefined") return
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches
   if (reducedMotion) return
 
   const colors = ["#bef264", "#a3e635", "#84cc16", "#65a30d"]

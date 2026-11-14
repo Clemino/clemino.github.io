@@ -17,7 +17,11 @@ type Placed = {
 }
 
 /** Assigns x positions bottom-up: leaves are spread evenly, parents centred. */
-function layout(node: GameTreeNode, depth: number, cursor: { x: number }): Placed {
+function layout(
+  node: GameTreeNode,
+  depth: number,
+  cursor: { x: number }
+): Placed {
   const kids = node.children ?? []
   if (kids.length === 0) {
     const x = cursor.x
@@ -36,7 +40,13 @@ function flatten(p: Placed, acc: Placed[]): Placed[] {
 }
 
 /** A figure of a two-player game tree for minimax / alpha-beta exercises. */
-export function GameTree({ root, caption }: { root: GameTreeNode; caption?: string }) {
+export function GameTree({
+  root,
+  caption,
+}: {
+  root: GameTreeNode
+  caption?: string
+}) {
   const placed = layout(root, 0, { x: PAD + NODE / 2 })
   const all = flatten(placed, [])
   const maxDepth = all.reduce((m, p) => Math.max(m, p.depth), 0)
@@ -68,7 +78,7 @@ export function GameTree({ root, caption }: { root: GameTreeNode; caption?: stri
               stroke="var(--border-strong)"
               strokeWidth={1.5}
             />
-          )),
+          ))
         )}
 
         {all.map((p, i) => {
@@ -103,7 +113,10 @@ export function GameTree({ root, caption }: { root: GameTreeNode; caption?: stri
               )}
               <text
                 x={cx}
-                y={cy + (p.node.type === "min" ? -3 : p.node.type === "max" ? 5 : 1)}
+                y={
+                  cy +
+                  (p.node.type === "min" ? -3 : p.node.type === "max" ? 5 : 1)
+                }
                 textAnchor="middle"
                 dominantBaseline="middle"
                 fontSize={12}

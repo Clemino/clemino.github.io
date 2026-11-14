@@ -44,7 +44,11 @@ export function FigureView({ spec }: { spec: FigureSpec }) {
       )
     case "confusion-matrix":
       return (
-        <ConfusionMatrix classes={spec.classes} matrix={spec.matrix} caption={spec.caption} />
+        <ConfusionMatrix
+          classes={spec.classes}
+          matrix={spec.matrix}
+          caption={spec.caption}
+        />
       )
     case "nn-diagram":
       return <NeuralNetDiagram layers={spec.layers} caption={spec.caption} />

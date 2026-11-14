@@ -16,38 +16,60 @@ export function ReviewView({ concepts }: { concepts: ConceptInfo[] }) {
   const due = getDueConcepts(concepts, data.mastery, now)
   const totalConcepts = concepts.length
   const overdueCount = Object.values(data.mastery).filter(
-    (m) => m.dueAt && new Date(m.dueAt).getTime() <= now - 24 * 3600 * 1000,
+    (m) => m.dueAt && new Date(m.dueAt).getTime() <= now - 24 * 3600 * 1000
   ).length
 
   return (
     <div className="flex min-h-svh">
       <ModuleSidebar />
       <main className="mx-auto max-w-4xl px-8 py-12">
-        <Link href="/" className="mono-label hover:text-[var(--fg-0)]">← accueil</Link>
+        <Link href="/" className="mono-label hover:text-[var(--fg-0)]">
+          ← accueil
+        </Link>
         <div className="mt-3 flex items-baseline justify-between border-b border-[var(--border)] pb-3">
           <div>
             <h1 className="font-mono text-3xl tracking-tight">Révision</h1>
             <p className="mt-1 text-xs text-[var(--fg-2)]">
-              File de révision basée sur la maîtrise des concepts (SM-2 spaced repetition).
+              File de révision basée sur la maîtrise des concepts (SM-2 spaced
+              repetition).
             </p>
           </div>
-          <div className="font-mono text-xs tabular-nums text-[var(--fg-2)]">
+          <div className="font-mono text-xs text-[var(--fg-2)] tabular-nums">
             {masteredCount} / {totalConcepts} maîtrisés
           </div>
         </div>
 
         <div className="mt-8 grid grid-cols-3 gap-3">
-          <Card label="À réviser" value={due.length.toString()} highlight={due.length > 0} icon={<RepeatIcon className="size-3.5" />} />
-          <Card label="En retard" value={overdueCount.toString()} highlight={overdueCount > 0} warning icon={<FlameIcon className="size-3.5" />} />
-          <Card label="Maîtrisés" value={`${masteredCount}/${totalConcepts}`} icon={<BookOpenIcon className="size-3.5" />} />
+          <Card
+            label="À réviser"
+            value={due.length.toString()}
+            highlight={due.length > 0}
+            icon={<RepeatIcon className="size-3.5" />}
+          />
+          <Card
+            label="En retard"
+            value={overdueCount.toString()}
+            highlight={overdueCount > 0}
+            warning
+            icon={<FlameIcon className="size-3.5" />}
+          />
+          <Card
+            label="Maîtrisés"
+            value={`${masteredCount}/${totalConcepts}`}
+            icon={<BookOpenIcon className="size-3.5" />}
+          />
         </div>
 
         {due.length === 0 ? (
-          <div className="mt-12 card-elevated p-10 text-center">
+          <div className="card-elevated mt-12 p-10 text-center">
             <FlameIcon className="mx-auto size-9 text-[var(--accent)]" />
-            <h2 className="mt-4 font-mono text-xl tracking-tight">Tout est à jour</h2>
+            <h2 className="mt-4 font-mono text-xl tracking-tight">
+              Tout est à jour
+            </h2>
             <p className="mt-2 text-sm text-[var(--fg-2)]">
-              {"Aucun concept à réviser pour aujourd'hui. Reviens demain pour la prochaine fournée, ou continue à débloquer de nouveaux modules."}
+              {
+                "Aucun concept à réviser pour aujourd'hui. Reviens demain pour la prochaine fournée, ou continue à débloquer de nouveaux modules."
+              }
             </p>
             <Button asChild className="mt-6">
               <Link href="/modules">Continuer le parcours</Link>
@@ -58,7 +80,11 @@ export function ReviewView({ concepts }: { concepts: ConceptInfo[] }) {
             <h2 className="mono-label mb-3">À réviser ({due.length})</h2>
             <ul className="space-y-2">
               {due.map(({ concept, mastery: m }) => {
-                const overdueDays = m.dueAt ? Math.floor((now - new Date(m.dueAt).getTime()) / (24 * 3600 * 1000)) : 0
+                const overdueDays = m.dueAt
+                  ? Math.floor(
+                      (now - new Date(m.dueAt).getTime()) / (24 * 3600 * 1000)
+                    )
+                  : 0
                 return (
                   <li key={concept.slug} className="card-elevated">
                     <Link
@@ -71,15 +97,17 @@ export function ReviewView({ concepts }: { concepts: ConceptInfo[] }) {
                             <span className="font-mono text-xs text-[var(--fg-3)]">
                               {m.reps === 0 ? "0×" : `${m.reps}× passé`}
                             </span>
-                            <h3 className="truncate font-mono text-sm">{concept.label}</h3>
+                            <h3 className="truncate font-mono text-sm">
+                              {concept.label}
+                            </h3>
                             {overdueDays > 1 && (
-                              <Badge className="bg-[oklch(0.83_0.16_80_/_0.2)] text-[var(--warning)] hover:bg-[oklch(0.83_0.16_80_/_0.2)] font-mono text-[9px]">
+                              <Badge className="bg-[oklch(0.83_0.16_80_/_0.2)] font-mono text-[9px] text-[var(--warning)] hover:bg-[oklch(0.83_0.16_80_/_0.2)]">
                                 +{overdueDays}j
                               </Badge>
                             )}
                           </div>
                           {concept.summary && (
-                            <p className="mt-1 text-xs text-[var(--fg-2)] truncate">
+                            <p className="mt-1 truncate text-xs text-[var(--fg-2)]">
                               {concept.summary}
                             </p>
                           )}
@@ -125,14 +153,18 @@ function Card({
 }) {
   return (
     <div className="card-elevated p-4">
-      <div className="flex items-center gap-1.5 mono-label">
+      <div className="mono-label flex items-center gap-1.5">
         {icon}
         {label}
       </div>
       <div
         className={
           "mt-2 font-mono text-xl tabular-nums " +
-          (warning && Number(value) > 0 ? "text-[var(--warning)]" : highlight && Number(value) > 0 ? "text-[var(--accent)]" : "")
+          (warning && Number(value) > 0
+            ? "text-[var(--warning)]"
+            : highlight && Number(value) > 0
+              ? "text-[var(--accent)]"
+              : "")
         }
       >
         {value}

@@ -22,13 +22,17 @@ describe("SearchTree", () => {
   })
 
   it("affiche les libellés des nœuds", () => {
-    render(<SearchTree nodes={nodes} edges={edges} startId="S" goalIds={["G"]} />)
+    render(
+      <SearchTree nodes={nodes} edges={edges} startId="S" goalIds={["G"]} />
+    )
     expect(screen.getByText("S")).toBeInTheDocument()
     expect(screen.getByText("G")).toBeInTheDocument()
   })
 
   it("affiche les coûts g, h et f", () => {
-    render(<SearchTree nodes={nodes} edges={edges} startId="S" goalIds={["G"]} />)
+    render(
+      <SearchTree nodes={nodes} edges={edges} startId="S" goalIds={["G"]} />
+    )
     // node A carries g=2 h=3, so its combined label is "g=2  h=3  f=5"
     expect(screen.getByText(/g=2\s+h=3\s+f=5/)).toBeInTheDocument()
     // node G carries g=6 h=0 — f=6 is unique to it

@@ -44,10 +44,18 @@ export function generateOhlc(spec: OhlcSpec): Candle[] {
     for (let i = 0; i < seg.count; i++) {
       const o = round(prevClose)
       const c = round(o * (1 + drift + vol * gaussian(rand)))
-      const h = round(Math.max(o, c) * (1 + Math.abs(gaussian(rand)) * vol * 0.5))
-      const l = round(Math.min(o, c) * (1 - Math.abs(gaussian(rand)) * vol * 0.5))
+      const h = round(
+        Math.max(o, c) * (1 + Math.abs(gaussian(rand)) * vol * 0.5)
+      )
+      const l = round(
+        Math.min(o, c) * (1 - Math.abs(gaussian(rand)) * vol * 0.5)
+      )
       const candle: Candle = { o, h, l, c }
-      if (spec.volume) candle.v = Math.round(spec.volume * (0.5 + rand() + Math.abs(c - o) / (o * vol || 1) * 0.3))
+      if (spec.volume)
+        candle.v = Math.round(
+          spec.volume *
+            (0.5 + rand() + (Math.abs(c - o) / (o * vol || 1)) * 0.3)
+        )
       candles.push(candle)
       prevClose = c
     }

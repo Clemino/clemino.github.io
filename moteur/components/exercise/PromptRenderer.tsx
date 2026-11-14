@@ -64,8 +64,21 @@ export function PromptRenderer({ source }: { source: string }) {
         return (
           <p key={i} className="leading-relaxed">
             {segments.map((s, j) => {
-              if (s.kind === "bold") return <strong key={j} className="font-semibold text-[var(--fg-0)]">{s.text}</strong>
-              if (s.kind === "code") return <code key={j} className="rounded-[3px] bg-[var(--bg-2)] px-1.5 py-0.5 font-mono text-[13px]">{s.text}</code>
+              if (s.kind === "bold")
+                return (
+                  <strong key={j} className="font-semibold text-[var(--fg-0)]">
+                    {s.text}
+                  </strong>
+                )
+              if (s.kind === "code")
+                return (
+                  <code
+                    key={j}
+                    className="rounded-[3px] bg-[var(--bg-2)] px-1.5 py-0.5 font-mono text-[13px]"
+                  >
+                    {s.text}
+                  </code>
+                )
               return <Fragment key={j}>{s.text}</Fragment>
             })}
           </p>

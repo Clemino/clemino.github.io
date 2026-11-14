@@ -8,12 +8,7 @@ afterEach(cleanup)
 describe("NumericInput", () => {
   it("affiche le placeholder par défaut quand aucun n'est défini", () => {
     render(
-      <NumericInput
-        payload={{}}
-        value=""
-        onChange={vi.fn()}
-        disabled={false}
-      />,
+      <NumericInput payload={{}} value="" onChange={vi.fn()} disabled={false} />
     )
     expect(screen.getByPlaceholderText("Entrez un nombre…")).toBeInTheDocument()
   })
@@ -25,7 +20,7 @@ describe("NumericInput", () => {
         value=""
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByPlaceholderText("ex: 42")).toBeInTheDocument()
   })
@@ -37,7 +32,7 @@ describe("NumericInput", () => {
         value=""
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("km/h")).toBeInTheDocument()
   })
@@ -49,7 +44,7 @@ describe("NumericInput", () => {
         value=""
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("Pensez aux décimales")).toBeInTheDocument()
   })
@@ -61,19 +56,14 @@ describe("NumericInput", () => {
         value="3.14"
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByRole("textbox")).toHaveValue("3.14")
   })
 
   it("désactive l'input quand disabled est vrai", () => {
     render(
-      <NumericInput
-        payload={{}}
-        value=""
-        onChange={vi.fn()}
-        disabled={true}
-      />,
+      <NumericInput payload={{}} value="" onChange={vi.fn()} disabled={true} />
     )
     expect(screen.getByRole("textbox")).toBeDisabled()
   })
@@ -85,10 +75,10 @@ describe("NumericInput", () => {
         value=""
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(
-      screen.getByRole("textbox", { name: /Réponse numérique \(m\/s\)/ }),
+      screen.getByRole("textbox", { name: /Réponse numérique \(m\/s\)/ })
     ).toBeInTheDocument()
   })
 })

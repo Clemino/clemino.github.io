@@ -19,15 +19,26 @@ describe("validateChartRead — mode candle", () => {
   })
 
   it("refuse une autre bougie sans tolérance", () => {
-    expect(validateChartRead(payload, { candles: [2] }, { candle: 3 }, "").passed).toBe(false)
+    expect(
+      validateChartRead(payload, { candles: [2] }, { candle: 3 }, "").passed
+    ).toBe(false)
   })
 
   it("applique la tolérance en nombre de bougies", () => {
-    expect(validateChartRead(payload, { candles: [2], candleTol: 1 }, { candle: 3 }, "").passed).toBe(true)
+    expect(
+      validateChartRead(
+        payload,
+        { candles: [2], candleTol: 1 },
+        { candle: 3 },
+        ""
+      ).passed
+    ).toBe(true)
   })
 
   it("accepte l'une des bougies acceptées", () => {
-    expect(validateChartRead(payload, { candles: [1, 3] }, { candle: 3 }, "").passed).toBe(true)
+    expect(
+      validateChartRead(payload, { candles: [1, 3] }, { candle: 3 }, "").passed
+    ).toBe(true)
   })
 
   it("refuse une absence de réponse", () => {
@@ -41,28 +52,60 @@ describe("validateChartRead — mode price", () => {
   const payload: ChartReadPayload = { ...base, mode: "price" }
 
   it("accepte un prix dans la tolérance absolue", () => {
-    expect(validateChartRead(payload, { price: 12, priceTol: 0.2 }, { price: 11.85 }, "").passed).toBe(true)
+    expect(
+      validateChartRead(
+        payload,
+        { price: 12, priceTol: 0.2 },
+        { price: 11.85 },
+        ""
+      ).passed
+    ).toBe(true)
   })
 
   it("refuse un prix hors tolérance", () => {
-    expect(validateChartRead(payload, { price: 12, priceTol: 0.2 }, { price: 11.5 }, "").passed).toBe(false)
+    expect(
+      validateChartRead(
+        payload,
+        { price: 12, priceTol: 0.2 },
+        { price: 11.5 },
+        ""
+      ).passed
+    ).toBe(false)
   })
 
   it("utilise 1 % du prix comme tolérance par défaut", () => {
-    expect(validateChartRead(payload, { price: 100 }, { price: 100.9 }, "").passed).toBe(true)
-    expect(validateChartRead(payload, { price: 100 }, { price: 101.5 }, "").passed).toBe(false)
+    expect(
+      validateChartRead(payload, { price: 100 }, { price: 100.9 }, "").passed
+    ).toBe(true)
+    expect(
+      validateChartRead(payload, { price: 100 }, { price: 101.5 }, "").passed
+    ).toBe(false)
   })
 })
 
 describe("validateChartRead — mode choice", () => {
-  const payload: ChartReadPayload = { ...base, mode: "choice", options: [{ id: "a", label: "Haussière" }, { id: "b", label: "Baissière" }] }
+  const payload: ChartReadPayload = {
+    ...base,
+    mode: "choice",
+    options: [
+      { id: "a", label: "Haussière" },
+      { id: "b", label: "Baissière" },
+    ],
+  }
 
   it("accepte la bonne lecture", () => {
-    expect(validateChartRead(payload, { correct: "a" }, { selected: "a" }, "").passed).toBe(true)
+    expect(
+      validateChartRead(payload, { correct: "a" }, { selected: "a" }, "").passed
+    ).toBe(true)
   })
 
   it("refuse une mauvaise lecture et révèle le libellé attendu", () => {
-    const r = validateChartRead(payload, { correct: "a" }, { selected: "b" }, "")
+    const r = validateChartRead(
+      payload,
+      { correct: "a" },
+      { selected: "b" },
+      ""
+    )
     expect(r.passed).toBe(false)
     expect(r.reveal.canonicalSolution).toBe("Haussière")
   })

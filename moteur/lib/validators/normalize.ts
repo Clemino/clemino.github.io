@@ -25,7 +25,11 @@ export function setsEqual<T>(a: T[], b: T[]): boolean {
 export function approxEqual(
   a: string,
   b: string,
-  opts: { tolerance?: number; caseSensitive?: boolean; stripAccents?: boolean } = {}
+  opts: {
+    tolerance?: number
+    caseSensitive?: boolean
+    stripAccents?: boolean
+  } = {}
 ): boolean {
   const tolerance = opts.tolerance ?? 0
   const na = normalize(a, opts)
@@ -74,6 +78,7 @@ export function numericMatch(
 ): boolean {
   const diff = Math.abs(x - target)
   if (diff <= (opts.absTol ?? 0)) return true
-  if (opts.relTol !== undefined && diff <= opts.relTol * Math.abs(target)) return true
+  if (opts.relTol !== undefined && diff <= opts.relTol * Math.abs(target))
+    return true
   return false
 }

@@ -88,7 +88,12 @@ describe("validateFigureInterpret — toutes correctes (training-curve)", () => 
         q2: { value: "2" },
       },
     }
-    const r = validateFigureInterpret(payload, solution, submission, "explication")
+    const r = validateFigureInterpret(
+      payload,
+      solution,
+      submission,
+      "explication"
+    )
     expect(r.passed).toBe(true)
     expect(r.score).toBeCloseTo(1)
   })
@@ -197,7 +202,12 @@ describe("validateFigureInterpret — mix de types (confusion-matrix)", () => {
         q3: { value: "100" },
       },
     }
-    const r = validateFigureInterpret(payload, solution, submission, "explication complète")
+    const r = validateFigureInterpret(
+      payload,
+      solution,
+      submission,
+      "explication complète"
+    )
     expect(r.passed).toBe(true)
     expect(r.score).toBeCloseTo(1)
   })
@@ -290,13 +300,13 @@ describe("validateFigureInterpret — le validateur ignore le contenu de la figu
       { figure: trainingCurveFigure, subQuestions },
       { subSolutions },
       submission,
-      "",
+      ""
     )
     const r2 = validateFigureInterpret(
       { figure: confusionMatrixFigure, subQuestions },
       { subSolutions },
       submission,
-      "",
+      ""
     )
 
     expect(r1.passed).toBe(true)

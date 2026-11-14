@@ -20,7 +20,8 @@ export function validateMcqSingle(
 ): ValidationResult {
   const correct = solution.correct ?? []
   const selected = submission.selected ?? []
-  const passed = selected.length === 1 && correct.length === 1 && selected[0] === correct[0]
+  const passed =
+    selected.length === 1 && correct.length === 1 && selected[0] === correct[0]
   return {
     passed,
     score: passed ? 1 : 0,
@@ -33,7 +34,12 @@ export function validateMcqSingle(
           : `Attendu : « ${optionLabel(payload, correct[0]) ?? "?"} ». Tu as choisi : « ${optionLabel(payload, selected[0]) ?? "rien"} ».`,
       },
     ],
-    reveal: { canonicalSolution: correct.map((id) => optionLabel(payload, id)).join(" ; "), explanation },
+    reveal: {
+      canonicalSolution: correct
+        .map((id) => optionLabel(payload, id))
+        .join(" ; "),
+      explanation,
+    },
   }
 }
 
@@ -51,8 +57,19 @@ export function validateMcqMulti(
     return {
       passed: true,
       score: 1,
-      feedback: [{ ok: true, criterion: "Sélection exacte", detail: "Toutes les bonnes réponses, aucune erreur." }],
-      reveal: { canonicalSolution: correct.map((id) => optionLabel(payload, id)).join(" ; "), explanation },
+      feedback: [
+        {
+          ok: true,
+          criterion: "Sélection exacte",
+          detail: "Toutes les bonnes réponses, aucune erreur.",
+        },
+      ],
+      reveal: {
+        canonicalSolution: correct
+          .map((id) => optionLabel(payload, id))
+          .join(" ; "),
+        explanation,
+      },
     }
   }
 
@@ -69,10 +86,23 @@ export function validateMcqMulti(
     score,
     feedback: [
       { ok: tp > 0, criterion: `${tp} bonne(s) réponse(s) sélectionnée(s)` },
-      { ok: fp === 0, criterion: `${fp} mauvaise(s) réponse(s) sélectionnée(s)`, detail: fp > 0 ? "Décochez les options incorrectes." : undefined },
-      { ok: fn === 0, criterion: `${fn} bonne(s) réponse(s) manquée(s)`, detail: fn > 0 ? "Il manque des cases à cocher." : undefined },
+      {
+        ok: fp === 0,
+        criterion: `${fp} mauvaise(s) réponse(s) sélectionnée(s)`,
+        detail: fp > 0 ? "Décochez les options incorrectes." : undefined,
+      },
+      {
+        ok: fn === 0,
+        criterion: `${fn} bonne(s) réponse(s) manquée(s)`,
+        detail: fn > 0 ? "Il manque des cases à cocher." : undefined,
+      },
     ],
-    reveal: { canonicalSolution: correct.map((id) => optionLabel(payload, id)).join(" ; "), explanation },
+    reveal: {
+      canonicalSolution: correct
+        .map((id) => optionLabel(payload, id))
+        .join(" ; "),
+      explanation,
+    },
   }
 }
 
@@ -90,7 +120,9 @@ export function validateTrueFalse(
       {
         ok: passed,
         criterion: "Réponse Vrai/Faux",
-        detail: passed ? "Correct." : `Attendu : ${solution.value ? "Vrai" : "Faux"}.`,
+        detail: passed
+          ? "Correct."
+          : `Attendu : ${solution.value ? "Vrai" : "Faux"}.`,
       },
     ],
     reveal: {

@@ -35,7 +35,7 @@ describe("CodeBlock", () => {
       <CodeBlock
         code={"line1\nline2\nline3"}
         annotations={[{ line: 2, note: "important" }]}
-      />,
+      />
     )
     expect(screen.getByText("important")).toBeInTheDocument()
   })
@@ -58,13 +58,13 @@ describe("CodeBlock", () => {
   // Issue 5(a): highlighted line has a different background style from a non-highlighted line
   it("applique un fond différent à la ligne surlignée", () => {
     const { container } = render(
-      <CodeBlock code={"line1\nline2"} highlightLines={[1]} />,
+      <CodeBlock code={"line1\nline2"} highlightLines={[1]} />
     )
     const rows = container.querySelectorAll("tbody tr")
     const highlightedRow = rows[0] as HTMLElement
     const normalRow = rows[1] as HTMLElement
     expect(highlightedRow.style.backgroundColor).not.toBe(
-      normalRow.style.backgroundColor,
+      normalRow.style.backgroundColor
     )
     expect(highlightedRow.style.backgroundColor).toBe("var(--accent-dim)")
     expect(normalRow.style.backgroundColor).toBe("")
@@ -77,7 +77,7 @@ describe("CodeBlock", () => {
         code={"line1\nline2"}
         highlightLines={[99]}
         annotations={[{ line: 99, note: "ghost" }]}
-      />,
+      />
     )
     // Only 2 rows, no extra row
     const rows = container.querySelectorAll("tbody tr")

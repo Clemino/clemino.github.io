@@ -7,7 +7,13 @@ import { useProgress } from "@/components/use-progress"
 import { nextStepAfterChapter } from "@/lib/progress"
 
 /** Appears once the chapter is complete, so the student never has to look for what comes next. */
-export function NextStepButton({ moduleSlug, chapterSlug }: { moduleSlug: string; chapterSlug: string }) {
+export function NextStepButton({
+  moduleSlug,
+  chapterSlug,
+}: {
+  moduleSlug: string
+  chapterSlug: string
+}) {
   const { modules, chapters } = useProgress()
   const mod = modules.find((m) => m.slug === moduleSlug)
   if (!mod || !chapters[chapterSlug]?.completed) return null

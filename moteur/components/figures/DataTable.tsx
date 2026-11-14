@@ -31,10 +31,13 @@ export function DataTable({
             {columns.map((col, c) => (
               <th
                 key={c}
-                className="border-b border-[var(--border)] px-3 py-2 text-left font-mono text-xs font-medium uppercase tracking-wide text-[var(--fg-1)]"
+                className="border-b border-[var(--border)] px-3 py-2 text-left font-mono text-xs font-medium tracking-wide text-[var(--fg-1)] uppercase"
                 style={
                   hiCols.has(c)
-                    ? { backgroundColor: "var(--accent-dim)", color: "var(--fg-0)" }
+                    ? {
+                        backgroundColor: "var(--accent-dim)",
+                        color: "var(--fg-0)",
+                      }
                     : { backgroundColor: "var(--bg-2)" }
                 }
               >
@@ -47,7 +50,11 @@ export function DataTable({
           {rows.map((row, r) => (
             <tr
               key={r}
-              style={hiRows.has(r) ? { backgroundColor: "var(--accent-dim)" } : undefined}
+              style={
+                hiRows.has(r)
+                  ? { backgroundColor: "var(--accent-dim)" }
+                  : undefined
+              }
             >
               {row.map((cell, c) => (
                 <td

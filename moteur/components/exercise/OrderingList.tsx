@@ -1,8 +1,22 @@
 "use client"
 
 import { useEffect, useMemo } from "react"
-import { closestCenter, DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable"
+import {
+  closestCenter,
+  DndContext,
+  type DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core"
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { GripVerticalIcon } from "lucide-react"
 import { shuffled } from "@/lib/shuffle"
@@ -28,10 +42,16 @@ export function OrderingList({
     }
   }, [order, payload.items, onChange])
 
-  const sensors = useSensors(useSensor(PointerSensor), useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }))
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  )
 
   const current = order ?? payload.items.map((i) => i.id)
-  const itemsById = useMemo(() => new Map(payload.items.map((i) => [i.id, i])), [payload.items])
+  const itemsById = useMemo(
+    () => new Map(payload.items.map((i) => [i.id, i])),
+    [payload.items]
+  )
 
   const handleDragEnd = (e: DragEndEvent) => {
     if (disabled) return
@@ -42,13 +62,25 @@ export function OrderingList({
   }
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
       <SortableContext items={current} strategy={verticalListSortingStrategy}>
         <ol className="space-y-2">
           {current.map((id, i) => {
             const item = itemsById.get(id)
             if (!item) return null
-            return <SortableRow key={id} id={id} index={i} label={item.label} disabled={disabled} />
+            return (
+              <SortableRow
+                key={id}
+                id={id}
+                index={i}
+                label={item.label}
+                disabled={disabled}
+              />
+            )
           })}
         </ol>
       </SortableContext>
@@ -56,8 +88,25 @@ export function OrderingList({
   )
 }
 
-function SortableRow({ id, index, label, disabled }: { id: string; index: number; label: string; disabled: boolean }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id, disabled })
+function SortableRow({
+  id,
+  index,
+  label,
+  disabled,
+}: {
+  id: string
+  index: number
+  label: string
+  disabled: boolean
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id, disabled })
   const style = { transform: CSS.Transform.toString(transform), transition }
   return (
     <li
@@ -66,7 +115,7 @@ function SortableRow({ id, index, label, disabled }: { id: string; index: number
       className={cn(
         "flex items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--bg-1)] px-4 py-3 text-sm transition-colors",
         isDragging && "border-[var(--accent)] bg-[var(--bg-2)]",
-        disabled && "cursor-not-allowed opacity-80",
+        disabled && "cursor-not-allowed opacity-80"
       )}
     >
       <button
@@ -79,8 +128,12 @@ function SortableRow({ id, index, label, disabled }: { id: string; index: number
       >
         <GripVerticalIcon className="size-4" />
       </button>
-      <span className="font-mono text-xs tabular-nums text-[var(--fg-3)]">{String(index + 1).padStart(2, "0")}</span>
-      <span className="flex-1 font-mono text-[13px] text-[var(--fg-0)]">{label}</span>
+      <span className="font-mono text-xs text-[var(--fg-3)] tabular-nums">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+      <span className="flex-1 font-mono text-[13px] text-[var(--fg-0)]">
+        {label}
+      </span>
     </li>
   )
 }

@@ -61,7 +61,10 @@ function skipAttempt(exerciseId: string, createdAt: string): Attempt {
 /** Counts the exercise as validated, without crediting any concept mastery. */
 export function skipExercise(exerciseId: string) {
   useProgressStore.setState((s) => ({
-    attempts: [...s.attempts, skipAttempt(exerciseId, new Date().toISOString())],
+    attempts: [
+      ...s.attempts,
+      skipAttempt(exerciseId, new Date().toISOString()),
+    ],
   }))
 }
 
@@ -70,7 +73,10 @@ export function skipModule({
   chapters,
 }: {
   slug: string
-  chapters: Pick<ModuleSummary["chapters"][number], "sectionIds" | "exerciseIds">[]
+  chapters: Pick<
+    ModuleSummary["chapters"][number],
+    "sectionIds" | "exerciseIds"
+  >[]
 }) {
   const now = new Date().toISOString()
   const sections = chapters.flatMap((c) => c.sectionIds)

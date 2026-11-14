@@ -4,7 +4,10 @@ import { ChapterView } from "@/components/study/ChapterView"
 import { getAllChapters, getChapter, getModule } from "@/lib/catalog"
 
 export function generateStaticParams() {
-  return getAllChapters().map(({ moduleSlug, chapter }) => ({ moduleSlug, chapterSlug: chapter.slug }))
+  return getAllChapters().map(({ moduleSlug, chapter }) => ({
+    moduleSlug,
+    chapterSlug: chapter.slug,
+  }))
 }
 
 export default async function ChapterPage(props: {
@@ -24,8 +27,19 @@ export default async function ChapterPage(props: {
           slug: chapter.slug,
           order: chapter.order,
           title: chapter.title,
-          sections: chapter.sections.map(({ id, slug, title, estimatedReadMin }) => ({ id, slug, title, estimatedReadMin })),
-          exercises: chapter.exercises.map(({ id, type, difficulty }) => ({ id, type, difficulty })),
+          sections: chapter.sections.map(
+            ({ id, slug, title, estimatedReadMin }) => ({
+              id,
+              slug,
+              title,
+              estimatedReadMin,
+            })
+          ),
+          exercises: chapter.exercises.map(({ id, type, difficulty }) => ({
+            id,
+            type,
+            difficulty,
+          })),
         }}
       />
     </AccessGuard>

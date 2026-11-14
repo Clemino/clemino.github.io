@@ -46,7 +46,7 @@ describe("CodeAnalysis", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("x = 1")).toBeInTheDocument()
   })
@@ -58,7 +58,7 @@ describe("CodeAnalysis", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("Analysez cette fonction")).toBeInTheDocument()
   })
@@ -70,7 +70,7 @@ describe("CodeAnalysis", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     // basePayload has no caption
     expect(screen.queryByRole("paragraph")).toBeNull()
@@ -83,7 +83,7 @@ describe("CodeAnalysis", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("Q1.")).toBeInTheDocument()
     expect(screen.getByText("Q2.")).toBeInTheDocument()
@@ -96,7 +96,7 @@ describe("CodeAnalysis", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("Que retourne f(3) ?")).toBeInTheDocument()
     expect(screen.getByText("Cette fonction est récursive")).toBeInTheDocument()
@@ -109,7 +109,7 @@ describe("CodeAnalysis", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("3")).toBeInTheDocument()
     expect(screen.getByText("6")).toBeInTheDocument()
@@ -123,7 +123,7 @@ describe("CodeAnalysis", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("Vrai")).toBeInTheDocument()
     expect(screen.getByText("Faux")).toBeInTheDocument()
@@ -136,7 +136,7 @@ describe("CodeAnalysis", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.queryByText("Q1.")).toBeNull()
   })
@@ -148,7 +148,7 @@ describe("CodeAnalysis", () => {
         submission={{ answers: { q1: { selected: ["b"] } } }}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     // Option b is selected (aria-checked=true)
     const option6 = screen.getByRole("radio", { name: /6/ })

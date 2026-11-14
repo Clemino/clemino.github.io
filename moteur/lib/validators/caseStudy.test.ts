@@ -16,7 +16,12 @@ const payload: CaseStudyPayload = {
         ],
       },
     },
-    { id: "q2", type: "TRUE_FALSE", prompt: "Le recours est recevable.", payload: {} },
+    {
+      id: "q2",
+      type: "TRUE_FALSE",
+      prompt: "Le recours est recevable.",
+      payload: {},
+    },
   ],
 }
 const solution = {
@@ -32,7 +37,7 @@ describe("validateCaseStudy", () => {
       payload,
       solution,
       { answers: { q1: { selected: ["b"] }, q2: { value: false } } },
-      "",
+      ""
     )
     expect(r.passed).toBe(true)
     expect(r.score).toBe(1)
@@ -43,7 +48,7 @@ describe("validateCaseStudy", () => {
       payload,
       solution,
       { answers: { q1: { selected: ["a"] }, q2: { value: false } } },
-      "",
+      ""
     )
     expect(r.passed).toBe(false)
     expect(r.score).toBe(0.5)
@@ -51,7 +56,12 @@ describe("validateCaseStudy", () => {
   })
 
   it("does not treat an unanswered sub-question as false", () => {
-    const r = validateCaseStudy(payload, solution, { answers: { q1: { selected: ["b"] } } }, "")
+    const r = validateCaseStudy(
+      payload,
+      solution,
+      { answers: { q1: { selected: ["b"] } } },
+      ""
+    )
     expect(r.passed).toBe(false)
     expect(r.score).toBe(0.5)
   })

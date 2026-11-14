@@ -155,7 +155,9 @@ export function TrainingCurve({
 
         {/* series polylines + point dots */}
         {series.map((s, si) => {
-          const color = s.tone ? TONE_VAR[s.tone] : FALLBACK_TONES[si % FALLBACK_TONES.length]
+          const color = s.tone
+            ? TONE_VAR[s.tone]
+            : FALLBACK_TONES[si % FALLBACK_TONES.length]
           const pts = [...s.points].sort((a, b) => a.x - b.x)
           const d = pts.map((p) => `${sx(p.x)},${sy(p.y)}`).join(" ")
           return (
@@ -171,7 +173,13 @@ export function TrainingCurve({
                 />
               )}
               {pts.map((p, pi) => (
-                <circle key={pi} cx={sx(p.x)} cy={sy(p.y)} r={2.6} fill={color} />
+                <circle
+                  key={pi}
+                  cx={sx(p.x)}
+                  cy={sy(p.y)}
+                  r={2.6}
+                  fill={color}
+                />
               ))}
             </g>
           )

@@ -5,7 +5,13 @@ import { PlayIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { startGateRun } from "@/lib/actions/progression"
 
-export function StartGateButton({ moduleSlug, poolIds }: { moduleSlug: string; poolIds: string[] }) {
+export function StartGateButton({
+  moduleSlug,
+  poolIds,
+}: {
+  moduleSlug: string
+  poolIds: string[]
+}) {
   const router = useRouter()
 
   return (

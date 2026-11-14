@@ -32,9 +32,14 @@ export function MatrixGrid({
       <table className="w-full border-collapse text-sm">
         <thead>
           <tr className="bg-[var(--bg-2)]">
-            <th className="border-b border-[var(--border)] px-3 py-2 text-left font-mono text-xs">Place</th>
+            <th className="border-b border-[var(--border)] px-3 py-2 text-left font-mono text-xs">
+              Place
+            </th>
             {transitions.map((transition) => (
-              <th key={transition.id} className="border-b border-[var(--border)] px-3 py-2 text-center font-mono text-xs">
+              <th
+                key={transition.id}
+                className="border-b border-[var(--border)] px-3 py-2 text-center font-mono text-xs"
+              >
                 {transition.label ?? transition.id}
               </th>
             ))}
@@ -43,19 +48,25 @@ export function MatrixGrid({
         <tbody>
           {places.map((place) => (
             <tr key={place.id} className="border-t border-[var(--border)]">
-              <td className="px-3 py-2 font-mono text-xs text-[var(--fg-2)]">{place.label ?? place.id}</td>
+              <td className="px-3 py-2 font-mono text-xs text-[var(--fg-2)]">
+                {place.label ?? place.id}
+              </td>
               {transitions.map((transition) => (
                 <td key={transition.id} className="px-2 py-2 text-center">
                   {editable ? (
                     <input
                       type="number"
                       value={values[place.id]?.[transition.id] ?? 0}
-                      onChange={(e) => update(place.id, transition.id, e.target.value)}
+                      onChange={(e) =>
+                        update(place.id, transition.id, e.target.value)
+                      }
                       disabled={disabled}
                       className="h-8 w-16 rounded border border-[var(--border)] bg-[var(--bg-1)] px-2 text-center font-mono text-sm outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                     />
                   ) : (
-                    <span className="font-mono tabular-nums">{values[place.id]?.[transition.id] ?? 0}</span>
+                    <span className="font-mono tabular-nums">
+                      {values[place.id]?.[transition.id] ?? 0}
+                    </span>
                   )}
                 </td>
               ))}

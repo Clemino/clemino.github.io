@@ -1,7 +1,13 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRightIcon, BookOpenIcon, CheckIcon, CircleIcon, FileTextIcon } from "lucide-react"
+import {
+  ArrowRightIcon,
+  BookOpenIcon,
+  CheckIcon,
+  CircleIcon,
+  FileTextIcon,
+} from "lucide-react"
 import { useProgress } from "@/components/use-progress"
 import { Badge } from "@/components/ui/badge"
 import { NextStepButton } from "@/components/study/NextStepButton"
@@ -15,7 +21,12 @@ export type ChapterViewProps = {
     slug: string
     order: number
     title: string
-    sections: { id: string; slug: string; title: string; estimatedReadMin: number }[]
+    sections: {
+      id: string
+      slug: string
+      title: string
+      estimatedReadMin: number
+    }[]
     exercises: { id: string; type: ExerciseType; difficulty: number }[]
   }
 }
@@ -26,23 +37,29 @@ export function ChapterView({ moduleSlug, mod, chapter }: ChapterViewProps) {
 
   return (
     <div className="mx-auto max-w-4xl px-8 py-12">
-      <Link href={`/modules/${moduleSlug}`} className="mono-label hover:text-[var(--fg-0)]">
+      <Link
+        href={`/modules/${moduleSlug}`}
+        className="mono-label hover:text-[var(--fg-0)]"
+      >
         ← {mod.title}
       </Link>
 
       <div className="mt-3 border-b border-[var(--border)] pb-6">
         <div className="flex items-baseline gap-2">
-          <span className="font-mono text-xs tabular-nums text-[var(--fg-3)]">
-            {String(mod.order).padStart(2, "0")}.{String(chapter.order).padStart(2, "0")}
+          <span className="font-mono text-xs text-[var(--fg-3)] tabular-nums">
+            {String(mod.order).padStart(2, "0")}.
+            {String(chapter.order).padStart(2, "0")}
           </span>
         </div>
-        <h1 className="mt-1 font-mono text-3xl tracking-tight">{chapter.title}</h1>
+        <h1 className="mt-1 font-mono text-3xl tracking-tight">
+          {chapter.title}
+        </h1>
       </div>
 
       <section className="mt-10">
         <div className="mb-4 flex items-baseline gap-2">
           <BookOpenIcon className="size-4 text-[var(--fg-2)]" />
-          <h2 className="font-mono text-sm tracking-widest uppercase text-[var(--fg-2)]">
+          <h2 className="font-mono text-sm tracking-widest text-[var(--fg-2)] uppercase">
             Théorie
           </h2>
         </div>
@@ -57,7 +74,10 @@ export function ChapterView({ moduleSlug, mod, chapter }: ChapterViewProps) {
                 >
                   {read ? (
                     <div className="flex size-4 items-center justify-center rounded-full bg-[var(--accent)]">
-                      <CheckIcon className="size-2.5 text-[var(--accent-fg)]" strokeWidth={3} />
+                      <CheckIcon
+                        className="size-2.5 text-[var(--accent-fg)]"
+                        strokeWidth={3}
+                      />
                     </div>
                   ) : (
                     <CircleIcon className="size-4 text-[var(--fg-3)]" />
@@ -77,12 +97,12 @@ export function ChapterView({ moduleSlug, mod, chapter }: ChapterViewProps) {
       <section className="mt-12">
         <div className="mb-4 flex items-baseline gap-2">
           <FileTextIcon className="size-4 text-[var(--fg-2)]" />
-          <h2 className="font-mono text-sm tracking-widest uppercase text-[var(--fg-2)]">
+          <h2 className="font-mono text-sm tracking-widest text-[var(--fg-2)] uppercase">
             Exercices
           </h2>
           <span className="ml-auto font-mono text-xs text-[var(--fg-2)] tabular-nums">
-            {chapter.exercises.filter((e) => passedExercises.has(e.id)).length} /{" "}
-            {chapter.exercises.length}
+            {chapter.exercises.filter((e) => passedExercises.has(e.id)).length}{" "}
+            / {chapter.exercises.length}
           </span>
         </div>
         <ol className="grid gap-2 md:grid-cols-2">
@@ -96,15 +116,21 @@ export function ChapterView({ moduleSlug, mod, chapter }: ChapterViewProps) {
                 >
                   {passed ? (
                     <div className="flex size-4 items-center justify-center rounded-full bg-[var(--accent)]">
-                      <CheckIcon className="size-2.5 text-[var(--accent-fg)]" strokeWidth={3} />
+                      <CheckIcon
+                        className="size-2.5 text-[var(--accent-fg)]"
+                        strokeWidth={3}
+                      />
                     </div>
                   ) : (
                     <CircleIcon className="size-4 text-[var(--fg-3)]" />
                   )}
-                  <span className="font-mono text-xs tabular-nums text-[var(--fg-2)]">
+                  <span className="font-mono text-xs text-[var(--fg-2)] tabular-nums">
                     Q{String(i + 1).padStart(2, "0")}
                   </span>
-                  <Badge variant="outline" className="border-[var(--border)] font-mono text-[9px] text-[var(--fg-2)]">
+                  <Badge
+                    variant="outline"
+                    className="border-[var(--border)] font-mono text-[9px] text-[var(--fg-2)]"
+                  >
                     {EXERCISE_LABELS[e.type]}
                   </Badge>
                   <span className="ml-auto font-mono text-[10px] text-[var(--fg-3)]">

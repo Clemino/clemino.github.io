@@ -22,7 +22,10 @@ const payloadWithSubQ: FigureInterpretPayload = {
   figure: {
     kind: "data-table",
     columns: ["x", "y"],
-    rows: [[1, 2], [3, 4]],
+    rows: [
+      [1, 2],
+      [3, 4],
+    ],
     caption: "Données d'entraînement",
   },
   caption: "Interprétez ce tableau",
@@ -56,7 +59,7 @@ describe("FigureInterpret", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("Matrice de confusion")).toBeInTheDocument()
   })
@@ -68,7 +71,7 @@ describe("FigureInterpret", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("Interprétez ce tableau")).toBeInTheDocument()
   })
@@ -80,7 +83,7 @@ describe("FigureInterpret", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("Q1.")).toBeInTheDocument()
     expect(screen.getByText("Q2.")).toBeInTheDocument()
@@ -93,10 +96,12 @@ describe("FigureInterpret", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("Combien y a-t-il de lignes ?")).toBeInTheDocument()
-    expect(screen.getByText("Quelle est la valeur maximale de y ?")).toBeInTheDocument()
+    expect(
+      screen.getByText("Quelle est la valeur maximale de y ?")
+    ).toBeInTheDocument()
   })
 
   it("affiche les options MCQ de la première sous-question", () => {
@@ -106,7 +111,7 @@ describe("FigureInterpret", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     // Use getAllByText since the figure table also contains numeric text
     expect(screen.getAllByText("1").length).toBeGreaterThanOrEqual(1)
@@ -121,7 +126,7 @@ describe("FigureInterpret", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("pts")).toBeInTheDocument()
   })
@@ -133,7 +138,7 @@ describe("FigureInterpret", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.queryByText("Q1.")).toBeNull()
   })
@@ -145,7 +150,7 @@ describe("FigureInterpret", () => {
         submission={null}
         onChange={vi.fn()}
         disabled={true}
-      />,
+      />
     )
     for (const input of screen.getAllByRole("textbox")) {
       expect(input).toBeDisabled()
@@ -159,7 +164,7 @@ describe("FigureInterpret", () => {
         submission={{ answers: { sq2: { value: "4" } } }}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByRole("textbox")).toHaveValue("4")
   })

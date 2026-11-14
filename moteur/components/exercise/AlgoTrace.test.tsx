@@ -21,7 +21,7 @@ describe("AlgoTrace", () => {
         values={{}}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("Valeur de x")).toBeInTheDocument()
     expect(screen.getByText("Compteur n")).toBeInTheDocument()
@@ -34,7 +34,7 @@ describe("AlgoTrace", () => {
         values={{}}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     const inputs = screen.getAllByRole("textbox")
     expect(inputs).toHaveLength(2)
@@ -47,7 +47,7 @@ describe("AlgoTrace", () => {
         values={{ x: "hello", n: "7" }}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByLabelText("Valeur de x")).toHaveValue("hello")
     expect(screen.getByLabelText("Compteur n")).toHaveValue("7")
@@ -60,7 +60,7 @@ describe("AlgoTrace", () => {
         values={{}}
         onChange={vi.fn()}
         disabled={true}
-      />,
+      />
     )
     for (const input of screen.getAllByRole("textbox")) {
       expect(input).toBeDisabled()
@@ -70,11 +70,14 @@ describe("AlgoTrace", () => {
   it("affiche la description quand elle est fournie", () => {
     render(
       <AlgoTrace
-        payload={{ ...minimalPayload, description: "Tracez l'algorithme suivant" }}
+        payload={{
+          ...minimalPayload,
+          description: "Tracez l'algorithme suivant",
+        }}
         values={{}}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     expect(screen.getByText("Tracez l'algorithme suivant")).toBeInTheDocument()
   })
@@ -94,7 +97,7 @@ describe("AlgoTrace", () => {
         values={{}}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     // FigureView renders a header for data-table
     expect(screen.getByText("Jeu de données")).toBeInTheDocument()
@@ -107,7 +110,7 @@ describe("AlgoTrace", () => {
         values={{}}
         onChange={vi.fn()}
         disabled={false}
-      />,
+      />
     )
     // No figure header
     expect(screen.queryByText("Jeu de données")).toBeNull()

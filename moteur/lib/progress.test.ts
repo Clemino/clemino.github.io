@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest"
 import type { ConceptInfo, CourseIndex } from "@/lib/course"
-import { computeProgress, getDueConcepts, nextStepAfterChapter, type ModuleSummary } from "@/lib/progress"
+import {
+  computeProgress,
+  getDueConcepts,
+  nextStepAfterChapter,
+  type ModuleSummary,
+} from "@/lib/progress"
 import {
   EMPTY_PROGRESS,
   type Attempt,
@@ -130,9 +135,27 @@ describe("computeProgress", () => {
         {
           ...course.modules[0],
           chapters: [
-            { slug: "empty", order: 1, title: "", sectionIds: [], exerciseIds: [] },
-            { slug: "written", order: 2, title: "", sectionIds: [], exerciseIds: ["e1"] },
-            { slug: "after", order: 3, title: "", sectionIds: [], exerciseIds: ["e2"] },
+            {
+              slug: "empty",
+              order: 1,
+              title: "",
+              sectionIds: [],
+              exerciseIds: [],
+            },
+            {
+              slug: "written",
+              order: 2,
+              title: "",
+              sectionIds: [],
+              exerciseIds: ["e1"],
+            },
+            {
+              slug: "after",
+              order: 3,
+              title: "",
+              sectionIds: [],
+              exerciseIds: ["e2"],
+            },
           ],
         },
       ],
@@ -224,7 +247,10 @@ describe("nextStepAfterChapter", () => {
   } as unknown as ModuleSummary
 
   it("leads to the next chapter", () => {
-    expect(nextStepAfterChapter(mod, "c1")).toEqual({ href: "/modules/m1/chapter/c2", label: "Chapitre suivant" })
+    expect(nextStepAfterChapter(mod, "c1")).toEqual({
+      href: "/modules/m1/chapter/c2",
+      label: "Chapitre suivant",
+    })
   })
 
   it("leads to the gate after the last chapter", () => {

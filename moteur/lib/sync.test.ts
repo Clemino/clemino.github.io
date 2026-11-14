@@ -18,7 +18,11 @@ vi.mock("@/lib/supabase", () => ({
       },
     },
     from: () => ({
-      select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: db.row, error: null }) }) }),
+      select: () => ({
+        eq: () => ({
+          maybeSingle: async () => ({ data: db.row, error: null }),
+        }),
+      }),
       upsert: async (value: (typeof db.saved)[number]) => {
         db.saved.push(value)
         return { error: null }
@@ -34,7 +38,8 @@ const attempt = (exerciseId: string): Attempt => ({
   source: "PRACTICE",
   createdAt: `2026-01-01T00:00:0${exerciseId}`,
 })
-const attemptIds = () => useProgressStore.getState().attempts.map((a) => a.exerciseId)
+const attemptIds = () =>
+  useProgressStore.getState().attempts.map((a) => a.exerciseId)
 
 describe("progress sync", () => {
   let stop: () => void

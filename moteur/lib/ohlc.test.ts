@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest"
 import { generateOhlc } from "./ohlc"
 
-const spec = { seed: 42, start: 100, segments: [{ count: 20, drift: 0.01, volatility: 0.01 }] }
+const spec = {
+  seed: 42,
+  start: 100,
+  segments: [{ count: 20, drift: 0.01, volatility: 0.01 }],
+}
 
 describe("generateOhlc", () => {
   it("est déterministe pour une même graine", () => {
@@ -13,7 +17,10 @@ describe("generateOhlc", () => {
   })
 
   it("produit des bougies cohérentes (l <= o,c <= h) enchaînées sur la clôture précédente", () => {
-    const candles = generateOhlc({ ...spec, segments: [{ count: 50, volatility: 0.03 }] })
+    const candles = generateOhlc({
+      ...spec,
+      segments: [{ count: 50, volatility: 0.03 }],
+    })
     expect(candles).toHaveLength(50)
     candles.forEach((k, i) => {
       expect(k.l).toBeLessThanOrEqual(Math.min(k.o, k.c))
@@ -23,7 +30,14 @@ describe("generateOhlc", () => {
   })
 
   it("suit la tendance de chaque segment", () => {
-    const candles = generateOhlc({ seed: 1, start: 100, segments: [{ count: 30, drift: 0.02, volatility: 0.005 }, { count: 30, drift: -0.02, volatility: 0.005 }] })
+    const candles = generateOhlc({
+      seed: 1,
+      start: 100,
+      segments: [
+        { count: 30, drift: 0.02, volatility: 0.005 },
+        { count: 30, drift: -0.02, volatility: 0.005 },
+      ],
+    })
     expect(candles[29].c).toBeGreaterThan(candles[0].o)
     expect(candles[59].c).toBeLessThan(candles[29].c)
   })

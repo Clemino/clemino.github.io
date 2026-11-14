@@ -1,7 +1,14 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRightIcon, BookOpenIcon, CheckCircle2Icon, LibraryBigIcon, LockIcon, TrophyIcon } from "lucide-react"
+import {
+  ArrowRightIcon,
+  BookOpenIcon,
+  CheckCircle2Icon,
+  LibraryBigIcon,
+  LockIcon,
+  TrophyIcon,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { AccountButton } from "@/components/chrome/AccountButton"
@@ -14,7 +21,8 @@ export default function HomePage() {
   const totalExercises = modules.reduce((s, m) => s + m.exercisesTotal, 0)
   const doneExercises = modules.reduce((s, m) => s + m.exercisesDone, 0)
   const completedModules = modules.filter((m) => m.completed).length
-  const currentModule = modules.find((m) => m.unlocked && !m.completed) ?? modules[0]
+  const currentModule =
+    modules.find((m) => m.unlocked && !m.completed) ?? modules[0]
 
   return (
     <div className="relative min-h-svh overflow-hidden bg-[var(--bg-0)]">
@@ -68,19 +76,21 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="relative mx-auto max-w-5xl px-6 pb-32 pt-20">
+      <main className="relative mx-auto max-w-5xl px-6 pt-20 pb-32">
         <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bg-1)] px-3 py-1">
           <span className="size-1.5 rounded-full bg-[var(--accent)]" />
           <span className="mono-label">{COURSE.label}</span>
         </div>
 
         <h1 className="font-mono text-5xl tracking-tighter md:text-6xl">
-          {COURSE.heading[0]}<br />
+          {COURSE.heading[0]}
+          <br />
           <span className="text-[var(--accent)]">{COURSE.heading[1]}</span>
         </h1>
 
         <p className="mt-6 max-w-2xl text-base leading-relaxed text-[var(--fg-1)]">
-          {COURSE.intro} Objectif : <span className="text-[var(--fg-0)]">20/20</span>.
+          {COURSE.intro} Objectif :{" "}
+          <span className="text-[var(--fg-0)]">20/20</span>.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center gap-3">
@@ -97,10 +107,34 @@ export default function HomePage() {
 
         {/* Stats */}
         <div className="mt-16 grid grid-cols-2 gap-3 md:grid-cols-4">
-          <StatCard label="Modules" value={`${completedModules}/${modules.length}`} icon={<BookOpenIcon className="size-3.5" />} />
-          <StatCard label="Exercices passés" value={`${doneExercises}/${totalExercises}`} icon={<CheckCircle2Icon className="size-3.5" />} />
-          <StatCard label="Module courant" value={currentModule.title.split(" ").slice(0, 2).join(" ")} icon={<COURSE.icon className="size-3.5" />} />
-          <StatCard label="Examens blancs" value={completedModules === modules.length ? "Débloqué" : "Verrouillé"} icon={completedModules === modules.length ? <TrophyIcon className="size-3.5" /> : <LockIcon className="size-3.5" />} />
+          <StatCard
+            label="Modules"
+            value={`${completedModules}/${modules.length}`}
+            icon={<BookOpenIcon className="size-3.5" />}
+          />
+          <StatCard
+            label="Exercices passés"
+            value={`${doneExercises}/${totalExercises}`}
+            icon={<CheckCircle2Icon className="size-3.5" />}
+          />
+          <StatCard
+            label="Module courant"
+            value={currentModule.title.split(" ").slice(0, 2).join(" ")}
+            icon={<COURSE.icon className="size-3.5" />}
+          />
+          <StatCard
+            label="Examens blancs"
+            value={
+              completedModules === modules.length ? "Débloqué" : "Verrouillé"
+            }
+            icon={
+              completedModules === modules.length ? (
+                <TrophyIcon className="size-3.5" />
+              ) : (
+                <LockIcon className="size-3.5" />
+              )
+            }
+          />
         </div>
 
         {/* Module overview */}
@@ -109,7 +143,10 @@ export default function HomePage() {
             <h2 className="font-mono text-sm tracking-widest text-[var(--fg-2)] uppercase">
               Parcours
             </h2>
-            <Link href="/modules" className="font-mono text-xs text-[var(--accent)] hover:underline">
+            <Link
+              href="/modules"
+              className="font-mono text-xs text-[var(--accent)] hover:underline"
+            >
               tout voir →
             </Link>
           </div>
@@ -120,22 +157,31 @@ export default function HomePage() {
                   href={m.unlocked ? `/modules/${m.slug}` : "/modules"}
                   className="group flex items-center justify-between gap-6 px-1 py-4 transition-colors hover:bg-[var(--bg-1)]"
                 >
-                  <div className="flex items-baseline gap-4 min-w-0">
-                    <span className="font-mono text-xs tabular-nums text-[var(--fg-2)]">
+                  <div className="flex min-w-0 items-baseline gap-4">
+                    <span className="font-mono text-xs text-[var(--fg-2)] tabular-nums">
                       {String(m.order).padStart(2, "0")}
                     </span>
                     <div className="min-w-0">
-                      <div className="font-medium truncate">{m.title}</div>
+                      <div className="truncate font-medium">{m.title}</div>
                       {m.subtitle && (
-                        <div className="mt-0.5 text-xs text-[var(--fg-2)] truncate">
+                        <div className="mt-0.5 truncate text-xs text-[var(--fg-2)]">
                           {m.subtitle}
                         </div>
                       )}
                     </div>
                   </div>
                   <div className="flex shrink-0 items-center gap-3">
-                    {m.completed && <Badge variant="outline" className="border-[var(--accent-dim)] font-mono text-[10px] text-[var(--accent)]">passé</Badge>}
-                    {!m.unlocked && <LockIcon className="size-4 text-[var(--fg-3)]" />}
+                    {m.completed && (
+                      <Badge
+                        variant="outline"
+                        className="border-[var(--accent-dim)] font-mono text-[10px] text-[var(--accent)]"
+                      >
+                        passé
+                      </Badge>
+                    )}
+                    {!m.unlocked && (
+                      <LockIcon className="size-4 text-[var(--fg-3)]" />
+                    )}
                     {m.unlocked && !m.completed && (
                       <span className="font-mono text-xs text-[var(--fg-2)]">
                         {m.exercisesDone}/{m.exercisesTotal}
@@ -154,17 +200,31 @@ export default function HomePage() {
         <div className="mx-auto max-w-5xl px-6 font-mono text-xs text-[var(--fg-2)]">
           <span>{COURSE.id}.app</span>
           <span className="mx-2 text-[var(--fg-3)]">·</span>
-          <span>Press <kbd className="rounded border border-[var(--border)] bg-[var(--bg-2)] px-1.5 py-0.5">d</kbd> to toggle theme</span>
+          <span>
+            Press{" "}
+            <kbd className="rounded border border-[var(--border)] bg-[var(--bg-2)] px-1.5 py-0.5">
+              d
+            </kbd>{" "}
+            to toggle theme
+          </span>
         </div>
       </footer>
     </div>
   )
 }
 
-function StatCard({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
+function StatCard({
+  label,
+  value,
+  icon,
+}: {
+  label: string
+  value: string
+  icon: React.ReactNode
+}) {
   return (
     <div className="card-elevated p-4">
-      <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-[var(--fg-2)]">
+      <div className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider text-[var(--fg-2)] uppercase">
         {icon}
         {label}
       </div>

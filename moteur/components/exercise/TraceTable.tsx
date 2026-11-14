@@ -13,8 +13,10 @@ export function TraceTable({
 }) {
   return (
     <div className="space-y-2">
-      <div className="font-mono text-[10px] uppercase tracking-wider text-[var(--fg-2)]">
-        {payload.format === "table" ? "Sortie attendue (tableau)" : "Sortie attendue (texte)"}
+      <div className="font-mono text-[10px] tracking-wider text-[var(--fg-2)] uppercase">
+        {payload.format === "table"
+          ? "Sortie attendue (tableau)"
+          : "Sortie attendue (texte)"}
       </div>
       <textarea
         disabled={disabled}

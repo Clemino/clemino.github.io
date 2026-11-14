@@ -18,7 +18,11 @@ export function PredictOutput({
     <div className="space-y-3">
       <div>
         <div className="mono-label mb-1.5">Programme</div>
-        <CodeBlock code={payload.program} language={payload.language} showLineNumbers />
+        <CodeBlock
+          code={payload.program}
+          language={payload.language}
+          showLineNumbers
+        />
       </div>
       <div>
         <div className="mono-label mb-1.5">Valeur ou sortie attendue</div>

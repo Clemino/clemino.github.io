@@ -12,19 +12,40 @@ import { ProgressHydrator } from "@/components/use-progress"
 import { cn } from "@/lib/utils"
 
 // Local files: the build must not depend on Google Fonts being reachable.
-const geistSans = localFont({ src: "./fonts/geist.woff2", weight: "100 900", variable: "--font-geist-sans", display: "swap" })
-const geistMono = localFont({ src: "./fonts/geist-mono.woff2", weight: "100 900", variable: "--font-geist-mono", display: "swap" })
+const geistSans = localFont({
+  src: "./fonts/geist.woff2",
+  weight: "100 900",
+  variable: "--font-geist-sans",
+  display: "swap",
+})
+const geistMono = localFont({
+  src: "./fonts/geist-mono.woff2",
+  weight: "100 900",
+  variable: "--font-geist-mono",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
   title: COURSE.title,
   description: COURSE.description,
 }
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr" suppressHydrationWarning className={cn(geistSans.variable, geistMono.variable)}>
+    <html
+      lang="fr"
+      suppressHydrationWarning
+      className={cn(geistSans.variable, geistMono.variable)}
+    >
       <body className="bg-background text-foreground antialiased">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
           <CourseAccess />
           <ProgressHydrator />
           <TooltipProvider delayDuration={200}>{children}</TooltipProvider>

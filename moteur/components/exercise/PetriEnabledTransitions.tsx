@@ -18,7 +18,11 @@ export function PetriEnabledTransitions({
 }) {
   const toggle = (id: string) => {
     if (disabled) return
-    onChange(selected.includes(id) ? selected.filter((x) => x !== id) : [...selected, id])
+    onChange(
+      selected.includes(id)
+        ? selected.filter((x) => x !== id)
+        : [...selected, id]
+    )
   }
 
   return (
@@ -43,18 +47,22 @@ export function PetriEnabledTransitions({
                 "flex items-center gap-3 rounded-md border px-4 py-3 text-left transition-colors",
                 active
                   ? "border-[var(--accent)] bg-[var(--accent-dim)]/30"
-                  : "border-[var(--border)] bg-[var(--bg-1)] hover:bg-[var(--bg-2)]",
+                  : "border-[var(--border)] bg-[var(--bg-1)] hover:bg-[var(--bg-2)]"
               )}
             >
               <span
                 className={cn(
                   "flex size-5 items-center justify-center rounded-[4px] border",
-                  active ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-fg)]" : "border-[var(--border-strong)]",
+                  active
+                    ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-fg)]"
+                    : "border-[var(--border-strong)]"
                 )}
               >
                 {active && <CheckIcon className="size-3" strokeWidth={3} />}
               </span>
-              <span className="font-mono text-sm">{transition.label ?? transition.id}</span>
+              <span className="font-mono text-sm">
+                {transition.label ?? transition.id}
+              </span>
             </button>
           )
         })}

@@ -27,7 +27,9 @@ export function McqQuestion({
     if (mode === "single") {
       onChange([id])
     } else {
-      onChange(value.includes(id) ? value.filter((x) => x !== id) : [...value, id])
+      onChange(
+        value.includes(id) ? value.filter((x) => x !== id) : [...value, id]
+      )
     }
   }
 
@@ -48,7 +50,7 @@ export function McqQuestion({
                 selected
                   ? "border-[var(--accent)] bg-[var(--accent-dim)]/30"
                   : "border-[var(--border)] bg-[var(--bg-1)] hover:bg-[var(--bg-2)]",
-                disabled && "cursor-not-allowed opacity-90",
+                disabled && "cursor-not-allowed opacity-90"
               )}
             >
               <div
@@ -57,16 +59,18 @@ export function McqQuestion({
                   mode === "single" ? "rounded-full" : "rounded-[4px]",
                   selected
                     ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-fg)]"
-                    : "border-[var(--border-strong)]",
+                    : "border-[var(--border-strong)]"
                 )}
               >
                 {selected && <CheckIcon className="size-3" strokeWidth={3} />}
               </div>
-              <div className="flex items-baseline gap-2 flex-1 min-w-0">
-                <span className="font-mono text-[10px] tabular-nums text-[var(--fg-3)]">
+              <div className="flex min-w-0 flex-1 items-baseline gap-2">
+                <span className="font-mono text-[10px] text-[var(--fg-3)] tabular-nums">
                   {String.fromCharCode(97 + i)})
                 </span>
-                <span className="text-sm leading-relaxed text-[var(--fg-0)]">{opt.label}</span>
+                <span className="text-sm leading-relaxed text-[var(--fg-0)]">
+                  {opt.label}
+                </span>
               </div>
             </button>
           </li>

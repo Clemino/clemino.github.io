@@ -1,11 +1,16 @@
 import { numericMatch } from "./normalize"
-import type { NumericPayload, NumericSolution, NumericSubmission, ValidationResult } from "./types"
+import type {
+  NumericPayload,
+  NumericSolution,
+  NumericSubmission,
+  ValidationResult,
+} from "./types"
 
 export function validateNumeric(
   payload: NumericPayload,
   solution: NumericSolution,
   submission: NumericSubmission,
-  explanation: string,
+  explanation: string
 ): ValidationResult {
   // Parse submission: trim, replace decimal comma, then Number()
   const raw = (submission?.value ?? "").trim().replace(/,/g, ".")
@@ -35,7 +40,13 @@ export function validateNumeric(
     return {
       passed: true,
       score: 1,
-      feedback: [{ ok: true, criterion: "Valeur correcte", detail: "La réponse est dans la tolérance attendue." }],
+      feedback: [
+        {
+          ok: true,
+          criterion: "Valeur correcte",
+          detail: "La réponse est dans la tolérance attendue.",
+        },
+      ],
       reveal: { canonicalSolution, explanation },
     }
   }

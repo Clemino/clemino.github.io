@@ -3,7 +3,12 @@ import { toast } from "sonner"
 import { COURSE } from "@/content/course"
 import { resetAllProgress } from "@/lib/actions/progression"
 import { mergeProgress } from "@/lib/merge-progress"
-import { EMPTY_PROGRESS, PROGRESS_KEY, useProgressStore, type ProgressData } from "@/lib/store"
+import {
+  EMPTY_PROGRESS,
+  PROGRESS_KEY,
+  useProgressStore,
+  type ProgressData,
+} from "@/lib/store"
 import { supabase } from "@/lib/supabase"
 
 const SYNC_DELAY_MS = 2000
@@ -14,7 +19,8 @@ let lastSynced = ""
 let timer: ReturnType<typeof setTimeout> | undefined
 
 function snapshot(): ProgressData {
-  const { attempts, sectionsRead, gateRuns, examRuns, mastery } = useProgressStore.getState()
+  const { attempts, sectionsRead, gateRuns, examRuns, mastery } =
+    useProgressStore.getState()
   return { attempts, sectionsRead, gateRuns, examRuns, mastery }
 }
 
@@ -25,7 +31,9 @@ const hydrated = () =>
   })
 
 async function save(data: ProgressData) {
-  const { error } = await supabase.from("progress").upsert({ user_id: userId, course: COURSE.id, data })
+  const { error } = await supabase
+    .from("progress")
+    .upsert({ user_id: userId, course: COURSE.id, data })
   if (error) throw error
 }
 
@@ -33,15 +41,24 @@ async function sync() {
   if (!userId) return
   try {
     await hydrated()
-    const { data: row, error } = await supabase.from("progress").select("data").eq("course", COURSE.id).maybeSingle()
+    const { data: row, error } = await supabase
+      .from("progress")
+      .select("data")
+      .eq("course", COURSE.id)
+      .maybeSingle()
     if (error) throw error
-    const merged = mergeProgress(snapshot(), (row?.data as ProgressData | undefined) ?? EMPTY_PROGRESS)
+    const merged = mergeProgress(
+      snapshot(),
+      (row?.data as ProgressData | undefined) ?? EMPTY_PROGRESS
+    )
     lastSynced = JSON.stringify(merged)
     useProgressStore.setState(merged)
     await save(merged)
   } catch (error) {
     console.error(error)
-    toast.error("Synchronisation impossible : ta progression reste sur cet appareil.")
+    toast.error(
+      "Synchronisation impossible : ta progression reste sur cet appareil."
+    )
   }
 }
 

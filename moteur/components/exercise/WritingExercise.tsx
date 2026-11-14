@@ -26,7 +26,9 @@ export function WritingExercise({
   const toggle = (id: string) =>
     onChange({
       text,
-      checked: checked.includes(id) ? checked.filter((c) => c !== id) : [...checked, id],
+      checked: checked.includes(id)
+        ? checked.filter((c) => c !== id)
+        : [...checked, id],
     })
 
   return (
@@ -41,11 +43,16 @@ export function WritingExercise({
           placeholder="Rédige ici, ou sur papier comme à l'examen, puis ouvre le corrigé."
           className="w-full rounded-md border border-[var(--border-strong)] bg-[var(--bg-1)] p-3 text-[14px] leading-relaxed text-[var(--fg-0)] outline-none focus:border-[var(--accent)]"
         />
-        <div className="mt-1 text-right font-mono text-[10px] text-[var(--fg-3)]">{words} mots</div>
+        <div className="mt-1 text-right font-mono text-[10px] text-[var(--fg-3)]">
+          {words} mots
+        </div>
       </div>
 
       {!revealed && (
-        <Button variant="outline" onClick={() => onChange({ text, checked: [] })}>
+        <Button
+          variant="outline"
+          onClick={() => onChange({ text, checked: [] })}
+        >
           <EyeIcon className="size-4" />
           Voir le corrigé et m&apos;évaluer
         </Button>
@@ -59,7 +66,9 @@ export function WritingExercise({
           </div>
 
           <fieldset className="space-y-2" disabled={disabled}>
-            <legend className="mono-label mb-2">Coche ce que ta copie contient vraiment</legend>
+            <legend className="mono-label mb-2">
+              Coche ce que ta copie contient vraiment
+            </legend>
             {payload.rubric.map((c) => (
               <label
                 key={c.id}

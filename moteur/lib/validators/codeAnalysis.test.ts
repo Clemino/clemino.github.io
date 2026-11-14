@@ -57,7 +57,12 @@ describe("validateCodeAnalysis — toutes correctes", () => {
         q2: { selected: ["a"] },
       },
     }
-    const r = validateCodeAnalysis(payloadNumericMcq, solutionNumericMcq, submission, "explication")
+    const r = validateCodeAnalysis(
+      payloadNumericMcq,
+      solutionNumericMcq,
+      submission,
+      "explication"
+    )
     expect(r.passed).toBe(true)
     expect(r.score).toBeCloseTo(1)
   })
@@ -70,12 +75,17 @@ describe("validateCodeAnalysis — partiellement correctes", () => {
   it("score fractionnaire et passed = false quand une réponse est fausse", () => {
     const submission: CodeAnalysisSubmission = {
       answers: {
-        q1: { value: "0" },    // correct (score 1, weight 1)
+        q1: { value: "0" }, // correct (score 1, weight 1)
         q2: { selected: ["b"] }, // incorrect (score 0, weight 2)
       },
     }
     // score pondéré = (1×1 + 0×2) / (1+2) = 1/3
-    const r = validateCodeAnalysis(payloadNumericMcq, solutionNumericMcq, submission, "")
+    const r = validateCodeAnalysis(
+      payloadNumericMcq,
+      solutionNumericMcq,
+      submission,
+      ""
+    )
     expect(r.passed).toBe(false)
     expect(r.score).toBeCloseTo(1 / 3)
   })
@@ -146,7 +156,12 @@ describe("validateCodeAnalysis — mix NUMERIC + MCQ_SINGLE, weight par défaut"
           id: "m1",
           type: "MCQ_SINGLE",
           prompt: "relu(0) vaut ?",
-          payload: { options: [{ id: "z", label: "0" }, { id: "w", label: "1" }] },
+          payload: {
+            options: [
+              { id: "z", label: "0" },
+              { id: "w", label: "1" },
+            ],
+          },
         },
       ],
     }
@@ -158,7 +173,7 @@ describe("validateCodeAnalysis — mix NUMERIC + MCQ_SINGLE, weight par défaut"
     }
     const submission: CodeAnalysisSubmission = {
       answers: {
-        n1: { value: "7" },   // correct
+        n1: { value: "7" }, // correct
         m1: { selected: ["w"] }, // incorrect
       },
     }
@@ -207,7 +222,12 @@ describe("validateCodeAnalysis — préfixes Q1. / Q2. dans le feedback", () => 
         q2: { selected: ["a"] },
       },
     }
-    const r = validateCodeAnalysis(payloadNumericMcq, solutionNumericMcq, submission, "")
+    const r = validateCodeAnalysis(
+      payloadNumericMcq,
+      solutionNumericMcq,
+      submission,
+      ""
+    )
     const criteria = r.feedback.map((c) => c.criterion)
     expect(criteria.some((c) => c.startsWith("Q1."))).toBe(true)
     expect(criteria.some((c) => c.startsWith("Q2."))).toBe(true)
@@ -306,7 +326,7 @@ describe("validateCodeAnalysis — type de sous-question invalide", () => {
     expect(r.passed).toBe(false)
     expect(r.score).toBe(0)
     const hasInvalidTypeCriterion = r.feedback.some(
-      (c) => !c.ok && /invalide|ORDERING/i.test(c.criterion),
+      (c) => !c.ok && /invalide|ORDERING/i.test(c.criterion)
     )
     expect(hasInvalidTypeCriterion).toBe(true)
   })
