@@ -1,20 +1,13 @@
 # Ce qui reste à faire sur le site
 
-État au 13 novembre 2026. Cocher ou retirer un point une fois fait.
+État au 14 novembre 2026. Retirer un point une fois fait : l'historique git en garde la trace.
 
 ## En attente d'une réponse de Clément
 
-- [x] **Faire publier le moteur dans `site/`.** Fait le 13 novembre 2026 : le moteur et les neuf matières sont dans `moteur/`, et `pnpm publish:course <id>` écrit dans `site/<id>/`.
-- [x] **Mettre la clé secrète de Supabase dans claude.ai/code.** Fait par Clément le 14 novembre 2026 et vérifié depuis une session cloud : un **secret réseau** de l'environnement `clemino.github` ajoute la clé (en-tête `apikey`, sans préfixe) aux requêtes vers `fcxrvoloiuicbgbqjoco.supabase.co`, sans qu'elle entre dans la session. Ne jamais la mettre dans les variables d'environnement : quiconque utilise l'environnement peut les lire, et cette clé passe outre les règles de Supabase.
-- [x] **Lancer `supabase/acces-par-personne.sql` dans Supabase.** Fait par Clément le 10 novembre 2026 : les accès par personne sont actifs, et Clément les gère dans la section « Accès » de la bibliothèque.
 - [ ] **Ajouter des proches à la liste de test Google.** L'appli Google reste en mode Test, comme Clément l'a décidé le 9 novembre 2026 : seuls les comptes de sa liste peuvent se connecter, donc ouvrir un cours. Il faut leurs adresses Gmail exactes, à ajouter dans la [console Google, page Audience](https://console.cloud.google.com/auth/audience?project=cours-513918), bouton **Add users** (100 personnes maximum). À la première connexion, Google affiche « Google n'a pas validé cette application » : il faut cliquer sur **Continuer**.
-- [x] **Supprimer le dépôt privé `Clemino/coursapp`.** Fait par Clément le 9 novembre 2026 : `coursapp` n'existe plus que sur son PC. Depuis le 13 novembre 2026, il est remplacé par `moteur/` dans ce dépôt.
 
 ## Site
 
-- [x] **Régler la page d'accueil** (`site/index.html`). Fait le 9 novembre 2026 : à la demande de Clément, c'est une page blanche. On entre sur le site uniquement par `/cours/`.
-- [x] **Chacun ne voit que ses matières.** Fait le 10 novembre 2026 : une personne voit les matières qu'elle a proposées et qui ont été créées, celles qu'elle suivait déjà, et celles que Clément lui donne dans la section « Accès » ; Clément voit tout. `proposals.mjs done` ouvre la matière créée à son auteur. Les cours n'ont pas eu à être republiés : ils vérifient qu'on suit la matière, et Supabase cache celles dont l'accès a été retiré.
-- [x] **Refaire l'interface de la bibliothèque** (`site/cours/index.html`). Fait le 9 novembre 2026 : une carte par matière, une carte « + » qui ouvre le formulaire dans une fenêtre, des boutons animés aux couleurs des cours, et « Mes propositions » avec l'état de chacune.
 - [ ] **Compléter Trading :** 18 sections de théorie rédigées sur 83 prévues ; les modules 4 à 15 sont presque vides. Le contenu se trouve dans `moteur/courses/trd/`, puis se publie avec `cd moteur && pnpm publish:course trd`.
 - [ ] **Ajouter les ateliers d'IA responsable** (diapositives 18, 27 et 34), si leurs documents sont disponibles : le PDF ne contient que leurs titres.
 
@@ -28,6 +21,16 @@ Relevé le 10 novembre 2026 en parcourant le site comme un étudiant.
 - [ ] **Ajouter une icône d'onglet et une description** à `/cours/` et à la racine : pas de favicon (erreur 404), pas de `<meta name="description">` pour le partage d'un lien.
 - [ ] **Ajouter une page 404 au site** (`site/404.html`) : une adresse inconnue affiche celle de GitHub, en anglais.
 - [ ] **Dire qui fait le site et comment le contacter.** Ni la bibliothèque ni les « À propos » des cours ne donnent d'auteur ou de contact. La page de confidentialité est déjà prévue dans « Ouvrir le site à tout le monde ».
+
+## Propositions de matières
+
+Demandé par Clément le 10 novembre 2026.
+
+- [ ] **Voir et trier toutes les propositions dans la bibliothèque.** Aujourd'hui, Clément ne voit que ses propres propositions : celles des autres n'apparaissent nulle part sur le site. Ajouter une section visible de lui seul, avec toutes les propositions (titre, catégorie, auteur, date, PDF à consulter) et deux boutons :
+  - **Accepter** : la proposition passe « En attente de Claude ». Claude ne traite plus que celles-là : `scripts/proposals.mjs list` n'affiche que les propositions acceptées ;
+  - **Refuser** : la proposition et ses PDF sont supprimés de Supabase.
+
+  À prévoir : des règles Supabase pour que l'administrateur lise et modifie toutes les propositions et efface leurs fichiers, le nouveau statut et son libellé dans « Mes propositions », et ce que voit l'auteur d'une proposition refusée.
 
 ## Moteur des cours (`moteur/`)
 
@@ -45,12 +48,9 @@ Relevé le 10 novembre 2026. Le moteur est commun aux cours : corriger dans `mot
 - [ ] **Ne pas couper la carte « Module courant »** de l'accueil d'un cours : elle affiche « Introduction au ».
 - [ ] **Masquer l'identifiant technique des exercices** (« #885fabb1 »), et donner une idée du sujet dans la liste des exercices, qui n'affiche que « Q01 QCM ★1 ».
 - [ ] **Pouvoir avancer sans valider.** Le seul bouton en bas d'une théorie est « Compris, suivant », qui marque la section comme comprise. Ajouter « précédent » et « suivant ».
-- [x] **Calculer le temps de lecture à partir du texte.** Fait le 13 novembre 2026 : le moteur compte 200 mots par minute, au lieu des durées indiquées à la main, 3 à 8 fois trop longues. Un cours affiche la nouvelle durée une fois republié.
 
 ## Entretien
 
-- [x] **Supprimer les branches déjà fusionnées.** Fait le 9 novembre 2026 : il ne reste que `main`, en local et sur GitHub.
-- [x] **Couper la connexion par e-mail dans Supabase.** Fait le 9 novembre 2026 : seul Google permet de se connecter, donc seules les personnes de la liste de test Google peuvent créer un compte.
 - [ ] **Tester sur un second appareil** (téléphone, iPad) : se connecter, retrouver ses matières et sa progression.
 
 ## Idées pour plus tard
