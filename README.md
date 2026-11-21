@@ -10,6 +10,7 @@ Bibliothèque de cours en ligne : on se connecte avec Google, on ouvre les mati�
 site/                   Publié tel quel sur https://clemino.github.io
 ├── index.html          Page d'accueil, volontairement blanche
 ├── cours/              Bibliothèque : connexion, matières, propositions, accès
+├── palworld/           Parcours des objets de collection de Palworld, page autonome copiée de clemino/palworld
 ├── admin/              Droit administratif   ┐
 ├── contrats/           Droit des contrats    │ générés par moteur/ :
 ├── ia-responsable/     IA responsable        │ ne pas modifier à la main
