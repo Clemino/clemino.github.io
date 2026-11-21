@@ -8,6 +8,7 @@ import {
   type CourseIndex,
   type ExamInfo,
   type Exercise,
+  type UnlockSnapshot,
 } from "@/lib/course"
 import { answerTexts } from "@/lib/validators/canonical"
 import { normalize } from "@/lib/validators/normalize"
@@ -341,7 +342,11 @@ export function getConceptInfos(): ConceptInfo[] {
 
 export function getCourseIndex(): CourseIndex {
   const { modules, exams, concepts } = getCatalog()
+  const snapshots = path.join(process.cwd(), "content", "unlock-snapshots.json")
   return {
+    ...(fs.existsSync(snapshots)
+      ? { unlockSnapshots: readJson<UnlockSnapshot[]>(snapshots) }
+      : {}),
     conceptCount: concepts.length,
     exams: exams.map(({ slug, title, durationMinutes }) => ({
       slug,

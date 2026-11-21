@@ -52,8 +52,40 @@ export function nextStepAfterChapter(
 }
 
 /**
+ * Chapters unlocked with an earlier outline of the course, by the same rule as
+ * computeProgress: content added to a chapter must not lock the next ones again.
+ */
+function unlockedBefore(
+  course: CourseIndex,
+  isRead: (id: string) => boolean,
+  isPassed: (id: string) => boolean
+): Set<string> {
+  const unlocked = new Set<string>()
+  for (const snapshot of course.unlockSnapshots ?? []) {
+    for (const m of snapshot.modules) {
+      let previousCompleted = true
+      const chapters = [...m.chapters].sort((a, b) => a.order - b.order)
+      for (const c of chapters) {
+        const size = c.sectionIds.length + c.exerciseIds.length
+        const completed =
+          size > 0 &&
+          c.sectionIds.every(isRead) &&
+          c.exerciseIds.every(isPassed)
+        const open: boolean = c.order === 1 || previousCompleted
+        if (open) unlocked.add(c.slug)
+        previousCompleted = size > 0 ? completed : open
+      }
+    }
+  }
+  return unlocked
+}
+
+/**
  * Everything derives from the recorded events (sections read, exercises passed,
  * gates passed), which only grow, so unlocks stay acquired without being stored.
+ * Content added to a published course must not take them back: a chapter stays
+ * open once its module is validated, once work has started in it or after it,
+ * or if it was open with an earlier outline of the course (unlockSnapshots).
  */
 export function computeProgress(
   course: CourseIndex,
@@ -67,10 +99,24 @@ export function computeProgress(
       .map((a) => a.exerciseId)
   )
 
+  const isRead = (id: string) => id in data.sectionsRead
+  const isPassed = (id: string) => passedExercises.has(id)
+  const openBefore = unlockedBefore(course, isRead, isPassed)
+
   let previousModuleCompleted = true
   const modules = course.modules.map((m) => {
+    const gateScores = data.gateRuns.filter(
+      (r) => r.moduleSlug === m.slug && r.endedAt
+    )
+    const gatePassed = gateScores.some((r) => r.passed)
+    let lastStarted = -1
+    m.chapters.forEach((c, i) => {
+      if (c.sectionIds.some(isRead) || c.exerciseIds.some(isPassed))
+        lastStarted = i
+    })
+
     let previousChapterCompleted = true
-    const chapters = m.chapters.map((c) => {
+    const chapters = m.chapters.map((c, i) => {
       const sectionsRead = c.sectionIds.filter(
         (id) => id in data.sectionsRead
       ).length
@@ -82,22 +128,24 @@ export function computeProgress(
         sectionsRead === c.sectionIds.length &&
         exercisesPassed === c.exerciseIds.length &&
         c.sectionIds.length + c.exerciseIds.length > 0
-      const unlocked = c.order === 1 || previousChapterCompleted
+      const unlocked =
+        c.order === 1 ||
+        previousChapterCompleted ||
+        gatePassed ||
+        i <= lastStarted ||
+        openBefore.has(c.slug)
       // An unwritten chapter must not lock the written ones after it.
       previousChapterCompleted =
         c.sectionIds.length + c.exerciseIds.length > 0 ? completed : unlocked
       return { ...c, unlocked, completed, sectionsRead, exercisesPassed }
     })
 
-    const gateScores = data.gateRuns.filter(
-      (r) => r.moduleSlug === m.slug && r.endedAt
-    )
     // A skipped module has a passed gate without score.
     const scores = gateScores.flatMap((r) =>
       r.score === null ? [] : [r.score]
     )
     const unlocked = m.order === 1 || previousModuleCompleted
-    const completed = gateScores.some((r) => r.passed)
+    const completed = gatePassed
     previousModuleCompleted = completed
 
     return {

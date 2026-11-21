@@ -18,6 +18,8 @@
     "pretest": "tsx scripts/select-course.ts && tsx scripts/build-course-index.ts",
     "precheck:content": "tsx scripts/select-course.ts",
     "publish:course": "bash scripts/publish-course.sh",
+    "presnapshot:unlocks": "tsx scripts/select-course.ts",
+    "snapshot:unlocks": "tsx scripts/snapshot-unlocks.ts",
     "gen:ohlc": "tsx scripts/generate-ohlc.ts"
   },
   "pnpm": {

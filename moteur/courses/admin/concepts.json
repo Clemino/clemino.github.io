@@ -417,7 +417,7 @@
  {
   "slug": "ivg-vabre",
   "label": "IVG et Jacques Vabre (1975)",
-  "summary": "Le Conseil constitutionnel refuse le contrôle de conventionnalité, confié aux juges ordinaires."
+  "summary": "Le Conseil constitutionnel refuse le contrôle de conventionnalité (IVG) ; la Cour de cassation l'exerce quatre mois plus tard (Jacques Vabre)."
  },
  {
   "slug": "controle-conventionnalite",
@@ -442,7 +442,7 @@
  {
   "slug": "perreux",
   "label": "Perreux (2009)",
-  "summary": "Une directive non transposée est invocable contre un acte individuel, si elle est précise et inconditionnelle."
+  "summary": "Une directive non transposée dans les délais est invocable contre un acte non réglementaire, si ses dispositions sont précises et inconditionnelles."
  },
  {
   "slug": "renvoi-prejudiciel-cjue",
@@ -452,7 +452,7 @@
  {
   "slug": "identite-constitutionnelle",
   "label": "Identité constitutionnelle",
-  "summary": "Limite à la primauté du droit de l'Union : un principe sans équivalent en droit de l'Union."
+  "summary": "Limite à l'immunité des lois de transposition : une règle ou un principe inhérent à l'identité constitutionnelle de la France, sans protection équivalente en droit de l'Union."
  },
  {
   "slug": "arcelor",
@@ -467,7 +467,7 @@
  {
   "slug": "french-data-network",
   "label": "French Data Network (2021)",
-  "summary": "La Constitution reste au sommet : le juge écarte le droit de l'Union qui la priverait de garanties."
+  "summary": "La Constitution reste au sommet : le juge écarte le droit de l'Union qui priverait de garanties une exigence constitutionnelle sans protection équivalente, dans la stricte mesure nécessaire."
  },
  {
   "slug": "qpc-ue",

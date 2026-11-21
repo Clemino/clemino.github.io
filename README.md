@@ -33,6 +33,7 @@ COURSE=<id> pnpm dev              # ouvre une matière en local
 COURSE=<id> pnpm check:content    # chaque solution passe son correcteur
 COURSE=<id> pnpm check:quality    # la matière atteint le niveau d'Admin et de Contrats
 COURSE=<id> pnpm test
+COURSE=<id> pnpm snapshot:unlocks # avant d'enrichir une matière publiée : garde les chapitres ouverts
 pnpm publish:course <id>          # écrit la matière dans site/<id>/
 ```
 

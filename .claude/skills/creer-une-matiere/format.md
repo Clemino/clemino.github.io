@@ -14,6 +14,18 @@ moteur/courses/<id>/
 
 **Ne jamais changer le `prompt` d'un exercice publié** : la progression de chacun est rangée sous un identifiant calculé à partir du prompt. Pour corriger une erreur dans l'énoncé d'un exercice publié, prévenir Clément : les élèves perdent sa progression.
 
+## Enrichir une matière déjà publiée
+
+La progression tient à des identifiants : chapitre et prompt pour un exercice, chapitre et `slug` du frontmatter pour une section. On peut renommer les fichiers `.mdx`, réécrire une section, ajouter des sections, des exercices ou des chapitres, mais sans jamais changer le `slug` d'un chapitre ou d'une section publiée, ni le `prompt` d'un exercice publié.
+
+Un chapitre ne s'ouvre que si le précédent est terminé : ajouter du contenu à un chapitre fini reverrouillerait la suite. **Avant de modifier** `courses/<id>/`, figer le plan publié :
+
+```bash
+cd moteur && COURSE=<id> pnpm snapshot:unlocks
+```
+
+Le plan s'ajoute à `courses/<id>/unlock-snapshots.json` : tout chapitre ouvert avec ce plan reste ouvert. Un chapitre où l'élève a déjà travaillé, et tous les chapitres d'un module validé, restent ouverts de toute façon.
+
 ## course.ts
 
 ```ts

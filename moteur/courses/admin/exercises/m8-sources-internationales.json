@@ -950,7 +950,7 @@
    "options": [
     {
      "id": "a",
-     "label": "Il vérifie la conformité de la directive à ce principe, en saisissant la CJUE en cas de difficulté sérieuse"
+     "label": "Il vérifie la conformité de la directive au principe équivalent du droit de l'Union, en saisissant la CJUE en cas de difficulté sérieuse"
     },
     {
      "id": "b",
@@ -1272,7 +1272,7 @@
     }
    ]
   },
-  "explanation": "Majeure : selon l'article 55, un traité régulièrement ratifié et publié a une autorité supérieure à celle des lois, sous réserve de réciprocité. Il prime donc sur un décret, s'il est d'effet direct (GISTI et FAPIL).\n\nMineure : ici, la convention a bien été ratifiée. La stipulation crée un droit pour les titulaires de diplômes, comme celle examinée dans Cheriet-Benseghir. Le juge vérifie la réciprocité lui-même.\n\nConclusion : l'argument de l'ordre échoue. Si la publication et la réciprocité sont établies, et si le diplôme a été délivré dans les mêmes conditions, le refus encourt l'annulation.",
+  "explanation": "Majeure : selon l'article 55, un traité régulièrement ratifié et publié a une autorité supérieure à celle des lois, sous réserve de réciprocité. Il prime donc sur un décret, s'il est d'effet direct (GISTI et FAPIL).\n\nMineure : ici, la convention a bien été ratifiée, par le président de la République. Elle ne porte sur aucune des matières de l'article 53 qui exigeraient une loi : la ratification est régulière (Blotzheim). La stipulation crée un droit pour les titulaires de diplômes, comme celle examinée dans Cheriet-Benseghir. Le juge vérifie la réciprocité lui-même.\n\nConclusion : l'argument de l'ordre échoue. Si la publication et la réciprocité sont établies, et si le diplôme a été délivré dans les mêmes conditions, le refus encourt l'annulation.",
   "hint": "Vérifie les conditions de l'article 55 une par une, comme dans Cheriet-Benseghir.",
   "concepts": [
    "conditions-article-55",
@@ -1373,7 +1373,7 @@
    "value": false
   },
   "explanation": "Faux : la signature authentifie le texte. C'est la ratification ou l'approbation qui engage l'État.",
-  "hint": "Distingue la formalité qui fixe le texte et l'acte qui engage l'État.",
+  "hint": "Pense à la portée de la signature en droit international.",
   "concepts": [
    "conditions-article-55"
   ],
@@ -1411,7 +1411,7 @@
    ]
   },
   "explanation": "Le juge vérifie l'existence et la régularité de la ratification, par exemple si une loi était nécessaire (article 53). Il ne vérifie pas la conformité du traité à la Constitution.",
-  "hint": "L'arrêt porte sur la deuxième condition de l'article 55.",
+  "hint": "Relis le tableau des cinq conditions.",
   "concepts": [
    "conditions-article-55"
   ],
@@ -1427,19 +1427,19 @@
    "items": [
     {
      "id": "i2",
-     "label": "Chevrol (CEDH, 2003) : la France est condamnée pour atteinte au procès équitable"
+     "label": "Chevrol (CEDH) : la France est condamnée pour atteinte au procès équitable"
     },
     {
      "id": "i3",
-     "label": "Cheriet-Benseghir (2010) : le juge apprécie lui-même la réciprocité"
+     "label": "Cheriet-Benseghir : le juge apprécie lui-même la réciprocité"
     },
     {
      "id": "i0",
-     "label": "Article 55 (1958) : la réciprocité conditionne la supériorité des traités sur les lois"
+     "label": "Article 55 de la Constitution : la réciprocité conditionne la supériorité des traités sur les lois"
     },
     {
      "id": "i1",
-     "label": "Rekhou (1981) : le juge interroge le ministre et s'estime lié par sa réponse"
+     "label": "Rekhou : le juge interroge le ministre et s'estime lié par sa réponse"
     }
    ]
   },
@@ -1451,7 +1451,7 @@
     "i3"
    ]
   },
-  "explanation": "Le juge s'en remettait au ministre ; la Cour européenne des droits de l'homme l'a condamné ; il décide désormais seul.",
+  "explanation": "1958 : l'article 55. 1981 : Rekhou, le juge s'en remet au ministre. 2003 : Chevrol, la Cour européenne condamne la France. 2010 : Cheriet-Benseghir, le juge décide seul.",
   "hint": "La décision de la Cour européenne explique le revirement du Conseil d'État.",
   "concepts": [
    "reciprocite"
@@ -1490,7 +1490,7 @@
    ]
   },
   "explanation": "Se dire lié par le ministre privait le justiciable d'un véritable examen par un juge, contrairement au droit au procès équitable. D'où le revirement Cheriet-Benseghir.",
-  "hint": "Pense à la jurisprudence Rekhou.",
+  "hint": "Demande-toi quel droit du justiciable la Cour européenne protège.",
   "concepts": [
    "reciprocite"
   ],
@@ -1507,7 +1507,7 @@
    "value": false
   },
   "explanation": "Faux : il peut toujours demander son avis, soumis au contradictoire. Mais cet avis ne le lie plus.",
-  "hint": "Ce qui a changé, c'est la force de l'avis du ministre.",
+  "hint": "Compare la place du ministre dans Rekhou et dans Cheriet-Benseghir.",
   "concepts": [
    "reciprocite"
   ],
@@ -1524,7 +1524,7 @@
    "value": true
   },
   "explanation": "Vrai : le Conseil d'État écarte les traités de l'Union de sa grille d'analyse de l'effet direct.",
-  "hint": "Le droit de l'Union a son propre juge.",
+  "hint": "Relis la réserve qui suit les critères de GISTI et FAPIL dans la section.",
   "concepts": [
    "effet-direct"
   ],
@@ -1626,7 +1626,7 @@
    "coutume-internationale",
    "pgdi"
   ],
-  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 b ; Fiche de révision de la partie 2, p. 7"
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 b ; Fiche de révision de la partie 2, p. 6-8"
  },
  {
   "chapterSlug": "primaute-droit-international",
@@ -1639,7 +1639,7 @@
    "value": false
   },
   "explanation": "Faux : comme la coutume, et contrairement aux traités, les PGDI ne priment pas sur la loi (Paulin, 2000).",
-  "hint": "L'article 55 ne vise que les « traités ou accords ».",
+  "hint": "Relis les trois relations déduites de l'article 55.",
   "concepts": [
    "pgdi"
   ],
@@ -1650,7 +1650,7 @@
   "type": "MCQ_MULTI",
   "difficulty": 2,
   "points": 1,
-  "prompt": "Quelles relations hiérarchiques le juge déduit-il de l'article 55 ?",
+  "prompt": "Quelles relations hiérarchiques le cours déduit-il de l'article 55 ?",
   "payload": {
    "options": [
     {
@@ -1699,19 +1699,19 @@
    "items": [
     {
      "id": "i2",
-     "label": "Jacques Vabre (Cass., mai 1975) : le juge judiciaire écarte la loi"
+     "label": "Jacques Vabre (Cass.) : le juge judiciaire écarte la loi"
     },
     {
      "id": "i3",
-     "label": "Nicolo (CE, 1989) : le juge administratif écarte la loi postérieure"
+     "label": "Nicolo (CE) : le juge administratif écarte la loi postérieure"
     },
     {
      "id": "i0",
-     "label": "Semoules (CE, 1968) : la loi postérieure l'emporte sur le traité"
+     "label": "Semoules (CE) : la loi postérieure l'emporte sur le traité"
     },
     {
      "id": "i1",
-     "label": "IVG (CC, janvier 1975) : refus du contrôle de conventionnalité"
+     "label": "IVG (CC) : refus du contrôle de conventionnalité"
     }
    ]
   },
@@ -1723,7 +1723,7 @@
     "i3"
    ]
   },
-  "explanation": "1968, puis deux décisions de 1975 à quatre mois d'intervalle, puis Nicolo, quatorze ans plus tard.",
+  "explanation": "1968 : Semoules. Janvier 1975 : IVG. Mai 1975 : Jacques Vabre, quatre mois plus tard. 1989 : Nicolo, quatorze ans après.",
   "hint": "Le juge judiciaire a réagi quelques mois après le Conseil constitutionnel.",
   "concepts": [
    "ivg-vabre",
@@ -1763,7 +1763,7 @@
    ]
   },
   "explanation": "Conception souverainiste : la loi postérieure exprime la volonté du législateur de déroger. L'article 55 donnait pourtant déjà aux traités une autorité supérieure aux lois.",
-  "hint": "Le juge s'en tient à la volonté du législateur.",
+  "hint": "Pense à la conception souverainiste du Conseil d'État avant Nicolo.",
   "concepts": [
    "nicolo"
   ],
@@ -1780,7 +1780,7 @@
    "value": true
   },
   "explanation": "Vrai : arrêt Section française de l'Observatoire international des prisons. Un traité prime sur tout acte administratif.",
-  "hint": "La primauté des traités sur les actes administratifs est acquise depuis 1952.",
+  "hint": "Le requérant était une association de défense des détenus.",
   "concepts": [
    "hierarchie-article-55"
   ],
@@ -1826,19 +1826,19 @@
    "options": [
     {
      "id": "a",
-     "label": "GISTI (CE, Ass., 1990)"
+     "label": "GISTI"
     },
     {
      "id": "b",
-     "label": "Veuve Murat (CE, 1823)"
+     "label": "Veuve Murat"
     },
     {
      "id": "c",
-     "label": "GISTI et FAPIL (CE, 2012)"
+     "label": "GISTI et FAPIL"
     },
     {
      "id": "d",
-     "label": "Cheriet-Benseghir (CE, Ass., 2010)"
+     "label": "Cheriet-Benseghir"
     }
    ]
   },
@@ -1847,8 +1847,8 @@
     "a"
    ]
   },
-  "explanation": "GISTI (1990), juste après Nicolo. GISTI et FAPIL porte sur l'effet direct, Cheriet-Benseghir sur la réciprocité, et Veuve Murat est la solution inverse.",
-  "hint": "L'arrêt suit de peu Nicolo.",
+  "explanation": "GISTI (CE, Ass., 1990), juste après Nicolo. GISTI et FAPIL (2012) porte sur l'effet direct, Cheriet-Benseghir (2010) sur la réciprocité, et Veuve Murat (1823) est la solution inverse.",
+  "hint": "Il est rendu peu après Nicolo.",
   "concepts": [
    "interpretation-traites"
   ],
@@ -1903,7 +1903,7 @@
    "value": false
   },
   "explanation": "Faux : ni les mêmes institutions, ni les mêmes États. L'Union compte 27 États membres.",
-  "hint": "Strasbourg ou Luxembourg ?",
+  "hint": "Relis le début de la section sur le droit de l'Union.",
   "concepts": [
    "droit-ue"
   ],
@@ -1941,7 +1941,7 @@
    ]
   },
   "explanation": "Avant, sans transposition, la directive n'était pas d'effet direct. Le Conseil d'État a nuancé, puis s'est aligné sur la CJUE avec Perreux (2009).",
-  "hint": "Perreux est un revirement.",
+  "hint": "Relis l'évolution de la jurisprudence avant 2009.",
   "concepts": [
    "perreux",
    "directive"
@@ -2006,7 +2006,7 @@
   "concepts": [
    "droit-ue"
   ],
-  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 B ; Fiche de révision de la partie 2, p. 9"
+  "source": "Fiche de révision de la partie 2, p. 6 et 10"
  },
  {
   "chapterSlug": "union-et-constitution",
@@ -2042,7 +2042,7 @@
   "explanation": "Le Conseil se fonde sur l'article 88-1. Il ne saisira la CJUE qu'en 2013, et la Constitution reste au sommet.",
   "hint": "Le Conseil s'appuie sur l'article de la Constitution consacré à l'Union.",
   "concepts": [
-   "identite-constitutionnelle"
+   "droit-ue"
   ],
   "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 B ; Fiche de révision de la partie 2, p. 10-11"
  },
@@ -2171,7 +2171,7 @@
    ]
   },
   "explanation": "Les trois autres principes sont protégés par le droit de l'Union : ils ne relèvent donc pas de l'identité constitutionnelle.",
-  "hint": "Le principe retenu se déduit de l'article 12 de la Déclaration de 1789, sur la force publique.",
+  "hint": "Cherche le principe que le droit de l'Union ne protège pas de manière équivalente.",
   "concepts": [
    "identite-constitutionnelle"
   ],
@@ -2209,7 +2209,7 @@
    ]
   },
   "explanation": "Le Conseil accepte, lors d'une QPC, de poser une question préjudicielle sur le fondement de l'article 88-2, pour assurer la primauté du droit de l'Union.",
-  "hint": "Ce n'est pas l'article général sur la participation à l'Union, mais le suivant.",
+  "hint": "Relis la réponse du Conseil constitutionnel en 2013, dans la section sur la QPC et le droit de l'Union.",
   "concepts": [
    "qpc-ue",
    "renvoi-prejudiciel-cjue"
@@ -2306,8 +2306,8 @@
     "a"
    ]
   },
-  "explanation": "Seules les normes écrites priment sur la loi. Le juge applique la coutume contre un acte administratif, jamais contre une loi.",
-  "hint": "L'article 55 ne parle que des « traités ou accords ».",
+  "explanation": "Seules les normes écrites priment sur la loi : la coutume ne permet pas d'écarter une loi, même postérieure (Aquarone).",
+  "hint": "Relis les trois relations déduites de l'article 55.",
   "concepts": [
    "coutume-internationale",
    "hierarchie-article-55"
@@ -2325,7 +2325,7 @@
    "value": false
   },
   "explanation": "Faux : c'est l'inverse. La constitutionnalité est abstraite et absolue ; la conventionnalité est relative et contingente, car un traité peut cesser de s'appliquer faute de réciprocité.",
-  "hint": "Pense à la réciprocité : peut-elle changer avec le temps ?",
+  "hint": "Relis la décision IVG de 1975.",
   "concepts": [
    "controle-conventionnalite",
    "ivg-vabre"
@@ -2339,7 +2339,7 @@
   "points": 3,
   "prompt": "Cas guidé : une directive, un décret et la Constitution.",
   "payload": {
-   "scenario": "Une directive précise et inconditionnelle impose aux États de soumettre certaines associations à une déclaration préalable. Le Gouvernement la transpose par un décret qui reprend exactement ses termes. Une association attaque le décret : il violerait la liberté d'association, principe à valeur constitutionnelle.\n\nDans le même recours, elle invoque une coutume internationale contre la loi qui fixe les sanctions applicables.",
+   "scenario": "Une directive précise et inconditionnelle soumet certaines industries à un système de quotas d'émission de gaz à effet de serre. Le Gouvernement la transpose par un décret qui reprend exactement ses termes. Une société sidérurgique attaque le décret : il violerait le principe d'égalité, à valeur constitutionnelle, car des industries concurrentes échappent au système.\n\nDans le même recours, elle invoque une coutume internationale contre la loi qui fixe les sanctions applicables.",
    "subQuestions": [
     {
      "id": "q1",
@@ -2365,7 +2365,7 @@
     {
      "id": "q2",
      "type": "TRUE_FALSE",
-     "prompt": "Si la liberté d'association est protégée de manière équivalente par le droit de l'Union, la question devient européenne : le juge vérifie la conformité de la directive au droit de l'Union.",
+     "prompt": "Si le principe d'égalité est protégé de manière équivalente par le droit de l'Union, la question devient européenne : le juge vérifie la conformité de la directive à ce principe du droit de l'Union.",
      "payload": {}
     },
     {

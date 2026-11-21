@@ -620,8 +620,8 @@
     "d"
    ]
   },
-  "explanation": "Seule une disposition législative est visée.",
-  "hint": "Le texte vise un seul type de norme.",
+  "explanation": "Une disposition législative, y compris l'interprétation jurisprudentielle constante qui en est donnée (CC, 6 octobre 2010). Ni un décret ni un traité.",
+  "hint": "La QPC vise la loi, telle qu'elle est appliquée.",
   "concepts": [
    "qpc"
   ],
@@ -1020,7 +1020,7 @@
   "points": 4,
   "prompt": "Sujet d'entraînement (non officiel) : « La Constitution, source effective de la légalité administrative ? » Rédige l'introduction et le plan détaillé.",
   "payload": {
-   "modelAnswer": "Accroche : depuis 1971, le bloc de constitutionnalité n'a cessé de grandir, et pourtant le juge administratif a longtemps refusé de confronter une loi à la Constitution.\n\nDéfinitions : la légalité administrative est l'ensemble des règles qui s'imposent à l'administration. Une source effective est une source qui peut être opposée à l'administration devant le juge.\n\nProblématique : la place de la Constitution au sommet de la hiérarchie des normes lui assure-t-elle une efficacité réelle face à l'administration ?\n\nI. Une source longtemps limitée. A. Un contenu souvent trop général (invocabilité). B. L'obstacle de la loi-écran (Arrighi).\n\nII. Une source aujourd'hui renforcée. A. Une loi-écran contournée (Quintin, abrogation implicite). B. L'apport de la QPC, sans perte de suprématie (article 61-1, Sarran, French Data Network).",
+   "modelAnswer": "Accroche : depuis 1971, le bloc de constitutionnalité n'a cessé de grandir, et pourtant le juge administratif a longtemps refusé de confronter une loi à la Constitution.\n\nDéfinitions : la légalité administrative est l'ensemble des règles qui s'imposent à l'administration. Une source effective est une source qui peut être opposée à l'administration devant le juge.\n\nProblématique : la place de la Constitution au sommet de la hiérarchie des normes lui assure-t-elle une efficacité réelle face à l'administration ?\n\nI. Une source longtemps limitée. A. Un contenu souvent trop général (invocabilité). B. L'obstacle de la loi-écran (Arrighi).\n\nII. Une source aujourd'hui renforcée. A. Une loi-écran limitée (Quintin) et contournée (Nicolo, abrogation implicite). B. L'apport de la QPC, sans perte de suprématie (article 61-1, Sarran, French Data Network).",
    "rubric": [
     {
      "id": "c0",
@@ -1122,7 +1122,7 @@
   "concepts": [
    "principe-legalite"
   ],
-  "source": "CM, Partie 2, Titre 1 (introduction) ; Fiche de révision de la partie 2, p. 1"
+  "source": "Fiche de révision de la partie 2, p. 1"
  },
  {
   "chapterSlug": "principe-legalite",
@@ -1149,11 +1149,11 @@
    }
   },
   "explanation": "Les sources supra-législatives garantissent souvent des droits fondamentaux : le droit administratif se subjectivise.",
-  "hint": "Le mot vient de « droits subjectifs », les droits des personnes.",
+  "hint": "Ces sources garantissent souvent des droits fondamentaux.",
   "concepts": [
    "subjectivisation"
   ],
-  "source": "CM, Partie 2, Titre 1 (introduction) ; Fiche de révision de la partie 2, p. 1"
+  "source": "Fiche de révision de la partie 2, p. 1"
  },
  {
   "chapterSlug": "principe-legalite",
@@ -1187,11 +1187,11 @@
    ]
   },
   "explanation": "La légalité s'entend au sens très large : Constitution, conventions internationales, loi, jurisprudence. Réduire la légalité à la loi de l'article 34 est le piège classique.",
-  "hint": "Le cours précise qu'on l'entend au sens très large.",
+  "hint": "Repense aux trois rangs de sources du tableau de la section.",
   "concepts": [
    "principe-legalite"
   ],
-  "source": "CM, Partie 2, Titre 1 (introduction) ; Fiche de révision de la partie 2, p. 1"
+  "source": "Fiche de révision de la partie 2, p. 1"
  },
  {
   "chapterSlug": "normes-constitutionnelles",
@@ -1248,7 +1248,7 @@
    "value": false
   },
   "explanation": "Faux : la loi doit être antérieure à la Constitution de 1946, donc à la IVe République.",
-  "hint": "Le Préambule de 1946 renvoie à des principes déjà reconnus avant lui.",
+  "hint": "Relis les trois critères du PFRLR.",
   "concepts": [
    "pfrlr"
   ],
@@ -1345,7 +1345,7 @@
    ]
   },
   "explanation": "Ce sont des normes de compétence, comme les articles 34 et 37, qui eux répartissent les domaines de la loi et du règlement.",
-  "hint": "Ces deux articles portent sur le pouvoir réglementaire au sein de l'exécutif.",
+  "hint": "Ce sont des normes de compétence, mais pas celles des articles 34 et 37.",
   "concepts": [
    "bloc-constitutionnalite"
   ],
@@ -1356,7 +1356,7 @@
   "type": "MCQ_SINGLE",
   "difficulty": 2,
   "points": 1,
-  "prompt": "Quel arrêt reconnaît, sous la Ve République, la valeur constitutionnelle du Préambule ?",
+  "prompt": "Quel arrêt est le premier, après 1958, à reconnaître la valeur constitutionnelle du Préambule ?",
   "payload": {
    "options": [
     {
@@ -1369,7 +1369,7 @@
     },
     {
      "id": "c",
-     "label": "Commune d'Annecy (CE, Ass., 2008)"
+     "label": "Quintin (CE, 1991)"
     },
     {
      "id": "d",
@@ -1382,8 +1382,8 @@
     "a"
    ]
   },
-  "explanation": "Eky (1960) : en 1958, aucun article ne renvoie plus au Préambule, mais le Conseil d'État lui reconnaît valeur constitutionnelle. Dehaene date de la IVe République, et Annecy porte sur la Charte de l'environnement.",
-  "hint": "C'est un arrêt rendu deux ans après l'entrée en vigueur de la Constitution de 1958.",
+  "explanation": "Société Eky (1960) : en 1958, aucun article ne renvoie plus au Préambule, mais le Conseil d'État lui reconnaît valeur constitutionnelle. Dehaene date de la IVe République ; Commune d'Annecy (2008) réaffirme plus tard cette valeur, à propos de la Charte.",
+  "hint": "En 1958, plus aucun article de la Constitution ne renvoie au Préambule.",
   "concepts": [
    "valeur-preambule"
   ],
@@ -1421,7 +1421,7 @@
    ]
   },
   "explanation": "Le juge ne faisait que dire ce que la Constitution prévoyait : son article 81 garantissait la jouissance des droits et libertés du Préambule. Le Conseil constitutionnel n'existe qu'à partir de 1958.",
-  "hint": "Sous la IVe République, un article du texte même de la Constitution renvoyait au Préambule.",
+  "hint": "Écarte d'abord ce qui est impossible en 1950.",
   "concepts": [
    "valeur-preambule"
   ],
@@ -1477,7 +1477,7 @@
    ]
   },
   "explanation": "Société indo-chinoise de construction électrique et mécanique (CE, 1962) : l'alinéa 12 n'est pas d'applicabilité directe. Seule la loi qui le précise peut être invoquée.",
-  "hint": "Pense au critère de la précision, et à l'arrêt de 1962.",
+  "hint": "Pense à l'arrêt de 1962.",
   "concepts": [
    "invocabilite"
   ],
@@ -1511,7 +1511,7 @@
    "right": [
     {
      "id": "r1",
-     "label": "Le Préambule garde cette valeur sous la Ve République"
+     "label": "Le Préambule garde sa valeur constitutionnelle sous la Ve République"
     },
     {
      "id": "r2",
@@ -1596,7 +1596,7 @@
   "concepts": [
    "loi-ecran"
   ],
-  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 4"
+  "source": "Fiche de révision de la partie 2, p. 4"
  },
  {
   "chapterSlug": "loi-ecran",
@@ -1656,41 +1656,20 @@
  },
  {
   "chapterSlug": "loi-ecran",
-  "type": "MCQ_SINGLE",
+  "type": "TRUE_FALSE",
   "difficulty": 1,
   "points": 1,
-  "prompt": "Quelle affaire américaine le cours oppose-t-il à la loi-écran ?",
-  "payload": {
-   "options": [
-    {
-     "id": "a",
-     "label": "Marbury contre Madison"
-    },
-    {
-     "id": "b",
-     "label": "Arrighi"
-    },
-    {
-     "id": "c",
-     "label": "Simmenthal"
-    },
-    {
-     "id": "d",
-     "label": "Quintin"
-    }
-   ]
-  },
+  "prompt": "Dans l'affaire Marbury contre Madison, le juge américain refuse, comme le juge français, de contrôler la loi.",
+  "payload": {},
   "solution": {
-   "correct": [
-    "a"
-   ]
+   "value": false
   },
-  "explanation": "Dans Marbury contre Madison, le juge américain s'est reconnu le pouvoir de contrôler la loi : c'est l'inverse du juge français.",
-  "hint": "C'est une décision de la Cour suprême des États-Unis.",
+  "explanation": "Faux : dans Marbury contre Madison, le juge américain s'est reconnu le pouvoir de contrôler la loi. C'est l'inverse de la loi-écran.",
+  "hint": "Rappelle-toi pourquoi le cours cite cette affaire à propos de la loi-écran.",
   "concepts": [
    "loi-ecran"
   ],
-  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 4"
+  "source": "Fiche de révision de la partie 2, p. 4"
  },
  {
   "chapterSlug": "loi-ecran",
@@ -1716,7 +1695,7 @@
    }
   },
   "explanation": "Le légicentrisme fait du juge la bouche de la loi : il l'applique sans la juger.",
-  "hint": "Le mot associe la loi et l'idée de centre.",
+  "hint": "Le juge est alors la bouche de la loi.",
   "concepts": [
    "loi-ecran"
   ],
@@ -1753,7 +1732,7 @@
     "a"
    ]
   },
-  "explanation": "Il faut une norme constitutionnelle nouvelle, issue d'une révision, contraire à une loi antérieure, et une incompatibilité manifeste. Le conflit avec un traité relève du contrôle de conventionnalité.",
+  "explanation": "Il faut une norme constitutionnelle nouvelle, postérieure à la loi (comme la Charte de l'environnement), et une incompatibilité manifeste. Le conflit avec un traité relève du contrôle de conventionnalité.",
   "hint": "Le contrôle est chronologique : pense à l'ordre d'adoption des deux normes.",
   "concepts": [
    "abrogation-implicite"
@@ -1791,12 +1770,12 @@
     "a"
    ]
   },
-  "explanation": "Avant 2008, le contrôle a priori laissait en vigueur des lois inconstitutionnelles, qui empêchaient d'invoquer la Constitution devant le juge administratif. Le Préambule a valeur constitutionnelle depuis Eky (1960).",
-  "hint": "Pense au moment où le Conseil constitutionnel intervenait.",
+  "explanation": "Avant 2008, le contrôle a priori laissait en vigueur des lois inconstitutionnelles, qui empêchaient d'invoquer la Constitution devant le juge administratif. Le Préambule a valeur constitutionnelle depuis Dehaene (1950), confirmé sous la Ve République par Eky (1960).",
+  "hint": "Pense à ce que la QPC a changé.",
   "concepts": [
    "loi-ecran"
   ],
-  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 4-5"
+  "source": "Fiche de révision de la partie 2, p. 4"
  },
  {
   "chapterSlug": "loi-ecran",
@@ -1847,7 +1826,7 @@
    ]
   },
   "explanation": "La révision du 23 juillet 2008 crée l'article 61-1. Le 1er mars 2005 est l'entrée en vigueur de la Charte de l'environnement.",
-  "hint": "C'est la grande révision de la fin des années 2000.",
+  "hint": "C'est la révision qui a créé l'article 61-1.",
   "concepts": [
    "qpc"
   ],
@@ -1931,7 +1910,7 @@
    }
   },
   "explanation": "Un mémoire distinct et motivé, portant la mention « question prioritaire de constitutionnalité ».",
-  "hint": "Elle ne se glisse pas dans les autres écritures de la partie.",
+  "hint": "Pense à la forme exigée, avec la mention « question prioritaire de constitutionnalité ».",
   "concepts": [
    "qpc"
   ],
@@ -2025,7 +2004,7 @@
    ]
   },
   "explanation": "SNIP (CE, 2001) confirme Sarran (1998). Porta (2002) refuse le contrôle direct des traités, Nicolo fait primer les traités sur les lois.",
-  "hint": "C'est un arrêt rendu à propos d'un syndicat professionnel.",
+  "hint": "Il confirme Sarran trois ans plus tard.",
   "concepts": [
    "suprematie-constitution"
   ],

@@ -75,11 +75,26 @@ export type CourseModule = {
   chapters: CourseChapter[]
 }
 
+/**
+ * The outline of a course as it was published before content was added to its
+ * chapters: a chapter unlocked with this outline stays unlocked afterwards.
+ */
+export type UnlockSnapshot = {
+  recordedAt: string
+  modules: Array<{
+    slug: string
+    chapters: Array<
+      Pick<CourseChapter, "slug" | "order" | "sectionIds" | "exerciseIds">
+    >
+  }>
+}
+
 /** Lightweight course outline shared with every page to compute progress in the browser. */
 export type CourseIndex = {
   modules: CourseModule[]
   exams: Pick<ExamInfo, "slug" | "title" | "durationMinutes">[]
   conceptCount: number
+  unlockSnapshots?: UnlockSnapshot[]
 }
 
 export type ExamInfo = {

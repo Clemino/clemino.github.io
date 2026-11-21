@@ -196,6 +196,104 @@ describe("computeProgress", () => {
   })
 })
 
+describe("computeProgress after content is added to a published course", () => {
+  // c1 receives a new section and a new exercise: the student had finished it before.
+  const grown: CourseIndex = {
+    ...course,
+    modules: [
+      {
+        ...course.modules[0],
+        chapters: [
+          {
+            slug: "c0",
+            order: 1,
+            title: "Nouveau",
+            sectionIds: ["c0/s"],
+            exerciseIds: ["e0"],
+          },
+          {
+            slug: "c1",
+            order: 2,
+            title: "",
+            sectionIds: ["c1/s", "c1/new"],
+            exerciseIds: ["e1", "e1-new"],
+          },
+          {
+            slug: "c2",
+            order: 3,
+            title: "",
+            sectionIds: [],
+            exerciseIds: ["e2"],
+          },
+        ],
+      },
+      course.modules[1],
+    ],
+  }
+  const before = {
+    recordedAt: "2026-11-21",
+    modules: course.modules.map((m) => ({
+      slug: m.slug,
+      chapters: m.chapters,
+    })),
+  }
+  const doneBefore = {
+    sectionsRead: { "c1/s": "2026-01-01T00:00:00.000Z" },
+    attempts: [passed("e1")],
+  }
+
+  it("would lock again a chapter opened with the earlier outline", () => {
+    const { chapters } = computeProgress(grown, {
+      ...EMPTY_PROGRESS,
+      ...doneBefore,
+    })
+    expect(chapters.c1.completed).toBe(false)
+    // c1 stays open because work started there, but nothing opens c2.
+    expect(chapters.c1.unlocked).toBe(true)
+    expect(chapters.c2.unlocked).toBe(false)
+  })
+
+  it("keeps the chapters opened with a snapshot of the earlier outline", () => {
+    const { chapters } = computeProgress(
+      { ...grown, unlockSnapshots: [before] },
+      { ...EMPTY_PROGRESS, ...doneBefore }
+    )
+    expect(chapters.c0.unlocked).toBe(true)
+    expect(chapters.c1.unlocked).toBe(true)
+    expect(chapters.c1.completed).toBe(false)
+    expect(chapters.c2.unlocked).toBe(true)
+  })
+
+  it("does not open more than the earlier outline did", () => {
+    const { chapters } = computeProgress(
+      { ...grown, unlockSnapshots: [before] },
+      EMPTY_PROGRESS
+    )
+    expect(chapters.c0.unlocked).toBe(true)
+    expect(chapters.c1.unlocked).toBe(true)
+    expect(chapters.c2.unlocked).toBe(false)
+  })
+
+  it("keeps open a chapter where work has started, and the ones before it", () => {
+    const { chapters } = computeProgress(grown, {
+      ...EMPTY_PROGRESS,
+      attempts: [passed("e2")],
+    })
+    expect(chapters.c1.unlocked).toBe(true)
+    expect(chapters.c2.unlocked).toBe(true)
+  })
+
+  it("opens every chapter of a validated module", () => {
+    const { chapters, modules } = computeProgress(grown, {
+      ...EMPTY_PROGRESS,
+      gateRuns: [gate({ passed: true, score: 0.9 })],
+    })
+    expect(modules[0].completed).toBe(true)
+    expect(chapters.c1.unlocked).toBe(true)
+    expect(chapters.c2.unlocked).toBe(true)
+  })
+})
+
 describe("getDueConcepts", () => {
   const concept = (slug: string): ConceptInfo => ({
     slug,
