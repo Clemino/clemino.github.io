@@ -48,11 +48,11 @@ Un examen final couvre tous les modules, avec une durée réaliste et des points
 | Exercices auto-corrigés par module | ≥ 15 | 19 au moins | 20 au moins |
 | Types d'exercices auto-corrigés par module | ≥ 4 | 5 | 5 |
 | QCM dont la bonne réponse est strictement la plus longue | ≤ 35 % | 22 % | 25 % |
-| Vrai ou faux : part de « vrai » | 35 à 65 % | 44 % | 45 % |
+| Vrai ou faux : part de « vrai » | 35 à 65 % | 45 % | 45 % |
 | Chapitre sans section ou sans exercice, section prévue non rédigée | aucun | | |
 | Exercice auto-corrigé sans `hint` propre ou sans `source`, section sans `source` | aucun | | |
 | Notion sans résumé, ou absente des sections ou des exercices | aucune | | |
-| Modules absents de l'examen le plus complet | aucun | 2 | 3 |
+| Modules absents de l'examen le plus complet | aucun | 0 | 3 |
 
 ## La relecture contre les sources
 

@@ -320,9 +320,34 @@
   "summary": "La police ne se délègue pas à une personne privée."
  },
  {
+  "slug": "principe-legalite",
+  "label": "Principe de légalité",
+  "summary": "Soumission des actes et décisions de l'administration à l'ensemble des règles de droit qui lui sont supérieures."
+ },
+ {
+  "slug": "principe-responsabilite",
+  "label": "Principe de responsabilité",
+  "summary": "L'administration répare, parfois même sans faute, les dommages qu'elle cause aux tiers et qui lui sont imputables."
+ },
+ {
+  "slug": "subjectivisation",
+  "label": "Subjectivisation",
+  "summary": "En se constitutionnalisant et en s'internationalisant, le droit administratif protège davantage les droits des administrés."
+ },
+ {
   "slug": "bloc-constitutionnalite",
   "label": "Bloc de constitutionnalité",
   "summary": "Constitution, Déclaration de 1789, Préambule de 1946, PFRLR et Charte de l'environnement."
+ },
+ {
+  "slug": "pfrlr",
+  "label": "PFRLR",
+  "summary": "Principe consacré par une loi républicaine antérieure à 1946, et reconnu comme tel par le juge."
+ },
+ {
+  "slug": "valeur-preambule",
+  "label": "Valeur constitutionnelle du Préambule",
+  "summary": "Reconnue par Dehaene (1950) puis Eky (1960) ; pour la Charte de l'environnement, par Commune d'Annecy (2008)."
  },
  {
   "slug": "invocabilite",
@@ -375,6 +400,16 @@
   "summary": "Une norme non écrite : le juge l'applique, mais elle ne prime pas sur la loi (Aquarone)."
  },
  {
+  "slug": "pgdi",
+  "label": "Principes généraux du droit international",
+  "summary": "Principes communs aux États : le juge les applique, mais ils ne priment pas sur la loi (Paulin)."
+ },
+ {
+  "slug": "hierarchie-article-55",
+  "label": "Primauté du droit international en droit interne",
+  "summary": "Toute norme internationale prime sur les actes administratifs, seuls les traités priment sur la loi, aucune ne prime sur la Constitution."
+ },
+ {
   "slug": "nicolo",
   "label": "Nicolo (1989)",
   "summary": "Le Conseil d'État fait primer un traité sur une loi, même postérieure."
@@ -383,6 +418,16 @@
   "slug": "ivg-vabre",
   "label": "IVG et Jacques Vabre (1975)",
   "summary": "Le Conseil constitutionnel refuse le contrôle de conventionnalité, confié aux juges ordinaires."
+ },
+ {
+  "slug": "controle-conventionnalite",
+  "label": "Contrôle de conventionnalité",
+  "summary": "Le juge ordinaire, saisi par une partie, écarte une loi incompatible avec un traité, sans l'annuler."
+ },
+ {
+  "slug": "interpretation-traites",
+  "label": "Interprétation des traités",
+  "summary": "Depuis GISTI (1990), le juge administratif interprète lui-même les traités, sans être lié par le ministre."
  },
  {
   "slug": "droit-ue",
@@ -400,6 +445,11 @@
   "summary": "Une directive non transposée est invocable contre un acte individuel, si elle est précise et inconditionnelle."
  },
  {
+  "slug": "renvoi-prejudiciel-cjue",
+  "label": "Question préjudicielle à la CJUE",
+  "summary": "Obligatoire en cas de difficulté sérieuse sur l'interprétation d'une norme de l'Union ou la validité d'un acte dérivé."
+ },
+ {
   "slug": "identite-constitutionnelle",
   "label": "Identité constitutionnelle",
   "summary": "Limite à la primauté du droit de l'Union : un principe sans équivalent en droit de l'Union."
@@ -408,6 +458,11 @@
   "slug": "arcelor",
   "label": "Arcelor (2007)",
   "summary": "Méthode de contrôle d'un décret de transposition, par recherche d'un équivalent en droit de l'Union."
+ },
+ {
+  "slug": "double-ecran",
+  "label": "Double écran (Air Algérie)",
+  "summary": "Contre un décret d'application d'une loi de transposition : QPC si la loi est en cause, méthode Arcelor si le vice est dans le décret."
  },
  {
   "slug": "french-data-network",

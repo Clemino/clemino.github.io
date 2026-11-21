@@ -1140,5 +1140,22 @@
    "circonstances-exceptionnelles"
   ],
   "source": "Fascicule de TD, séance 9"
+ },
+ {
+  "chapterSlug": "actes-en-deca",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "La marge de manœuvre non contrôlée de l'administration se restreint en temps normal et s'élargit en période de crise.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Vrai : l'administration doit pouvoir s'adapter aux circonstances. Sa marge varie selon les périodes.",
+  "hint": "Pense aux régimes de crise étudiés dans ce module.",
+  "concepts": [
+   "regimes-crise"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 2 ; Fiche de révision de la partie 2, p. 11"
  }
 ]

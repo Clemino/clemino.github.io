@@ -11,7 +11,7 @@ export const COURSE = {
   intro:
     "Parcours strictement linéaire et verrouillé, de l'histoire du droit administratif au contrôle de la légalité — service public, police administrative, sources, limites et recours. Chaque étape doit être validée avant de passer à la suivante : cours assimilé, exercices auto-corrigés réussis, puis cas pratiques et dissertations avec corrigé type.",
   about:
-    "admin.app — plateforme de révision du droit administratif. Les corrigés types sont rédigés pour s’entraîner : ils ne sont pas officiels et ne remplacent pas le cours.",
+    "admin.app — plateforme de révision du droit administratif, rédigée à partir des notes du cours magistral, du fascicule de travaux dirigés et d'une fiche de révision de la partie 2 sur le principe de légalité. Les corrigés types sont rédigés pour s’entraîner : ils ne sont pas officiels et ne remplacent pas le cours.",
   examIntro:
     "Un galop d'essai sur les modules 1 à 8 et un examen final sur tout le cours, chronométrés et notés /20. Pas de feedback intermédiaire.",
 }

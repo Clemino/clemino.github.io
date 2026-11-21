@@ -830,5 +830,22 @@
    "hierarchie-actes"
   ],
   "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 3"
+ },
+ {
+  "chapterSlug": "loi-jurisprudence",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quand la loi laisse à l'administration une marge d'appréciation discrétionnaire, le juge renonce à tout contrôle de l'acte.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Faux : le contrôle de conformité à la loi laisse place à un contrôle plus ou moins strict de la manière dont l'administration précise la loi. Il ne disparaît pas.",
+  "hint": "Le contrôle change d'intensité, il ne s'arrête pas.",
+  "concepts": [
+   "jurisprudence"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 2, §1 ; Fiche de révision de la partie 2, p. 11"
  }
 ]

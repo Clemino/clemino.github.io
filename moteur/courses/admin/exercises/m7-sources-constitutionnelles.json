@@ -1051,5 +1051,984 @@
    "suprematie-constitution"
   ],
   "source": "Fascicule de TD, séance 6"
+ },
+ {
+  "chapterSlug": "principe-legalite",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Que désigne le principe de légalité ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La soumission des actes et décisions de l'administration aux règles de droit"
+    },
+    {
+     "id": "b",
+     "label": "L'obligation pour l'administration de réparer les dommages qu'elle cause aux tiers"
+    },
+    {
+     "id": "c",
+     "label": "La soumission de l'administration à la seule loi votée par le Parlement selon l'article 34"
+    },
+    {
+     "id": "d",
+     "label": "Le pouvoir du juge administratif de contrôler la constitutionnalité des lois"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Le principe de légalité soumet les actes de l'administration au droit, au sens large : Constitution, traités, lois. La réparation des dommages relève de l'autre principe, celui de responsabilité.",
+  "hint": "Des deux principes d'encadrement, c'est celui qui porte sur l'action juridique de l'administration.",
+  "concepts": [
+   "principe-legalite"
+  ],
+  "source": "CM, Partie 2, Titre 1 (introduction) ; Fiche de révision de la partie 2, p. 1"
+ },
+ {
+  "chapterSlug": "principe-legalite",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Le principe de responsabilité peut obliger l'administration à réparer un dommage même sans faute.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Vrai : l'administration doit, dans certaines hypothèses, réparer les dommages qui lui sont imputables, parfois même sans faute.",
+  "hint": "Ce principe encadre l'action factuelle de l'administration.",
+  "concepts": [
+   "principe-responsabilite"
+  ],
+  "source": "CM, Partie 2, Titre 1 (introduction) ; Fiche de révision de la partie 2, p. 1"
+ },
+ {
+  "chapterSlug": "principe-legalite",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "La montée en puissance des sources supra-législatives est d'abord quantitative : ces normes sont surtout de plus en plus nombreuses.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Faux : elle est qualitative. Ce qui progresse, c'est l'aptitude de ces normes à être mobilisées devant un juge.",
+  "hint": "Demande-toi ce qui change pour le justiciable qui veut s'en servir.",
+  "concepts": [
+   "principe-legalite"
+  ],
+  "source": "CM, Partie 2, Titre 1 (introduction) ; Fiche de révision de la partie 2, p. 1"
+ },
+ {
+  "chapterSlug": "principe-legalite",
+  "type": "FILL_BLANK",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Complète la phrase du cours.",
+  "payload": {
+   "template": "Plus le droit administratif s'internationalise et se constitutionnalise, plus il défend les intérêts des administrés : il se {{a}}.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "md"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "subjectivise",
+     "subjectivisé",
+     "subjective"
+    ]
+   }
+  },
+  "explanation": "Les sources supra-législatives garantissent souvent des droits fondamentaux : le droit administratif se subjectivise.",
+  "hint": "Le mot vient de « droits subjectifs », les droits des personnes.",
+  "concepts": [
+   "subjectivisation"
+  ],
+  "source": "CM, Partie 2, Titre 1 (introduction) ; Fiche de révision de la partie 2, p. 1"
+ },
+ {
+  "chapterSlug": "principe-legalite",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Dans l'expression « principe de légalité », que recouvre le mot « légalité » ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'ensemble des normes supérieures à l'acte administratif"
+    },
+    {
+     "id": "b",
+     "label": "Les seules lois votées par le Parlement dans le domaine de l'article 34"
+    },
+    {
+     "id": "c",
+     "label": "Les seuls actes réglementaires pris par le Premier ministre"
+    },
+    {
+     "id": "d",
+     "label": "Les lois et les décrets, à l'exclusion de la Constitution et des traités"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "La légalité s'entend au sens très large : Constitution, conventions internationales, loi, jurisprudence. Réduire la légalité à la loi de l'article 34 est le piège classique.",
+  "hint": "Le cours précise qu'on l'entend au sens très large.",
+  "concepts": [
+   "principe-legalite"
+  ],
+  "source": "CM, Partie 2, Titre 1 (introduction) ; Fiche de révision de la partie 2, p. 1"
+ },
+ {
+  "chapterSlug": "normes-constitutionnelles",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quelles conditions un principe doit-il remplir pour être un PFRLR ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Être formellement consacré par une ou plusieurs lois"
+    },
+    {
+     "id": "b",
+     "label": "Venir de lois adoptées sous un régime républicain"
+    },
+    {
+     "id": "c",
+     "label": "Venir de lois antérieures à la Constitution de 1946"
+    },
+    {
+     "id": "d",
+     "label": "Venir de lois adoptées sous la Ve République"
+    },
+    {
+     "id": "e",
+     "label": "Être énuméré dans le texte même du Préambule de 1946"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "b",
+    "c"
+   ]
+  },
+  "explanation": "Trois critères : consécration dans une loi, régime républicain, antériorité à 1946. Le Préambule renvoie aux PFRLR sans les énumérer : c'est le juge qui les reconnaît.",
+  "hint": "Pense à l'expression elle-même : « reconnus par les lois de la République ».",
+  "concepts": [
+   "pfrlr"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 2"
+ },
+ {
+  "chapterSlug": "normes-constitutionnelles",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Une loi votée sous la IVe République peut fonder un PFRLR.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Faux : la loi doit être antérieure à la Constitution de 1946, donc à la IVe République.",
+  "hint": "Le Préambule de 1946 renvoie à des principes déjà reconnus avant lui.",
+  "concepts": [
+   "pfrlr"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 2"
+ },
+ {
+  "chapterSlug": "normes-constitutionnelles",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque PFRLR à l'année de sa reconnaissance.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Liberté d'association"
+    },
+    {
+     "id": "l1",
+     "label": "Liberté d'enseignement"
+    },
+    {
+     "id": "l2",
+     "label": "Indépendance de la juridiction administrative"
+    },
+    {
+     "id": "l3",
+     "label": "Interdiction d'extrader dans un but politique"
+    }
+   ],
+   "right": [
+    {
+     "id": "r1",
+     "label": "1977"
+    },
+    {
+     "id": "r2",
+     "label": "1980"
+    },
+    {
+     "id": "r3",
+     "label": "1996"
+    },
+    {
+     "id": "r0",
+     "label": "1971"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2",
+    "l3": "r3"
+   }
+  },
+  "explanation": "1971 : décision Liberté d'association. 1977 : liberté d'enseignement. 1980 : indépendance de la juridiction administrative. 1996 : arrêt Koné du Conseil d'État.",
+  "hint": "Le plus ancien est celui de la décision qui ouvre l'essor du bloc de constitutionnalité.",
+  "concepts": [
+   "pfrlr"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 2"
+ },
+ {
+  "chapterSlug": "normes-constitutionnelles",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Que répartissent les articles 13 et 21 de la Constitution ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Les compétences du président de la République et du Premier ministre"
+    },
+    {
+     "id": "b",
+     "label": "Les domaines de la loi et du règlement"
+    },
+    {
+     "id": "c",
+     "label": "Les compétences de l'État et des collectivités territoriales, au nom de la libre administration"
+    },
+    {
+     "id": "d",
+     "label": "Les pouvoirs du Parlement et du Conseil constitutionnel"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Ce sont des normes de compétence, comme les articles 34 et 37, qui eux répartissent les domaines de la loi et du règlement.",
+  "hint": "Ces deux articles portent sur le pouvoir réglementaire au sein de l'exécutif.",
+  "concepts": [
+   "bloc-constitutionnalite"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 2"
+ },
+ {
+  "chapterSlug": "normes-constitutionnelles",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quel arrêt reconnaît, sous la Ve République, la valeur constitutionnelle du Préambule ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Société Eky (CE, 1960)"
+    },
+    {
+     "id": "b",
+     "label": "Dehaene (CE, Ass., 1950)"
+    },
+    {
+     "id": "c",
+     "label": "Commune d'Annecy (CE, Ass., 2008)"
+    },
+    {
+     "id": "d",
+     "label": "Arrighi (CE, Sect., 1936)"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Eky (1960) : en 1958, aucun article ne renvoie plus au Préambule, mais le Conseil d'État lui reconnaît valeur constitutionnelle. Dehaene date de la IVe République, et Annecy porte sur la Charte de l'environnement.",
+  "hint": "C'est un arrêt rendu deux ans après l'entrée en vigueur de la Constitution de 1958.",
+  "concepts": [
+   "valeur-preambule"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 3-4"
+ },
+ {
+  "chapterSlug": "normes-constitutionnelles",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Pourquoi l'arrêt Dehaene (1950) reconnaît-il pleine valeur constitutionnelle au Préambule de 1946 ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'article 81 de la Constitution de 1946 garantissait les droits du Préambule"
+    },
+    {
+     "id": "b",
+     "label": "Le Conseil constitutionnel venait de censurer une loi contraire au Préambule"
+    },
+    {
+     "id": "c",
+     "label": "Le droit de grève était déjà reconnu par une loi républicaine antérieure à 1946"
+    },
+    {
+     "id": "d",
+     "label": "La Déclaration de 1789 renvoyait expressément au Préambule de 1946"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Le juge ne faisait que dire ce que la Constitution prévoyait : son article 81 garantissait la jouissance des droits et libertés du Préambule. Le Conseil constitutionnel n'existe qu'à partir de 1958.",
+  "hint": "Sous la IVe République, un article du texte même de la Constitution renvoyait au Préambule.",
+  "concepts": [
+   "valeur-preambule"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 3-4"
+ },
+ {
+  "chapterSlug": "normes-constitutionnelles",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Reconnaître la valeur constitutionnelle d'une norme suffit à la rendre invocable devant le juge.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Faux : Commune d'Annecy le rappelle pour la Charte. Il faut encore que la norme soit d'applicabilité directe, donc assez précise.",
+  "hint": "Le cours sépare deux questions : la valeur, puis l'applicabilité directe.",
+  "concepts": [
+   "valeur-preambule",
+   "invocabilite"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 3-4"
+ },
+ {
+  "chapterSlug": "normes-constitutionnelles",
+  "type": "MCQ_SINGLE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Un requérant invoque seul l'alinéa 12 du Préambule de 1946 (solidarité nationale) contre un décret. Que fait le juge ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Il rejette le moyen comme inopérant, faute d'applicabilité directe"
+    },
+    {
+     "id": "b",
+     "label": "Il annule le décret pour violation du Préambule"
+    },
+    {
+     "id": "c",
+     "label": "Il transmet une QPC au Conseil constitutionnel"
+    },
+    {
+     "id": "d",
+     "label": "Il se déclare incompétent, car une loi fait toujours écran entre la Constitution et un décret"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Société indo-chinoise de construction électrique et mécanique (CE, 1962) : l'alinéa 12 n'est pas d'applicabilité directe. Seule la loi qui le précise peut être invoquée.",
+  "hint": "Pense au critère de la précision, et à l'arrêt de 1962.",
+  "concepts": [
+   "invocabilite"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 3-4"
+ },
+ {
+  "chapterSlug": "normes-constitutionnelles",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque décision à son apport.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Dehaene (1950)"
+    },
+    {
+     "id": "l1",
+     "label": "Société Eky (1960)"
+    },
+    {
+     "id": "l2",
+     "label": "Commune d'Annecy (2008)"
+    },
+    {
+     "id": "l3",
+     "label": "Société indo-chinoise (1962)"
+    }
+   ],
+   "right": [
+    {
+     "id": "r1",
+     "label": "Le Préambule garde cette valeur sous la Ve République"
+    },
+    {
+     "id": "r2",
+     "label": "La Charte de l'environnement a valeur constitutionnelle"
+    },
+    {
+     "id": "r3",
+     "label": "La solidarité nationale n'est pas d'applicabilité directe"
+    },
+    {
+     "id": "r0",
+     "label": "Le Préambule de 1946 a valeur constitutionnelle sous la IVe République"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2",
+    "l3": "r3"
+   }
+  },
+  "explanation": "Trois décisions sur la valeur constitutionnelle, une sur l'applicabilité directe.",
+  "hint": "Repère d'abord la seule décision qui porte sur l'applicabilité directe.",
+  "concepts": [
+   "valeur-preambule",
+   "invocabilite"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 3-4"
+ },
+ {
+  "chapterSlug": "normes-constitutionnelles",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quand une norme constitutionnelle est trop imprécise pour être invoquée seule, le juge rejette le moyen comme inopérant.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Vrai : le moyen est inopérant, incapable de résoudre le litige. Seule une loi qui précise la norme pourra être invoquée.",
+  "hint": "Pense à l'alinéa 12 du Préambule de 1946.",
+  "concepts": [
+   "invocabilite"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 3-4"
+ },
+ {
+  "chapterSlug": "loi-ecran",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Selon l'arrêt Deprez et Baillard (2005), d'où vient l'incompétence du Conseil d'État pour juger une loi ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "De la compétence exclusive du Conseil constitutionnel"
+    },
+    {
+     "id": "b",
+     "label": "De l'article 5 du code civil, qui interdit les arrêts de règlement"
+    },
+    {
+     "id": "c",
+     "label": "De l'article 55, qui place les traités au-dessus des lois"
+    },
+    {
+     "id": "d",
+     "label": "De la séparation des autorités administratives et judiciaires"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Le Conseil d'État explicite en 2005 le fondement moderne de la loi-écran : le contrôle de constitutionnalité des lois revient au seul Conseil constitutionnel.",
+  "hint": "C'est le fondement de la loi-écran depuis 1958.",
+  "concepts": [
+   "loi-ecran"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 4"
+ },
+ {
+  "chapterSlug": "loi-ecran",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Un règlement autonome peut être directement confronté à la Constitution.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Vrai : pris en dehors du domaine de la loi, il n'applique aucune loi. Aucune loi ne peut donc faire écran.",
+  "hint": "Demande-toi quelle loi pourrait s'interposer.",
+  "concepts": [
+   "loi-ecran",
+   "ecran-transparent"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 4"
+ },
+ {
+  "chapterSlug": "loi-ecran",
+  "type": "MCQ_SINGLE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Une loi pose un principe et renvoie à un décret le soin d'en fixer le montant. Un requérant soutient que le montant retenu par le décret méconnaît le principe d'égalité. Le moyen est-il opérant ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Oui : il critique le quantum fixé par le décret, la loi fait transparence"
+    },
+    {
+     "id": "b",
+     "label": "Non : le décret a été pris en application d'une loi, qui fait donc nécessairement écran"
+    },
+    {
+     "id": "c",
+     "label": "Non : seule une QPC permettrait de critiquer ce décret"
+    },
+    {
+     "id": "d",
+     "label": "Oui : depuis 2008, le juge administratif contrôle lui-même la loi"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Arrêt CFDT : si l'on critique le principe posé par la loi, le moyen est inopérant ; si l'on critique la manière dont le décret le met en œuvre, la Constitution peut être invoquée. La QPC ne vise que les lois.",
+  "hint": "Demande-toi si c'est la loi elle-même ou l'usage que le décret fait de sa marge qui est critiqué.",
+  "concepts": [
+   "ecran-transparent"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 4"
+ },
+ {
+  "chapterSlug": "loi-ecran",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quelle affaire américaine le cours oppose-t-il à la loi-écran ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Marbury contre Madison"
+    },
+    {
+     "id": "b",
+     "label": "Arrighi"
+    },
+    {
+     "id": "c",
+     "label": "Simmenthal"
+    },
+    {
+     "id": "d",
+     "label": "Quintin"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Dans Marbury contre Madison, le juge américain s'est reconnu le pouvoir de contrôler la loi : c'est l'inverse du juge français.",
+  "hint": "C'est une décision de la Cour suprême des États-Unis.",
+  "concepts": [
+   "loi-ecran"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 4"
+ },
+ {
+  "chapterSlug": "loi-ecran",
+  "type": "FILL_BLANK",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Complète la phrase.",
+  "payload": {
+   "template": "Avant 1958, la loi-écran repose sur la séparation des pouvoirs et la suprématie de la loi, qu'on appelle le {{a}}.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "md"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "légicentrisme",
+     "legicentrisme"
+    ]
+   }
+  },
+  "explanation": "Le légicentrisme fait du juge la bouche de la loi : il l'applique sans la juger.",
+  "hint": "Le mot associe la loi et l'idée de centre.",
+  "concepts": [
+   "loi-ecran"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 4"
+ },
+ {
+  "chapterSlug": "loi-ecran",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "À quelle condition joue l'abrogation implicite d'une loi ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Une norme constitutionnelle postérieure est manifestement incompatible avec elle"
+    },
+    {
+     "id": "b",
+     "label": "La loi est contraire à un traité international ratifié et publié après son adoption"
+    },
+    {
+     "id": "c",
+     "label": "La loi n'est plus appliquée par l'administration depuis plusieurs dizaines d'années"
+    },
+    {
+     "id": "d",
+     "label": "Le Conseil constitutionnel a déjà déclaré la loi conforme"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Il faut une norme constitutionnelle nouvelle, issue d'une révision, contraire à une loi antérieure, et une incompatibilité manifeste. Le conflit avec un traité relève du contrôle de conventionnalité.",
+  "hint": "Le contrôle est chronologique : pense à l'ordre d'adoption des deux normes.",
+  "concepts": [
+   "abrogation-implicite"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 4-5"
+ },
+ {
+  "chapterSlug": "loi-ecran",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Pourquoi la loi-écran posait-elle un problème particulier avant la QPC ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le Conseil constitutionnel ne contrôlait les lois qu'a priori : une loi inconstitutionnelle qui lui avait échappé restait applicable"
+    },
+    {
+     "id": "b",
+     "label": "Le Conseil constitutionnel ne pouvait contrôler que les décrets"
+    },
+    {
+     "id": "c",
+     "label": "Le Préambule de 1946 n'avait pas encore valeur constitutionnelle"
+    },
+    {
+     "id": "d",
+     "label": "Le juge administratif contrôlait déjà la constitutionnalité des lois, sans pouvoir les écarter dans le litige qu'il jugeait"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Avant 2008, le contrôle a priori laissait en vigueur des lois inconstitutionnelles, qui empêchaient d'invoquer la Constitution devant le juge administratif. Le Préambule a valeur constitutionnelle depuis Eky (1960).",
+  "hint": "Pense au moment où le Conseil constitutionnel intervenait.",
+  "concepts": [
+   "loi-ecran"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 4-5"
+ },
+ {
+  "chapterSlug": "loi-ecran",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Invoquer un droit de la Convention européenne des droits de l'homme équivalent à un droit constitutionnel permet de contourner la loi-écran.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Vrai : depuis Nicolo, le juge écarte une loi contraire à un traité. On invoque l'homologue conventionnel de la norme constitutionnelle.",
+  "hint": "Le juge administratif refuse de juger la constitutionnalité d'une loi, pas sa conventionnalité.",
+  "concepts": [
+   "loi-ecran"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fiche de révision de la partie 2, p. 4-5"
+ },
+ {
+  "chapterSlug": "qpc",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quelle révision constitutionnelle a introduit la QPC ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Celle du 23 juillet 2008"
+    },
+    {
+     "id": "b",
+     "label": "Celle du 1er mars 2005"
+    },
+    {
+     "id": "c",
+     "label": "Celle du 4 octobre 1958"
+    },
+    {
+     "id": "d",
+     "label": "Celle du 25 juin 1992"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "La révision du 23 juillet 2008 crée l'article 61-1. Le 1er mars 2005 est l'entrée en vigueur de la Charte de l'environnement.",
+  "hint": "C'est la grande révision de la fin des années 2000.",
+  "concepts": [
+   "qpc"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 5"
+ },
+ {
+  "chapterSlug": "qpc",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Selon l'arrêt Région Lorraine (2010), une QPC peut reprocher au législateur d'avoir empiété sur le domaine du règlement.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Faux : le Conseil d'État le refuse. Seuls les droits et libertés garantis par la Constitution peuvent être invoqués.",
+  "hint": "Rappelle-toi ce qu'on peut invoquer en QPC.",
+  "concepts": [
+   "qpc"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 5"
+ },
+ {
+  "chapterSlug": "qpc",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Que fait le juge administratif lorsqu'il refuse de transmettre une QPC ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Il valide lui-même la loi : c'est un contrôle de constitutionnalité négatif"
+    },
+    {
+     "id": "b",
+     "label": "Il abroge la loi pour l'avenir"
+    },
+    {
+     "id": "c",
+     "label": "Il écarte la loi dans le litige, comme il le fait pour une loi contraire à un traité"
+    },
+    {
+     "id": "d",
+     "label": "Il renvoie la question au Tribunal des conflits"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Seul le Conseil constitutionnel peut abroger la loi. Mais en ne transmettant pas, le juge administratif la valide seul : il filtre.",
+  "hint": "Le juge administratif ne peut jamais faire disparaître la loi.",
+  "concepts": [
+   "qpc"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 5"
+ },
+ {
+  "chapterSlug": "qpc",
+  "type": "FILL_BLANK",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Complète la règle de forme.",
+  "payload": {
+   "template": "La QPC est présentée dans un mémoire {{a}} et motivé.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "md"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "distinct"
+    ]
+   }
+  },
+  "explanation": "Un mémoire distinct et motivé, portant la mention « question prioritaire de constitutionnalité ».",
+  "hint": "Elle ne se glisse pas dans les autres écritures de la partie.",
+  "concepts": [
+   "qpc"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 5"
+ },
+ {
+  "chapterSlug": "suprematie-constitution",
+  "type": "MCQ_SINGLE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Dans l'arrêt Koné (1996), comment le Conseil d'État règle-t-il le conflit entre la convention d'extradition et le PFRLR ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Il interprète la convention comme interdisant implicitement l'extradition dans un but politique"
+    },
+    {
+     "id": "b",
+     "label": "Il écarte la convention comme contraire à la Constitution"
+    },
+    {
+     "id": "c",
+     "label": "Il interroge le ministre des Affaires étrangères et s'estime lié par son interprétation de la convention"
+    },
+    {
+     "id": "d",
+     "label": "Il transmet au Conseil constitutionnel une QPC portant sur la loi qui a autorisé la ratification"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Le Conseil d'État fait œuvre d'interprétation conforme : la convention, silencieuse, est lue à la lumière du PFRLR. Il évite ainsi de juger la convention contraire à la Constitution.",
+  "hint": "Le Conseil d'État cherche à éviter toute censure de la convention.",
+  "concepts": [
+   "suprematie-constitution",
+   "pfrlr"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 C ; Fiche de révision de la partie 2, p. 5-6"
+ },
+ {
+  "chapterSlug": "suprematie-constitution",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quand le Conseil constitutionnel juge un traité contraire à la Constitution, la solution la plus fréquente est de réviser la Constitution.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Vrai : c'est ce qui s'est passé pour les traités de Maastricht et de Lisbonne. L'autre option est d'abandonner le traité.",
+  "hint": "Pense aux grands traités européens.",
+  "concepts": [
+   "suprematie-constitution"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 C ; Fiche de révision de la partie 2, p. 5-6"
+ },
+ {
+  "chapterSlug": "suprematie-constitution",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Quel arrêt du 3 décembre 2001 affirme la supériorité de la Constitution sur les conventions internationales ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Syndicat national de l'industrie pharmaceutique"
+    },
+    {
+     "id": "b",
+     "label": "Commune de Porta"
+    },
+    {
+     "id": "c",
+     "label": "Nicolo"
+    },
+    {
+     "id": "d",
+     "label": "Dame Kirkwood"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "SNIP (CE, 2001) confirme Sarran (1998). Porta (2002) refuse le contrôle direct des traités, Nicolo fait primer les traités sur les lois.",
+  "hint": "C'est un arrêt rendu à propos d'un syndicat professionnel.",
+  "concepts": [
+   "suprematie-constitution"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 C ; Fiche de révision de la partie 2, p. 5-6"
  }
 ]

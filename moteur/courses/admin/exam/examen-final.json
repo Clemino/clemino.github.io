@@ -1,10 +1,87 @@
 {
  "slug": "examen-final",
  "title": "Examen final",
- "description": "Tout le cours, 120 minutes, noté sur 20. QCM sur 12 points et deux cas guidés sur 8 points. La rédaction se travaille dans les modules.",
+ "description": "Tout le cours, 120 minutes, noté sur 20. QCM sur 16 points et deux cas guidés sur 8 points, ramenés sur 20. La rédaction se travaille dans les modules.",
  "durationMinutes": 120,
- "totalPoints": 20,
+ "totalPoints": 24,
  "exercises": [
+  {
+   "chapterSlug": "criteres-administration",
+   "type": "MCQ_SINGLE",
+   "difficulty": 1,
+   "points": 1,
+   "prompt": "Pourquoi le seul critère organique ne suffit-il pas à définir l'administration ?",
+   "payload": {
+    "options": [
+     {
+      "id": "a",
+      "label": "Des personnes privées exercent des missions administratives, et l'administration n'est pas toujours soumise au droit public"
+     },
+     {
+      "id": "b",
+      "label": "Les personnes publiques n'ont pas la personnalité morale"
+     },
+     {
+      "id": "c",
+      "label": "Seul le juge judiciaire peut dire qui est une personne publique"
+     },
+     {
+      "id": "d",
+      "label": "Toute activité d'intérêt général relève du droit administratif, quel qu'en soit l'auteur"
+     }
+    ]
+   },
+   "solution": {
+    "correct": [
+     "a"
+    ]
+   },
+   "explanation": "L'auteur de l'acte ne suffit pas : les SPIC sont en partie soumis au droit privé, et des personnes privées exercent des missions administratives. Le critère matériel de l'intérêt général est lui aussi insuffisant.",
+   "hint": "Pense aux SPIC et aux personnes privées chargées d'une mission.",
+   "concepts": [
+    "critere-organique"
+   ],
+   "source": "CM, Introduction, §3"
+  },
+  {
+   "chapterSlug": "cas-pratique",
+   "type": "MCQ_SINGLE",
+   "difficulty": 1,
+   "points": 1,
+   "prompt": "Dans le syllogisme d'un cas pratique, où se trouve l'essentiel du travail de qualification ?",
+   "payload": {
+    "options": [
+     {
+      "id": "a",
+      "label": "Dans la mineure, qui présente juridiquement les faits"
+     },
+     {
+      "id": "b",
+      "label": "Dans la majeure, qui pose la règle de droit"
+     },
+     {
+      "id": "c",
+      "label": "Dans la conclusion, qui applique le droit aux faits"
+     },
+     {
+      "id": "d",
+      "label": "Dans l'annonce de plan en deux parties"
+     }
+    ]
+   },
+   "solution": {
+    "correct": [
+     "a"
+    ]
+   },
+   "explanation": "La mineure traduit juridiquement les faits : c'est là qu'on qualifie, en envisageant les catégories possibles puis en choisissant la bonne.",
+   "hint": "La qualification porte sur les faits du cas.",
+   "concepts": [
+    "qualification",
+    "syllogisme"
+   ],
+   "source": "Fascicule de TD, séance 1, II B"
+  },
   {
    "chapterSlug": "spa-spic",
    "type": "MCQ_SINGLE",
@@ -158,6 +235,44 @@
    "source": "CM, Partie 1, Titre 2, Chapitre 2, Section 1, §1 ; Fascicule de TD, séance 5"
   },
   {
+   "chapterSlug": "normes-constitutionnelles",
+   "type": "MCQ_SINGLE",
+   "difficulty": 1,
+   "points": 1,
+   "prompt": "Un requérant invoque seul un principe constitutionnel trop imprécis pour créer des droits. Que fait le juge ?",
+   "payload": {
+    "options": [
+     {
+      "id": "a",
+      "label": "Il rejette le moyen comme inopérant"
+     },
+     {
+      "id": "b",
+      "label": "Il annule l'acte attaqué"
+     },
+     {
+      "id": "c",
+      "label": "Il transmet une QPC"
+     },
+     {
+      "id": "d",
+      "label": "Il pose une question préjudicielle à la CJUE"
+     }
+    ]
+   },
+   "solution": {
+    "correct": [
+     "a"
+    ]
+   },
+   "explanation": "Sans applicabilité directe, la norme ne peut être invoquée seule : le moyen est inopérant (Société indo-chinoise, 1962, pour la solidarité nationale).",
+   "hint": "Le critère de l'applicabilité directe est la précision.",
+   "concepts": [
+    "invocabilite"
+   ],
+   "source": "Fiche de révision de la partie 2, p. 3"
+  },
+  {
    "chapterSlug": "qpc",
    "type": "MCQ_SINGLE",
    "difficulty": 1,
@@ -194,6 +309,44 @@
     "qpc"
    ],
    "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §1 ; Fascicule de TD, séance 6"
+  },
+  {
+   "chapterSlug": "traites-conditions",
+   "type": "MCQ_SINGLE",
+   "difficulty": 1,
+   "points": 1,
+   "prompt": "Depuis l'arrêt Cheriet-Benseghir (2010), qui apprécie si l'autre État applique le traité ?",
+   "payload": {
+    "options": [
+     {
+      "id": "a",
+      "label": "Le juge administratif, sans être lié par l'avis du ministre"
+     },
+     {
+      "id": "b",
+      "label": "Le ministre des Affaires étrangères, dont l'avis lie le juge"
+     },
+     {
+      "id": "c",
+      "label": "La Cour européenne des droits de l'homme"
+     },
+     {
+      "id": "d",
+      "label": "Le Conseil constitutionnel, avant la ratification"
+     }
+    ]
+   },
+   "solution": {
+    "correct": [
+     "a"
+    ]
+   },
+   "explanation": "Le juge vérifie lui-même la réciprocité ; il peut consulter le ministre, mais n'est pas lié (revirement après Rekhou et la condamnation Chevrol).",
+   "hint": "Pense au revirement imposé par la condamnation de la France en 2003.",
+   "concepts": [
+    "reciprocite"
+   ],
+   "source": "Fiche de révision de la partie 2, p. 7"
   },
   {
    "chapterSlug": "primaute-droit-international",

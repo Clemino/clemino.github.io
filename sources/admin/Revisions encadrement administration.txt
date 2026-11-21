@@ -1,0 +1,1410 @@
+[page 1]
+FICHE DE RÉVISION – DROIT ADMINISTRATIF
+Partie 2 : L’encadrement de l’administration – Titre 1 : Le principe de légalité
+Sources : CM_RATTRAPAGE.pdf – de l’introduction de la partie 2 (p. 41) jusqu’à la fin du document (p. 62)
+
+Comment lire cette fiche
+Bleu = définitions, règles, notions. Vert (⚖) = arrêts et décisions (juridiction, date, apport). Orange (⚠) = pièges,
+nuances, erreurs fréquentes. Un tableau chronologique de tous les arrêts se trouve à la fin, suivi d’une méthode
+pour les questions d’interro et de la liste des coquilles repérées dans le cours.
+Important : dans le PDF, les parties annoncées après la section 2 du chapitre 1 (chapitre 2 « Les limites du principe de
+légalité », titre 2 « Le contrôle de la légalité », chapitre « Le régime de la police administrative ») ne contiennent que
+des titres ou 2 lignes : ils sont repris en fin de fiche, mais le cours ne contient rien de plus dessus.
+
+Plan de la partie en un coup d’œil
+Niveau
+
+Contenu
+
+Introduction
+
+Les 2 grands principes d’encadrement : légalité et responsabilité ; sources de la légalité
+
+Chapitre 1 – Sources de
+légalité
+
+Section 1 : sources supra-législatives : I. La Constitution (A. essor ; B. statut contentieux : 1.
+invocabilité, 2. loi écran ; C. place dans la hiérarchie) – II. Le droit international (A. droit international au
+sens strict : 1. intégration, B. statut contentieux : 1. primauté, 2. interprétation) – III. Le droit de l’UE (cours
+: « II ») (A. primauté ; B. place par rapport à la Constitution)
+Section 2 : sources supra-décrétales : I. La loi – II. La jurisprudence (PGD) – III. Les ordonnances de
+l’article 38
+
+Chapitre 2 – Limites
+
+Les limites du principe de légalité (titre seulement dans le cours)
+
+Titre 2
+
+Le contrôle de la légalité ; chapitre 2 : le régime de la police administrative (titres seulement)
+
+INTRODUCTION : LES 2 GRANDS PRINCIPES D’ENCADREMENT
+Les deux principes
+Principe de légalité : soumission des actes et décisions de l’administration aux règles de droit. Il encadre l’action
+juridique de l’administration.
+Principe de responsabilité : l’administration doit, dans certaines hypothèses, réparer les conséquences
+dommageables pour les tiers qu’elle a causées et qui lui sont imputables. Il encadre l’action factuelle de
+l’administration. Elle doit parfois réparer, même sans faute.
+
+• Le principe de légalité est intrinsèquement lié à l’État de droit.
+• L’administration doit respecter toutes les sources de la légalité de son action, dans l’ordre hiérarchique : la
+Constitution, les conventions internationales, la loi (le cours cite : la loi, les conventions internationales, la
+Constitution).
+
+• Légalité au sens très large : ce n’est pas seulement l’acte adopté sur le fondement de l’article 34 de la Constitution,
+c’est l’ensemble de toutes les normes supérieures.
+
+• La source première de l’administration était la loi. Elle est désormais remise en cause : depuis une quarantaine
+d’années, des sources constitutionnelles et internationales se développent.
+
+• Ces sources ont souvent pour objet de garantir des droits fondamentaux : plus le droit administratif
+s’internationalise et se constitutionnalise, plus il défend les intérêts des administrés. Il se subjectivise.
+Montée en puissance des sources supra-législatives
+Un des phénomènes les plus marquants pour les juristes à partir de la 2e moitié du XXe siècle. Elle est qualitative et
+non quantitative : ce qui monte, c’est l’aptitude de ces normes à être mobilisées dans un contentieux ; chacune
+devient plus opérationnelle, directement mobilisable devant un juge.
+
+Fiche – Droit administratif – Partie 2 : L’encadrement de l’administration (principe de légalité)
+
+Page 1
+
+[page 2]
+CHAPITRE 1 : LES DIFFÉRENTES SOURCES DE LÉGALITÉ
+Section 1 : les sources supra-législatives
+
+I – La Constitution
+Bloc de constitutionnalité
+La Constitution n’est pas qu’un ensemble d’articles : c’est un bloc de constitutionnalité, ensemble de normes en
+partie écrites et en partie non écrites qui, depuis la décision Liberté d’association (CC, 1971), comprend le
+préambule et tout ce auquel il renvoie.
+
+A / L’essor des normes constitutionnelles
+• Place de la Constitution très évolutive au XXe siècle : secondaire au XIXe siècle ; se renforce avec la Ve République et
+de manière exponentielle à partir des années 1970.
+
+• Le Conseil d’État a toujours utilisé la Constitution pour vérifier la légalité d’un acte, mais avec d’importantes limites :
+aucune déclaration de droits ; aucun renvoi aux anciens textes (ex. DDHC).
+
+• Elle était considérée comme un texte politique et procédural (règles du jeu du pouvoir) : aucun impact direct sur la
+vie quotidienne des administrés et leur lien avec l’administration.
+
+• Très progressivement, le juge administratif a modifié ce corps de règles pour l’appliquer aux contentieux : un intérêt
+pour les justiciables devait émerger.
+
+Les différents types de normes dans la Constitution
+Type
+
+Contenu
+
+Normes de compétence
+(historiquement)
+
+Art. 34 et 37 : répartition des compétences entre le législateur et le pouvoir réglementaire. Art.
+13 et 21 : répartition des compétences entre le Premier ministre et le Président de la République.
+
+Principes de fond applicables à
+l’administration (peu
+nombreux)
+
+Art. 1 : principe d’égalité devant la loi. Art. 72 : libre administration des collectivités territoriales.
+Art. 55 : supériorité des traités internationaux sur la loi.
+
+Préambule (le plus grand
+nombre de normes applicables
+aux administrés = bloc de
+constitutionnalité)
+
+DDHC : art. 1 (égalité) et corollaires : art. 13 (égalité devant les charges publiques), égalité devant
+la justice ; art. 4 (liberté) et corollaires : liberté religieuse, liberté individuelle, liberté
+d’entreprendre.
+Préambule de 1946 : liberté de propriété (qui limite le droit d’expropriation), droit de grève, droit
+d’asile, PFRLR.
+Charte de l’environnement de 2004 : principe de précaution ; droit de vivre dans un
+environnement équilibré et respectueux de la santé (droit à un environnement sain).
+
+Les PFRLR (Principes Fondamentaux Reconnus par les Lois de la République)
+3 critères : (1) être formellement consacré dans une ou plusieurs lois ; (2) loi adoptée par un régime républicain ; (3)
+adoption antérieure à la IVe République. Ce ne sont des PFRLR que si le juge constitutionnel les reconnaît comme
+tels.
+
+• Liberté d’association (1971)
+• Liberté d’enseignement (1977)
+• Indépendance de la juridiction administrative (1980)
+• Noyau dur de compétence du juge administratif (1987)
+• Interdiction de l’extradition dans un but politique : arrêt Koné (1996)
+Ces normes posent un problème central : leur mobilisation devant un juge.
+
+B / Le statut contentieux des normes constitutionnelles
+Question : à quelles conditions et dans quelle mesure une norme constitutionnelle peut-elle être invoquée devant le juge
+administratif, et quel résultat en attendre ? C’est l’utilité contentieuse de ces normes. Traduction de la hiérarchie des
+normes : a priori, la Constitution est au-dessus de n’importe quel acte administratif, donc un acte contraire à la Constitution
+devrait être écarté ou annulé (souvent le cas). Mais il existe des limites :
+
+Fiche – Droit administratif – Partie 2 : L’encadrement de l’administration (principe de légalité)
+
+Page 2
+
+[page 3]
+Les 2 limites tenant à la nature des normes constitutionnelles
+
+• Leur contenu : normes souvent très larges donc très vagues (liberté d’expression, liberté d’aller et venir, droit des
+générations futures, droit à la protection de la santé, droit à un environnement sain). Nombreuses normes =
+objectifs très généraux, « orientations stratégiques » plus que normes juridiques (Charte de l’environnement ;
+Préambule de 1946 : droit d’obtenir un emploi). Le caractère large et vague est un frein à l’invocabilité : une
+norme que personne ne sait utiliser ne sert à rien.
+
+• Les normes écrans : le juge administratif considère qu’il existe un obstacle entre la Constitution et lui. D’une part
+la loi qui applique la Constitution, la précise et s’impose aux actes administratifs : contrôler la constitutionnalité d’un
+acte pris en application d’une loi reviendrait à contrôler la constitutionnalité de la loi. Même raisonnement longtemps
+utilisé pour les conventions internationales. Les 2 problèmes s’auto-alimentent (normes trop larges ⇒ lois qui font
+écran).
+
+1 – L’invocabilité des normes constitutionnelles
+Le problème ne s’est jamais posé pour les articles de la Constitution, mais pour les normes du Préambule et celles
+auxquelles il renvoie (Charte de l’environnement, Préambule de 1946). Deux questions : la valeur constitutionnelle ;
+l’applicabilité directe.
+a) La valeur constitutionnelle du Préambule et de la Charte de l’environnement (réponse en 2 temps)
+⚖ Dehaene – CE, Ass., 7 juillet 1950
+Avant 1958, le CE juge que le Préambule de 1946 a pleinement valeur constitutionnelle (cas du droit de grève).
+Explication : l’art. 81 de la Constitution de 1946 prévoyait que la Constitution garantissait la jouissance des droits et
+libertés du préambule : le juge ne faisait que dire ce que la Constitution prévoyait.
+1958 : la référence au préambule manque dans les articles de la nouvelle Constitution : il redevient une forme de préface.
+Néanmoins :
+⚖ Eky – CE, 12 février 1960
+Le CE apporte de nouveau une réponse positive à la valeur constitutionnelle du préambule.
+⚖ Liberté d’association – CC, 1971 (11 ans après)
+Le Conseil constitutionnel accepte de censurer une loi contraire au préambule.
+⚖ Commune d’Annecy – CE, 2008
+er
+
+Après l’entrée en vigueur de la Charte de l’environnement (1 mars 2005) dans le préambule de la Constitution de
+1958, la question se repose. Le CE réaffirme la valeur constitutionnelle du préambule et de ses composantes, mais
+cela n’a pas pour conséquence automatique une invocabilité devant le juge.
+
+b) L’applicabilité directe du Préambule et de la Charte de l’environnement
+Définition
+Applicabilité directe = capacité de la norme à créer directement des droits et obligations au profit des particuliers,
+sans loi pour l’appliquer ou la préciser. Les justiciables peuvent s’en prévaloir sans médiation législative. Critère = la
+précision de la norme. Si elle est jugée trop imprécise, elle ne peut être invoquée seule faute de loi : le juge rejette le
+moyen comme inopérant (incapable de résoudre le litige). L’invocabilité est examinée norme par norme.
+⚖ Société indo-chinoise de construction électrique et mécanique – CE, 1962
+Alinéa 12 du Préambule de 1946 (principe de solidarité nationale) : pas d’applicabilité directe. Le législateur doit
+le préciser ; seule la loi le précisant pourra être invoquée.
+Normes reconnues invocables
+
+Source
+
+Droit de grève
+
+Conseil d’État
+
+Droit d’asile
+
+LDH, 2007 (il avait jugé le contraire
+avant)
+
+Alinéas 10 et 11 du Préambule de 1946 (al. 10 : la nation assure à l’individu et à la
+famille les conditions nécessaires à leur développement ; al. 11 : droit à la
+protection de la santé de la mère, des enfants et des vieux travailleurs)
+
+GISTI, 1978
+
+Principe de développement durable
+
+Association du quartier Les Hauts de
+Choiseul
+
+Fiche – Droit administratif – Partie 2 : L’encadrement de l’administration (principe de légalité)
+
+Page 3
+
+[page 4]
+Normes reconnues invocables
+
+Source
+
+Droit de vivre dans un environnement sain et respectueux de la santé :
+invocabilité complexe (pendant un temps jugé d’invocabilité directe)
+
+Décision renversée par Fédération
+nationale de la pêche en France
+
+⚠ Nuances
+Le critère de partage entre normes d’applicabilité directe et les autres n’est pas simple à mettre en œuvre : des
+dispositions même imprécises sont invocables, des considérations de politique jurisprudentielle interviennent. Les
+principes constitutionnels non d’applicabilité directe sont de plus en plus rares, mais ni le CC ni le CE n’ont renoncé à
+ce filtre (possibilité de refuser les principes trop imprécis). Même un principe précis et invocable ne pourra pas
+forcément être mobilisé : théorie de la loi écran.
+
+2 – La théorie de la loi écran
+Contenu
+Le juge administratif n’est pas compétent pour contrôler la constitutionnalité de la loi. Si un acte administratif
+est contesté pour violation de la Constitution alors qu’il applique une loi, c’est la loi qui violerait la Constitution : le juge
+ne peut contrôler l’acte, la loi fait écran. Fondement : séparation des pouvoirs qui accorde à la loi une suprématie
+(légicentrisme). C’est l’inverse de ce qu’a fait le juge américain dans Marbury contre Madison. Le contrôle de
+constitutionnalité de la loi relève du Conseil constitutionnel (nouveau fondement de la théorie depuis 1958).
+⚖ Arrighi – CE, 1936
+Formulation de la loi écran : en l’état du droit public français, le moyen tiré de l’inconstitutionnalité d’une loi n’est
+pas de nature à être discuté devant le CE.
+⚖ Deprez et Baillard – CE, 5 janvier 2005
+Le CE explicite que son incompétence procède de la compétence exclusive du Conseil constitutionnel.
+
+Les limites de la loi écran
+• L’écran ne joue que si l’acte administratif découle nécessairement de la loi : c’est seulement alors que
+contrôler l’acte revient à contrôler la loi. S’il existe une marge de manœuvre, on critique non la loi mais l’exercice par
+le pouvoir réglementaire de cette marge : écran transparent (arrêt Quintin, 1991). 2 versions :
+
+– La loi ne fixe aucune règle : l’autorité administrative la fixe par décret. Seul le décret viole la Constitution ; la loi est
+une pure norme d’habilitation.
+
+– Arrêt CFDT : la loi pose une règle qui applique la Constitution mais renvoie à un acte réglementaire le soin de la
+préciser. L’opérance du moyen dépend de ce qui est critiqué : (i) le principe posé dans la loi : seule la loi est critiquée
+⇒ moyen inopérant, seul le CC est compétent ; (ii) la manière dont il est posé par le décret (le « quantum ») ⇒
+moyen opérant, la Constitution peut être invoquée (la loi fait transparence).
+• Règlement autonome (intervenant en dehors du domaine de la loi) : sa constitutionnalité peut être critiquée.
+
+Critiques et évolution
+• Théorie très critiquée : frein important pour le juge administratif dans la concrétisation des normes constitutionnelles,
+anomalie dans un État de droit.
+• Le CC n’a été compétent que de manière très restrictive pendant très longtemps : contrôle a priori ⇒ des lois
+inconstitutionnelles étaient applicables et empêchaient l’application de la Constitution devant le juge administratif.
+• La jurisprudence a tenté des palliatifs (contourner la loi écran sans faire de contrôle de constitutionnalité) ; puis le
+pouvoir constituant est intervenu avec la QPC (contournement de la loi écran et sa confirmation, puisque la question est
+posée au CC).
+Les 2 palliatifs jurisprudentiels
+⚖ 1) Nicolo – contrôle de conventionnalité – CE, 1989
+Le CE accepte d’écarter une loi contraire à une convention internationale, même postérieure. Or de
+nombreuses dispositions constitutionnelles se retrouvent en substance dans une convention : à défaut d’invoquer le
+droit constitutionnel, on invoque son homologue conventionnel (ex. la CEDH contient des pendants des droits du
+Préambule de 1946).
+
+Fiche – Droit administratif – Partie 2 : L’encadrement de l’administration (principe de légalité)
+
+Page 4
+
+[page 5]
+⚖ 2) Abrogation implicite de la loi – CE, Association Eaux et rivières de Bretagne
+Utilisable seulement dans des configurations précises : lorsqu’intervient une révision de la Constitution (nouvelle
+norme constitutionnelle : la Charte de l’environnement) contraire à une loi antérieure. Le juge écarte la loi
+antérieure manifestement incompatible avec la disposition constitutionnelle postérieure. Pour lui, ce n’est pas un
+contrôle de constitutionnalité (hiérarchique) mais un contrôle chronologique (conflit de normes dans le
+temps) : il constate que la nouvelle norme a implicitement abrogé la loi, réputée avoir disparu depuis son entrée en
+vigueur. Hypothèse rare ; il faut que les 2 normes ne puissent pas coexister sans contrariété manifeste.
+
+La Question Prioritaire de Constitutionnalité (QPC)
+Définition et fondement
+Art. 61-1 de la Constitution, introduit par la révision constitutionnelle du 23 juillet 2008. Permet, dans
+n’importe quelle instance, devant toute juridiction, de poser la question de la conformité d’une disposition
+législative aux droits et libertés que la Constitution garantit.
+
+• Ne peut pas être utilisée pour écarter une convention internationale.
+• On peut critiquer l’interprétation jurisprudentielle constante d’une disposition législative : décision CC du 6
+octobre 2010.
+
+• Seuls les droits et libertés garantis par la Constitution peuvent être invoqués. L’art. 34 (méconnaissance par le
+législateur de sa compétence) fait l’objet d’une jurisprudence nuancée : le CE refuse que la QPC puisse porter sur la
+méconnaissance par le législateur du domaine du règlement (Région Lorraine, 2010) ; le CC l’admet à condition qu’un
+droit ou une liberté garanti par la Constitution soit aussi affecté.
+Conditions de procédure
+
+Détail
+
+Qui / quand ?
+
+Par n’importe quelle partie, mais seulement dans une instance : le juge ne peut pas la soulever
+d’office.
+
+Devant quelles juridictions ?
+
+Celles relevant de la Cour de cassation et du Conseil d’État (pas le Tribunal des conflits).
+
+Forme
+
+Mémoire distinct et motivé, portant la mention « Question prioritaire de constitutionnalité ».
+
+Filtres
+
+Le CC ne répond pas seul : les juridictions transmettent la question à la juridiction suprême.
+Conditions de transmission : (1) la question doit être applicable au litige (incidence directe de la loi
+sur ce qui est demandé) ; (2) la disposition ne doit pas déjà avoir été déclarée conforme à la
+Constitution, sauf changement de circonstances ; (3) la question ne doit pas être dépourvue de
+caractère sérieux.
+
+⚠ Effets de la QPC sur la loi écran
+Seul le CC peut abroger la loi (la faire disparaître pour l’avenir). La loi écran est confirmée : le juge administratif
+reste incompétent. Mais il exerce un filtre : il peut décider de ne pas transmettre la question, donc valider la loi seul
+(contrôle de constitutionnalité négatif). La QPC permet de redéfinir le champ du juge administratif.
+
+C / La place de la Constitution dans la hiérarchie des normes
+La Constitution est et demeure la norme suprême de l’ordre juridique : supérieure aux conventions internationales et aux
+sources internes.
+⚖ Syndicat national des industries pharmaceutiques (SNIP) – CE, 3 décembre 2001
+La Constitution est supérieure aux conventions internationales.
+Faire primer la Constitution sur une norme internationale est difficile (contrôle de constitutionnalité de normes
+internationales). Le CE a tenté de bâtir une jurisprudence :
+⚖ Koné – CE, 1996
+Faits : demande d’extradition entre la France et le Mali ; une convention d’extradition obligeait la France à extrader
+toute personne accusée d’une infraction ; un décret d’extradition vise M. Koné. Le requérant soutient qu’il viole un
+principe constitutionnel : l’État doit refuser l’extradition d’un étranger lorsqu’elle est demandée dans un but politique ;
+la convention ne prévoit pas cette limite.
+Solution : le CE reconnaît que l’interdiction d’extrader un étranger dans un but politique est un PFRLR. Il fait œuvre
+d’interprétation de la convention pour la rendre conforme à la Constitution (pour éviter de la censurer) : la
+convention franco-malienne interdisait implicitement l’extradition dans un but politique. Le décret viole donc la
+convention ; le CE ne censure ni le décret ni la convention comme contraires à la Constitution.
+Limite : ne marche que si la convention est interprétable (vide, silence sans contradiction) ; plus compliqué en cas de
+contradiction explicite (incompatibilité frontale).
+
+Fiche – Droit administratif – Partie 2 : L’encadrement de l’administration (principe de légalité)
+
+Page 5
+
+[page 6]
+⚖ Sarran – CE, 1998
+L’art. 55 de la Constitution prévoit la supériorité des conventions internationales sur les lois. Précise que les
+conventions ne sont pas supérieures à la Constitution (évite tout problème de supériorité : elles pourraient être
+égales). Le CE a toujours refusé d’exercer directement un contrôle de constitutionnalité des traités.
+⚖ Commune de Porta – CE, juillet 2002
+Confirme le refus d’un contrôle direct de constitutionnalité des traités internationaux.
+
+• Explications de cette position : éviter d’engager la responsabilité de la France devant la CIJ pour non-respect de
+conventions ; le Conseil constitutionnel est compétent sur le fondement de l’art. 54 (contrôle d’une convention avant
+sa ratification).
+
+• Si le CC juge la convention contraire à la Constitution, elle ne peut être ratifiée : soit elle est abandonnée (la convention
+cède), soit la Constitution est révisée (cas le plus fréquent : traité de Maastricht, traité de Lisbonne).
+
+• Art. 53 : règle de procédure pour s’assurer que norme conventionnelle et norme constitutionnelle ne soient pas
+incompatibles en même temps : l’une doit céder (aucune hiérarchie).
+
+II – Les sources du droit international
+2 dates importantes pour l’efficacité du droit international :
+⚖ 1946 – première reconnaissance d’une place des normes d’origine externe
+Dans le préambule et le texte de la Constitution de 1946 (prise de conscience au lendemain de la Seconde Guerre
+mondiale : les États s’engagent aussi à l’égard de leurs ressortissants, il faut faire de la place aux normes
+internationales dans l’ordre interne).
+
+• Alinéa 15 du Préambule : sous réserve de réciprocité, la France consent aux limitations de souveraineté
+nécessaires à l’organisation et à la défense de la paix (Charte des Nations unies, ONU).
+
+• Art. 26 de la Constitution de 1946 : les traités diplomatiques régulièrement ratifiés et publiés ont force de loi
+même contraires aux lois françaises, sans qu’il y ait besoin d’autres dispositions législatives que celles nécessaires à
+leur ratification.
+⚖ Dame Kirkwood – CE, 30 mai 1952 (le cours écrit « 1962 » une fois)
+Le CE admet le contrôle d’un acte administratif au regard d’une convention internationale.
+Art. 55 de la Constitution de 1958 : les traités ou accords régulièrement ratifiés ou approuvés ont, dès leur publication,
+une autorité supérieure à celle des lois. Pendant longtemps, le CE a refusé de reconnaître la supériorité des traités sur les
+lois postérieures (le législateur était réputé avoir voulu déroger à la convention) :
+⚖ Nicolo – CE, 1989 (2e date importante)
+Le CE accepte de faire prévaloir les traités internationaux sur les lois, même postérieures. La place de ces
+normes et leur statut contentieux diffèrent selon que le droit de l’UE est en jeu ou non.
+
+A / Le droit international au sens strict
+1 – L’intégration des normes internationales au droit interne
+Toutes les normes internationales ne sont pas intégrées aux mêmes conditions : distinguer les normes écrites (traités :
+texte signifiant l’accord de volonté entre 2 ou plusieurs États) et les normes non écrites. Pour qu’un traité s’applique dans
+l’ordre interne, l’art. 55 pose des conditions. Quand elles sont remplies, la convention intègre l’ordre interne au-dessus
+des lois.
+Condition
+
+Contenu et jurisprudence
+
+1. Signature
+
+Ne vaut pas consentement en droit international mais vaut authentification des dispositions ; faculté
+nécessaire pour intégrer l’ordre interne : arrêt Société française d’entreprise de dragage.
+
+2. Ratification
+régulière
+
+Certains traités sont approuvés, d’autres ratifiés (par le Président de la République). Art. 53 : certains doivent
+l’être par une loi : traité de paix, traité de commerce, traités ou accords relatifs à l’organisation internationale,
+traités qui modifient des dispositions de nature législative, traités relatifs au statut des personnes, traités
+comportant cession de territoire.
+CE, Ass., 18 décembre 1998, SARL du parc d’activités de Blotzheim : le CE contrôle l’existence de la
+ratification ; il ne vérifie pas que le traité ratifié est conforme à la Constitution.
+
+3. Publication
+
+Nécessaire à l’entrée en vigueur et à l’intégration du traité (arrêt Villa, 1956 cité par le cours). Le refus de
+publier un acte international est un acte de gouvernement non susceptible de recours (interdiction de
+forcer un État).
+
+Fiche – Droit administratif – Partie 2 : L’encadrement de l’administration (principe de légalité)
+
+Page 6
+
+[page 7]
+Condition
+
+Contenu et jurisprudence
+
+4. Réciprocité
+
+Déjà prévue dans la Constitution de 1946 et l’art. 55. Un État n’est plus engagé si les autres destinataires ne
+respectent pas le traité : exception d’inexécution. Condition relative et contingente (peut changer). Pas
+absolue : ne vaut que pour les traités synallagmatiques. Elle ne s’applique pas aux conventions en matière de
+droits de l’homme (tous les États s’engagent à la même chose, pas les uns envers les autres).
+
+5. Effet direct
+
+Aptitude à créer des droits et obligations directement pour les particuliers : les stipulations doivent avoir
+pour destinataires les particuliers (et ne pas lier que les États entre eux). Seul un traité d’effet direct est
+invocable : CE, Sect., 23 avril 1997, Gisti.
+
+⚖ Contrôle de la réciprocité : Rekhou (1981) → Chevrol (CEDH, 2003) → Cheriet-Benseghir (CE)
+Rekhou, 1981 : le CE estimait que seul le ministre des Affaires étrangères pouvait contrôler la réciprocité ; il posait
+une question préjudicielle au ministre et s’estimait lié par la réponse.
+CEDH, 2003, Chevrol : condamne la France : l’absence d’examen faute de réponse du ministre viole le droit au
+procès équitable.
+CE, Mme Cheriet-Benseghir : le CE se range derrière la CEDH : il n’interdit pas de demander l’avis du ministre, mais
+le juge n’est pas tenu de le suivre (avis soumis au contradictoire).
+⚖ Effet direct : Gisti (CE, Sect., 23 avril 1997) précisé par Gisti et Fapil (CE, 11 avril 2012)
+Une stipulation est d’effet direct lorsqu’elle n’a pas pour objet exclusif de régir les relations entre États et ne
+requiert aucun acte complémentaire pour régler les relations entre particuliers. Le contrôle prend en compte : (1)
+la volonté exprimée des parties ; (2) le contenu et les termes de chaque stipulation (interprétation globale ;
+critères cumulatifs selon le cours). L’absence d’effet direct ne peut être déduite de la seule circonstance que la
+stipulation désigne les États parties comme sujets d’obligation.
+Le CE écarte les traités relatifs à l’UE de cette grille : seule la CJUE peut déterminer si une stipulation est d’effet
+direct.
+
+2 – L’intégration des normes internationales non écrites
+Norme non écrite
+
+Définition / conditions
+
+Arrêts
+
+Coutume
+internationale
+
+2 conditions cumulatives : élément matériel et objectif
+(répétition continue d’un comportement) + élément intentionnel
+(conviction qu’il s’agit d’une obligation).
+
+Le juge vérifie son existence et
+l’applique : Aquarone, 1997.
+
+Principes généraux du
+droit international
+(PGDI)
+
+Principes communs aux États. Le juge accepte de vérifier leur
+existence. Contrairement aux traités, ils ne permettent pas
+d’écarter une loi française.
+
+Nachfolger Navigation Company,
+1987 ; revalidé par Paulin, 28 juillet
+2000.
+
+• La coutume suppose la réciprocité (sans partage elle ne peut exister) ; les PGDI aussi (principes communs aux États) :
+la réciprocité constitue l’existence même de la norme en droit international.
+
+• Effet direct : ces normes doivent avoir un degré de prévisibilité suffisant et créer des droits au profit des
+particuliers pour être invoquées. Elles sont soumises à une procédure d’intégration et ne sont pas toujours applicables
+même si les conditions cumulatives sont remplies.
+
+B / Le statut contentieux du droit international en droit interne
+Une norme internationale engage l’État : si, une fois intégrée, elle n’est pas respectée parce qu’une norme interne lui est
+opposée, la France viole ses obligations et engage sa responsabilité internationale. Pas de réponse absolue : le droit
+international n’a d’existence en droit interne que parce que le droit interne l’organise (la Constitution prévoit l’intégration).
+
+1 – La portée de la primauté du droit international
+Point de vue
+
+Contenu
+
+Droit international
+
+L’État est le sujet de base. Toute norme internationale (écrite ou non) doit nécessairement primer le droit
+interne : notion consubstantielle. Les États ne peuvent pas invoquer leur droit interne pour justifier la
+méconnaissance de leurs obligations internationales.
+
+Droit interne
+
+La norme principielle est la Constitution. La primauté du droit international n’existe en France que parce
+que la Constitution le veut bien : art. 55. La question de l’application opposée d’une loi interne et d’une
+norme internationale = conflit de normes. Le droit de l’UE est à part (quasi totalement constitutionnalisé).
+
+3 relations hiérarchiques déduites de l’art. 55 (il faut distinguer selon le type de norme internationale ET
+de norme interne)
+
+• Toutes les normes internationales (écrites ou non écrites) priment sur toutes les normes infra-législatives.
+• Seules les normes conventionnelles (écrites) priment sur les normes législatives.
+• Aucune norme internationale ne prime sur la Constitution.
+Fiche – Droit administratif – Partie 2 : L’encadrement de l’administration (principe de légalité)
+
+Page 7
+
+[page 8]
+a) Primauté sur les actes administratifs
+• Acquise sans discussion au moins depuis la IVe République : un traité est supérieur à un acte administratif (arrêt du 30
+mai 1952, Kirkwood).
+• Arrêt Section française de l’Observatoire international des prisons : le CE censure un décret qui violait la
+Convention de New York sur les droits de l’enfant et la CEDH.
+• Pour les normes non écrites (coutumes, PGDI), le juge n’a jamais eu l’occasion de répondre ; il a seulement affirmé
+qu’elles ne priment pas sur les lois. On déduit implicitement que leur intégration implique leur primauté sur les actes
+administratifs (individuels ou réglementaires).
+b) Seules les normes écrites priment sur la loi
+Interprétation littérale de l’art. 55 (qui ne vise que les traités ou accords) : primauté explicite des normes internationales
+écrites sur les lois. Chronologie de la querelle :
+⚖ Syndicat général des fabricants de semoule de France – CE, Sect., 1968
+Le CE continue de faire prévaloir sur le droit international toutes les lois postérieures : la loi postérieure devait être
+interprétée comme la volonté du législateur de déroger à la norme conventionnelle (conception souverainiste ; et idée
+que ce serait au CC, a priori, de contrôler le respect de l’art. 55). Toute loi en vigueur non contrôlée par le CC ne peut
+être écartée par le juge : il doit l’appliquer.
+⚖ IVG – CC, 15 janvier 1975 (« Interruption volontaire de grossesse »)
+Le CC interprète l’art. 55 autrement. Il construit une distinction entre contrôle de constitutionnalité et contrôle
+de conventionnalité des lois :
+
+• Contrôle de constitutionnalité : abstrait et absolu (la loi est soumise une fois pour toutes au CC par saisine a
+priori ; une loi contraire à la Constitution le reste tant que la Constitution ne change pas ; elle peut être censurée,
+son entrée en vigueur refusée).
+
+• Contrôle de conventionnalité : relatif et contingent (la réponse peut varier selon le moment : la convention
+peut être intégrée à un moment et ne plus l’être à un autre, notamment faute de réciprocité ; paramètres sur
+lesquels ni le juge ni les parties n’ont de prise). Impossible à opérer en contrôle a priori (ni le temps, ni les moyens, ni
+de réponse définitive).
+
+• Le CC refuse de faire le contrôle de conventionnalité (son rôle est de contrôler la constitutionnalité).
+⚖ Société des cafés Jacques Vabre – Cour de cassation, 24 mai 1975 (4 mois plus tard)
+La Cour de cassation réagit : elle fait un contrôle de conventionnalité des lois, même postérieures.
+⚖ Nicolo – CE, 1989 (14 ans plus tard)
+Le CE, longtemps très réticent, admet sa compétence pour faire prévaloir une convention sur une loi postérieure. Il se
+borne à viser l’art. 55, désormais interprété non comme une norme de fond qui rendrait inconstitutionnelle une loi,
+mais comme un article de compétence habilitant une juridiction à censurer les lois contraires aux conventions.
+Extension aux normes non écrites : réponse en 2 temps, négative :
+⚖ Aquarone – CE, 6 juin 1997 (coutume) et « Polin/Paulin » (PGDI)
+Aquarone, 6 juin 1997 : l’art. 55 ne vise que les traités ou accords ; la coutume n’a pas de valeur supérieure aux
+lois.
+Le cours cite ensuite un arrêt « Polin, 28 juin 1997 » (à rapprocher de Paulin, 28 juillet 2000) : même solution pour
+les PGDI.
+Caractéristiques du contrôle de conventionnalité (primauté partielle des normes internationales sur les
+lois)
+
+• Direct : le juge confronte directement la loi à la convention ; il peut écarter n’importe quelle norme interne sauf la
+Constitution ; il peut le faire seul.
+
+• Sur saisine : il ne le fait que si la question lui est posée (comme le contrôle de constitutionnalité).
+• Contrôle de compatibilité, pas de stricte conformité : la loi doit être conforme à la Constitution ; la norme
+internationale doit seulement être compatible (ne pas faire le contraire ; peut ne pas aller dans le même sens).
+Marge de manœuvre laissée au juge.
+Aucune norme internationale ne prime sur la Constitution.
+
+Fiche – Droit administratif – Partie 2 : L’encadrement de l’administration (principe de légalité)
+
+Page 8
+
+[page 9]
+2 – L’interprétation des normes internationales
+Le contrôle de conventionnalité suppose de pouvoir interpréter la norme internationale (une norme internationale n’est
+pas déterminée exclusivement par des autorités nationales).
+⚖ Veuve Murat – CE, 23 juillet 1823
+Pendant très longtemps, le CE ne s’estimait pas compétent pour interpréter les conventions : il posait la question au
+ministre des Affaires étrangères et s’estimait lié par son interprétation (même logique que la réciprocité).
+⚖ Gisti – CE, Ass., 29 juin 1990 (le cours écrit « 29 juillet »)
+Après Nicolo, le CE considère qu’il peut interpréter lui-même les conventions : il doit pouvoir déterminer la
+signification des mots du droit international.
+
+III (« II » dans le cours) – Le droit de l’Union européenne
+Différent de la Convention européenne des droits de l’homme : pas les mêmes institutions, pas les mêmes États membres.
+L’UE regroupe 27 États membres. Comme l’UE ne comprend pas de droits de l’homme au sens des traités classiques, la
+réciprocité est absente.
+Pourquoi le droit de l’UE est spécifique
+C’est d’abord un droit international général (traité classique : traité de Lisbonne), mais avec des conséquences plus
+importantes pour les signataires :
+
+• Il crée des institutions (commun à beaucoup de traités).
+• Il donne aux institutions des compétences pour adopter elles-mêmes d’autres normes : 2 degrés de normes :
+droit primaire (traités, ex. TFUE) et droit dérivé (directives, règlements). Ce droit existe sans l’aval
+systématique de tous les États ; il s’impose aux États membres.
+
+• Il donne aux institutions des compétences touchant à la souveraineté : monnaie, électoral, économie, fiscalité,
+sécurité, concurrence.
+Conséquences du transfert de souveraineté :
+
+• Les lois de transfert supposent l’acceptation par la Constitution : une révision constitutionnelle a dû avoir lieu (sans
+elle, les traités n’auraient pu être ratifiés).
+
+• Le droit de l’UE est automatiquement intégré à chaque ordre interne, réputé systématiquement d’effet direct : un
+droit à part, quasi « interne ».
+
+• Art. 88-1 de la Constitution : la République participe à l’UE, constituée d’États qui ont choisi librement d’exercer en
+commun certaines de leurs compétences en vertu du TUE et du TFUE tels qu’ils résultent du traité signé à Lisbonne le 13
+décembre 2007. Il revient à intégrer en bloc le droit de l’UE dans le droit interne : le droit de l’UE est constamment
+constitutionnalisé.
+
+A / Le principe de primauté du droit de l’Union européenne
+• Traités primaires : priment sur les lois sur le fondement de l’art. 55.
+• Règlements : précis et inconditionnels (pas d’acte interne nécessaire) ⇒ effet direct automatique ; la seule adoption
+suffit.
+
+• Directives : fixent des objectifs obligatoires aux États, qui doivent les transposer (acte national distinct qui tire les
+conséquences de la directive, avec une marge de manœuvre dans le choix des moyens ; la transposition est
+elle-même obligatoire).
+⚖ Évolution de la jurisprudence du CE sur les directives → Mme Perreux – CE, Ass., 30 octobre 2009
+Avant : (1) la loi de transposition doit respecter la directive (contrôle de conventionnalité classique) ; (2) en l’absence
+de transposition, la directive n’est pas d’effet direct, n’est pas invocable, l’état antérieur du droit ne peut être
+écarté.
+Ensuite : nuances (une fois le délai passé, les objectifs de la directive peuvent être invocables). Perreux : le CE se plie
+à la jurisprudence limpide de la CJUE.
+Condition : l’effet direct reste subordonné à ce que la directive comporte des dispositions suffisamment précises.
+Résultat actuel
+Tout le droit de l’UE, primaire ou dérivé, prime sur les lois : toute loi qui le méconnaît doit être écartée. Question
+préjudicielle à la CJUE obligatoire en cas de difficulté sérieuse sur l’interprétation d’une norme de l’UE ou sur la
+validité d’un acte dérivé par rapport au droit primaire.
+
+Fiche – Droit administratif – Partie 2 : L’encadrement de l’administration (principe de légalité)
+
+Page 9
+
+[page 10]
+B / Les spécificités de la place du droit de l’UE par rapport à la Constitution
+Premiers transferts de souveraineté : traité de Maastricht. Art. 54 : aucun traité contraire à la Constitution ne peut être
+ratifié ⇒ révision constitutionnelle pour Maastricht et Lisbonne. Le problème se repose avec le droit dérivé, notamment les
+directives : un acte est contesté ; l’administration répond qu’il applique une loi qui transpose une directive ; un justiciable le
+juge contraire à la Constitution. Écarter l’acte = soumettre le droit de l’UE à la Constitution ; respecter le droit de l’UE =
+mettre la Constitution de côté (primauté de la directive sur la Constitution). Or le droit de l’UE affirme sa propre
+primauté.
+⚖ Simmenthal – CJCE
+Les États ne peuvent soustraire le droit de l’UE à aucune norme interne, même la Constitution. En droit interne,
+l’argument est inverse (suprématie de la Constitution).
+
+• La Constitution française a prévu une disposition spéciale : art. 88-1 (introduit pour Maastricht) = constitutionnalisation
+générale du droit de l’UE. Parmi les exigences de l’UE, l’art. 249 (cours) impose aux États de transposer les
+directives.
+
+• Donc transposer une directive, c’est aussi respecter la Constitution : l’acte de transposition n’existe qu’en vertu
+d’une obligation constitutionnelle. Le contrôle est opéré en 2 temps par 2 juridictions :
+
+1) Le Conseil constitutionnel – la loi de transposition
+• Conception historique : il contrôlait la loi comme si elle ne transposait pas la directive. Si elle était contraire à la
+Constitution, il la censurait ; or si la loi transposait exactement la directive, cela revenait à censurer la directive (faire
+primer la Constitution) : risque d’actions en manquement contre la France.
+⚖ Loi pour la confiance dans l’économie numérique – CC, 10 juin 2004
+Le CC se fonde sur l’art. 88-1 : la transposition d’une directive est une exigence constitutionnelle. La loi de
+transposition peut donc être à la fois conforme (art. 88-1) et éventuellement contraire à la Constitution (autre article).
+⚖ DADVSI – CC, 27 juillet 2006 (le cours écrit « 2026 »)
+Principe : une loi de transposition d’une directive bénéficie d’une immunité constitutionnelle.
+Exception (réserve constitutionnelle) : l’exigence et l’immunité cessent lorsque la directive va à l’encontre d’« une
+règle ou un principe inhérent à l’identité constitutionnelle de la France » (repris par la décision Société Air
+France QPC, 2023 selon le cours). Le CC censure alors la loi, mais seulement si le principe n’a pas d’équivalent en
+droit de l’UE (absence de protection équivalente) : censure de la directive.
+⚖ Décision « loi relative au secteur de l’énergie » (intitulé du cours) – CC
+Ajoute une étape : le CC se réserve le contrôle de l’erreur manifeste de transposition (possibilité de censurer une
+loi qui transposerait manifestement mal la directive). Vérifier qu’une loi transpose bien une directive suppose un
+contrôle de proportionnalité, que le CC ne faisait pas (il présumait). Faute de pouvoir interroger la CJUE (à l’époque), il
+répond lui-même. Options : présumer comme avant ; contrôler la proportionnalité : il l’a accepté.
+
+2) Le Conseil d’État – décret de transposition ou décret d’application d’une loi de transposition
+⚖ Arcelor – CE, Ass., 8 février 2007
+Le CE transpose le raisonnement du CC à sa manière. Principe : même raisonnement que le CC (le règlement
+transpose-t-il bien la directive ?). Si le règlement transpose mal : il viole la Constitution. S’il transpose bien : conflit.
+Il n’utilise pas la notion d’identité constitutionnelle, mais recherche si, comparés globalement, la Constitution (et le
+principe invoqué) et le droit de l’UE protègent le principe invoqué de manière équivalente :
+
+• Protection équivalente : le problème se résout par rapport au seul droit de l’UE. Si la directive est conforme au
+droit primaire, elle est conforme à la Constitution (« si la directive respecte le traité, le traité respecte la Constitution
+»). Recours possible à la question préjudicielle CJUE.
+
+• Pas de protection équivalente : le CE contrôle directement la constitutionnalité du décret (« translation » dans le
+cours) : conception qui peut être perçue comme souverainiste.
+
+• Ne joue que pour une directive d’effet direct, inconditionnelle et précise. Sinon il y a marge d’appréciation :
+si ce n’est pas la directive qui est contestée mais l’usage par le décret de sa marge, le décret peut être soumis
+directement à la Constitution (même logique que l’écran transparent).
+⚖ Société Air Algérie – CE, 6 décembre 2012
+Étend la solution au contrôle d’un décret d’application d’une loi de transposition : le CE combine Arcelor + QPC.
+
+• Si c’est la constitutionnalité de la loi de transposition qui est contestée : QPC ; la loi fait écran ; le CC
+appliquera DADVSI.
+Fiche – Droit administratif – Partie 2 : L’encadrement de l’administration (principe de légalité)
+
+Page 10
+
+[page 11]
+• Si le vice est dans le décret d’application (marge d’appréciation) : la loi ne fait pas écran ; le CE juge le décret :
+théorie du double écran (loi + directive). Il confronte le décret à la question de l’équivalence des normes.
+
+QPC, droit de l’UE et question préjudicielle
+• En cas de QPC, le moyen de constitutionnalité devient prioritaire : la constitutionnalité est traitée avant la
+conventionnalité. Risque : le CC pourrait être saisi alors que la loi est conforme au droit international et européen ⇒ la
+primauté du droit de l’UE pourrait être escamotée.
+• La Cour de cassation, dès la première QPC, a posé une question préjudicielle à la CJUE (crainte que le CC profite de
+la QPC pour revenir sur sa jurisprudence IVG de 1975 : refus du contrôle de conventionnalité).
+• Pour désamorcer, le CC a précisé :
+
+– Le contrôle de constitutionnalité via la QPC n’interdit pas aux juridictions ordinaires d’opérer ensuite leur contrôle de
+conventionnalité, même si la loi a été déclarée conforme à la Constitution.
+
+– La QPC ne prive pas les juridictions ordinaires (y compris dans leur fonction de filtre) de la faculté de saisir la CJUE
+d’une question préjudicielle en cas de difficulté sérieuse. Le caractère prioritaire de la QPC ne remet pas en cause la
+question préjudicielle simultanée.
+– Le juge ordinaire peut suspendre immédiatement, à tout moment de la procédure, tout effet d’une loi incompatible
+avec le droit de l’UE, même sans réponse à la QPC.
+• La CJUE a jugé qu’en l’état le système est compatible avec le droit de l’UE, en précisant les conditions (qui reprennent
+celles du CE) : pouvoir suspendre immédiatement toute loi contraire au droit de l’UE sans attendre la QPC ; toujours
+pouvoir ne pas appliquer une loi même déclarée conforme à la Constitution.
+
+• La Cour de cassation (dans le cours) : dans l’attente de la réponse de la CJUE, pas de mesures provisoires ; elle écarte
+immédiatement la loi comme incompatible avec le droit de l’UE et ne renvoie pas la QPC comme sérieuse.
+⚖ CC, 14 juin 2013 – QPC
+Le CC accepte, lors d’une QPC, de poser une question préjudicielle à la CJUE (art. 88-2 de la Constitution), afin
+d’assurer la réelle primauté du droit de l’UE.
+
+SECTION 2 : LES SOURCES SUPRA-DÉCRÉTALES
+I – La loi
+Le juge administratif vérifie que l’acte administratif est conforme à la loi, entendue au sens de l’art. 34 de la Constitution
+: acte voté par le Parlement. S’il ne l’est pas, il le censure. Ce contrôle de conformité laisse place, dans certains cas, à un
+contrôle plus ou moins strict des précisions de la loi : marge d’appréciation discrétionnaire.
+
+II – La jurisprudence
+Historiquement, place importante : beaucoup de principes jurisprudentiels dégagés par le juge. Ils sont de moins en moins
+jurisprudentiels mais restent essentiels. Une catégorie jouit d’un statut à part : les Principes Généraux du Droit (PGD).
+PGD
+Normes non écrites dont le juge impose le respect à l’administration même sans texte. Normes d’origine
+jurisprudentielle. Ces PGD préexistent (le juge les révèle).
+
+III – Les ordonnances de l’article 38
+Le cours ne contient que le titre (aucun développement). Rappel utile : l’art. 38 permet au Gouvernement de demander au
+Parlement l’autorisation de prendre par ordonnances des mesures relevant normalement du domaine de la loi.
+
+CHAPITRE 2 – LES LIMITES DU PRINCIPE DE LÉGALITÉ (+ titres
+annoncés)
+Contenu du cours : l’administration doit pouvoir, dans certains cas, disposer d’une certaine marge de manœuvre non
+contrôlée. Elle varie selon les périodes : en temps normal elle se restreint ; en période d’exceptions / de troubles
+elle s’élargit.
+Titres annoncés sans contenu dans le PDF : Titre 2 : Le contrôle de la légalité ; Chapitre 2 : Le régime de la police administrative.
+
+Fiche – Droit administratif – Partie 2 : L’encadrement de l’administration (principe de légalité)
+
+Page 11
+
+[page 12]
+TABLEAU RÉCAPITULATIF DE TOUS LES ARRÊTS ET DÉCISIONS DU
+COURS
+Dates telles qu’indiquées dans le cours (corrigées quand une coquille est évidente, cf. dernière page). « n.d. » = date non indiquée dans le
+cours. CE = Conseil d’État ; CC = Conseil constitutionnel ; Cass. = Cour de cassation.
+Date
+
+Décision
+
+Juridiction
+
+Apport
+
+23 juil. 1823
+
+Veuve Murat
+
+CE
+
+Le CE se juge lié par l’interprétation des conventions donnée par
+le ministre des Affaires étrangères.
+
+1936
+
+Arrighi
+
+CE
+
+Formule la loi écran : pas de discussion de l’inconstitutionnalité
+d’une loi devant le CE.
+
+7 juil. 1950
+
+Dehaene
+
+CE, Ass.
+
+Le Préambule de 1946 a pleine valeur constitutionnelle
+(droit de grève).
+
+30 mai 1952
+
+Dame Kirkwood
+
+CE
+
+Contrôle d’un acte administratif au regard d’une convention
+internationale (traité > acte administratif).
+
+1956
+
+Villa
+
+CE
+
+Cité à propos de la publication du traité.
+
+12 fév. 1960
+
+Eky
+
+CE
+
+Réaffirme la valeur constitutionnelle du préambule sous la Ve
+République.
+
+1962
+
+Sté indo-chinoise de construction
+électrique et mécanique
+
+CE
+
+Al. 12 du Préambule de 1946 (solidarité nationale) : pas
+d’applicabilité directe.
+
+1968
+
+Syndicat général des fabricants de
+semoule de France
+
+CE, Sect.
+
+Les lois postérieures au traité l’emportent (volonté de déroger)
+: situation avant Nicolo.
+
+1971
+
+Liberté d’association
+
+CC
+
+Le préambule fait partie du bloc de constitutionnalité ; le CC
+censure une loi contraire au préambule.
+
+15 janv. 1975
+
+IVG (Interruption volontaire de
+grossesse)
+
+CC
+
+Distingue contrôle de constitutionnalité (abstrait, absolu) et de
+conventionnalité (relatif, contingent) ; refuse ce dernier.
+
+24 mai 1975
+
+Société des cafés Jacques Vabre
+
+Cass.
+
+Contrôle de conventionnalité des lois, même postérieures.
+
+1977 / 1980 /
+1987
+
+Liberté d’enseignement /
+indépendance de la juridiction
+admin. / noyau dur de compétence
+du juge admin.
+
+CC
+
+Reconnaissance de PFRLR.
+
+1978
+
+GISTI
+
+CE
+
+Alinéas 10 et 11 du Préambule de 1946 : invocables.
+
+1981
+
+Rekhou
+
+CE
+
+Réciprocité : le CE pose une question préjudicielle au ministre et
+se juge lié.
+
+1987
+
+Nachfolger Navigation Company
+
+CE
+
+Le CE vérifie l’existence des PGDI.
+
+1989
+
+Nicolo
+
+CE, Ass.
+
+Les traités priment sur les lois, même postérieures (art. 55 =
+norme de compétence) ; contrôle de conventionnalité.
+
+29 juin 1990
+
+Gisti (interprétation)
+
+CE, Ass.
+
+Le CE peut interpréter lui-même les conventions.
+
+1991
+
+Quintin
+
+CE
+
+Écran transparent (marge de manœuvre du pouvoir
+réglementaire).
+
+1996
+
+Koné
+
+CE
+
+Interdiction d’extrader dans un but politique = PFRLR ;
+interprétation de la convention conforme à la Constitution.
+
+23 avr. 1997
+
+Gisti
+
+CE, Sect.
+
+Seul un traité d’effet direct est invocable.
+
+6 juin 1997
+
+Aquarone
+
+CE, Ass.
+
+La coutume internationale est appliquée mais n’a pas valeur
+supérieure à la loi.
+
+18 déc. 1998
+
+SARL du parc d’activités de
+Blotzheim
+
+CE, Ass.
+
+Contrôle de l’existence de la ratification (pas de contrôle de
+constitutionnalité du traité).
+
+1998
+
+Sarran
+
+CE, Ass.
+
+Art. 55 : traités > lois ; traités pas supérieurs à la
+Constitution.
+
+28 juil. 2000
+
+Paulin (« Polin » 28 juin 1997 dans
+le cours)
+
+CE
+
+PGDI : ne permettent pas d’écarter une loi.
+
+3 déc. 2001
+
+Syndicat national des industries
+pharmaceutiques
+
+CE
+
+Constitution > conventions internationales.
+
+juil. 2002
+
+Commune de Porta
+
+CE
+
+Refus de contrôler directement la constitutionnalité des traités.
+
+2003
+
+Chevrol
+
+CEDH
+
+Condamne la France : l’absence d’examen de la réciprocité viole
+le procès équitable.
+
+Fiche – Droit administratif – Partie 2 : L’encadrement de l’administration (principe de légalité)
+
+Page 12
+
+[page 13]
+Date
+
+Décision
+
+Juridiction
+
+Apport
+
+10 juin 2004
+
+Loi pour la confiance dans
+l’économie numérique
+
+CC
+
+Transposition d’une directive = exigence constitutionnelle
+(art. 88-1).
+
+5 janv. 2005
+
+Deprez et Baillard
+
+CE
+
+L’incompétence du CE vient de la compétence exclusive du
+CC.
+
+n.d. (après
+2005)
+
+Association Eaux et rivières de
+Bretagne
+
+CE
+
+Abrogation implicite d’une loi antérieure incompatible avec la
+Charte de l’environnement.
+
+27 juil. 2006
+
+DADVSI
+
+CC
+
+Immunité des lois de transposition sauf identité
+constitutionnelle de la France.
+
+2007
+
+Ligue des droits de l’Homme
+
+CE
+
+Droit d’asile invocable (le CE avait dit le contraire avant).
+
+8 fév. 2007
+
+Arcelor
+
+CE, Ass.
+
+Contrôle d’un décret de transposition : protection équivalente
+Constitution / droit de l’UE.
+
+2008
+
+Commune d’Annecy
+
+CE, Ass.
+
+Valeur constitutionnelle de la Charte de l’environnement, mais
+invocabilité pas automatique.
+
+30 oct. 2009
+
+Mme Perreux
+
+CE, Ass.
+
+Une directive peut être invoquée (effet direct si assez précise).
+
+6 oct. 2010
+
+Décision CC (QPC)
+
+CC
+
+La QPC peut critiquer l’interprétation jurisprudentielle constante
+d’une loi.
+
+2010
+
+Région Lorraine
+
+CE
+
+Refus d’invoquer par QPC la méconnaissance par le législateur
+du domaine du règlement.
+
+n.d. (≈2010)
+
+Mme Cheriet-Benseghir
+
+CE
+
+Le CE peut interroger le ministre sur la réciprocité mais n’est
+pas lié.
+
+11 avr. 2012
+
+Gisti et Fapil
+
+CE
+
+Critères de l’effet direct d’un traité (volonté des parties ;
+contenu et termes).
+
+6 déc. 2012
+
+Société Air Algérie
+
+CE
+
+Arcelor + QPC : double écran (loi de transposition + décret
+d’application).
+
+14 juin 2013
+
+CC (QPC)
+
+CC
+
+Le CC pose une question préjudicielle à la CJUE (art. 88-2).
+
+2023
+
+Société Air France QPC
+
+CC
+
+Identité constitutionnelle (selon le cours).
+
+n.d.
+
+Association du quartier Les Hauts
+de Choiseul
+
+CE
+
+Développement durable invocable.
+
+n.d.
+
+Fédération nationale de la pêche
+en France
+
+CE
+
+Renverse l’invocabilité directe du droit à un environnement sain.
+
+n.d.
+
+CFDT
+
+CE
+
+Loi qui renvoie au règlement : le moyen est opérant seulement
+contre le décret.
+
+n.d.
+
+Société française d’entreprise de
+dragage
+
+CE
+
+La signature vaut authentification.
+
+n.d.
+
+Section française de l’Observatoire
+international des prisons
+
+CE
+
+Décret censuré pour violation de la Convention de New York
+(droits de l’enfant) et de la CEDH.
+
+9 mars 1978
+(n.d. dans le
+cours)
+
+Simmenthal
+
+CJCE
+
+Le droit de l’UE ne peut être soustrait à aucune norme interne,
+même constitutionnelle.
+
+n.d.
+
+Marbury contre Madison
+
+Cour
+suprême des
+États-Unis
+
+Contre-exemple : le juge américain contrôle la loi (le juge
+français ne le fait pas).
+
+MÉTHODE POUR L’INTERRO (dérivée du cours)
+1) Un requérant invoque une norme constitutionnelle contre un acte administratif
+
+• Valeur constitutionnelle ? (Préambule 1946 : Dehaene, Eky ; Charte : Commune d’Annecy).
+• Applicabilité directe ? Précision suffisante ? Sinon moyen inopérant (ex. al. 12 : solidarité nationale).
+• Loi écran ? L’acte découle-t-il nécessairement de la loi ? Si marge de manœuvre : écran transparent (Quintin) ;
+règlement autonome : contrôlable.
+
+• Si la loi fait écran : QPC (seul le CC peut abroger), contrôle de conventionnalité via un droit équivalent (Nicolo),
+ou abrogation implicite (nouvelle norme constitutionnelle).
+
+Fiche – Droit administratif – Partie 2 : L’encadrement de l’administration (principe de légalité)
+
+Page 13
+
+[page 14]
+2) Un requérant invoque un traité
+
+• Intégration (art. 55) : signature, ratification régulière, publication, réciprocité (sauf droits de l’homme), puis effet
+direct (Gisti 1997 ; Gisti et Fapil 2012).
+
+• Primauté : sur acte administratif = toujours ; sur loi = oui pour les traités (Nicolo, même postérieure), non pour
+coutume/PGDI (Aquarone, Paulin) ; sur la Constitution = jamais (Sarran, SNIP ; Koné = interprétation conforme).
+
+• Interpréter la convention : le CE le fait lui-même (Gisti 1990), le ministre peut être consulté mais ne lie pas
+(Cheriet-Benseghir).
+3) Droit de l’UE / directive
+
+• Droit primaire et dérivé priment sur les lois (art. 55, art. 88-1). Règlement = effet direct automatique ; directive =
+invocable si précise après le délai de transposition (Perreux).
+
+• Loi de transposition : CC (DADVSI : immunité sauf identité constitutionnelle ; erreur manifeste de transposition).
+Décret : Arcelor (protection équivalente) ; décret d’application d’une loi de transposition : Air Algérie (double
+écran).
+
+• Difficulté sérieuse d’interprétation ou de validité : question préjudicielle à la CJUE ; la priorité de la QPC
+n’empêche ni elle ni le contrôle de conventionnalité.
+⚠ Pièges classiques
+
+• Ne pas confondre invocabilité (la norme peut-elle être invoquée ?) et valeur (a-t-elle valeur constitutionnelle ?).
+• Ne pas confondre contrôle de constitutionnalité (abstrait, absolu, a priori ou QPC) et contrôle de
+conventionnalité (relatif, contingent, par tout juge).
+
+• Ne pas dire que la QPC « supprime » la loi écran : elle la contourne et la confirme (seul le CC abroge ; le juge
+administratif filtre).
+
+• Contrôle de compatibilité pour les traités, de conformité pour la Constitution.
+• Aucune norme internationale ne prime sur la Constitution, y compris le droit de l’UE (réserve de l’identité
+constitutionnelle).
+
+COQUILLES ET POINTS À VÉRIFIER DANS LE COURS
+J’ai corrigé les erreurs évidentes dans la fiche. Ci-dessous ce qui diffère du texte du PDF ; pour les points signalés « à
+vérifier », vérifie avec ton cours oral/ton chargé de TD avant l’interro.
+Dans le cours
+
+Dans la fiche
+
+Remarque
+
+« Niccolo »
+
+Nicolo
+
+CE, 1989.
+
+« Quuntin de 1991 »
+
+Quintin (1991)
+
+Écran transparent.
+
+« décision du 27 juillet 2026, DADVSI »
+
+27 juillet 2006
+
+Coquille de date.
+
+« Dame Kirkwood » : 30 mai 1962 (une fois) / 30
+mai 1952 (une autre fois)
+
+30 mai 1952
+
+Le cours est incohérent ; 1952 est la
+date retenue.
+
+Nicolo : écarter une loi contraire à une convention
+« même antérieure »
+
+« même postérieure »
+
+Tout l’apport de Nicolo : la loi
+postérieure ne fait plus obstacle.
+
+Gisti : « 29 juillet 1990 »
+
+29 juin 1990
+
+À vérifier.
+
+« Intervention volontaire de grossesse » ; « IVG »
+utilisé aussi comme raccourci dans les passages
+sur la QPC
+
+Interruption volontaire de
+grossesse (CC, 15 janvier 1975)
+
+Le cours semble renvoyer à cette
+décision (refus du contrôle de
+conventionnalité).
+
+« arrêt Polin, du 28 juin 1997 » (PGDI) et « arrêt
+Paulin, du 28 juillet 2000 »
+
+Paulin (28 juillet 2000) ; Aquarone
+(6 juin 1997) pour la coutume
+
+À vérifier : probablement un seul arrêt
+cité deux fois sous des noms/dates
+différents.
+
+« Gisty et Fapil »
+
+Gisti et Fapil (11 avril 2012)
+
+Orthographe.
+
+Décision « loi relative au secteur de l’énergie »
+(erreur manifeste de transposition)
+
+Intitulé repris tel quel
+
+À vérifier (nom et date exacts de la
+décision).
+
+« Société Air France QPC, de 2023 »
+
+Repris tel quel
+
+À vérifier (nom et date).
+
+« art. 249 » (obligation de transposer les
+directives)
+
+Repris tel quel
+
+Numérotation d’origine du traité ; à
+vérifier avec ton cours.
+
+« Narchfolger Navigation Company »
+
+Nachfolger Navigation Company
+
+Orthographe.
+
+Fiche – Droit administratif – Partie 2 : L’encadrement de l’administration (principe de légalité)
+
+Page 14
+

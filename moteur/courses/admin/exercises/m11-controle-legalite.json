@@ -1005,7 +1005,8 @@
   "explanation": "C'est le critère de classification.",
   "hint": "La classification suit les pouvoirs du juge.",
   "concepts": [
-   "rep"
+   "rep",
+   "plein-contentieux"
   ],
   "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 2"
  },
@@ -1497,5 +1498,60 @@
    "syllogisme"
   ],
   "source": "Fascicule de TD, séance 10"
+ },
+ {
+  "chapterSlug": "recours-contentieux",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Un commerçant demande au juge administratif de condamner la commune à réparer le préjudice que lui a causé une décision illégale. Quel recours exerce-t-il ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Un recours de plein contentieux"
+    },
+    {
+     "id": "b",
+     "label": "Un recours pour excès de pouvoir"
+    },
+    {
+     "id": "c",
+     "label": "Un recours en appréciation de validité"
+    },
+    {
+     "id": "d",
+     "label": "Un recours relevant du contentieux répressif"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Demander une condamnation à réparer relève du plein contentieux, où le juge peut réformer et condamner. Le juge de l'excès de pouvoir ne peut qu'annuler ou rejeter.",
+  "hint": "Demande-toi si le juge doit seulement annuler, ou aussi condamner.",
+  "concepts": [
+   "plein-contentieux"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 2"
+ },
+ {
+  "chapterSlug": "recours-contentieux",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Le ministère d'avocat est obligatoire en plein contentieux.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Vrai : il ne l'est pas en excès de pouvoir, mais il l'est en plein contentieux.",
+  "hint": "Le cours oppose sur ce point les deux grands recours.",
+  "concepts": [
+   "plein-contentieux"
+  ],
+  "source": "CM, Partie 2, Titre 2, Chapitre 2, Section 2"
  }
 ]

@@ -1323,5 +1323,1119 @@
    "syllogisme"
   ],
   "source": "Fascicule de TD, séance 7 (d'après le cas pratique du partiel de janvier 2024)"
+ },
+ {
+  "chapterSlug": "traites-conditions",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Que prévoyait l'article 26 de la Constitution de 1946 ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Les traités ratifiés et publiés ont force de loi, même contraires à des lois françaises"
+    },
+    {
+     "id": "b",
+     "label": "Les traités ont une autorité supérieure à celle de la Constitution"
+    },
+    {
+     "id": "c",
+     "label": "Les traités ne s'appliquent en droit interne qu'après le vote d'une loi qui reprend leur contenu"
+    },
+    {
+     "id": "d",
+     "label": "Le juge administratif contrôle la constitutionnalité des traités"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Article 26 : les traités régulièrement ratifiés et publiés ont force de loi même contraires aux lois françaises, sans autre loi que celle nécessaire à leur ratification.",
+  "hint": "C'est la première Constitution à faire une place aux engagements internationaux.",
+  "concepts": [
+   "conditions-article-55"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 ; Fiche de révision de la partie 2, p. 6-7"
+ },
+ {
+  "chapterSlug": "traites-conditions",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "La signature d'un traité vaut consentement de la France à être liée.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Faux : la signature authentifie le texte. C'est la ratification ou l'approbation qui engage l'État.",
+  "hint": "Distingue la formalité qui fixe le texte et l'acte qui engage l'État.",
+  "concepts": [
+   "conditions-article-55"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 ; Fiche de révision de la partie 2, p. 6-7"
+ },
+ {
+  "chapterSlug": "traites-conditions",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Dans l'arrêt SARL du parc d'activités de Blotzheim (1998), que contrôle le Conseil d'État ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La régularité de la ratification du traité"
+    },
+    {
+     "id": "b",
+     "label": "La conformité du traité à la Constitution"
+    },
+    {
+     "id": "c",
+     "label": "L'application du traité par l'autre État partie"
+    },
+    {
+     "id": "d",
+     "label": "L'effet direct de chacune des stipulations"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Le juge vérifie l'existence et la régularité de la ratification, par exemple si une loi était nécessaire (article 53). Il ne vérifie pas la conformité du traité à la Constitution.",
+  "hint": "L'arrêt porte sur la deuxième condition de l'article 55.",
+  "concepts": [
+   "conditions-article-55"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 ; Fiche de révision de la partie 2, p. 6-7"
+ },
+ {
+  "chapterSlug": "traites-conditions",
+  "type": "ORDERING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Remets dans l'ordre l'évolution du contrôle de la réciprocité.",
+  "payload": {
+   "items": [
+    {
+     "id": "i2",
+     "label": "Chevrol (CEDH, 2003) : la France est condamnée pour atteinte au procès équitable"
+    },
+    {
+     "id": "i3",
+     "label": "Cheriet-Benseghir (2010) : le juge apprécie lui-même la réciprocité"
+    },
+    {
+     "id": "i0",
+     "label": "Article 55 (1958) : la réciprocité conditionne la supériorité des traités sur les lois"
+    },
+    {
+     "id": "i1",
+     "label": "Rekhou (1981) : le juge interroge le ministre et s'estime lié par sa réponse"
+    }
+   ]
+  },
+  "solution": {
+   "order": [
+    "i0",
+    "i1",
+    "i2",
+    "i3"
+   ]
+  },
+  "explanation": "Le juge s'en remettait au ministre ; la Cour européenne des droits de l'homme l'a condamné ; il décide désormais seul.",
+  "hint": "La décision de la Cour européenne explique le revirement du Conseil d'État.",
+  "concepts": [
+   "reciprocite"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 ; Fiche de révision de la partie 2, p. 7"
+ },
+ {
+  "chapterSlug": "traites-conditions",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Pourquoi la Cour européenne des droits de l'homme condamne-t-elle la France dans l'arrêt Chevrol (2003) ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le juge s'estimait lié par l'avis du ministre sur la réciprocité, sans examen par un juge"
+    },
+    {
+     "id": "b",
+     "label": "La France avait refusé de publier un traité régulièrement ratifié"
+    },
+    {
+     "id": "c",
+     "label": "Le juge administratif avait appliqué une loi postérieure contraire à la Convention"
+    },
+    {
+     "id": "d",
+     "label": "La France refusait d'appliquer une convention bilatérale alors que l'autre État partie l'appliquait fidèlement de son côté"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Se dire lié par le ministre privait le justiciable d'un véritable examen par un juge, contrairement au droit au procès équitable. D'où le revirement Cheriet-Benseghir.",
+  "hint": "Pense à la jurisprudence Rekhou.",
+  "concepts": [
+   "reciprocite"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 ; Fiche de révision de la partie 2, p. 7"
+ },
+ {
+  "chapterSlug": "traites-conditions",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Depuis l'arrêt Cheriet-Benseghir, le juge administratif n'a plus le droit de consulter le ministre des Affaires étrangères sur la réciprocité.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Faux : il peut toujours demander son avis, soumis au contradictoire. Mais cet avis ne le lie plus.",
+  "hint": "Ce qui a changé, c'est la force de l'avis du ministre.",
+  "concepts": [
+   "reciprocite"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 ; Fiche de révision de la partie 2, p. 7"
+ },
+ {
+  "chapterSlug": "traites-conditions",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Pour un traité de l'Union européenne, c'est la CJUE, et non le juge administratif avec la grille GISTI et FAPIL, qui dit si une stipulation est d'effet direct.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Vrai : le Conseil d'État écarte les traités de l'Union de sa grille d'analyse de l'effet direct.",
+  "hint": "Le droit de l'Union a son propre juge.",
+  "concepts": [
+   "effet-direct"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 ; Fiche de révision de la partie 2, p. 7"
+ },
+ {
+  "chapterSlug": "traites-conditions",
+  "type": "MCQ_SINGLE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Une convention bilatérale stipule que « les États parties garantissent aux travailleurs de l'autre État l'égalité de traitement en matière de salaire ». L'administration soutient qu'elle n'est pas d'effet direct, puisqu'elle ne vise que les États. Que décide le juge ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'argument ne suffit pas : désigner les États comme sujets de l'obligation n'exclut pas l'effet direct"
+    },
+    {
+     "id": "b",
+     "label": "La stipulation est sans effet direct, puisqu'elle s'adresse aux États"
+    },
+    {
+     "id": "c",
+     "label": "Le juge doit renvoyer la question au ministre des Affaires étrangères et suivre son interprétation de la stipulation"
+    },
+    {
+     "id": "d",
+     "label": "Le juge écarte la convention, faute de réciprocité"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "GISTI et FAPIL (2012) : l'absence d'effet direct ne peut se déduire du seul fait que la stipulation désigne les États comme sujets de l'obligation. Le juge regarde l'intention des parties, le contenu et les termes.",
+  "hint": "Pense à la dernière phrase des critères de 2012.",
+  "concepts": [
+   "effet-direct"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 ; Fiche de révision de la partie 2, p. 7"
+ },
+ {
+  "chapterSlug": "primaute-droit-international",
+  "type": "MATCHING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Associe chaque arrêt à sa solution.",
+  "payload": {
+   "left": [
+    {
+     "id": "l0",
+     "label": "Aquarone (1997)"
+    },
+    {
+     "id": "l1",
+     "label": "Nachfolger Navigation Company (1987)"
+    },
+    {
+     "id": "l2",
+     "label": "Paulin (2000)"
+    },
+    {
+     "id": "l3",
+     "label": "Dame Kirkwood (1952)"
+    }
+   ],
+   "right": [
+    {
+     "id": "r1",
+     "label": "Le juge vérifie l'existence des PGDI"
+    },
+    {
+     "id": "r2",
+     "label": "Les PGDI ne permettent pas d'écarter une loi"
+    },
+    {
+     "id": "r3",
+     "label": "Un traité prime sur un acte administratif"
+    },
+    {
+     "id": "r0",
+     "label": "La coutume est appliquée, mais ne prime pas sur la loi"
+    }
+   ]
+  },
+  "solution": {
+   "pairs": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2",
+    "l3": "r3"
+   }
+  },
+  "explanation": "Trois arrêts sur les normes non écrites, un sur la primauté des traités sur les actes administratifs.",
+  "hint": "Deux arrêts portent sur les principes généraux du droit international.",
+  "concepts": [
+   "coutume-internationale",
+   "pgdi"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 b ; Fiche de révision de la partie 2, p. 7"
+ },
+ {
+  "chapterSlug": "primaute-droit-international",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Un principe général du droit international permet au juge d'écarter une loi française contraire.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Faux : comme la coutume, et contrairement aux traités, les PGDI ne priment pas sur la loi (Paulin, 2000).",
+  "hint": "L'article 55 ne vise que les « traités ou accords ».",
+  "concepts": [
+   "pgdi"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 b ; Fiche de révision de la partie 2, p. 7"
+ },
+ {
+  "chapterSlug": "primaute-droit-international",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quelles relations hiérarchiques le juge déduit-il de l'article 55 ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Toutes les normes internationales priment sur les actes administratifs"
+    },
+    {
+     "id": "b",
+     "label": "Seules les normes internationales écrites priment sur la loi"
+    },
+    {
+     "id": "c",
+     "label": "Aucune norme internationale ne prime sur la Constitution"
+    },
+    {
+     "id": "d",
+     "label": "La coutume internationale prime sur les lois antérieures"
+    },
+    {
+     "id": "e",
+     "label": "Les traités de droits de l'homme priment sur la Constitution"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "b",
+    "c"
+   ]
+  },
+  "explanation": "Trois relations : toutes les normes internationales au-dessus des actes administratifs ; seuls les traités au-dessus de la loi ; rien au-dessus de la Constitution.",
+  "hint": "Il faut distinguer selon le type de norme internationale et selon le type de norme interne.",
+  "concepts": [
+   "hierarchie-article-55"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 7-8"
+ },
+ {
+  "chapterSlug": "primaute-droit-international",
+  "type": "ORDERING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Remets dans l'ordre la querelle sur la primauté des traités sur les lois.",
+  "payload": {
+   "items": [
+    {
+     "id": "i2",
+     "label": "Jacques Vabre (Cass., mai 1975) : le juge judiciaire écarte la loi"
+    },
+    {
+     "id": "i3",
+     "label": "Nicolo (CE, 1989) : le juge administratif écarte la loi postérieure"
+    },
+    {
+     "id": "i0",
+     "label": "Semoules (CE, 1968) : la loi postérieure l'emporte sur le traité"
+    },
+    {
+     "id": "i1",
+     "label": "IVG (CC, janvier 1975) : refus du contrôle de conventionnalité"
+    }
+   ]
+  },
+  "solution": {
+   "order": [
+    "i0",
+    "i1",
+    "i2",
+    "i3"
+   ]
+  },
+  "explanation": "1968, puis deux décisions de 1975 à quatre mois d'intervalle, puis Nicolo, quatorze ans plus tard.",
+  "hint": "Le juge judiciaire a réagi quelques mois après le Conseil constitutionnel.",
+  "concepts": [
+   "ivg-vabre",
+   "nicolo"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 7-8"
+ },
+ {
+  "chapterSlug": "primaute-droit-international",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Dans l'arrêt Semoules (1968), pourquoi le Conseil d'État fait-il prévaloir une loi postérieure sur un traité ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le législateur est réputé avoir voulu déroger au traité"
+    },
+    {
+     "id": "b",
+     "label": "Les traités n'avaient pas encore une autorité supérieure aux lois"
+    },
+    {
+     "id": "c",
+     "label": "La réciprocité n'était pas remplie"
+    },
+    {
+     "id": "d",
+     "label": "Le traité n'avait pas d'effet direct"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Conception souverainiste : la loi postérieure exprime la volonté du législateur de déroger. L'article 55 donnait pourtant déjà aux traités une autorité supérieure aux lois.",
+  "hint": "Le juge s'en tient à la volonté du législateur.",
+  "concepts": [
+   "nicolo"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 7-8"
+ },
+ {
+  "chapterSlug": "primaute-droit-international",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Le Conseil d'État a censuré un décret contraire à la Convention de New York sur les droits de l'enfant.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Vrai : arrêt Section française de l'Observatoire international des prisons. Un traité prime sur tout acte administratif.",
+  "hint": "La primauté des traités sur les actes administratifs est acquise depuis 1952.",
+  "concepts": [
+   "hierarchie-article-55"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 7-8"
+ },
+ {
+  "chapterSlug": "primaute-droit-international",
+  "type": "FILL_BLANK",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Complète la phrase.",
+  "payload": {
+   "template": "Avant l'arrêt GISTI de 1990, le Conseil d'État renvoyait l'interprétation des traités au ministre des {{a}}.",
+   "slots": [
+    {
+     "id": "a",
+     "width": "lg"
+    }
+   ]
+  },
+  "solution": {
+   "answers": {
+    "a": [
+     "Affaires étrangères",
+     "affaires etrangeres"
+    ]
+   }
+  },
+  "explanation": "Veuve Murat (1823) : le juge posait la question au ministre et se jugeait lié. GISTI (1990) met fin à ce renvoi.",
+  "hint": "C'est le ministre qui négocie les traités.",
+  "concepts": [
+   "interpretation-traites"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 8-9"
+ },
+ {
+  "chapterSlug": "primaute-droit-international",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Depuis quel arrêt le Conseil d'État interprète-t-il lui-même les traités ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "GISTI (CE, Ass., 1990)"
+    },
+    {
+     "id": "b",
+     "label": "Veuve Murat (CE, 1823)"
+    },
+    {
+     "id": "c",
+     "label": "GISTI et FAPIL (CE, 2012)"
+    },
+    {
+     "id": "d",
+     "label": "Cheriet-Benseghir (CE, Ass., 2010)"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "GISTI (1990), juste après Nicolo. GISTI et FAPIL porte sur l'effet direct, Cheriet-Benseghir sur la réciprocité, et Veuve Murat est la solution inverse.",
+  "hint": "L'arrêt suit de peu Nicolo.",
+  "concepts": [
+   "interpretation-traites"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 8-9"
+ },
+ {
+  "chapterSlug": "primaute-droit-international",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Quelle affirmation décrit le contrôle de conventionnalité ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le juge vérifie que la loi est compatible avec le traité, et l'écarte sinon"
+    },
+    {
+     "id": "b",
+     "label": "Le juge vérifie que la loi est strictement conforme au traité, et l'annule sinon"
+    },
+    {
+     "id": "c",
+     "label": "Le Conseil constitutionnel vérifie la loi avant sa promulgation"
+    },
+    {
+     "id": "d",
+     "label": "Le juge relève d'office toute contrariété entre une loi et un traité"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Contrôle direct, sur demande d'une partie, de compatibilité, et la loi est écartée sans être annulée.",
+  "hint": "Le contrôle se fait par le juge ordinaire, dans un litige.",
+  "concepts": [
+   "controle-conventionnalite"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 8-9"
+ },
+ {
+  "chapterSlug": "droit-union-europeenne",
+  "type": "TRUE_FALSE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Le droit de l'Union européenne et la Convention européenne des droits de l'homme relèvent des mêmes institutions.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Faux : ni les mêmes institutions, ni les mêmes États. L'Union compte 27 États membres.",
+  "hint": "Strasbourg ou Luxembourg ?",
+  "concepts": [
+   "droit-ue"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 B ; Fiche de révision de la partie 2, p. 9"
+ },
+ {
+  "chapterSlug": "droit-union-europeenne",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Avant l'arrêt Perreux, que jugeait le Conseil d'État d'une directive non transposée ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Elle n'était pas invocable : l'état antérieur du droit ne pouvait pas être écarté"
+    },
+    {
+     "id": "b",
+     "label": "Elle était invocable contre tout acte administratif, réglementaire ou individuel, dès son adoption"
+    },
+    {
+     "id": "c",
+     "label": "Elle avait valeur constitutionnelle par l'article 88-1"
+    },
+    {
+     "id": "d",
+     "label": "Elle s'appliquait directement, comme un règlement"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Avant, sans transposition, la directive n'était pas d'effet direct. Le Conseil d'État a nuancé, puis s'est aligné sur la CJUE avec Perreux (2009).",
+  "hint": "Perreux est un revirement.",
+  "concepts": [
+   "perreux",
+   "directive"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 B ; Fiche de révision de la partie 2, p. 9"
+ },
+ {
+  "chapterSlug": "droit-union-europeenne",
+  "type": "MCQ_MULTI",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Dans quels cas le juge doit-il poser une question préjudicielle à la CJUE ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Une difficulté sérieuse sur l'interprétation d'une norme de l'Union"
+    },
+    {
+     "id": "b",
+     "label": "Un doute sérieux sur la validité d'un acte dérivé au regard du droit primaire"
+    },
+    {
+     "id": "c",
+     "label": "Une question sur la constitutionnalité d'une loi"
+    },
+    {
+     "id": "d",
+     "label": "Une question sur la réciprocité d'un traité bilatéral"
+    },
+    {
+     "id": "e",
+     "label": "Toute invocation d'un règlement, même claire"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a",
+    "b"
+   ]
+  },
+  "explanation": "La question préjudicielle porte sur l'interprétation ou la validité du droit de l'Union, et seulement en cas de difficulté sérieuse.",
+  "hint": "La CJUE est le juge du droit de l'Union, pas de la Constitution.",
+  "concepts": [
+   "renvoi-prejudiciel-cjue"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 B ; Fiche de révision de la partie 2, p. 9"
+ },
+ {
+  "chapterSlug": "droit-union-europeenne",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "La ratification des traités de Maastricht et de Lisbonne a exigé une révision de la Constitution.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Vrai : ces transferts de souveraineté étaient contraires à la Constitution, qui a dû être révisée avant la ratification (article 54).",
+  "hint": "Pense à ce qui se passe quand un traité est contraire à la Constitution.",
+  "concepts": [
+   "droit-ue"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 B ; Fiche de révision de la partie 2, p. 9"
+ },
+ {
+  "chapterSlug": "union-et-constitution",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Que pose la décision Économie numérique (CC, 10 juin 2004) ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "La transposition d'une directive est une exigence constitutionnelle"
+    },
+    {
+     "id": "b",
+     "label": "Le Conseil constitutionnel accepte de saisir la CJUE"
+    },
+    {
+     "id": "c",
+     "label": "Les lois de transposition échappent désormais à toute forme de contrôle juridictionnel"
+    },
+    {
+     "id": "d",
+     "label": "La Constitution est inférieure au droit dérivé de l'Union"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Le Conseil se fonde sur l'article 88-1. Il ne saisira la CJUE qu'en 2013, et la Constitution reste au sommet.",
+  "hint": "Le Conseil s'appuie sur l'article de la Constitution consacré à l'Union.",
+  "concepts": [
+   "identite-constitutionnelle"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 B ; Fiche de révision de la partie 2, p. 10-11"
+ },
+ {
+  "chapterSlug": "union-et-constitution",
+  "type": "MCQ_SINGLE",
+  "difficulty": 1,
+  "points": 1,
+  "prompt": "Selon l'arrêt Simmenthal, à quelles normes internes les États peuvent-ils soustraire le droit de l'Union ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "À aucune, pas même à la Constitution"
+    },
+    {
+     "id": "b",
+     "label": "À leur seule Constitution"
+    },
+    {
+     "id": "c",
+     "label": "Aux lois postérieures au traité"
+    },
+    {
+     "id": "d",
+     "label": "Aux règlements autonomes"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Pour la Cour de justice, le droit de l'Union ne peut être soustrait à aucune norme interne. En droit interne, l'argument est inverse : la Constitution reste suprême.",
+  "hint": "C'est le point de vue de la Cour de justice, pas celui du juge français.",
+  "concepts": [
+   "droit-ue"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 B ; Fiche de révision de la partie 2, p. 10-11"
+ },
+ {
+  "chapterSlug": "union-et-constitution",
+  "type": "MCQ_SINGLE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Un décret applique une loi qui transpose fidèlement une directive précise et inconditionnelle. Le requérant soutient que c'est la loi elle-même qui méconnaît un droit constitutionnel. Que doit-il faire ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Soulever une QPC : la loi fait écran, et le Conseil constitutionnel appliquera DADVSI"
+    },
+    {
+     "id": "b",
+     "label": "Demander au Conseil d'État d'appliquer directement au décret la méthode Arcelor, comme pour tout décret de transposition"
+    },
+    {
+     "id": "c",
+     "label": "Demander au juge administratif d'écarter la loi comme contraire à la Constitution"
+    },
+    {
+     "id": "d",
+     "label": "Saisir directement la CJUE d'un recours contre la loi"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Air Algérie (2012) : si le vice est dans la loi de transposition, elle fait écran et seule la QPC est possible. Si le vice était dans le décret, le Conseil d'État appliquerait Arcelor.",
+  "hint": "Demande-toi où se trouve le vice : dans la loi ou dans le décret.",
+  "concepts": [
+   "double-ecran"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 B ; Fiche de révision de la partie 2, p. 10-11"
+ },
+ {
+  "chapterSlug": "union-et-constitution",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "La méthode Arcelor s'applique même quand le décret use d'une marge d'appréciation laissée par la directive.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Faux : elle ne joue que pour une directive précise et inconditionnelle. Si le décret use d'une marge, il peut être confronté directement à la Constitution.",
+  "hint": "Rapproche ce cas de l'écran transparent.",
+  "concepts": [
+   "arcelor"
+  ],
+  "source": "CM, Partie 2, Titre 1, Chapitre 1, Section 1, §2 B ; Fiche de révision de la partie 2, p. 10-11"
+ },
+ {
+  "chapterSlug": "union-et-constitution",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Dans la décision Société Air France (2021), quel principe le Conseil constitutionnel reconnaît-il comme inhérent à l'identité constitutionnelle de la France ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'interdiction de déléguer à des personnes privées des compétences de police administrative générale"
+    },
+    {
+     "id": "b",
+     "label": "Le droit à la sûreté"
+    },
+    {
+     "id": "c",
+     "label": "L'égalité devant les charges publiques"
+    },
+    {
+     "id": "d",
+     "label": "Le principe de responsabilité personnelle"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Les trois autres principes sont protégés par le droit de l'Union : ils ne relèvent donc pas de l'identité constitutionnelle.",
+  "hint": "Le principe retenu se déduit de l'article 12 de la Déclaration de 1789, sur la force publique.",
+  "concepts": [
+   "identite-constitutionnelle"
+  ],
+  "source": "Fascicule de TD, séance 5 (CC, 15 octobre 2021, Société Air France, n° 2021-940 QPC)"
+ },
+ {
+  "chapterSlug": "union-et-constitution",
+  "type": "MCQ_SINGLE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Sur quel article de la Constitution le Conseil constitutionnel s'appuie-t-il en 2013 pour poser une question préjudicielle à la CJUE ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "L'article 88-2"
+    },
+    {
+     "id": "b",
+     "label": "L'article 88-1"
+    },
+    {
+     "id": "c",
+     "label": "L'article 61-1"
+    },
+    {
+     "id": "d",
+     "label": "L'article 55"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Le Conseil accepte, lors d'une QPC, de poser une question préjudicielle sur le fondement de l'article 88-2, pour assurer la primauté du droit de l'Union.",
+  "hint": "Ce n'est pas l'article général sur la participation à l'Union, mais le suivant.",
+  "concepts": [
+   "qpc-ue",
+   "renvoi-prejudiciel-cjue"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 11"
+ },
+ {
+  "chapterSlug": "union-et-constitution",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "La Cour de cassation a posé une question préjudicielle à la CJUE dès la première QPC.",
+  "payload": {},
+  "solution": {
+   "value": true
+  },
+  "explanation": "Vrai : elle craignait que la priorité de la QPC écarte le contrôle de conventionnalité. La décision du 12 mai 2010 a répondu à cette crainte.",
+  "hint": "Le juge judiciaire est celui de Jacques Vabre.",
+  "concepts": [
+   "qpc-ue"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 11"
+ },
+ {
+  "chapterSlug": "td-seance-7",
+  "type": "ORDERING",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Un requérant invoque une norme constitutionnelle contre un acte administratif. Remets les questions dans l'ordre.",
+  "payload": {
+   "items": [
+    {
+     "id": "i2",
+     "label": "Une loi fait-elle écran entre la norme et l'acte ?"
+    },
+    {
+     "id": "i3",
+     "label": "Si oui, quel contournement : QPC, traité équivalent ou abrogation implicite ?"
+    },
+    {
+     "id": "i0",
+     "label": "La norme a-t-elle valeur constitutionnelle ?"
+    },
+    {
+     "id": "i1",
+     "label": "Est-elle d'applicabilité directe ?"
+    }
+   ]
+  },
+  "solution": {
+   "order": [
+    "i0",
+    "i1",
+    "i2",
+    "i3"
+   ]
+  },
+  "explanation": "Valeur, applicabilité directe, écran, puis contournement : c'est la méthode de la fiche.",
+  "hint": "On part de la norme invoquée avant de regarder l'acte.",
+  "concepts": [
+   "loi-ecran",
+   "invocabilite"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 13-14"
+ },
+ {
+  "chapterSlug": "td-seance-7",
+  "type": "MCQ_SINGLE",
+  "difficulty": 3,
+  "points": 1,
+  "prompt": "Un requérant invoque une coutume internationale contre une loi postérieure. Quelle réponse donner ?",
+  "payload": {
+   "options": [
+    {
+     "id": "a",
+     "label": "Le moyen échoue : la coutume ne prime pas sur la loi (Aquarone)"
+    },
+    {
+     "id": "b",
+     "label": "Le juge écarte la loi, comme pour un traité (Nicolo)"
+    },
+    {
+     "id": "c",
+     "label": "Le juge transmet une QPC au Conseil constitutionnel"
+    },
+    {
+     "id": "d",
+     "label": "Le juge interroge le ministre des Affaires étrangères sur l'existence de la coutume et suit son avis"
+    }
+   ]
+  },
+  "solution": {
+   "correct": [
+    "a"
+   ]
+  },
+  "explanation": "Seules les normes écrites priment sur la loi. Le juge applique la coutume contre un acte administratif, jamais contre une loi.",
+  "hint": "L'article 55 ne parle que des « traités ou accords ».",
+  "concepts": [
+   "coutume-internationale",
+   "hierarchie-article-55"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 13-14"
+ },
+ {
+  "chapterSlug": "td-seance-7",
+  "type": "TRUE_FALSE",
+  "difficulty": 2,
+  "points": 1,
+  "prompt": "Le contrôle de constitutionnalité est relatif et contingent, alors que le contrôle de conventionnalité est abstrait et absolu.",
+  "payload": {},
+  "solution": {
+   "value": false
+  },
+  "explanation": "Faux : c'est l'inverse. La constitutionnalité est abstraite et absolue ; la conventionnalité est relative et contingente, car un traité peut cesser de s'appliquer faute de réciprocité.",
+  "hint": "Pense à la réciprocité : peut-elle changer avec le temps ?",
+  "concepts": [
+   "controle-conventionnalite",
+   "ivg-vabre"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 13-14"
+ },
+ {
+  "chapterSlug": "td-seance-7",
+  "type": "CASE_STUDY",
+  "difficulty": 3,
+  "points": 3,
+  "prompt": "Cas guidé : une directive, un décret et la Constitution.",
+  "payload": {
+   "scenario": "Une directive précise et inconditionnelle impose aux États de soumettre certaines associations à une déclaration préalable. Le Gouvernement la transpose par un décret qui reprend exactement ses termes. Une association attaque le décret : il violerait la liberté d'association, principe à valeur constitutionnelle.\n\nDans le même recours, elle invoque une coutume internationale contre la loi qui fixe les sanctions applicables.",
+   "subQuestions": [
+    {
+     "id": "q1",
+     "type": "MCQ_SINGLE",
+     "prompt": "Quelle méthode le Conseil d'État applique-t-il au décret ?",
+     "payload": {
+      "options": [
+       {
+        "id": "a",
+        "label": "La méthode Arcelor : chercher une protection équivalente en droit de l'Union"
+       },
+       {
+        "id": "b",
+        "label": "La loi-écran : il se déclare incompétent"
+       },
+       {
+        "id": "c",
+        "label": "La QPC : il transmet au Conseil constitutionnel"
+       }
+      ]
+     }
+    },
+    {
+     "id": "q2",
+     "type": "TRUE_FALSE",
+     "prompt": "Si la liberté d'association est protégée de manière équivalente par le droit de l'Union, la question devient européenne : le juge vérifie la conformité de la directive au droit de l'Union.",
+     "payload": {}
+    },
+    {
+     "id": "q3",
+     "type": "MCQ_SINGLE",
+     "prompt": "En cas de difficulté sérieuse sur la validité de la directive, que fait le juge ?",
+     "payload": {
+      "options": [
+       {
+        "id": "a",
+        "label": "Il pose une question préjudicielle à la CJUE"
+       },
+       {
+        "id": "b",
+        "label": "Il annule le décret sans attendre"
+       },
+       {
+        "id": "c",
+        "label": "Il écarte la directive comme contraire à la Constitution"
+       }
+      ]
+     }
+    },
+    {
+     "id": "q4",
+     "type": "TRUE_FALSE",
+     "prompt": "La coutume internationale invoquée permet au juge d'écarter la loi qui fixe les sanctions.",
+     "payload": {}
+    }
+   ]
+  },
+  "solution": {
+   "subSolutions": [
+    {
+     "id": "q1",
+     "solution": {
+      "correct": [
+       "a"
+      ]
+     }
+    },
+    {
+     "id": "q2",
+     "solution": {
+      "value": true
+     }
+    },
+    {
+     "id": "q3",
+     "solution": {
+      "correct": [
+       "a"
+      ]
+     }
+    },
+    {
+     "id": "q4",
+     "solution": {
+      "value": false
+     }
+    }
+   ]
+  },
+  "explanation": "Décret de transposition d'une directive précise : Arcelor. Protection équivalente : la question devient européenne, avec renvoi à la CJUE en cas de difficulté sérieuse. Coutume : elle ne prime pas sur la loi (Aquarone).",
+  "hint": "Identifie d'abord l'acte attaqué, puis la norme invoquée contre chaque texte.",
+  "concepts": [
+   "arcelor",
+   "renvoi-prejudiciel-cjue",
+   "coutume-internationale"
+  ],
+  "source": "Fiche de révision de la partie 2, p. 13-14"
  }
 ]

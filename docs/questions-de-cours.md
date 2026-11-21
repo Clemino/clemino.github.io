@@ -23,6 +23,9 @@ Cours sur le site : https://clemino.github.io/admin/
 |---|---|
 | `CM ADMIN 2026_27.txt` | Notes du cours magistral (L2, semestre 1). Pas de pages : citer le titre de partie. Le `.pages` d'origine ne s'ouvre qu'avec Pages. |
 | `Fascicule TD DAG 2026-2027.pdf` et `.txt` | Fascicule de travaux dirigés : séances, documents (arrêts, textes) et exercices. |
+| `Revisions encadrement administration.pdf` et `.txt` | Fiche de révision de la partie 2, « L'encadrement de l'administration », titre 1 : le principe de légalité et ses sources (Constitution, droit international, droit de l'Union, loi, PGD), avec un tableau de tous les arrêts, une méthode et des pièges. Proposée par Océane depuis la bibliothèque, rédigée d'après une autre prise de notes du CM ; elle liste ses propres coquilles en dernière page. Elle date à tort la décision Société Air France de 2023 : c'est le 15 octobre 2021 (TD, séance 5). Sa décision « loi relative au secteur de l'énergie » est celle du 30 novembre 2006 (CM et TD). Son « art. 249 » est l'ancien article du traité CE, aujourd'hui l'article 288 TFUE. |
+
+Coquilles du CM sur la partie 2 : l'arrêt Nicolo fait primer le traité sur la loi même **postérieure** (pas « antérieure ») ; « Gitsy et Fabil » est l'arrêt GISTI et FAPIL (2012) ; « Saran » est Sarran (1998) ; « Connect » est l'arrêt Koné (1996).
 
 ### Trading : `sources/trd/`
 

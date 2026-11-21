@@ -281,9 +281,9 @@ describe.each([
     id: "admin",
     minAuto: 19,
     minTypes: 5,
-    longest: [31, 141],
-    vrai: [39, 88],
-    missing: 2,
+    longest: [37, 171],
+    vrai: [50, 110],
+    missing: 0,
   },
   {
     id: "contrats",
