@@ -71,6 +71,10 @@ ol.items input{width:22px;height:22px;margin:2px 0 0;accent-color:var(--statue)}
 .notes{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
 .notes ul{margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px;color:var(--muted);font-size:.9rem}
 .notes summary{padding:0;display:block;font-weight:600}
+.sync{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.sync p{margin:0;flex:1 1 200px;font-size:.88rem;color:var(--muted);overflow-wrap:anywhere}
+.sync[data-s="ok"] p::before{content:"✓ ";color:var(--statue);font-weight:700}
+.sync[data-s="error"] p{color:var(--warn)}
 @media (prefers-reduced-motion:reduce){.bar>i{transition:none}}
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0}
@@ -85,6 +89,9 @@ body{margin:0}
     <div class="big"><b id="tot">0 / 0</b><span id="pct" style="color:var(--muted)"></span></div>
     <div class="bar"><i id="totbar"></i></div>
     <div class="chips" id="chips"></div>
+    <div class="sync" id="sync" data-s="load">
+      <p id="syncText" role="status">Chargement de la progression commune…</p>
+    </div>
   </header>
   <div class="sticky">
     <button class="primary" id="resume" type="button">Reprendre</button>
@@ -102,6 +109,7 @@ body{margin:0}
       <li>Si un téléporteur n'est pas encore débloqué, vole jusqu'à lui depuis l'étape précédente : il se débloque en passant.</li>
       <li>L'Arbre-Monde est gardé pour la fin, car c'est la zone la plus difficile. Elle a sa propre carte dans le jeu.</li>
       <li>Positions extraites des fichiers du jeu par le projet PalDex : 577 objets. op.gg en compte 521, il lui manque notamment les 30 statues de Cattiva.</li>
+      <li>La progression est commune : tout le monde voit et coche les mêmes cases, sans compte. Hors connexion, tes coches restent sur l'appareil et partent dès que le réseau revient.</li>
     </ul>
   </details>
   <section class="maps" aria-label="Vue d'ensemble">
@@ -116,11 +124,19 @@ const R={"stages":[{"tp":"Colline du Commencement","h":[240,-512],"r":"main","it
 const ST=R.stages, KEY='pw-collect-route-v1';
 const TYPES={statue:{c:'var(--statue)',n:'Statues'},ruine:{c:'var(--ruine)',n:'Ruines antiques'},journal:{c:'var(--journal)',n:'Journaux'}};
 const DIRS=['nord','nord-est','est','sud-est','sud','sud-ouest','ouest','nord-ouest'];
-let done=new Set();
-try{done=new Set(JSON.parse(localStorage.getItem(KEY)||'[]'))}catch(e){}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify([...done]))}catch(e){}};
-let gi=0;ST.forEach((s,si)=>s.items.forEach(it=>{it.g=gi++;it.si=si}));
+// Each item is known by its type and game position, so saved progress survives a reordered route.
+let gi=0;ST.forEach((s,si)=>s.items.forEach(it=>{it.g=gi++;it.si=si;it.id=it.k+':'+it.p[0]+','+it.p[1]}));
 const ALL=ST.flatMap(s=>s.items);
+// Progress shared by everyone: the last known online state, and the ticks of this device not yet sent.
+const STATE_KEY='pw-shared-v1';
+let shared={},pending={},since='';
+try{const c=JSON.parse(localStorage.getItem(STATE_KEY)||'{}');shared=c.shared||{};pending=c.pending||{};since=c.since||''}catch(e){}
+const save=()=>{try{localStorage.setItem(STATE_KEY,JSON.stringify({shared,pending,since}))}catch(e){}};
+// Ticks saved on this device before the shared progress are added to it once.
+try{const old=JSON.parse(localStorage.getItem(KEY)||'null');if(Array.isArray(old)){old.forEach(g=>{if(ALL[g])pending[ALL[g].id]=1});save();localStorage.removeItem(KEY)}}catch(e){}
+let done=new Set();
+const derive=()=>{done=new Set();for(const it of ALL){const v=it.id in pending?pending[it.id]:shared[it.id];if(v)done.add(it.g)}};
+derive();
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function title(it){
   if(it.k==='statue')return (/^[AEIOUH]/.test(it.s)?"Statue d'":'Statue de ')+it.s;
@@ -194,7 +210,7 @@ function refresh(){
 }
 function current(){const i=ST.findIndex(s=>s.items.some(it=>!done.has(it.g)));return i<0?ST.length-1:i}
 host.addEventListener('change',e=>{const g=+e.target.dataset.g;if(isNaN(g))return;
-  e.target.checked?done.add(g):done.delete(g);save();refresh();
+  e.target.checked?done.add(g):done.delete(g);pending[ALL[g].id]=e.target.checked?1:0;save();refresh();later();
   const s=ST[ALL[g].si];if(s.items.every(i=>done.has(i.g))){const nx=current();if(sel!==nx)highlight(nx)}});
 host.addEventListener('click',e=>{const sm=e.target.closest('summary');if(sm)highlight(+sm.parentElement.dataset.si)});
 document.getElementById('resume').onclick=()=>{const c=current();highlight(c);const d=document.getElementById('st'+c);d.open=true;d.scrollIntoView({behavior:'smooth',block:'start'})};
@@ -202,6 +218,67 @@ document.getElementById('hide').onchange=e=>document.getElementById('app').class
 let allOpen=true;document.getElementById('openall').onclick=e=>{allOpen=!allOpen;document.querySelectorAll('details.st').forEach(d=>d.open=allOpen);e.target.textContent=allOpen?'Tout replier':'Tout déplier'};
 document.getElementById('openall').textContent='Tout replier';
 refresh();highlight(current());
+
+// Shared progress: one Supabase table read and written by every visitor, without an account (supabase/palworld.sql).
+const API='https://fcxrvoloiuicbgbqjoco.supabase.co/rest/v1/';
+const HEADERS={apikey:'sb_publishable_c9upHMOOf7Zi_m1xpy_seQ_t3uLZVTG',Authorization:'Bearer sb_publishable_c9upHMOOf7Zi_m1xpy_seQ_t3uLZVTG'};
+const box=document.getElementById('sync'),txt=document.getElementById('syncText');
+let busy=false,again=false,retry=null,flushTimer=null;
+function status(s){
+  box.dataset.s=s;
+  const n=Object.keys(pending).length;
+  txt.textContent={
+    load:'Chargement de la progression commune…',
+    saving:'Enregistrement en ligne…',
+    ok:'Progression commune : tout le monde voit et coche les mêmes cases.',
+    error:`Hors ligne : ${n?`${n} coche${n>1?'s':''} en attente sur cet appareil, envoyée${n>1?'s':''}`:'la progression commune sera mise à jour'} dès que possible.`
+  }[s];
+}
+function apply(){
+  derive();
+  document.querySelectorAll('ol.items input').forEach(i=>{i.checked=done.has(+i.dataset.g)});
+  refresh();
+  if(sel===null||ST[sel].items.every(i=>done.has(i.g)))highlight(current());
+}
+async function call(path,init){
+  const res=await fetch(API+path,{...init,headers:{...HEADERS,...(init&&init.headers)},cache:'no-store'});
+  if(!res.ok)throw new Error(`Supabase ${res.status} : ${(await res.text()).slice(0,200)}`);
+  return res.json();
+}
+// Everything at first, then only what changed (with a margin, for changes saved at the same moment).
+async function pull(full){
+  let q='palworld_items?select=id,checked,changed_at';
+  const t=Date.parse(since);
+  if(!full&&t)q+='&changed_at=gt.'+encodeURIComponent(new Date(t-10000).toISOString());
+  const rows=await call(q);
+  if(full)shared={};
+  for(const r of rows){shared[r.id]=r.checked?1:0;if(!since||Date.parse(r.changed_at)>Date.parse(since))since=r.changed_at}
+  save();apply();
+}
+async function push(){
+  const sent=Object.entries(pending);
+  if(!sent.length)return;
+  await call('rpc/palworld_set',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({changes:sent.map(([id,v])=>({id,checked:!!v}))})});
+  for(const[id,v]of sent){shared[id]=v;if(pending[id]===v)delete pending[id]}
+  save();
+}
+async function sync(full){
+  if(busy){again=true;return}
+  busy=true;clearTimeout(retry);clearTimeout(flushTimer);flushTimer=null;
+  if(Object.keys(pending).length)status('saving');
+  try{await push();await pull(full);status('ok')}
+  catch(err){console.error(err);status('error');retry=setTimeout(()=>sync(true),20000)}
+  finally{busy=false;if(again){again=false;sync(false)}}
+}
+function later(){status('saving');clearTimeout(flushTimer);flushTimer=setTimeout(()=>sync(false),600)}
+status('load');sync(true);
+// Others tick too: look for their changes while the page is shown, and in full when coming back to it.
+setInterval(()=>{if(document.visibilityState==='visible')sync(false)},15000);
+addEventListener('online',()=>sync(true));
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible')sync(true);
+  else if(flushTimer)sync(false); // leaving for the game: send the last ticks right away
+});
 })();
 </script>
 </body>
