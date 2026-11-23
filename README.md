@@ -11,7 +11,7 @@ site/                   Publié tel quel sur https://clemino.github.io
 ├── index.html          Page d'accueil, volontairement blanche
 ├── cours/              Bibliothèque : connexion, matières, propositions, accès
 ├── palworld/           Parcours des objets de collection de Palworld : page autonome venue de clemino/palworld,
-│                       dont les coches se sauvegardent avec le compte Google (table `progress`)
+│                       dont les coches sont communes à tous les visiteurs, sans compte
 ├── admin/              Droit administratif   ┐
 ├── contrats/           Droit des contrats    │ générés par moteur/ :
 ├── ia-responsable/     IA responsable        │ ne pas modifier à la main
@@ -72,8 +72,9 @@ Projet `cours`, connexion par Google uniquement.
 | `people` | Comptes inscrits, pour la section « Accès » |
 | `admins` | Administrateurs |
 | `course_proposals` | Matières proposées, avec leurs PDF dans l'espace de stockage privé `proposals` |
-| `progress` | Progression de chacun : une ligne par matière, et une ligne `palworld` pour les coches de la page Palworld |
+| `palworld_items` | Coches de la page Palworld, communes à tous les visiteurs |
 
+- La page Palworld n'a pas de compte : tout visiteur lit les coches et en change avec la fonction `palworld_set`, qui n'accepte que des objets du parcours. Table et fonction sont créées par `supabase/palworld.sql`.
 - Les règles de Supabase empêchent de suivre une matière sans y avoir accès, et cachent celles dont l'accès a été retiré ; la progression reste enregistrée. Elles sont dans `supabase/acces-par-personne.sql`.
 - La clé secrète, qui sert à `scripts/proposals.mjs`, est dans `.env.local` sur le PC (ignoré par git), et dans un secret réseau de l'environnement claude.ai/code. Elle ne doit apparaître nulle part ailleurs.
 - `.github/workflows/supabase-keepalive.yml` réveille le projet deux fois par semaine : sans activité, l'offre gratuite le met en pause.
