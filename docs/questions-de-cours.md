@@ -61,6 +61,18 @@ Droit des obligations, L2 semestre 3, CY Cergy Paris Université, cours de Magal
 | `TD 1` à `TD 7` (`.pdf` et `.txt`) | Fiches de travaux dirigés : sources de l'obligation (loteries publicitaires), notion de contrat et réforme de 2016, conclusion du contrat, erreur et dol, violence, contenu licite et certain, révisions et commentaire d'arrêt. |
 | `FASCICULE METHODO L2 CONTRATS - 20262027.pdf` et `.txt` | Fascicule de méthodologie : lecture des arrêts de la Cour de cassation, commentaire d'arrêt, dissertation, cas pratique, commentaire d'article. |
 
+### Culture générale : `sources/culture/`
+
+Cours sur le site : https://clemino.github.io/culture/
+
+Culture générale et grands débats contemporains, thème « Crises et critiques des démocraties ». Proposé par Océane depuis la bibliothèque, sous le titre « Droit des biens » : le PDF envoyé était ce cours de culture générale, et Clément a choisi de le créer tel quel le 23 novembre 2026.
+
+| Fichier | Contenu |
+|---|---|
+| `Culture generale (2).pdf` et `.txt` | Notes d'étudiant du cours magistral, 36 pages : I. Une critique ambivalente (rareté de la démocratie, populisme, crise) ; II. Le pouvoir du démos (Aron, Lincoln, Kelsen, Hobbes, Rousseau, Negri, Rancière, Colliot-Thélène) ; III. Les critiques du principe démocratique (Platon, Tocqueville, Calliclès, Nietzsche, Land, Yarvin, Burke, de Maistre, Marx, Schmitt) ; IV. La démocratie comme délibération (Aristote, Alain, Locke, Kant, Montesquieu, Churchill, Aron). Les notes s'arrêtent à IV, B : IV, C et la partie V n'ont que leurs titres. |
+
+Coquilles des notes, corrigées dans le cours : le discours de Gettysburg date du 19 novembre **1863**, pendant la guerre de Sécession (pas « 1963 », ni « à la fin » de la guerre) ; Viktor Orbán est Premier ministre de 1998 à 2002, puis de **2010** à 2026 (pas « de 2002 ») ; Jackson défend l'homme ordinaire *contre* l'élite financière ; Giscard abaisse l'**âge** du vote (pas « le cens ») ; le régime que De Gaulle prépare en 1942-1944 est celui de l'après-guerre (pas la Ve République, qui date de 1958) ; chez Platon (*La République*, livre VIII), la démocratie naît de la victoire des **pauvres** sur les riches ; « 488-489 », « 465 », « 483 » et « 540 » sont des numéros de passages de Platon, pas des dates ; *La dictature* de Schmitt date de **1921** ; Montesquieu réfléchit au modèle anglais au **XVIIIe** siècle ; en 2017, François Hollande ne se représentait pas : il transmet le pouvoir à Emmanuel Macron ; l'article 17 de la Déclaration de 1789 fait de la propriété « un droit inviolable et sacré » (les notes en déforment la phrase) ; « ligne de Délos » est la ligue de Délos ; noms : Javier Milei, Curtis Yarvin, Calliclès, Paul Lazarsfeld, Mona Sahlin. Faits que les notes donnent et que le cours écarte faute de les confirmer : le nombre d'années de Périclès comme stratège, l'âge de 16 ans pour l'instruction obligatoire des lois de la IIIe République.
+
 ## Ajouter une matière
 
 Mettre ses fichiers dans `sources/<id>/` avec une version texte de chaque PDF, puis ajouter sa section ci-dessus. La version texte se fait avec `pdftotext`, en remplaçant chaque saut de page par un repère `[page N]`.

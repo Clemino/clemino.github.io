@@ -1,0 +1,692 @@
+{
+  "slug": "galop-essai",
+  "title": "Galop d'essai",
+  "description": "Modules 1 et 2, 60 minutes, noté sur 20. Douze questions sur 12 points et deux cas guidés sur 8 points. La dissertation se travaille dans les modules.",
+  "durationMinutes": 60,
+  "exercises": [
+    {
+      "chapterSlug": "fragilite-rarete",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Depuis les années 2020, comment évolue la part de la population mondiale qui vit dans une démocratie non déficiente ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Elle passe d'environ 8 % à 6 %"
+          },
+          {
+            "id": "b",
+            "label": "Elle reste stable, autour de 12 à 14 %"
+          },
+          {
+            "id": "c",
+            "label": "Elle dépasse désormais la moitié"
+          },
+          {
+            "id": "d",
+            "label": "Elle passe de 1 % à 3 %"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "De 8 % à 6 % de la population mondiale ; 12 à 14 % est la part des pays classés démocraties.",
+      "hint": "Le cours donne deux chiffres : l'un compte des pays, l'autre des habitants.",
+      "concepts": [
+        "indices-democratie"
+      ],
+      "source": "CM, I, A (p. 1)"
+    },
+    {
+      "chapterSlug": "fragilite-rarete",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "De quel événement Rancière part-il pour montrer que les élites jugent que le peuple ne sait pas ce qui est bon pour lui ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "L'abaissement de l'âge du vote à 18 ans"
+          },
+          {
+            "id": "b",
+            "label": "Le référendum de 2005 sur la Constitution européenne"
+          },
+          {
+            "id": "c",
+            "label": "L'élection de Napoléon III"
+          },
+          {
+            "id": "d",
+            "label": "La crise boulangiste"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "b"
+        ]
+      },
+      "explanation": "Le « non » l'emporte nettement en 2005, mais le traité est appliqué par d'autres moyens : le résultat n'est pas pris en compte.",
+      "hint": "C'est l'année même de la parution de La haine de la démocratie.",
+      "concepts": [
+        "minimum-democratique",
+        "etat-de-droit-oligarchique"
+      ],
+      "source": "CM, I, A (p. 4)"
+    },
+    {
+      "chapterSlug": "fragilite-rarete",
+      "type": "TRUE_FALSE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Napoléon III est devenu empereur par des plébiscites, tout en se disant ami du peuple.",
+      "payload": {},
+      "solution": {
+        "value": true
+      },
+      "explanation": "Élu président, il devient empereur par des plébiscites et installe un régime autoritaire en se disant ami du peuple, voire socialiste.",
+      "hint": "Le cours le rapproche des populistes d'aujourd'hui.",
+      "concepts": [
+        "deux-jugements-crise"
+      ],
+      "source": "CM, I, A (p. 3)"
+    },
+    {
+      "chapterSlug": "abstention-populisme",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Que recouvre la personnalisation du pouvoir dans le populisme ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Le renforcement des syndicats et des associations"
+          },
+          {
+            "id": "b",
+            "label": "L'attente d'une figure forte qui incarnerait le peuple"
+          },
+          {
+            "id": "c",
+            "label": "Le tirage au sort des dirigeants"
+          },
+          {
+            "id": "d",
+            "label": "La multiplication des contre-pouvoirs"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "b"
+        ]
+      },
+      "explanation": "On attend une personne qui incarnerait le peuple et le ferait exister à travers elle. Les corps intermédiaires sont au contraire court-circuités.",
+      "hint": "Pense au lien direct entre le chef et les individus.",
+      "concepts": [
+        "populisme",
+        "corps-intermediaires"
+      ],
+      "source": "CM, I, B (p. 6-8)"
+    },
+    {
+      "chapterSlug": "abstention-populisme",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Quelle notion le cours associe-t-il à Viktor Orbán ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Le régime constitutionnel pluraliste"
+          },
+          {
+            "id": "b",
+            "label": "La démocratie populaire"
+          },
+          {
+            "id": "c",
+            "label": "La démocratie illibérale"
+          },
+          {
+            "id": "d",
+            "label": "La démocratie censitaire"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "c"
+        ]
+      },
+      "explanation": "Orbán a revendiqué et théorisé la démocratie illibérale, et la Hongrie a été condamnée par l'Union européenne pour ses écarts.",
+      "hint": "Pense aux reproches que lui a adressés l'Union européenne.",
+      "concepts": [
+        "democratie-illiberale"
+      ],
+      "source": "CM, I, B (p. 7)"
+    },
+    {
+      "chapterSlug": "crise-concept-positif",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Pour Rousseau, que se passe-t-il si les débats sont toujours écourtés au nom des règles ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Le peuple devient souverain"
+          },
+          {
+            "id": "b",
+            "label": "La délibération gagne en efficacité"
+          },
+          {
+            "id": "c",
+            "label": "La république devient une démocratie directe"
+          },
+          {
+            "id": "d",
+            "label": "Ce sont toujours les puissants qui parlent"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "d"
+        ]
+      },
+      "explanation": "Il faut des règles pour débattre, mais trop de règles détruisent la justice et la liberté : il faut avoir le droit de parler et de s'opposer.",
+      "hint": "Rousseau tient ensemble la liberté et la règle.",
+      "concepts": [
+        "dissension"
+      ],
+      "source": "CM, I, C (p. 10)"
+    },
+    {
+      "chapterSlug": "population-peuple",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Selon Aron, qui est le « vrai peuple » au nom duquel gouverne le régime nazi ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Le prolétariat"
+          },
+          {
+            "id": "b",
+            "label": "Le peuple-race"
+          },
+          {
+            "id": "c",
+            "label": "Les citoyens tirés au sort"
+          },
+          {
+            "id": "d",
+            "label": "L'ensemble des électeurs"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "b"
+        ]
+      },
+      "explanation": "Le régime nazi gouverne au nom du peuple-race, dont le parti et son chef expriment la vraie volonté ; le prolétariat est le « vrai peuple » du communisme.",
+      "hint": "Le cours distingue le « vrai peuple » du communisme et celui du nazisme.",
+      "concepts": [
+        "totalitarisme"
+      ],
+      "source": "CM, II, A (p. 12-13)"
+    },
+    {
+      "chapterSlug": "population-peuple",
+      "type": "TRUE_FALSE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Selon le cours, le peuple qui vote décide directement de la politique qui sera menée.",
+      "payload": {},
+      "solution": {
+        "value": false
+      },
+      "explanation": "Le peuple ne décide pas de la politique, mais de qui la décidera ; les programmes ne sont pas un mandat impératif.",
+      "hint": "Pense au mandat impératif.",
+      "concepts": [
+        "mandat-imperatif",
+        "formule-lincoln"
+      ],
+      "source": "CM, II, A (p. 13)"
+    },
+    {
+      "chapterSlug": "construction-peuple",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Pourquoi Kelsen écarte-t-il les liens affectifs, sur le modèle de la famille, pour définir le peuple ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Ils sont trop forts et excluent les étrangers"
+          },
+          {
+            "id": "b",
+            "label": "Ils dépendent de la religion de chacun"
+          },
+          {
+            "id": "c",
+            "label": "Ils peuvent être faibles et ne réunissent que quelques dizaines de personnes"
+          },
+          {
+            "id": "d",
+            "label": "Ils se confondent avec le territoire"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "c"
+        ]
+      },
+      "explanation": "Les liens familiaux peuvent être faibles et ne concernent que quelques dizaines de personnes ; la fraternité de la devise n'est qu'un idéal moral métaphorique.",
+      "hint": "Kelsen tient la fraternité de la devise pour une métaphore.",
+      "concepts": [
+        "etat-ordre-juridique"
+      ],
+      "source": "CM, II, B (p. 15)"
+    },
+    {
+      "chapterSlug": "construction-peuple",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Pour Hobbes, pourquoi l'État a-t-il besoin d'une volonté unifiée ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Pour s'engager maintenant et dans l'avenir, par exemple par des traités"
+          },
+          {
+            "id": "b",
+            "label": "Pour que chacun puisse exprimer sa propre volonté"
+          },
+          {
+            "id": "c",
+            "label": "Pour organiser des référendums réguliers"
+          },
+          {
+            "id": "d",
+            "label": "Pour garantir le droit de sédition"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "La continuité de l'État est celle de son unité : il doit pouvoir s'engager, par exemple par des traités commerciaux. Seul le souverain peut donner cette unité.",
+      "hint": "Hobbes oppose la destruction et la construction.",
+      "concepts": [
+        "multitude"
+      ],
+      "source": "CM, II, B (p. 16)"
+    },
+    {
+      "chapterSlug": "auto-institution",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Quel moment historique illustre, pour Negri, le pouvoir constituant à l'œuvre ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Le discours de Gettysburg"
+          },
+          {
+            "id": "b",
+            "label": "La création de Sciences Po"
+          },
+          {
+            "id": "c",
+            "label": "Le référendum de 2005"
+          },
+          {
+            "id": "d",
+            "label": "L'abolition des privilèges en 1789"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "d"
+        ]
+      },
+      "explanation": "En abolissant les privilèges, le pouvoir constituant fait entrer dans le corps politique ouvriers et paysans, qui ont obtenu ce pouvoir en se révoltant.",
+      "hint": "Negri pense aux révolutions, quand la masse entre dans le corps politique.",
+      "concepts": [
+        "pouvoir-constituant"
+      ],
+      "source": "CM, II, C (p. 18)"
+    },
+    {
+      "chapterSlug": "auto-institution",
+      "type": "MATCHING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Associe chaque auteur à sa thèse.",
+      "payload": {
+        "left": [
+          {
+            "id": "l0",
+            "label": "Jacques Rancière"
+          },
+          {
+            "id": "l1",
+            "label": "Catherine Colliot-Thélène"
+          },
+          {
+            "id": "l2",
+            "label": "Mark Granovetter"
+          },
+          {
+            "id": "l3",
+            "label": "Antonio Negri"
+          }
+        ],
+        "right": [
+          {
+            "id": "r0",
+            "label": "L'extension des droits est la vraie démocratie"
+          },
+          {
+            "id": "r1",
+            "label": "Il faut consacrer et stabiliser les droits conquis"
+          },
+          {
+            "id": "r2",
+            "label": "Un mouvement se propage à partir d'une masse critique"
+          },
+          {
+            "id": "r3",
+            "label": "Ordonner le pouvoir constituant en tant que sujet"
+          }
+        ]
+      },
+      "solution": {
+        "pairs": {
+          "l0": "r0",
+          "l1": "r1",
+          "l2": "r2",
+          "l3": "r3"
+        }
+      },
+      "explanation": "Rancière insiste sur la conquête des droits, Colliot-Thélène sur leur institutionnalisation, Granovetter sur le modèle de seuil, Negri sur le pouvoir constituant.",
+      "hint": "Un seul de ces auteurs est sociologue.",
+      "concepts": [
+        "absence-titre",
+        "droits-fictifs",
+        "modele-seuil",
+        "pouvoir-constituant"
+      ],
+      "source": "CM, II, C (p. 18-20)"
+    },
+    {
+      "chapterSlug": "crise-concept-positif",
+      "type": "CASE_STUDY",
+      "difficulty": 3,
+      "points": 4,
+      "prompt": "Cas guidé : un éditorial sur la crise.",
+      "payload": {
+        "scenario": "Un éditorialiste écrit : « La démocratie est en crise : l'abstention monte, la France est classée démocratie déficiente, et un tribun qui promet de « dégager » juges et journalistes est en tête des sondages. Ce régime ne pourra jamais fonctionner : revenons à un pouvoir fort, comme sous Napoléon III, qui saura mettre fin à ces troubles. »",
+        "subQuestions": [
+          {
+            "id": "q1",
+            "type": "MCQ_SINGLE",
+            "prompt": "Lequel des deux jugements sur la crise l'éditorialiste formule-t-il ?",
+            "payload": {
+              "options": [
+                {
+                  "id": "a",
+                  "label": "Le principe démocratique est bon, mais mal appliqué : il faut plus de démocratie"
+                },
+                {
+                  "id": "b",
+                  "label": "Le principe démocratique est déficient : il faut changer de régime"
+                }
+              ]
+            }
+          },
+          {
+            "id": "q2",
+            "type": "TRUE_FALSE",
+            "prompt": "Selon le cours, une crise annonce nécessairement le déclin de la démocratie.",
+            "payload": {}
+          },
+          {
+            "id": "q3",
+            "type": "MCQ_SINGLE",
+            "prompt": "Que rappelle, dans le cours, l'exemple de Napoléon III ?",
+            "payload": {
+              "options": [
+                {
+                  "id": "a",
+                  "label": "Un pouvoir fort est le seul moyen de faire reculer l'abstention"
+                },
+                {
+                  "id": "b",
+                  "label": "Le Second Empire fut une démocratie pleine"
+                },
+                {
+                  "id": "c",
+                  "label": "Un dirigeant peut se dire ami du peuple et installer un régime autoritaire par des plébiscites"
+                }
+              ]
+            }
+          },
+          {
+            "id": "q4",
+            "type": "MCQ_SINGLE",
+            "prompt": "Comment Machiavel jugerait-il les troubles dont se plaint l'éditorialiste ?",
+            "payload": {
+              "options": [
+                {
+                  "id": "a",
+                  "label": "Ils peuvent régénérer le pouvoir et faire entendre ceux qui ne sont pas représentés"
+                },
+                {
+                  "id": "b",
+                  "label": "Ils doivent être réprimés pour sauver la république"
+                },
+                {
+                  "id": "c",
+                  "label": "Seule une monarchie peut y mettre fin"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "solution": {
+        "subSolutions": [
+          {
+            "id": "q1",
+            "solution": {
+              "correct": [
+                "b"
+              ]
+            }
+          },
+          {
+            "id": "q2",
+            "solution": {
+              "value": false
+            }
+          },
+          {
+            "id": "q3",
+            "solution": {
+              "correct": [
+                "c"
+              ]
+            }
+          },
+          {
+            "id": "q4",
+            "solution": {
+              "correct": [
+                "a"
+              ]
+            }
+          }
+        ]
+      },
+      "explanation": "Q1 : « ce régime ne pourra jamais fonctionner » rejette le principe lui-même. Q2 : krisis désigne un moment décisif, pas forcément un déclin. Q3 : Napoléon III, devenu empereur par plébiscites, se disait ami du peuple. Q4 : pour Machiavel, les troubles de Rome l'ont rendue plus libre.",
+      "hint": "Commence par distinguer les deux jugements que recouvre l'idée de crise.",
+      "concepts": [
+        "deux-jugements-crise",
+        "krisis",
+        "dissension"
+      ],
+      "source": "CM, I (p. 1-11)"
+    },
+    {
+      "chapterSlug": "auto-institution",
+      "type": "CASE_STUDY",
+      "difficulty": 3,
+      "points": 4,
+      "prompt": "Cas guidé : l'occupation d'immeubles vides.",
+      "payload": {
+        "scenario": "Une association de mal-logés occupe des immeubles vides en invoquant le droit au logement. Le préfet répond que la loi doit s'appliquer et que « quelques centaines de manifestants ne sont pas le peuple ». Après une crise économique, le mouvement s'étend brusquement à plusieurs villes.",
+        "subQuestions": [
+          {
+            "id": "q1",
+            "type": "MCQ_SINGLE",
+            "prompt": "Comment Colliot-Thélène qualifierait-elle un droit au logement proclamé mais non garanti ?",
+            "payload": {
+              "options": [
+                {
+                  "id": "a",
+                  "label": "Un droit naturel"
+                },
+                {
+                  "id": "b",
+                  "label": "Un droit fictif"
+                },
+                {
+                  "id": "c",
+                  "label": "Un privilège"
+                }
+              ]
+            }
+          },
+          {
+            "id": "q2",
+            "type": "MCQ_SINGLE",
+            "prompt": "Comment Rancière lirait-il ce mouvement ?",
+            "payload": {
+              "options": [
+                {
+                  "id": "a",
+                  "label": "Comme la démocratie même : ceux qui n'ont pas de titre à gouverner imposent leurs droits"
+                },
+                {
+                  "id": "b",
+                  "label": "Comme une multitude sans volonté commune, qui ne peut représenter le peuple"
+                },
+                {
+                  "id": "c",
+                  "label": "Comme un désordre à réprimer au nom de l'ordre"
+                }
+              ]
+            }
+          },
+          {
+            "id": "q3",
+            "type": "TRUE_FALSE",
+            "prompt": "Pour Hobbes, ces occupants, s'ils prenaient les armes, pourraient se dire le peuple.",
+            "payload": {}
+          },
+          {
+            "id": "q4",
+            "type": "MCQ_SINGLE",
+            "prompt": "Quel modèle explique l'extension brusque du mouvement après la crise ?",
+            "payload": {
+              "options": [
+                {
+                  "id": "a",
+                  "label": "L'égalité géométrique"
+                },
+                {
+                  "id": "b",
+                  "label": "Le décisionnisme"
+                },
+                {
+                  "id": "c",
+                  "label": "Le modèle de seuil de Granovetter"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "solution": {
+        "subSolutions": [
+          {
+            "id": "q1",
+            "solution": {
+              "correct": [
+                "b"
+              ]
+            }
+          },
+          {
+            "id": "q2",
+            "solution": {
+              "correct": [
+                "a"
+              ]
+            }
+          },
+          {
+            "id": "q3",
+            "solution": {
+              "value": false
+            }
+          },
+          {
+            "id": "q4",
+            "solution": {
+              "correct": [
+                "c"
+              ]
+            }
+          }
+        ]
+      },
+      "explanation": "Q1 : un droit non garanti reste fictif tant que la liberté ne s'exprime pas pour le rendre effectif. Q2 : pour Rancière, la démocratie naît quand ceux qui n'ont pas de droits les imposent ; la multitude sans volonté est la lecture de Hobbes. Q3 : pour Hobbes, la sédition est le fait d'une partie du peuple, qui ne peut se dire le peuple. Q4 : en temps de crise, le seuil général baisse et la masse critique est atteinte plus vite.",
+      "hint": "Pour chaque question, cherche l'auteur de la partie II qui l'a traitée.",
+      "concepts": [
+        "droits-fictifs",
+        "absence-titre",
+        "multitude",
+        "modele-seuil"
+      ],
+      "source": "CM, II (p. 16-20)"
+    }
+  ]
+}

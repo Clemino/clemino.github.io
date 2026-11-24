@@ -1,0 +1,943 @@
+[
+  {
+    "chapterSlug": "resistance-abus",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Pour Aristote, comme pour Platon, la politique est une science qui n'admet qu'une bonne réponse.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Aristote critique Platon : la politique n'est pas une science mais un art, un savoir-faire sans savoir unique. On ne délibère pas sur ce que la science sait ; en politique, plusieurs solutions sont possibles.",
+    "hint": "Demande-toi si, en politique, tous ceux qui savent donnent la même réponse.",
+    "concepts": [
+      "deliberation"
+    ],
+    "source": "CM, IV, A (p. 29-30)"
+  },
+  {
+    "chapterSlug": "resistance-abus",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pourquoi, selon Aristote, l'homme est-il un animal politique bien plus que l'abeille ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Parce qu'il dialogue pour décider en commun du juste et de l'injuste"
+        },
+        {
+          "id": "b",
+          "label": "Parce qu'il vit en groupe et transmet des informations sur la nourriture et le danger"
+        },
+        {
+          "id": "c",
+          "label": "Parce qu'il obéit à un chef, comme l'abeille à sa reine"
+        },
+        {
+          "id": "d",
+          "label": "Parce que la cité est une ruche bien ordonnée"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Les animaux sociaux se transmettent des informations liées à leurs besoins vitaux, ce qui ne suffit pas à faire une cité. L'homme dialogue : il construit une parole commune sur le juste et l'injuste. Pour Aristote, la cité n'est pas une ruche.",
+    "hint": "Demande-toi ce qui suffit, ou non, à faire une cité.",
+    "concepts": [
+      "animal-politique"
+    ],
+    "source": "CM, IV, A (p. 30)"
+  },
+  {
+    "chapterSlug": "resistance-abus",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complète la phrase.",
+    "payload": {
+      "template": "Pour Aristote, la {{a}} est une recherche incertaine, faite à plusieurs, de la meilleure solution.",
+      "slots": [
+        {
+          "id": "a",
+          "width": "md"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "a": [
+          "délibération",
+          "deliberation"
+        ]
+      }
+    },
+    "explanation": "La délibération fait converger les recherches de plusieurs personnes. La vie politique en est faite, et de nouvelles propositions peuvent toujours être faites : d'où la « délibération infinie ».",
+    "hint": "Les juges d'assises la pratiquent avant de rendre leur verdict.",
+    "concepts": [
+      "deliberation"
+    ],
+    "source": "CM, IV, A (p. 30)"
+  },
+  {
+    "chapterSlug": "resistance-abus",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque personnage de la comparaison d'Alain à son rôle.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Le capitaine"
+        },
+        {
+          "id": "l1",
+          "label": "L'armateur"
+        },
+        {
+          "id": "l2",
+          "label": "Le tyran"
+        },
+        {
+          "id": "l3",
+          "label": "Le peuple"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Juge des moyens : comment arriver à bon port"
+        },
+        {
+          "id": "r1",
+          "label": "Juge des fins : où aller"
+        },
+        {
+          "id": "r2",
+          "label": "Tient la richesse et la puissance pour des fins évidentes"
+        },
+        {
+          "id": "r3",
+          "label": "Propriétaire de la cité, qui décide de ses fins par la délibération"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "Le capitaine est engagé par l'armateur, propriétaire du navire, pour arriver là où celui-ci a décidé. Dans la cité, le propriétaire est le peuple : à lui de délibérer sur les fins, justice comprise.",
+    "hint": "L'un est propriétaire du navire, l'autre est engagé pour le conduire.",
+    "concepts": [
+      "capitaine-armateur"
+    ],
+    "source": "CM, IV, A (p. 31)"
+  },
+  {
+    "chapterSlug": "resistance-abus",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quel intérêt Alain reconnaît-il au pouvoir fondé sur le savoir ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Il supprime toute obéissance dans la cité"
+        },
+        {
+          "id": "b",
+          "label": "Il délivre de la servitude du pouvoir hérité à la naissance"
+        },
+        {
+          "id": "c",
+          "label": "Il permet au peuple de choisir lui-même les moyens techniques"
+        },
+        {
+          "id": "d",
+          "label": "Il garantit que la cité fera du profit"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Le pouvoir fondé sur le savoir a une légitimité objective, contrairement au pouvoir hérité. Mais il fait passer d'une servitude à une autre, car il impose l'obéissance.",
+    "hint": "Pense à ce que le pouvoir du plus compétent vient remplacer.",
+    "concepts": [
+      "capitaine-armateur",
+      "navire-cite"
+    ],
+    "source": "CM, IV, A (p. 31)"
+  },
+  {
+    "chapterSlug": "resistance-abus",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pour Locke, se révolter contre un monarque qui se comporte en ennemi du peuple, c'est mener une guerre défensive.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Le monarque retourne les pouvoirs de l'État contre le peuple : celui-ci est en légitime défense, et la cause de la guerre est le monarque.",
+    "hint": "Demande-toi qui, chez Locke, est l'agresseur.",
+    "concepts": [
+      "revolution-defensive"
+    ],
+    "source": "CM, IV, A (p. 32)"
+  },
+  {
+    "chapterSlug": "resistance-abus",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "À quelles conditions une révolution est-elle légitime selon Locke ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le monarque met le peuple dans les plus grands dangers"
+        },
+        {
+          "id": "b",
+          "label": "Elle vise à reconstruire un autre ordre législatif"
+        },
+        {
+          "id": "c",
+          "label": "Elle répond à de petites fautes du monarque"
+        },
+        {
+          "id": "d",
+          "label": "Elle détruit pour détruire"
+        },
+        {
+          "id": "e",
+          "label": "Elle est décidée par une élite éclairée"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b"
+      ]
+    },
+    "explanation": "Le peuple ne se révolte pas pour de petits motifs ; la révolution est légitime quand elle détruit pour reconstruire mieux, ce qui la distingue de la révolte.",
+    "hint": "Locke distingue la révolution de la simple rébellion.",
+    "concepts": [
+      "revolution-defensive",
+      "revolte-revolution"
+    ],
+    "source": "CM, IV, A (p. 32)"
+  },
+  {
+    "chapterSlug": "resistance-abus",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Que veut dire le cours en appelant la tyrannie « le désastre qui se présente sous la forme de l'ordre » ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un État stable et puissant peut être injuste : ordre et désordre dépendent d'un jugement sur le bien commun"
+        },
+        {
+          "id": "b",
+          "label": "Tout ordre vaut mieux que l'absence d'ordre, même s'il est injuste"
+        },
+        {
+          "id": "c",
+          "label": "La tyrannie finit toujours dans le désordre"
+        },
+        {
+          "id": "d",
+          "label": "Le désordre révolutionnaire est toujours pire qu'une tyrannie stable, car la guerre est le pire des maux et ruine la cité"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Stabilité et puissance existent aussi dans des États violents et injustes. Il faut se méfier du discours de l'ordre à tout prix. Les réponses b et d reprennent l'ancienne condamnation de la révolution, que Locke conteste.",
+    "hint": "Le cours renvoie ici à Alain et à la question des fins de la cité.",
+    "concepts": [
+      "revolution-defensive",
+      "capitaine-armateur"
+    ],
+    "source": "CM, IV, A (p. 32)"
+  },
+  {
+    "chapterSlug": "resistance-abus",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Kant juge que certains peuples ne sont pas mûrs pour la liberté et doivent d'abord y être préparés.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Kant critique cet argument, sophistique et dangereux : un peuple maintenu dans la servitude ne sera jamais prêt. La liberté s'apprend en l'exerçant, comme l'enfant apprend à marcher.",
+    "hint": "Pense à la comparaison de Kant avec l'enfant.",
+    "concepts": [
+      "maturite-peuple"
+    ],
+    "source": "CM, IV, A (p. 32-33)"
+  },
+  {
+    "chapterSlug": "resistance-abus",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Remets ces textes dans l'ordre chronologique.",
+    "payload": {
+      "items": [
+        {
+          "id": "i3",
+          "label": "Déclaration des droits de l'homme et du citoyen"
+        },
+        {
+          "id": "i0",
+          "label": "Bill of Rights anglais"
+        },
+        {
+          "id": "i5",
+          "label": "Kant, La religion dans les limites de la simple raison"
+        },
+        {
+          "id": "i2",
+          "label": "Montesquieu, De l'esprit des lois"
+        },
+        {
+          "id": "i4",
+          "label": "Bill of Rights des États-Unis"
+        },
+        {
+          "id": "i1",
+          "label": "Locke, Second Traité du gouvernement civil"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "i0",
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ]
+    },
+    "explanation": "Bill of Rights (1689), Locke (1690), Montesquieu (1748), Déclaration (1789), Bill of Rights américain (1791), Kant (1793).",
+    "hint": "Les deux premiers suivent la Révolution anglaise ; les trois derniers ont moins de cinq ans d'écart.",
+    "concepts": [
+      "declarations-droits",
+      "pouvoir-arrete-pouvoir"
+    ],
+    "source": "CM, IV, A (p. 31-33)"
+  },
+  {
+    "chapterSlug": "resistance-abus",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Que formulent en commun le Bill of Rights de 1689, la Déclaration de 1789 et le Bill of Rights de 1791 ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La liberté religieuse"
+        },
+        {
+          "id": "b",
+          "label": "Le droit à un procès équitable"
+        },
+        {
+          "id": "c",
+          "label": "Le consentement du peuple à l'impôt"
+        },
+        {
+          "id": "d",
+          "label": "Le suffrage universel"
+        },
+        {
+          "id": "e",
+          "label": "L'abolition de la monarchie"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "L'État y formule lui-même des normes qui limitent son pouvoir. La Révolution anglaise, elle, n'abolit pas la monarchie : elle la limite.",
+    "hint": "Pense à ce que l'État s'interdit de faire, pas à qui gouverne.",
+    "concepts": [
+      "declarations-droits"
+    ],
+    "source": "CM, IV, A (p. 33)"
+  },
+  {
+    "chapterSlug": "resistance-abus",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complète la citation de Montesquieu.",
+    "payload": {
+      "template": "« Pour qu'on ne puisse abuser du pouvoir, il faut que, par la disposition des choses, le pouvoir {{a}} le pouvoir. »",
+      "slots": [
+        {
+          "id": "a",
+          "width": "md"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "a": [
+          "arrête",
+          "arrete"
+        ]
+      }
+    },
+    "explanation": "Tout homme qui a du pouvoir est porté à en abuser jusqu'à ce qu'il trouve des limites : c'est l'organisation des pouvoirs qui les fournit.",
+    "hint": "Montesquieu cherche une limite que le pouvoir trouve en face de lui.",
+    "concepts": [
+      "pouvoir-arrete-pouvoir"
+    ],
+    "source": "CM, IV, A (p. 33)"
+  },
+  {
+    "chapterSlug": "resistance-abus",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Comment Alain définit-il l'essence de la démocratie ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le pouvoir du peuple de faire lui-même les lois"
+        },
+        {
+          "id": "b",
+          "label": "La concurrence réglée de plusieurs partis"
+        },
+        {
+          "id": "c",
+          "label": "Le gouvernement fondé sur l'absence de titre à gouverner"
+        },
+        {
+          "id": "d",
+          "label": "Le contre-pouvoir du peuple, qui empêche les abus"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "Pour Alain, la démocratie n'est pas le pouvoir du peuple mais son contre-pouvoir : contrôler, interpeller, rappeler au pouvoir qu'il est à son service. Les autres définitions sont celles de Rousseau, d'Aron et de Rancière.",
+    "hint": "Alain s'inscrit dans la lignée de Montesquieu.",
+    "concepts": [
+      "contre-pouvoir-peuple"
+    ],
+    "source": "CM, IV, A (p. 34)"
+  },
+  {
+    "chapterSlug": "resistance-abus",
+    "type": "TRUE_FALSE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Selon le cours, Montesquieu est un théoricien de la démocratie.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Montesquieu fonde la limitation du pouvoir non sur le peuple, mais sur ce qui empêche le pouvoir d'agir contre le peuple. Le cours précise que ce n'est pas un théoricien de la démocratie.",
+    "hint": "Demande-toi qui, chez Montesquieu, limite le pouvoir.",
+    "concepts": [
+      "pouvoir-arrete-pouvoir"
+    ],
+    "source": "CM, IV, A (p. 33)"
+  },
+  {
+    "chapterSlug": "moindre-mal",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Que déclare Churchill à la Chambre des communes, le 11 novembre 1947 ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Que la démocratie est la pire forme de gouvernement, à l'exception de toutes les autres"
+        },
+        {
+          "id": "b",
+          "label": "Que la démocratie est parfaite et omnisciente"
+        },
+        {
+          "id": "c",
+          "label": "Que la monarchie parlementaire vaut mieux que la démocratie"
+        },
+        {
+          "id": "d",
+          "label": "Que la démocratie est un gouvernement si parfait qu'il ne conviendrait qu'à des dieux, donc impossible chez les hommes"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Churchill dit que personne ne prétend la démocratie parfaite ou omnisciente, mais qu'elle est la pire forme de gouvernement à l'exception de toutes celles qui ont été essayées. La phrase sur les dieux est de Rousseau.",
+    "hint": "Churchill était alors dans l'opposition : il ne prétend pas la démocratie parfaite.",
+    "concepts": [
+      "moindre-mal"
+    ],
+    "source": "CM, IV, B (p. 34)"
+  },
+  {
+    "chapterSlug": "moindre-mal",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Selon Aron, la démocratie est le seul régime qui accepte le parti qui ne l'accepte pas.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "On peut y être antidémocrate : un parti monarchiste, un parti communiste prônant la dictature du prolétariat, ou un parti qui veut changer de Constitution restent autorisés.",
+    "hint": "Pense aux partis monarchistes ou communistes en France.",
+    "concepts": [
+      "regime-constitutionnel-pluraliste"
+    ],
+    "source": "CM, IV, B (p. 34-35)"
+  },
+  {
+    "chapterSlug": "moindre-mal",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelles règles encadrent la concurrence dans un régime constitutionnel pluraliste ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Laisser les autres exprimer leur point de vue"
+        },
+        {
+          "id": "b",
+          "label": "Ne pas prendre le pouvoir par la violence"
+        },
+        {
+          "id": "c",
+          "label": "Accepter le verdict des urnes"
+        },
+        {
+          "id": "d",
+          "label": "Respecter le calendrier des élections"
+        },
+        {
+          "id": "e",
+          "label": "Interdire les partis qui veulent changer de Constitution"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Ces quatre règles font que la concurrence n'est pas anarchique. Les partis qui veulent changer de Constitution restent autorisés : seuls sont interdits ceux qui veulent prendre le pouvoir par la violence.",
+    "hint": "Pense à ce qui empêche la concurrence d'être anarchique.",
+    "concepts": [
+      "regles-concurrence"
+    ],
+    "source": "CM, IV, B (p. 35)"
+  },
+  {
+    "chapterSlug": "moindre-mal",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pour quelle raison un parti peut-il être interdit dans un régime constitutionnel pluraliste ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Pour son programme antidémocratique"
+        },
+        {
+          "id": "b",
+          "label": "Parce qu'il veut changer de Constitution"
+        },
+        {
+          "id": "c",
+          "label": "Pour sa méthode : prendre le pouvoir par la violence"
+        },
+        {
+          "id": "d",
+          "label": "Parce qu'il critique la démocratie"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "Certains programmes sont interdits non pour leur contenu, mais pour leur méthode : prendre le pouvoir par la violence viole la règle qui laisse le peuple choisir ses dirigeants.",
+    "hint": "Repense aux règles de la concurrence pluraliste.",
+    "concepts": [
+      "regles-concurrence"
+    ],
+    "source": "CM, IV, B (p. 35)"
+  },
+  {
+    "chapterSlug": "moindre-mal",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "En 2021, Donald Trump a reconnu sa défaite face à Joe Biden et participé à la passation de pouvoir.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Il n'a pas reconnu sa défaite, a invoqué une fraude et n'a pas participé à la passation, ce qui est extrêmement rare ; ses partisans ont tenté de s'emparer du Capitole.",
+    "hint": "Repense à ce qu'est une passation de pouvoir.",
+    "concepts": [
+      "regles-concurrence"
+    ],
+    "source": "CM, IV, B (p. 35)"
+  },
+  {
+    "chapterSlug": "moindre-mal",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Selon Aron, quel est l'effet de la concurrence pluraliste sur les gouvernants ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Elle rend les hommes vertueux par nature"
+        },
+        {
+          "id": "b",
+          "label": "Elle crée mécaniquement des comportements plus vertueux, par souci de l'opinion publique"
+        },
+        {
+          "id": "c",
+          "label": "Aucun : seule la vertu personnelle des gouvernants modère le pouvoir"
+        },
+        {
+          "id": "d",
+          "label": "Elle les corrompt, car ils ne pensent qu'à être réélus à tout prix, quitte à flatter les électeurs et à mentir"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "La démocratie ne rend pas les hommes vertueux, mais la légalité de l'opposition, la presse libre et les contre-pouvoirs créent une pression permanente. La concurrence, souvent vue comme un défaut, devient la principale qualité du régime.",
+    "hint": "Aron ne compte pas sur la vertu des gouvernants.",
+    "concepts": [
+      "regles-concurrence",
+      "regime-constitutionnel-pluraliste"
+    ],
+    "source": "CM, IV, B (p. 35)"
+  },
+  {
+    "chapterSlug": "moindre-mal",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pourquoi, selon Aron, la démocratie est-elle nécessairement décevante ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Parce qu'elle est plus corrompue que les régimes autoritaires"
+        },
+        {
+          "id": "b",
+          "label": "Parce que le peuple n'est jamais mûr pour la liberté"
+        },
+        {
+          "id": "c",
+          "label": "Parce qu'elle n'est jamais identique à l'idéal que chacun s'en fait"
+        },
+        {
+          "id": "d",
+          "label": "Parce qu'elle interdit les partis qui la critiquent"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "Les républicains du Second Empire comme les populations de l'Est après la chute du Mur ont idéalisé la démocratie, qui s'est révélée moins belle. La corruption n'y est pas plus forte : elle y est plus visible.",
+    "hint": "Pense au Second Empire et à la chute du Mur.",
+    "concepts": [
+      "democratie-decevante"
+    ],
+    "source": "CM, IV, B (p. 35-36)"
+  },
+  {
+    "chapterSlug": "moindre-mal",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Selon le cours, l'impression qu'il y a plus de corruption en démocratie vient en partie de ce que rien n'y est secret.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Dans un régime autoritaire, les imperfections du pouvoir restent secrètes. En démocratie, la presse en parle ; or plus la corruption est exposée, plus elle est limitée.",
+    "hint": "Compare le rôle de la presse dans les deux régimes.",
+    "concepts": [
+      "democratie-decevante"
+    ],
+    "source": "CM, IV, B (p. 36)"
+  },
+  {
+    "chapterSlug": "moindre-mal",
+    "type": "MATCHING",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Associe chaque responsable politique au motif de sa démission.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Mona Sahlin"
+        },
+        {
+          "id": "l1",
+          "label": "Hervé Gaymard"
+        },
+        {
+          "id": "l2",
+          "label": "Karl-Theodor zu Guttenberg"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Une carte de crédit de fonction utilisée pour des courses personnelles"
+        },
+        {
+          "id": "r1",
+          "label": "Un logement de fonction loué environ 14 000 euros par mois"
+        },
+        {
+          "id": "r2",
+          "label": "Une suspicion de fraude dans sa thèse"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2"
+      }
+    },
+    "explanation": "Suède (1995), France (février 2005), Allemagne (1er mars 2011) : moins la corruption existe, moins elle est tolérée.",
+    "hint": "Une Suédoise, un Français, un Allemand.",
+    "concepts": [
+      "democratie-decevante"
+    ],
+    "source": "CM, IV, B (p. 36)"
+  },
+  {
+    "chapterSlug": "moindre-mal",
+    "type": "CASE_STUDY",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Cas d'entraînement : une élection contestée.",
+    "payload": {
+      "scenario": "Dans un pays imaginaire, le président sortant perd l'élection de peu. Il dénonce une fraude sans preuve et refuse d'assister à la passation de pouvoir. Pendant la campagne, un parti qui propose de restaurer la monarchie par référendum a obtenu 4 % des voix. Peu après, la presse révèle qu'une ministre a payé ses vacances avec des fonds publics ; elle démissionne. Des citoyens en concluent : « C'est la preuve que la démocratie est plus corrompue que les régimes autoritaires. »",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quelle règle de la concurrence pluraliste le président sortant enfreint-il ?",
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Accepter le verdict des urnes"
+              },
+              {
+                "id": "b",
+                "label": "Laisser les autres exprimer leur point de vue"
+              },
+              {
+                "id": "c",
+                "label": "Ne pas présenter de programme antidémocratique"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "TRUE_FALSE",
+          "prompt": "Le parti monarchiste aurait dû être interdit, puisqu'il ne reconnaît pas la démocratie.",
+          "payload": {}
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Que répondrait Aron aux citoyens qui voient dans cette démission la preuve d'une démocratie plus corrompue ?",
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Ils ont raison : les régimes autoritaires sont moins corrompus"
+              },
+              {
+                "id": "b",
+                "label": "La corruption y est plus visible, donc plus limitée, car rien n'y est secret"
+              },
+              {
+                "id": "c",
+                "label": "La ministre aurait dû rester jusqu'aux prochaines élections, par respect du calendrier"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q4",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quel auteur dirait que ce régime, malgré ses défauts, reste le moins mauvais de ceux qui ont été essayés ?",
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Platon"
+              },
+              {
+                "id": "b",
+                "label": "Carl Schmitt"
+              },
+              {
+                "id": "c",
+                "label": "Winston Churchill"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "value": false
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "b"
+            ]
+          }
+        },
+        {
+          "id": "q4",
+          "solution": {
+            "correct": [
+              "c"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "Q1 : refuser sa défaite et la passation, comme Trump en 2021, c'est ne pas accepter le verdict des urnes. Q2 : la démocratie accepte le parti qui ne l'accepte pas ; seule une méthode violente justifierait une interdiction. Q3 : la presse rend la corruption visible, et plus elle est exposée, plus elle est limitée. Q4 : Churchill, le 11 novembre 1947 ; Platon et Schmitt sont des critiques de la démocratie.",
+    "hint": "Reprends les règles du régime constitutionnel pluraliste, puis la section sur la démocratie décevante.",
+    "concepts": [
+      "regles-concurrence",
+      "regime-constitutionnel-pluraliste",
+      "democratie-decevante",
+      "moindre-mal"
+    ],
+    "source": "CM, IV, B (p. 34-36)"
+  },
+  {
+    "chapterSlug": "moindre-mal",
+    "type": "WRITING",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "« La démocratie est-elle le moins mauvais des régimes ? » Rédige un plan détaillé de dissertation.",
+    "payload": {
+      "modelAnswer": "Introduction : partir de la formule de Churchill (11 novembre 1947) ; rappeler qu'aucun régime n'est parfait et que la démocratie est sans cesse critiquée, depuis Platon. Problématique : la démocratie ne se défend-elle que par comparaison, ou a-t-elle une valeur propre ?\n\nI. Un régime imparfait et décevant\nA. Les critiques du principe : la mauvaise égalité et la démagogie (Platon), le despotisme de la majorité (Tocqueville), l'éloge de l'inégalité et de la dictature (Nietzsche, Schmitt).\nB. Une démocratie qui n'est pas ce qu'elle prétend : au mieux un gouvernement pour le peuple plutôt que par le peuple (la formule de Lincoln, critiquée par Aron), une démocratie nécessairement décevante (Second Empire, chute du Mur), une corruption qui semble plus forte parce qu'elle est visible.\n\nII. Un régime qui vaut par sa capacité à limiter le pouvoir\nA. La résistance aux abus : Montesquieu (le pouvoir arrête le pouvoir), Alain (le contre-pouvoir du peuple), Locke et Kant (le droit de résister et d'apprendre la liberté), les déclarations de droits.\nB. Le régime constitutionnel pluraliste : la concurrence réglée produit mécaniquement des comportements plus vertueux ; il accepte même ses ennemis ; et, avec Aristote, la délibération reste ouverte.\n\nConclusion : la démocratie n'est pas seulement le moindre mal par défaut ; elle est le seul régime qui organise sa propre critique et la correction de ses erreurs.",
+      "rubric": [
+        {
+          "id": "c0",
+          "label": "La formule de Churchill est citée et expliquée dans l'introduction"
+        },
+        {
+          "id": "c1",
+          "label": "Les critiques de la démocratie sont exposées avec des auteurs précis"
+        },
+        {
+          "id": "c2",
+          "label": "La défense de la démocratie mobilise Montesquieu, Alain ou Aron"
+        },
+        {
+          "id": "c3",
+          "label": "La conclusion répond à la question posée"
+        }
+      ]
+    },
+    "solution": {},
+    "explanation": "Ce plan n'est qu'un exemple d'entraînement, pas un corrigé officiel : d'autres plans sont possibles, pourvu qu'ils répondent à la question.",
+    "concepts": [
+      "moindre-mal",
+      "pouvoir-arrete-pouvoir",
+      "contre-pouvoir-peuple",
+      "regime-constitutionnel-pluraliste"
+    ],
+    "source": "CM, I à IV (p. 1-36)"
+  }
+]
