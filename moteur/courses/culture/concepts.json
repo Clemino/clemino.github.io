@@ -74,7 +74,7 @@
   {"slug": "partis-tri", "label": "Le tri des partis", "summary": "Les partis présélectionnent les candidats ; ressources, financements privés et instruction favorisent le haut de la hiérarchie sociale."},
   {"slug": "partis-masse", "label": "Partis de masse", "summary": "Pour Manin, les grands partis du XIXe siècle ont lié le pouvoir à la population et permis le compromis, avant que l'argent en fasse des machines autonomes."},
   {"slug": "discipline-parti", "label": "Discipline de parti", "summary": "Pour Simone Weil, l'obligation de défendre la position du parti est un danger moral majeur : la passion collective y remplace la raison."},
-  {"slug": "votation", "label": "Votation", "summary": "Référendum d'initiative citoyenne suisse, au moins quatre fois par an, préparé par un livret d'information neutre envoyé à chaque citoyen."},
+  {"slug": "votation", "label": "Votation", "summary": "Vote suisse organisé plusieurs fois par an, notamment sur des initiatives citoyennes, préparé par un livret d'information neutre envoyé à chaque citoyen."},
   {"slug": "civisme", "label": "Civisme", "summary": "Pour Rousseau, être citoyen est un état d'esprit ; le civisme est le résultat d'un calcul d'intérêt : l'intérêt des autres est aussi le sien."},
   {"slug": "bien-commun", "label": "Bien commun", "summary": "Pour Rousseau, ce qu'il y a de commun dans les intérêts : ce que visent les membres d'un groupe quand ils oublient leur intérêt particulier."}
 ]

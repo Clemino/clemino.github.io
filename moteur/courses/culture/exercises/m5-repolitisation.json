@@ -170,7 +170,7 @@
     "explanation": "Le tiers état, c'est la quasi-totalité de la population, qui a vocation à représenter toute la nation : d'où la proclamation de l'Assemblée nationale en 1789.",
     "hint": "Les États généraux réunissent trois ordres.",
     "concepts": [
-      "argument-substantiel"
+      "argument-technique"
     ],
     "source": "CM, V, A (p. 37-38)"
   },
@@ -332,7 +332,7 @@
     "type": "NUMERIC",
     "difficulty": 2,
     "points": 1,
-    "prompt": "Selon le cours, quelle part des députés, en pourcentage, appartient aux classes populaires ?",
+    "prompt": "Selon le cours, quelle part des députés, en pourcentage, appartient aujourd'hui aux classes populaires ?",
     "payload": {
       "unit": "%"
     },
@@ -357,7 +357,7 @@
       "options": [
         {
           "id": "a",
-          "label": "Le pic de députés issus des classes populaires après la guerre, qui adopte la sécurité sociale"
+          "label": "Le pic de députés issus des classes populaires après la guerre, quand l'Assemblée adopte de grandes lois sur la sécurité sociale"
         },
         {
           "id": "b",
@@ -423,7 +423,7 @@
       ]
     },
     "explanation": "Ressources, financeurs et instruction (reproduction sociale) font que les partis retiennent surtout des personnes du haut de la hiérarchie sociale. Aucune loi ne l'impose.",
-    "hint": "Pense à l'argent, au temps et aux études.",
+    "hint": "Pense à ce qu'il faut avoir pour militer et convaincre.",
     "concepts": [
       "partis-tri"
     ],
@@ -524,7 +524,7 @@
       ]
     },
     "explanation": "Pour Simone Weil, la discipline de parti est en elle-même un danger moral : elle propose de supprimer les partis. Le plafonnement des campagnes est le remède de Manin.",
-    "hint": "Pour elle, le mal tient aux partis eux-mêmes, pas à leur financement.",
+    "hint": "Repense à ce qu'elle pense de la discipline de parti.",
     "concepts": [
       "discipline-parti"
     ],
@@ -564,7 +564,7 @@
     "type": "TRUE_FALSE",
     "difficulty": 1,
     "points": 1,
-    "prompt": "Simone Weil a renoncé pendant plusieurs années à sa position sociale pour vivre comme une ouvrière.",
+    "prompt": "Simone Weil a renoncé un temps à sa position sociale pour vivre comme une ouvrière.",
     "payload": {},
     "solution": {
       "value": true
@@ -628,7 +628,7 @@
         },
         {
           "id": "b",
-          "label": "Des votations au moins quatre fois par an"
+          "label": "Des votations régulières, plusieurs fois par an"
         },
         {
           "id": "c",
@@ -640,7 +640,7 @@
         },
         {
           "id": "e",
-          "label": "Le vote obligatoire sous peine d'amende"
+          "label": "Le droit de vote réservé aux propriétaires"
         }
       ]
     },
@@ -725,7 +725,7 @@
       "value": true
     },
     "explanation": "Chacun bénéficie du bon fonctionnement de l'État : l'intérêt des autres est en même temps le sien. Le civisme n'est donc pas un pur sacrifice.",
-    "hint": "Rousseau ne demande pas à chacun de renoncer à son intérêt.",
+    "hint": "Repense à ce que Rousseau dit de l'intérêt des autres.",
     "concepts": [
       "civisme"
     ],
@@ -914,8 +914,8 @@
         }
       ]
     },
-    "explanation": "Q1 : le maire reprend la dépolitisation des Modernes décrite par Constant. Q2 : la Suisse montre que des référendums réguliers, avec une information neutre, sont possibles. Q3 : le cours montre que le défaut de représentativité se traduit dans les décisions (retraites, IVG, sécurité sociale). Q4 : Rousseau admet l'argument sociologique mais refuse le fatalisme, et fait du civisme un calcul d'intérêt.",
-    "hint": "Reprends, dans l'ordre, Constant, la Suisse, la représentativité et Rousseau.",
+    "explanation": "Q1 : le maire reprend la dépolitisation des Modernes décrite par Constant. Q2 : la Suisse montre que des référendums réguliers, avec une information neutre, sont possibles. Q3 : le cours montre que le défaut de représentativité se traduit dans les décisions (retraites, IVG, sécurité sociale). Q4 : Rousseau admet l'argument sociologique mais refuse le fatalisme, et fait du civisme un calcul d'intérêt. La phrase « si parfait qu'il ne convient qu'à des dieux » vise la démocratie comme gouvernement, le peuple exécutant les lois, pas la participation des citoyens aux lois.",
+    "hint": "Pour chaque question, repère la partie du cours en jeu : dépolitisation, démocratie directe, représentativité, civisme.",
     "concepts": [
       "liberte-anciens-modernes",
       "votation",
