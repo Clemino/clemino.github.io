@@ -1,0 +1,964 @@
+[
+  {
+    "chapterSlug": "representation-theories",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complète la formule de Rousseau (Du contrat social, livre III).",
+    "payload": {
+      "template": "« Où se trouve le {{a}}, il n'y a plus de représentant. »",
+      "slots": [
+        {
+          "id": "a",
+          "width": "md"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "a": [
+          "représenté",
+          "represente"
+        ]
+      }
+    },
+    "explanation": "Quand le peuple est présent et agit, ses représentants n'ont plus aucun pouvoir. La formule se retourne : où se trouve le représentant, il n'y a plus de représenté.",
+    "hint": "Rousseau pense au peuple assemblé en personne.",
+    "concepts": [
+      "representation-absence"
+    ],
+    "source": "CM, V, A (p. 37)"
+  },
+  {
+    "chapterSlug": "representation-theories",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Que suppose, selon le cours, toute représentation ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La présence permanente du représenté"
+        },
+        {
+          "id": "b",
+          "label": "L'absence de ce qui est représenté"
+        },
+        {
+          "id": "c",
+          "label": "L'élection des représentants"
+        },
+        {
+          "id": "d",
+          "label": "Un mandat impératif"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Une ambassade représente la France là où elle n'est pas, un personnage remplace une personne réelle : qui dit représentation dit présence substitutive. La théorie de la représentation est une théorie de l'absence du peuple.",
+    "hint": "Pense à une représentation diplomatique ou théâtrale.",
+    "concepts": [
+      "representation-absence"
+    ],
+    "source": "CM, V, A (p. 37)"
+  },
+  {
+    "chapterSlug": "representation-theories",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque argument de Sieyès à son contenu.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Argument technique"
+        },
+        {
+          "id": "l1",
+          "label": "Argument substantiel"
+        },
+        {
+          "id": "l2",
+          "label": "Thèse sociologique"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "La nation ne peut pas matériellement s'assembler"
+        },
+        {
+          "id": "r1",
+          "label": "Les représentants ne peuvent vouloir autre chose que la nation"
+        },
+        {
+          "id": "r2",
+          "label": "Les Modernes n'ont ni le temps ni l'envie de faire de la politique"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2"
+      }
+    },
+    "explanation": "Impossibilité, inutilité, désintérêt : trois raisons de ne concevoir qu'une démocratie représentative. Le cours relève que la thèse sociologique est affirmée sans être démontrée.",
+    "hint": "L'un parle de ce qui est possible, l'autre de ce qui est nécessaire, le dernier de ce que veulent les gens.",
+    "concepts": [
+      "argument-technique",
+      "argument-substantiel",
+      "depolitisation"
+    ],
+    "source": "CM, V, A (p. 38)"
+  },
+  {
+    "chapterSlug": "representation-theories",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Sieyès est un partisan de la démocratie directe, dans la lignée de Rousseau.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Sieyès écrit contre la démocratie directe, et en particulier contre Rousseau : si la démocratie remplace la monarchie, elle ne peut être que représentative.",
+    "hint": "Repense à ce que Sieyès dit de la nation qui voudrait s'assembler.",
+    "concepts": [
+      "argument-technique"
+    ],
+    "source": "CM, V, A (p. 38)"
+  },
+  {
+    "chapterSlug": "representation-theories",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Qui compose le tiers état, selon Sieyès ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Presque toute la population : ceux qui ne sont ni du clergé ni de la noblesse"
+        },
+        {
+          "id": "b",
+          "label": "Les seuls bourgeois les plus riches"
+        },
+        {
+          "id": "c",
+          "label": "Les députés du clergé"
+        },
+        {
+          "id": "d",
+          "label": "La noblesse de robe et la noblesse d'épée réunies, qui forment l'élite de la nation"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Le tiers état, c'est la quasi-totalité de la population, qui a vocation à représenter toute la nation : d'où la proclamation de l'Assemblée nationale en 1789.",
+    "hint": "Les États généraux réunissent trois ordres.",
+    "concepts": [
+      "argument-substantiel"
+    ],
+    "source": "CM, V, A (p. 37-38)"
+  },
+  {
+    "chapterSlug": "representation-theories",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "À quoi Benjamin Constant compare-t-il les représentants des peuples modernes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Au capitaine d'un navire"
+        },
+        {
+          "id": "b",
+          "label": "À l'intendant qu'un homme riche paie pour gérer son domaine"
+        },
+        {
+          "id": "c",
+          "label": "Au médecin qui prescrit un remède amer"
+        },
+        {
+          "id": "d",
+          "label": "À l'armateur qui fixe la destination"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Comme un riche qui ne veut pas s'occuper de son château paie un intendant, les Modernes paient des serviteurs pour la chose publique. Le capitaine et l'armateur viennent de Platon et d'Alain, le médecin du Gorgias.",
+    "hint": "Constant prend une image tirée de la vie des propriétaires fortunés.",
+    "concepts": [
+      "liberte-anciens-modernes"
+    ],
+    "source": "CM, V, A (p. 39)"
+  },
+  {
+    "chapterSlug": "representation-theories",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Pour Constant, la liberté des Anciens incluait la liberté politique.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Les Anciens se sentaient vivre à l'intérieur de la chose publique ; les Modernes, eux, excluent la liberté politique et ne s'intéressent qu'à la liberté privée.",
+    "hint": "Constant oppose deux époques.",
+    "concepts": [
+      "liberte-anciens-modernes"
+    ],
+    "source": "CM, V, A (p. 38-39)"
+  },
+  {
+    "chapterSlug": "representation-theories",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque auteur à son ouvrage ou à sa thèse.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Benjamin Constant"
+        },
+        {
+          "id": "l1",
+          "label": "Francis Fukuyama"
+        },
+        {
+          "id": "l2",
+          "label": "Isaiah Berlin"
+        },
+        {
+          "id": "l3",
+          "label": "Emmanuel-Joseph Sieyès"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "De la liberté des Anciens comparée à celle des Modernes (1819)"
+        },
+        {
+          "id": "r1",
+          "label": "La fin de l'histoire et le dernier homme (1992)"
+        },
+        {
+          "id": "r2",
+          "label": "Liberté négative et liberté positive (conférence de 1958)"
+        },
+        {
+          "id": "r3",
+          "label": "Qu'est-ce que le Tiers-État ? (1789)"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "Quatre défenseurs, ou observateurs, de la démocratie représentative et de la dépolitisation des Modernes.",
+    "hint": "L'un écrit à la veille de la Révolution, un autre après la chute du Mur.",
+    "concepts": [
+      "liberte-anciens-modernes",
+      "liberte-negative-positive"
+    ],
+    "source": "CM, V, A (p. 37-39)"
+  },
+  {
+    "chapterSlug": "representation-theories",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pour Isaiah Berlin, quelle liberté reste-t-il aux Modernes ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La liberté positive : le droit d'agir et de participer"
+        },
+        {
+          "id": "b",
+          "label": "Les deux libertés, renforcées par l'État de droit"
+        },
+        {
+          "id": "c",
+          "label": "La liberté négative : ne pas être empêché"
+        },
+        {
+          "id": "d",
+          "label": "Aucune"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "Comme Constant et Fukuyama, Berlin pense que la liberté positive a disparu à l'époque moderne : seule demeure la liberté négative.",
+    "hint": "Berlin rejoint Constant sur la disparition de la liberté politique.",
+    "concepts": [
+      "liberte-negative-positive"
+    ],
+    "source": "CM, V, A (p. 39)"
+  },
+  {
+    "chapterSlug": "representation-theories",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Selon le cours, quelle part des députés, en pourcentage, appartient aux classes populaires ?",
+    "payload": {
+      "unit": "%"
+    },
+    "solution": {
+      "value": 6,
+      "absTol": 0.5
+    },
+    "explanation": "Environ 6 % des députés, alors que les classes populaires représentent au moins 40, voire 60 % de la population.",
+    "hint": "Moins d'un député sur dix.",
+    "concepts": [
+      "representativite"
+    ],
+    "source": "CM, V, A (p. 40)"
+  },
+  {
+    "chapterSlug": "representation-theories",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Quel exemple montre, selon le cours, que le défaut de représentativité n'est pas une fatalité ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le pic de députés issus des classes populaires après la guerre, qui adopte la sécurité sociale"
+        },
+        {
+          "id": "b",
+          "label": "La surreprésentation des professions libérales"
+        },
+        {
+          "id": "c",
+          "label": "Le grand nombre d'hommes de plus de 50 ans à l'Assemblée"
+        },
+        {
+          "id": "d",
+          "label": "Le financement privé des partis, qui permettrait à chacun de se présenter sans ressources personnelles ni réseau"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "Après la guerre, jusqu'à 20 % des députés venaient des classes populaires, et de grandes lois sociales ont été adoptées. Le cours cite aussi Simone Veil et l'IVG. Le financement privé, lui, favorise les plus aisés.",
+    "hint": "Cherche un moment où la composition de l'Assemblée a changé les lois.",
+    "concepts": [
+      "representativite"
+    ],
+    "source": "CM, V, A (p. 40)"
+  },
+  {
+    "chapterSlug": "critiques-representation",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pourquoi, selon le cours, les partis présélectionnent-ils surtout des personnes aisées ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Militer demande du temps et des ressources"
+        },
+        {
+          "id": "b",
+          "label": "Les partis dépendent de financements privés"
+        },
+        {
+          "id": "c",
+          "label": "L'instruction donne les codes pour convaincre"
+        },
+        {
+          "id": "d",
+          "label": "Les candidats sont tirés au sort parmi les diplômés"
+        },
+        {
+          "id": "e",
+          "label": "La loi réserve les candidatures aux cadres"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Ressources, financeurs et instruction (reproduction sociale) font que les partis retiennent surtout des personnes du haut de la hiérarchie sociale. Aucune loi ne l'impose.",
+    "hint": "Pense à l'argent, au temps et aux études.",
+    "concepts": [
+      "partis-tri"
+    ],
+    "source": "CM, V, B (p. 40)"
+  },
+  {
+    "chapterSlug": "critiques-representation",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pour Bernard Manin, les partis ont toujours été un obstacle à la démocratie.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Manin juge les partis nécessaires : les partis de masse du XIXe siècle ont créé un lien avec la population et porté des classes populaires au pouvoir. C'est le poids de l'argent qui les a dévoyés.",
+    "hint": "Manin commence par ce que les partis ont apporté.",
+    "concepts": [
+      "partis-masse"
+    ],
+    "source": "CM, V, B (p. 40-41)"
+  },
+  {
+    "chapterSlug": "critiques-representation",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Remets dans l'ordre l'histoire des partis selon Bernard Manin.",
+    "payload": {
+      "items": [
+        {
+          "id": "i3",
+          "label": "Les partis deviennent des machines autonomes de leurs militants"
+        },
+        {
+          "id": "i1",
+          "label": "Les partis de masse portent des classes populaires au pouvoir"
+        },
+        {
+          "id": "i4",
+          "label": "Des lois encadrent le financement de la vie politique"
+        },
+        {
+          "id": "i0",
+          "label": "Les grands partis naissent pour créer un lien avec la population"
+        },
+        {
+          "id": "i2",
+          "label": "Les campagnes coûtent de plus en plus cher"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "i0",
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ]
+    },
+    "explanation": "Naissance au XIXe siècle, âge des partis de masse, montée du poids de l'argent, autonomie des appareils, puis lois sur le financement pour rétablir l'égalité.",
+    "hint": "L'histoire va de l'apport des partis à leur dévoiement, puis au remède.",
+    "concepts": [
+      "partis-masse"
+    ],
+    "source": "CM, V, B (p. 40-41)"
+  },
+  {
+    "chapterSlug": "critiques-representation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quel remède Simone Weil propose-t-elle ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le plafonnement du coût des campagnes"
+        },
+        {
+          "id": "b",
+          "label": "Le tirage au sort des députés"
+        },
+        {
+          "id": "c",
+          "label": "Le référendum d'initiative citoyenne"
+        },
+        {
+          "id": "d",
+          "label": "La suppression générale des partis politiques"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "Pour Simone Weil, la discipline de parti est en elle-même un danger moral : elle propose de supprimer les partis. Le plafonnement des campagnes est le remède de Manin.",
+    "hint": "Pour elle, le mal tient aux partis eux-mêmes, pas à leur financement.",
+    "concepts": [
+      "discipline-parti"
+    ],
+    "source": "CM, V, B (p. 42)"
+  },
+  {
+    "chapterSlug": "critiques-representation",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complète la phrase.",
+    "payload": {
+      "template": "Pour Simone Weil, la discipline de parti est un danger {{a}} majeur.",
+      "slots": [
+        {
+          "id": "a",
+          "width": "md"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "a": [
+          "moral"
+        ]
+      }
+    },
+    "explanation": "La discipline de parti fait disparaître le discernement : la passion collective remplace la raison, et l'intérêt général n'est plus poursuivi.",
+    "hint": "Simone Weil juge la discipline de parti du point de vue de la conscience et du bien.",
+    "concepts": [
+      "discipline-parti"
+    ],
+    "source": "CM, V, B (p. 41)"
+  },
+  {
+    "chapterSlug": "critiques-representation",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Simone Weil a renoncé pendant plusieurs années à sa position sociale pour vivre comme une ouvrière.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Pour elle, on ne connaît vraiment une catégorie sociale qu'en vivant sa condition. Attention à ne pas la confondre avec Simone Veil, la ministre qui a fait légaliser l'IVG.",
+    "hint": "Le cours le rappelle en présentant la philosophe.",
+    "concepts": [
+      "discipline-parti"
+    ],
+    "source": "CM, V, B (p. 41)"
+  },
+  {
+    "chapterSlug": "critiques-representation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quel argument contre la démocratie directe Francis Dupuis-Déri conteste-t-il ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "L'argument de Kant sur la maturité du peuple"
+        },
+        {
+          "id": "b",
+          "label": "L'argument technique : le peuple ne pourrait pas s'assembler"
+        },
+        {
+          "id": "c",
+          "label": "L'argument de Churchill sur le moindre mal"
+        },
+        {
+          "id": "d",
+          "label": "L'argument de Machiavel sur les troubles civils"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Pour Dupuis-Déri, « le peuple a très souvent trouvé l'occasion de s'assembler dans des agoras formelles ou non » : l'argument technique, souvent utilisé en dernier ressort, ne tient pas.",
+    "hint": "Dupuis-Déri parle d'agoras, formelles ou non.",
+    "concepts": [
+      "argument-technique"
+    ],
+    "source": "CM, V, B (p. 42)"
+  },
+  {
+    "chapterSlug": "critiques-representation",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelles pratiques de la démocratie directe suisse le cours décrit-il ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La Landsgemeinde, où la population se réunit pour décider"
+        },
+        {
+          "id": "b",
+          "label": "Des votations au moins quatre fois par an"
+        },
+        {
+          "id": "c",
+          "label": "Un livret d'information neutre envoyé à chaque citoyen"
+        },
+        {
+          "id": "d",
+          "label": "Le tirage au sort du gouvernement fédéral"
+        },
+        {
+          "id": "e",
+          "label": "Le vote obligatoire sous peine d'amende"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "La démocratie directe suisse suppose des règles qui organisent des référendums réguliers et une information neutre : elle se donne les moyens d'exister.",
+    "hint": "Pense à ce qui permet aux citoyens de décider en connaissance de cause.",
+    "concepts": [
+      "votation",
+      "democratie-directe"
+    ],
+    "source": "CM, V, B (p. 42-43)"
+  },
+  {
+    "chapterSlug": "critiques-representation",
+    "type": "TRUE_FALSE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Selon le cours, la Commune de Paris a pris fin parce que les Parisiens se sont désintéressés de la vie politique.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "La Commune a bien fonctionné : conseils élus, clubs, débats après la journée de travail. C'est la victoire de l'armée officielle qui y a mis fin.",
+    "hint": "Repense à la façon dont la Commune s'est achevée.",
+    "concepts": [
+      "democratie-directe"
+    ],
+    "source": "CM, V, B (p. 42)"
+  },
+  {
+    "chapterSlug": "civisme",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Comment Rousseau définit-il le bien commun ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La somme des intérêts particuliers"
+        },
+        {
+          "id": "b",
+          "label": "Ce qu'il y a de commun dans les intérêts, quand chacun oublie son intérêt particulier"
+        },
+        {
+          "id": "c",
+          "label": "La volonté du monarque"
+        },
+        {
+          "id": "d",
+          "label": "Ce que décide la majorité des représentants élus par la nation, selon les règles fixées par la Constitution"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Le bien commun est ce que visent les membres d'un groupe quand ils oublient leur intérêt particulier : c'est sur lui seul que le peuple doit être gouverné.",
+    "hint": "Rousseau ne fait pas une addition.",
+    "concepts": [
+      "bien-commun"
+    ],
+    "source": "CM, V, C (p. 43)"
+  },
+  {
+    "chapterSlug": "civisme",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pour Rousseau, le civisme est le résultat d'un calcul d'intérêt.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Chacun bénéficie du bon fonctionnement de l'État : l'intérêt des autres est en même temps le sien. Le civisme n'est donc pas un pur sacrifice.",
+    "hint": "Rousseau ne demande pas à chacun de renoncer à son intérêt.",
+    "concepts": [
+      "civisme"
+    ],
+    "source": "CM, V, C (p. 43)"
+  },
+  {
+    "chapterSlug": "civisme",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Pourquoi, selon Rousseau, les Anglais ne se démocratisent-ils pas vraiment ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Ils vivent sous une monarchie absolue, sans aucune liberté"
+        },
+        {
+          "id": "b",
+          "label": "Leur territoire est trop vaste pour qu'ils s'assemblent"
+        },
+        {
+          "id": "c",
+          "label": "Ils n'ont pas le goût de la liberté politique qu'avaient les Anciens"
+        },
+        {
+          "id": "d",
+          "label": "Ils ont aboli leur Parlement"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "Les Anglais sont le peuple le plus proche de la liberté, mais il leur manque le goût de la liberté politique : être citoyen est un état d'esprit.",
+    "hint": "Rousseau les juge pourtant le peuple le plus proche de la liberté.",
+    "concepts": [
+      "civisme",
+      "depolitisation"
+    ],
+    "source": "CM, V, C (p. 43)"
+  },
+  {
+    "chapterSlug": "civisme",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complète la phrase.",
+    "payload": {
+      "template": "Pour Rousseau, être citoyen n'est pas seulement une disposition juridique, mais un {{a}} d'esprit.",
+      "slots": [
+        {
+          "id": "a",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "a": [
+          "état",
+          "etat"
+        ]
+      }
+    },
+    "explanation": "On peut être soumis aux lois sans être citoyen ; le citoyen a le droit, et surtout la volonté, de participer à la vie publique.",
+    "hint": "Le mot désigne une manière d'être intérieure.",
+    "concepts": [
+      "civisme"
+    ],
+    "source": "CM, V, C (p. 43)"
+  },
+  {
+    "chapterSlug": "civisme",
+    "type": "CASE_STUDY",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Cas d'entraînement : une commune désaffectée.",
+    "payload": {
+      "scenario": "Dans une commune imaginaire, la participation aux élections municipales tombe sous 30 %. Le maire déclare : « Les gens n'ont plus le temps de s'occuper de politique : qu'ils nous laissent gérer, nous sommes là pour ça. » Un collectif d'habitants propose d'organiser chaque trimestre un référendum d'initiative citoyenne, précédé d'un livret d'information neutre. Le conseil municipal ne compte qu'un seul ouvrier sur trente élus.",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "De quelle thèse le maire est-il le plus proche ?",
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Celle de Constant : les Modernes paient des représentants comme un riche paie un intendant"
+              },
+              {
+                "id": "b",
+                "label": "Celle de Rousseau : où se trouve le représenté, il n'y a plus de représentant"
+              },
+              {
+                "id": "c",
+                "label": "Celle de Simone Weil : il faut supprimer les partis"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quel exemple du cours appuie la proposition du collectif ?",
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "La dictature romaine"
+              },
+              {
+                "id": "b",
+                "label": "Les votations suisses et leur livret d'information"
+              },
+              {
+                "id": "c",
+                "label": "Le Bill of Rights de 1689"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "Selon le cours, la composition sociale du conseil municipal est sans effet sur les décisions qu'il prend.",
+          "payload": {}
+        },
+        {
+          "id": "q4",
+          "type": "MCQ_SINGLE",
+          "prompt": "Que répondrait Rousseau au maire ?",
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Qu'il a raison : la démocratie est un gouvernement trop parfait pour des hommes"
+              },
+              {
+                "id": "b",
+                "label": "Qu'il faut confier la commune à un philosophe-roi"
+              },
+              {
+                "id": "c",
+                "label": "Que la dépolitisation est réelle, mais qu'il faut refuser le fatalisme : le civisme est l'intérêt bien compris de chacun"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "correct": [
+              "b"
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": false
+          }
+        },
+        {
+          "id": "q4",
+          "solution": {
+            "correct": [
+              "c"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "Q1 : le maire reprend la dépolitisation des Modernes décrite par Constant. Q2 : la Suisse montre que des référendums réguliers, avec une information neutre, sont possibles. Q3 : le cours montre que le défaut de représentativité se traduit dans les décisions (retraites, IVG, sécurité sociale). Q4 : Rousseau admet l'argument sociologique mais refuse le fatalisme, et fait du civisme un calcul d'intérêt.",
+    "hint": "Reprends, dans l'ordre, Constant, la Suisse, la représentativité et Rousseau.",
+    "concepts": [
+      "liberte-anciens-modernes",
+      "votation",
+      "representativite",
+      "civisme"
+    ],
+    "source": "CM, V (p. 37-43)"
+  },
+  {
+    "chapterSlug": "civisme",
+    "type": "WRITING",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "« La démocratie représentative est-elle encore une démocratie ? » Rédige un plan détaillé de dissertation.",
+    "payload": {
+      "modelAnswer": "Introduction : partir de la formule de Rousseau, « où se trouve le représenté, il n'y a plus de représentant » ; rappeler que représenter, c'est rendre présent un absent. Problématique : une démocratie peut-elle reposer sur l'absence du peuple ?\n\nI. La représentation, seule démocratie possible chez les Modernes ?\nA. L'impossibilité et l'inutilité de la démocratie directe : Sieyès (argument technique, argument substantiel, le tiers état comme nation).\nB. La dépolitisation des Modernes : Constant (la liberté des Anciens et celle des Modernes, l'intendant), Fukuyama (une démocratie libérale au sens faible), Berlin (il ne reste que la liberté négative).\n\nII. Une représentation qui s'éloigne du peuple\nA. Des assemblées peu représentatives : environ 6 % de députés issus des classes populaires ; le tri des partis (ressources, financements, instruction).\nB. Des partis dévoyés : Manin (de l'apport des partis de masse au poids de l'argent), Simone Weil (la discipline de parti, danger moral ; supprimer les partis).\n\nIII. Repolitiser la démocratie\nA. La démocratie directe est possible : Dupuis-Déri, la Commune de Paris, la Suisse (Landsgemeinde, votations, livret d'information).\nB. Réhabiliter le civisme : Rousseau, être citoyen est un état d'esprit ; le civisme est un calcul d'intérêt bien compris.\n\nConclusion : la démocratie représentative reste une démocratie si elle se corrige (financement des partis, représentativité) et s'ouvre à la participation directe des citoyens.",
+      "rubric": [
+        {
+          "id": "c0",
+          "label": "L'introduction définit la représentation comme présence substitutive"
+        },
+        {
+          "id": "c1",
+          "label": "Les arguments de Sieyès et de Constant sont exposés avant d'être discutés"
+        },
+        {
+          "id": "c2",
+          "label": "La critique mobilise la représentativité des assemblées et au moins un auteur sur les partis"
+        },
+        {
+          "id": "c3",
+          "label": "Le plan aboutit à une réponse, avec la démocratie directe ou le civisme"
+        }
+      ]
+    },
+    "solution": {},
+    "explanation": "Ce plan n'est qu'un exemple d'entraînement, pas un corrigé officiel : d'autres plans sont possibles, pourvu qu'ils répondent à la question.",
+    "concepts": [
+      "representation-absence",
+      "depolitisation",
+      "partis-masse",
+      "civisme"
+    ],
+    "source": "CM, V (p. 37-43)"
+  }
+]

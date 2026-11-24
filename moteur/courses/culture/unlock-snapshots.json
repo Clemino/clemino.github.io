@@ -1,0 +1,300 @@
+[
+ {
+  "recordedAt": "2026-11-24",
+  "modules": [
+   {
+    "slug": "m1-critique-ambivalente",
+    "chapters": [
+     {
+      "slug": "fragilite-rarete",
+      "order": 1,
+      "sectionIds": [
+       "fragilite-rarete/democratie-rare",
+       "fragilite-rarete/demos-restreint",
+       "fragilite-rarete/deux-jugements",
+       "fragilite-rarete/oligarchie-antiparlementarisme"
+      ],
+      "exerciseIds": [
+       "753c92418e7e",
+       "0d828db51a03",
+       "764e0819adc7",
+       "e5fb15afa378",
+       "8b978020c377",
+       "200df48d671f",
+       "8edd853f2e33",
+       "af8cb2f22167",
+       "3ff03c704254",
+       "58a147591519",
+       "fed59ec79723",
+       "2e91a056637f",
+       "0c1cd0ace93b",
+       "37a2f8baa755",
+       "4e37684a88d6",
+       "185b00033e80"
+      ]
+     },
+     {
+      "slug": "abstention-populisme",
+      "order": 2,
+      "sectionIds": [
+       "abstention-populisme/populisme-mot",
+       "abstention-populisme/traits-populisme",
+       "abstention-populisme/figures-populistes",
+       "abstention-populisme/populisme-gauche"
+      ],
+      "exerciseIds": [
+       "57eaf968eab1",
+       "f187dfe01d5c",
+       "f68f83a75ebe",
+       "fb4472c664b3",
+       "c574100ee156",
+       "5f8ec1b65de3",
+       "51b344b63a02",
+       "d44fc8a95c3c",
+       "aeb1e3a15d74",
+       "cae1915eaaac",
+       "b2971b52ae5f",
+       "5331ca2bb4f4",
+       "ca26ef91c036",
+       "df15387a39c8"
+      ]
+     },
+     {
+      "slug": "crise-concept-positif",
+      "order": 3,
+      "sectionIds": [
+       "crise-concept-positif/krisis-critique",
+       "crise-concept-positif/rousseau-machiavel"
+      ],
+      "exerciseIds": [
+       "894e1d966774",
+       "c0f43ebf6108",
+       "115a1cbe05bb",
+       "59af381a409d",
+       "42d311ddbabb",
+       "4261e3191093",
+       "348f74708637",
+       "79df7d6f3c8b",
+       "f95bc0414b7b",
+       "85fda56efce7",
+       "ad1ba8db3ae5"
+      ]
+     }
+    ]
+   },
+   {
+    "slug": "m2-pouvoir-demos",
+    "chapters": [
+     {
+      "slug": "population-peuple",
+      "order": 1,
+      "sectionIds": [
+       "population-peuple/fait-droit",
+       "population-peuple/aron-totalitarisme",
+       "population-peuple/lincoln"
+      ],
+      "exerciseIds": [
+       "4e1eee99e859",
+       "b53e278c5193",
+       "42d68006449f",
+       "b1c3d909cc34",
+       "624873c43964",
+       "0e51646b7662",
+       "4890f3bc3ff6",
+       "a8107af71c0a",
+       "96496f959d20",
+       "e5f7bc69fa2c",
+       "2d19f93c0168"
+      ]
+     },
+     {
+      "slug": "construction-peuple",
+      "order": 2,
+      "sectionIds": [
+       "construction-peuple/kelsen-ordre-juridique",
+       "construction-peuple/kelsen-criteres",
+       "construction-peuple/hobbes-multitude"
+      ],
+      "exerciseIds": [
+       "37e9bce583f2",
+       "fe790da4db0f",
+       "ad79e149d228",
+       "98b3fb5c5531",
+       "dbbc1fce0bf2",
+       "7e488cc7a75f",
+       "d47eda235c15",
+       "0d1d723904e6",
+       "d81dfe012ac7",
+       "9d50de4af01e"
+      ]
+     },
+     {
+      "slug": "auto-institution",
+      "order": 3,
+      "sectionIds": [
+       "auto-institution/cercle-commencement",
+       "auto-institution/rousseau-contrat-social",
+       "auto-institution/negri-pouvoir-constituant",
+       "auto-institution/democratisation",
+       "auto-institution/revolte-revolution"
+      ],
+      "exerciseIds": [
+       "9802a9c32cdc",
+       "9b528ca5dfb4",
+       "3b295abb9541",
+       "78cd8d288a77",
+       "095c5df639fe",
+       "f6bd76e67f08",
+       "77111426bdc5",
+       "7f6746755f2d",
+       "ee2fcef43ca5",
+       "36a17a0e7b30",
+       "90327eccffa9",
+       "779a279cf39e",
+       "15cf37300568",
+       "7e5f59ef6e52",
+       "305453f24499",
+       "66e05876b375",
+       "73120aa342b1",
+       "f2d146a5ba45",
+       "c02fc8d69a3e"
+      ]
+     }
+    ]
+   },
+   {
+    "slug": "m3-critiques-principe",
+    "chapters": [
+     {
+      "slug": "mauvaise-egalite",
+      "order": 1,
+      "sectionIds": [
+       "mauvaise-egalite/athenes",
+       "mauvaise-egalite/platon-egalite-navire",
+       "mauvaise-egalite/platon-licence",
+       "mauvaise-egalite/platon-demagogie-philosophe-roi",
+       "mauvaise-egalite/tocqueville"
+      ],
+      "exerciseIds": [
+       "05ea3600e66c",
+       "77c08f976e8d",
+       "34cf864bb281",
+       "92dd4989f523",
+       "4ffa7154c0a5",
+       "753432b70ad4",
+       "f85eb939403e",
+       "49073c15580c",
+       "8df2b7cbbdcd",
+       "eba3142910c9",
+       "bc46577932f8",
+       "ee7f78d6af39",
+       "77c69fc9e460",
+       "68a6f27703c1",
+       "ca1344618506"
+      ]
+     },
+     {
+      "slug": "aristocratie-tradition",
+      "order": 2,
+      "sectionIds": [
+       "aristocratie-tradition/inegalite-naturelle",
+       "aristocratie-tradition/neoreaction",
+       "aristocratie-tradition/burke-maistre"
+      ],
+      "exerciseIds": [
+       "569afcadc436",
+       "d62d85d6552f",
+       "edea6094d5bb",
+       "ba4569941b2d",
+       "df27cace60f7",
+       "97350b5424f2",
+       "13ae7fc4ccd7",
+       "9a6f9c1d97ec",
+       "e4069867e354"
+      ]
+     },
+     {
+      "slug": "theories-dictature",
+      "order": 3,
+      "sectionIds": [
+       "theories-dictature/marx",
+       "theories-dictature/dictature-schmitt"
+      ],
+      "exerciseIds": [
+       "3dd803c6ae22",
+       "44a15376a7eb",
+       "3e496e014305",
+       "20178513831d",
+       "9e32c5fe7e07",
+       "04ef5098ad51",
+       "69d3be5e4a30",
+       "344a6ee5207b",
+       "edb8f97c241b",
+       "9f5b4e55be02",
+       "98a9962a4569",
+       "95b638767e92"
+      ]
+     }
+    ]
+   },
+   {
+    "slug": "m4-deliberation",
+    "chapters": [
+     {
+      "slug": "resistance-abus",
+      "order": 1,
+      "sectionIds": [
+       "resistance-abus/aristote",
+       "resistance-abus/alain-capitaine-armateur",
+       "resistance-abus/locke",
+       "resistance-abus/kant-declarations",
+       "resistance-abus/montesquieu-alain"
+      ],
+      "exerciseIds": [
+       "2f82de13d3b4",
+       "88717c95a1dc",
+       "a73988915fe0",
+       "954fb83a87eb",
+       "9cac59bbc673",
+       "a304e208aaaf",
+       "9c1c41daccfd",
+       "7b011ca969f8",
+       "d685e9a7d97f",
+       "fd1176ac2534",
+       "d0e158e00336",
+       "93a4848499f6",
+       "264753a8cbeb",
+       "1fcae1c113f8",
+       "02eb0f68805a",
+       "854f1d0219ce"
+      ]
+     },
+     {
+      "slug": "moindre-mal",
+      "order": 2,
+      "sectionIds": [
+       "moindre-mal/churchill-aron",
+       "moindre-mal/regles-pluralisme",
+       "moindre-mal/democratie-decevante"
+      ],
+      "exerciseIds": [
+       "b3e1b5998a0f",
+       "e7438924eef1",
+       "653c5dd291a1",
+       "d592718807d9",
+       "934b1879af92",
+       "d03a12dd5642",
+       "76a7380d998a",
+       "d129ded9b341",
+       "f4d9ea8f3369",
+       "fffcd8658cba",
+       "07c43ed0bd17",
+       "b9a30bf02efa",
+       "81cb23212e14"
+      ]
+     }
+    ]
+   }
+  ]
+ }
+]

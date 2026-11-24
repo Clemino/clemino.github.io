@@ -135,7 +135,7 @@
         "populisme",
         "corps-intermediaires"
       ],
-      "source": "CM, I, B (p. 6-8)"
+      "source": "CM, I, B (p. 6-9)"
     },
     {
       "chapterSlug": "abstention-populisme",
@@ -211,7 +211,7 @@
       "concepts": [
         "dissension"
       ],
-      "source": "CM, I, C (p. 10)"
+      "source": "CM, I, C (p. 10-11)"
     },
     {
       "chapterSlug": "population-peuple",
@@ -249,7 +249,7 @@
       "concepts": [
         "totalitarisme"
       ],
-      "source": "CM, II, A (p. 12-13)"
+      "source": "CM, II, A (p. 12-14)"
     },
     {
       "chapterSlug": "population-peuple",
@@ -267,7 +267,7 @@
         "mandat-imperatif",
         "formule-lincoln"
       ],
-      "source": "CM, II, A (p. 13)"
+      "source": "CM, II, A (p. 13-14)"
     },
     {
       "chapterSlug": "construction-peuple",
@@ -305,7 +305,7 @@
       "concepts": [
         "etat-ordre-juridique"
       ],
-      "source": "CM, II, B (p. 15)"
+      "source": "CM, II, B (p. 15-16)"
     },
     {
       "chapterSlug": "construction-peuple",
@@ -343,7 +343,7 @@
       "concepts": [
         "multitude"
       ],
-      "source": "CM, II, B (p. 16)"
+      "source": "CM, II, B (p. 16-17)"
     },
     {
       "chapterSlug": "auto-institution",
@@ -381,7 +381,7 @@
       "concepts": [
         "pouvoir-constituant"
       ],
-      "source": "CM, II, C (p. 18)"
+      "source": "CM, II, C (p. 18-19)"
     },
     {
       "chapterSlug": "auto-institution",
@@ -443,7 +443,7 @@
         "modele-seuil",
         "pouvoir-constituant"
       ],
-      "source": "CM, II, C (p. 18-20)"
+      "source": "CM, II, C (p. 18-21)"
     },
     {
       "chapterSlug": "crise-concept-positif",
@@ -562,7 +562,7 @@
         "krisis",
         "dissension"
       ],
-      "source": "CM, I (p. 1-11)"
+      "source": "CM, I (p. 1-12)"
     },
     {
       "chapterSlug": "auto-institution",
@@ -686,7 +686,7 @@
         "multitude",
         "modele-seuil"
       ],
-      "source": "CM, II (p. 16-20)"
+      "source": "CM, II (p. 16-21)"
     }
   ]
 }

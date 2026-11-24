@@ -52,7 +52,7 @@ pnpm publish:course <id>          # écrit la matière dans site/<id>/
 |---|---|
 | `site/admin/` | Droit administratif, L2 semestre 1 : service public, police administrative, sources de la légalité, limites et contrôle. Les corrigés types et les sujets de dissertation servent à s'entraîner : ils ne sont pas officiels. |
 | `site/contrats/` | Droit des contrats, L2 semestre 3 : sources de l'obligation, réforme de 2016, conclusion du contrat, vices du consentement, capacité et contenu. Les corrigés types servent à s'entraîner : ils ne sont pas officiels. |
-| `site/culture/` | Culture générale, thème « Crises et critiques des démocraties » : populisme, définition du peuple, critiques de la démocratie de Platon à Schmitt, délibération et démocratie libérale. Les plans de dissertation servent à s'entraîner : ils ne sont pas officiels. |
+| `site/culture/` | Culture générale, thème « Crises et critiques des démocraties » : populisme, définition du peuple, critiques de la démocratie de Platon à Schmitt, délibération et démocratie libérale, démocratie représentative, partis et civisme. Les plans de dissertation servent à s'entraîner : ils ne sont pas officiels. |
 | `site/ia-responsable/` | IA responsable : le dossier de confiance d'un système d'IA, des risques à la décision. |
 | `site/trd/` | Trading, du niveau zéro au bot : marchés, analyse, gestion du risque, backtest, automatisation, certification AMF. |
 

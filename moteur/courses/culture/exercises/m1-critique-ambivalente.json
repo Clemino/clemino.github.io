@@ -625,7 +625,7 @@
     "concepts": [
       "corps-intermediaires"
     ],
-    "source": "CM, I, B (p. 7-8)"
+    "source": "CM, I, B (p. 7-9)"
   },
   {
     "chapterSlug": "abstention-populisme",
@@ -642,7 +642,7 @@
     "concepts": [
       "corps-intermediaires"
     ],
-    "source": "CM, I, B (p. 8)"
+    "source": "CM, I, B (p. 8-9)"
   },
   {
     "chapterSlug": "abstention-populisme",
@@ -711,7 +711,7 @@
       "democratie-illiberale",
       "populisme"
     ],
-    "source": "CM, I, B (p. 7-8)"
+    "source": "CM, I, B (p. 7-9)"
   },
   {
     "chapterSlug": "abstention-populisme",
@@ -749,7 +749,7 @@
     "concepts": [
       "populisme-de-gauche"
     ],
-    "source": "CM, I, B (p. 9)"
+    "source": "CM, I, B (p. 9-10)"
   },
   {
     "chapterSlug": "abstention-populisme",
@@ -766,7 +766,7 @@
     "concepts": [
       "populisme-de-gauche"
     ],
-    "source": "CM, I, B (p. 8)"
+    "source": "CM, I, B (p. 8-9)"
   },
   {
     "chapterSlug": "abstention-populisme",
@@ -902,7 +902,7 @@
       "democrates-sans-ideal",
       "populisme"
     ],
-    "source": "CM, I, A et B (p. 3-8)"
+    "source": "CM, I, A et B (p. 3-9)"
   },
   {
     "chapterSlug": "crise-concept-positif",
@@ -933,7 +933,7 @@
     "concepts": [
       "krisis"
     ],
-    "source": "CM, I, C (p. 9)"
+    "source": "CM, I, C (p. 9-10)"
   },
   {
     "chapterSlug": "crise-concept-positif",
@@ -950,7 +950,7 @@
     "concepts": [
       "krisis"
     ],
-    "source": "CM, I, C (p. 9)"
+    "source": "CM, I, C (p. 9-10)"
   },
   {
     "chapterSlug": "crise-concept-positif",
@@ -988,7 +988,7 @@
     "concepts": [
       "dissension"
     ],
-    "source": "CM, I, C (p. 10)"
+    "source": "CM, I, C (p. 10-11)"
   },
   {
     "chapterSlug": "crise-concept-positif",
@@ -1031,7 +1031,7 @@
     "concepts": [
       "secession-plebe"
     ],
-    "source": "CM, I, C (p. 10)"
+    "source": "CM, I, C (p. 10-11)"
   },
   {
     "chapterSlug": "crise-concept-positif",
@@ -1048,7 +1048,7 @@
     "concepts": [
       "dissension"
     ],
-    "source": "CM, I, C (p. 10)"
+    "source": "CM, I, C (p. 10-11)"
   },
   {
     "chapterSlug": "crise-concept-positif",
@@ -1066,7 +1066,7 @@
       "dissension",
       "secession-plebe"
     ],
-    "source": "CM, I, C (p. 10)"
+    "source": "CM, I, C (p. 10-11)"
   },
   {
     "chapterSlug": "crise-concept-positif",
@@ -1105,7 +1105,7 @@
       "krisis",
       "dissension"
     ],
-    "source": "CM, I, C (p. 9-11)"
+    "source": "CM, I, C (p. 9-12)"
   },
   {
     "chapterSlug": "crise-concept-positif",
@@ -1141,6 +1141,6 @@
       "deux-jugements-crise",
       "dissension"
     ],
-    "source": "CM, I (p. 1-11)"
+    "source": "CM, I (p. 1-12)"
   }
 ]

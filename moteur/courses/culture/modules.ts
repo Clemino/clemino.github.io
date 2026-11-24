@@ -166,4 +166,41 @@ export const MODULES: ModuleDef[] = [
       },
     ],
   },
+  {
+    slug: "m5-repolitisation",
+    order: 5,
+    title: "L'idéal démocratique comme idéal de repolitisation",
+    subtitle: "Représentation, partis, démocratie directe, civisme",
+    description:
+      "La représentation comme absence du peuple (Rousseau, Sieyès), la liberté des Modernes (Constant, Fukuyama, Berlin), la sociologie des assemblées, la critique des partis (Manin, Simone Weil), les formes de démocratie directe et la réhabilitation du civisme. Partie V du cours.",
+    icon: "Vote",
+    chapters: [
+      {
+        slug: "representation-theories",
+        order: 1,
+        title: "Théories et pratiques de la démocratie représentative",
+        summary: "Représentation et absence, Sieyès, la liberté des Modernes, la représentativité des assemblées.",
+        sections: [
+          "01-representation-absence",
+          "02-sieyes",
+          "03-liberte-modernes",
+          "04-representativite",
+        ],
+      },
+      {
+        slug: "critiques-representation",
+        order: 2,
+        title: "Critiques de la démocratie représentative",
+        summary: "Le tri des partis, Manin, Simone Weil, la démocratie directe en pratique.",
+        sections: ["05-partis-tri", "06-manin", "07-simone-weil", "08-democratie-directe"],
+      },
+      {
+        slug: "civisme",
+        order: 3,
+        title: "La réhabilitation du civisme",
+        summary: "Rousseau : être citoyen est un état d'esprit, le civisme un calcul d'intérêt.",
+        sections: ["09-rousseau-civisme"],
+      },
+    ],
+  },
 ]
