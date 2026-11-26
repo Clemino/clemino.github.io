@@ -645,7 +645,7 @@
       ]
     },
     "explanation": "Le dégrèvement réduit l'impôt dû après son calcul ; la somme reste dans le produit voté par la collectivité, mais l'État la prend en charge. L'exonération, elle, fait sortir le bénéficiaire du champ de l'impôt.",
-    "hint": "Il intervient après le calcul de l'impôt.",
+    "hint": "Pense au moment où il intervient, et à qui en supporte le coût.",
     "concepts": [
       "compensations-fiscales"
     ],
@@ -987,7 +987,7 @@
       ]
     },
     "explanation": "La contractualisation concerne 322 collectivités dont le budget dépasse 60 millions d'euros (article 29 de la loi de programmation) ; 16 autres ont signé volontairement.",
-    "hint": "Un seuil de budget, et non de population.",
+    "hint": "Le critère retenu est financier.",
     "concepts": [
       "contractualisation"
     ],
@@ -1116,7 +1116,7 @@
       ]
     },
     "explanation": "La loi d'urgence sanitaire du 23 mars 2020 suspend la contractualisation des relations financières entre l'État et les collectivités.",
-    "hint": "Une loi adoptée dès le début de la crise sanitaire.",
+    "hint": "Une loi adoptée au tout début de la crise.",
     "concepts": [
       "contractualisation"
     ],
