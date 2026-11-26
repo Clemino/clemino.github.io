@@ -1,0 +1,576 @@
+[
+  {
+    "chapterSlug": "contexte-maastricht",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'est-ce qui provoque le premier choc pétrolier, en 1973 ?",
+    "payload": { "options": [
+      { "id": "a", "label": "La révolution iranienne" },
+      { "id": "b", "label": "L'embargo de l'OPEP lié à la guerre du Kippour" },
+      { "id": "c", "label": "La chute du mur de Berlin" },
+      { "id": "d", "label": "La fin des accords de Bretton Woods sur les taux de change" }
+    ] },
+    "solution": { "correct": ["b"] },
+    "explanation": "En 1973, l'OPEP décrète un embargo contre les pays qui soutiennent Israël dans la guerre du Kippour. La révolution iranienne provoque le second choc, en 1979.",
+    "hint": "Deux chocs, deux causes : ne confonds pas 1973 et 1979.",
+    "concepts": ["chocs-petroliers"],
+    "source": "Cours, titre I, chapitre 3, section 2, I (p. 25-26)"
+  },
+  {
+    "chapterSlug": "contexte-maastricht",
+    "type": "TRUE_FALSE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Pendant les Trente Glorieuses, de 1945 à 1975, la croissance avoisine 5 % par an.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Le cours décrit une période de croissance soutenue, autour de 5 %, avant la brusque accélération des dépenses des années 1970.",
+    "hint": "Le cours parle d'une période de croissance soutenue.",
+    "concepts": ["chocs-petroliers"],
+    "source": "Cours, titre I, chapitre 3, section 2, I (p. 25)"
+  },
+  {
+    "chapterSlug": "contexte-maastricht",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complète la phrase.",
+    "payload": {
+      "template": "Quand les dépenses et les recettes n'augmentent pas au même rythme, le cours parle d'effet de {{a}}.",
+      "slots": [{ "id": "a", "width": "md" }]
+    },
+    "solution": { "answers": { "a": ["ciseau", "ciseaux"] } },
+    "explanation": "L'effet de ciseau oblige à recourir à l'emprunt pour équilibrer : déficits durables et dette s'auto-alimentent.",
+    "hint": "Une image tirée d'un outil de couture.",
+    "concepts": ["effet-ciseau"],
+    "source": "Cours, titre I, chapitre 3, section 2, I (p. 27)"
+  },
+  {
+    "chapterSlug": "contexte-maastricht",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelles solutions le cours envisage-t-il face aux déficits nés des années 1970 ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Augmenter les prélèvements obligatoires" },
+      { "id": "b", "label": "Baisser les dépenses" },
+      { "id": "c", "label": "Recourir à l'emprunt" },
+      { "id": "d", "label": "Mieux gérer la dépense avec des outils venus du privé" },
+      { "id": "e", "label": "Faire financer sans limite l'État par la Banque de France" },
+      { "id": "f", "label": "Sortir du marché commun" }
+    ] },
+    "solution": { "correct": ["a", "b", "c", "d"] },
+    "explanation": "Le cours examine ces quatre solutions, toutes difficiles : pression fiscale déjà élevée, baisse des dépenses malaisée, risque de faillite, et gestion inspirée du New Public Management. La Banque de France, au contraire, a vu ses avances à l'État limitées.",
+    "hint": "Pense aux recettes, aux dépenses, au financement et à la gestion.",
+    "concepts": ["effet-ciseau"],
+    "source": "Cours, titre I, chapitre 3, section 2, I (p. 27)"
+  },
+  {
+    "chapterSlug": "contexte-maastricht",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Pourquoi augmenter les prélèvements obligatoires est-il difficile en France, selon le cours ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Parce que la pression fiscale y est déjà la plus élevée de l'Union" },
+      { "id": "b", "label": "Parce que le traité de Maastricht interdit toute hausse d'impôt dans les États de l'Union européenne" },
+      { "id": "c", "label": "Parce que les impôts ne peuvent être votés qu'une fois par législature" },
+      { "id": "d", "label": "Parce que les cotisations sociales ont été supprimées" }
+    ] },
+    "solution": { "correct": ["a"] },
+    "explanation": "La France est la championne des prélèvements obligatoires dans l'Union : aller plus loin est difficile. Aucun traité n'interdit de hausse d'impôt.",
+    "hint": "Le cours qualifie la France de « championne » dans ce domaine.",
+    "concepts": ["prelevements-obligatoires", "effet-ciseau"],
+    "source": "Cours, titre I, chapitre 3, section 2, I (p. 27)"
+  },
+  {
+    "chapterSlug": "contexte-maastricht",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque étape à sa date.",
+    "payload": {
+      "left": [
+        { "id": "l0", "label": "Signature du traité de Maastricht" },
+        { "id": "l1", "label": "Entrée en vigueur du traité de Maastricht" },
+        { "id": "l2", "label": "Adoption du Pacte de stabilité et de croissance" },
+        { "id": "l3", "label": "Création de l'euro" }
+      ],
+      "right": [
+        { "id": "r0", "label": "Février 1992" },
+        { "id": "r1", "label": "1er novembre 1993" },
+        { "id": "r2", "label": "1997" },
+        { "id": "r3", "label": "1er janvier 1999" }
+      ]
+    },
+    "solution": { "pairs": { "l0": "r0", "l1": "r1", "l2": "r2", "l3": "r3" } },
+    "explanation": "Le traité, signé en 1992, entre en vigueur fin 1993 ; le Pacte est adopté en 1997, avant la création de l'euro, au terme des trois étapes de l'UEM.",
+    "hint": "Le Pacte devait discipliner les États avant l'arrivée de l'euro.",
+    "concepts": ["union-economique-monetaire", "pacte-stabilite"],
+    "source": "Cours, titre I, chapitre 3, section 2, II, A (p. 28-29)"
+  },
+  {
+    "chapterSlug": "contexte-maastricht",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quels sont les critères de convergence fixés pour passer à l'euro ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Le déficit public" },
+      { "id": "b", "label": "La dette publique" },
+      { "id": "c", "label": "L'inflation" },
+      { "id": "d", "label": "Le taux de change" },
+      { "id": "e", "label": "Le taux d'intérêt" },
+      { "id": "f", "label": "Le taux de chômage" },
+      { "id": "g", "label": "Le niveau de la dépense publique" }
+    ] },
+    "solution": { "correct": ["a", "b", "c", "d", "e"] },
+    "explanation": "Les plus importants sont le déficit (3 %) et la dette (60 %) ; s'y ajoutent l'inflation, le taux de change et le taux d'intérêt. Le chômage et le niveau de la dépense n'en font pas partie.",
+    "hint": "Deux critères budgétaires, trois critères monétaires.",
+    "concepts": ["criteres-maastricht", "union-economique-monetaire"],
+    "source": "Cours, titre I, chapitre 3, section 2, II, A (p. 28)"
+  },
+  {
+    "chapterSlug": "contexte-maastricht",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Les programmes de stabilité concernent les États membres qui n'appartiennent pas à la zone euro.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Les programmes de stabilité concernent les États de la zone euro ; ceux qui n'y appartiennent pas présentent des programmes de convergence.",
+    "hint": "Le cours distingue deux documents selon l'appartenance à la zone euro.",
+    "concepts": ["pacte-stabilite"],
+    "source": "Cours, titre I, chapitre 3, section 2, II, A (p. 29)"
+  },
+  {
+    "chapterSlug": "contexte-maastricht",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelle sanction le volet correctif du Pacte prévoit-il, selon le cours ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Un dépôt représentant 0,2 % du PIB" },
+      { "id": "b", "label": "L'exclusion de la zone euro de l'État en déficit excessif" },
+      { "id": "c", "label": "La suspension du droit de vote de l'État au Parlement européen" },
+      { "id": "d", "label": "Une amende égale au déficit excessif constaté" }
+    ] },
+    "solution": { "correct": ["a"] },
+    "explanation": "Un État de la zone euro en déficit excessif peut se voir imposer des sanctions financières, comme un dépôt de 0,2 % de son PIB, sauf circonstances exceptionnelles.",
+    "hint": "La sanction est financière et proportionnée à la richesse du pays.",
+    "concepts": ["pacte-stabilite"],
+    "source": "Cours, titre I, chapitre 3, section 2, II, A (p. 29)"
+  },
+  {
+    "chapterSlug": "contexte-maastricht",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Que se passe-t-il quand la France et l'Allemagne dépassent les critères, au début des années 2000 ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Les deux États paient une sanction financière" },
+      { "id": "b", "label": "Le Conseil suspend la procédure sans consulter la Commission, d'où un arrêt de 2004" },
+      { "id": "c", "label": "Les deux États sortent temporairement de la zone euro" },
+      { "id": "d", "label": "La Commission renonce d'elle-même à toute procédure, avec l'accord des autres États membres, sans recours possible devant la Cour" }
+    ] },
+    "solution": { "correct": ["b"] },
+    "explanation": "Le Conseil, qui représente les États, suspend la procédure sans demander l'avis de la Commission ; la Cour de justice tranche (Commission contre Conseil, 13 juillet 2004), et la crise débouche sur l'assouplissement de 2005.",
+    "hint": "Un conflit oppose deux institutions de l'Union.",
+    "concepts": ["pacte-stabilite"],
+    "source": "Cours, titre I, chapitre 3, section 2, II, A (p. 29-30)"
+  },
+  {
+    "chapterSlug": "contexte-maastricht",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Qu'apporte l'assouplissement du Pacte de 2005 ?",
+    "payload": { "options": [
+      { "id": "a", "label": "La procédure n'est plus engagée en cas de simple récession" },
+      { "id": "b", "label": "Des facteurs pertinents sont pris en compte, comme les réformes structurelles" },
+      { "id": "c", "label": "Le délai de correction du déficit passe de 1 à 2 ans" },
+      { "id": "d", "label": "Le critère de dette est supprimé" },
+      { "id": "e", "label": "Les sanctions sont abandonnées" }
+    ] },
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "Après la crise institutionnelle, le Pacte tient compte de la conjoncture, des réformes (retraites) et de l'assainissement, et allonge le délai de correction. Les critères et les sanctions demeurent.",
+    "hint": "L'assouplissement rend la procédure moins mécanique, sans supprimer les règles.",
+    "concepts": ["pacte-stabilite"],
+    "source": "Cours, titre I, chapitre 3, section 2, II, A (p. 30)"
+  },
+  {
+    "chapterSlug": "regles-europeennes",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Qu'est-ce que le semestre européen, selon le cours ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Un budget européen voté tous les six mois" },
+      { "id": "b", "label": "L'examen par la Commission des programmes de stabilité et des projets de budgets avant leur adoption" },
+      { "id": "c", "label": "Le délai de six mois laissé à un État pour corriger son déficit après une mise en demeure du Conseil, sous peine de sanction automatique" },
+      { "id": "d", "label": "La présidence tournante du Conseil" }
+    ] },
+    "solution": { "correct": ["b"] },
+    "explanation": "Le semestre européen permet à la Commission d'encadrer la procédure budgétaire nationale : les programmes de stabilité, présentés dès avril avec les grandes lignes des budgets, sont examinés avant le vote des Parlements.",
+    "hint": "Il intervient en amont du vote des budgets nationaux.",
+    "concepts": ["semestre-europeen"],
+    "source": "Cours, titre I, chapitre 3, section 2, II, B (p. 30)"
+  },
+  {
+    "chapterSlug": "regles-europeennes",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Depuis le renforcement du Pacte, la procédure pour déficit excessif s'applique aussi à la dette publique.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Le volet correctif est élargi à la dette : un endettement élevé et persistant peut être plus dangereux que des déficits occasionnels. Au-delà de 60 %, l'État doit se désendetter d'un vingtième par an.",
+    "hint": "Pense à la notion de « déficit et dette publics excessifs ».",
+    "concepts": ["pacte-stabilite", "dette-publique"],
+    "source": "Cours, titre I, chapitre 3, section 2, II, B (p. 30)"
+  },
+  {
+    "chapterSlug": "regles-europeennes",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complète la phrase.",
+    "payload": {
+      "template": "Le TSCG fixe un objectif à moyen terme de déficit structurel limité à {{a}} % du PIB.",
+      "slots": [{ "id": "a", "width": "sm" }]
+    },
+    "solution": { "answers": { "a": ["0,5", "0.5"] } },
+    "explanation": "La règle d'or limite le déficit structurel, indépendant de la conjoncture, à 0,5 % du PIB, sauf circonstances exceptionnelles.",
+    "hint": "Un seuil bien plus bas que celui de Maastricht.",
+    "concepts": ["tscg", "deficit-structurel"],
+    "source": "Cours, titre I, chapitre 3, section 2, II, B (p. 31)"
+  },
+  {
+    "chapterSlug": "regles-europeennes",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Qu'est-ce que le déficit structurel ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Le déficit cumulé depuis le dernier excédent" },
+      { "id": "b", "label": "Le déficit des seules collectivités territoriales" },
+      { "id": "c", "label": "Le déficit qui existe indépendamment des aléas de la conjoncture" },
+      { "id": "d", "label": "La part du déficit due à une récession, que l'on retire du calcul des critères de Maastricht" }
+    ] },
+    "solution": { "correct": ["c"] },
+    "explanation": "C'est le déficit qu'on obtiendrait hors période de récession. La part due à la conjoncture est précisément celle qu'on retire pour le calculer.",
+    "hint": "Le mot « structurel » s'oppose à « conjoncturel ».",
+    "concepts": ["deficit-structurel"],
+    "source": "Cours, titre I, chapitre 3, section 2, II, B (p. 31)"
+  },
+  {
+    "chapterSlug": "regles-europeennes",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quand le TSCG a-t-il été signé ?",
+    "payload": { "options": [
+      { "id": "a", "label": "En février 1992" },
+      { "id": "b", "label": "En 1997" },
+      { "id": "c", "label": "Le 2 mars 2012" },
+      { "id": "d", "label": "Le 17 décembre 2012" }
+    ] },
+    "solution": { "correct": ["c"] },
+    "explanation": "Le TSCG est signé le 2 mars 2012 ; la France transpose la règle d'or par la loi organique du 17 décembre 2012. Février 1992 est la date de Maastricht, 1997 celle du Pacte.",
+    "hint": "Le traité précède de quelques mois la loi organique qui le transpose.",
+    "concepts": ["tscg"],
+    "source": "Cours, titre I, chapitre 3, section 2, II, B (p. 31)"
+  },
+  {
+    "chapterSlug": "regles-europeennes",
+    "type": "TRUE_FALSE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Depuis le renforcement du Pacte, une majorité simple des États suffit à bloquer une sanction.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Les sanctions sont quasi automatiques, sauf si les États s'y opposent à la majorité qualifiée : ce vote inversé est très difficile à réunir.",
+    "hint": "Le cours parle d'un vote « inversé ».",
+    "concepts": ["pacte-stabilite"],
+    "source": "Cours, titre I, chapitre 3, section 2, II, B (p. 30-31)"
+  },
+  {
+    "chapterSlug": "regles-europeennes",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Remets ces étapes de l'encadrement européen dans l'ordre chronologique.",
+    "payload": { "items": [
+      { "id": "i3", "label": "Signature du TSCG" },
+      { "id": "i0", "label": "Adoption du Pacte de stabilité et de croissance" },
+      { "id": "i5", "label": "Approbation des nouvelles règles budgétaires" },
+      { "id": "i2", "label": "Crise financière née du système bancaire" },
+      { "id": "i4", "label": "Activation de la clause dérogatoire" },
+      { "id": "i1", "label": "Arrêt Commission contre Conseil" }
+    ] },
+    "solution": { "order": ["i0", "i1", "i2", "i3", "i4", "i5"] },
+    "explanation": "Pacte (1997), arrêt Commission contre Conseil (2004), crise de 2008, TSCG (2012), clause dérogatoire (2020), nouvelles règles (2024).",
+    "hint": "La crise sanitaire précède la refonte des règles.",
+    "concepts": ["pacte-stabilite", "tscg", "clause-derogatoire", "regles-2024"],
+    "source": "Cours, titre I, chapitre 3, section 2, II (p. 29-32)"
+  },
+  {
+    "chapterSlug": "regles-europeennes",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "La clause dérogatoire activée en mars 2020 a suspendu la présentation des programmes de stabilité.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "La clause permet de s'écarter temporairement des règles, mais ne suspend pas la surveillance : la France a remis son programme de stabilité en avril 2020.",
+    "hint": "La Commission n'est pas tenue à l'écart pendant la suspension.",
+    "concepts": ["clause-derogatoire"],
+    "source": "Cours, titre I, chapitre 3, section 2, II, C (p. 32)"
+  },
+  {
+    "chapterSlug": "regles-europeennes",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Que changent les règles budgétaires approuvées en 2024 ?",
+    "payload": { "options": [
+      { "id": "a", "label": "La surveillance porte sur un seul indicateur : l'évolution des dépenses" },
+      { "id": "b", "label": "Des plans nationaux sur 4 ans remplacent les programmes de stabilité" },
+      { "id": "c", "label": "Les investissements dans les domaines prioritaires sont mieux pris en compte" },
+      { "id": "d", "label": "Le seuil de déficit public passe à 4 % du PIB" },
+      { "id": "e", "label": "Le seuil de dette publique est supprimé" }
+    ] },
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "Les règles se concentrent sur les dépenses, s'appuient sur des plans nationaux évalués par la Commission et favorisent les investissements (écologie, énergie, défense, numérique). Les seuils de 3 %, 60 % et 0,5 % restent inchangés.",
+    "hint": "La méthode change, les seuils non.",
+    "concepts": ["regles-2024"],
+    "source": "Cours, titre I, chapitre 3, section 2, II, D (p. 32-33)"
+  },
+  {
+    "chapterSlug": "regles-europeennes",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque règle européenne à son seuil.",
+    "payload": {
+      "left": [
+        { "id": "l0", "label": "Déficit public" },
+        { "id": "l1", "label": "Dette publique" },
+        { "id": "l2", "label": "Déficit structurel" },
+        { "id": "l3", "label": "Désendettement annuel au-delà de 60 %" }
+      ],
+      "right": [
+        { "id": "r0", "label": "3 % du PIB" },
+        { "id": "r1", "label": "60 % du PIB" },
+        { "id": "r2", "label": "0,5 % du PIB" },
+        { "id": "r3", "label": "Un vingtième" }
+      ]
+    },
+    "solution": { "pairs": { "l0": "r0", "l1": "r1", "l2": "r2", "l3": "r3" } },
+    "explanation": "Maastricht fixe 3 % et 60 % ; le TSCG fixe 0,5 % de déficit structurel ; le renforcement du Pacte impose un désendettement d'un vingtième au-delà de 60 %.",
+    "hint": "Le seuil le plus bas vient du TSCG.",
+    "concepts": ["criteres-maastricht", "deficit-structurel", "pacte-stabilite"],
+    "source": "Cours, titre I, chapitre 3, section 2, II (p. 28-33)"
+  },
+  {
+    "chapterSlug": "regles-nationales-notation",
+    "type": "NUMERIC",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Selon le cours, combien de budgets ont été exécutés en équilibre depuis 1814 ?",
+    "payload": { "unit": "budgets" },
+    "solution": { "value": 37, "absTol": 0 },
+    "explanation": "En plus de deux siècles, seuls 37 budgets ont été exécutés en équilibre : la règle classique a vite été démentie par la pratique.",
+    "hint": "Moins d'une quarantaine, en plus de deux cents ans.",
+    "concepts": ["equilibre-budgetaire"],
+    "source": "Cours, titre I, chapitre 3, section 2, III (p. 33)"
+  },
+  {
+    "chapterSlug": "regles-nationales-notation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "De quelle année date le dernier budget exécuté en excédent ?",
+    "payload": { "options": [
+      { "id": "a", "label": "2019" },
+      { "id": "b", "label": "1974" },
+      { "id": "c", "label": "1999" },
+      { "id": "d", "label": "2008" }
+    ] },
+    "solution": { "correct": ["b"] },
+    "explanation": "Le dernier budget exécuté en excédent date de 1974, sous Valéry Giscard d'Estaing ; en 2019, la France respectait seulement le seuil de déficit de 3 %.",
+    "hint": "Sous la présidence de Valéry Giscard d'Estaing.",
+    "concepts": ["equilibre-budgetaire"],
+    "source": "Cours, titre I, chapitre 3, section 2, III (p. 33)"
+  },
+  {
+    "chapterSlug": "regles-nationales-notation",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Les lois de programmation des finances publiques s'imposent juridiquement au législateur.",
+    "payload": {},
+    "solution": { "value": false },
+    "explanation": "Les LPFP ne sont pas juridiquement contraignantes et ne s'imposent pas au législateur ; leur cadre s'émousse aussi passé la première année.",
+    "hint": "Le cours liste leurs limites.",
+    "concepts": ["lpfp"],
+    "source": "Cours, titre I, chapitre 3, section 2, III (p. 34)"
+  },
+  {
+    "chapterSlug": "regles-nationales-notation",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Qui préside le Haut Conseil des finances publiques ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Le ministre de l'Économie et des Finances" },
+      { "id": "b", "label": "Le président de la commission des finances de l'Assemblée nationale" },
+      { "id": "c", "label": "Le premier président de la Cour des comptes" },
+      { "id": "d", "label": "Le gouverneur de la Banque de France" }
+    ] },
+    "solution": { "correct": ["c"] },
+    "explanation": "Créé par la loi organique du 17 décembre 2012, le HCFP est un organe indépendant présidé par le premier président de la Cour des comptes ; il rend un avis sur le projet de loi de finances.",
+    "hint": "Un organe indépendant, lié à une juridiction financière.",
+    "concepts": ["hcfp"],
+    "source": "Cours, titre I, chapitre 3, section 2, III (p. 34)"
+  },
+  {
+    "chapterSlug": "regles-nationales-notation",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Que prévoit le code de bonne conduite du FMI en matière de transparence ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Définir clairement les responsabilités des activités publiques" },
+      { "id": "b", "label": "Donner au public l'accès à l'information" },
+      { "id": "c", "label": "Faire auditer les finances par un organe indépendant" },
+      { "id": "d", "label": "Faire noter chaque État par le FMI" },
+      { "id": "e", "label": "Garder secrètes les décisions budgétaires" }
+    ] },
+    "solution": { "correct": ["a", "b", "c"] },
+    "explanation": "Responsabilités claires, accès du public à l'information, audit indépendant (une Cour des comptes). La notation relève d'agences privées.",
+    "hint": "La transparence suppose de savoir qui décide, d'informer et de contrôler.",
+    "concepts": ["surveillance-multilaterale"],
+    "source": "Cours, titre I, chapitre 3, section 2, IV, A (p. 35)"
+  },
+  {
+    "chapterSlug": "regles-nationales-notation",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quels critères les agences de notation prennent-elles en compte pour noter un État ?",
+    "payload": { "options": [
+      { "id": "a", "label": "Le PIB par habitant" },
+      { "id": "b", "label": "Le rapport entre dette publique et recettes budgétaires" },
+      { "id": "c", "label": "Le taux d'inflation" },
+      { "id": "d", "label": "La stabilité politique" },
+      { "id": "e", "label": "L'histoire des défauts de paiement" },
+      { "id": "f", "label": "Le nombre de fonctionnaires" },
+      { "id": "g", "label": "La superficie du territoire" }
+    ] },
+    "solution": { "correct": ["a", "b", "c", "d", "e"] },
+    "explanation": "Le cours cite ces cinq critères. La note juge la capacité, mais aussi la volonté, de l'État à honorer ses engagements.",
+    "hint": "Richesse, endettement, prix, politique et passé.",
+    "concepts": ["agences-notation"],
+    "source": "Cours, titre I, chapitre 3, section 2, IV, B (p. 36-37)"
+  },
+  {
+    "chapterSlug": "regles-nationales-notation",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Plus la note d'un État est élevée, plus le taux d'intérêt auquel il emprunte est faible.",
+    "payload": {},
+    "solution": { "value": true },
+    "explanation": "Une meilleure note rend le placement de la dette plus facile et moins coûteux pour l'emprunteur.",
+    "hint": "La note mesure le risque pris par le prêteur.",
+    "concepts": ["agences-notation"],
+    "source": "Cours, titre I, chapitre 3, section 2, IV, B (p. 36)"
+  },
+  {
+    "chapterSlug": "regles-nationales-notation",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque critique ou réponse à son contenu.",
+    "payload": {
+      "left": [
+        { "id": "l0", "label": "Conflits d'intérêts" },
+        { "id": "l1", "label": "Oligopole" },
+        { "id": "l2", "label": "Irresponsabilité" },
+        { "id": "l3", "label": "Encadrement européen" }
+      ],
+      "right": [
+        { "id": "r0", "label": "Les agences sont payées par ceux qu'elles notent" },
+        { "id": "r1", "label": "Trois agences se partagent 90 % du marché" },
+        { "id": "r2", "label": "Elles ne répondent pas juridiquement de leurs erreurs" },
+        { "id": "r3", "label": "Un agrément de l'Autorité européenne des marchés financiers" }
+      ]
+    },
+    "solution": { "pairs": { "l0": "r0", "l1": "r1", "l2": "r2", "l3": "r3" } },
+    "explanation": "La crise de 2008 a révélé ces défauts ; les règlements de 2009 et 2011 soumettent les agences à l'agrément et au contrôle de l'AEMF.",
+    "hint": "Standard & Poor's, Fitch et Moody's dominent le marché.",
+    "concepts": ["agences-notation"],
+    "source": "Cours, titre I, chapitre 3, section 2, IV, B (p. 37)"
+  },
+  {
+    "chapterSlug": "regles-nationales-notation",
+    "type": "CASE_STUDY",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Cas d'entraînement : un État de la zone euro sous surveillance.",
+    "payload": {
+      "scenario": "Un État imaginaire de la zone euro affiche un déficit public de 4,2 % du PIB, une dette de 98 % du PIB et un déficit structurel de 1,5 % du PIB. Son gouvernement veut financer un vaste programme de défense. Une agence de notation vient d'abaisser sa note de AA à A+.",
+      "subQuestions": [
+        { "id": "q1", "type": "MCQ_MULTI", "prompt": "Quels seuils européens cet État dépasse-t-il ?", "payload": { "options": [
+          { "id": "a", "label": "Le seuil de déficit public" },
+          { "id": "b", "label": "Le seuil de dette publique" },
+          { "id": "c", "label": "Le seuil de déficit structurel" },
+          { "id": "d", "label": "Aucun, puisque les règles sont suspendues depuis 2020" }
+        ] } },
+        { "id": "q2", "type": "MCQ_SINGLE", "prompt": "Quel document présente-t-il désormais à Bruxelles ?", "payload": { "options": [
+          { "id": "a", "label": "Un programme de convergence" },
+          { "id": "b", "label": "Un plan national sur quatre ans" },
+          { "id": "c", "label": "Une loi de programmation" }
+        ] } },
+        { "id": "q3", "type": "TRUE_FALSE", "prompt": "La baisse de sa note devrait renchérir le coût de ses emprunts.", "payload": {} },
+        { "id": "q4", "type": "MCQ_SINGLE", "prompt": "Comment les règles de 2024 traitent-elles ses dépenses de défense ?", "payload": { "options": [
+          { "id": "a", "label": "Elles sont exclues de tout calcul de déficit" },
+          { "id": "b", "label": "Elles sont interdites au-delà d'un plafond fixé par Bruxelles" },
+          { "id": "c", "label": "Elles font partie des investissements prioritaires mieux pris en compte" }
+        ] } }
+      ]
+    },
+    "solution": { "subSolutions": [
+      { "id": "q1", "solution": { "correct": ["a", "b", "c"] } },
+      { "id": "q2", "solution": { "correct": ["b"] } },
+      { "id": "q3", "solution": { "value": true } },
+      { "id": "q4", "solution": { "correct": ["c"] } }
+    ] },
+    "explanation": "Q1 : 4,2 % dépasse 3 %, 98 % dépasse 60 %, 1,5 % dépasse 0,5 % ; la suspension de 2020 a pris fin avec les nouvelles règles appliquées depuis 2025. Q2 : les plans nationaux sur 4 ans remplacent les programmes de stabilité, et un État de la zone euro ne présente pas de programme de convergence. Q3 : une note plus basse signifie un taux d'intérêt plus élevé. Q4 : la défense fait partie des domaines prioritaires dont les investissements sont mieux pris en compte, sans être exclus des seuils.",
+    "hint": "Reprends les trois seuils, puis les règles de 2024 et le rôle de la note.",
+    "concepts": ["criteres-maastricht", "deficit-structurel", "regles-2024", "agences-notation"],
+    "source": "Cours, titre I, chapitre 3, section 2 (p. 28-38)"
+  },
+  {
+    "chapterSlug": "regles-nationales-notation",
+    "type": "WRITING",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "« Les règles européennes ont-elles réussi à discipliner les finances publiques nationales ? » Rédige un plan détaillé de dissertation.",
+    "payload": {
+      "modelAnswer": "Introduction : partir des déficits durables nés des chocs pétroliers et de l'effet de ciseau ; présenter le traité de Maastricht (3 % et 60 %). Problématique : un encadrement de plus en plus étroit a-t-il réellement contraint les États ?\n\nI. Un encadrement de plus en plus exigeant\nA. Des règles de discipline puis de surveillance : critères de convergence contre les passagers clandestins ; Pacte de 1997, volet préventif (programmes de stabilité ou de convergence) et correctif (dépôt de 0,2 % du PIB).\nB. Un renforcement après 2008 : semestre européen, procédure élargie à la dette (un vingtième), sanctions quasi automatiques, déséquilibres macroéconomiques ; TSCG et règle d'or (0,5 % de déficit structurel) ; en France, LPFP (2008) et HCFP (2012).\n\nII. Une discipline souvent contournée ou suspendue\nA. Des règles peu appliquées : procédure jamais menée à terme, crise France-Allemagne et arrêt de 2004, assouplissement de 2005 ; LPFP non contraignantes, mécanisme de correction jamais enclenché.\nB. Des règles adaptées aux crises : clause dérogatoire de 2020, nouvelles règles de 2024 centrées sur les dépenses et l'investissement ; la discipline des marchés relayée par les agences de notation (note de la France abaissée depuis 2024).\n\nConclusion : les règles européennes encadrent les budgets nationaux, mais leur efficacité dépend de la volonté des États ; la contrainte vient aussi des marchés.",
+      "rubric": [
+        { "id": "c0", "label": "Les critères de Maastricht et le Pacte de 1997 sont exposés avec précision" },
+        { "id": "c1", "label": "Le renforcement après 2008 et le TSCG sont mobilisés" },
+        { "id": "c2", "label": "Les limites (procédure jamais menée à terme, suspension, LPFP non contraignantes) sont discutées" },
+        { "id": "c3", "label": "La conclusion répond à la question posée" }
+      ]
+    },
+    "solution": {},
+    "explanation": "Ce plan n'est qu'un exemple d'entraînement, pas un corrigé officiel : d'autres plans sont possibles, pourvu qu'ils répondent à la question.",
+    "concepts": ["pacte-stabilite", "tscg", "lpfp", "regles-2024"],
+    "source": "Cours, titre I, chapitre 3, section 2 (p. 25-38)"
+  }
+]

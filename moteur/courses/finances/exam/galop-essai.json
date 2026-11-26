@@ -1,0 +1,680 @@
+{
+  "slug": "galop-essai",
+  "title": "Galop d'essai",
+  "description": "Modules 1 à 4, 60 minutes, noté sur 20. Douze questions sur 12 points et deux cas guidés sur 8 points. La dissertation se travaille dans les modules.",
+  "durationMinutes": 60,
+  "exercises": [
+    {
+      "chapterSlug": "finances-apu",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Selon le traité de Maastricht, quel est le plafond de la dette publique ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "3 % du PIB"
+          },
+          {
+            "id": "b",
+            "label": "60 % du PIB"
+          },
+          {
+            "id": "c",
+            "label": "100 % du PIB, seuil d'alerte de la Commission"
+          },
+          {
+            "id": "d",
+            "label": "0,5 % du PIB, en déficit structurel"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "b"
+        ]
+      },
+      "explanation": "Le traité de Maastricht limite le déficit public à 3 % du PIB et la dette publique à 60 % du PIB ; le seuil de 0,5 % vient du TSCG.",
+      "hint": "Deux critères budgétaires : l'un pour le déficit d'une année, l'autre pour le stock accumulé.",
+      "concepts": [
+        "criteres-maastricht"
+      ],
+      "source": "Cours, introduction, I (p. 3-4)"
+    },
+    {
+      "chapterSlug": "finances-apu",
+      "type": "TRUE_FALSE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Les administrations de sécurité sociale forment l'un des trois sous-secteurs des administrations publiques.",
+      "payload": {},
+      "solution": {
+        "value": true
+      },
+      "explanation": "Les APU comprennent trois sous-secteurs : les administrations publiques centrales (État et ODAC), les administrations de sécurité sociale (ASSO) et les administrations publiques locales (APUL).",
+      "hint": "Pense aux trois niveaux : central, social, local.",
+      "concepts": [
+        "sous-secteurs-apu"
+      ],
+      "source": "Cours, introduction, I (p. 3-4)"
+    },
+    {
+      "chapterSlug": "histoire-finances",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Sous l'Ancien Régime, à qui le recouvrement de l'impôt est-il confié ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "À des fermiers, qui gardent l'excédent"
+          },
+          {
+            "id": "b",
+            "label": "Aux parlements de province, qui votent l'impôt chaque année"
+          },
+          {
+            "id": "c",
+            "label": "À la Cour des comptes, chargée de contrôler l'emploi des fonds"
+          },
+          {
+            "id": "d",
+            "label": "Aux intendants, sous le contrôle des états généraux réunis chaque année"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "Le recouvrement est confié à des fermiers, qui avancent l'impôt au roi et gardent l'excédent, sans contrôle : ces abus mènent à la Révolution.",
+      "hint": "Un système sans contrôle, qui enrichit des particuliers.",
+      "concepts": [
+        "systeme-ferme"
+      ],
+      "source": "Cours, introduction, II, A (p. 5-6)"
+    },
+    {
+      "chapterSlug": "histoire-finances",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Quel principe l'article 13 de la Déclaration de 1789 pose-t-il ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Le consentement à l'impôt par les représentants"
+          },
+          {
+            "id": "b",
+            "label": "L'universalité et la proportionnalité de l'impôt"
+          },
+          {
+            "id": "c",
+            "label": "L'annualité du budget voté par les chambres"
+          },
+          {
+            "id": "d",
+            "label": "La séparation entre l'ordonnateur et le comptable public"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "b"
+        ]
+      },
+      "explanation": "L'article 13 pose l'universalité (la fin des privilèges) et la proportionnalité de l'impôt ; le consentement relève de l'article 14 ; l'annualité s'impose sous la Restauration.",
+      "hint": "L'article qui suit la nuit du 4 août et l'abolition des privilèges.",
+      "concepts": [
+        "universalite-impot",
+        "proportionnalite-impot"
+      ],
+      "source": "Cours, introduction, II, B (p. 6)"
+    },
+    {
+      "chapterSlug": "conception-liberale",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Que constate la loi de Wagner (1872) ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Les dépenses publiques augmentent par bonds, après les guerres et les crises"
+          },
+          {
+            "id": "b",
+            "label": "Trop d'impôt tue l'impôt, et les recettes de l'État finissent par baisser"
+          },
+          {
+            "id": "c",
+            "label": "Le budget doit être en équilibre strict, sans déficit ni excédent, chaque année civile"
+          },
+          {
+            "id": "d",
+            "label": "La dépense publique doit rester neutre et ne jamais influencer l'activité économique privée"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "Selon la loi de Wagner, les dépenses publiques augmentent de façon continue, par bonds après les guerres et les crises. L'équilibre strict et la neutralité sont d'autres traits du système classique.",
+      "hint": "Une loi sur l'évolution des dépenses dans le temps.",
+      "concepts": [
+        "loi-wagner"
+      ],
+      "source": "Cours, titre I, chapitre 1, section 2 (p. 9-11)"
+    },
+    {
+      "chapterSlug": "conception-liberale",
+      "type": "TRUE_FALSE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Dans le système classique, l'emprunt peut financer des dépenses d'investissement.",
+      "payload": {},
+      "solution": {
+        "value": true
+      },
+      "explanation": "L'équilibre classique interdit le déficit, sauf pour financer l'investissement, et refuse aussi l'excédent.",
+      "hint": "L'équilibre strict admet une exception.",
+      "concepts": [
+        "equilibre-budgetaire",
+        "systeme-classique"
+      ],
+      "source": "Cours, titre I, chapitre 1, section 2 (p. 9-11)"
+    },
+    {
+      "chapterSlug": "etat-providence",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Quel penseur associe le cours au solidarisme ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Léon Bourgeois"
+          },
+          {
+            "id": "b",
+            "label": "John Maynard Keynes"
+          },
+          {
+            "id": "c",
+            "label": "Adolph Wagner"
+          },
+          {
+            "id": "d",
+            "label": "Jean-Baptiste Say"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "Le solidarisme de Léon Bourgeois, avec la démocratie chrétienne, fait partie des doctrines sociales qui inspirent la loi de 1898 et les assurances sociales.",
+      "hint": "Un homme politique français de la IIIe République.",
+      "concepts": [
+        "doctrines-sociales"
+      ],
+      "source": "Cours, titre I, chapitre 2, section 1, III et IV (p. 12-14)"
+    },
+    {
+      "chapterSlug": "etat-providence",
+      "type": "TRUE_FALSE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "La crise de 1929 ramène l'État à son rôle d'État gendarme.",
+      "payload": {},
+      "solution": {
+        "value": false
+      },
+      "explanation": "La crise de 1929 impose au contraire l'intervention de l'État : New Deal aux États-Unis, grands travaux en France, doctrine de Keynes.",
+      "hint": "Pense au New Deal.",
+      "concepts": [
+        "etat-providence",
+        "new-deal"
+      ],
+      "source": "Cours, titre I, chapitre 2, section 1, I et II (p. 11-12)"
+    },
+    {
+      "chapterSlug": "principes-budgetaires",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Quel principe interdit d'affecter une recette précise à une dépense précise ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Le principe d'annualité budgétaire"
+          },
+          {
+            "id": "b",
+            "label": "L'universalité"
+          },
+          {
+            "id": "c",
+            "label": "Le principe de spécialité des crédits"
+          },
+          {
+            "id": "d",
+            "label": "La sincérité du budget"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "b"
+        ]
+      },
+      "explanation": "L'universalité comprend la non-compensation et la non-affectation : toutes les recettes vont dans un pot commun qui finance toutes les dépenses.",
+      "hint": "Pense à l'image du pot commun.",
+      "concepts": [
+        "universalite-budgetaire"
+      ],
+      "source": "Cours, titre I, chapitre 2, section 3, II (p. 18-19)"
+    },
+    {
+      "chapterSlug": "science-pluridisciplinaire",
+      "type": "MCQ_SINGLE",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Que désigne la soutenabilité des finances publiques ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "La capacité de l'État à honorer ses dettes sans faire faillite"
+          },
+          {
+            "id": "b",
+            "label": "L'obligation de présenter un budget vert chaque année depuis 2021"
+          },
+          {
+            "id": "c",
+            "label": "L'application par l'État des règles comptables des entreprises"
+          },
+          {
+            "id": "d",
+            "label": "La neutralité du budget à l'égard de l'activité économique"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "a"
+        ]
+      },
+      "explanation": "La soutenabilité est la capacité à financer durablement l'action publique sans faire faillite ; avec la logique de performance, elle caractérise les finances publiques d'aujourd'hui.",
+      "hint": "Une préoccupation née du poids de la dette.",
+      "concepts": [
+        "soutenabilite"
+      ],
+      "source": "Cours, titre I, chapitre 2, section 3, I (p. 16-17)"
+    },
+    {
+      "chapterSlug": "marche-interieur",
+      "type": "MCQ_SINGLE",
+      "difficulty": 1,
+      "points": 1,
+      "prompt": "Quel texte instaure le marché intérieur ?",
+      "payload": {
+        "options": [
+          {
+            "id": "a",
+            "label": "Le traité de Rome"
+          },
+          {
+            "id": "b",
+            "label": "L'Acte unique européen"
+          },
+          {
+            "id": "c",
+            "label": "Le traité de Maastricht"
+          },
+          {
+            "id": "d",
+            "label": "Le traité de Lisbonne"
+          }
+        ]
+      },
+      "solution": {
+        "correct": [
+          "b"
+        ]
+      },
+      "explanation": "Le marché intérieur est instauré par l'Acte unique européen, entré en vigueur le 1er juillet 1987, première grande révision du traité de Rome.",
+      "hint": "La première grande révision du traité de Rome.",
+      "concepts": [
+        "marche-interieur"
+      ],
+      "source": "Cours, titre I, chapitre 3, section 1 (p. 20-21)"
+    },
+    {
+      "chapterSlug": "privatisations-liberalisation",
+      "type": "MATCHING",
+      "difficulty": 2,
+      "points": 1,
+      "prompt": "Associe chaque étape à sa date.",
+      "payload": {
+        "left": [
+          {
+            "id": "l0",
+            "label": "Première grande vague de privatisations"
+          },
+          {
+            "id": "l1",
+            "label": "Création de l'Agence des participations de l'État"
+          },
+          {
+            "id": "l2",
+            "label": "Libéralisation des télécommunications"
+          },
+          {
+            "id": "l3",
+            "label": "Libéralisation du secteur postal"
+          }
+        ],
+        "right": [
+          {
+            "id": "r0",
+            "label": "1986"
+          },
+          {
+            "id": "r1",
+            "label": "2004"
+          },
+          {
+            "id": "r2",
+            "label": "1er janvier 1998"
+          },
+          {
+            "id": "r3",
+            "label": "1er janvier 2006"
+          }
+        ]
+      },
+      "solution": {
+        "pairs": {
+          "l0": "r0",
+          "l1": "r1",
+          "l2": "r2",
+          "l3": "r3"
+        }
+      },
+      "explanation": "Privatisations à partir de 1986 sous Jacques Chirac ; APE en 2004 ; télécommunications ouvertes le 1er janvier 1998, secteur postal le 1er janvier 2006.",
+      "hint": "Les privatisations commencent avec la première cohabitation.",
+      "concepts": [
+        "privatisation",
+        "ape",
+        "liberalisation"
+      ],
+      "source": "Cours, titre I, chapitre 3, section 1 (p. 21-25)"
+    },
+    {
+      "chapterSlug": "principes-budgetaires",
+      "type": "CASE_STUDY",
+      "difficulty": 3,
+      "points": 4,
+      "prompt": "Cas guidé : un projet de budget contesté.",
+      "payload": {
+        "scenario": "Un gouvernement présente un projet de budget fondé sur une prévision de croissance qu'il sait trop optimiste. Il veut affecter tout le produit d'une nouvelle taxe sur les sodas aux hôpitaux, confier une grande partie de ses dépenses d'équipement à une agence dont les comptes resteront hors du budget, et faire voter le budget pour deux ans.",
+        "subQuestions": [
+          {
+            "id": "q1",
+            "type": "MCQ_SINGLE",
+            "prompt": "Quel principe méconnaît une prévision volontairement trop optimiste ?",
+            "payload": {
+              "options": [
+                {
+                  "id": "a",
+                  "label": "La sincérité budgétaire"
+                },
+                {
+                  "id": "b",
+                  "label": "La spécialité des crédits par ministère"
+                },
+                {
+                  "id": "c",
+                  "label": "L'unité du document budgétaire"
+                }
+              ]
+            }
+          },
+          {
+            "id": "q2",
+            "type": "TRUE_FALSE",
+            "prompt": "Affecter le produit de la taxe aux hôpitaux respecte la règle de non-affectation.",
+            "payload": {}
+          },
+          {
+            "id": "q3",
+            "type": "MCQ_SINGLE",
+            "prompt": "Comment appelle-t-on le fait de sortir des dépenses du budget en les confiant à une agence ?",
+            "payload": {
+              "options": [
+                {
+                  "id": "a",
+                  "label": "La débudgétisation"
+                },
+                {
+                  "id": "b",
+                  "label": "La globalisation des crédits du ministère"
+                },
+                {
+                  "id": "c",
+                  "label": "La péréquation entre les administrations"
+                }
+              ]
+            }
+          },
+          {
+            "id": "q4",
+            "type": "MCQ_SINGLE",
+            "prompt": "Quel principe méconnaît un budget voté pour deux ans ?",
+            "payload": {
+              "options": [
+                {
+                  "id": "a",
+                  "label": "L'annualité"
+                },
+                {
+                  "id": "b",
+                  "label": "La proportionnalité de l'impôt"
+                },
+                {
+                  "id": "c",
+                  "label": "La neutralité économique du budget"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "solution": {
+        "subSolutions": [
+          {
+            "id": "q1",
+            "solution": {
+              "correct": [
+                "a"
+              ]
+            }
+          },
+          {
+            "id": "q2",
+            "solution": {
+              "value": false
+            }
+          },
+          {
+            "id": "q3",
+            "solution": {
+              "correct": [
+                "a"
+              ]
+            }
+          },
+          {
+            "id": "q4",
+            "solution": {
+              "correct": [
+                "a"
+              ]
+            }
+          }
+        ]
+      },
+      "explanation": "Q1 : la sincérité exclut l'intention de fausser l'équilibre ; les prévisions doivent reposer sur les informations disponibles. Q2 : la non-affectation, composante de l'universalité, interdit de réserver une recette à une dépense. Q3 : sortir des dépenses du budget est une débudgétisation, que la sincérité vise à combattre. Q4 : le budget est voté chaque année, pour l'année civile.",
+      "hint": "Reprends un à un les principes budgétaires : annualité, spécialité, unité, universalité, sincérité.",
+      "concepts": [
+        "sincerite-budgetaire",
+        "universalite-budgetaire",
+        "debudgetisation",
+        "annualite-budgetaire"
+      ],
+      "source": "Cours, titre I, chapitre 2, section 3, II (p. 17-19)"
+    },
+    {
+      "chapterSlug": "privatisations-liberalisation",
+      "type": "CASE_STUDY",
+      "difficulty": 3,
+      "points": 4,
+      "prompt": "Cas guidé : sauver un constructeur automobile.",
+      "payload": {
+        "scenario": "Pendant une grave crise économique, un constructeur automobile national manque de liquidités. Le gouvernement français veut lui verser une subvention et entrer à son capital. Il envisage aussi d'ouvrir à la concurrence la fourniture d'électricité.",
+        "subQuestions": [
+          {
+            "id": "q1",
+            "type": "MCQ_SINGLE",
+            "prompt": "Quel article du TFUE encadre ces aides ?",
+            "payload": {
+              "options": [
+                {
+                  "id": "a",
+                  "label": "L'article 107"
+                },
+                {
+                  "id": "b",
+                  "label": "L'article 119"
+                },
+                {
+                  "id": "c",
+                  "label": "L'article 288"
+                }
+              ]
+            }
+          },
+          {
+            "id": "q2",
+            "type": "MCQ_SINGLE",
+            "prompt": "Quelle institution contrôle ces aides ?",
+            "payload": {
+              "options": [
+                {
+                  "id": "a",
+                  "label": "La Commission européenne"
+                },
+                {
+                  "id": "b",
+                  "label": "La Cour des comptes"
+                },
+                {
+                  "id": "c",
+                  "label": "Le Conseil constitutionnel"
+                }
+              ]
+            }
+          },
+          {
+            "id": "q3",
+            "type": "TRUE_FALSE",
+            "prompt": "Une aide destinée à remédier à une perturbation grave de l'économie peut être autorisée.",
+            "payload": {}
+          },
+          {
+            "id": "q4",
+            "type": "MCQ_MULTI",
+            "prompt": "Que prévoit le cadre européen de la libéralisation de l'électricité ?",
+            "payload": {
+              "options": [
+                {
+                  "id": "a",
+                  "label": "Un service universel"
+                },
+                {
+                  "id": "b",
+                  "label": "Le maintien du réseau en monopole"
+                },
+                {
+                  "id": "c",
+                  "label": "Une autorité de régulation"
+                },
+                {
+                  "id": "d",
+                  "label": "La privatisation obligatoire du réseau"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "solution": {
+        "subSolutions": [
+          {
+            "id": "q1",
+            "solution": {
+              "correct": [
+                "a"
+              ]
+            }
+          },
+          {
+            "id": "q2",
+            "solution": {
+              "correct": [
+                "a"
+              ]
+            }
+          },
+          {
+            "id": "q3",
+            "solution": {
+              "value": true
+            }
+          },
+          {
+            "id": "q4",
+            "solution": {
+              "correct": [
+                "a",
+                "b",
+                "c"
+              ]
+            }
+          }
+        ]
+      },
+      "explanation": "Q1 : l'article 107 du TFUE interdit les aides qui faussent la concurrence ; l'article 119 pose l'économie de marché. Q2 : la Commission contrôle les aides, qui lui sont notifiées. Q3 : l'article 107, paragraphe 3, permet de remédier à une perturbation grave, comme pendant la crise sanitaire (recapitalisations). Q4 : service universel, réseau en monopole et services ouverts, régulateur ; rien n'impose de privatiser le réseau.",
+      "hint": "Distingue l'encadrement des aides d'État et la libéralisation des services en réseau.",
+      "concepts": [
+        "aides-etat",
+        "liberalisation",
+        "service-universel"
+      ],
+      "source": "Cours, titre I, chapitre 3, section 1, II et III (p. 24-25)"
+    }
+  ]
+}

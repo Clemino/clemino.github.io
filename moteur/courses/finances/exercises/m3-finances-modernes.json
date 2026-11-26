@@ -1,0 +1,854 @@
+[
+  {
+    "chapterSlug": "science-pluridisciplinaire",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Comment le cours définit-il la soutenabilité des finances publiques ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "L'égalité des dépenses et des recettes"
+        },
+        {
+          "id": "b",
+          "label": "La capacité d'un État à ne pas faire faillite et à honorer ses engagements futurs"
+        },
+        {
+          "id": "c",
+          "label": "Le respect par l'État, chaque année, du seuil de déficit de 3 % du PIB fixé par le traité de Maastricht"
+        },
+        {
+          "id": "d",
+          "label": "La neutralité économique du budget"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "La soutenabilité vise la capacité d'un État à conserver des marges de manœuvre pour honorer ses engagements futurs : charge de la dette, santé, retraites. L'équilibre et le seuil de 3 % sont des règles, pas sa définition.",
+    "hint": "La notion regarde vers l'avenir de l'État, pas vers l'équilibre d'une seule année.",
+    "concepts": [
+      "soutenabilite"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, I (p. 16-17)"
+  },
+  {
+    "chapterSlug": "science-pluridisciplinaire",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque auteur ou courant à son apport aux finances publiques.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Jean-Baptiste Say"
+        },
+        {
+          "id": "l1",
+          "label": "Gaston Jèze"
+        },
+        {
+          "id": "l2",
+          "label": "New Public Management"
+        },
+        {
+          "id": "l3",
+          "label": "Sociologie fiscale"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "La loi des débouchés"
+        },
+        {
+          "id": "r1",
+          "label": "Une définition juridique de l'impôt"
+        },
+        {
+          "id": "r2",
+          "label": "Le lien entre budgets publics et efficacité de l'action publique"
+        },
+        {
+          "id": "r3",
+          "label": "Les comportements des contribuables face à l'impôt"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "Économie, droit, gestion et sociologie : les finances publiques sont une science pluridisciplinaire.",
+    "hint": "Les finances publiques empruntent à l'économie, au droit, à la gestion et à la sociologie.",
+    "concepts": [
+      "finances-modernes"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, I (p. 17)"
+  },
+  {
+    "chapterSlug": "science-pluridisciplinaire",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "La prévision de croissance fixée par le gouvernement pèse aussi sur les dépenses sociales, et pas seulement sur les recettes.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Les dépenses sociales sont sensibles à la conjoncture : en période de croissance, les entreprises recrutent et ces dépenses se réduisent. La prévision sert aussi à évaluer les recettes, comme la TVA.",
+    "hint": "Pense à l'effet de la croissance sur l'emploi.",
+    "concepts": [
+      "finances-modernes"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, I (p. 16)"
+  },
+  {
+    "chapterSlug": "science-pluridisciplinaire",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Que marque l'insertion des finances publiques dans l'économie au XXe siècle ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le retour à l'État gendarme"
+        },
+        {
+          "id": "b",
+          "label": "L'abandon du principe d'annualité"
+        },
+        {
+          "id": "c",
+          "label": "La disparition du contrôle du Parlement sur les choix budgétaires"
+        },
+        {
+          "id": "d",
+          "label": "La fin de la neutralité économique du budget"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "L'interventionnisme dépasse la conception juridique, technique et comptable du XIXe siècle : les finances publiques agissent désormais sur l'économie, ce qui met fin à leur neutralité.",
+    "hint": "Repense aux quatre traits du système financier classique.",
+    "concepts": [
+      "finances-modernes"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, I (p. 16)"
+  },
+  {
+    "chapterSlug": "science-pluridisciplinaire",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quels engagements futurs le cours cite-t-il à propos de la soutenabilité ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La charge de la dette"
+        },
+        {
+          "id": "b",
+          "label": "La santé"
+        },
+        {
+          "id": "c",
+          "label": "Les retraites"
+        },
+        {
+          "id": "d",
+          "label": "Les aides aux start-up innovantes"
+        },
+        {
+          "id": "e",
+          "label": "Les subventions à la presse"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Garder des marges suffisantes pour payer les intérêts de la dette, la santé et les retraites : c'est le cœur de la soutenabilité. Les aides aux start-up et à la presse sont des aides économiques, pas des engagements cités à ce titre.",
+    "hint": "Le cours cite trois postes que l'État devra assurer quoi qu'il arrive.",
+    "concepts": [
+      "soutenabilite"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, I (p. 17)"
+  },
+  {
+    "chapterSlug": "science-pluridisciplinaire",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "La logique de la performance vise aussi à renforcer les pouvoirs du Parlement par rapport au gouvernement.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Née du niveau élevé des dépenses et de l'endettement, la logique de la performance vise une meilleure gestion des fonds publics et un Parlement plus fort, pour rendre compte démocratiquement de l'usage des impôts.",
+    "hint": "Pense à qui doit rendre compte de l'usage des impôts, et devant qui.",
+    "concepts": [
+      "logique-performance"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, I (p. 16-17)"
+  },
+  {
+    "chapterSlug": "principes-budgetaires",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque principe budgétaire à ce qu'il impose.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Annualité"
+        },
+        {
+          "id": "l1",
+          "label": "Spécialité"
+        },
+        {
+          "id": "l2",
+          "label": "Unité"
+        },
+        {
+          "id": "l3",
+          "label": "Universalité"
+        },
+        {
+          "id": "l4",
+          "label": "Équilibre"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Le budget est voté chaque année"
+        },
+        {
+          "id": "r1",
+          "label": "L'objet de chaque dépense est clairement indiqué"
+        },
+        {
+          "id": "r2",
+          "label": "Toutes les dépenses et recettes figurent dans un document unique"
+        },
+        {
+          "id": "r3",
+          "label": "Ni compensation ni affectation des recettes"
+        },
+        {
+          "id": "r4",
+          "label": "Les dépenses et les recettes s'égalisent"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3",
+        "l4": "r4"
+      }
+    },
+    "explanation": "Les cinq grands principes budgétaires, formalisés sous la Restauration, auxquels la LOLF ajoute la sincérité.",
+    "hint": "Unité et universalité se distinguent : l'une parle du document, l'autre de son contenu.",
+    "concepts": [
+      "annualite-budgetaire",
+      "specialite-budgetaire",
+      "unite-budgetaire",
+      "universalite-budgetaire",
+      "equilibre-budgetaire"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, II (p. 17-18)"
+  },
+  {
+    "chapterSlug": "principes-budgetaires",
+    "type": "MCQ_MULTI",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Selon quels critères peut-on définir l'objet d'une dépense, au titre de la spécialité ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La personne qui décide de la dépense"
+        },
+        {
+          "id": "b",
+          "label": "La nature de la dépense"
+        },
+        {
+          "id": "c",
+          "label": "La finalité de la dépense"
+        },
+        {
+          "id": "d",
+          "label": "La recette qui lui est affectée"
+        },
+        {
+          "id": "e",
+          "label": "La date de son paiement"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Par la personne (le ministre), par la nature (fonctionnement, investissement, transfert) ou par la finalité (l'environnement). Affecter une recette à une dépense est au contraire interdit par la non-affectation.",
+    "hint": "La spécialité porte sur l'objet des dépenses, pas sur les recettes.",
+    "concepts": [
+      "specialite-budgetaire"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, II (p. 18)"
+  },
+  {
+    "chapterSlug": "principes-budgetaires",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complète la phrase.",
+    "payload": {
+      "template": "Depuis 2021, un budget {{a}} mesure l'impact des dépenses publiques sur l'environnement.",
+      "slots": [
+        {
+          "id": "a",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "a": [
+          "vert"
+        ]
+      }
+    },
+    "explanation": "Le budget vert classe les dépenses selon leur impact sur l'environnement ; certaines sont neutres. Il illustre la spécialité par la finalité.",
+    "hint": "Le cours le rattache au critère de la finalité de la dépense.",
+    "concepts": [
+      "specialite-budgetaire"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, II (p. 18)"
+  },
+  {
+    "chapterSlug": "principes-budgetaires",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "La règle de non-affectation permet à un ministère de garder pour lui les recettes qu'il perçoit.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "C'est l'inverse : aucun ministère ne peut s'approprier une recette ; elle est versée au pot commun pour servir l'intérêt général, ce qui permet un arbitrage d'ensemble.",
+    "hint": "L'universalité permet un arbitrage d'ensemble entre dépenses et recettes.",
+    "concepts": [
+      "universalite-budgetaire"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, II (p. 18)"
+  },
+  {
+    "chapterSlug": "principes-budgetaires",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quelles sont les deux règles de l'universalité budgétaire ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "L'annualité et la spécialité"
+        },
+        {
+          "id": "b",
+          "label": "La non-compensation et la non-affectation"
+        },
+        {
+          "id": "c",
+          "label": "L'unité et la sincérité"
+        },
+        {
+          "id": "d",
+          "label": "La non-compensation et le strict équilibre des comptes de l'État"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "Toutes les dépenses et recettes sont inscrites sans compensation, et aucune recette n'est affectée à une dépense. L'équilibre est un principe distinct.",
+    "hint": "L'unité porte sur le document, l'universalité sur son contenu.",
+    "concepts": [
+      "universalite-budgetaire"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, II (p. 18)"
+  },
+  {
+    "chapterSlug": "principes-budgetaires",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Aujourd'hui, l'équilibre budgétaire est pour l'État un objectif vers lequel tendre, et non une règle stricte.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Depuis l'encadrement européen des finances publiques, l'équilibre est un objectif pour l'État ; le budget tient compte chaque année de la conjoncture. Pour les collectivités, en revanche, c'est une obligation.",
+    "hint": "Pense à l'encadrement européen des finances publiques.",
+    "concepts": [
+      "equilibre-budgetaire"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, II (p. 18) ; introduction (p. 4)"
+  },
+  {
+    "chapterSlug": "principes-budgetaires",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quel texte a aménagé les grands principes budgétaires, devenus inadaptés à l'État interventionniste ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "La Déclaration des droits de l'homme et du citoyen"
+        },
+        {
+          "id": "b",
+          "label": "Le traité de Maastricht"
+        },
+        {
+          "id": "c",
+          "label": "L'ordonnance du 2 janvier 1959"
+        },
+        {
+          "id": "d",
+          "label": "Le décret du 31 mai 1862"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "L'ordonnance du 2 janvier 1959 a aménagé les principes, surtout pour l'exécution de la loi de finances ; la LOLF de 2001 les a repris en encadrant davantage leurs exceptions.",
+    "hint": "Ce texte a longtemps servi à élaborer les lois de finances, avant la LOLF.",
+    "concepts": [
+      "annualite-budgetaire",
+      "specialite-budgetaire",
+      "unite-budgetaire",
+      "universalite-budgetaire",
+      "equilibre-budgetaire"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, II (p. 19)"
+  },
+  {
+    "chapterSlug": "principes-budgetaires",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Quel triple objectif visaient les cinq grands principes budgétaires ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Assurer une gestion claire et honnête des finances publiques"
+        },
+        {
+          "id": "b",
+          "label": "Consacrer la prééminence du Parlement"
+        },
+        {
+          "id": "c",
+          "label": "Disposer d'informations justes pour contrôler l'exécutif"
+        },
+        {
+          "id": "d",
+          "label": "Permettre au gouvernement d'adapter le budget à la conjoncture"
+        },
+        {
+          "id": "e",
+          "label": "Garantir la soutenabilité des finances publiques"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Les principes limitaient les moyens d'action du gouvernement au profit du Parlement. L'adaptation à la conjoncture et la soutenabilité relèvent des finances publiques modernes, pas des principes classiques.",
+    "hint": "Ces principes ont été conçus par un Parlement qui voulait contrôler l'exécutif.",
+    "concepts": [
+      "annualite-budgetaire",
+      "specialite-budgetaire",
+      "unite-budgetaire",
+      "universalite-budgetaire",
+      "equilibre-budgetaire"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, II (p. 19)"
+  },
+  {
+    "chapterSlug": "principes-budgetaires",
+    "type": "FILL_BLANK",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Complète la phrase.",
+    "payload": {
+      "template": "La décision n° 94-351 DC du 29 décembre 1994 limite la {{a}} : ne pas inscrire dans la loi de finances des dépenses qui devraient y figurer.",
+      "slots": [
+        {
+          "id": "a",
+          "width": "lg"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "a": [
+          "débudgétisation",
+          "debudgetisation"
+        ]
+      }
+    },
+    "explanation": "La débudgétisation porte souvent sur des dépenses obligatoires, comme les retraites ; la jurisprudence du Conseil constitutionnel, codifiée par la LOLF, la limite au nom de la sincérité.",
+    "hint": "Ce sont souvent des dépenses obligatoires, comme les retraites.",
+    "concepts": [
+      "debudgetisation",
+      "sincerite-budgetaire"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, II (p. 19)"
+  },
+  {
+    "chapterSlug": "principes-budgetaires",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Le principe de sincérité budgétaire a été ajouté par l'ordonnance du 2 janvier 1959.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "C'est la LOLF du 1er août 2001 qui ajoute la sincérité, en codifiant la jurisprudence du Conseil constitutionnel.",
+    "hint": "Le principe découle de la jurisprudence du Conseil constitutionnel.",
+    "concepts": [
+      "sincerite-budgetaire"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, II (p. 19)"
+  },
+  {
+    "chapterSlug": "principes-budgetaires",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Comment le cours définit-il la sincérité budgétaire ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "L'absence d'intention de fausser les grandes lignes de l'équilibre budgétaire"
+        },
+        {
+          "id": "b",
+          "label": "L'exactitude parfaite des prévisions de recettes"
+        },
+        {
+          "id": "c",
+          "label": "L'obligation de voter un budget en équilibre"
+        },
+        {
+          "id": "d",
+          "label": "L'application à l'État des principes et procédures comptables des entreprises privées"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La sincérité budgétaire ne garantit pas des prévisions exactes : elle exige qu'elles reposent sur les informations disponibles, sans intention de fausser l'équilibre. L'application des règles des entreprises, c'est la sincérité comptable.",
+    "hint": "Ne confonds ni sincérité et exactitude, ni sincérité budgétaire et sincérité comptable.",
+    "concepts": [
+      "sincerite-budgetaire",
+      "sincerite-comptable"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, II (p. 19)"
+  },
+  {
+    "chapterSlug": "principes-budgetaires",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Remets ces étapes dans l'ordre chronologique.",
+    "payload": {
+      "items": [
+        {
+          "id": "i2",
+          "label": "Décision du Conseil constitutionnel contre la débudgétisation"
+        },
+        {
+          "id": "i0",
+          "label": "Formalisation des grands principes budgétaires sous la Restauration"
+        },
+        {
+          "id": "i4",
+          "label": "Création du budget vert"
+        },
+        {
+          "id": "i1",
+          "label": "Ordonnance du 2 janvier 1959"
+        },
+        {
+          "id": "i3",
+          "label": "Loi organique relative aux lois de finances (LOLF)"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "i0",
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ]
+    },
+    "explanation": "Restauration (XIXe siècle), ordonnance de 1959, décision 94-351 DC (1994), LOLF (2001), budget vert (2021).",
+    "hint": "La jurisprudence précède le texte qui la codifie.",
+    "concepts": [
+      "sincerite-budgetaire",
+      "debudgetisation"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, II (p. 17-19)"
+  },
+  {
+    "chapterSlug": "principes-budgetaires",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "À quoi sert la sincérité comptable ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "À interdire tout déficit"
+        },
+        {
+          "id": "b",
+          "label": "À affecter chaque recette au ministère qui la perçoit"
+        },
+        {
+          "id": "c",
+          "label": "À voter le budget chaque année"
+        },
+        {
+          "id": "d",
+          "label": "À donner une image fidèle du patrimoine de l'État"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "Elle applique à l'État les règles comptables des entreprises : comme un bilan, elle montre ce qu'il a et ce qu'il doit.",
+    "hint": "Elle applique à l'État des règles venues du privé.",
+    "concepts": [
+      "sincerite-comptable"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, II (p. 19)"
+  },
+  {
+    "chapterSlug": "principes-budgetaires",
+    "type": "CASE_STUDY",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Cas d'entraînement : un projet de loi de finances contestable.",
+    "payload": {
+      "scenario": "Un gouvernement imaginaire présente son projet de loi de finances. Les amendes routières y sont directement réservées aux dépenses du ministère de l'Intérieur. Une dépense de retraites de 3 milliards d'euros est laissée hors de la loi de finances et confiée à un organisme extérieur. Le texte retient une croissance de 4 %, alors que toutes les prévisions disponibles annoncent 1 %. Enfin, le budget serait voté pour deux ans.",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quelle règle la réservation des amendes au ministère de l'Intérieur méconnaît-elle ?",
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "La non-affectation"
+              },
+              {
+                "id": "b",
+                "label": "La spécialité"
+              },
+              {
+                "id": "c",
+                "label": "L'annualité"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "Comment s'appelle le fait de laisser la dépense de retraites hors de la loi de finances ?",
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "La fongibilité"
+              },
+              {
+                "id": "b",
+                "label": "La débudgétisation"
+              },
+              {
+                "id": "c",
+                "label": "La compensation"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "TRUE_FALSE",
+          "prompt": "Une prévision de croissance délibérément irréaliste peut méconnaître le principe de sincérité budgétaire.",
+          "payload": {}
+        },
+        {
+          "id": "q4",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quel principe le vote pour deux ans méconnaît-il ?",
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "L'unité"
+              },
+              {
+                "id": "b",
+                "label": "L'universalité"
+              },
+              {
+                "id": "c",
+                "label": "L'annualité"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "correct": [
+              "b"
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "value": true
+          }
+        },
+        {
+          "id": "q4",
+          "solution": {
+            "correct": [
+              "c"
+            ]
+          }
+        }
+      ]
+    },
+    "explanation": "Q1 : réserver une recette à une dépense méconnaît la non-affectation, règle de l'universalité. Q2 : c'est la débudgétisation, que limite la décision 94-351 DC. Q3 : la sincérité exige des prévisions fondées sur les informations disponibles, sans intention de fausser l'équilibre. Q4 : le budget de l'État est voté chaque année.",
+    "hint": "Pour chaque mesure, cherche le principe budgétaire qu'elle heurte.",
+    "concepts": [
+      "universalite-budgetaire",
+      "debudgetisation",
+      "sincerite-budgetaire",
+      "annualite-budgetaire"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3, II (p. 17-19)"
+  },
+  {
+    "chapterSlug": "principes-budgetaires",
+    "type": "WRITING",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "« Les principes budgétaires classiques sont-ils encore adaptés aux finances publiques modernes ? » Rédige un plan détaillé de dissertation.",
+    "payload": {
+      "modelAnswer": "Introduction : présenter les cinq principes formalisés sous la Restauration, pour des finances limitées et un État libéral ; rappeler l'insertion des finances publiques dans l'économie au XXe siècle. Problématique : ces principes ont-ils été dépassés, ou seulement adaptés ?\n\nI. Des principes conçus pour un État libéral, mis à l'épreuve\nA. Le sens des principes : annualité, spécialité (par personne, nature, finalité ; aujourd'hui le budget vert), unité, universalité (non-compensation, non-affectation), équilibre ; un triple objectif (gestion claire, prééminence du Parlement, contrôle de l'exécutif).\nB. Leur inadaptation à l'État interventionniste : fin de la neutralité, budget dépendant de la conjoncture ; l'équilibre devenu un simple objectif pour l'État depuis l'encadrement européen.\n\nII. Des principes aménagés et renforcés\nA. Les aménagements : l'ordonnance du 2 janvier 1959, surtout pour l'exécution de la loi de finances et la gestion quotidienne.\nB. Le renforcement : la LOLF de 2001 encadre les exceptions et ajoute la sincérité (jurisprudence 94-351 DC contre la débudgétisation) ; la sincérité comptable ; le rééquilibrage au profit du Parlement et la logique de la performance.\n\nConclusion : les principes demeurent, mais leur sens a changé : d'outils de limitation de l'État, ils deviennent des outils de transparence et de performance.",
+      "rubric": [
+        {
+          "id": "c0",
+          "label": "Les cinq principes classiques sont définis avec précision"
+        },
+        {
+          "id": "c1",
+          "label": "Leur inadaptation à l'État interventionniste est expliquée"
+        },
+        {
+          "id": "c2",
+          "label": "L'ordonnance de 1959 et la LOLF (sincérité) sont mobilisées"
+        },
+        {
+          "id": "c3",
+          "label": "La conclusion répond à la question posée"
+        }
+      ]
+    },
+    "solution": {},
+    "explanation": "Ce plan n'est qu'un exemple d'entraînement, pas un corrigé officiel : d'autres plans sont possibles, pourvu qu'ils répondent à la question.",
+    "concepts": [
+      "annualite-budgetaire",
+      "sincerite-budgetaire",
+      "finances-modernes"
+    ],
+    "source": "Cours, titre I, chapitre 2, section 3 (p. 16-19)"
+  }
+]

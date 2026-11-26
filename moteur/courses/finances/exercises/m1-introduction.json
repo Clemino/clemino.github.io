@@ -1,0 +1,899 @@
+[
+  {
+    "chapterSlug": "finances-apu",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quel niveau la dépense publique a-t-elle atteint en France en 2020 ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "55,2 % du PIB"
+        },
+        {
+          "id": "b",
+          "label": "61,3 % du PIB"
+        },
+        {
+          "id": "c",
+          "label": "57,3 % du PIB"
+        },
+        {
+          "id": "d",
+          "label": "47 % du PIB"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "b"
+      ]
+    },
+    "explanation": "61,3 % du PIB en 2020, le niveau le plus élevé de l'OCDE. 55,2 % est le niveau d'avant crise, 57,3 % celui de 2023, et 47 % environ celui des prélèvements obligatoires.",
+    "hint": "Pense aux deux causes de la hausse : dépenses exceptionnelles et baisse des recettes.",
+    "concepts": [
+      "depense-publique"
+    ],
+    "source": "Cours, introduction (p. 1)"
+  },
+  {
+    "chapterSlug": "finances-apu",
+    "type": "MCQ_MULTI",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Quels déficits budgétaires composent le déficit public ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le déficit de l'État"
+        },
+        {
+          "id": "b",
+          "label": "Le déficit des collectivités territoriales"
+        },
+        {
+          "id": "c",
+          "label": "Le déficit de la sécurité sociale"
+        },
+        {
+          "id": "d",
+          "label": "Le déficit commercial avec l'étranger"
+        },
+        {
+          "id": "e",
+          "label": "Le déficit des entreprises privées"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c"
+      ]
+    },
+    "explanation": "Le déficit public est la somme de trois déficits budgétaires : ceux de l'État, des collectivités territoriales et de la sécurité sociale. Le commerce extérieur et les entreprises privées n'en font pas partie.",
+    "hint": "Pense aux administrations que vise le traité de Maastricht.",
+    "concepts": [
+      "deficit-public"
+    ],
+    "source": "Cours, introduction (p. 2)"
+  },
+  {
+    "chapterSlug": "finances-apu",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "La dette publique correspond au seul déficit de l'année en cours.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "La dette publique, ce sont les déficits budgétaires passés auxquels s'ajoute le déficit de l'année. Seule la charge de la dette, les intérêts, parvient à être remboursée.",
+    "hint": "Demande-toi ce que deviennent les déficits des années précédentes.",
+    "concepts": [
+      "dette-publique"
+    ],
+    "source": "Cours, introduction (p. 2)"
+  },
+  {
+    "chapterSlug": "finances-apu",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque grandeur à sa valeur selon le cours.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Déficit public de la France en 2024"
+        },
+        {
+          "id": "l1",
+          "label": "Dette publique de la France en 2024"
+        },
+        {
+          "id": "l2",
+          "label": "Plafond de déficit fixé à Maastricht"
+        },
+        {
+          "id": "l3",
+          "label": "Plafond de dette fixé à Maastricht"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "5,8 % du PIB"
+        },
+        {
+          "id": "r1",
+          "label": "113 % du PIB"
+        },
+        {
+          "id": "r2",
+          "label": "3 % du PIB"
+        },
+        {
+          "id": "r3",
+          "label": "60 % du PIB"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2",
+        "l3": "r3"
+      }
+    },
+    "explanation": "En 2024, la France dépasse largement les deux critères de Maastricht : 5,8 % de déficit (169,6 milliards) et 113 % de dette (3 305,3 milliards).",
+    "hint": "La dette française dépasse le PIB lui-même.",
+    "concepts": [
+      "criteres-maastricht",
+      "deficit-public",
+      "dette-publique"
+    ],
+    "source": "Cours, introduction (p. 3)"
+  },
+  {
+    "chapterSlug": "finances-apu",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complète la définition.",
+    "payload": {
+      "template": "Un service est non marchand quand ses ventes couvrent moins de {{a}} % de son coût de production.",
+      "slots": [
+        {
+          "id": "a",
+          "width": "sm"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "a": [
+          "50",
+          "cinquante"
+        ]
+      }
+    },
+    "explanation": "Les services non marchands sont des services publics dont les ventes couvrent moins de la moitié de leur coût : c'est l'activité principale des APU, avec la redistribution.",
+    "hint": "Le seuil est donné dans la définition des APU par l'INSEE.",
+    "concepts": [
+      "apu"
+    ],
+    "source": "Cours, introduction, I (p. 3)"
+  },
+  {
+    "chapterSlug": "finances-apu",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque sous-secteur des APU à son contenu.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "APUC"
+        },
+        {
+          "id": "l1",
+          "label": "ASSO"
+        },
+        {
+          "id": "l2",
+          "label": "APUL"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "L'État et les ODAC, comme les universités"
+        },
+        {
+          "id": "r1",
+          "label": "Les régimes de sécurité sociale, les hôpitaux"
+        },
+        {
+          "id": "r2",
+          "label": "Les collectivités territoriales, les collèges et lycées"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2"
+      }
+    },
+    "explanation": "Administrations publiques centrales, administrations de sécurité sociale, administrations publiques locales.",
+    "hint": "Un seul sous-secteur comprend l'État lui-même.",
+    "concepts": [
+      "sous-secteurs-apu"
+    ],
+    "source": "Cours, introduction, I (p. 3-4)"
+  },
+  {
+    "chapterSlug": "finances-apu",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Dans quel sous-secteur des APU se rangent les universités ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Les APUL, comme les lycées"
+        },
+        {
+          "id": "b",
+          "label": "Les ASSO"
+        },
+        {
+          "id": "c",
+          "label": "Les APUC, en tant qu'ODAC"
+        },
+        {
+          "id": "d",
+          "label": "Aucun, ce sont des entreprises publiques"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "Les universités sont des ODAC : des établissements publics nationaux, dotés de la personnalité morale, financés et contrôlés par l'État. Les collèges et lycées, eux, sont des établissements publics locaux.",
+    "hint": "Compare le statut des universités à celui des collèges et lycées.",
+    "concepts": [
+      "sous-secteurs-apu"
+    ],
+    "source": "Cours, introduction, I (p. 3)"
+  },
+  {
+    "chapterSlug": "finances-apu",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Selon la définition de l'INSEE, les APU se financent par des prélèvements obligatoires ou par des emprunts.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "Les APU produisent des services non marchands ou redistribuent, avec des ressources issues de prélèvements obligatoires ou d'emprunts.",
+    "hint": "Pense aux deux façons de financer un déficit.",
+    "concepts": [
+      "apu"
+    ],
+    "source": "Cours, introduction, I (p. 3)"
+  },
+  {
+    "chapterSlug": "finances-apu",
+    "type": "MATCHING",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Associe chaque administration à son texte financier annuel.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "L'État"
+        },
+        {
+          "id": "l1",
+          "label": "La sécurité sociale"
+        },
+        {
+          "id": "l2",
+          "label": "Les collectivités territoriales"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "Les lois de finances"
+        },
+        {
+          "id": "r1",
+          "label": "Les lois de financement"
+        },
+        {
+          "id": "r2",
+          "label": "Le budget"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2"
+      }
+    },
+    "explanation": "Chaque année, ces textes fixent le niveau des dépenses et des recettes : c'est un instrument de la gouvernance financière.",
+    "hint": "Un seul de ces textes n'est pas une loi.",
+    "concepts": [
+      "gouvernance-financiere",
+      "lois-finances"
+    ],
+    "source": "Cours, introduction, I (p. 5)"
+  },
+  {
+    "chapterSlug": "finances-apu",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Quel texte permet de lever l'impôt et de dépenser lorsque la loi de finances de l'année n'a pas été votée à temps ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Une loi de finances rectificative"
+        },
+        {
+          "id": "b",
+          "label": "La loi de règlement"
+        },
+        {
+          "id": "c",
+          "label": "La loi de financement de la sécurité sociale"
+        },
+        {
+          "id": "d",
+          "label": "La loi de finances spéciale"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "d"
+      ]
+    },
+    "explanation": "La loi de finances spéciale permet de percevoir les impôts et de dépenser en attendant le vote du projet de loi de finances ; on n'y avait plus recouru depuis 1980. Une LFR modifie une loi de finances déjà votée.",
+    "hint": "Les crises politiques l'ont remise au goût du jour.",
+    "concepts": [
+      "lois-finances"
+    ],
+    "source": "Cours, introduction, I (p. 5)"
+  },
+  {
+    "chapterSlug": "finances-apu",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "La gouvernance financière laisse la conduite des finances publiques à la libre discrétion du gouvernement.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Elle est née de l'idée inverse : la conduite des finances publiques ne peut être laissée à la discrétion des gouvernements, au gré des aléas ; elle doit suivre une trajectoire.",
+    "hint": "Pense à la notion de trajectoire des finances publiques.",
+    "concepts": [
+      "gouvernance-financiere"
+    ],
+    "source": "Cours, introduction, I (p. 5)"
+  },
+  {
+    "chapterSlug": "histoire-finances",
+    "type": "MCQ_SINGLE",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Qu'était la gabelle sous l'Ancien Régime ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Un impôt indirect sur le sel"
+        },
+        {
+          "id": "b",
+          "label": "Un impôt direct sur les terres"
+        },
+        {
+          "id": "c",
+          "label": "Une taxe sur les portes et fenêtres"
+        },
+        {
+          "id": "d",
+          "label": "Un impôt sur le revenu de la noblesse"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "La gabelle frappait le sel, nécessaire à la conservation des aliments ; les paysans y étaient notamment assujettis. Clergé et noblesse bénéficiaient de privilèges fiscaux.",
+    "hint": "Demande-toi si elle frappait un revenu, une terre ou un produit consommé.",
+    "concepts": [
+      "systeme-ferme"
+    ],
+    "source": "Cours, introduction, II, A (p. 5)"
+  },
+  {
+    "chapterSlug": "histoire-finances",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Dans le système de la ferme, les fermiers devaient reverser au roi tout l'excédent d'impôt qu'ils percevaient.",
+    "payload": {},
+    "solution": {
+      "value": false
+    },
+    "explanation": "Après avoir recouvré le montant fixé par le roi, les fermiers pouvaient conserver les excédents. Sans contrôle, le système a débouché sur des abus.",
+    "hint": "Pense aux deux avantages de la ferme, l'un pour le roi, l'autre pour les fermiers.",
+    "concepts": [
+      "systeme-ferme"
+    ],
+    "source": "Cours, introduction, II, A (p. 6)"
+  },
+  {
+    "chapterSlug": "histoire-finances",
+    "type": "MATCHING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Associe chaque principe fiscal de la Révolution à ce qui le caractérise.",
+    "payload": {
+      "left": [
+        {
+          "id": "l0",
+          "label": "Consentement à l'impôt"
+        },
+        {
+          "id": "l1",
+          "label": "Universalité de l'impôt"
+        },
+        {
+          "id": "l2",
+          "label": "Proportionnalité de l'impôt"
+        }
+      ],
+      "right": [
+        {
+          "id": "r0",
+          "label": "L'impôt est décidé par les représentants des citoyens (article 14)"
+        },
+        {
+          "id": "r1",
+          "label": "L'impôt est payé par tous, depuis l'abolition des privilèges"
+        },
+        {
+          "id": "r2",
+          "label": "Chacun paie une somme en rapport avec ses revenus"
+        }
+      ]
+    },
+    "solution": {
+      "pairs": {
+        "l0": "r0",
+        "l1": "r1",
+        "l2": "r2"
+      }
+    },
+    "explanation": "Le consentement figure à l'article 14 de la DDHC ; l'universalité et la proportionnalité, à l'article 13.",
+    "hint": "L'un de ces principes répond aux privilèges du clergé et de la noblesse.",
+    "concepts": [
+      "consentement-impot",
+      "universalite-impot",
+      "proportionnalite-impot"
+    ],
+    "source": "Cours, introduction, II, B (p. 6)"
+  },
+  {
+    "chapterSlug": "histoire-finances",
+    "type": "FILL_BLANK",
+    "difficulty": 1,
+    "points": 1,
+    "prompt": "Complète la phrase.",
+    "payload": {
+      "template": "Le 17 juin 1789, les États généraux se proclament {{a}} et instaurent le libre consentement à l'impôt.",
+      "slots": [
+        {
+          "id": "a",
+          "width": "lg"
+        }
+      ]
+    },
+    "solution": {
+      "answers": {
+        "a": [
+          "Assemblée nationale",
+          "l'Assemblée nationale",
+          "assemblee nationale",
+          "l’Assemblée nationale"
+        ]
+      }
+    },
+    "explanation": "En se proclamant Assemblée nationale, les États généraux posent un consentement politique à l'impôt, décidé par les représentants des citoyens.",
+    "hint": "Pense à la façon dont ils affirment représenter la nation tout entière.",
+    "concepts": [
+      "consentement-impot"
+    ],
+    "source": "Cours, introduction, II, B (p. 6)"
+  },
+  {
+    "chapterSlug": "histoire-finances",
+    "type": "ORDERING",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "Remets ces étapes dans l'ordre chronologique.",
+    "payload": {
+      "items": [
+        {
+          "id": "i2",
+          "label": "Abolition des privilèges, la nuit du 4 août"
+        },
+        {
+          "id": "i4",
+          "label": "Formalisation de l'annualité budgétaire"
+        },
+        {
+          "id": "i0",
+          "label": "Réunion des États généraux"
+        },
+        {
+          "id": "i5",
+          "label": "Création de la CSG"
+        },
+        {
+          "id": "i1",
+          "label": "Proclamation de l'Assemblée nationale"
+        },
+        {
+          "id": "i3",
+          "label": "Inscription des principes fiscaux dans la DDHC"
+        }
+      ]
+    },
+    "solution": {
+      "order": [
+        "i0",
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ]
+    },
+    "explanation": "États généraux (mai 1789), Assemblée nationale (17 juin 1789), nuit du 4 août, DDHC (26 août 1789), Restauration (annualité), CSG (1990).",
+    "hint": "Les quatre premières étapes ont lieu la même année ; la dernière à la fin du XXe siècle.",
+    "concepts": [
+      "consentement-impot",
+      "annualite-budgetaire",
+      "universalite-impot"
+    ],
+    "source": "Cours, introduction, II (p. 6-7)"
+  },
+  {
+    "chapterSlug": "histoire-finances",
+    "type": "MCQ_SINGLE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "De quel principe découle l'annualité budgétaire ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "De l'universalité de l'impôt"
+        },
+        {
+          "id": "b",
+          "label": "De la proportionnalité de l'impôt"
+        },
+        {
+          "id": "c",
+          "label": "Du consentement à l'impôt"
+        },
+        {
+          "id": "d",
+          "label": "Des critères de Maastricht"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "c"
+      ]
+    },
+    "explanation": "L'annualité pose un rendez-vous annuel où le Parlement autorise le gouvernement à dépenser et à recouvrer les recettes : c'est le prolongement du consentement à l'impôt.",
+    "hint": "Pense à ce que le Parlement accorde chaque année au gouvernement.",
+    "concepts": [
+      "annualite-budgetaire",
+      "consentement-impot"
+    ],
+    "source": "Cours, introduction, II, C (p. 7)"
+  },
+  {
+    "chapterSlug": "histoire-finances",
+    "type": "MCQ_MULTI",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Pourquoi l'État garde-t-il une place prééminente dans les finances publiques ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Son déficit est bien plus important que ceux des collectivités et de la sécurité sociale"
+        },
+        {
+          "id": "b",
+          "label": "Il régule la vie économique et sociale par ses lois de finances"
+        },
+        {
+          "id": "c",
+          "label": "Il fixe les règles des collectivités et de la sécurité sociale et leur attribue des ressources"
+        },
+        {
+          "id": "d",
+          "label": "Il est garant, à Bruxelles, du respect des engagements européens"
+        },
+        {
+          "id": "e",
+          "label": "La France est un État fédéral"
+        },
+        {
+          "id": "f",
+          "label": "Les collectivités financent l'État par leurs impôts locaux"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    "explanation": "Le cours donne ces quatre raisons. La France n'est justement pas un État fédéral : c'est l'État qui fixe les règles. Et ce sont les collectivités qui dépendent des dotations de l'État, pas l'inverse.",
+    "hint": "Le cours donne quatre raisons ; écarte celles qui contredisent l'organisation de la France.",
+    "concepts": [
+      "preeminence-etat"
+    ],
+    "source": "Cours, introduction, II, C (p. 7-8)"
+  },
+  {
+    "chapterSlug": "histoire-finances",
+    "type": "TRUE_FALSE",
+    "difficulty": 2,
+    "points": 1,
+    "prompt": "La CSG, créée en 1990, frappe l'ensemble des revenus.",
+    "payload": {},
+    "solution": {
+      "value": true
+    },
+    "explanation": "La CSG prolonge l'idée d'universalité : un impôt sur l'ensemble des revenus, devenu l'impôt direct le plus rentable, avec plus de 120 milliards d'euros.",
+    "hint": "Relis ce que le cours dit de la CSG à propos de l'universalité.",
+    "concepts": [
+      "universalite-impot"
+    ],
+    "source": "Cours, introduction, II, B (p. 6)"
+  },
+  {
+    "chapterSlug": "histoire-finances",
+    "type": "MCQ_SINGLE",
+    "difficulty": 3,
+    "points": 1,
+    "prompt": "Quelle disposition de la DDHC fonde le droit de contrôle du Parlement sur la gestion de l'impôt par l'État ?",
+    "payload": {
+      "options": [
+        {
+          "id": "a",
+          "label": "Le droit des citoyens de suivre l'emploi de la contribution publique"
+        },
+        {
+          "id": "b",
+          "label": "L'universalité de l'impôt"
+        },
+        {
+          "id": "c",
+          "label": "La proportionnalité de l'impôt"
+        },
+        {
+          "id": "d",
+          "label": "La propriété, droit inviolable et sacré que la Déclaration protège contre l'État"
+        }
+      ]
+    },
+    "solution": {
+      "correct": [
+        "a"
+      ]
+    },
+    "explanation": "L'article 14 de la DDHC ne pose pas seulement le consentement à l'impôt : il donne aux citoyens le droit d'en suivre l'emploi, ce qui fonde le contrôle du Parlement. L'universalité et la proportionnalité figurent à l'article 13.",
+    "hint": "Pense à ce que les citoyens peuvent faire une fois l'impôt consenti.",
+    "concepts": [
+      "consentement-impot"
+    ],
+    "source": "Cours, introduction, II, B (p. 6)"
+  },
+  {
+    "chapterSlug": "histoire-finances",
+    "type": "CASE_STUDY",
+    "difficulty": 3,
+    "points": 3,
+    "prompt": "Cas d'entraînement : un pays imaginaire de l'Union européenne.",
+    "payload": {
+      "scenario": "Un pays imaginaire de l'Union européenne, dont la Constitution reprend les principes de la DDHC, affiche une dépense publique de 58 % du PIB, un déficit public de 4,5 % du PIB et une dette publique de 95 % du PIB. Pour financer une nouvelle dépense, son gouvernement propose un impôt sur l'énergie, dont la collecte serait confiée à des entreprises privées autorisées à garder ce qu'elles perçoivent au-delà du montant fixé par l'État. Les ménages les plus riches en seraient exonérés.",
+      "subQuestions": [
+        {
+          "id": "q1",
+          "type": "MCQ_MULTI",
+          "prompt": "Quels critères de Maastricht ce pays dépasse-t-il ?",
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Le critère de déficit public"
+              },
+              {
+                "id": "b",
+                "label": "Le critère de dette publique"
+              },
+              {
+                "id": "c",
+                "label": "Un plafond de dépense publique fixé à 55 % du PIB"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "type": "MCQ_SINGLE",
+          "prompt": "À quel système de l'Ancien Régime la collecte proposée ressemble-t-elle ?",
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "La gabelle"
+              },
+              {
+                "id": "b",
+                "label": "La ferme"
+              },
+              {
+                "id": "c",
+                "label": "La comptabilité publique"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "type": "MCQ_SINGLE",
+          "prompt": "Quel principe de la DDHC l'exonération des plus riches heurte-t-elle ?",
+          "payload": {
+            "options": [
+              {
+                "id": "a",
+                "label": "Le consentement à l'impôt"
+              },
+              {
+                "id": "b",
+                "label": "Le droit de suivre l'emploi de la contribution publique"
+              },
+              {
+                "id": "c",
+                "label": "L'universalité de l'impôt"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q4",
+          "type": "TRUE_FALSE",
+          "prompt": "Pour être levé, ce nouvel impôt doit être consenti par les représentants des citoyens.",
+          "payload": {}
+        }
+      ]
+    },
+    "solution": {
+      "subSolutions": [
+        {
+          "id": "q1",
+          "solution": {
+            "correct": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "solution": {
+            "correct": [
+              "b"
+            ]
+          }
+        },
+        {
+          "id": "q3",
+          "solution": {
+            "correct": [
+              "c"
+            ]
+          }
+        },
+        {
+          "id": "q4",
+          "solution": {
+            "value": true
+          }
+        }
+      ]
+    },
+    "explanation": "Q1 : 4,5 % dépasse 3 % et 95 % dépasse 60 % ; Maastricht ne fixe pas de plafond de dépense publique. Q2 : des collecteurs privés qui gardent l'excédent, c'est la ferme, source d'abus faute de contrôle ; la gabelle est un impôt, pas un mode de collecte. Q3 : l'universalité veut que l'impôt soit payé par tous, depuis l'abolition des privilèges. Q4 : article 14 de la DDHC, consentement à l'impôt par les représentants.",
+    "hint": "Reprends les seuils de Maastricht, puis l'histoire de l'impôt de l'Ancien Régime à la DDHC.",
+    "concepts": [
+      "criteres-maastricht",
+      "systeme-ferme",
+      "universalite-impot",
+      "consentement-impot"
+    ],
+    "source": "Cours, introduction (p. 3-6)"
+  },
+  {
+    "chapterSlug": "histoire-finances",
+    "type": "WRITING",
+    "difficulty": 3,
+    "points": 4,
+    "prompt": "« Les finances publiques se réduisent-elles aux finances de l'État ? » Rédige un plan détaillé de dissertation.",
+    "payload": {
+      "modelAnswer": "Introduction : définir les finances publiques ; rappeler qu'elles ont longtemps été assimilées aux finances de l'État, alors que le traité de Maastricht raisonne en administrations publiques. Problématique : l'élargissement aux APU a-t-il fait perdre à l'État sa place centrale ?\n\nI. Des finances publiques longtemps confondues avec celles de l'État\nA. Une histoire centrée sur l'impôt de l'État : le pouvoir fiscal du roi, la gabelle et la ferme sous l'Ancien Régime ; les principes de la DDHC (consentement, article 14 ; universalité et proportionnalité, article 13).\nB. Des règles conçues pour le budget de l'État : l'annualité et la comptabilité publique sous la Restauration, qui assoient le pouvoir du Parlement sur l'exécutif.\n\nII. Des finances des APU où l'État reste prééminent\nA. L'approche européenne : les critères de Maastricht (3 % et 60 % du PIB) visent l'ensemble des APU ; la définition de l'INSEE et ses trois sous-secteurs (APUC, ASSO, APUL) ; la notion inscrite dans la Constitution depuis 2008.\nB. La prééminence de l'État : le poids de son déficit, son rôle de régulation, la dépendance des collectivités (dotations) et de la sécurité sociale (CSG), sa responsabilité devant Bruxelles.\n\nConclusion : les finances publiques ne se réduisent plus aux finances de l'État, mais l'État en reste le pivot.",
+      "rubric": [
+        {
+          "id": "c0",
+          "label": "L'introduction oppose finances de l'État et finances des APU"
+        },
+        {
+          "id": "c1",
+          "label": "L'histoire (Ancien Régime, DDHC, Restauration) est mobilisée avec ses articles et dates"
+        },
+        {
+          "id": "c2",
+          "label": "La définition des APU et ses trois sous-secteurs sont exposés"
+        },
+        {
+          "id": "c3",
+          "label": "Le plan répond à la question en montrant la prééminence de l'État"
+        }
+      ]
+    },
+    "solution": {},
+    "explanation": "Ce plan n'est qu'un exemple d'entraînement, pas un corrigé officiel : d'autres plans sont possibles, pourvu qu'ils répondent à la question.",
+    "concepts": [
+      "apu",
+      "preeminence-etat",
+      "consentement-impot"
+    ],
+    "source": "Cours, introduction (p. 1-8)"
+  }
+]
