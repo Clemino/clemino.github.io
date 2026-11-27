@@ -56,7 +56,7 @@ Un examen final couvre tous les modules, avec une durée réaliste et des points
 
 ## La relecture contre les sources
 
-Après chaque module, lancer un agent `general-purpose` avec la consigne ci-dessous, en remplaçant `<id>` et `<module>`. Il ne modifie rien : il rend une liste. Chaque point est corrigé, ou vérifié dans la source et expliqué à Clément s'il est écarté.
+Après chaque module, lancer un agent `general-purpose`, effort `high` (voir « Effort des agents » dans SKILL.md), avec la consigne ci-dessous, en remplaçant `<id>` et `<module>`. Il ne modifie rien : il rend une liste. Chaque point est corrigé, ou vérifié dans la source et expliqué à Clément s'il est écarté.
 
 ```
 Tu relis le module <module> de la matière <id> du site clemino.github.io, avant sa publication. Tu ne modifies aucun fichier.

@@ -56,16 +56,16 @@ Commencer par `mkdir -p moteur/courses/<identifiant>/{theory,exercises,exam}` : 
 
 ## 6. Rédiger, module par module
 
-Pour chaque module, dans l'ordre, et sans passer au suivant avant d'avoir fini :
+Pour chaque module, dans l'ordre, et sans passer au suivant avant d'avoir fini. Les agents se lancent avec l'effort indiqué dans [Effort des agents](#effort-des-agents) :
 
-1. **La théorie** : chaque section prévue dans `modules.ts`, dans `theory/<module>/<section>.mdx`.
-2. **Les exercices** : `exercises/<module>.json`, au moins 15 exercices auto-corrigés de 4 types différents.
+1. **La théorie** : chaque section prévue dans `modules.ts`, dans `theory/<module>/<section>.mdx`. Un agent `general-purpose` la rédige, effort `medium`.
+2. **Les exercices** : `exercises/<module>.json`, au moins 15 exercices auto-corrigés de 4 types différents. Un second agent `general-purpose` les rédige, effort `high`, une fois la théorie écrite.
 3. **La vérification** : `cd moteur && COURSE=<identifiant> pnpm check:content`, jusqu'à `OK`.
-4. **La relecture contre les sources** : lancer un agent `general-purpose` avec la consigne de [qualite.md](qualite.md), remplie pour ce module. Corriger chaque problème qu'il signale. S'il se trompe, le vérifier dans la source et garder une ligne d'explication pour le compte rendu à Clément. Relancer `check:content`.
+4. **La relecture contre les sources** : lancer un agent `general-purpose`, effort `high`, avec la consigne de [qualite.md](qualite.md), remplie pour ce module. Corriger chaque problème qu'il signale. S'il se trompe, le vérifier dans la source et garder une ligne d'explication pour le compte rendu à Clément. Relancer `check:content`.
 
 ## 7. Écrire les examens
 
-Dans `exam/`, un examen final qui couvre tous les modules, et si le cours s'y prête un galop d'essai sur la première moitié. Mêmes règles que les exercices, puis `check:content`.
+Dans `exam/`, un examen final qui couvre tous les modules, et si le cours s'y prête un galop d'essai sur la première moitié. Mêmes règles que les exercices, donc un agent `general-purpose` effort `high`, puis `check:content`, puis une relecture contre les sources comme pour un module, effort `high`.
 
 ## 8. Contrôler et publier
 
@@ -97,3 +97,22 @@ Attendre l'accord explicite de Clément.
 ## 11. Clore la proposition
 
 Seulement après l'accord de Clément : `node scripts/proposals.mjs done <proposition> <identifiant>`, qui ouvre aussi la matière à la personne qui l'a proposée. S'il refuse la proposition : `node scripts/proposals.mjs reject <proposition>`. Les deux effacent les fichiers de Supabase. Dans le cloud, le proxy de GitHub refuse de supprimer une branche : après un refus, Clément ferme la PR et supprime la branche lui-même.
+
+## Effort des agents
+
+Clément l'a demandé : chaque agent se lance avec l'effort adapté à sa tâche (paramètre `effort` de l'outil Agent), pour dépenser le moins de jetons possible sans rien perdre en qualité. Les matières doivent rester sans faute, comme Admin, Contrats, Culture et Finances. On pense davantage là où une erreur se glisse ; la relecture, qui garantit l'exactitude, n'est jamais allégée.
+
+| Tâche | Qui | Effort | Pourquoi |
+|---|---|---|---|
+| Lire les sources, faire le plan (étapes 2 à 5) | la session | celui de la session | le découpage engage toute la matière |
+| Rédiger la théorie d'un module | agent `general-purpose` | `medium` | les sources disent déjà quoi écrire : c'est surtout reformuler et structurer ; la relecture rattrape un écart |
+| Rédiger les exercices d'un module, ou un examen | agent `general-purpose` | `high` | une seule réponse défendable, des pièges plausibles, des indices qui ne trahissent pas la réponse : c'est là que naissent les fautes |
+| Relire un module ou un examen contre les sources | agent `general-purpose` | `high` | vérifier chaque article, date, arrêt et chiffre : c'est la garantie du « sans faute » |
+| Corriger ce que signale `check:content`, `check:quality` ou le relecteur | la session | celui de la session | corrections ciblées, déjà décrites |
+| Bibliothèque, README, publication, PR (étapes 8 à 11) | la session | celui de la session | mécanique |
+
+- Jamais `low` pour rédiger ou relire, et jamais `max` : il coûte bien plus pour un gain qu'on ne voit pas sur ces tâches.
+- Le modèle des agents est celui de la session (ne pas passer `model`).
+- Chaque agent part de zéro : sa consigne nomme la matière, le module, les sections ou exercices attendus, les fichiers de sources à lire, et renvoie à [format.md](format.md) et [qualite.md](qualite.md). Il écrit ses fichiers lui-même et ne lance pas d'autre agent.
+- Si la relecture d'un module signale beaucoup de fautes (plus d'une par section), relancer la rédaction de ce module en effort `high` plutôt que de corriger point par point.
+
