@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 
@@ -42,6 +43,21 @@ jobs:
         uses: actions/upload-pages-artifact@v5
         with:
           path: site
+
+      # GitHub can list a freshly uploaded archive a few seconds late, and deploy-pages
+      # then fails with "No artifacts named github-pages were found".
+      - name: Wait until the site archive is listed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 24); do
+            n=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" \
+              --jq '[.artifacts[] | select(.name == "github-pages")] | length' 2>/dev/null || echo 0)
+            if [ "${n:-0}" -gt 0 ]; then exit 0; fi
+            sleep 5
+          done
+          echo "::error::L'archive github-pages n'apparaît toujours pas après 2 minutes."
+          exit 1
 
       - name: Deploy to GitHub Pages
         id: deployment
