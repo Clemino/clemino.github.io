@@ -1,15 +1,16 @@
 -- Progression commune de la page Palworld : tout le monde voit et coche les mêmes cases, sans compte.
+-- Objets de collection (statues, ruines, journaux) et entrées de donjon.
 --
 -- À coller dans Supabase, projet `cours`, SQL Editor, puis Run. Tout se fait en une fois :
 -- en cas d'erreur, rien n'est changé. Le script peut être relancé.
 --
 -- Anyone with the page may read every box and change any of them, on purpose. Writes only go
--- through palworld_set(), which accepts nothing but item ids and caps the table size, so a visitor
+-- through palworld_set(), which accepts nothing but item and dungeon ids and caps the table size, so a visitor
 -- cannot fill the database with anything else.
 
 begin;
 
--- 1. One row per item: id is "<type>:<x>,<y>" (game position), changed_at is the server time.
+-- 1. One row per item or dungeon entrance: id is "<type>:<x>,<y>" (game position), changed_at is the server time.
 create table if not exists public.palworld_items (
 	id text primary key,
 	checked boolean not null,
@@ -41,7 +42,7 @@ begin
 		raise exception 'palworld_set attend une liste de 1000 changements au plus';
 	end if;
 	for change in select value from jsonb_array_elements(changes) loop
-		if coalesce(change ->> 'id', '') !~ '^(statue|ruine|journal):-?[0-9]{1,9},-?[0-9]{1,9}$'
+		if coalesce(change ->> 'id', '') !~ '^(statue|ruine|journal|donjon):-?[0-9]{1,9},-?[0-9]{1,9}$'
 			or jsonb_typeof(change -> 'checked') is distinct from 'boolean' then
 			raise exception 'changement invalide : %', left(change::text, 100);
 		end if;

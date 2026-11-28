@@ -10,8 +10,8 @@ Bibliothèque de cours en ligne : on se connecte avec Google, on ouvre les mati�
 site/                   Publié tel quel sur https://clemino.github.io
 ├── index.html          Page d'accueil, volontairement blanche
 ├── cours/              Bibliothèque : connexion, matières, propositions, accès
-├── palworld/           Parcours des objets de collection de Palworld : page autonome venue de clemino/palworld,
-│                       dont les coches sont communes à tous les visiteurs, sans compte
+├── palworld/           Palworld : parcours des objets de collection et liste des donjons. Page autonome venue
+│                       de clemino/palworld, dont les coches sont communes à tous les visiteurs, sans compte
 ├── admin/              Droit administratif   ┐
 ├── contrats/           Droit des contrats    │
 ├── culture/            Culture générale      │ générés par moteur/ :
@@ -78,7 +78,7 @@ Projet `cours`, connexion par Google uniquement.
 | `course_proposals` | Matières proposées, avec leurs PDF dans l'espace de stockage privé `proposals` |
 | `palworld_items` | Coches de la page Palworld, communes à tous les visiteurs |
 
-- La page Palworld n'a pas de compte : tout visiteur lit les coches et en change avec la fonction `palworld_set`, qui n'accepte que des objets du parcours. Table et fonction sont créées par `supabase/palworld.sql`.
+- La page Palworld n'a pas de compte : tout visiteur lit les coches et en change avec la fonction `palworld_set`, qui n'accepte que des objets du parcours et des entrées de donjon. Table et fonction sont créées par `supabase/palworld.sql`.
 - Les règles de Supabase empêchent de suivre une matière sans y avoir accès, et cachent celles dont l'accès a été retiré ; la progression reste enregistrée. Elles sont dans `supabase/acces-par-personne.sql`.
 - La clé secrète, qui sert à `scripts/proposals.mjs`, est dans `.env.local` sur le PC (ignoré par git), et dans un secret réseau de l'environnement claude.ai/code. Elle ne doit apparaître nulle part ailleurs.
 - `.github/workflows/supabase-keepalive.yml` réveille le projet deux fois par semaine : sans activité, l'offre gratuite le met en pause.
